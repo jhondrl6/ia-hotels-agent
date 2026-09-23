@@ -3,8 +3,8 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 16,
-    "archivos_contexto_escaneados": 38,
-    "archivos_md_escaneados": 416,
+    "archivos_contexto_escaneados": 39,
+    "archivos_md_escaneados": 417,
     "ids_con_definicion": 332,
     "ids_citados_sin_definicion": 51,
     "familias_incluidas": [
@@ -3421,11 +3421,12 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 26,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
       "redefiniciones": []
     },

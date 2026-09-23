@@ -67,10 +67,17 @@ USO
     python scripts/decision_client.py --provider-status      # resuelve, no llama a nadie
     python scripts/decision_client.py --scan-imports         # AC6 sobre el arbol, con poblacion
     python scripts/decision_client.py --costura              # AC9: cuanto cuesta un 2 proveedor
-    python scripts/decision_client.py --report [--json]      # informe.json (FASE-B)
+    python scripts/decision_client.py --report               # informe por stdout, SIN escribir
+    python scripts/decision_client.py --report RUTA.json     # ademas escribe en ESA ruta
 
-SALIDA CLI: 0 = RESUELTO / SIN-HALLAZGOS · 1 = hay hallazgos · 2 = AUSENTE (ruta buscada) ·
-3 = LECTOR-FALLIDO. Los estados se imprimen en ASCII por la misma razon que en
+SALIDA CLI: 0 = RESUELTO / SIN-HALLAZGOS · 1 = hay hallazgos, o el proveedor no resolvio
+(`NO-CONFIGURADO` / `ILEGIBLE`) · 2 = AUSENTE (ruta buscada) o sin subcomando · 3 = LECTOR-FALLIDO.
+`--provider-status` usa 0 / 1 / 3 con esos significados, y el 3 es lo que permite a un instrumento de
+evidencia distinguir «el lector no pudo operar» de «no habia nada que leer» sin parsear texto.
+`--report` respeta la misma tabla cuando una componente no pudo operar: emite el informe **parcial**
+con los hallazgos leidos y la causa del fallo (`fallos_de_componentes`), y sale 2 o 3 segun la causa;
+un fallo posterior no borra lo ya medido (orden 2026-09-22 §4.A-a). El stdout de `--report` es siempre
+JSON puro. Los estados se imprimen en ASCII por la misma razon que en
 `validate_governance_numbers.py`: la consola de este entorno no es UTF-8.
 """
 
@@ -93,7 +100,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path(__file__).resolve().parent.parent
-EVIDENCIA = ROOT / "evidence" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20" / "FASE-B"
+# S12 / L-VCF-12: aqui vivia `EVIDENCIA`, la ruta de FASE-B que `--report` usaba como destino por
+# defecto. Un verificador no puede tener una ruta de evidencia cerrada como default de escritura.
 
 ENV_PROVIDER = "IAH_DECISION_PROVIDER"
 ENV_PROVIDERS_DIR = "IAH_DECISION_PROVIDERS_DIR"
@@ -126,7 +134,7 @@ FUNCIONES_DE_CARGA = ("import_module", "__import__", "find_and_load", "exec_modu
 # Un archivo bajo cualquier directorio `*proveedores*` esta en la superficie de contrabando: ahi
 # una carga con nombre construido en runtime SI es hallazgo (fuera de ahi es solo un limite).
 DIRECTORIO_PROVEEDORES_RE = re.compile(r"(^|/)[^/]*proveedores[^/]*/")
-ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION = (".git", "venv", ".venv", "env", "__pycache__",
+ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION = (".git", "venv", ".venv", ".venv-wsl", "env", "__pycache__",
                                       "node_modules", "tmp_test", "site-packages", "build",
                                       "temp")
 
@@ -171,6 +179,23 @@ class LectorFallido(Exception):
 
 class Ausente(Exception):
     """R2.9: la ruta buscada se imprime tal cual."""
+
+
+def _estado_de_la_excepcion(exc: Exception) -> str:
+    """Que el informe nombre el estado **que hubo**, no uno elegido a mano para ese camino del codigo.
+
+    Es lo que impide que los tres fallos posibles colapsen en la misma etiqueta: un lector que no
+    opero y un proveedor mal formado dejan de ser indistinguibles en el acta.
+    """
+    if isinstance(exc, ProveedorNoConfigurado):
+        return "NO-CONFIGURADO"
+    if isinstance(exc, RespuestaIlegible):
+        return "ILEGIBLE"
+    if isinstance(exc, LectorFallido):
+        return "LECTOR-FALLIDO"
+    if isinstance(exc, Ausente):
+        return "AUSENTE"
+    return f"ESTADO-NO-CLASIFICADO:{type(exc).__name__}"
 
 
 # -----------------------------------------------------------------------------------------
@@ -309,33 +334,50 @@ def _campos_declarados(r: dict) -> tuple:
     return tuple(sorted(k for k in r if k not in CAMPOS_BASE))
 
 
+def _quien_es_la_respuesta(r: dict, posicion: int) -> str:
+    """Como nombrar a una respuesta cuando lo que puede estar roto es justamente su `pregunta_id`."""
+    pid = r.get("pregunta_id")
+    if isinstance(pid, str) and pid.strip():
+        return pid
+    return f"#la-posicion-{posicion}"
+
+
 def check_campos_conocidos(payload: dict, preguntas: Sequence[Pregunta]) -> list:
     """Un campo nuevo, o uno que desaparece, ES una ruptura de contrato: la primitiva cambio."""
     motivos = []
-    for r in payload.get("respuestas", []):
+    for posicion, r in enumerate(payload.get("respuestas", []), start=1):
         if not isinstance(r, dict):
             motivos.append(f"respuesta no es un objeto: {r!r}")
             continue
         tipo = r.get("tipo")
+        quien = _quien_es_la_respuesta(r, posicion)
         faltan = set(CAMPOS_BASE) - set(r)
         if faltan:
-            motivos.append(f"respuesta {r.get('pregunta_id', '?')}): faltan campos base "
-                           f"{sorted(faltan)}")
+            motivos.append(f"respuesta {quien}: faltan campos base {sorted(faltan)}")
+        # Los dos campos base se comprueban ANTES de usarlos: `tipo` se consulta como clave de dict y
+        # `pregunta_id` entra en conjuntos, asi que un valor no hashable hacia explotar al guard en
+        # lugar de dejarlo reportar la forma rota. Un TypeError que escapa no es un estado del
+        # contrato: es el instrumento caido, y se leeria como «no hubo hallazgo» (CX3).
+        for campo in CAMPOS_BASE:
+            if campo in r and (not isinstance(r[campo], str) or not r[campo].strip()):
+                motivos.append(f"respuesta {quien}: {campo} no es un texto no vacio: {r[campo]!r}")
+        if not isinstance(tipo, str):
+            continue
         if tipo not in CAMPOS_POR_TIPO:
-            motivos.append(f"respuesta {r.get('pregunta_id', '?')}): tipo {tipo!r} fuera de "
+            motivos.append(f"respuesta {quien}: tipo {tipo!r} fuera de "
                            f"contrato {list(CAMPOS_POR_TIPO)}")
             continue
         esperados = set(CAMPOS_POR_TIPO[tipo])
         declarados = set(_campos_declarados(r))
         if tipo == "noul" and declarados & {"confidence"}:
-            motivos.append(f"{r.get('pregunta_id')}: noul no debe reportar confidence "
+            motivos.append(f"{quien}: noul no debe reportar confidence "
                            "(la primitiva no la expone)")
             declarados -= {"confidence"}
         if esperados - declarados:
-            motivos.append(f"{r.get('pregunta_id')} ({tipo}): faltan campos "
+            motivos.append(f"{quien} ({tipo}): faltan campos "
                            f"{sorted(esperados - declarados)}")
-        if declarados - esperados and tipo != "noul":
-            motivos.append(f"{r.get('pregunta_id')} ({tipo}): campos fuera de contrato "
+        if declarados - esperados:
+            motivos.append(f"{quien} ({tipo}): campos fuera de contrato "
                            f"{sorted(declarados - esperados)}")
     desconocidos = set(payload) - {"modelo", "respuestas", "usage", "request_id"}
     if desconocidos:
@@ -346,30 +388,51 @@ def check_campos_conocidos(payload: dict, preguntas: Sequence[Pregunta]) -> list
 def check_cobertura_de_preguntas(payload: dict, preguntas: Sequence[Pregunta]) -> list:
     """Una respuesta por pregunta, ni una de mas: ningun drop silencioso (familia de AC12)."""
     ids_esperados = [p.id for p in preguntas]
-    ids_recibidos = [r.get("pregunta_id") for r in payload.get("respuestas", []) if isinstance(r, dict)]
+    brutos = [r.get("pregunta_id") for r in payload.get("respuestas", []) if isinstance(r, dict)]
+    # Solo los ids legibles entran en la cuenta de cobertura: un id que no es texto ya lo nombro
+    # `campos-conocidos`, y meterlo en un set volvia al guard inoperante ante su propio caso.
+    validos = [i for i in brutos if isinstance(i, str) and i.strip()]
     motivos = []
-    duplicados = {i for i in ids_recibidos if ids_recibidos.count(i) > 1}
+    duplicados = {i for i in validos if validos.count(i) > 1}
     if duplicados:
         motivos.append(f"respuestas duplicadas para {sorted(duplicados)}")
-    faltan = [i for i in ids_esperados if i not in ids_recibidos]
-    sobran = [i for i in ids_recibidos if i not in ids_esperados]
+    faltan = [i for i in ids_esperados if i not in validos]
+    sobran = [i for i in validos if i not in ids_esperados]
     if faltan:
         motivos.append(f"sin respuesta para {faltan}")
     if sobran:
         motivos.append(f"respuestas de preguntas no pedidas {sobran}")
-    for r, p in zip(payload.get("respuestas", []), preguntas):
-        if isinstance(r, dict) and "tipo" in r and r["tipo"] != p.tipo:
-            motivos.append(f"{p.id}: el proveedor contesto {r['tipo']!r} a una pregunta {p.tipo!r}")
+    # El tipo se compara contra la pregunta que el id nombra, no contra la que ocupa la misma
+    # posicion: emparejando por indice, un proveedor que contesta en otro orden recibia el reproche
+    # de haber contestado «noul a una choice» a una pregunta que no era suya.
+    por_id = {p.id: p for p in preguntas}
+    for r in payload.get("respuestas", []):
+        if not isinstance(r, dict):
+            continue
+        p = por_id.get(r["pregunta_id"]) if isinstance(r.get("pregunta_id"), str) else None
+        tipo = r.get("tipo")
+        if p is not None and isinstance(tipo, str) and tipo != p.tipo:
+            motivos.append(f"{p.id}: el proveedor contesto {tipo!r} a una pregunta {p.tipo!r}")
     return motivos
+
+
+def _id_usable(r: dict):
+    """El `pregunta_id` solo se consulta como clave si es texto: uno que no lo es ya lo nombro
+    `campos-conocidos`, y usarlo para indexar volvia inoperantes a estos tres guards (CX3)."""
+    pid = r.get("pregunta_id")
+    return pid if isinstance(pid, str) else None
 
 
 def check_choice(payload: dict, preguntas: Sequence[Pregunta]) -> list:
     motivos = []
     por_id = {p.id: p for p in preguntas if p.tipo == "choice"}
     for r in payload.get("respuestas", []):
-        if not isinstance(r, dict) or r.get("tipo") != "choice" or r.get("pregunta_id") not in por_id:
+        if not isinstance(r, dict) or r.get("tipo") != "choice":
             continue
-        p = por_id[r["pregunta_id"]]
+        pid = _id_usable(r)
+        if pid is None or pid not in por_id:
+            continue
+        p = por_id[pid]
         if r.get("eleccion") not in p.opciones:
             motivos.append(f"{p.id}: eleccion {r.get('eleccion')!r} no esta entre las opciones")
         probs = r.get("probabilidades")
@@ -398,9 +461,12 @@ def check_score(payload: dict, preguntas: Sequence[Pregunta]) -> list:
     motivos = []
     por_id = {p.id: p for p in preguntas if p.tipo == "score"}
     for r in payload.get("respuestas", []):
-        if not isinstance(r, dict) or r.get("tipo") != "score" or r.get("pregunta_id") not in por_id:
+        if not isinstance(r, dict) or r.get("tipo") != "score":
             continue
-        p = por_id[r["pregunta_id"]]
+        pid = _id_usable(r)
+        if pid is None or pid not in por_id:
+            continue
+        p = por_id[pid]
         nivel = r.get("nivel")
         if not isinstance(nivel, int) or isinstance(nivel, bool) or not 0 <= nivel < len(p.leyenda):
             motivos.append(f"{p.id}: nivel {nivel!r} fuera de la leyenda de {len(p.leyenda)} "
@@ -419,10 +485,13 @@ def check_noul(payload: dict, preguntas: Sequence[Pregunta]) -> list:
     motivos = []
     ids = {p.id for p in preguntas if p.tipo == "noul"}
     for r in payload.get("respuestas", []):
-        if not isinstance(r, dict) or r.get("tipo") != "noul" or r.get("pregunta_id") not in ids:
+        if not isinstance(r, dict) or r.get("tipo") != "noul":
+            continue
+        pid = _id_usable(r)
+        if pid is None or pid not in ids:
             continue
         if not _en_rango(r.get("probabilidad_si")):
-            motivos.append(f"{r.get('pregunta_id')}: probabilidad_si ausente o fuera de [0,1]. "
+            motivos.append(f"{pid}: probabilidad_si ausente o fuera de [0,1]. "
                            "Ojo: probabilidad baja NO es incertidumbre, puede ser un no claro.")
     return motivos
 
@@ -527,8 +596,9 @@ def _credencial(nombre_env: str, entorno: dict) -> dict:
 def resolver_proveedor(entorno: dict = None) -> dict:
     """`{nombre, modulo, path, credencial_env}` del proveedor nombrado por el entorno.
 
-    No hay proveedor por defecto: ninguna de las cuatro salidas «no encontro» devuelve un candidato
-    propio (L-PF6 - un lector roto leido como ausencia producia un dolor falso).
+    No hay proveedor por defecto: ninguna de las tres salidas «no esta» devuelve un candidato propio
+    (L-PF6 - un lector roto leido como ausencia producia un dolor falso). Y la lectura incompleta no
+    se cuenta como «no esta»: si algo del directorio no cargo, lo que se devuelve es `LectorFallido`.
     """
     entorno = os.environ if entorno is None else entorno
     buscado = {ENV_PROVIDER: entorno.get(ENV_PROVIDER), ENV_PROVIDERS_DIR: entorno.get(ENV_PROVIDERS_DIR)}
@@ -562,10 +632,18 @@ def resolver_proveedor(entorno: dict = None) -> dict:
                     "credencial_env": decl.get("credencial_env"),
                     "declara": decl, "directorio": str(directorio),
                     "descarte_carga": errores}
+    # Un archivo que no cargo pudo declarar CUALQUIER nombre: certificar que el buscado no esta en el
+    # directorio exigiendo haber leído todos, y aqui no se leyeron todos. Traducirlo a
+    # `NO-CONFIGURADO` es el colapso que este contrato prohibe (L-PF6: un lector roto no es una
+    # ausencia), asi que el estado que sale es el del lector y se publican los dos hechos.
+    if errores:
+        raise LectorFallido(
+            f"no se pudo certificar la ausencia del proveedor {nombre!r} en {directorio}: "
+            f"{len(errores)} de {len(candidatos)} modulos no cargaron. "
+            f"Nombres leidos: {encontrados or '(ninguno)'}; fallos de carga: {errores}")
     raise ProveedorNoConfigurado(
         f"el proveedor {nombre!r} no esta en {directorio}; nombres encontrados: "
-        f"{encontrados or '(ninguno)'}"
-        + (f"; modulos que no cargaron: {errores}" if errores else ""),
+        f"{encontrados or '(ninguno)'}",
         "nombre-no-esta-en-el-directorio", {**buscado, "directorio": str(directorio),
                                             "nombres_encontrados": encontrados})
 
@@ -607,6 +685,16 @@ def evaluar(state, preguntas: Sequence[Pregunta], entorno: dict = None,
         raise ValueError("preguntas fuera de contrato: " + "; ".join(fallos[:3]))
     if not preguntas:
         raise ValueError("evaluar() sin preguntas no tiene nada que medir: se falla, no se devuelve []")
+    # Un id repetido no es un defecto de cada pregunta (cada una por si esta bien) sino del LOTE: dos
+    # preguntas que comparten nombre no se pueden emparejar con su respuesta, y una sola respuesta
+    # cerraba las dos como `RESUELTO` sin decir cual se contesto. Se falla antes de despachar, que es
+    # donde le corresponde: no depende de lo que el proveedor conteste.
+    ids = [p.id for p in preguntas]
+    repetidos = sorted({i for i in ids if ids.count(i) > 1})
+    if repetidos:
+        raise ValueError("preguntas fuera de contrato: ids repetidos "
+                         f"{repetidos} - un lote con el mismo id dos veces no tiene como emparejar "
+                         "cada respuesta con su pregunta")
 
     prov = resolver_proveedor(entorno)
     payload = (prov["modulo"].evaluar(state, preguntas)
@@ -701,23 +789,32 @@ def es_carga_dinamica_prohibida(nodo) -> str:
 
 
 def iterar_py(raiz: Path) -> tuple:
-    """(archivos a escanear, excluidos por directorio) - la exclusion se publica, no se calla."""
-    incluidos, excluidos = [], {k: 0 for k in ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION}
+    """(archivos a escanear, excluidos por directorio, excluidos unicos).
+
+    La atribucion por directorio puede contar el mismo archivo DOS veces cuando las exclusiones se
+    solapan (`venv/lib/site-packages/x.py` suma en las dos), asi que la suma de `excluidos` no
+    reproduce el universo y no sirve de comprobacion aritmetica: el total del arbol se calcula contra
+    el conteo unico, no contra la suma (L-VCF-11, orden 2026-09-22 §4.A-b).
+    """
+    incluidos = []
+    excluidos = {k: 0 for k in ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION}
+    excluidos_unicos = 0
     for path in sorted(raiz.rglob("*.py")):
         partes = {p.lower() for p in path.relative_to(raiz).parts[:-1]}
         tocado = partes & set(ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION)
         if tocado:
+            excluidos_unicos += 1
             for t in tocado:
                 excluidos[t] += 1
             continue
         incluidos.append(path)
-    return incluidos, {k: v for k, v in excluidos.items() if v}
+    return incluidos, {k: v for k, v in excluidos.items() if v}, excluidos_unicos
 
 
 def escanear_aislamiento(raiz: Path = ROOT, puerta: Path = None) -> dict:
     """Cuantas coincidencias de import del SDK/adapter hay, y sobre que poblacion (AC6 + L-R.3)."""
     puerta = puerta or Path(__file__).resolve()
-    archivos, excluidos = iterar_py(raiz)
+    archivos, excluidos, excluidos_unicos = iterar_py(raiz)
     coincidencias, menciones, no_parseables, carga_dinamica = [], [], [], []
     nodos_vistos = 0
     for path in archivos:
@@ -773,8 +870,20 @@ def escanear_aislamiento(raiz: Path = ROOT, puerta: Path = None) -> dict:
     fuera_dinamica = ([c for c in dinamica_prohibida if not c["en_la_puerta"]]
                       + [c for c in dinamica_no_resuelta
                          if c["en_directorio_de_proveedores"] and not c["en_la_puerta"]])
+    if fuera or fuera_dinamica:
+        estado = "HALLAZGOS"
+    elif not archivos:
+        # Poblacion ausente o vacia: un `SIN-HALLAZGOS` sobre 0 archivos es un favorable que no miro
+        # nada (orden 2026-09-22 §4.A-a). El 0 queda publicado en coverage_basis, no callado.
+        estado = "SIN-POBLACION"
+    elif no_parseables:
+        # Lectura incompleta: los no parseables se conservan con su causa, y el escaneo no cierra
+        # favorable sin haber leido toda la poblacion declarada.
+        estado = "LECTURA-INCOMPLETA"
+    else:
+        estado = "SIN-HALLAZGOS"
     return {
-        "status": "HALLAZGOS" if (fuera or fuera_dinamica) else "SIN-HALLAZGOS",
+        "status": estado,
         "regla": ("ningun archivo fuera de la puerta importa el SDK, el adapter ni su transporte; "
                   "la carga dinamica de paquetes esta prohibida salvo la carga por ruta que hace "
                   "la propia puerta de sus modulos de proveedor"),
@@ -800,10 +909,11 @@ def escanear_aislamiento(raiz: Path = ROOT, puerta: Path = None) -> dict:
         "menciones_no_import": menciones,
         "no_parseables": no_parseables,
         "coverage_basis": {
-            "archivos_py_en_el_arbol": len(archivos) + sum(excluidos.values()),
+            "archivos_py_en_el_arbol": len(archivos) + excluidos_unicos,
             "archivos_escaneados": len(archivos),
             "nodos_de_import_vistos": nodos_vistos,
             "excluidos_por_directorio": excluidos,
+            "excluidos_archivos_unicos": excluidos_unicos,
             "tokens_buscados": list(NOMBRES_PROHIBIDOS) + list(ALIAS_ADAPTER),
             "archivos_mirados": [{"archivo": p.relative_to(raiz).as_posix()} for p in archivos]
                                  if len(archivos) <= 40 else None,
@@ -862,6 +972,10 @@ def medir_costura(directorio_base: Path, raiz: Path = ROOT) -> dict:
 
     Copia la puerta y sus proveedores a un directorio temporal, anade **un** archivo, mide por sha256
     que nadie mas cambio, y despacha los dos proveedores a traves de `evaluar()`. No toca el arbol.
+
+    Lo que AC9 **no** afirma (declarado aqui porque el numero se publica y se cita): es una extension
+    local contra un proveedor falso del propio repo. No certifica el coste total de integrar un SDK,
+    sus dependencias ni su autenticacion, y no dice donde vivira ese SDK - eso es CONTEXTO/S10 y D7.
     """
     import hashlib
     import shutil
@@ -913,8 +1027,9 @@ def medir_costura(directorio_base: Path, raiz: Path = ROOT) -> dict:
             "modificados": modificados,
             "costura_funciona_con_ambos": [r1.proveedor, r2.proveedor],
             "los_dos_despachan_respuestas_distintas": distintos,
-            "provider_status": ["RESUELTO" if r1.provider_status == r2.provider_status == "RESUELTO"
-                                else "ILEGIBLE", "RESUELTO"],
+            # Los estados que salieron, no los que el codigo ya sabia de antemano: publicar un literal
+            # «RESUELTO» hacia que la asercion del contract test no pudiera ponerse roja.
+            "provider_status": [r1.provider_status, r2.provider_status],
             "archivos_de_test_paralelos": {
                 "valor": 1,
                 "nota": "un proveedor falso nuevo necesita un caso que lo despache; se declara "
@@ -926,6 +1041,10 @@ def medir_costura(directorio_base: Path, raiz: Path = ROOT) -> dict:
                 "archivos_base_antes": sorted(antes),
                 "archivos_base_despues": sorted(despues),
                 "instrumento": "sha256 por archivo + despacho real por la costura",
+                "alcance_de_ac9": (
+                    "medicion LOCAL: agregar un proveedor FALSO del repo, sin red ni credenciales. "
+                    "No es el coste certificado de integrar un SDK real con sus dependencias y su "
+                    "autenticacion; la ubicacion futura de ese SDK es CONTEXTO/S10 y D7"),
                 "comando": "python scripts/decision_client.py --costura "
                            "--falsos-directorio tests/quality_gates/decision_client/falsos_proveedores",
                 "medido_el": datetime.now().strftime("%Y-%m-%d"),
@@ -957,7 +1076,9 @@ def sonda_tres_estados(directorio_falsos: Path) -> dict:
                            "credencial": r.credencial,
                            "provocado_por": "falso-forma a traves de la costura, sin red"}
     except (ProveedorNoConfigurado, RespuestaIlegible, LectorFallido) as exc:
-        out["RESUELTO"] = {"provider_status": "LECTOR-FALLIDO", "motivo": str(exc)}
+        # La etiqueta sale de la clase que se levanto, no de un texto fijo: si los tres caminos
+        # imprimian «LECTOR-FALLIDO» el informe contaba un verde/rojo pero no que estado era.
+        out["RESUELTO"] = {"provider_status": _estado_de_la_excepcion(exc), "motivo": str(exc)}
 
     try:
         evaluar("estado de prueba", preguntas, {ENV_PROVIDER: "falso-forma"})
@@ -970,36 +1091,119 @@ def sonda_tres_estados(directorio_falsos: Path) -> dict:
                                  "decision_devuelta": None,
                                  "provocado_por": f"{ENV_PROVIDER} definido, {ENV_PROVIDERS_DIR} no"}
     except (RespuestaIlegible, LectorFallido) as exc:
-        out["NO-CONFIGURADO"] = {"provider_status": "LECTOR-FALLIDO", "motivo": str(exc)}
+        out["NO-CONFIGURADO"] = {"provider_status": _estado_de_la_excepcion(exc),
+                                 "motivo": str(exc)}
 
     try:
         r = evaluar("estado de prueba", preguntas,
                     {**env_base, ENV_PROVIDER: "falso-ilegible"})
-        out["ILEGIBLE"] = {"provider_status": "INESPERADAMENTE-RESUELTO",
+        out["ILEGIBLE"] = {"provider_status": "INESPERADAMENTE-" + str(r.provider_status),
                            "detalle": r.to_dict()}
-    except RespuestaIlegible as exc:
-        out["ILEGIBLE"] = {"provider_status": "ILEGIBLE", "motivos": exc.motivos,
-                           "proveedor": exc.proveedor, "decision_devuelta": None,
-                           "provocado_por": "falso-ilegible devuelve choice sin confidence y una "
+    except (ProveedorNoConfigurado, RespuestaIlegible, LectorFallido) as exc:
+        out["ILEGIBLE"] = {"provocado_por": "falso-ilegible devuelve choice sin confidence y una "
                                             "pregunta sin responder"}
-    except ProveedorNoConfigurado as exc:
-        out["ILEGIBLE"] = {"provider_status": "NO-CONFIGURADO", "motivo": str(exc)}
+        if isinstance(exc, RespuestaIlegible):
+            out["ILEGIBLE"].update({"provider_status": "ILEGIBLE", "motivos": exc.motivos,
+                                    "proveedor": exc.proveedor, "decision_devuelta": None})
+        else:
+            out["ILEGIBLE"].update({"provider_status": _estado_de_la_excepcion(exc),
+                                    "motivo": str(exc)})
     return out
 
 
+def _veredicto_de_la_sonda(sond: dict) -> str:
+    """`OK` solo si cada provocacion devolvio **su** estado esperado.
+
+    Los negativos esperados (que la sonda correcta produce: `NO-CONFIGURADO` sin directorio,
+    `ILEGIBLE` con el falso roto) son el resultado sano de una sonda que opera. Lo que NO es sano es
+    que la provocacion devuelva otro estado — un `LECTOR-FALLIDO` donde se esperaba `RESUELTO`, un
+    `INESPERADO`, un estado no clasificado — o que falte una provocacion entera: eso es un fallo al
+    ejecutar la sonda, y el informe no puede cerrar favorable sobre una componente caida
+    (orden 2026-09-22 §4.A-c).
+    """
+    esperados = {"RESUELTO": "RESUELTO", "NO-CONFIGURADO": "NO-CONFIGURADO",
+                 "ILEGIBLE": "ILEGIBLE"}
+    if set(sond) != set(esperados):
+        return "SONDA-INCOMPLETA"
+    if any(sond[clave].get("provider_status") != esperado
+           for clave, esperado in esperados.items()):
+        return "SONDA-FALLIDA"
+    return "OK"
+
+
+def _veredicto_de_la_costura(costura: dict) -> str:
+    """El `1` de archivos cambiados NO es por si solo un despacho válido.
+
+    La costura solo funciona si, ademas de tocar un archivo, los dos proveedores se resolvieron
+    (`provider_status` doble `RESUELTO`), son **dos** proveedores distintos y contestan distinto.
+    Un `1` sin despacho real contaria una frontera que en realidad repite o no resuelve al segundo
+    proveedor - el contract test de AC9 lo afirma sobre `medir_costura`; el informe tiene que
+    exigir el mismo contrato (orden 2026-09-22 §4.A-c, corregido en sesion 3).
+    """
+    if costura.get("files_changed_to_add_provider") != 1:
+        return "FALLIDA"
+    if list(costura.get("provider_status", [])) != ["RESUELTO", "RESUELTO"]:
+        return "FALLIDA"
+    ambos = list(costura.get("costura_funciona_con_ambos", []))
+    if len(ambos) != 2 or ambos[0] == ambos[1]:
+        return "FALLIDA"
+    if costura.get("los_dos_despachan_respuestas_distintas") is not True:
+        return "FALLIDA"
+    return "OK"
+
+
+def _capturar_componente(nombre: str, fn):
+    """Ejecuta una componente del informe sin dejar que un fallo posterior borre lo ya medido.
+
+    Devuelve `(resultado, fallo)`. Capturar NO convierte nada en favorable: el fallo se publica
+    con su estado y su causa en `fallos_de_componentes`, y el informe pierde el favorable por esa
+    componente. Un `ValueError` de contrato (lote con ids repetidos, preguntas fuera de contrato)
+    NO se captura: es el instrumento roto, y su trazabilidad exige el ruido de la excepcion.
+    """
+    try:
+        return fn(), None
+    except (ProveedorNoConfigurado, RespuestaIlegible, LectorFallido, Ausente) as exc:
+        return None, {"componente": nombre, "estado": _estado_de_la_excepcion(exc),
+                      "motivo": str(exc)}
+    except OSError as exc:
+        # Un fallo de E/S es el lector que no pudo operar, no una ausencia (R2.9), y sale 3.
+        return None, {"componente": nombre, "estado": "LECTOR-FALLIDO",
+                      "motivo": f"lectura/escritura: {exc}"}
+
+
 def construir_informe(directorio_falsos: Path, raiz: Path = ROOT) -> dict:
-    scan = escanear_aislamiento(raiz)
-    sond = sonda_tres_estados(directorio_falsos)
-    costura = medir_costura(directorio_falsos, raiz)
+    scan, fallo_scan = _capturar_componente(
+        "aislamiento_imports", lambda: escanear_aislamiento(raiz))
+    sond, fallo_sonda = _capturar_componente(
+        "sonda_tres_estados", lambda: sonda_tres_estados(directorio_falsos))
+    costura, fallo_costura = _capturar_componente(
+        "costura", lambda: medir_costura(directorio_falsos, raiz))
+    fallos = [f for f in (fallo_scan, fallo_sonda, fallo_costura) if f]
+    componentes = {
+        "aislamiento_imports": scan["status"] if scan else fallo_scan["estado"],
+        "sonda_tres_estados": (_veredicto_de_la_sonda(sond) if sond
+                               else (fallo_sonda or {"estado": "FALLIDA"})["estado"]),
+        "costura": (_veredicto_de_la_costura(costura) if costura
+                    else (fallo_costura or {"estado": "FALLIDA"})["estado"]),
+    }
+    # El estado del informe ya no es el del escaneo a secas: un escaneo limpio con la sonda caida o
+    # con la costura rota no certifica nada, y cada componente publica su propio veredicto. Con una
+    # componente que no pudo operar, el informe sale PARCIAL: conserva lo ya medido y la causa.
+    favorable = (scan is not None and sond is not None and costura is not None
+                 and scan["status"] == "SIN-HALLAZGOS"
+                 and componentes["sonda_tres_estados"] == "OK"
+                 and componentes["costura"] == "OK")
     informe = {
         "tool": "scripts/decision_client.py",
         "esquema": "FASE-B del plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "schema_version": SCHEMA_VERSION,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "status": scan["status"],
-        "provider_status": sond,
-        "aislamiento_imports": scan,
-        "costura": costura,
+        "status": "SIN-HALLAZGOS" if favorable else "HALLAZGOS",
+        "componentes": componentes,
+        "fallos_de_componentes": fallos,
+        "provider_status": sond or {},
+        "aislamiento_imports": scan or {"status": componentes["aislamiento_imports"]},
+        "costura": costura or {},
         "corte_de_red": {
             "llamadas_de_red_en_esta_fase": 0,
             "como_se_verifica": "guard de socket en conftest.py + escaneo ast de imports de esta "
@@ -1007,11 +1211,23 @@ def construir_informe(directorio_falsos: Path, raiz: Path = ROOT) -> dict:
             "credenciales_leidas": False,
         },
         "cobertura_de_la_fase": {
-            "comando": "python scripts/decision_client.py --report",
+            "comando": "python scripts/decision_client.py --report RUTA  "
+                       "(RUTA es la evidencia de esta corrida; sin destino imprime y no escribe)",
             "medido_el": datetime.now().strftime("%Y-%m-%d"),
         },
     }
     return informe
+
+
+def _exit_del_informe(informe: dict) -> int:
+    """La tabla del docstring, aplicada al informe: 3 si una componente no pudo leer, 2 si falto
+    una ruta buscada, 1 si hay hallazgos o una componente no cerro, 0 solo con todo favorable."""
+    estados = {f["estado"] for f in informe.get("fallos_de_componentes", [])}
+    if "LECTOR-FALLIDO" in estados or "ESTADO-NO-CLASIFICADO" in {e.split(":")[0] for e in estados}:
+        return 3
+    if "AUSENTE" in estados:
+        return 2
+    return 0 if informe["status"] == "SIN-HALLAZGOS" else 1
 
 
 def main(argv=None) -> int:
@@ -1022,15 +1238,21 @@ def main(argv=None) -> int:
     ap.add_argument("--provider-status", action="store_true")
     ap.add_argument("--scan-imports", action="store_true")
     ap.add_argument("--costura", action="store_true")
-    ap.add_argument("--report", nargs="?", const=str(EVIDENCIA / "informe.json"), default=None)
+    ap.add_argument("--report", nargs="?", const=None, default=False,
+                    help="imprimir el informe; con destino, ademas lo escribe en esa ruta. Sin "
+                         "destino NO escribe: la ruta de evidencia de una fase cerrada no puede ser "
+                         "el default de quien vuelve a medir (S12 / L-VCF-12)")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
     if args.provider_status:
         est = estado_proveedor()
         print(json.dumps(est, indent=2, ensure_ascii=False, default=str))
-        return 0 if est.get("provider_status") == "RESUELTO" else (
-            2 if est.get("estado_lector") == "LECTOR-FALLIDO" else 1)
+        if est.get("provider_status") == "RESUELTO":
+            return 0
+        # 2 es AUSENTE (la ruta buscada no existe) y 3 LECTOR-FALLIDO; un diagnostico que devolviera
+        # el mismo numero por los dos no deja a un instrumento de evidencia distinguirlos.
+        return 3 if est.get("estado_lector") == "LECTOR-FALLIDO" else 1
 
     if args.scan_imports:
         scan = escanear_aislamiento()
@@ -1047,18 +1269,34 @@ def main(argv=None) -> int:
             print(f"  poblacion: {b['archivos_escaneados']}/{b['archivos_py_en_el_arbol']} .py | "
                   f"nodos de import vistos {b['nodos_de_import_vistos']} | excluidos "
                   f"{b['excluidos_por_directorio']} | tokens {b['tokens_buscados']}")
-        return 1 if scan["status"] == "HALLAZGOS" else 0
+        # Solo `SIN-HALLAZGOS` sale 0: `SIN-POBLACION` y `LECTURA-INCOMPLETA` son estados de que el
+        # escaneo no miro todo, y salir 0 los leeria como favorable (orden 2026-09-22 §4.A-a).
+        return 1 if scan["status"] != "SIN-HALLAZGOS" else 0
 
     if args.costura:
-        datos = medir_costura(Path(args.falsos_directorio))
+        try:
+            datos = medir_costura(Path(args.falsos_directorio))
+        except (Ausente, LectorFallido) as exc:
+            # La tabla del docstring promete 2 = AUSENTE y 3 = LECTOR-FALLIDO tambien aqui: un
+            # traceback con exit 1 no deja a un instrumento de evidencia distinguir la causa.
+            print(json.dumps({"estado": _estado_de_la_excepcion(exc), "motivo": str(exc)},
+                             ensure_ascii=False))
+            return 2 if isinstance(exc, Ausente) else 3
         print(json.dumps(datos, indent=2, ensure_ascii=False))
-        return 0 if datos["files_changed_to_add_provider"] == 1 else 1
+        return 0 if _veredicto_de_la_costura(datos) == "OK" else 1
 
-    if args.report:
+    if args.report is not False:
         informe = construir_informe(Path(args.falsos_directorio))
+        if args.report is None:
+            # S12: imprimir sin escribir. El default anterior era la ruta de evidencia de FASE-B, de
+            # modo que volver a medir re-escribia el registro fechado de otra fase.
+            print(json.dumps(informe, indent=2, ensure_ascii=False, default=str))
+            print("# no se escribio ningun archivo: pase --report RUTA para persistir el informe",
+                  file=sys.stderr)
+            return _exit_del_informe(informe)
         destino = Path(args.report)
         destino.parent.mkdir(parents=True, exist_ok=True)
-        destino.write_text(json.dumps(informe, indent=2, ensure_ascii=False) + "\n",
+        destino.write_text(json.dumps(informe, indent=2, ensure_ascii=False, default=str) + "\n",
                            encoding="utf-8")
         if args.json:
             print(json.dumps(informe, indent=2, ensure_ascii=False, default=str))
@@ -1066,15 +1304,21 @@ def main(argv=None) -> int:
             ps = informe["provider_status"]
             print(f"[{_ascii(informe['status'])}] decision_client.py - "
                   "costura de proveedor de decisiones (AC6-AC9)")
-            print(f"  provider_status: " + " | ".join(
-                f"{k}={_ascii(str(v.get('provider_status')))}" for k, v in ps.items()))
-            print(f"  imports fuera de la puerta: "
-                  f"{informe['aislamiento_imports']['conteos']['coincidencias_de_import_fuera_de_la_puerta']}"
-                  f" sobre {informe['aislamiento_imports']['coverage_basis']['archivos_escaneados']} .py")
-            print(f"  files_changed_to_add_provider: "
-                  f"{informe['costura']['files_changed_to_add_provider']}")
+            if ps:
+                print(f"  provider_status: " + " | ".join(
+                    f"{k}={_ascii(str(v.get('provider_status')))}" for k, v in ps.items()))
+            scan_pub = informe["aislamiento_imports"]
+            if "conteos" in scan_pub:
+                print(f"  imports fuera de la puerta: "
+                      f"{scan_pub['conteos']['coincidencias_de_import_fuera_de_la_puerta']}"
+                      f" sobre {scan_pub['coverage_basis']['archivos_escaneados']} .py")
+            if informe["costura"]:
+                print(f"  files_changed_to_add_provider: "
+                      f"{informe['costura']['files_changed_to_add_provider']}")
+            for f in informe.get("fallos_de_componentes", []):
+                print(f"  [FALLO] {f['componente']}: {_ascii(f['estado'])} - {f['motivo'][:200]}")
             print(f"  informe: {destino}")
-        return 0 if informe["status"] == "SIN-HALLAZGOS" else 1
+        return _exit_del_informe(informe)
 
     ap.print_help()
     return 2

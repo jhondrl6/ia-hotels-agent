@@ -1,5 +1,263 @@
 # Changelog
 
+## [Sin publicar] - Remediación bloque A - contract test de decisiones honesto con sus propios estados — 2026-09-22
+
+> **No es una release.** El incremento provisional a 4.77.4 de la primera sesión se retiró en la
+> segunda: la fuente única de versión sigue en **4.77.3** y los consumidores (cabeceras,
+> DOMAIN_PRIMER) no se movieron. El trabajo vive en el árbol sin commitear y esta entrada lo
+> documenta bajo «Sin publicar».
+
+### Objetivo
+
+`.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` documenta cinco defectos de
+`scripts/decision_client.py` observados pese al verde de su suite, reproducidos **en memoria y sin
+tests versionados**. Esta entrada documenta el trabajo de su bloque A: versionar los cinco como
+regresiones que caen por la causa declarada, corregirlos sin introducir decisiones por defecto ni
+capturar errores para devolver un favorable, y ejecutar en este bloque las dos deudas que la propia
+orden trasladó a él (S11 y S12) más la precisión de AC9. **El bloque A no se declara cerrado aquí**:
+la corrección técnica está medida y verificada (sesión 2, ver Tests), pero el cierre contractual de
+S11/S12 exige registrar la enmienda en el plan propietario CONTEXTO, que sigue pendiente.
+
+El hilo común de los cinco no es la sintaxis: es que el instrumento **publicaba un estado que no
+había medido**. Un módulo que no cargo se traducía a `NO-CONFIGURADO` («busqué y no estaba») cuando
+nadie había podido leerlo; un `TypeError` que escapaba dejaba el escaneo sin informe, que se lee
+como «sin coincidencias»; y un lote de dos preguntas con el mismo id cerraba en `RESUELTO` con una
+sola respuesta, sin decir cuál se contestó.
+
+### Cambios Implementados
+
+- **Fallo de carga ≠ ausencia (`resolver_proveedor`)**: si algún módulo del directorio no cargó, la
+  puerta ya no certifica que el nombre buscado no esté — devuelve `LectorFallido` con los nombres que
+  **sí** se leyeron y los fallos que no. Es la invariante que el docstring del módulo prometía desde
+  FASE-B (L-PF6) mientras el código hacía lo contrario.
+- **`noul` deja de ser un tipo sin contrato**: cae la excepción `and tipo != "noul"` que perdonaba los
+  campos extra solo a la primitiva que ya redefinió sus criterios dos veces. `confidence` conserva su
+  motivo propio y único, que es lo que necesita el mutante que aísla un guard por guard.
+- **Forma total donde antes había una excepción de Python**: `tipo` y `pregunta_id` se validan como
+  texto **antes** de usarse como clave de conjunto o de dict. Ningún `except` nuevo convierte el fallo
+  en favorable: se sigue lanzando `RespuestaIlegible`, ahora con el campo roto nombrado.
+- **Unicidad de ids como contrato del lote**: `evaluar()` rechaza ids repetidos antes de despachar,
+  igual que ya rechazaba el lote vacío. Además el guard de cobertura dejó de emparejar por índice y
+  compara el `tipo` contra la pregunta que su `id` nombra; con el orden invertido culpaba a una
+  pregunta ajena de una primitiva que no era suya.
+- **Códigos de salida y etiquetas que dicen lo que hubo**: `--provider-status` devolvía `2` por
+  `LECTOR-FALLIDO`, número que el propio docstring reserva a `AUSENTE`; ahora devuelve `3`. La sonda de
+  los tres estados nombra el estado desde la clase de la excepción en vez de un literal, y
+  `medir_costura` publica los `provider_status` reales en lugar del literal `["RESUELTO","RESUELTO"]`
+  que hacía que su aserción no pudiera ponerse roja.
+- **S11, el denominador de AC6**: medido antes del cambio, `.venv-wsl/bin/activate_this.py` era 1 de
+  los 692 `.py` que leía `iterar_py()` y el numerador no se movía (0 imports). La exclusión entra en la
+  lista y su conteo se publica; ningún umbral se tocó. **Sesión 2**: el solape de exclusiones que
+  documenta L-VCF-11 dejó de inflar el denominador — `archivos_py_en_el_arbol` se cuenta con archivos
+  **únicos** y la atribución por directorio se publica aparte. **Corrección técnica aplicada; el
+  cierre contractual de S11 exige la enmienda en el plan CONTEXTO, pendiente.**
+- **S12, volver a medir pisaba el pasado**: `--report` a secas re-escribía `generated_at`, `medido_el`
+  y el conteo dentro de evidencia cerrada, en **los dos** verificadores. Ahora imprimen sin escribir,
+  escribir exige nombrar la ruta, y las constantes `EVIDENCIA` / `REPORT_DEFAULT` dejan de existir.
+  Se verificó a los consumidores antes y después: ni `run_all_validations.py` ni el hook pre-commit
+  invocan al verificador de gobernanza, y los cinco tests que ya pasaban destino explícito siguen.
+  **Sesión 2**: el aviso de no-escritura salió de stdout a stderr, de modo que el stdout de
+  `--report` sin destino es JSON parseable. **Corrección técnica aplicada; el cierre contractual de
+  S12 exige la enmienda en el plan CONTEXTO, pendiente.**
+- **Sesión 2 — estados que no fabrican favorables (§4.A a/c)**: población ausente o vacía
+  (`SIN-POBLACION`) y lectura incompleta (`LECTURA-INCOMPLETA`) son estados propios del escaneo y
+  del CLI, distintos de `SIN-HALLAZGOS`; ninguna de las dos sale `exit 0`. El estado del informe
+  refleja **escaneo, sonda y costura**: los negativos esperados de una sonda correcta
+  (`NO-CONFIGURADO`, `ILEGIBLE`) son resultado sano, y un fallo al ejecutar la sonda o una costura
+  rota degradan el informe con su componente publicada. Un documento de gobierno **vacío** ya no
+  produce `SIN-HALLAZGOS` con exit 0 (cae en `LECTOR-FALLIDO`).
+- **Sesión 2 — partición de validadores desacoplada (§4.A d)**: el test de mutantes dejó de exigir
+  que la puerta tenga exactamente 6 guards; el contrato que se afirma es 1 a 1 por **nombre** (cada
+  guard con su mutante, cada mutante sobre un guard vivo). *(Rectificado en sesión 3: la igualdad de
+  nombres contra la lista fija de seis seguía fijando la partición; ver el bullet siguiente.)*
+- **Sesión 3 — auditoría del propio cierre (a sesión 2 se le quedaron tres sobreafirmaciones)**:
+  (1) **El «1» de la costura no era un despacho**: el informe y `--costura` saldaban 0 con solo
+  contar un archivo cambiado, aunque los dos proveedores no resolvieran, fueran el mismo o
+  contestaran igual; `_veredicto_de_la_costura` exige ahora el mismo contrato que el contract test
+  de AC9, y `--costura` sale 1 sin despacho real y 2 con la ruta ausente (la tabla del docstring,
+  que antes moría en traceback). (2) **Un fallo posterior borraba lo ya medido**: `--report` con un
+  directorio de proveedores inexistente propagaba la excepción y no publicaba el hallazgo del
+  escaneo; ahora el informe sale **parcial** (`fallos_de_componentes` con estado y causa),
+  conserva lo obtenido, y el exit distingue 2/3 según la causa. En gobernanza, un segundo documento
+  ilegible borraba los hallazgos del primero: el `LectorFallido` se captura **por documento**, el
+  estado pasa a `LECTOR-FALLIDO` con exit 3, los hallazgos conservados viajan en el informe y
+  ningún destino se escribe. (3) **La partición seguía fijada**: `GUARDS_DE_FORMA` ahora se
+  **deriva de la puerta** en colección y el test de invariantes solo afirma símbolos distintos y
+  vivos — el guard extra cae por la función de payloads (precio contractual), no por la conta.
+  El instrumento PRE/POST se reescribió (`veredicto_cierre_a.py`): el PRE gatea el exit, cada rojo
+  nombra su causa con el estado observado, y se cubren los exits del CLI y los criterios que
+  sesión 2 anunció y no medía (12 criterios: PRE 12/12 rojo-por-causa → POST 12/12).
+  *(Rectificado en sesión 4: en ese instrumento la causa se imprimía pero no se comprobaba con un
+  predicado; ver el bullet siguiente.)*
+- **Sesión 4 — segunda auditoría del cierre (tres defectos técnicos medidos y corregidos)**:
+  (1) **La causa del rojo en PRE se imprimía, no se comprobaba**: sabotajeando el fixture de C9 en
+  una copia del instrumento, C9 quedaba rojo por fixture roto (su escenario ya no existía) y el
+  instrumento certificaba «todos cayeron en PRE por su causa» con exit 0. Ahora cada criterio lleva
+  un **predicado de causa esperada** sobre lo observado —incluida la precondición del fixture— y un
+  rojo en PRE por causa no esperada sale 2 (INSTRUMENTO SOSPECHOSO); control negativo: el mismo
+  sabotaje → `rojos-PRE-con-causa-comprobada: 12/13`, C9 señalizado, exit 2. (2) **El contract test
+  de forma volvía a fijar la partición**: `test_decision_client_contract_forma.py` anclaba el rojo a
+  la igualdad `{campos-conocidos, forma-choice}` — medido que un guard extra legítimo que también
+  detecta la mutación producía un falso rojo mientras el superset sostenía la causa; relajado a
+  comportamiento (el rojo **nombra** a los guards que detectan la mutación, sin enumerar la
+  partición), coherente con el criterio d. (3) **El AUSENTE de un documento era una puerta previa
+  en gobernanza**: un doc legible + una ruta ausente → exit 2, stdout en prosa (JSON roto) y los
+  hallazgos del legible descartados (medido: 2 hallazgos → null). Ahora la ausencia se trata como
+  la misma incompletitud de §4.A-a: se analizan los legibles, la ruta ausente se publica con su
+  causa en `fallos_de_lectura`, el estado es `LECTOR-FALLIDO` con exit 3 y ningún destino se
+  escribe; el exit 2 queda reservado a la población sin nada analizable (todos los docs ausentes o
+  fuente/hook ausentes). El instrumento suma el criterio C11 de población mixta (13 criterios).
+- **Sesión 4, auto-auditoría — un predicado permisivo seguía confundiendo síntoma con causa**: la
+  primera versión del endurecimiento ponía `causa_pre7 = True` ante **cualquier** `JSONDecodeError`,
+  y `JSONDecodeError` es síntoma compartido (veredicto mezclado, puerta `AUSENTE`, lector caído,
+  stdout vacío). Medido con una observación sintética: exit 2 + `[AUSENTE]` pasaba como «su causa».
+  Los predicados de los caminos `except` (C7, C11) se extrajeron a funciones que exigen la **firma
+  positiva** del defecto nombrado y rechazan las firmas vecinas (C11 añade la precondición de que
+  las fuentes del fixture existan, para que un exit 2 por fuente ausente no se lea como el suyo), y
+  `_auto_test_predicados()` pasa observaciones sintéticas de esas otras causas por los predicados y,
+  si uno acepta lo que no debe, el veredicto es INSTRUMENTO SOSPECHOSO con exit 2. Prueba de que
+  el auto-test tiene dientes: una copia que **restaura el predicado permisivo viejo** mantiene la
+  matriz en «13/13 con causa comprobada» y solo el auto-test lo detecta (`sesion4_controles_predicados.txt`).
+  La generalización inicial (solo C7 y C11) se midió después sobre los **13** criterios: cada
+  predicado es una función pura de la observación y el auto-test pasó a **43 casos** — firma
+  baseline aceptada + firmas vecinas rechazadas, incluida la precondición del fixture apagada.
+  Control de dientes predicado a predicado: forzar cada uno a `lambda *a, **k: True` hace fallar el
+  auto-test y señala ese criterio exacto; 0 familias sin casos de rechazo y 0 permisivos que pasaran
+  inadvertidos (`sesion4_dientes_auto_test.txt`).
+- **AC9 con su alcance escrito en el artefacto** (`costura.coverage_basis.alcance_de_ac9`): la
+  medición es una **extensión local contra un proveedor falso del repo**, no el coste certificado de
+  integrar un SDK con sus dependencias y su autenticación; la ubicación futura de ese SDK sigue en
+  CONTEXTO/S10 y D7.
+- **Retrabajo evitable medido**: las tres aserciones independientes sobre el mismo árbol comparten un
+  `fixture(scope="session")`. Las que mutan el módulo o el árbol siguen aisladas y con `dc` de
+  función, y la lectura compartida usa un módulo cargado aparte para que el verde de AC6 no dependa
+  del orden en que corrió un mutante.
+
+### Archivos Nuevos
+
+| Archivo | Contenido |
+|---------|-----------|
+| `tests/quality_gates/decision_client/test_decision_client_remediacion_bloque_a.py` | Sesión 1: 22 funciones (los cinco contraejemplos como regresiones, el par de emparejamiento por identidad y la parte de S12 del cliente). Sesión 2: +7 que afirman por comportamiento que el informe refleja escaneo/sonda/costura y que stdout de `--report` es JSON parseable. Sesión 3: +3 (el «1» de costura sin despacho real, los exits de `--costura`, y el informe parcial que conserva el hallazgo del escaneo) |
+| `tests/quality_gates/governance_numbers/test_governance_numbers_s12_report_no_escribe.py` | Sesión 1: 5 funciones (`--report` sin destino no toca el expediente). Sesión 2: +1 de stdout JSON parseable |
+| `tests/quality_gates/governance_numbers/test_governance_numbers_lector_fallido.py` | Sesión 2: +1 — un documento de gobierno **vacío** cae en `LECTOR-FALLIDO`, no sale favorable. Sesión 3: +2 — los hallazgos del otro documento se conservan en el informe parcial y ningún destino se escribe con lectura incompleta. Sesión 4: +3 — documento AUSENTE en población mixta conserva los hallazgos del legible y publica su causa, población sin nada analizable sigue en exit 2, y ningún destino se escribe con ausencia |
+| `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REMEDIACION-BLOQUE-A-2026-09-22/` | `00-resumen-bloque-A.md`, `contraejemplos-antes-despues.txt`, `PRE_suite_decision_client.txt`, `POST_suite_decision_client.txt`, `POST_suite_completa.txt` e `instrumentos/veredicto_contraejemplos.py` (sesión 1); `pendientes-abcd-antes-despues.txt`, `instrumentos/veredicto_pendientes_abcd.py` y `sesion2_suite_completa.txt` (sesión 2); `cierre-a-antes-despues.txt`, `instrumentos/veredicto_cierre_a.py` y `sesion3_suite_completa.txt` (sesión 3); `sesion4_repro_defectos_antes.txt`, `sesion4_veredicto_cierre_a.txt`, `sesion4_veredicto_cierre_a_v2.txt`, `sesion4_veredicto_cierre_a_v3.txt`, `sesion4_veredicto_cierre_a_v4.txt`, `sesion4_control_negativo_causa.txt`, `sesion4_controles_predicados.txt`, `sesion4_dientes_auto_test.txt`, `sesion4_bateria_final.txt`, `sesion4_bateria_final2.txt`, `sesion4_bateria_final3.txt`, `sesion4_bateria_final4.txt` y `sesion4_suite_completa.txt` (sesión 4). Cada medición con destino propio, sin sobrescribir la evidencia fechada anterior |
+
+La evidencia de la remediación tiene ubicación propia, como pide el §4.A; el expediente de FASE-B no
+se reescribe.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/decision_client.py` | Sesión 1: los cinco fixes, códigos de salida del CLI, `alcance_de_ac9`, exclusión `.venv-wsl`, `--report` sin default de escritura y etiqueta de estado derivada de la excepción. Sesión 2: estados `SIN-POBLACION`/`LECTURA-INCOMPLETA`, denominador con archivos únicos y veredicto del informe por componentes. Sesión 3: `_veredicto_de_la_costura` con el contrato completo de AC9, informe **parcial** con `fallos_de_componentes`, exits 2/3 de `--costura`/`--report` según la tabla del docstring y stdout JSON puro |
+| `scripts/validate_governance_numbers.py` | S12: `--report` sin destino imprime y no escribe; se retira `REPORT_DEFAULT`; el comando publicado declara cómo se persiste. Sesión 2: documento vacío cae en `LECTOR-FALLIDO` y el aviso de no-escritura va a stderr. Sesión 3: el `LectorFallido` se captura **por documento** — estado `LECTOR-FALLIDO`, exit 3, hallazgos conservados en el informe y ningún destino escrito con lectura incompleta. Sesión 4: la AUSENCIA de un documento en población mixta deja de ser puerta previa — se analizan los legibles, la ruta ausente se publica con su causa, estado `LECTOR-FALLIDO` con exit 3; el exit 2 queda para la población sin nada analizable, semántica documentada en el docstring |
+| `tests/quality_gates/decision_client/test_decision_client_contract_forma.py` | Sesión 4: el pin de igualdad sobre la partición exacta `{campos-conocidos, forma-choice}` se relaja a comportamiento (superset: el rojo nombra a los guards que detectan la mutación) con la justificación L-V2.1 documentada en el test |
+| `tests/quality_gates/decision_client/conftest.py` | Fixtures de sesión `dc_sesion` y `escaneo_arbol_real`, con el porqué van aparte de `dc` |
+| `tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py` | Cuatro lecturas del árbol real pasan al escaneo compartido; dos funciones nuevas de población para S11. Sesión 2: +1 contra el solape de exclusiones y el contrato nuevo de población vacía/lectura incompleta |
+| `tests/quality_gates/decision_client/test_decision_client_mutation_guards.py` | Sesión 2: el acoplamiento a la partición exacta de 6 guards se sustituye por correspondencia 1 a 1 por nombre. Sesión 3: `GUARDS_DE_FORMA` se **deriva de la puerta** en colección, el test de invariantes queda libre de partición y una prueba nueva fija el precio contractual del guard extra (función de payloads) |
+| `VERSION.yaml`, `CHANGELOG.md` | Sesión 1: bump provisional a 4.77.4. **Sesión 2: el bump se retira** — la fuente única vuelve a 4.77.3 y esta entrada queda bajo «Sin publicar» |
+
+**No se tocó**: `AGENTS.md`, `.cursorrules`, `.agents/**` (executor y plantilla), los cuatro planes,
+`docs/contributing/REGISTRY.md` ni ninguna evidencia de FASE-A/FASE-B. El trabajo ajeno preexistente
+en `JEV/dependencias-fases.md` (18 líneas) sigue sin tocar.
+
+### Tests
+
+- `tests/quality_gates/decision_client/test_decision_client_remediacion_bloque_a.py` — 30 funciones
+  (22 de la sesión 1 —antes del fix caían 12 y pasaban 5—, las de sesión 2 para el veredicto del
+  informe y stdout parseable, y tres de sesión 3: el «1» sin despacho, el exit de `--costura` y el
+  informe parcial); después, 30/30. `test_decision_client_mutation_guards.py` — 8 funciones (la
+  nueva invariante sin partición fijada es de sesión 3).
+- Instrumentos PRE/POST, cada uno con su log (ninguno sobrescribe al anterior):
+  `veredicto_contraejemplos.py` (sesión 1, 0/6→6/6), `veredicto_pendientes_abcd.py` (sesión 2,
+  0/6→6/6 — queda como antecedente: su exit no gateaba el PRE, no cubría los exits del CLI ni el
+  criterio d, y su C5 daba verde con fixture inválido hasta corregirlo en la misma sesión—) y
+  `veredicto_cierre_a.py` (sesión 3): **PRE 12/12 rojo-por-causa con el estado observado impreso,
+  POST 12/12, exit 0** (`cierre-a-antes-despues.txt`). El PRE gatea el exit: con la baseline
+  `a3ab8f9` intacta, cualquier verde en PRE hace salir 2 (instrumento sospechoso). Tras un commit
+  que mueva la baseline, el registro es el log, no una promesa de re-ejecución.
+  *(Rectificado en sesión 4: en esa corrida la causa se imprimía pero no se comprobaba con un
+  predicado — ver la línea siguiente.)*
+- Instrumento fortalecido (sesión 4, logs `sesion4_veredicto_cierre_a_v2.txt` → `..._v3.txt`): `veredicto_cierre_a.py` con
+  **predicado de causa esperada por criterio** —incluida la precondición del fixture— y +C11 de
+  población mixta con documento AUSENTE (13 criterios): **PRE 13/13 rojos con causa-esperada OK,
+  POST 13/13, auto-test de predicados OK, exit 0** (v3, árbol final). Un rojo en PRE por causa no
+  esperada sale 2 (INSTRUMENTO SOSPECHOSO); control negativo con el fixture de C9 saboteado → C9
+  señalizado, exit 2 — el mismo sabotaje que el instrumento de la sesión 3 certificaba con exit 0
+  (`sesion4_repro_defectos_antes.txt`). El v2 registra la corrida en la que el auto-test cazó un
+  error propio de esta sesión (un caso de control sin `not` y sin aislar la rama de precondición),
+  no un defecto del árbol.
+- Auto-test de predicados (sesión 4, `sesion4_controles_predicados.txt` y
+  `sesion4_dientes_auto_test.txt`): el **control de mutación**
+  restaura el predicado C7 permisivo de la primera versión en una copia → la matriz sigue leyendo
+  «13/13 con causa comprobada» y el auto-test falla con exit 2. Sin ese control, «predicado
+  endurecido» sería una afirmación sobre el código leído, no una medición. La generalización se midió
+  después sobre los **13** criterios (cada predicado es ya una función pura de la observación,
+  43 casos sintéticos): forzar cada predicado a aceptar todo hace fallar el auto-test y señala ese
+  criterio exacto, con 0 familias sin casos de rechazo y 0 falsos OK.
+- Instrumento sobre el árbol final de la sesión 4 (`sesion4_veredicto_cierre_a_v4.txt`): **PRE 13/13
+  con causa-esperada OK, POST 13/13, auto-test OK (43 casos), exit 0**. `..._v2.txt` y `..._v3.txt`
+  quedan como mediciones de estados intermedios de esta sesión (v2: el auto-test cazando un error
+  propio en un caso de control; v3: antes de extraer los 13 predicados).
+- Selección afectada (sesión 4, árbol final): `pytest tests/quality_gates/decision_client
+  tests/quality_gates/governance_numbers tests/regression -q -p no:cacheprovider` → **153 passed,
+  exit 0** (29,50 s; los +3 son los tests nuevos de gobernanza). Antecedente sesión 3: **150
+  passed, exit 0** (87 + 37 + 26, 22,48 s).
+- Suite completa (sesión 3, `sesion3_suite_completa.txt`, exit real 1): **4.393 passed, 4 failed,
+  41 skipped, 4 xfailed en 292,17 s**. Los cuatro fallos son los mismos de las corridas de sesiones
+  anteriores; su atribución se publica con **límite declarado**: premisas re-verificadas en disco
+  (`git ls-files tmp_test` → 0 con `pydantic` presente; `Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/`
+  existe), pero sin reproducción mínima de la causa raíz — atribución pendiente de demostración, no
+  tercera parte absuelta por ubicación.
+- Suite completa (sesión 4, `sesion4_suite_completa.txt`, `EXIT_PYTEST=1` grabado en el propio log):
+  **4.396 passed, 4 failed, 41 skipped, 4 xfailed en 304,59 s**. La lista `FAILED` es idéntica a la
+  de sesión 3 (diff vacío), lo cual prueba identidad de población, **no** la causa; por eso cada
+  causa se midió aparte:
+  * `test_validate_wiring`: contamina `tmp_test/venv-jev-sdk/` (28 MB; `git ls-files tmp_test` → 0,
+    `.gitignore:28 tmp_test/`). En una extracción de HEAD sin ese directorio el test **pasa** → causa
+    demostrada (artefacto local ignorado), ajena a esta remediación.
+  * `test_validate_lesson_capitalization[...TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]`: el parametriza
+    como predecesor en alcance, pero ese plan ya no está en `.opencode/plans/` sino bajo
+    `Archives/`. **Falla igual en la extracción de HEAD** → deriva de archivado, no de este bloque.
+  * `test_diagnostic_includes_geo_metrics`: falta la cabecera «Métricas de Optimización para IA» en
+    el diagnóstico generado. **Falla igual en la extracción de HEAD** → deriva de producto hotelero,
+    fuera de la superficie autorizada.
+  * `test_function_default_flags` (pricing): **pasa** aislado, **pasa** con `tests/financial_engine`
+    completo (548 passed) y **falla** en las corridas completas de tres árboles distintos (sesiones
+    2, 3 y 4) → dependencia de orden/estado compartido con población fuera de `financial_engine`.
+    Mecanismo **sin localizar: queda pendiente**. Independencia estructural medida: de los 6 ficheros
+    de los cuatro fallos (dos tests y sus validadores, `test_diagnostic_geo_metrics`,
+    `test_pricing_resolution_wrapper`, `validate_wiring.py`, `validate_lesson_capitalization.py`),
+    **0** referencian `decision_client` o `validate_governance_numbers`.
+  * Límite del método: la extracción de HEAD con `git archive` **no sirve como baseline comparable**
+    de la suite completa (dio 17 failed + 18 errors por estado local ignorado ausente: `.env`,
+    `output/`, `tmp_test/`); solo se usó para comparar tests concretos.
+- Coste del retrabajo, con tiempos reales: `tests/quality_gates/decision_client` pasó de **53 tests
+  / 3 escaneos / 23,51 s** (PRE, sesión 1) a **87 tests / 1 escaneo / 9,69 s** (sesión 3).
+  Verificable sin leer el relato:
+  `git grep -c "escanear_aislamiento(raiz_repo)" HEAD -- tests/quality_gates/decision_client/` → 3,
+  y sobre el árbol de trabajo → 1. Son tiempo de comando, no tiempo activo, y no se comparan con
+  las 2 h 59 min del intervalo PRE→POST de FASE-B.
+- Funciones canónicas (método `grep -rE "^\s*def test_" tests --include=*.py`): **4.378 → 4.421**
+  (+43: 27 de la sesión 1, 10 de la sesión 2, 6 de la sesión 3) → **4.424** en la sesión 4 (+3,
+  los tests nuevos de gobernanza; medido sobre el árbol final).
+  `AGENTS.md` publica 4.246 y esa cifra ya estaba vencida contra HEAD antes de esta remediación; su
+  edición es configuración central y pide instrucción literal.
+- **Comparación retirada**: la primera sesión publicó que el quick pasó «de 10/10 a 8/11» por el
+  bump. La cifra «10/10» publicada en AGENTS corresponde a otro denominador y otra época que la
+  corrida de 11 checks que se midió — comparación sin baseline, y el bump que la motivó ya se
+  retiró. Resultado vigente, medido sobre el árbol final de esta entrada:
+  `python scripts/run_all_validations.py --quick` → **11/11 passed, exit 0** (Version Sync,
+  Document Integration y OpenCode References incluidos), junto con `sync_versions.py --check`
+  ("All files in sync"), `validate_agents_md.py` y `version_consistency_checker.py`
+  (TODO SINCRONIZADO), todos exit 0. Re-confirmado sobre el árbol final de la sesión 4 en
+  `sesion4_bateria_final4.txt` (los cuatro, exit 0 reales). Cadena de antecedentes:
+  `sesion4_bateria_final.txt` (árbol previo a la auto-auditoría, códigos correctos),
+  `sesion4_bateria_final2.txt` (mismo árbol pero con **defecto de medición de esta sesión**: sus
+  `EXIT=` se capturaron tras `| tail`, así que registraban el estado del `tail`, no el del
+  validador — detectado al releer el propio log) y `sesion4_bateria_final3.txt` (árbol tras la
+  auto-auditoría, sin tuberías).
+
 ## [4.77.3] - LLMReport honesto cuando ningún provider responde — 2026-09-19
 
 ### Objetivo

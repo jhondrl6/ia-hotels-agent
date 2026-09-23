@@ -83,6 +83,33 @@ def dc():
     return mod
 
 
+@pytest.fixture(scope="session")
+def dc_sesion():
+    """El mismo modulo, pero sin posibilidad de patch: es el que sirve las lecturas compartidas.
+
+    Va aparte de `dc` porque `dc` es de funcion a proposito - los mutantes de R2.8 le apagan simbolos
+    con `monkeypatch.setattr`, y compartir esa instancia con el escaneo de sesion haria que el verde
+    de AC6 dependiera del orden en que corrio un mutante.
+    """
+    spec = importlib.util.spec_from_file_location("decision_client_lectura", SCRIPT)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+@pytest.fixture(scope="session")
+def escaneo_arbol_real(dc_sesion, raiz_repo) -> dict:
+    """Un escaneo del arbol vigente, compartido por las aserciones **independientes** sobre el.
+
+    Medido: cada una de las tres aserciones que lo consumian escanueaba los 17.9xx .py del arbol por
+    su cuenta (7,1 s + 6,9 s + 6,9 s de los 23,5 s del PRE, es decir ~21 s del total). Las tres leen
+    el mismo arbol con la misma configuracion, asi que el resultado reutilizable es el mismo. Las
+    pruebas que mutan el modulo o el arbol siguen escaneando su propio `tmp_path`: ahi las entradas
+    si cambian y reutilizar seria invalidar la medicion (orden de cambio 2026-09-22, bloque A).
+    """
+    return dc_sesion.escanear_aislamiento(raiz_repo)
+
+
 @pytest.fixture
 def preguntas(dc):
     """Una pregunta de cada forma del contrato: choice, score ordenado y noul."""

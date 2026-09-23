@@ -12,7 +12,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `16` análisis de plan + `38` archivos de `.opencode/context/`. `416` `.md` en total como corpus de **citas**.
+- Corpus de **definiciones**: `16` análisis de plan + `39` archivos de `.opencode/context/`. `417` `.md` en total como corpus de **citas**.
 - 332 IDs con definición detectada; 51 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
@@ -182,7 +182,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-T4B.5` | Un baseline pre tomado después de crear el archivo de tests de la fase contamina NR1 de forma invisible: pre y post sumaban idéntico 4.037 y el delta correcto (+7) se publicó como "+5 con 2 que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 12 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-V1` | Un validador que no lee el artefacto que el sistema produce certifica un mundo que producción no habita *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 17 en context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `L-V2` | Quien cambia un contrato barre sus tests espejo en TODO el repo, no solo en el directorio de su fase *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 (solo el plan dueño) |
-| `L-V2.1` | Un test que solo mira qué check disparó puede quedar verde por una rama distinta de la que pretendía observar — El runner de NR7 mutó dos guards (C4a «ninguna fila nombra un AC» y C7a «la celda no es… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 25 en VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-V2.1` | Un test que solo mira qué check disparó puede quedar verde por una rama distinta de la que pretendía observar — El runner de NR7 mutó dos guards (C4a «ninguna fila nombra un AC» y C7a «la celda no es… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 26 en VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-V2.2` | Un verificador no debe apoyar su conclusión en el artefacto generado por otro gate — C7/C8 necesitan el mapa {ID → dueño}. Leer .opencode/lecciones_index.json era lo obvio, pero ese archivo lo… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 18 en VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-V2.3` | Una medición de seguridad sobre el artefacto equivocado deja pasar el rojo que pretendía descartar — Para renumerar el hook, Q10 midió «0 contract tests afirman el número de checks» buscando en… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 32 en VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-V3` | La prosa de un artefacto que llega al cliente es superficie de contrato, no comentario *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 1 (solo el plan dueño) |

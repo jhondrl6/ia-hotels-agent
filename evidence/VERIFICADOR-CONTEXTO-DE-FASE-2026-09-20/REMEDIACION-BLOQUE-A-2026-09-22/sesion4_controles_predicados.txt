@@ -1,0 +1,26 @@
+== Controles de predicado sobre el instrumento final (sesion 4, tras endererzar C7/C11 y anadir auto-test) ==
+
+--- control 1: sabotaje del fixture de C9 (esperado INSTRUMENTO SOSPECHOSO exit 2)
+auto-test de predicados (observaciones sinteticas de otras causas): OK
+VEREDICTO: INSTRUMENTO SOSPECHOSO — criterios rojos en PRE por una causa distinta de la esperada (el criterio ya no prueba el defecto que nombra, o el fixture dejo de instanciar su escenario): C9 gov-parcial-conserva
+
+exit=2
+---
+VERDE-POR-CAUSA DEFECTO 3: CONFIRMADA - el instrumento fortalecido rechaza el rojo de C9 por causa no esperada y sale 2; el debil lo certificaba con exit 0.
+EXIT_CONTROL_C9=0
+
+--- control 2: mutacion que restaura el predicado C7 permisivo (esperado auto-test FALLA, exit 2, matriz 13/13 intacta)
+[A real]
+  PRE rojos: 13/13 | POST verdes: 13/13 | rojos-PRE-con-causa-comprobada: 13/13
+  auto-test de predicados (observaciones sinteticas de otras causas): OK
+  VEREDICTO: los 13 criterios pasan en el arbol de trabajo y todos cayeron en PRE por la causa esperada, comprobada con predicado.
+  exit=0
+
+[B mutacion C7 permisivo]
+  PRE rojos: 13/13 | POST verdes: 13/13 | rojos-PRE-con-causa-comprobada: 13/13
+  auto-test de predicados (observaciones sinteticas de otras causas): FALLA — C7 rechaza la puerta AUSENTE (exit 2); C7 rechaza el lector caido (exit 3); C7 rechaza stdout vacio
+  VEREDICTO: INSTRUMENTO SOSPECHOSO — un predicado de causa acepto una observacion de otra causa; la matriz PRE/POST no es fiable hasta corregirlo (la discriminacion se prueba con el auto-test, no con la confianza en el lectura-del-codigo).
+  exit=2
+
+VERDE-POR-CAUSA BRECHA 1: CONFIRMADA
+EXIT_CONTROL_C7=0

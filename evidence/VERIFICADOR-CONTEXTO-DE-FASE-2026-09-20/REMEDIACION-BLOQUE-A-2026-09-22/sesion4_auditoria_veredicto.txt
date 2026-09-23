@@ -1,0 +1,11 @@
+== Auditoria del veredicto (turno de la pregunta 'Estas seguro?') - solo lectura sobre el arbol ==
+
+--- 1) Instrumento re-corrido tras limpieza de docstring/variable muerta: diff contra el log v4
+EXIT=0
+SALIDA_BYTE-IDENTICA_AL_LOG_V4
+
+--- 2) quick re-verification (los otros tres validadores leen cabeceras de version intactas desde final4)
+EXIT=0
+  TOTAL: 11/11 validations passed
+
+--- 3) frontera del accept-set de C7 auditada (la familia de palabra suelta es inalcanzable en PRE: la marca bracketeada se imprime en todo camino con stdout, verificado en git show a3ab8f9)

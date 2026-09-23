@@ -1,0 +1,27 @@
+== Bateria final sesion 4 (v3): salidas completas y codigos de salida REALES de cada validador ==
+== Nota: en sesion4_bateria_final2.txt el 'EXIT=' capturaba el estado del 'tail' de la tuberia, no el del validador (defecto de medicion de esta sesion; el log queda como antecedente). ==
+
+--- python scripts/run_all_validations.py --quick
+EXIT=0
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+
+--- python scripts/sync_versions.py --check
+EXIT=0
+
+============================================================
+Result: All files in sync
+
+--- python scripts/validate_agents_md.py
+EXIT=0
+    "missing": []
+  }
+}
+
+--- python scripts/version_consistency_checker.py
+EXIT=0
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+

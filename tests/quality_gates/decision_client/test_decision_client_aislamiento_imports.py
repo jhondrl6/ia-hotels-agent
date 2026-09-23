@@ -13,15 +13,15 @@ import ast
 import pytest
 
 
-def test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter(dc, raiz_repo):
-    scan = dc.escanear_aislamiento(raiz_repo)
+def test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter(escaneo_arbol_real):
+    scan = escaneo_arbol_real
     assert scan["status"] == "SIN-HALLAZGOS", scan["hallazgos"] + scan["hallazgos_carga_dinamica"]
     assert scan["conteos"]["coincidencias_de_import_fuera_de_la_puerta"] == 0
     assert scan["conteos"]["hallazgos_de_carga_dinamica"] == 0
 
 
-def test_el_escaneo_publica_la_poblacion_que_lo_sostiene(dc, raiz_repo):
-    scan = dc.escanear_aislamiento(raiz_repo)
+def test_el_escaneo_publica_la_poblacion_que_lo_sostiene(escaneo_arbol_real):
+    scan = escaneo_arbol_real
     b = scan["coverage_basis"]
     assert b["archivos_escaneados"] > 600, (
         f"poblacion sospechosamente chica: {b['archivos_escaneados']} .py escaneados")
@@ -32,16 +32,83 @@ def test_el_escaneo_publica_la_poblacion_que_lo_sostiene(dc, raiz_repo):
     assert b["limites"], "un escaneo sin limites declarados se lee como cobertura total (L-HF1)"
 
 
+# --- S11: el denominador de AC6 tiene su propia prueba de poblacion ---------------------------
+# Un `0 coincidencias` sobre una poblacion que nadie declaro no distingue «nadie importa el SDK» de
+# «el escaneo contaba otra cosa» (L-R.3). S11 medido el 2026-09-22: `.venv-wsl/bin/activate_this.py`
+# entraba en los .py escaneados porque `.venv-wsl` no estaba en la lista de exclusiones, y el
+# numerador no se movia (0 imports). La cura no es un `except` ni un umbral mas abajo: es excluir el
+# directorio y **publicar la exclusion con su conteo**, que es lo que estas dos pruebas afirman.
+
+def test_un_directorio_de_venv_se_excluye_y_su_exclusion_se_publica_con_su_conteo(dc, tmp_path):
+    raiz = tmp_path / "repo-venv"
+    (raiz / ".venv-wsl" / "bin").mkdir(parents=True)
+    (raiz / "modules").mkdir(parents=True)
+    (raiz / ".venv-wsl" / "bin" / "activate_this.py").write_text(
+        "import typesafe\n", encoding="utf-8")
+    (raiz / "modules" / "limpio.py").write_text("import json\n", encoding="utf-8")
+    puerta = raiz / "decision_client.py"
+    puerta.write_text("import json\n", encoding="utf-8")
+    scan = dc.escanear_aislamiento(raiz, puerta=puerta)
+    b = scan["coverage_basis"]
+    assert b["archivos_escaneados"] == 2, "el venv se col6 en el numerador de archivos leidos"
+    assert b["excluidos_por_directorio"] == {".venv-wsl": 1}, (
+        "la exclusion se callo: un denominador que no publica lo que saca no informa (L-R.3)")
+    assert b["archivos_py_en_el_arbol"] == 3, "el arbol completo sigue contado, exclusion incluida"
+
+
+def test_en_el_arbol_vigente_un_venv_presente_aparece_como_exclusion_publicada(dc,
+                                                                               escaneo_arbol_real,
+                                                                               raiz_repo):
+    """Contra el arbol real: si el directorio existe tiene que estar del lado de las exclusiones
+    publicadas, no del lado de la poblacion leida.
+
+    La regla en si la prueba la de arriba con un arbol plantado; esta es la que se pone roja si alguien
+    quita `.venv-wsl` de la lista y devuelve el residuo al denominador de S11.
+    """
+    presentes = [n for n in dc.ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION
+                 if "venv" in n and (raiz_repo / n).is_dir()]
+    if not presentes:
+        pytest.skip("la maquina no tiene ningun directorio de venv: nada que publicar")
+    excluidos = escaneo_arbol_real["coverage_basis"]["excluidos_por_directorio"]
+    for nombre in presentes:
+        assert excluidos.get(nombre), (
+            f"{nombre} existe en el arbol y no esta publicado como exclusion: o se leyo su contenido "
+            "como codigo propio, o el denominador se callo lo que sac6 (L-R.3)")
+
+
 def test_sin_poblacion_no_hay_favorable(dc, tmp_path, raiz_repo):
-    """Un arbol sin archivos no produce `SIN-HALLAZGOS` creible: la poblacion tiene que existir."""
+    """Un arbol sin archivos no cierra en favorable: `SIN-POBLACION` es un estado de que no se miro
+    nada, y el CLI lo sale distinto de `SIN-HALLAZGOS` (orden 2026-09-22 §4.A-a)."""
     vacio = tmp_path / "arbol-vacio"
     vacio.mkdir()
     scan = dc.escanear_aislamiento(vacio, puerta=vacio / "decision_client.py")
     assert scan["coverage_basis"]["archivos_escaneados"] == 0
-    # Y aqui el status SI es SIN-HALLAZGOS (no hay nada que violar): lo que informa es el 0 de
-    # poblacion, que esta publicado. La prueba deja la lectura explicita, no el silencio.
-    assert scan["status"] == "SIN-HALLAZGOS"
+    assert scan["status"] == "SIN-POBLACION", (
+        "un 0 de poblacion no puede publicarse con el mismo status que un escaneo completo: se "
+        "leeria como certificacion favorable sobre un arbol que no se miro")
     assert scan["coverage_basis"]["archivos_py_en_el_arbol"] == 0
+
+
+def test_exclusiones_solapadas_no_inflan_el_denominador(dc, tmp_path):
+    """Un archivo bajo DOS directorios excluidos es UN archivo: la atribucion por directorio puede
+    repetirlo, pero el total del arbol se cuenta contra los excluidos unicos (L-VCF-11; la suma de
+    `excluidos_por_directorio` nunca reprodujo el universo, y como comprobacion aritmetica mentia)."""
+    raiz = tmp_path / "repo-solapado"
+    (raiz / ".venv-wsl" / "lib" / "site-packages").mkdir(parents=True)
+    (raiz / "modules").mkdir(parents=True)
+    (raiz / ".venv-wsl" / "lib" / "site-packages" / "x.py").write_text(
+        "import typesafe\n", encoding="utf-8")
+    (raiz / "modules" / "limpio.py").write_text("import json\n", encoding="utf-8")
+    puerta = raiz / "decision_client.py"
+    puerta.write_text("import json\n", encoding="utf-8")
+    scan = dc.escanear_aislamiento(raiz, puerta=puerta)
+    b = scan["coverage_basis"]
+    assert b["excluidos_por_directorio"] == {".venv-wsl": 1, "site-packages": 1}
+    assert b["excluidos_archivos_unicos"] == 1, "el archivo solapado se conto dos veces como excluido"
+    assert b["archivos_escaneados"] == 2
+    assert b["archivos_py_en_el_arbol"] == 3, (
+        f"el denominador se infl6 con la exclusion solapada: {b['archivos_py_en_el_arbol']} != "
+        "2 escaneados + 1 archivo unico excluido")
 
 
 def test_un_import_prohibido_plantado_fuera_de_la_puerta_es_hallazgo(dc, tmp_path):
@@ -93,21 +160,26 @@ def test_un_proveedor_que_cuela_el_sdk_por_nombre_armado_es_hallazgo(dc, tmp_pat
 
 
 def test_un_archivo_que_no_parsea_no_se_cuenta_como_limpio(dc, tmp_path):
-    """R2.9: si un .py no se puede parsear, el escaneo lo dice; no suma un silencio al 0."""
+    """R2.9: si un .py no se puede parsear, el escaneo lo dice; no suma un silencio al 0.
+
+    Y desde la orden 2026-09-22 §4.A-a el status del escaneo tampoco cierra favorable con la lectura
+    incompleta: `LECTURA-INCOMPLETA` es un estado propio, distinto de `SIN-HALLAZGOS`.
+    """
     raiz = tmp_path / "repo"
     raiz.mkdir()
     (raiz / "roto.py").write_text("def x(\n", encoding="utf-8")
     puerta = raiz / "decision_client.py"
     puerta.write_text("import json\n", encoding="utf-8")
     scan = dc.escanear_aislamiento(raiz, puerta=puerta)
+    assert scan["status"] == "LECTURA-INCOMPLETA", scan["status"]
     assert scan["conteos"]["archivos_no_parseables"] == 1
     assert scan["no_parseables"][0]["archivo"] == "roto.py"
     assert "sintaxis" in scan["no_parseables"][0]["motivo"]
 
 
-def test_en_el_arbol_real_no_hay_archivos_no_parseables(dc, raiz_repo):
+def test_en_el_arbol_real_no_hay_archivos_no_parseables(escaneo_arbol_real):
     """Con la poblacion del repo: si algo no parsea, el escaneo dejaria de ser una prueba de AC6."""
-    scan = dc.escanear_aislamiento(raiz_repo)
+    scan = escaneo_arbol_real
     assert scan["no_parseables"] == [], scan["no_parseables"][:5]
 
 

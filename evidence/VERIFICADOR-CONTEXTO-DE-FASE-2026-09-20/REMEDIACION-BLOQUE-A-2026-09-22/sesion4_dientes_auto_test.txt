@@ -1,0 +1,44 @@
+== Dientes del auto-test, predicado por predicado + controles de sabotaje (sesion 4, instrumento final) ==
+
+--- 1) control de dientes: forzar permisivo cada uno de los 13 predicados
+[sin mutar] auto-test OK=True | 43 casos; fallidos: ninguno
+
+| criterio | predicado forzado permisivo -> auto-test OK? | senala ese criterio? |
+|---|---|---|
+| C1a | False | SI |
+| C1b | False | SI |
+| C2 | False | SI |
+| C2b | False | SI |
+| C3 | False | SI |
+| C4 | False | SI |
+| C5 | False | SI |
+| C6 | False | SI |
+| C7 | False | SI |
+| C8 | False | SI |
+| C9 | False | SI |
+| C10 | False | SI |
+| C11 | False | SI |
+
+familias sin casos de rechazo (sin dientes): ninguna
+permisivos que el auto-test NO detecto (falsos OK): ninguno
+VERDE-POR-CAUSA AUTO-TEST: CONFIRMADA
+EXIT_DIENTES=0
+
+--- 2) sabotaje del fixture de C9 (esperado INSTRUMENTO SOSPECHOSO exit 2)
+VEREDICTO: INSTRUMENTO SOSPECHOSO — criterios rojos en PRE por una causa distinta de la esperada (el criterio ya no prueba el defecto que nombra, o el fixture dejo de instanciar su escenario): C9 gov-parcial-conserva
+
+exit=2
+---
+VERDE-POR-CAUSA DEFECTO 3: CONFIRMADA - el instrumento fortalecido rechaza el rojo de C9 por causa no esperada y sale 2; el debil lo certificaba con exit 0.
+EXIT_C9=0
+
+--- 3) mutacion del predicado C7 permisivo sobre el instrumento final
+
+[B mutacion C7 permisivo]
+  PRE rojos: 13/13 | POST verdes: 13/13 | rojos-PRE-con-causa-comprobada: 13/13
+  auto-test de predicados (observaciones sinteticas de otras causas): FALLA — 43 casos; fallidos: C7 rechaza la puerta AUSENTE; C7 rechaza el lector caido; C7 rechaza stdout vacio
+  VEREDICTO: INSTRUMENTO SOSPECHOSO — un predicado de causa acepto una observacion de otra causa; la matriz PRE/POST no es fiable hasta corregirlo (la discriminacion se prueba con el auto-test, no con la confianza en el lectura-del-codigo).
+  exit=2
+
+VERDE-POR-CAUSA BRECHA 1: CONFIRMADA
+EXIT_C7=0

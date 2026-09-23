@@ -1,0 +1,34 @@
+== veredicto de contrato / PRE / modulo: temp/orden-cambio-2026-09-22/decision_client_PRE.py
+   generado por: veredicto_contraejemplos.py
+
+[NO CUMPLE] CX1: un modulo de proveedor que no carga NO se resuelve como ausencia
+         ProveedorNoConfigurado: el proveedor 'roto' no esta en C:\Users\Jhond\AppData\Local\Temp\iah-veredicto-1_dj1j01; nombres encontrados: (ninguno); modulos que no cargaron: ['roto.py: el modulo de proveedor C:\\Users\\Jhond\\AppData\\Local\\Temp\\iah-veredicto-1_dj1j01\\roto.py no cargo: RuntimeError: el modulo del proveedor no carga']
+[NO CUMPLE] CX1b: la sonda de estado lo nombra LECTOR-FALLIDO, no NO-CONFIGURADO
+         provider_status='NO-CONFIGURADO' estado_lector=None
+[NO CUMPLE] CX2: un campo fuera de contrato en `noul` se reporta como ruptura
+         motivos=[] (el campo desconocido escapo)
+[NO CUMPLE] CX3a: `tipo` que no es texto produce motivos, no un TypeError
+         TypeError: unhashable type: 'list' (el instrumento cayo, no informo)
+[NO CUMPLE] CX3b: `pregunta_id` que no es texto produce ILEGIBLE, no un TypeError
+         TypeError: unhashable type: 'list' (el instrumento cayo, no informo)
+[NO CUMPLE] CX4: un lote con ids repetidos se rechaza antes de cerrar en RESUELTO
+         provider_status='RESUELTO' con 1 respuesta para 2 preguntas
+
+total: 0/6 criterios del contrato cumplidos en PRE
+== veredicto de contrato / POST / modulo: scripts/decision_client.py
+   generado por: veredicto_contraejemplos.py
+
+[CUMPLE] CX1: un modulo de proveedor que no carga NO se resuelve como ausencia
+         LectorFallido: no se pudo certificar la ausencia del proveedor 'roto' en C:\Users\Jhond\AppData\Local\Temp\iah-veredicto-s_dvtuha: 1 de 1 modulos no cargaron. Nombres leidos: (ninguno); fallos de carga: ['roto.py: el modulo de proveedor C:\\Users\\Jhond\\AppData\\Local\\Temp\\iah-veredicto-s_dvtuha\\roto.py no cargo: RuntimeError: el modulo del proveedor no carga']
+[CUMPLE] CX1b: la sonda de estado lo nombra LECTOR-FALLIDO, no NO-CONFIGURADO
+         provider_status=None estado_lector='LECTOR-FALLIDO'
+[CUMPLE] CX2: un campo fuera de contrato en `noul` se reporta como ruptura
+         motivos=["n1 (noul): campos fuera de contrato ['campo_inventado']"]
+[CUMPLE] CX3a: `tipo` que no es texto produce motivos, no un TypeError
+         motivos=['respuesta n1: tipo no es un texto no vacio: []']
+[CUMPLE] CX3b: `pregunta_id` que no es texto produce ILEGIBLE, no un TypeError
+         ILEGIBLE ['campos-conocidos: respuesta #la-posicion-1: pregunta_id no es un texto no vacio: []', "cobertura-de-preguntas: sin respuesta para ['p1']"]
+[CUMPLE] CX4: un lote con ids repetidos se rechaza antes de cerrar en RESUELTO
+         ValueError del lote: preguntas fuera de contrato: ids repetidos ['mismo'] - un lote con el mismo id dos veces no tiene como emparejar cada respuesta con su pregunta
+
+total: 6/6 criterios del contrato cumplidos en POST

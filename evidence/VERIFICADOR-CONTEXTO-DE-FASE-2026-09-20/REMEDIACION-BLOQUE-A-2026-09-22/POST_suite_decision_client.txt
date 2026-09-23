@@ -1,0 +1,23 @@
+# POST remediacion ORDEN-CAMBIO-2026-09-22 / bloque A
+# fecha: 2026-09-22 13:11:14
+# HEAD: a3ab8f9 (+ cambios sin commitear en el arbol de trabajo)
+# comando: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe -m pytest tests/quality_gates/decision_client -q -p no:cacheprovider --durations=5
+........................................................................ [ 96%]
+...                                                                      [100%]
+============================== warnings summary ===============================
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 5 durations =============================
+7.63s setup    tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+0.66s call     tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test
+0.04s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_anadir_un_segundo_proveedor_toca_un_archivo
+0.03s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_los_dos_proveedores_se_despachan_por_la_misma_puerta
+0.03s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_el_arbol_del_repo_no_se_toca_para_medir
+75 passed, 2 warnings in 10.21s

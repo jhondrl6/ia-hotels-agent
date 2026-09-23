@@ -36,13 +36,24 @@ TRI-ESTADO (R2.9, aplicado a si mismo como `validate_lesson_capitalization.py`)
     `LECTOR-FALLIDO` (dice el motivo y **nunca** un favorable ni un 0). Prohibido el `except` que
     devuelve «no habia nada».
 
+POBLACION MIXTA (sesion 4, defecto medido del cierre del bloque A)
+    La ausencia de UNA ruta no es una puerta previa: si queda algun documento legible, se
+    analizan los legibles, cada ruta ausente se publica con su causa en `fallos_de_lectura`
+    (motivo «no existe (AUSENTE)») y el estado es `LECTOR-FALLIDO` con exit 3 — jamas favorable.
+    El exit 2 (`AUSENTE`) responde solo cuando no hay nada analizable: fuente/hook ausentes o
+    todos los documentos ausentes.
+
 USO
     python scripts/validate_governance_numbers.py --report
+        (imprime el JSON por stdout y NO escribe: S12 / L-VCF-12)
+    python scripts/validate_governance_numbers.py --report RUTA/informe.json
+        (imprime el resumen y escribe en ESA ruta; cada evidencia con su ruta nombrada)
     python scripts/validate_governance_numbers.py --json
     python scripts/validate_governance_numbers.py --governance-doc D [--governance-doc D2] \\
         --source S --hook H          # (tests: fixtures en tmp_path)
 
-SALIDA: 0 = SIN-HALLAZGOS · 1 = HALLAZGOS · 2 = AUSENTE · 3 = LECTOR-FALLIDO.
+SALIDA: 0 = SIN-HALLAZGOS · 1 = HALLAZGOS · 2 = AUSENTE (nada analizable) ·
+    3 = LECTOR-FALLIDO (poblacion parcial; incluye documento ausente entre legibles).
 """
 
 from __future__ import annotations
@@ -69,9 +80,11 @@ GOVERNANCE_DEFAULTS = (
     ROOT / ".agents" / "workflows" / "phased_project_executor.md",
     ROOT / ".agents" / "workflows" / "templates" / "lecciones-capitalizadas-template.md",
 )
-REPORT_DEFAULT = (
-    ROOT / "evidence" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20" / "FASE-A" / "informe.json"
-)
+# S12 / L-VCF-12: aqui habia una ruta de escritura por defecto apuntando a
+# `evidence/…/FASE-A/informe.json`. Un verificador que ademas es writer gobernaba el registro fechado
+# de otra fase, y cada corrida lo re-escribia (S12). La salida por defecto es ahora **sin escritura**:
+# escribir exige nombrar el destino en la linea de comandos.
+REPORT_SIN_ESCRITURA = None
 
 # Los archivos que SON la fuente de verdad nunca pueden ser el sujeto de una asercion.
 SOURCE_FILE_NAMES = {"run_all_validations.py", "pre-commit"}
@@ -521,114 +534,138 @@ def analizar(governance: list, source: Path, hook_path: Path) -> dict:
     findings_by_key = {}
     checked, historical, unresolved = [], [], []
     docs_scan = []
+    fallos_lectura = []
 
     for idx, doc in enumerate(governance):
-        texto = _leer(doc["path"], f"documento de gobierno {doc['name']}")
-        bloques, instancias = _bloques(texto)
-        linea_changelog = _linea_de_versiones(texto)
-        amparo = _frase_de_amparo(texto)
-        docs_scan.append({
-            "document": doc["path"].as_posix(),
-            "nombre": doc["name"],
-            "bytes": doc["path"].stat().st_size,
-            "instancias_bracket": sum(1 for i in instancias if i["forma"] == "bracket"),
-            "instancias_check_n": sum(1 for i in instancias if i["forma"] == "check_n"),
-            "lineas_con_instancias": len({i["linea"] for i in instancias}),
-            "orden_de_escaneo": idx,
-        })
-        if not instancias and texto.strip():
-            raise LectorFallido(
-                f"{doc['path']}: documento no vacio con 0 instancias de conteo; o el patron "
-                "no aplica o la lectura es parcial (R2.9: vacio != ausente)"
-            )
-
-        for inst in sorted(instancias, key=lambda i: (i["linea"], i["col"])):
-            bloque = bloques[inst["bloque"]]
-            bloque_texto, cursor = _plano(bloque, inst)
-            len_raw = len(inst["raw"])
-            segmento = _segmento(bloque_texto, cursor, len_raw)
-            ventana, ancla = _ventana(bloque_texto, cursor, len_raw, 300, 200)
-            dentro_cl = (
-                inst["linea"] >= linea_changelog
-                and any(CHANGELOG_ENTRY_RE.match(l) for _, l in bloque)
-            )
-            congelada, regla = es_mencion_historica(inst, segmento, dentro_cl, totales)
-            ubicacion = {
+        # Un documento que no se puede leer es INCOMPLETITUD de la poblacion, no veredicto: se
+        # registra su causa y el analisis continua con los demas, para que el fallo de uno no borre
+        # los hallazgos ya obtenidos del otro (orden 2026-09-22 §4.A-a, sesion 3). El estado final
+        # del informe pasa a LECTOR-FALLIDO: jamas favorable.
+        try:
+            if not doc["path"].exists():
+                # Un documento AUSENTE en poblacion mixta es la misma incompletitud que un
+                # documento ilegible (§4.A-a): se publica su causa y el analisis continua con
+                # los legibles. AUSENTE como veredicto (exit 2) queda reservado a la poblacion
+                # sin nada analizable (todos los documentos ausentes, o fuente/hook ausentes).
+                raise LectorFallido(
+                    f"{doc['path']}: no existe (AUSENTE); poblacion parcial, los demas "
+                    "documentos se analizan y el estado no es favorable "
+                    "(R2.9: AUSENTE no es 'sin hallazgos')"
+                )
+            texto = _leer(doc["path"], f"documento de gobierno {doc['name']}")
+            bloques, instancias = _bloques(texto)
+            linea_changelog = _linea_de_versiones(texto)
+            amparo = _frase_de_amparo(texto)
+            docs_scan.append({
                 "document": doc["path"].as_posix(),
-                "linea": inst["linea"],
-                "columna": inst["col"] + 1,
-                "texto_afirmado": inst["raw"],
-                "segmento": segmento.strip(),
-            }
-            if congelada:
-                historical.append({
-                    **ubicacion,
-                    "clase": "CONGELADA-historica",
-                    "regla": regla[0],
-                    "marca": regla[1],
-                    "authorized_by": amparo or "sin frase de amparo encontrada en el documento",
-                })
-                continue
+                "nombre": doc["name"],
+                "bytes": doc["path"].stat().st_size,
+                "instancias_bracket": sum(1 for i in instancias if i["forma"] == "bracket"),
+                "instancias_check_n": sum(1 for i in instancias if i["forma"] == "check_n"),
+                "lineas_con_instancias": len({i["linea"] for i in instancias}),
+                "orden_de_escaneo": idx,
+            })
+            if not instancias:
+                # Un documento VACIO tambien es poblacion ausente: dejarlo pasar seria
+                # `SIN-HALLAZGOS` con exit 0 sobre un documento que no se audito
+                # (orden 2026-09-22 §4.A-a; R2.9: vacio != ausente, y ninguno de los dos es favorable).
+                vacio = not texto.strip()
+                raise LectorFallido(
+                    f"{doc['path']}: documento {'vacio' if vacio else 'no vacio'} con 0 instancias "
+                    "de conteo; o el patron no aplica o la lectura es parcial "
+                    "(R2.9: vacio != ausente)"
+                )
 
-            modo = modo_de_la_instancia(bloque_texto, cursor, len_raw)
-            if modo == "hook":
-                ok = forma_de_hook_ok(inst["ordinal"], inst["total"], totales["hook"])
-                registro = {"ordinal": inst["ordinal"], "total": totales["hook"],
-                            "script": None, "emisor": "hook (forma)", "mode": "hook"}
-                razones = [] if ok else ["forma-del-hook"]
-                fuente = f"hook de {totales['hook']} pasos"
-                observado = f"hook:[{inst['ordinal']}/{totales['hook']}]"
-            else:
-                pool = pool_quick if modo == "quick" else pool_full
-                record = sujeto_de_la_instancia(ventana, ancla, pool) if modo else None
-                if record is None:
-                    unresolved.append({
-                        **ubicacion, "clase": "NO-RESUELTA",
-                        "motivo": ("la instancia no declara fuente (--quick/hook/completo)"
-                                   if not modo else
-                                   f"fuente {modo} pero ningun verificador nombrado ni alias unico "
-                                   "aparece en la ventana"),
+            for inst in sorted(instancias, key=lambda i: (i["linea"], i["col"])):
+                bloque = bloques[inst["bloque"]]
+                bloque_texto, cursor = _plano(bloque, inst)
+                len_raw = len(inst["raw"])
+                segmento = _segmento(bloque_texto, cursor, len_raw)
+                ventana, ancla = _ventana(bloque_texto, cursor, len_raw, 300, 200)
+                dentro_cl = (
+                    inst["linea"] >= linea_changelog
+                    and any(CHANGELOG_ENTRY_RE.match(l) for _, l in bloque)
+                )
+                congelada, regla = es_mencion_historica(inst, segmento, dentro_cl, totales)
+                ubicacion = {
+                    "document": doc["path"].as_posix(),
+                    "linea": inst["linea"],
+                    "columna": inst["col"] + 1,
+                    "texto_afirmado": inst["raw"],
+                    "segmento": segmento.strip(),
+                }
+                if congelada:
+                    historical.append({
+                        **ubicacion,
+                        "clase": "CONGELADA-historica",
+                        "regla": regla[0],
+                        "marca": regla[1],
+                        "authorized_by": amparo or "sin frase de amparo encontrada en el documento",
                     })
                     continue
-                fuente = (f"{record['script']} imprime [{record['ordinal']}/{record['total']}]"
-                          f" ({record['mode']}) via {record['emisor']}")
-                razones = []
-                if inst["forma"] == "check_n":
-                    if check_n_discrepa(inst["ordinal"], record):
-                        razones.append("ordinal")
-                else:
-                    if ordinal_discrepa(inst["ordinal"], record):
-                        razones.append("ordinal")
-                    if total_discrepa(inst["total"], record["total"]):
-                        razones.append("denominador")
-                registro = record
-                observado = f"[{record['ordinal']}/{record['total']}]"
 
-            claimed = (f"[{inst['ordinal']}/{inst['total']}]" if inst["forma"] == "bracket"
-                       else f"check {inst['ordinal']}")
-            entrada = {
-                "document": doc["path"].as_posix(),
-                "nombre_documento": doc["name"],
-                "orden_documento": idx,
-                "observed_ordinal": registro["ordinal"] if registro["script"] else None,
-                "claimed": claimed,
-                "observed": observado,
-                "subject": registro["script"] or "(forma del hook)",
-                "source_kind": modo or "(hook)",
-                "fuente": fuente,
-                "emisor_del_codigo": registro["emisor"],
-                "razones": razones,
-                "ocurrencia": ubicacion,
-            }
-            if razones:
-                clave = (entrada["document"], entrada["claimed"], entrada["subject"], modo)
-                findings_by_key.setdefault(clave, entrada)
-                findings_by_key[clave]["ocurrencia_line"] = ubicacion["linea"]
-                findings_by_key[clave].setdefault("occurrences", []).append(ubicacion)
-                findings_by_key[clave]["reasons"] = sorted(
-                    set(findings_by_key[clave].get("reasons", [])) | set(razones))
-            else:
-                checked.append({**entrada, "clase": "VIGENTE-CORRECTA"})
+                modo = modo_de_la_instancia(bloque_texto, cursor, len_raw)
+                if modo == "hook":
+                    ok = forma_de_hook_ok(inst["ordinal"], inst["total"], totales["hook"])
+                    registro = {"ordinal": inst["ordinal"], "total": totales["hook"],
+                                "script": None, "emisor": "hook (forma)", "mode": "hook"}
+                    razones = [] if ok else ["forma-del-hook"]
+                    fuente = f"hook de {totales['hook']} pasos"
+                    observado = f"hook:[{inst['ordinal']}/{totales['hook']}]"
+                else:
+                    pool = pool_quick if modo == "quick" else pool_full
+                    record = sujeto_de_la_instancia(ventana, ancla, pool) if modo else None
+                    if record is None:
+                        unresolved.append({
+                            **ubicacion, "clase": "NO-RESUELTA",
+                            "motivo": ("la instancia no declara fuente (--quick/hook/completo)"
+                                       if not modo else
+                                       f"fuente {modo} pero ningun verificador nombrado ni alias "
+                                       "unico aparece en la ventana"),
+                        })
+                        continue
+                    fuente = (f"{record['script']} imprime [{record['ordinal']}/{record['total']}]"
+                              f" ({record['mode']}) via {record['emisor']}")
+                    razones = []
+                    if inst["forma"] == "check_n":
+                        if check_n_discrepa(inst["ordinal"], record):
+                            razones.append("ordinal")
+                    else:
+                        if ordinal_discrepa(inst["ordinal"], record):
+                            razones.append("ordinal")
+                        if total_discrepa(inst["total"], record["total"]):
+                            razones.append("denominador")
+                    registro = record
+                    observado = f"[{record['ordinal']}/{record['total']}]"
+
+                claimed = (f"[{inst['ordinal']}/{inst['total']}]" if inst["forma"] == "bracket"
+                           else f"check {inst['ordinal']}")
+                entrada = {
+                    "document": doc["path"].as_posix(),
+                    "nombre_documento": doc["name"],
+                    "orden_documento": idx,
+                    "observed_ordinal": registro["ordinal"] if registro["script"] else None,
+                    "claimed": claimed,
+                    "observed": observado,
+                    "subject": registro["script"] or "(forma del hook)",
+                    "source_kind": modo or "(hook)",
+                    "fuente": fuente,
+                    "emisor_del_codigo": registro["emisor"],
+                    "razones": razones,
+                    "ocurrencia": ubicacion,
+                }
+                if razones:
+                    clave = (entrada["document"], entrada["claimed"], entrada["subject"], modo)
+                    findings_by_key.setdefault(clave, entrada)
+                    findings_by_key[clave]["ocurrencia_line"] = ubicacion["linea"]
+                    findings_by_key[clave].setdefault("occurrences", []).append(ubicacion)
+                    findings_by_key[clave]["reasons"] = sorted(
+                        set(findings_by_key[clave].get("reasons", [])) | set(razones))
+                else:
+                    checked.append({**entrada, "clase": "VIGENTE-CORRECTA"})
+        except LectorFallido as exc:
+            fallos_lectura.append({"document": doc["path"].as_posix(), "motivo": str(exc)})
+            continue
 
     ordenados = sorted(findings_by_key.values(),
                        key=lambda f: (f["orden_documento"], f["observed_ordinal"] or 0,
@@ -658,8 +695,12 @@ def analizar(governance: list, source: Path, hook_path: Path) -> dict:
         "tool": "scripts/validate_governance_numbers.py",
         "schema_version": SCHEMA_VERSION,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "status": "HALLAZGOS" if hallazgos else "SIN-HALLAZGOS",
+        # La lectura incompleta manda sobre cualquier otra marca: el lector no goberno toda la
+        # poblacion, y ni `SIN-HALLAZGOS` ni `HALLAZGOS` describen ese estado (orden §4.A-a c3).
+        "status": ("LECTOR-FALLIDO" if fallos_lectura
+                   else "HALLAZGOS" if hallazgos else "SIN-HALLAZGOS"),
         "findings": hallazgos,
+        "fallos_de_lectura": fallos_lectura,
         "assertions_checked": [
             {"assertion": c["claimed"], "observed": c["observed"], "document": c["document"],
              "subject": c["subject"], "source_kind": c["source_kind"], "fuente": c["fuente"]}
@@ -688,6 +729,7 @@ def analizar(governance: list, source: Path, hook_path: Path) -> dict:
                 "clase_viva_correcta": len(checked),
                 "clase_historica_congelada": len(historical),
                 "clase_no_resuelta": len(unresolved),
+                "clase_fallo_de_lectura": len(fallos_lectura),
             },
             "regla_de_poblacion": {
                 "fuente": "maestro §1 medicion A8 del plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -704,7 +746,8 @@ def analizar(governance: list, source: Path, hook_path: Path) -> dict:
             },
             "families_not_covered": [],
             "excluded": [],
-            "comando": "python scripts/validate_governance_numbers.py --report",
+            "comando": "python scripts/validate_governance_numbers.py --report  "
+                       "(imprime; para persistir, --report RUTA — S12)",
             "medido_el": datetime.now().strftime("%Y-%m-%d"),
         },
     }
@@ -869,8 +912,10 @@ def main(argv=None) -> int:
                     help="documento de gobierno a auditar (repetible); default: los dos del maestro")
     ap.add_argument("--source", default=str(SOURCE_DEFAULT))
     ap.add_argument("--hook", default=str(HOOK_DEFAULT))
-    ap.add_argument("--report", nargs="?", const=str(REPORT_DEFAULT), default=None,
-                    help="escribir el informe JSON (default: ruta de evidencia del plan)")
+    ap.add_argument("--report", nargs="?", const=REPORT_SIN_ESCRITURA, default=False,
+                    help="imprimir el informe JSON; con destino, ademas lo escribe en esa ruta "
+                         "(S12: sin destino NO escribe, porque no hay ruta por defecto que valga "
+                         "pisar evidencia cerrada de otra fase)")
     ap.add_argument("--json", action="store_true", help="volcar el informe por stdout")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(argv)
@@ -880,17 +925,22 @@ def main(argv=None) -> int:
     else:
         docs = [{"path": p, "name": p.stem} for p in GOVERNANCE_DEFAULTS]
 
+    # R2.9 con poblacion mixta (sesion 4): la AUSENCIA de una ruta deja de ser una puerta previa
+    # al analisis que descartaba los hallazgos de los documentos legibles y rompia el JSON por
+    # stdout (medido: doc legible + ruta ausente -> exit 2, stdout en prosa, hallazgos_perdidos).
+    # Ahora el exit 2 (AUSENTE) responde solo cuando NO hay nada analizable: falta la fuente de
+    # verdad o faltan todos los documentos; si queda algun documento legible, analizar() trata la
+    # ausencia como incompletitud de la poblacion y el veredicto es LECTOR-FALLIDO (exit 3) con
+    # los hallazgos conservados y la causa de cada ruta ausente publicada.
+    ausentes_fuentes = [p for p in (Path(args.source), Path(args.hook)) if not p.exists()]
+    ausentes_docs = [d["path"] for d in docs if not d["path"].exists()]
+    if ausentes_fuentes or len(ausentes_docs) == len(docs):
+        print("[AUSENTE] validate_governance_numbers: no se encontro la ruta buscada")
+        for f in ausentes_fuentes + ausentes_docs:
+            print(f"  - {f}")
+        print("  (R2.9: AUSENTE no es 'sin hallazgos'; no se emite denominador favorable)")
+        return 2
     try:
-        faltan = [d["path"] for d in docs if not d["path"].exists()]
-        for otro in (Path(args.source), Path(args.hook)):
-            if not otro.exists():
-                faltan.append(otro)
-        if faltan:
-            print("[AUSENTE] validate_governance_numbers: no se encontro la ruta buscada")
-            for f in faltan:
-                print(f"  - {f}")
-            print("  (R2.9: AUSENTE no es 'sin hallazgos'; no se emite denominador favorable)")
-            return 2
         informe = analizar(docs, Path(args.source), Path(args.hook))
     except LectorFallido as exc:
         print("[LECTOR-FALLIDO] validate_governance_numbers no pudo operar:")
@@ -898,7 +948,32 @@ def main(argv=None) -> int:
         print("  (R2.9: nunca se imprime un favorable ni un 0 desde aqui)")
         return 3
 
-    if args.report:
+    if informe["status"] == "LECTOR-FALLIDO":
+        # Lectura incompleta de la poblacion: exit 3, ningun destino escribe, y los hallazgos ya
+        # obtenidos viajan dentro del informe publicado en lugar de perderse (sesion 3, §4.A-a).
+        if args.json or args.report is None:
+            print(json.dumps(informe, indent=2, ensure_ascii=False))
+        else:
+            print("[LECTOR-FALLIDO] validate_governance_numbers no pudo leer toda la poblacion:")
+            for f in informe["fallos_de_lectura"]:
+                print(f"  motivo: {f['document']} - {f['motivo']}")
+            print(f"  hallazgos conservados en el informe parcial: {len(informe['findings'])} "
+                  "(R2.9: nunca se imprime un favorable ni un 0)")
+        return 3
+
+    if args.report is False:
+        pass
+    elif args.report is None:
+        # S12: `--report` sin destino imprime y NO escribe. Antes tenia una ruta por defecto dentro de
+        # la evidencia commiteada de FASE-A, asi que volver a medir re-escribia el registro de otra
+        # fase; ahora escribir exige nombrar donde.
+        print(json.dumps(informe, indent=2, ensure_ascii=False))
+        # A stderr, no a stdout: quien pide `--report` sin destino lee JSON parseable por stdout
+        # (orden 2026-09-22 §4.A).
+        print("# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe",
+              file=sys.stderr)
+        return 1 if informe["findings"] else 0
+    else:
         destino = Path(args.report)
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(json.dumps(informe, indent=2, ensure_ascii=False) + "\n",

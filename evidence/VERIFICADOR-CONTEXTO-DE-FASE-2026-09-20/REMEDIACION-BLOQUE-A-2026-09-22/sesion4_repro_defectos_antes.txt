@@ -1,0 +1,62 @@
+# Sesion 4 (2026-09-22) — Reproducciones de los tres defectos antes de corregir
+# Metodo: cada defecto se reprodujo con medicion propia antes de tocar codigo.
+# Los scripts de reproduccion viven en scratch fuera del repo (Temp/repro-defecto{1,2,3}/).
+
+# =========================================================================================
+# DEFECTO 1 — scripts/validate_governance_numbers.py:905-920 (pre-fix)
+# Comando: python %TEMP%/repro-defecto1/repro.py
+# Fixture: src.py [1/2]+[2/2], hook de 2 pasos, doc_vencido.md (check 7, [9/9]) — el mismo
+#          fixture del instrumento veredicto_cierre_a.py.
+# =========================================================================================
+[A legible-solo] exit=1 json_parseable=True hallazgos_publicados=2
+  stdout[0:110]: '{'
+[B legible+ausente] exit=2 json_parseable=False hallazgos_publicados=None
+  stdout[0:110]: '[AUSENTE] validate_governance_numbers: no se encontro la ruta buscada'
+[C ausente-solo] exit=2 json_parseable=False hallazgos_publicados=None
+  stdout[0:110]: '[AUSENTE] validate_governance_numbers: no se encontro la ruta buscada'
+
+# POST-fix (mismo script):
+[A legible-solo] exit=1 json_parseable=True hallazgos_publicados=2
+[B legible+ausente] exit=3 json_parseable=True hallazgos_publicados=2   # hallazgos conservados
+[C ausente-solo] exit=2 json_parseable=False hallazgos_publicados=None  # AUSENTE sin nada analizable
+
+# =========================================================================================
+# DEFECTO 2 — tests/quality_gates/decision_client/test_decision_client_contract_forma.py:145
+# Comando: python %TEMP%/repro-defecto2/repro.py
+# =========================================================================================
+[A sin guard extra] nombres=['campos-conocidos', 'forma-choice']
+  pin igualdad (linea 145): PASA
+[B con guard extra] nombres=['campos-conocidos', 'forma-choice', 'forma-extra']
+  pin igualdad (linea 145): ROMPE (falso rojo)
+  atribucion de causa L-V2.1 (superset): SE MANTIENE
+REPRO DEFECTO 2: CONFIRMADA — el pin de igualdad ancla el rojo a una particion exacta y lo rompe
+una extension legitima; la causa (L-V2.1) no exige esa particion exacta.
+
+# =========================================================================================
+# DEFECTO 3 — instrumentos/veredicto_cierre_a.py: causa impresa, no comprobada (pre-fix)
+# Comando: python %TEMP%/repro-defecto3/repro_v2.py
+# Sabotaje en COPIA del instrumento: solo C9 usa un segundo doc NO vacio sin instancias, con lo
+# que su escenario (poblacion parcialmente ilegible) deja de existir y su rojo en PRE nace del
+# fixture roto. C8 conserva su doc vacio (control).
+# =========================================================================================
+PRE rojos: 12/12 | POST verdes: 12/12
+VEREDICTO: los 12 criterios pasan en el arbol de trabajo y todos cayeron en PRE por su causa.
+exit=0
+REPRO DEFECTO 3: CONFIRMADA — el instrumento debil conto el rojo de C9 (fixture roto) como un
+rojo mas "por su causa": la causa se imprimio, nadie la comprobo.
+
+# Antecedente (v1, sabotaje tambien del doc de C8): produjo un VERDE en PRE (11/12) y el gate de
+# conteo si lo cazo (INSTRUMENTO SOSPECHOSO exit 2). Los dientes que el instrumento YA tenia eran
+# de conteo; el que faltaba era el de causa-de-rojo.
+
+# POST-fix (control negativo, mismo sabotaje contra el instrumento fortalecido):
+# Comando: python %TEMP%/repro-defecto3/demo_fix.py  -> log: sesion4_control_negativo_causa.txt
+PRE rojos: 13/13 | POST verdes: 13/13 | rojos-PRE-con-causa-comprobada: 12/13
+VEREDICTO: INSTRUMENTO SOSPECHOSO — criterios rojos en PRE por una causa distinta de la esperada
+(...): C9 gov-parcial-conserva
+exit=2
+
+# Nota de la sesion 4: el control negativo expuso ademas un NameError latente en el camino de
+# veredicto del instrumento fortalecido (elemento (n, c) con c sin ligar en la comprension; solo
+# se evaluaba cuando HABIA una causa equivocada, es decir, justo en el camino de SOSPECHOSO).
+# Corregido en ambas comprensiones (rojos_post y causas_equivocadas) antes de medir POST.

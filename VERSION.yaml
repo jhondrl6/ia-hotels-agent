@@ -11,6 +11,25 @@ release_date: "2026-09-19"
 date: "2026-09-19"
 plan_maestro_version: "v2.6.0"
 
+# SIN PUBLICAR - Remediacion bloque A / VERIFICADOR-CONTEXTO (2026-09-22, NO es una release)
+# Orden `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.A, autorizado por sesion
+# con alcance acotado (ver registro en la propia orden). Trabajo pendiente de commit: la fuente
+# unica de version sigue siendo 4.77.3 y NO hay entrada de release por este bloque. Contenido del
+# trabajo: cinco defectos del contract test de `scripts/decision_client.py` reproducidos,
+# versionados como regresiones y corregidos sin introducir defaults ni convertir fallos en
+# favorables: un modulo de proveedor que no carga se resolvia como NO-CONFIGURADO; `noul`
+# perdonaba campos fuera de contrato; `tipo=[]` y `pregunta_id=[]` hacian explotar al guard con
+# TypeError (instrumento caido leido como «sin coincidencias»); un lote con ids repetidos cerraba
+# en RESUELTO con una sola respuesta; y el guard de cobertura emparejaba por posicion. Sesion 2
+# (cierre verificable): poblacion ausente/vacia o lectura incompleta no cierran favorable ni
+# exit 0; denominador con archivos unicos (exclusiones solapadas no inflan el total, L-VCF-11);
+# el informe refleja escaneo+sonda+costura distinguiendo negativos esperados de sonda caida; y se
+# retira el acoplamiento a una particion exacta de validadores. S11 y S12 quedan con su
+# CORRECCION TECNICA aqui, no en RELEASE, pero su CIERRE CONTRACTUAL exige la enmienda en el plan
+# propietario CONTEXTO, que sigue pendiente. AC9 declarado con su alcance: extension local a un
+# proveedor falso, no coste certificado de integrar un SDK.
+#
+
 # v4.77.0 - TRIBUNAL-ENFORCEMENT-OBS (2026-09-15)
 # Plan TRIBUNAL-ENFORCEMENT-OBS-2026-09-11: el tribunal pasa de capa de auditoria (v4.76.0)
 # a capa de enforcement, certificado por FASE-VERIFY con matriz de 25 ACs.

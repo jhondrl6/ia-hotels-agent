@@ -1,0 +1,17 @@
+PRE (HEAD) — criterios del cierre a-d:
+  FALLA C1 SIN-POBLACION — causa: arbol sin archivos devolvio status 'SIN-HALLAZGOS' (favorable sobre poblacion 0)
+  FALLA C2 LECTURA-INCOMPLETA — causa: 1 archivo no parseable devolvio status 'SIN-HALLAZGOS' (se lee como «sin hallazgos»)
+  FALLA C3 denominador-unico — causa: 1 archivo bajo 2 exclusiones solapadas dio arbol=4 (2 escaneados + 1 unico esperado): la suma de la atribucion infla el total
+  FALLA C4 informe-refleja-sonda — causa: sonda caida (RESUELTO->LECTOR-FALLIDO) dejo informe status 'SIN-HALLAZGOS' sin 'componentes' que lo expliquen: el informe hereda el status del escaneo a secas
+  FALLA C5 gov-doc-vacio — causa: documento de gobierno de 0 bytes salio exit 0 con salida '[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documen': poblacion vacia certificada como favorable
+  FALLA C6 stdout-json-parseable — causa: stdout no es JSON parseable (Expecting value: line 1 column 2 (char 1)): la salida mezcla JSON con relatos
+PRE: 0/6 (rotos: C1 SIN-POBLACION, C2 LECTURA-INCOMPLETA, C3 denominador-unico, C4 informe-refleja-sonda, C5 gov-doc-vacio, C6 stdout-json-parseable)
+POST (arbol de trabajo):
+  OK   C1 SIN-POBLACION
+  OK   C2 LECTURA-INCOMPLETA
+  OK   C3 denominador-unico
+  OK   C4 informe-refleja-sonda
+  OK   C5 gov-doc-vacio
+  OK   C6 stdout-json-parseable
+POST: 6/6 (rotos: ninguno)
+VEREDICTO: los seis criterios pasan en el arbol de trabajo.

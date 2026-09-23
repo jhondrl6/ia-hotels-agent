@@ -62,12 +62,28 @@ def _payload_que_solo_ve(guard):
     elif guard == "campos-conocidos":
         p["respuestas"][0]["confianza_extra"] = 0.5
     else:
-        raise AssertionError(guard)
+        raise AssertionError(f"guard sin payload aislante: {guard!r} - escriba en este archivo el "
+                             "payload que SOLO el guard nuevo rechaza, para que su mutante aisle")
     return p
 
 
-GUARDS_DE_FORMA = ("campos-conocidos", "cobertura-de-preguntas", "forma-choice", "forma-score",
-                   "forma-noul", "metadata-modelo-usage")
+def _guards_de_la_puerta():
+    """La lista de guards se DERIVA de la puerta; este archivo no pina una particion.
+
+    Orden 2026-09-22 §4.A-d: el contrato de R2.8 es que CADA guard tenga su payload aislante y su
+    mutante, no que la puerta tenga N guards exactos. Con la lista derivada, anadir un guard nuevo
+    en la puerta suelta automaticamente un caso parametrizado que cae por la funcion de payloads
+    (`_payload_que_solo_ve` no lo conoce): el rojo obliga a escribir el mutante, y borrar un guard
+    no deja casos huerfanos que mantener a mano.
+    """
+    script = Path(__file__).resolve().parents[3] / "scripts" / "decision_client.py"
+    spec = importlib.util.spec_from_file_location("dc_param_guards", script)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return tuple(nombre for nombre, _ in mod.VERIFICACIONES_DE_FORMA)
+
+
+GUARDS_DE_FORMA = _guards_de_la_puerta()
 
 
 @pytest.mark.parametrize("guard", GUARDS_DE_FORMA)
@@ -96,7 +112,8 @@ def test_cada_guard_de_forma_carga_solo_con_lo_suyo(dc, monkeypatch, guard):
 
 
 def test_apagar_toda_la_lista_no_hace_que_la_puerta_invente_campos(dc, monkeypatch):
-    """Con los seis guards apagados la puerta **tampoco** rellena: sigue sin decision por defecto.
+    """Con todos los guards de la puerta apagados la puerta **tampoco** rellena: sin decision
+    por defecto.
 
     Es el anti-default de L-PF6 llevado al limite: la conversion a tipos no pone un `0.0` donde no
     hay confidence, se declara inoperante. Por eso `M-AC7-forma` apaga guard a guard y no la lista
@@ -192,4 +209,21 @@ def test_cada_mutante_apunta_a_un_simbolo_distinto_y_vigente(dc):
     assert len(set(planos)) == len(planos), "dos mutantes comparten symbolo"
     for s in planos:
         assert hasattr(dc, s), f"{s} ya no existe en la puerta: el mutante quedo huerfano"
-    assert len(dc.VERIFICACIONES_DE_FORMA) == len(GUARDS_DE_FORMA) == 6
+
+
+def test_un_guard_adicional_no_requiere_pinar_nada_en_este_archivo(dc, monkeypatch):
+    """§4.A-d (sesion 3): invariantes del mutante sin particion fijada.
+
+    Un guard extra en la puerta no puede poner rojo EL TEST DE SIMBOLOS (distintos y vigentes): ese
+    test no cuenta guards. Lo que si cae es el caso parametrizado del guard nuevo, porque
+    `_payload_que_solo_ve` lo desconoce - y ese rojo es el precio contractual de agregar un guard,
+    no un acoplamiento a cuantos guards existen.
+    """
+    original = tuple(dc.VERIFICACIONES_DE_FORMA)
+    monkeypatch.setattr(dc, "VERIFICACIONES_DE_FORMA",
+                        original + (("forma-extra", original[0][1]),))
+    test_cada_mutante_apunta_a_un_simbolo_distinto_y_vigente(dc)
+    with pytest.raises(AssertionError) as exc:
+        _payload_que_solo_ve("forma-extra")
+    assert "forma-extra" in str(exc.value), (
+        "el guard nuevo no dej6 funcion de payload que lo exija: la particion volvio a ser libre")

@@ -1,0 +1,29 @@
+instrumento: veredicto_cierre_a.py | HEAD=a3ab8f9 baseline=a3ab8f9 | python=3.13.3
+PRE (revision de la linea de partida):
+  FALLA C1a SIN-POBLACION — causa: arbol vacio devolvio 'SIN-HALLAZGOS'
+  FALLA C1b wiring-exit-vacía — causa: CLI salio 0 con estado 'SIN-HALLAZGOS'
+  FALLA C2 LECTURA-INCOMPLETA — causa: 1 no parseable dio status 'SIN-HALLAZGOS' (causas conservadas: 1)
+  FALLA C2b wiring-exit-incompleta — causa: CLI salio 0 con lectura incompleta declarada
+  FALLA C3 denominador-unico — causa: arbol=4 unicos=None (esperado 3 y 1; la suma de la atribucion infla)
+  FALLA C4 sonda-caida-degrada — causa: informe 'SIN-HALLAZGOS' componentes=None (sonda LECTOR-FALLIDO donde se esperaba RESUELTO)
+  FALLA C5 costura-1-sin-despacho — causa: informe 'SIN-HALLAZGOS', --costura exit 0: el 1 de archivos contaba una frontera que no resolvio a los dos proveedores
+  FALLA C6 parcial-conserva-hallazgos — causa: el informe murio con la componente ausente: Ausente: directorio de proveedores falsos no existe: Z (stdout sin informe parcial)
+  FALLA C7 stdout-json-puro — causa: stdout no es JSON puro (Expecting value: line 1 column 2 (char 1)): el veredicto/aviso se mezcla con el informe
+  FALLA C8 gov-doc-vacio — causa: exit 0 primera-linea '[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gob'
+  FALLA C9 gov-parcial-conserva — causa: exit 1, destino-escrito=True, status='HALLAZGOS', hallazgos-conservados=2
+  FALLA C10 mutantes-sin-particion — causa: el test de invariantes se entero de la particion: 
+POST (arbol de trabajo):
+  OK   C1a SIN-POBLACION
+  OK   C1b wiring-exit-vacía
+  OK   C2 LECTURA-INCOMPLETA
+  OK   C2b wiring-exit-incompleta
+  OK   C3 denominador-unico
+  OK   C4 sonda-caida-degrada
+  OK   C5 costura-1-sin-despacho
+  OK   C6 parcial-conserva-hallazgos
+  OK   C7 stdout-json-puro
+  OK   C8 gov-doc-vacio
+  OK   C9 gov-parcial-conserva
+  OK   C10 mutantes-sin-particion
+PRE rojos: 12/12 | POST verdes: 12/12
+VEREDICTO: los 12 criterios pasan en el arbol de trabajo y todos cayeron en PRE por su causa.

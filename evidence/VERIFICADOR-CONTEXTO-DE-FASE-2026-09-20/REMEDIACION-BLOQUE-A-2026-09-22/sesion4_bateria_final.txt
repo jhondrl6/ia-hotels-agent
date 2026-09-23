@@ -1,0 +1,153 @@
+== Batería final sesión 4 (árbol final) ==
+--- run_all_validations.py --quick
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-22 18:46:44
+Mode: FULL
+============================================================
+
+[1/11] Checking for residual files...
+[2/11] Checking Plan Maestro sync...
+[3/11] Checking version synchronization...
+[4/11] Checking for hardcoded secrets (tracked + staged)...
+[5/11] Checking client material policy (tracked + staged)...
+[6/11] Checking document integration...
+[7/11] Checking prompts for --release flag in intermediate phases...
+[8/11] Checking .opencode references...
+[9/11] Checking plan citations (simbolos, no numeros de linea)...
+[10/11] Checking lesson capitalization (Paso 0 del executor)...
+[11/11] Checking signal wiring by AST (AC7/AC16)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1316 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2380 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1323 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+EXIT=0
+--- sync_versions.py --check
+============================================================
+VERSION SYNC (CHECK)
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.77.3
+  codename: LLMReport honesto cuando ning�n provider responde
+  date: 2026-09-19
+
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+OK: docs/contributing/REGISTRY.md (registry_last_update) - in sync
+
+============================================================
+Result: All files in sync
+EXIT=0
+--- validate_agents_md.py
+{
+  "modules_exist": {
+    "status": "PASS",
+    "total": 35,
+    "found": 35,
+    "missing": []
+  },
+  "test_count": {
+    "status": "PASS",
+    "agents_md_count": 4246,
+    "pytest_count": 4444,
+    "pct_diff": 4.5,
+    "tolerance": "±5%"
+  },
+  "gate_count": {
+    "status": "PASS",
+    "code_gate_count": 13,
+    "agents_md_count": 13,
+    "gate_names": [
+      "hard_contradictions",
+      "evidence_coverage",
+      "financial_validity",
+      "coherence",
+      "critical_recall",
+      "ethics",
+      "content_quality",
+      "asset_confidence",
+      "proposal_asset_alignment",
+      "tier_c_onboarding_required",
+      "coverage_no_silent_drop",
+      "doc_audit_consistency",
+      "pricing_compliance"
+    ]
+  },
+  "fase0_modules": {
+    "status": "PASS",
+    "modules_checked": [
+      "pain_ledger",
+      "delivery_quality_report",
+      "human_checklist",
+      "data_derivation_layer"
+    ],
+    "missing_agents_md": [],
+    "missing_roadmap": []
+  },
+  "no_deprecated_active": {
+    "status": "PASS",
+    "exclusively_deprecated": [
+      "assessment.py",
+      "calibration.py",
+      "dashboard.py",
+      "evidence.py",
+      "evidence_ledger.py",
+      "instagram_scraper.py",
+      "tripadvisor_scraper.py"
+    ],
+    "active_references": []
+  },
+  "scripts_exist": {
+    "status": "PASS",
+    "total": 6,
+    "found": 6,
+    "missing": []
+  }
+}
+EXIT=0
+--- version_consistency_checker.py
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.77.3
+  VERSION.yaml:   4.77.3
+  Codename:       LLMReport honesto cuando ningún provider responde
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-A
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+EXIT=0

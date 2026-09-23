@@ -142,7 +142,14 @@ def test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test(script_ruta,
                                             leyenda=("bajo", "medio", "alto", "critico")),
                                mod.Pregunta("n1", "noul", "?")],
              entorno)
-    assert {mod._nombre_de_la_verificacion(m) for m in exc.value.motivos} == {
-        "campos-conocidos", "forma-choice"}
+    # L-V2.1 exige que el rojo NOMBRE a los guards que detectan la mutacion — `campos-conocidos`
+    # es el contrato de campos (confidence declarada) y `forma-choice` la forma de la choice con
+    # su confidence — pero NO fija la particion: la doctrina del propio cierre (criterio d del
+    # instrumento, «sin particion fijada») permite que un guard futuro detecte tambien esta
+    # malformacion y se sume a los motivos sin romper la atribucion de causa (medido en sesion 4:
+    # con un guard extra legitimo, el pin de igualdad producia un falso rojo y el superset seguia
+    # sosteniendo la causa).
+    nombres = {mod._nombre_de_la_verificacion(m) for m in exc.value.motivos}
+    assert {"campos-conocidos", "forma-choice"} <= nombres, nombres
     assert "confidence" in " ".join(exc.value.motivos)
     del alterado

@@ -1,0 +1,28 @@
+# PRE remediacion ORDEN-CAMBIO-2026-09-22 / bloque A
+# fecha: 2026-09-22 12:35:15
+# HEAD: a3ab8f9
+.....................................................                    [100%]
+============================== warnings summary ===============================
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 8 durations =============================
+7.66s call     tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_en_el_arbol_real_no_hay_archivos_no_parseables
+7.36s call     tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_el_escaneo_publica_la_poblacion_que_lo_sostiene
+7.26s call     tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+0.70s call     tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_alterar_la_forma_del_proveedor_falso_rompe_este_mismo_test
+0.04s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_anadir_un_segundo_proveedor_toca_un_archivo
+0.04s call     tests/quality_gates/decision_client/test_decision_client_contract_forma.py::test_el_pin_del_modelo_esta_declarado_y_no_decide_nada
+0.03s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_los_dos_proveedores_se_despachan_por_la_misma_puerta
+0.03s call     tests/quality_gates/decision_client/test_decision_client_segundo_proveedor_un_archivo.py::test_el_arbol_del_repo_no_se_toca_para_medir
+53 passed, 6 warnings in 23.51s
