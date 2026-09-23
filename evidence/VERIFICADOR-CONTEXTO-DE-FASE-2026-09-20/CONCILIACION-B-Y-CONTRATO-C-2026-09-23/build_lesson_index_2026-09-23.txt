@@ -1,0 +1,3 @@
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json

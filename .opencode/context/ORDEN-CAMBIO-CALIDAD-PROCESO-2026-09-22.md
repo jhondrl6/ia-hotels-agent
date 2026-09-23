@@ -1,6 +1,8 @@
 # Orden de cambio — Calidad y coste del proceso de ejecución
 
-**Estado: bloque A autorizado y ejecutado (ver §5-bis); B, C y piloto PENDIENTES de autorización.**
+**Estado: bloque A autorizado y ejecutado (ver §5-bis) y su pendiente contractual con CONTEXTO cerrado
+el 2026-09-23 (ver §5-ter); B, C y piloto PENDIENTES de autorización.** El contrato del piloto
+(CONTEXTO/C) quedó preparado con enmiendas locales **E1–E5**, **sin ejecutar**.
 **Fecha de la revisión:** 2026-09-22.
 **Mandato original:** crear únicamente este documento; no ejecutar fases ni modificar código, configuración central o planes existentes. El §5-bis registra la autorización posterior que acotó la ejecución del bloque A.
 
@@ -41,7 +43,7 @@ Los alias de esta tabla se usan únicamente en esta orden; las rutas parten de l
 
 | Alias | Directorio | Estado observado y tramo a adaptar |
 |---|---|---|
-| CONTEXTO | `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` | A/B cerradas offline; remediación puntual de B por alcance separado; C, D y RELEASE pendientes. |
+| CONTEXTO | `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` | A/B cerradas offline; remediación puntual de B por alcance separado, **conciliada y aceptada por el plan propietario el 2026-09-23** (§5-ter: S11/S12 aceptadas, README rectificado, AC9 precisado); **C contractualmente preparada con E1–E5 y no ejecutada**; D y RELEASE pendientes. |
 | WHATSAPP | `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/` | A/G/0/B cerradas, B con deuda AC5 asignada a C-D; adaptar C, D, E, F, H, E2E, VERIFY y RELEASE. El README y partes de dependencias aún presentan B pendiente, pero su prompt, su fila y el commit `473ed0f` corroboran el cierre. |
 | JEV | `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/` | A ejecutada offline con muestra BORRADOR y revisión humana pendiente; B/C/RELEASE pendientes. El bloque de arranque todavía ofrece ejecutar A. |
 | ESCRITURA-QMIND | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/` | Fase única pendiente; conservar su propiedad del writer y de su integración con validaciones. |
@@ -53,6 +55,11 @@ Hay trabajo ajeno preexistente en `JEV/dependencias-fases.md`: 18 líneas locale
 ## 4. Bloques de cambio propuestos
 
 ### A. Remediación técnica focalizada, antes del consumidor de CONTEXTO
+
+**⟦Estado al 2026-09-23⟧.** Ejecutado en `fdd397f` (§5-bis) y **conciliado con su plan propietario**
+(§5-ter): los tres bullets de abajo que pedían resolver S11, resolver S12 con destino explícito y
+declarar AC9 con precisión están **hechos y aceptados**. Lo que sigue pendiente de este bloque es lo que
+él mismo difería al bloque B (proceso común e instrumentos).
 
 - Añadir regresiones de los cinco contraejemplos de la revisión; después corregir clasificación de fallos, validación estructural y unicidad de IDs, sin introducir decisiones por defecto ni capturar errores para devolver un favorable.
 - Compartir el escaneo real entre aserciones independientes sobre el mismo árbol; mantener aisladas las pruebas que mutan el módulo o el árbol. Separar conceptualmente cliente y certificación; extraer archivos solo si el beneficio lo justifica, no como objetivo de volumen.
@@ -78,7 +85,7 @@ Hay trabajo ajeno preexistente en `JEV/dependencias-fases.md`: 18 líneas locale
 
 | Plan | Ajustes de contrato que deben quedar resueltos antes de ejecutar el tramo afectado |
 |---|---|
-| CONTEXTO/C | Definir decisión binaria y confianza sin equiparar probabilidad de sí con confianza; recomendación: `choice` de dos opciones si se necesita confidence independiente. Propuestas de un falso no se incorporan como lecciones pertinentes sin revisión humana. Elegir lectura de JSON con frescura propia o construcción en memoria y alinear estados/tests: no exigir `VENCIDO` si la opción elegida lo elimina. AC15 semántico continúa no ejercitado y D6 dormida. |
+| CONTEXTO/C | **⟦RESUELTOS el 2026-09-23 como E1–E5 en el contrato del plan; ninguno implementado⟧** Definida la decisión binaria como `choice` de dos opciones con `confidence` independiente (la recomendación de esta fila es la que se adoptó, confirmada contra `decision_client.py`); las propuestas de un falso no se incorporan sin revisión humana; **E2** eligió lectura del JSON con frescura propia (ruta b) y alineó estados/tests/prompt — `VENCIDO` **no** se elimina: lo produce el check del propio C; AC15 semántico continúa `NO-EJERCITADO` y D6 dormida. Queda por ejecutar la fase. |
 | CONTEXTO/D | Medir carga total, incluido workflow obligatorio y coste del pack; no prometer ahorro por concatenación. Aceptar explícitamente el resultado no medido de C. Definir frescura por fuentes relevantes, con HEAD como procedencia, evitando invalidación circular por el commit del propio generado; acordar resolución y regeneración tras archivado. |
 | CONTEXTO/RELEASE | Resolver «verificador verde» frente a D1 sin ejecutar; subida/consulta QMind frente a cero red; y `--check` posterior al traslado sin regeneración prevista. No convertir RELEASE en reparación de código. Mantener resultados parciales sin promoverlos a éxito. |
 | WHATSAPP | Reconciliar el punto de reanudación en C y adaptar sus tramos pendientes al cierre común aprobado. Conservar deuda AC5, contratos aditivos, pruebas de botón seguro, aislamiento interno/cliente, corrida única y lectura directa de VERIFY. Resolver con la gobernanza común la discrepancia ya registrada sobre cuándo regenerar DOMAIN_PRIMER, sin tratar su generación y su validación como la misma operación. |
@@ -92,10 +99,10 @@ Actualizar maestro, contrato, prompts pendientes y resúmenes que expresen las r
 | Decisión | Recomendación | Estado |
 |---|---|---|
 | Alcance de implementación | Aprobar A, B y C por bloques y archivos concretos; autorizar expresamente los cambios centrales/configuración necesarios | PENDIENTE |
-| Encaje con deudas | Enlazar A con S11/S12 y B con D1/D3 de CONTEXTO, sin crear propietarios paralelos; mantener D2 y activación D7 fuera. Adelantar D3 respecto a su disparador actual requiere decisión expresa, no interpretación | PENDIENTE |
-| Fecha de REGISTRY | Un único escritor para fecha de última entrada; fecha de release por separado, sin cambiar VERSION para reparar el registro | PENDIENTE |
+| Encaje con deudas | Enlazar A con S11/S12 y B con D1/D3 de CONTEXTO, sin crear propietarios paralelos; mantener D2 y activación D7 fuera. Adelantar D3 respecto a su disparador actual requiere decisión expresa, no interpretación | **PARCIAL 2026-09-23**: el enlace A↔S11/S12 está hecho, ejecutado en `fdd397f` y **aceptado por el plan CONTEXTO** (§5-ter). El enlace B↔D1/D3 **sigue pendiente** con el bloque B sin autorizar. D2 y D7 siguen fuera, como pedía la fila |
+| Fecha de REGISTRY | Un único escritor para fecha de última entrada; fecha de release por separado, sin cambiar VERSION para reparar el registro | PENDIENTE (bloque B, sin autorización; la conciliación del 2026-09-23 **no** lo tocó y lo dejó declarado en `09-` §Correcciones) |
 | Entrega y permisos remotos | Entrega offline verificable, aceptación remota posterior con autorización y presupuesto propios; no fingir que una prohibición de red permite una subida | PENDIENTE |
-| Piloto | FASE-C de CONTEXTO después de remediación y enmiendas, bajo mandato propio; no ejecutarla como parte de redactar o aprobar esta orden | PENDIENTE |
+| Piloto | FASE-C de CONTEXTO después de remediación y enmiendas, bajo mandato propio; no ejecutarla como parte de redactar o aprobar esta orden | **CONTRATO PREPARADO, EJECUCIÓN PENDIENTE**: las enmiendas que la fila pedía están resueltas y conciliadas como **E1–E5** (§5-ter). **No se ejecutó FASE-C** — sigue necesitando su mandato propio |
 
 Orden recomendado: aprobar fronteras y resolver contradicciones; implementar A; adaptar proceso/instrumentos y contratos pendientes de forma coherente; validar; ejecutar el piloto autorizado. Son bloques de trabajo, no nuevas fases automáticas ni promesa de resolver todo en una sesión. Serializar escrituras y cierres sobre archivos compartidos; las lecturas independientes sí pueden hacerse en paralelo.
 
@@ -122,7 +129,7 @@ es la corrección de la primera sesión, que declaró el bloque cerrado de forma
 
 | Pendiente | Dueño |
 |---|---|
-| Registrar en el plan CONTEXTO la aceptación de la remediación A de S11/S12 y actualizar la advertencia vencida de su README («nunca correr el default sobre el árbol vigente», que ya no aplica tras S12). No es un traslado desde asignación exclusiva: el propio plan ya contemplaba «quien toque el script antes» | Plan propietario CONTEXTO (fuera de la autorización de estas sesiones) |
+| Registrar en el plan CONTEXTO la aceptación de la remediación A de S11/S12 y actualizar la advertencia vencida de su README («nunca correr el default sobre el árbol vigente», que ya no aplica tras S12). No es un traslado desde asignación exclusiva: el propio plan ya contemplaba «quien toque el script antes» | ~~Plan propietario CONTEXTO~~ → **HECHO el 2026-09-23**, ver §5-ter |
 | Commit del árbol (con la decisión que implica para las cabeceras versionadas vía hook `version-sync`) y, si procede, push | Operador |
 | Bloque B original, bloque C y piloto (FASE-C de CONTEXTO), cada uno con su autorización específica | Operador |
 
@@ -199,6 +206,66 @@ auto-auditoría están corregidos con rojo reproducido y verde por causa, y el i
 causa de síntoma también en sus caminos `except`. Persiste, declarado y fuera de la superficie
 autorizada, el mecanismo del fallo de pricing flaky. El cierre **contractual** no cambia: registro
 CONTEXTO de S11/S12, commit/push del operador y autorizaciones separadas para B, C y piloto.
+
+> **⟦Rectificada parcialmente el 2026-09-23⟧** de los tres componentes que nombraba ese párrafo, **uno**
+> cambió: el **registro CONTEXTO de S11/S12** se hizo ese día (ver §5-ter). Los otros dos siguen
+> exactamente donde estaban — **commit/push es decisión del operador** y **los bloques B, C y el piloto
+> conservan su autorización pendiente** — y el `fdd397f` que contiene la remediación **sí está commiteado
+> y empujado** (medido el 2026-09-23: HEAD local = `fdd397f`, `git rev-list --count origin/master..HEAD`
+> = **0**), de modo que «sin commit» ya no es una descripción vigente de la remediación técnica.
+
+## 5-ter. Conciliación de CONTEXTO con el bloque A y enmiendas locales sobre CONTEXTO/C (2026-09-23)
+
+Una sesión de solo documento, con autorización expresa del operador, cerró el pendiente contractual que
+esta orden dejó abierto en §5-bis y preparó el contrato del piloto **sin ejecutarlo**. Los tres
+momentos quedan separados en el plan propietario, no fundidos: **cierre original** de FASE-B
+(`647f436`, que además *produjo* S11/S12), **corrección técnica** del bloque A (`fdd397f`, ajena a esta
+sesión) y **aceptación** (2026-09-23).
+
+**Qué se registró en el plan propietario CONTEXTO** (`dependencias-fases.md` §Conciliación, con eco en
+`README.md`, `06-checklist-implementacion.md`, `09-`, `10-` y `00-`):
+
+| Elemento | Estado tras la conciliación |
+|---|---|
+| **S11** (exclusión `.venv-wsl` no declarada en el denominador de AC6) | **Aceptada**, con re-validación offline: `--scan-imports` → `SIN-HALLAZGOS`, `exit 0`; escáner **696** `.py` vs `git ls-files '*.py'` **696** → **residuo 0**, y `.venv-wsl` publicado con 582 archivos excluidos |
+| **S12** (`--report` sin destino pisaba la evidencia de FASE-A) | **Aceptada**: `--report` a secas → `exit 1` con A1–A4 en stdout JSON, aviso por stderr, `sha256` de `evidence/…/FASE-A/informe.json` **idéntico** y `git status --porcelain evidence/` **vacío** |
+| Advertencia del README sobre el default de `--report` | **Rectificada** (queda sin efecto su aplicación a este script; la lección **L-VCF-12** permanece como regla general) |
+| Fila de población AC6 (692/691 + residuo) | **Rectificada** como antecedente vencido |
+| **AC9** | **Precisado**: extensión **local** con proveedor falso, no coste de integrar un SDK real con dependencias y autenticación |
+| Prompt histórico de FASE-B | **Solo nota de cierre/rectificación**; sus instrucciones originales no se reconstruyeron |
+| **Rojo contractual A1–A4** | **Vivo y no convertido en PASS**: `validate_governance_numbers.py` sigue saliendo `exit 1` porque `.agents/` no se edita (D1, instrucción literal). La remediación del bloque A no lo tocaba |
+
+**Decisiones locales sobre CONTEXTO/C (fila §4.C, «CONTEXTO/C»)** — autorizadas sobre **este** plan y
+registradas como contrato **E1–E5** en su `04-contrato-ejecucion.md`, **sin implementar**:
+
+- **E1** decisión binaria = **`choice` de dos opciones**, con `confidence` como campo **independiente**
+  del umbral. **Forma confirmada contra `scripts/decision_client.py`**, no contra su docstring:
+  `RespuestaEleccion` exige `confidence`; `RespuestaNoul` la trae en `None` con `confidence_motivo`.
+  Consecuencia: `probabilidad_si` **no** es confianza y no gobierna el umbral de AC12.
+- **E2** **AC11 cierra su elección abierta en la ruta (b)**: C consume el JSON del índice **tras
+  ejecutar él mismo** la comprobación de frescura; `VENCIDO` es producto del check propio y no de
+  `[6/7]`. Alineados AC11, la matriz §2, los estados, la tabla de tests y el prompt. Las tres causas
+  (**`AUSENTE` / `VENCIDO` / `LECTOR-FALLIDO`**) quedan distinguibles con su test.
+- **E3** las propuestas del proveedor falso **no** entran en §2 de `00-lecciones-capitalizadas.md` en
+  automático: **revisión humana explícita** con **aceptación o rechazo registrado**. Se reescribió el
+  paso 6 del post-ejecución de C, que mandaba lo contrario — una nota al margen no basta contra una
+  instrucción ejecutable vigente.
+- **E4** AC15 semántico **NO-EJERCITADO con motivo**, prohibido simular la aceptabilidad con el falso;
+  **D6 dormida**.
+- **E5** la futura C **conserva el workflow canónico y el proceso común actualmente vigentes**.
+  **Los bloques B y C de esta orden quedan explícitamente diferidos: no aplicados ni declarados
+  cerrados.** Se aprovechó para rectificar dos frases del prompt de C que contradecían el propio
+  contrato (el «tope de 200 llamadas», que no existe como licencia de red, y la referencia a una
+  sección del contrato que no estaba).
+
+**Límites de esta conciliación.** No modificó código, tests, configuración central, `AGENTS.md`,
+`.cursorrules`, `.agents/**`, hooks ni validadores; no tocó los otros tres planes ni D/RELEASE de
+CONTEXTO; no hubo red, QMind, fetch, SDKs, pipeline, archivado, commit ni push. No volvió a registrar
+FASE-B en `REGISTRY.md` ni movió `VERSION.yaml`. La evidencia nueva vive en
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-B-Y-CONTRATO-C-2026-09-23/` y no
+reemplazó ninguna anterior. **Sigue debiendo al operador**: el commit de este árbol documental (y su
+consecuencia sobre las cabeceras vía `version-sync`), y las autorizaciones separadas de bloque B,
+bloque C y piloto.
 
 
 ## 6. Criterios de aceptación de la implementación futura

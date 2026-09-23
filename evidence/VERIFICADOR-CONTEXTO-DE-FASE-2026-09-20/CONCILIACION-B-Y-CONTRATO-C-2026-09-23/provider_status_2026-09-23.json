@@ -1,0 +1,9 @@
+{
+  "provider_status": "NO-CONFIGURADO",
+  "motivo_clase": "env-de-proveedor-sin-definir",
+  "motivo": "IAH_DECISION_PROVIDER no esta definido: no hay proveedor nombrado y esta costura no elige uno por su cuenta",
+  "buscado": {
+    "IAH_DECISION_PROVIDER": null,
+    "IAH_DECISION_PROVIDERS_DIR": null
+  }
+}

@@ -168,3 +168,27 @@ No toques .agents/, run_all_validations.py, el hook, validate_governance_numbers
 vivo. Registra la fase con log_phase_completion.py y regenera el indice en el mismo commit. Deja
 checkpoint si falta autorizacion.
 ```
+
+---
+
+## Nota de cierre de esta fase (2026-09-23) — no reconstruye las instrucciones de arriba
+
+**Esta fase ya se ejecutó: FASE-B cerró VERIFICADO OFFLINE el 2026-09-21 y se commiteó el 2026-09-22
+en `647f436`. Este prompt queda como histórico de esa sesión y no debe volver a ejecutarse.** Tres
+rectificaciones que el texto de arriba no contenía cuando se escribió, y que la fase produjo al
+commitearse:
+
+- **S11 y S12** nacieron del propio commit de la fase y fueron corregidas **fuera de este plan** por el
+  bloque A de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` (`fdd397f`); su **aceptación** por el plan
+  propietario está en `dependencias-fases.md` §Conciliación. La guarda que esta fase publicó en el
+  README sobre `validate_governance_numbers.py --report` sin destino **ya no aplica**.
+- **AC9 se declaró con alcance local**: certifica añadir un proveedor **falso** del repo
+  (`files_changed_to_add_provider = 1`, medido por sha256, sin red ni credenciales), **no** el coste de
+  integrar un SDK real con sus dependencias y su autenticación. Su texto original («añadir el segundo
+  cuesta un archivo») se leía como lo segundo.
+- La instrucción de arriba sobre **`log_phase_completion.py` ya está cumplida y no se repite**: la fase
+  tiene su entrada en `REGISTRY.md`. Volver a registrarla duplicaría la entrada, y ningún cierre de
+  esta fase mueve `VERSION.yaml` (el bump pertenece a RELEASE).
+
+Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-implementacion.md` y
+`06-checklist-implementacion.md`.

@@ -1,0 +1,7 @@
+C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+  H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+  El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+[SIN-HALLAZGOS] decision_client.py - aislamiento de imports (AC6)
+  0 import(s) prohibido(s) fuera de la puerta | 0 carga(s) dinamica(s) hallada(s) | 26 mencion(es) no-import (no son hallazgos) | 0 archivo(s) no parseable(s)
+  poblacion: 696/9655 .py | nodos de import vistos 4411 | excluidos {'venv': 7618, '.venv-wsl': 582, 'tmp_test': 690, 'site-packages': 8889, 'build': 14, 'temp': 69} | tokens ['typesafe', 'typesafe_sdk', 'typesafe-sdk', 'jev', 'httpx2', 'typesafe_adapter', 'adapter_typesafe', 'system_one_adapter']

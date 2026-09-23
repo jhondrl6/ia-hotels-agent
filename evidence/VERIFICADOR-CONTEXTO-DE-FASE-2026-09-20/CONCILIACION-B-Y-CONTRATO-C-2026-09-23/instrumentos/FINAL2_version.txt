@@ -1,0 +1,26 @@
+# COMANDO: python scripts/version_consistency_checker.py
+# MEDIDO: 2026-09-23 barrida final (tras reparar tablas, S13 y la cita R2.2)
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.77.3
+  VERSION.yaml:   4.77.3
+  Codename:       LLMReport honesto cuando ningún provider responde
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-A
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+EXIT=0

@@ -1,0 +1,4 @@
+# COMANDO: python scripts/validate_plan_closure.py
+# MEDIDO: 2026-09-23 barrida final (tras reparar tablas, S13 y la cita R2.2)
+[OK] Cierre de planes: ningún plan vivo declara cierre con filas pendientes
+EXIT=0

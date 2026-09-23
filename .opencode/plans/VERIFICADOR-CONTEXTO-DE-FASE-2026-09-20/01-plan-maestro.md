@@ -129,6 +129,10 @@ de que sea cero.
 | **¿Entra Jev en este plan?** | **NO, por decisión del operador del 2026-09-20.** El acceso existe y la API está habilitada; posponerlo es distinto de no poder usarlo | FASE-B deja la costura lista y AC9 verifica que **añadir** un segundo proveedor sea un cambio de un archivo. La activación queda como deuda **D7** con su disparador |
 | **¿Se compara proveedores dentro de este plan?** | **NO.** Con un único proveedor configurable no hay elección que medir | Reformular AC9 era obligatorio: un AC que exige medir una comparación inexistente se cierra declarando `NO-EJERCITADO` y certifica humo. Es la familia de verde vacuo que AC20 cerró en el otro plan |
 | **¿Dónde vive el pack generado por FASE-D?** | En `…/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/`, **dentro del plan** | `.agents/workflows/` tiene contadores de skills con `glob("*.md")` no recursivo: un `.md` ahí altera lo que reporta `validate_agent_ecosystem.py` y exige seguimiento en su `README.md`. Y AC17 prohíbe escribir en `.agents/` |
+| **¿`confidence` es lo mismo que la probabilidad de sí? (⟦decidido el 2026-09-23, orden §4.C⟧)** | **NO.** La pregunta de pertinencia es `choice` de dos opciones, y el umbral de AC12 se aplica a `confidence` **nombrando el campo** en `basis` | Confirmado contra `scripts/decision_client.py`, no contra su docstring: `RespuestaEleccion` exige `confidence` y `RespuestaNoul` la trae en `None` con `confidence_motivo` —la primitiva no la expone—. Un umbral sobre `probabilidad_si` mediría otra cosa y cerraría AC12 con una métrica que el AC no describe |
+| **¿El JSON del índice puede leerse confiando en que `[6/7]` lo regeneró? (⟦decidido el 2026-09-23⟧)** | **NO. AC11 toma la ruta (b):** C consume el JSON **tras ejecutar ella misma** la comprobación de frescura | L-V2.2 (`PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`): un verificador no apoya su conclusión en el artefacto de otro gate. La ruta (a) (`build()` en memoria) habría **borrado** el estado `VENCIDO`; elegirla aquí sin decirlo dejaría un AC que pide tres estados sobre un diseño que solo produce dos. Coste aceptado: C es responsable de su suelo y mide dos lecturas por corrida |
+| **¿Una lección propuesta por el proveedor falso entra en §2 del `00-`? (⟦decidido el 2026-09-23⟧)** | **NO, no en automático.** Propuesta ≠ pertinente: exige **revisión humana explícita** y su aceptación o rechazo **registrada** con quién decidió | Lo que prueba el falso es la mecánica del camino, no la pertinencia. Auto-triarse con respuestas sintéticas y escribir el resultado en §2 fabricaría la evidencia que AC15 declara `NO-EJERCITADO`, y rechazar en silencio es la familia del filtro que la matriz ya descartó arriba (`VACUOUS_RECALL`). El rechazo también se publica: una fila no desaparece |
+| **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** hoy vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó **solo su bloque A**; su bloque B (proceso común: `AGENTS.md`, executor, plantilla, fecha de REGISTRY) y el C (enmiendas a los otros planes) están **PENDIENTES de autorización**. Ejecutarlos dentro de C sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
 
 ## 3. Alcance y no-alcance
 
@@ -161,8 +165,8 @@ QMind.
 | AC8 | Contract test de forma con proveedor falso y versión pineada | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/contract.txt` |
 | AC9 | **Añadir un segundo proveedor es un cambio de un archivo**, demostrado con un proveedor falso adicional; ningún proveedor de pago se activa en este plan | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/extensibilidad.txt` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/costura.json` → `files_changed_to_add_provider` |
 | AC10 | El triaje **no elimina** ninguna fila anclada de §2 | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json` → `removed: []` |
-| AC11 | Índice ausente o vencido no se lee como «sin candidatos» | ídem → `index_status` |
-| AC12 | Umbral de confianza publicado con valor, base y acción por debajo | ídem → `threshold` |
+| AC11 | Índice ausente o vencido no se lee como «sin candidatos»; **`AUSENTE`, `VENCIDO` y `LECTOR-FALLIDO` son tres causas distinguibles y la frescura la comprueba el propio C** (⟦ruta (b) decidida 2026-09-23⟧) | ídem → `index_status` |
+| AC12 | Umbral publicado con valor, base y acción por debajo, **aplicado a `confidence` de un `choice` de dos opciones** — no a `probabilidad_si` — y las propuestas van a **revisión humana**, no a §2 en automático (⟦decidido 2026-09-23⟧) | ídem → `threshold` |
 | AC13 | ≥1 test contra corpus real archivado, con skip visible y declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` |
 | AC14 | Mutation check sobre el guard real de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` |
 | AC15 | Denominador del triaje con términos usados, ceros incluidos y familias no juzgadas, **más la aceptabilidad que dispara D6** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` |
@@ -255,22 +259,59 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
 - **AC10** — El triaje es **aditivo por construcción**: ningún ID ya presente en §2 de un plan
   puede desaparecer. Artefacto: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json` con `anchored_before`,
   `anchored_after`, `removed` que **debe** ser `[]`; y un test que lo afirma.
-- **AC11** — El suelo determinista es `lecciones_index.json`. Si falta o está vencido, el script
-  **no** emite «no hay candidatos»: emite `AUSENTE` o `VENCIDO` con la ruta buscada y el comando
-  de regeneración (L-PF6, L-PF10). Artefacto: clave `index_status` + tres tests por estado.
+- **AC11** — El suelo determinista es `lecciones_index.json`. Si falta, está vencido o no se puede
+  leer, el script **no** emite «no hay candidatos»: emite `AUSENTE`, `VENCIDO` o `LECTOR-FALLIDO` con la
+  ruta buscada y el comando de regeneración (L-PF6, L-PF10). Artefacto: clave `index_status` + tres
+  tests, uno por causa.
   **Fuente de la decisión (Knowledge Center, `L-V2.2` de
   `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`):** «un verificador no debe apoyar su conclusión en
   el artefacto que genera otro gate» — ese plan lo capitalizó porque leer el JSON era lo obvio y el
   JSON lo produce `[6/7]`; la cura que implementó fue **calcular el índice en memoria** con
   `build_lesson_index.build()` (0,30 s medidos) y fallar con nombre propio si el cálculo cae.
-  FASE-C elige entre las dos rutas **y deja la elección escrita con su costo**: (a) correr
-  `build_lesson_index.build()` en memoria — un solo lector, sin verde heredado; o (b) leer el JSON
-  tras ejecutar él mismo la comprobación de frescura, en cuyo caso `VENCIDO` es un estado que
-  produce su propio check y no un `--check` ajeno. Lo prohibido es la tercera vía: leer el JSON
-  confiando en que otro paso lo regeneró.
+  - **⟦ENMENDADA el 2026-09-23 por la orden de calidad §4.C — la elección queda CERRADA, no abierta para C⟧**
+  **FASE-C elige la ruta (b): consumir el JSON con su propia comprobación de frescura.** Ya no hay
+  elección que la sesión de C tenga que tomar; lo que tiene que implementar es esto, con su costo
+  declarado:
+  - C **ejecuta ella misma** la comprobación de frescura contra el árbol y a partir de ahí emite su
+    estado. **`VENCIDO` es producto del check propio de C**, no de un `--check` ajeno, y por eso el
+    estado sigue vivo (a diferencia de la ruta (a), que lo habría borrado).
+  - **Prohibida la tercera vía**: leer el JSON confiando en que otro gate (el `[6/7]` del hook o la
+    sesión anterior) lo regeneró. Que el archivo exista no es que esté fresco.
+  - **Coste aceptado:** C es responsable de su suelo —si el árbol se movió después de la última
+    regeneración, C lo dice aunque el hook esté verde— y mide dos lecturas del mismo JSON por corrida
+    (la suya y la del check) en lugar de heredar un verde.
+  - **Tres causas distinguibles, ninguna colapsable** (R2.9, y aquí con nombres propios porque el
+    prompt las pide separadas): **`AUSENTE`** = no hay archivo en la ruta buscada → imprime la ruta y
+    el comando de regeneración; **`VENCIDO`** = el archivo existe y se lee, pero **el check de frescura
+    propio de C** no lo aprueba → imprime qué diff lo venció y el comando; **`LECTOR-FALLIDO`** = el
+    archivo existe pero revienta al parsear o no es legible → imprime el motivo. **Un JSON roto jamás
+    produce «sin candidatos» y `VENCIDO` no es `AUSENTE`.**
 - **AC12** — El umbral de confianza se publica **con su valor y su efecto**, y los candidatos se
   separan en `propuesto` y `a-revisar-humano`. Ningún camino del código auto-filtra una lección.
   Artefacto: clave `threshold` con `value`, `basis`, `action_below`.
+  - **⟦ENMENDADA el 2026-09-23 por la orden de calidad §4.C — forma de la pregunta binaria⟧**
+  **La pregunta de pertinencia se formula como `choice` de dos opciones, no como `noul`.** Forma
+  confirmada contra `scripts/decision_client.py` (no contra su documentación): `RespuestaEleccion`
+  trae `eleccion` + `probabilidades` sobre **todas** las opciones + **`confidence` obligatoria**,
+  mientras `RespuestaNoul` trae solo `probabilidad_si` y **`confidence = None` con su
+  `confidence_motivo`** — la primitiva no la expone, y la puerta la **prohíbe** ahí.
+  **Consecuencia operativa, que es el punto de la enmienda: la probabilidad de sí no es confianza y
+  no pueden usarse indistintamente.** El `threshold` de AC12 se aplica a **`confidence`** (cuán seguro
+  está el proveedor de haber leído bien la pregunta), y **`basis` debe nombrar el campo**; un umbral
+  declarado sobre `probabilidad_si` sería otra cosa — cuánto se inclina por «sí» — y cerraría AC12 con
+  una métrica que no es la que el AC describe. Publicar los dos números separados es válido y
+  recomendado; **equipararlos, no**.
+  - **⟦ENMENDADA el 2026-09-23 — qué se hace con las propuestas⟧**
+  **Las propuestas del proveedor falso prueban mecánica y no entran en §2 en automático.** Con `D7`
+  sin activar, quien contesta es un proveedor **falso determinista**: lo que su respuesta demuestra es
+  que el camino funciona (aditividad, estados, umbral), **no** que la lección propuesta sea pertinente.
+  Por eso ninguna fila propuesta puede escribirse en `00-lecciones-capitalizadas.md` §2 por el propio
+  script ni por el cierre de la fase: **cada propuesta exige revisión humana explícita, y su
+  aceptación o rechazo queda registrada con quién la decidió** (aceptada → entra con dueño y «qué
+  cambia» reales; rechazada → se publica el rechazo con su motivo, no se borra). Esto es AC12 en su
+  parte de `a-revisar-humano`, es AC10 (aditividad) del lado del documento, y es la familia de
+  `VACUOUS_RECALL` que la matriz §2 ya descartó: **un verde con proveedor falso no es evidencia de
+  pertinencia.**
 - **AC13** — ≥1 test contra **corpus real archivado**, no contra fixture propio (R2.6). El skip
   por baseline ausente es `pytest.mark.skipif` explícito y la evidencia declara **si el test
   corrió o se saltó**. Artefacto: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` con el nombre del test y su marcador.
@@ -283,6 +324,15 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   que resultaron pertinentes sobre el total propuesto, con su muestra y su método. Ese número es el
   **disparador de la deuda D6** y lo único que decide si el lint de contradicciones se abre en este
   directorio o en uno nuevo. Artefacto: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json`.
+  - **⟦DECLARADO el 2026-09-23 (orden §4.C): el tramo semántico de AC15 permanece NO-EJERCITADO, con
+    motivo⟧** — y no es un descuido ni un ⚠️ prestado: con `D7` sin activar el único emisor de juicio es
+    un proveedor **falso**, así que `acceptance` se publica como `NO-EJERCITADO` con el motivo literal y
+    **D6 sigue dormida**. No se abre un lint de contradicciones semánticas sobre una base que nunca juzgó
+    nada, y **no** se reemplaza el número por una aceptabilidad simulada con el falso para poder cerrar
+    el AC: eso convertiría el disparador de una deuda en una cifra fabricada. Lo que C **sí** cierra con
+    el falso es la mecánica —aditividad (AC10), estados del índice (AC11), umbral publicado (AC12),
+    mutation check (AC14) y denominador con términos y ceros (AC15, su parte no semántica)— y lo que no,
+    se declara con su nombre. **Re-evaluar D6 toca cuando exista un proveedor real, no antes.**
 
 ### FASE-D — `build_phase_briefing.py` (pack derivado y delta de lectura)
 

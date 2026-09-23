@@ -24,6 +24,46 @@ necesita llamar a un servicio real para avanzar, para y deja checkpoint: la llam
 por conveniencia. Consecuencia aceptada y escrita en el maestro: ningún AC de este plan mide calidad
 de decisiones de un modelo real.
 
+## Enmiendas prospectivas ya resueltas para FASE-C (registradas el 2026-09-23)
+
+Fuente: `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.C, fila `CONTEXTO/C`, con
+autorización local del operador sobre **este** plan y solo sobre **estas** cuatro decisiones. **Ninguna
+se implementó todavía**: son contrato para la sesión de C, no trabajo hecho. No acompañan cambio de
+versión, de `REGISTRY.md` ni de configuración central.
+
+| # | Regla que C debe cumplir | Qué deroga o precisa |
+|---|---|---|
+| **E1** | La pregunta de pertinencia es **`choice` de dos opciones**, con `confidence` leída como campo **independiente** del umbral. **Prohibido equiparar `probabilidad_si` con confianza.** | Precisa AC12 y su `basis`; la forma está en `scripts/decision_client.py` (`RespuestaEleccion` / `RespuestaNoul.confidence = None`) |
+| **E2** | C consume `.opencode/lecciones_index.json` **después de ejecutar ella misma** la comprobación de frescura. Prohibido apoyarse en que `[6/7]` del hook u otra sesión lo regeneró. `AUSENTE` / `VENCIDO` / `LECTOR-FALLIDO` son tres causas con su test cada una | **Cierra la elección abierta de AC11** en la ruta (b); con la ruta (a) `VENCIDO` habría dejado de existir y el AC pediría tres estados a un diseño de dos |
+| **E3** | Una propuesta del proveedor falso **no** entra en §2 de `00-lecciones-capitalizadas.md` por sí sola: pasa a `a-revisar-humano` y solo entra con **revisión humana explícita**, dejando la **aceptación o el rechazo registrado** con quién lo decidió. Un rechazo se publica, no se borra | Corrige el paso 6 de post-ejecución del prompt de C, que mandaba «aplicar lo que proponga» sin filtro humano |
+| **E4** | El tramo **semántico** de AC15 se publica `NO-EJERCITADO` con su motivo y **D6 queda dormida**. No se simula una aceptabilidad con el falso para cerrar el AC | Refuerza lo ya escrito en el prompt de C; queda elevado a contrato para que no dependa de leer un párrafo |
+| **E5** | C **conserva el workflow canónico y el proceso común vigentes**: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos de este contrato, y no renumera checks (AC16 delta 0: quick **11**, hook **7**) | Declara explícitamente que los **bloques B y C de la orden de calidad están diferidos, no aplicados ni cerrados**. Ejecutar dentro de C una mejora de proceso sería colar un cambio de gobierno por arrastre de una fase |
+
+**Invariante que ninguna enmienda mueve:** el triaje es **aditivo** (AC10, `removed: []` con su test),
+todo conteo lleva su **denominador** (AC15/AC2), todo verificador de detección se cierra con su
+**mutation check** sobre el símbolo real del guard (AC14), al menos un test corre sobre **corpus real**
+archivado con su skip declarado (AC13), y **la red sigue prohibida** en las cuatro fases (§Regla de
+cero red). Lo enmendado es la **forma de la pregunta, la fuente de la frescura y el destino de las
+propuestas**; no el nivel de garantía.
+
+**Lo que NO se tocó al enmendar** (para que C no lo asuma hecho): las deudas **S10** (dónde vivirá el
+`import` del SDK) y **D7** (activar el proveedor) siguen pendientes y **no son bloqueantes artificiales
+de una C offline** — C se cierra con proveedor falso por diseño; **D6** sigue dormida; y el **rojo
+contractual** de A1–A4 (`validate_governance_numbers.py`, `exit 1`) sigue vivo porque es **D1** y pide
+instrucción literal sobre `.agents/`. La conciliación de FASE-B con la remediación del bloque A está en
+`dependencias-fases.md` §Conciliación.
+
+**Y una restricción nueva que hereda C, nacida de medirlo (S13).** El arnés de mutación de FASE-A
+(`test_governance_numbers_mutation_por_asercion.py`, por su constante `EVIDENCE` junto a `SCRIPT`) tiene el
+**destino de escritura hardcodeado dentro de `evidence/…/FASE-A/mutation/`**: al re-evidenciar R2.8 el
+2026-09-23 re-escribió 7 archivos cerrados de otra fase — sin daño, porque los 7 `git hash-object --path`
+casaron con HEAD, pero con los `mtime` movidos, que es lo que hace invisible este patrón. Es la misma familia
+que **S12 / L-VCF-12**, y aquella cura alcanzó a los dos verificadores, no al arnés. **Cuando C escriba su
+mutation check de AC14 no puede heredar ese patrón**: su evidencia va a
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/`, el destino se declara con la ruta del
+propio cierre (no como constante apuntando al directorio de otra fase), y la prueba de que no pisó pasado es
+por **hash de objeto**, no por `git status` (un re-escritura con bytes idénticos no aparece ahí).
+
 ## Dónde se escribe la evidencia (corregido en la auditoría del 2026-09-20)
 
 Toda la evidencia de este plan va a **`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-X/`**.

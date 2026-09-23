@@ -1,0 +1,7 @@
+comando: ./venv/Scripts/python.exe scripts/decision_client.py --scan-imports
+fecha: 2026-09-23 10:18:09
+HEAD: fdd397f
+---stdout+stderr---
+EXIT=0
+---poblaciones---
+git_lsfiles_py=696

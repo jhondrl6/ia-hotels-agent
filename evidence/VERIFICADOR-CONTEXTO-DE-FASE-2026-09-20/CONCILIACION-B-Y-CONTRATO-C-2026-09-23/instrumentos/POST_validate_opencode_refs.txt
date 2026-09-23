@@ -1,0 +1,1 @@
+[PASS] OpenCode References: todas las referencias existen

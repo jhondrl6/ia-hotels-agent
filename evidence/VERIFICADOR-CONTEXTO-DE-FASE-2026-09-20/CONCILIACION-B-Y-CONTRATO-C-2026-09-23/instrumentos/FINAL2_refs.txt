@@ -1,0 +1,4 @@
+# COMANDO: python scripts/validate_opencode_refs.py
+# MEDIDO: 2026-09-23 barrida final (tras reparar tablas, S13 y la cita R2.2)
+[PASS] OpenCode References: todas las referencias existen
+EXIT=0

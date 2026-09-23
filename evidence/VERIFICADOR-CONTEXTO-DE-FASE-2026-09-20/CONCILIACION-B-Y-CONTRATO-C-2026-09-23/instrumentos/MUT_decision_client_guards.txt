@@ -1,0 +1,17 @@
+# COMANDO: python -m pytest tests/quality_gates/decision_client/test_decision_client_mutation_guards.py -v
+# MEDIDO: 2026-09-23 (re-evidencia de R2.8, guardas de la costura)
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[campos-conocidos] PASSED [  7%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[cobertura-de-preguntas] PASSED [ 15%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-choice] PASSED [ 23%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-score] PASSED [ 30%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[forma-noul] PASSED [ 38%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_guard_de_forma_carga_solo_con_lo_suyo[metadata-modelo-usage] PASSED [ 46%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_apagar_toda_la_lista_no_hace_que_la_puerta_invente_campos PASSED [ 53%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_token_prohibido_deja_de_ver_el_import PASSED [ 61%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_carga_dinamica_deja_de_ver_el_contrabando PASSED [ 69%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC6_superficie_de_proveedores_deja_de_aplicar PASSED [ 76%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_M_AC7_proveedor_por_defecto_inventa_una_decision PASSED [ 84%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_cada_mutante_apunta_a_un_simbolo_distinto_y_vigente PASSED [ 92%]
+tests/quality_gates/decision_client/test_decision_client_mutation_guards.py::test_un_guard_adicional_no_requiere_pinar_nada_en_este_archivo PASSED [100%]
+============================= 13 passed in 0.22s ==============================
+EXIT=0

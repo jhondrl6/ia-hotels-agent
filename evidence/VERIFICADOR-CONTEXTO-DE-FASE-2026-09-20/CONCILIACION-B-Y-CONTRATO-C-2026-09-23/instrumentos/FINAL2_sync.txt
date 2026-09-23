@@ -1,0 +1,22 @@
+# COMANDO: python scripts/sync_versions.py --check
+# MEDIDO: 2026-09-23 barrida final (tras reparar tablas, S13 y la cita R2.2)
+============================================================
+VERSION SYNC (CHECK)
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.77.3
+  codename: LLMReport honesto cuando ningún provider responde
+  date: 2026-09-19
+
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+OK: docs/contributing/REGISTRY.md (registry_last_update) - in sync
+
+============================================================
+Result: All files in sync
+EXIT=0

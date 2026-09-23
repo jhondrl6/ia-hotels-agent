@@ -50,7 +50,32 @@
 - (FASE-B, **2026-09-21**) El `--quick` cayó a 10/11 al registrar la fase, por el mismo conflicto de
   los **dos escritores de la fecha** en `REGISTRY.md` que documentó FASE-A. Corregido con su writer
   (`sync_versions.py --rule registry_last_update`) y no a mano; el conflicto sigue sin dueño de
-  reconciliación y esta es la segunda fase que lo paga.
+  reconciliación y esta es la segunda fase que lo paga. **Y sigue sin dueño después de esta
+  conciliación**: la orden de calidad lo tiene en su **bloque B**, diferido y sin autorización, así que
+  aquí no se cerró ni se declaró resuelto.
+- **⟦Conciliación del 2026-09-23 — correcciones de documento, ninguna de código⟧**
+  - **Rectificada una advertencia vigente del README** que ya no era cierta: la guarda «nunca correr
+    `validate_governance_numbers.py --report` sin destino porque pisa la evidencia de FASE-A». **S12**
+    fue corregida por el bloque A de la orden de calidad (`fdd397f`) y hoy ese comando imprime y no
+    escribe — re-medido aquí con `sha256` idéntico y `exit 1` conservado. La **lección L-VCF-12**
+    permanece como regla general; lo que caducó fue su aplicación a este script.
+  - **Rectificada la fila de población AC6**: el residuo 692−691 que **S11** dejó publicado ya no
+    existe. Re-medido 2026-09-23: escáner **696** vs `git ls-files '*.py'` **696**, con `.venv-wsl` ya
+    declarado en `ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION` y su conteo publicado (582).
+  - **Aceptadas S11 y S12 con su procedencia fuera de este plan**, separando tres momentos que antes se
+    leían como uno: cierre original (`647f436`) / corrección técnica ajena (`fdd397f`) / aceptación
+    (2026-09-23). El propio resumen del bloque A declaraba que el cierre **contractual** le tocaba a
+    este plan: eso es lo que se cerró, y ningún mérito técnico se atribuye a esta sesión.
+  - **Precisado AC9 en el documento**: certifica **extensión local** con un proveedor falso
+    (`files_changed_to_add_provider = 1`), **no** el coste de integrar un SDK real con sus dependencias
+    y su autenticación. La redacción anterior se leía como lo segundo.
+  - **Cuatro enmiendas prospectivas de FASE-C conciliadas** en maestro §2 y §4, contrato
+    (§Enmiendas E1–E5), prompt de C, checklist y este análisis — **no** basta una nota al margen cuando
+    la instrucción ejecutable seguía diciendo lo contrario: el paso 6 del post-ejecución de C mandaba
+    «aplicar lo que proponga el triaje», y esa frase fue reescrita. **Ninguna se implementó.**
+  - **Lo que NO se corrigió** porque no corresponde a esta conciliación: `.agents/` con A1–A4 vencidas
+    (**D1**, instrucción literal), la fecha de `REGISTRY.md` (bloque B de la orden, diferido) y los otros
+    tres planes con D/RELEASE (fuera del alcance autorizado).
 
 
 
@@ -65,7 +90,7 @@
 | Checks del hook `scripts/git_hooks/pre-commit` | 7 | **7** (delta **0**) | Delta esperado **0** — cumplido. Quién lo afirma en `tests/`: `test_validate_plan_closure.py` (`[5/7]`) |
 | `def test_` en `tests/` | **4.330** (PRE de FASE-B) | **4.378** (resta **+48**, verificada: 4.378 − 4.330 = 48) | FASE-B: `tests/quality_gates/decision_client/` = 48 funciones / **53 casos** (parametrización de los 6 guards). La cifra canónica que publica `AGENTS.md` (4.246) sigue vencida por tráfico ajeno y su edición pide instrucción literal |
 | IDs definidos en `.opencode/LECCIONES-INDEX.md` | 320 (re-medido el 2026-09-20) | re-medido al cerrar cada fase: lo publica `build_lesson_index.py` y FASE-A cerró con **325** | Cambia al archivar; lo regenera RELEASE. A6 documentó que esta cifra vence al escribir cualquier `.md` del corpus — **y FASE-B la vuelve a reproducir**: esta fase escribe IDs reales (L-V2.3, L-PF6, L-R.3…) en seis `.md` de plan, así que el índice se regenera en el cierre |
-| Imports del SDK/adapter fuera de la puerta (AC6) | **0** sobre 678 `.py` rastreados / **692** del árbol de trabajo (690 en el primer escaneo: +2 por los instrumentos propios) (medido al abrir FASE-B con el AST de la propia puerta) | **0** re-medido al cerrar (misma población) y **0 otra vez el 2026-09-22**, ya con **691** rastreados (el commit de la fase sumó sus 13 `.py`) sobre los mismos **692** del árbol | El SDK sí existe en el entorno, pero **aislado en `tmp_test/venv-jev-sdk`** y no instalado en el venv del producto; esa exclusión está publicada con su conteo en `import_scanner.txt`, no callada. **Y hay una exclusión que faltaba**: el residuo 692−691 es `.venv-wsl/bin/activate_this.py` (deuda **S11**, lección **L-VCF-11**), que no importa el SDK y por eso no mueve el 0 |
+| Imports del SDK/adapter fuera de la puerta (AC6) | **0** sobre 678 `.py` rastreados / **692** del árbol de trabajo (690 en el primer escaneo: +2 por los instrumentos propios) (medido al abrir FASE-B con el AST de la propia puerta) | **0** re-medido al cerrar (misma población) y **0 otra vez el 2026-09-22**, ya con **691** rastreados (el commit de la fase sumó sus 13 `.py`) sobre los mismos **692** del árbol | El SDK sí existe en el entorno, pero **aislado en `tmp_test/venv-jev-sdk`** y no instalado en el venv del producto; esa exclusión está publicada con su conteo en `import_scanner.txt`, no callada. **Y hay una exclusión que faltaba**: el residuo 692−691 es `.venv-wsl/bin/activate_this.py` (deuda **S11**, lección **L-VCF-11**), que no importa el SDK y por eso no mueve el 0. **⟦Cerrado el 2026-09-23⟧ S11 aceptada** (corrección técnica del bloque A de la orden, `fdd397f`): la exclusión está declarada y **re-medido offline: escáner 696 vs `git ls-files '*.py'` 696 → residuo 0**, con `--scan-imports` en `exit 0` y `excluidos_por_directorio` publicando `.venv-wsl`: 582 |
 | Coste de añadir un proveedor (AC9) | sin instrumento (no existía la costura) | **1** archivo, medido por sha256 sobre la frontera copia+door (`costura.json`) | Tests paralelos: 1, declarado aparte y no escondido para inflar el «1». Con un proveedor **real** (D7) habría además manifiesto de dependencias: eso no está medido aquí porque ningún proveedor se activa |
 | **Carga de lectura declarada por fase (bytes / ~tokens)** | **263.973 / ≈65.993** re-medidos el 2026-09-20 sobre las siete lecturas que suma A7 en el plan de referencia (al concebir: 254.010 / ≈63.502; maestro §1, A7 y A6) | **263.973 / ≈65.993** re-medidos el 2026-09-21 con `stat -c %s` sobre los siete archivos: **sin cambio** (las fases de `REFACTOR-WHATSAPP` no volvieron a escribirlos). FASE-A no reduce lectura: es FASE-D quien debe mover esta fila | **AC20 lo mide con el mismo comando en los dos lados**, sobre las fases de este plan; delta cero o negativo es resultado válido y se explica |
 | Población bajo el patrón de conteo (A8) | **22 instancias `[N/M]` en 17 líneas** + 2 formas «check N» en `.agents/` (medido el 2026-09-20) | **22 / 17 / 2, re-medido el 2026-09-21: idéntico** (el verificador las agrupa en 24 instancias auditables = 22 + 2) | El verificador las clasifica en viva / histórica congelada / vigente-correcta y publica las dos últimas con su conteo; sin esa regla AC1 no es verificable |

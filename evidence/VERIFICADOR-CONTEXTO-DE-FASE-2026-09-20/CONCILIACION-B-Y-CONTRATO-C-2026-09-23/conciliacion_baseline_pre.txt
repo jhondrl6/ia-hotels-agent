@@ -1,0 +1,46 @@
+# CONCILIACION baseline PRE - medido 2026-09-23 sobre HEAD fdd397f (antes de las ediciones de esta sesion)
+# Lado PRE = la revision HEAD, no el arbol de trabajo. Los conteos de scripts se tomaron por corriente
+#   (`git show HEAD:<ruta> | <mismo grep>`), no por estimacion. El git status de abajo es el de esta sesion
+#   al empezar, con las rutas ajenas declaradas.
+# git status --porcelain (al empezar la sesion)
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md   <- ajeno, preexistente, excluido
+
+## 1. checks del --quick y del modo completo  [git show HEAD:scripts/run_all_validations.py | grep -cE ...]
+11
+4
+## 2. pasos del hook versionado  [git show HEAD:scripts/git_hooks/pre-commit | grep -cE '^#   \[[0-9]+/[0-9]+\]']
+7
+## 3. funciones de test canonicas (metodo grep en arbol)  [grep -rE '^\s*def test_' tests --include=*.py | wc -l]
+4424
+## 3b. funciones de test rastreadas, mismo grep contra el commit  [git grep -hE '^\s*def test_' HEAD -- tests | wc -l]
+4424
+## 4. seleccion de tests decision_client (casos recolectados)
+87
+## 4b. seleccion de tests governance_numbers: funciones / casos
+35 / 40
+## 4c. regresiones de S12 (funciones en test_governance_numbers_s12_report_no_escribe.py, agregadas por fdd397f)
+6
+## 5. poblacion escaneada para AC6 (.py rastreados por git)
+696
+## 6. coincidencias de import del SDK/adapter fuera de la puerta
+0
+## 7. IDs definidos del indice de lecciones (criterio del generador: cobertura.ids_con_definicion)
+332
+## 8. bytes de los documentos de gobierno (AC17, stat -c "%s")
+98694 .agents/workflows/phased_project_executor.md
+6123 .agents/workflows/templates/lecciones-capitalizadas-template.md
+## 9. carga de lectura de los 16 documentos gobernados (bytes de blob; divisor 4 = A7)
+703627  ->  175907 tokens
+## 10. hash de objeto de los cuatro scripts gobernados: HEAD [git rev-parse HEAD:<f>] vs arbol [git hash-object --path=<f> <f>]
+b6d0ffa7e4a5  scripts/run_all_validations.py          (HEAD == arbol)
+75e0f5eae93a  scripts/git_hooks/pre-commit            (HEAD == arbol)
+b844914eee89  scripts/build_lesson_index.py           (HEAD == arbol)
+23ee23ca17ea  scripts/validate_governance_numbers.py  (HEAD == arbol)
+# Advertencia de instrumento: `git show HEAD:<f> | sha256sum` NO casa con `sha256sum <f>` en este repo
+#   (core.autocrlf=input): el blob de run_all_validations.py tiene 36.499 bytes y 0 CR, el archivo en
+#   disco 37.412 y 913 CR. Ese par de sha256 desiguales es un artefacto de EOL, no un cambio de script.
+#   El instrumento que si decide es el hash de objeto con el filtro limpio aplicado (arriba) y `git diff`.
+## 11. diff de run_all_validations.py, el hook, build_lesson_index.py y validate_governance_numbers.py (debe estar vacio)
+(fin - vacio)
+## 12. git status sobre .agents/ (AC17)
+(vacio = intacto)

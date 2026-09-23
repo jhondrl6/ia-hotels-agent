@@ -3440,7 +3440,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 21,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3457,7 +3457,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 32,
+      "total_citas": 33,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3761,7 +3761,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 13,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3775,8 +3775,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
-      "planes_que_lo_citan": [],
+      "total_citas": 16,
+      "planes_que_lo_citan": [
+        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
+      ],
       "redefiniciones": []
     },
     {

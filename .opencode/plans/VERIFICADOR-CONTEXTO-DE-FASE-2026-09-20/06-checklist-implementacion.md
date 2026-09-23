@@ -17,13 +17,13 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
 | AC6 | B | aislamiento de imports | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/import_scanner.txt` (conteo + población) | **VERIFICADO OFFLINE** 2026-09-21 (0 imports fuera de la puerta sobre **692** `.py` del árbol de trabajo / 678 rastreados por git; mutante `M-AC6-token` y `M-AC6-carga-dinamica` en `mutation/`) |
 | AC7 | B | proveedor no configurado no decide | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/informe.json` → `provider_status` | **VERIFICADO OFFLINE** 2026-09-21 (los tres estados provocados cada uno por su causa, 5 `motivo_clase` distintos sin colapsar; mutante `M-AC7-proveedor-por-defecto` muestra que un default sí fabricaría decisión) |
 | AC8 | B | contract test de forma con proveedor falso | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/contract.txt` | **VERIFICADO OFFLINE** 2026-09-21 (verde exit 0 y **rojo exit 1 del mismo test** contra una copia del proveedor falso sin `confidence`; pin del modelo declarado y probado por AST como no-used) |
-| AC9 | B | añadir un 2º proveedor cuesta **un** archivo | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/costura.json` → `files_changed_to_add_provider` | **VERIFICADO OFFLINE** 2026-09-21 (valor **1**, `agregados=[falsos_proveedores/falso_segundo.py]`, `modificados=[]`; los dos proveedores se despachan por la misma puerta y contestan distinto. tests paralelos = 1, declarados aparte) |
-| AC10 | C | el triaje **no elimina** fila anclada alguna | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json` → `removed: []` | PENDIENTE |
-| AC11 | C | índice ausente/vencido ≠ sin candidatos | ídem → `index_status` | PENDIENTE |
-| AC12 | C | umbral con valor, base y acción por debajo | ídem → `threshold` | PENDIENTE |
+| AC9 | B | **extensión LOCAL**: añadir un 2º proveedor **falso** cuesta **un** archivo — no el coste de integrar un SDK real ⟦precisión declarada 2026-09-23⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/costura.json` → `files_changed_to_add_provider` | **VERIFICADO OFFLINE** 2026-09-21 (valor **1**, `agregados=[falsos_proveedores/falso_segundo.py]`, `modificados=[]`; los dos proveedores se despachan por la misma puerta y contestan distinto. tests paralelos = 1, declarados aparte) · **re-medido 2026-09-23: `files_changed_to_add_provider = 1`, `exit 0`**, y el propio informe imprime `alcance_de_ac9` diciendo que **no** cubre dependencias ni autenticación de un SDK real (eso es S10/D7) |
+| AC10 | C | el triaje **no elimina** fila anclada alguna **y tampoco escribe §2 por su cuenta** ⟦E3⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json` → `removed: []` | PENDIENTE |
+| AC11 | C | índice **ausente / vencido / lector-caído** ≠ sin candidatos; **frescura comprobada por el propio C** ⟦ruta (b) cerrada 2026-09-23, E2⟧ | ídem → `index_status` | PENDIENTE (contrato **resuelto**, no la ejecución: C implementa, no elige) |
+| AC12 | C | umbral con valor, base y acción por debajo, **sobre `confidence` de un `choice` de dos opciones** ⟦E1⟧ | ídem → `threshold` | PENDIENTE |
 | AC13 | C | ≥1 test contra corpus real, skip declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` | PENDIENTE |
 | AC14 | C | mutation check del guard de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` | PENDIENTE |
-| AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6) | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | PENDIENTE |
+| AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6); con proveedor falso el tramo semántico es **`NO-EJERCITADO`, sin simular** ⟦E4⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | PENDIENTE |
 | AC16 | A,B,C,D | quick en 11 y hook en 7, inalterados en todo el plan | los cuatro `baseline-pre-post.md` | **A: delta 0** y **B: delta 0 verificados 2026-09-21** (quick 11→11, hook 7→7, `git diff` vacío en los cuatro scripts gobernados; +48 funciones de test declaradas aparte) · C/D pendientes |
 | AC17 | A,B,C,D | `.agents/` intocado; familias no cubiertas declaradas | `evidence/…/FASE-A/informe.json` → `families_not_covered[]` + `ac17-y-presupuesto.md` + `git status --porcelain .agents/` (vacio) | **A: VERIFICADO OFFLINE 2026-09-21** · **B: VERIFICADO OFFLINE 2026-09-21** (`git status --porcelain .agents/` vacío; 98.694 / 6.123 bytes idénticos en PRE y POST) · C/D pendientes |
 | AC18 | A,B,C,D | capitalización, citas e índice verdes en el mismo commit | salida de los tres verificadores | **A: los tres verdes el 2026-09-21** (`[9/11]`, `[10/11]` en el quick 11/11 + indice regenerado) · cumplido en el mismo commit `a7564ae` · **B: quick 11/11 verde con el índice regenerado en el cierre de la fase**, y el par viajó **dentro** del commit `647f436` (2026-09-22) con los **7** checks del pre-commit en verde |
@@ -104,6 +104,20 @@ estado) · `NO-EJERCITADO` (el camino no se ejercitó; con el motivo) · `FUERA 
       contra los 692 del escáner se desglosó archivo por archivo y dio un nombre —
       `.venv-wsl/bin/activate_this.py`, exclusión no declarada en `iterar_py()` — que queda como
       **S11** con su lección **L-VCF-11**.
+- [x] **Conciliación con la remediación del bloque A aceptada el 2026-09-23.** S11 y S12 quedaron
+      corregidas en código **fuera de este plan**, por las sesiones del bloque A de
+      `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` (commit **`fdd397f`**, superficie
+      `decision_client.py` + `validate_governance_numbers.py` + sus tests). Ese bloque publicó que lo
+      suyo era **corrección técnica, no cierre contractual**: faltaba la enmienda en este plan, y esa
+      es la que se registra aquí. Re-medido offline en la misma fecha: `--scan-imports` → **0** imports
+      sobre **696** `.py`, y `git ls-files '*.py'` = **696** → **residuo 0** (S11); `--report` sin
+      destino → `exit 1` con A1–A4 y **sha256 de la evidencia de FASE-A intacto** (S12); `--costura` →
+      `files_changed_to_add_provider = 1` con su `alcance_de_ac9` impreso (AC9 = extensión **local**, no
+      integración de un SDK real); selección `decision_client` **87 passed**, `exit 0`. Cierre original
+      (`647f436`), corrección (`fdd397f`) y aceptación (esta fila) van **separados** y no se atribuyen
+      entre sí. **No** se volvió a registrar la fase ni se movió `VERSION.yaml`. Detalle con comandos y
+      códigos: `dependencias-fases.md` §Conciliación y
+      `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-B-Y-CONTRATO-C-2026-09-23/`.
 
 **Lo que esta fase no cerró, con su motivo**: activar el proveedor (**D7**), el lint que lo consumiría
 (**D6**) y una decisión que este repo no puede tomar sola: dónde vivirá el `import` del SDK cuando
@@ -115,14 +129,30 @@ decida, no para que esta fase lo reinterpretara.
 
 ## FASE-C — `triage_lesson_relevance.py`
 
-- [ ] `removed: []` afirmado por un test sobre el §2 real de este plan.
-- [ ] `index_status` distingue presente / `AUSENTE` (ruta) / `VENCIDO` (check del hook que lo detecta).
+**Contractualmente preparada el 2026-09-23, no ejecutada.** Las casillas de abajo ya no admiten
+elección durante la sesión: las cuatro decisiones que el prompt dejaba abiertas quedaron resueltas en
+`04-contrato-ejecucion.md` §Enmiendas (E1–E5) y en el maestro §2/§4.
+
+- [ ] `removed: []` afirmado por un test sobre el §2 real de este plan (AC10).
+- [ ] `index_status` distingue **tres** causas: `AUSENTE` (ruta + comando) / `VENCIDO` (⟦E2⟧ lo produce
+      **el check de frescura propio de C**, no el `[6/7]` del hook) / `LECTOR-FALLIDO` (JSON existente
+      pero ilegible, con su motivo). Ninguna prueba puede decir «sin candidatos».
+- [ ] Umbral ⟦E1⟧ aplicado a **`confidence`** de una pregunta **`choice` de dos opciones**, con `basis`
+      que nombra el campo y un test que afirme que `probabilidad_si` **no** es el campo gobernado.
 - [ ] `threshold` publicado con valor, base y `action_below`; ningún camino auto-filtra.
+- [ ] ⟦E3⟧ El script **no** escribe §2: cada propuesta pasa por **revisión humana explícita** y su
+      **aceptación o rechazo queda registrado** con quién decidió. Aceptada → entra con dueño y «qué
+      cambia»; rechazada → se publica el rechazo. Ninguna fila se borra.
 - [ ] Test contra planes reales de `Archives/` con `skipif` visible y su corrida declarada.
 - [ ] Mutation check sobre el símbolo real del guard de no-filtrado.
 - [ ] `coverage.json` con los términos usados y sus conteos, **incluidos los ceros**.
-- [ ] `acceptance` publicado con muestra y método: es el número que decide si **D6** se activa.
-- [ ] El triaje aplicado sobre `00-lecciones-capitalizadas.md` de este propio plan y su §4 actualizado.
+- [ ] ⟦E4⟧ `acceptance` = **`NO-EJERCITADO` con su motivo** bajo proveedor falso, **sin cifra
+      simulada**; es el número que, con proveedor real, decidirá si **D6** se activa — y D6 sigue
+      **dormida** al cerrar C.
+- [ ] ⟦E5⟧ C cerró leyendo el **workflow canónico vigente** y sin aplicar las mejoras generales de la
+      orden de calidad (bloques B y C **diferidos**): cero renumeración (AC16 delta 0).
+- [ ] §4 del `00-lecciones-capitalizadas.md` actualizado con el auto-triaje del plan y su resultado
+      (propuestas aceptadas / rechazadas), **después** de la revisión humana, no antes.
 
 ## FASE-D — `build_phase_briefing.py`
 

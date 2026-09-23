@@ -1,0 +1,5 @@
+# COMANDO: python scripts/validate_plan_citations.py
+# MEDIDO: 2026-09-23 barrida TERCERA PASADA
+[FAIL] Plan citations: 1 violacion(es) (inventario actual: 744 citas)
+  - NUEVO con citas numericas (1): VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+EXIT=1

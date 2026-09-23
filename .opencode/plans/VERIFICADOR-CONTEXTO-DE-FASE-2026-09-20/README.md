@@ -2,11 +2,15 @@
 
 **Estado: FASE-A ✅ CERRADA el 2026-09-21 (VERIFICADO OFFLINE, AC1–AC5) y FASE-B ✅ CERRADA el
 2026-09-21 (VERIFICADO OFFLINE, AC6–AC9), commiteada el 2026-09-22 en `647f436` — 2 de 4 fases de
-implementación ejecutadas. FASE-C, D y RELEASE pendientes.** *(Esta cabecera estuvo vencida: decía «1 de
-4» y «FASE-B pendiente» mientras la tabla de fases y el contador de ACs del propio README ya contaban B
-por cerrada — el defecto que este plan caza, reproducido sobre su propio índice de entrada y corregido
-el 2026-09-22 al medirlo.)* Concepción: AUDITADA y CORREGIDA
-el 2026-09-20 contra código vivo y contra el Knowledge Center (ver §Correcciones aplicadas).
+implementación ejecutadas. FASE-B quedó además **conciliada el 2026-09-23** con la remediación del
+bloque A de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`: **S11 y S12 aceptadas** (corrección técnica
+ajena, en `fdd397f`) y **AC9 declarado con su alcance local**. FASE-C **preparada contractualmente**
+con sus enmiendas prospectivas ya conciliadas (no ejecutada), y D y RELEASE pendientes.**
+*(Esta cabecera estuvo vencida: decía «1 de 4» y «FASE-B pendiente» mientras la tabla de fases y el
+contador de ACs del propio README ya contaban B por cerrada — el defecto que este plan caza,
+reproducido sobre su propio índice de entrada y corregido el 2026-09-22 al medirlo.)* Concepción:
+AUDITADA y CORREGIDA el 2026-09-20 contra código vivo y contra el Knowledge Center (ver
+§Correcciones aplicadas).
 Renombrado desde `PASO0-VERIFICADOR-PERTINENCIA-2026-09-20` cuando entró FASE-D, porque el
 contenido dejó de ser solo pertinencia.
 
@@ -59,7 +63,7 @@ R5: la evidencia de este plan vive en su propio subdirectorio). Detalle en `depe
 |---|---|---|---|
 | 1 · [A](05-prompt-inicio-sesion-fase-A.md) | `validate_governance_numbers.py`: aserción contra fuente dinámica, denominador, tres estados. AC1–AC5 | MEDIA / alta consecuencia: es el guard de cualquier edición futura de `.agents/` | **✅ VERIFICADO OFFLINE 2026-09-21** (rojo y verde en `evidence/…/FASE-A/mutation/`) |
 | 2 · [B](05-prompt-inicio-sesion-fase-B.md) | `decision_client.py`: costura neutra, contract test de forma, extensión a un segundo proveedor **probada**. AC6–AC9 | MEDIA-ALTA | **✅ VERIFICADO OFFLINE 2026-09-21** (`files_changed_to_add_provider: 1`, rojo del contract test en `contract.txt`, 9 mutantes en `mutation/`) |
-| 3 · [C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: pertinencia **aditiva** sobre el índice generado, con su aceptabilidad medida. AC10–AC15 | ALTA | PENDIENTE |
+| 3 · [C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: pertinencia **aditiva** sobre el índice generado, con su aceptabilidad medida. AC10–AC15 | ALTA | **PENDIENTE de ejecución** — pero **contractualmente preparada el 2026-09-23**: sus cuatro decisiones abiertas quedaron resueltas como **E1–E5** en `04-contrato-ejecucion.md` (§Enmiendas) y conciliadas en maestro, prompt, checklist y resúmenes. **No se implementó nada de C en esta sesión.** |
 | 4 · [D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga de lectura**. AC19–AC23 | MEDIA: gobierna lo que todas las sesiones futuras van a leer | PENDIENTE |
 | 5 · [RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Sync, CHANGELOG, `REGISTRY.md`, decisión sobre D1 y D2/D3, write-back (re-leyendo su interfaz: **D10**) y archivado | MEDIA | PENDIENTE |
 
@@ -97,6 +101,12 @@ quedan intactas.
   la costura y AC9 certifica que **añadir** el proveedor cuesta un archivo; la comparación de
   proveedores se pospone como deuda **D7**. Consecuencia aceptada: ningún AC mide calidad de
   decisiones de un modelo real — miden forma, aislamiento y no-regresión.
+  **Precisión de AC9 declarada el 2026-09-23** (orden de calidad §4.A): lo certificado es **extensión
+  local con un proveedor falso del repo** — `files_changed_to_add_provider = 1`, medido por sha256
+  sobre la frontera copia+puerta, sin red ni credenciales. **No** es el coste total de integrar un
+  **SDK real** en un archivo: sus dependencias y su autenticación no se midieron ni pueden medirse bajo
+  la regla de cero red, y dónde vivirá ese `import` es **S10**/D7 (el propio `--costura` imprime ya
+  esta acotación en su clave `alcance_de_ac9`).
 - **No hace el lint de contradicciones semánticas** (`validate_plan_semantics.py`), que era la otra
   mitad del diagnóstico. Queda como deuda **D6** con un disparador medible: la **aceptabilidad** que
   publique FASE-C. Si el triaje sale inaceptable, D6 **no** se activa — no se apila un segundo
@@ -166,8 +176,8 @@ qué ruta queda fuera del commit y cómo se trata):
 | Checks del `--quick` | **11** (delta 0, AC16) | `grep -cE '^\\s*print\\(f?"\\[[0-9]+/11\\]' scripts/run_all_validations.py` |
 | Pasos del hook | **7** (delta 0, AC16) | `grep -cE '^#   \\[[0-9]+/[0-9]+\\]' scripts/git_hooks/pre-commit` |
 | Funciones de test canónicas (método grep) | **4.378** (4.330 PRE + 48 de B); `AGENTS.md` sigue publicando 4.246 y su cifra está vencida por tráfico ajeno | `grep -rE '^\\s*def test_' tests --include=*.py \\| wc -l` |
-| Herencia de forma para C | `coverage_basis` y el tri-estado, ya re-utilizados por B **sin reinventarlos**; y la costura de B como **única** puerta al proveedor (C no debe importar un SDK: es AC6, no estilo) | `evidence/…/FASE-A/informe.json`, `evidence/…/FASE-B/informe.json` → `costura` |
-| Población AC6 que C no debe mover | **0** imports del SDK/adapter fuera de `scripts/decision_client.py`, **re-medido el 2026-09-22** sobre **692** `.py` del árbol / **691** rastreados por git (678 a 2026-09-21, antes del commit de B: +13 por sus propios archivos). El residuo de 1 entre las dos cifras **no** es tráfico ajeno: es `.venv-wsl/bin/activate_this.py`, una exclusión no declarada del denominador, con dueño en **S11**. Re-medir tras escribir los tests de C, porque C es el consumidor que podría tentar un import | `python scripts/decision_client.py --scan-imports`, `git ls-files '*.py' \| wc -l` |
+| Herencia de forma para C | `coverage_basis` y el tri-estado, ya re-utilizados por B **sin reinventarlos**; y la costura de B como **única** puerta al proveedor (C no debe importar un SDK: es AC6, no estilo). **Y ya no hereda cuatro decisiones abiertas**: E1–E5 del contrato (§Enmiendas, 2026-09-23) cerraron AC11 (ruta b + tres causas), la forma de la pregunta (`choice`, `confidence` ≠ `probabilidad_si`), el destino de las propuestas (revisión humana registrada), AC15 (`NO-EJERCITADO`, D6 dormida) y el alcance de lo que C **no** aplica (bloques B/C de la orden, diferidos). **Leer esa sección antes de la primera tarea de C** | `evidence/…/FASE-A/informe.json`, `evidence/…/FASE-B/informe.json` → `costura`, `04-contrato-ejecucion.md` §Enmiendas |
+| Población AC6 que C no debe mover | **0** imports del SDK/adapter fuera de `scripts/decision_client.py`, **re-medido el 2026-09-23**: el escáner incluye **696** `.py` y `git ls-files '*.py'` cuenta **696** → **residuo 0**. **Antecedente vencido (S11, ya aceptada):** al cerrar B las dos cifras eran 692/691 y el residuo de 1 era `.venv-wsl/bin/activate_this.py`, una exclusión **no declarada** del denominador; el bloque A de la orden de calidad metió `.venv-wsl` en `ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION` (`fdd397f`) y hoy el escáner publica su conteo (582 archivos excluidos por ese directorio). Re-medir tras escribir los tests de C, porque C es el consumidor que podría tentar un import | `python scripts/decision_client.py --scan-imports`, `git ls-files '*.py' \| wc -l` |
 | Índice de lecciones | el par `.md`+`.json` **viajó dentro de `647f436`** (`--numstat`: `LECCIONES-INDEX.md` 24+/17−, `lecciones_index.json` 100+/14−), así que `[6/7]` del hook ya no corta este cierre. **330 IDs** definidos al cerrar B y **332** re-medidos el 2026-09-22 tras el barrido de citas (sube porque el propio barrido define L-VCF-11 y L-VCF-12 — A6 otra vez: la cifra caduca al escribirla); re-medir al abrir C | `python scripts/build_lesson_index.py --check` |
 | Carga de lectura A7 | **263.973 bytes ≈ 65.993 tokens** — re-medidos con `stat -c %s` al cerrar B y **sin cambio** desde el 2026-09-20 (los siete documentos son del plan medido, no de este) | `stat -c %s` sobre los siete documentos |
 | Presupuesto (R2.1) | el instrumento **sigue sin correr**: `find . -name "*.jsonl"` (sin contar `venv/`) devuelve **0** también medido el **2026-09-22**, sexta reproducción de la precondición que capitalizó **D-V2.1**; métrica retirada y unidad contable declarada en `FASE-B/baseline-pre-post.md` | `find . -name "*.jsonl" -not -path "./venv/*" \| wc -l` |
@@ -184,6 +194,19 @@ barrido aprendió a costa de la evidencia de FASE-A: **no correr
 `python scripts/validate_governance_numbers.py --report` sin destino** — su default está fijado dentro de
 `evidence/…/FASE-A/informe.json` y cada corrida re-escribe ese registro cerrado (deuda **S12**, lección
 **L-VCF-12**); para re-muestrear, `--report temp/<archivo>` y comparar contra el `HALLAZGOS` de A1–A4.
+
+> **[Rectificada el 2026-09-23 — la guarda anterior ya NO aplica.]** Ese default de escritura fue
+> corregido por el **bloque A** de `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`
+> (commit **`fdd397f`**, ajeno a este plan) y su aceptación está registrada en
+> `dependencias-fases.md` §Conciliación. Medido de nuevo aquí sobre el árbol vigente:
+> `python scripts/validate_governance_numbers.py --report` **sin destino imprime y no escribe** —
+> `exit 1` con `HALLAZGOS` A1–A4 en stdout JSON puro (el aviso de no-escritura va a stderr), y el
+> `sha256` de `evidence/…/FASE-A/informe.json` queda **idéntico** antes y después. **S12 queda
+> aceptada**; la lección **L-VCF-12** sigue vigente como regla general (*antes de correr un verificador
+> con `--report`/`--write`, mirar si su default toca evidencia commiteada*), pero ya no como guarda
+> obligada para re-muestrear este script. Persiste lo que la guarda no cubría: el **rojo contractual**
+> A1–A4 (`exit 1`) sigue ahí porque `.agents/` no se edita (AC17, deuda **D1/S1**) y un verde de la
+> suite no lo convierte en PASS.
 
 ## Cierre y aceptación
 

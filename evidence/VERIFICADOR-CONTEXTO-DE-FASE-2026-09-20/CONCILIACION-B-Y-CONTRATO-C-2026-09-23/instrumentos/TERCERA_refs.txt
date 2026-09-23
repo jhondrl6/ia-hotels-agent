@@ -1,0 +1,4 @@
+# COMANDO: python scripts/validate_opencode_refs.py
+# MEDIDO: 2026-09-23 barrida TERCERA PASADA
+[PASS] OpenCode References: todas las referencias existen
+EXIT=0
