@@ -1,0 +1,15 @@
+# Estado DESPUES de la corrida de evidencia (comparacion contra no-piso-pasado_ANTES.txt)
+2026-09-24T20:56:38Z
+## git status --porcelain evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (excluyendo FASE-C, que es el destino propio)
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-REMEDIACION-2026-09-24/
+fin
+## FASE-A (expediente cerrado de otra fase): 15 archivos antes, 15 despues
+   sha256 + mtime_ns + tamano identicos: True
+## lectura S13: la igualdad de estado final NO basta por si sola (un utime restaurado la
+   conserva); por eso el arnes de AC14 afirma ademas las OPERACIONES DE ESCRITURA observadas
+   dentro del expediente protegido: ver test_las_dos_salidas_van_a_destino_explicito_y_no_al_
+   expediente_ajeno en tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py
+   y su ancla positiva con el alcance declarado del observador (proceso de pytest, no hijos).

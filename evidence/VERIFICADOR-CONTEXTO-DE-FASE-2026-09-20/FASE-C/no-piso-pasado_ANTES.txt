@@ -1,0 +1,10 @@
+# Estado ANTES de la corrida de evidencia (S13: prueba de que nadie pisa evidencia cerrada)
+2026-09-24T20:53:58Z
+## git status --porcelain evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-REMEDIACION-2026-09-24/
+fin (las rutas de FASE-C se excluyen porque son el destino propio de este cierre)
+## huellas (sha256, mtime_ns, size) de FASE-A: 15 archivos
+guardadas en tmp_huellas_fase_a_antes.json

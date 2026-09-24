@@ -1,0 +1,82 @@
+# Bateria adyacente â€” TERCERA CORRIDA, en primer plano y sin escritores concurrentes
+# (la segunda corrida dio 2 fallos: uno preexistente y otro FALSO, provocado por este propio cierre
+#  escribiendo FASE-C/regression_calidad.txt mientras el test S12 tomaba huellas de evidence/â€¦/)
+# fecha: 2026-09-24T21:35:09Z
+# comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates tests/test_validate_lesson_capitalization.py -q -p no:randomly
+
+........................................................................ [  8%]
+........................................................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 33%]
+........................................................................ [ 41%]
+........................................................................ [ 49%]
+........................................................................ [ 58%]
+........................................................................ [ 66%]
+.......................................................s................ [ 74%]
+........................................................................ [ 83%]
+sssssss.........................................................ss...... [ 91%]
+......................................................................F. [ 99%]
+.                                                                        [100%]
+================================== FAILURES ===================================
+_ test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] _
+
+cutoff = '2026-09-11', plan_esperado = 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11'
+
+    @pytest.mark.parametrize(
+        "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
+    )
+    def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
+        cutoff: str, plan_esperado: str
+    ):
+        """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
+    
+        Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+        verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+        esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+        cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+        seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+        fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+        su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
+        """
+        vs, pobo = vlc.verificar(
+            vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
+        )
+>       assert plan_esperado in pobo["alcance"], pobo["alcance"]
+E       AssertionError: ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+
+tests\test_validate_lesson_capitalization.py:389: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+1 failed, 854 passed, 10 skipped, 10 warnings in 56.93s
+EXIT=1

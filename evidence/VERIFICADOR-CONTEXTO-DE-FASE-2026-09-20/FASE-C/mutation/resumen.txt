@@ -1,0 +1,11 @@
+AC14 — mutation check del guard de no-filtrado (FASE-C)
+simbolo mutado: triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO (leido por guardar_filas_ancladas)
+alcance del observador de escrituras: proceso actual (pytest): pathlib + builtins.open + os + shutil, incluidas rutas indirectas; NO cubre procesos hijos
+destino declarado por el cierre: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation
+VERDE  (guard activo): anchored 14->14 removed=[] intentos=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1']
+ROJO   (guard apagado): anchored 14->3 removed=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1'] intentos=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1']
+lectura: con el guard apagado una fila anclada desaparece de §2; el test de AC10
+  (test_triage_no_elimina_fila_anclada) se pone rojo con el mismo insumo. Eso es lo que
+  prueba que el verde no es un verde por ausencia de oportunidad de borrar.
+emisor de los juicios: proveedor FALSO (falso=True)
+

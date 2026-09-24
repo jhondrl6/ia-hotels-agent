@@ -1,0 +1,37 @@
+{
+  "tool": "triage_lesson_relevance.py",
+  "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+  "head": "da382b1",
+  "generated_at": "2026-09-24T21:28:48Z",
+  "anchored_before": 14,
+  "anchored_after": 14,
+  "removed": [],
+  "filas_cuestionadas_sin_borrar": [
+    "D-V2.1",
+    "L-HF1",
+    "L-NC10",
+    "L-PF10",
+    "L-PF6",
+    "L-R.1",
+    "L-R.3",
+    "L-R.4",
+    "L-V2.1",
+    "L-V2.2",
+    "L-V2.3"
+  ],
+  "intentos_filtrados": [
+    "L-R.1",
+    "L-R.3",
+    "L-R.4",
+    "L-NC10",
+    "L-PF6",
+    "L-PF10",
+    "L-V2.3",
+    "L-V2.1",
+    "L-V2.2",
+    "D-V2.1",
+    "L-HF1"
+  ],
+  "escrita_por_este_script": false,
+  "guard": "triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO"
+}

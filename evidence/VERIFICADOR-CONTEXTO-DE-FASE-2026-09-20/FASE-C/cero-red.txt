@@ -1,0 +1,109 @@
+CERO RED — FASE-C (regla de cero red del contrato de ejecucion; mandato del operador 2026-09-24)
+
+LO QUE SE PROHIBIO Y COMO SE SOSTIENE
+  1. Ningun modulo de red importado por `scripts/triage_lesson_relevance.py`. Unica puerta al
+     proveedor: `scripts/decision_client.py` (AC6/AC7 heredados de FASE-B), cargada por ruta.
+     Comprobacion: `grep -cE '^\s*(import|from)\s+(typesafe|jev|httpx2)' scripts/triage_lesson_relevance.py`
+     -> 0 (exit 1: cero coincidencias reales, no cero por lector roto).
+  2. Guard de red VIVO en la seleccion: `tests/quality_gates/lesson_relevance/conftest.py` parchea
+     `socket.socket`, `create_connection`, `getaddrinfo` y `gethostbyname` como fixture autouse, asi
+     que una fuga es un rojo ruidoso (`RedProhibida`) y no un verde silencioso. Los 56 casos de
+     `run_tests.txt` corrieron con el guard puesto.
+  3. El emisor se declara a si mismo: `informe.json` -> `coste.emisor` =
+     {nombre: "falso-pertinencia", falso: true, credencial_env: null}. `credencial_env: null` es la
+     prueba estructural de que no habia credencial que usar.
+  4. Ninguna clave de proveedor en el entorno de la corrida: el `--report` de evidencia paso las dos
+     variables por entorno de forma explicita, con el comando literal publicado en `reporte-triage.txt`.
+  5. Unica llamada externa en todo el script: `git rev-parse --short HEAD` (subproceso local, para la
+     procedencia del informe). No es red y no resuelve nombres.
+
+ESCANER AC6, RE-MEDIDO AL CERRAR C (C era el consumidor que podia tentar un import)
+  comando: `python scripts/decision_client.py --scan-imports`  ->  `SIN-HALLAZGOS`, exit 0
+  salida de la corrida: 0 imports prohibidos | 0 cargas dinamicas | 26 menciones no-import (no son
+  hallazgos y se publican aparte) | 0 archivos no parseables
+  poblacion que imprime el escaner: 731 .py   ·   `git ls-files '*.py' | wc -l`: 696
+
+DESGLOSE DEL RESIDUO 731 - 696 = 35 (L-VCF-11: una brecha entre dos poblaciones se desglosa archivo
+por archivo y NO se atribuye a la fase que la mira)
+  comando: `git status --porcelain --untracked-files=all -- '*.py'`  ->  35 rutas sin commitear
+    - 14 de FASE-C (codigo y tests): `scripts/triage_lesson_relevance.py`,
+      `tests/quality_gates/lesson_relevance/{__init__.py, conftest.py}`,
+      `.../falsos_proveedores_triage/falso_pertinencia.py` y sus 10 archivos de test
+    -  1 de FASE-C (instrumento de cierre): `evidence/.../FASE-C/instrumentos/correr_mutation_a_evidencia.py`
+    - 20 ajenas, preexistentes en el arbol de trabajo al abrir la sesion (62 rutas sucias medida con
+      `git status --porcelain | wc -l` ANTES de la primera edicion): 17 bajo `evidence/.../BLOQUE-B-*`
+      y `evidence/.../BLOQUE-C-*` (instrumentos de las sesiones del bloque B y del bloque C de la orden
+      de calidad), `tests/support_observador_escrituras.py` (bloque B),
+      `tests/test_registry_fecha_documental.py` y `tests/test_validate_document_integration.py`
+  lectura honesta: el desfase NO es una exclusion no declarada del denominador (eso era S11, ya
+  aceptada). Es el efecto de medir una poblacion **en disco** y la otra **en el indice de git** sobre
+  un arbol con trabajo ajeno sin commitear. Se publican las dos cifras con su comando y su descomposicion.
+  Auto-refutacion dentro de la misma sesion (A6 sobre mi propio numero): la primera medicion de este
+  bloque dio 730/696 = 34 porque el instrumento de cierre aun no existia; el acto de escribirlo subio
+  el residuo a 35. La cifra vigente es la de arriba, y la refutada queda dicha aqui en lugar de borrada.
+
+LA UNICA CIFRA DE POBLACION QUE GOBIERNA UN AC SE LEE DEL ARTEFACTO, NO DE ESTE ARCHIVO
+  `coverage.json` -> `coverage_basis.poblacion_leida_del_indice` (ida del JSON en la propia corrida).
+  El script no pinea 320/332/50/402: hay un test que lo comprueba
+  (`test_la_cifra_no_esta_pineada_en_el_codigo`, en `test_triage_acceptance_no_es_simulado.py`).
+
+MEZCLA DECLARADA EN EL ARBOL (no limpiada: sin commit es ruido de atribucion, no perdida)
+  Al abrir la sesion el arbol traia 62 rutas sucias de trabajo ajeno. Entre ellas estan las rutas que
+  los pasos de cierre de esta fase pisan: `.opencode/LECCIONES-INDEX.md` y
+  `.opencode/lecciones_index.json` (los regenera `build_lesson_index.py`, paso obligatorio del cierre y
+  del contrato §Cierres incrementales punto 5) y `docs/contributing/REGISTRY.md` (lo escribe
+  `log_phase_completion.py`, tambien paso obligatorio). Y
+  `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, que esta sesion toca solo en su §6.
+  No se hizo `git checkout`, `restore` ni `stash` sobre ninguna de esas rutas y no se commiteo nada:
+  la coexistencia se declara aqui en lugar de «limpiarse».
+
+DEUDA D7 (cero proveedor real): no se llamo a ningun servicio. Si la fase la hubiera necesitado, el
+mandato ordenaba parar y dejar checkpoint. No hizo falta: el triaje se ejercito contra el proveedor
+falso determinista de la seleccion, y por eso `acceptance` salio `NO-EJERCITADO` (contrato E4), que es
+el estado previsto por el plan y no un fallo de ejecucion.
+
+ROJOS QUE PRODUCO LA FASE (L-VUP-5: una fase sin un rojo es un falso verde potencial)
+  1. `LECTOR-FALLIDO` por forma: la primera version del check de frescura reventaba con
+     `AttributeError: 'str' object has no attribute 'get'` sobre un JSON que se parsea pero cuya clave
+     `lecciones` no es lista. Rojo propio, cazado por el test parametrizado de la tercera causa, y
+     curado con un estado propio (`LECTOR-FALLIDO` con motivo de forma) en lugar de un `except` que
+     devolviera «sin candidatos».
+  2. Cuatro rojos de test al primer correr la seleccion: (a) el bucket incluia filas ancladas y
+     quebraba la conservacion de AC12, (b) `removed` salia en orden de §2 y `cuestionadas` ordenado,
+     (c) el `basis` del umbral no casaba con una busqueda case-sensitive de «falso», (d) el arnes de
+     AC14 se auto-detectaba al buscar su propia constante vetada. Los cuatro eran del test o del
+     arnes, no del guard; se arreglaron apuntando mejor, no aflojando la asercion.
+  3. El rojo pedido por AC14: apagado `GUARD_ADITIVIDAD_ACTIVO`, §2 pasa de 14 filas a 3 y
+     `removed` lista 11 IDs. En `mutation/mutante_M-AC10-guard-aditividad.json`.
+  4. Rojo preexistente, ajeno a esta fase y NO ocultado:
+     `tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]`
+     falla en la bateria adyacente (`regression_calidad.txt`: 854 passed, 1 failed, 10 skipped).
+     Atribucion medida, no supuesta: el archivo de test, `scripts/validate_lesson_capitalization.py` y
+     el plan archivado implicado estan **intactos contra HEAD** (`git status --porcelain` sobre esas
+     tres rutas devuelve vacio), y al momento de esa corrida esta fase no habia escrito ningun `.md`.
+     Ese rojo ya esta declarado con dueño en la matriz §13 de la fuente unica del bloque B y en §6 de
+     `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` (registros de `REFACTOR-WHATSAPP` FASE-G/0). No se
+     tocado ni se maquillo.
+  5. Rojo **propio y falso a la vez, atribuido sin esconderlo**: la segunda corrida de la bateria
+     adyacente dio **2** fallos en lugar de 1. El nuevo era
+     `test_governance_numbers_s12_report_no_escribe.py::test_report_sin_destino_no_toca_el_expediente_cerrado`,
+     y **no** era un defecto de C ni del verificador de gobernanza: la causa fue el propio cierre de C.
+     El test toma huellas (sha256 + mtime) de `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` —el
+     directorio del plan **entero**, no solo `FASE-A/`— antes y despues de correr el verificador, y este
+     cierre estaba escribiendo `FASE-C/regression_calidad.txt` **dentro de esa misma ventana**, desde un
+     proceso en segundo plano.
+     Diagnostico: en aislado el test pasa (1 passed); re-corrida la bateria en primer plano y sin
+     escritores concurrentes, vuelve a **1 failed / 854 passed**, el patron exacto de la primera corrida.
+     `regression_calidad.txt` lleva la nota de la tercera corrida y su motivo en su encabezado.
+     Lo que se aprende y se declara: **el area que un verificador de «no piso pasado» protege es el
+     arbol de evidencia del plan completo**, asi que dos sesiones que escriben en `FASE-X/` y `FASE-Y/`
+     del mismo plan se ven en las huellas de la otra. No se modifico el test (no es su defecto) y no se
+     lo reporto como preexistente: se corrigio el procedimiento de esta fase.
+
+LO QUE QUEDO SIN EJERCITAR EN C, DICHO EN SU NOMBRE (no un ✅ por omision)
+  - El caso «aplicar a §2 solo los candidatos ACEPTADOS por revision humana»: cero propuestas revisadas
+    en esta sesion, asi que la ruta `ACEPTADA-PARA-QUE-ESCRIBA-UN-HUMANO` esta probada por test pero no
+    instanciada sobre el documento real. AC18 se cumple por via vacua y se declara como tal.
+  - El juicio de pertinencia con emisor real: `acceptance = NO-EJERCITADO` (contrato E4) y **D6 dormida**.
+  - La re-currida del triaje con un `--plans-dir` no estandar: encontrada como limite y registrada como
+    deuda **S14** en `10-analisis-post-implementacion.md`, no callada como detalle.

@@ -1,0 +1,71 @@
+# Seleccion de FASE-C — corrida final sobre el arbol cerrado
+# fecha: 2026-09-24T21:37:55Z
+# comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates/lesson_relevance -v -rs
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 56 items
+
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_acceptacion_no_ejercitado_con_motivo_literal PASSED [  1%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_no_se_simulo_ninguna_aceptabilidad PASSED [  3%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_el_informe_declara_quien_contesto PASSED [  5%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_denominador_con_poblacion_terminos_ceros_y_familias PASSED [  7%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_no_juzgadas] PASSED [  8%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_excluidas_por_el_generador] PASSED [ 10%]
+tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_la_cifra_no_esta_pineada_en_el_codigo PASSED [ 12%]
+tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_el_corpus_real_existe_y_es_legible PASSED [ 14%]
+tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12] PASSED [ 16%]
+tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] PASSED [ 17%]
+tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_la_salida_por_main_sobre_archivado_es_triado PASSED [ 19%]
+tests/quality_gates/lesson_relevance/test_triage_indices_ausente.py::test_ausente_imprime_ruta_y_comando PASSED [ 21%]
+tests/quality_gates/lesson_relevance/test_triage_indices_ausente.py::test_ausente_no_es_sin_candidatos PASSED [ 23%]
+tests/quality_gates/lesson_relevance/test_triage_indices_ausente.py::test_salida_del_main_es_distinta_para_ausente PASSED [ 25%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_json_ilegible_es_lector_fallido_con_su_motivo[bytes-que-noSon-texto-\x00\x01\x02 binario] PASSED [ 26%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_json_ilegible_es_lector_fallido_con_su_motivo[dict-con-lista-{"lecciones": {"no": "es lista"}, "cobertura": []}] PASSED [ 28%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_json_ilegible_es_lector_fallido_con_su_motivo[no-es-json-{"lecciones": [] PASSED [ 30%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_lector_fallido_no_es_ausente_ni_vencido_ni_vacio PASSED [ 32%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_el_main_responde_exit_3_y_dice_el_motivo PASSED [ 33%]
+tests/quality_gates/lesson_relevance/test_triage_indices_lector_fallido.py::test_el_calculo_propio_roto_tambien_es_lector_fallido PASSED [ 35%]
+tests/quality_gates/lesson_relevance/test_triage_indices_vencido.py::test_vencido_lo_detecta_el_check_propio PASSED [ 37%]
+tests/quality_gates/lesson_relevance/test_triage_indices_vencido.py::test_vencido_dice_que_lo_vencio_y_quien_lo_corta_en_el_hook PASSED [ 39%]
+tests/quality_gates/lesson_relevance/test_triage_indices_vencido.py::test_vencido_no_devuelve_candidatos_ni_denominador_favorable PASSED [ 41%]
+tests/quality_gates/lesson_relevance/test_triage_indices_vencido.py::test_la_tercera_via_esta_prohibida PASSED [ 42%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_verde_con_el_guard_activo PASSED [ 44%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_rojo_con_el_guard_apagado PASSED [ 46%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10 PASSED [ 48%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_apagar_el_guard_no_altera_nada_mas PASSED [ 50%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno PASSED [ 51%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_el_destino_no_puede_apuntar_a_otra_fase_por_defecto PASSED [ 53%]
+tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_resumen_publica_el_alcance_del_observador PASSED [ 55%]
+tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_ninguna_fila_anclada_desaparece_y_el_guard_tuvo_trabajo PASSED [ 57%]
+tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_el_informe_del_seccion_dos_trae_los_tres_campos_del_ac10 PASSED [ 58%]
+tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_anchored_after_conserva_las_filas_litales PASSED [ 60%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_todas_las_preguntas_son_choice_de_dos_opciones PASSED [ 62%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_la_primitiva_noul_no_puede_gobernar_el_umbral PASSED [ 64%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_probabilidad_si_no_es_el_campo_gobernado PASSED [ 66%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_misma_probabilidad_distinta_confidencia_cambia_el_bucket PASSED [ 67%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_el_umbral_no_acepta_una_confidence_ausente PASSED [ 69%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[campo] PASSED [ 71%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[value] PASSED [ 73%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[basis] PASSED [ 75%]
+tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[action_below] PASSED [ 76%]
+tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_el_script_no_tiene_camino_de_escribir_seccion_dos PASSED [ 78%]
+tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_corrida_completa_no_toca_el_plan_real PASSED [ 80%]
+tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_incompleta_no_se_aplica_y_ruena_fuerte PASSED [ 82%]
+tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio PASSED [ 83%]
+tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista PASSED [ 85%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_las_tres_partes_del_ac12_estan_en_el_artefacto PASSED [ 87%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_la_accion_por_debajo_no_es_descartar PASSED [ 89%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_todos_los_candidatos_tienen_bucket_y_ninguno_se_pierde PASSED [ 91%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[campo] PASSED [ 92%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[value] PASSED [ 94%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[basis] PASSED [ 96%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[action_below] PASSED [ 98%]
+tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_coste_del_reporte_lleva_tope_publicado PASSED [100%]
+
+============================= 56 passed in 16.57s =============================
+EXIT=0

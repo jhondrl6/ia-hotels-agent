@@ -1,0 +1,41 @@
+R2.6 / AC13 — corpus real archivado: corrio o se salto el test?
+Fecha: 2026-09-24   HEAD: da382b1
+
+DESVIACION DECLARADA POR EL OPERADOR (registrada, no aplicada en silencio):
+  El prompt de la fase decia «planes reales de Archives/». Medido: el «archives/» de la raiz
+  del repo NO contiene planes. El corpus real esta en .opencode/plans/Archives/ (los planes
+  archivados del plan medido). El test apunta alla con skipif sobre el corpus EFECTIVO, no
+  sobre la ruta del prompt: un skip sobre una ruta inexistente seria un verde vacio (L-HF1).
+
+MEDICION DEL CORPUS (comandos re-ejecutables):
+  ls .opencode/plans/Archives/ | wc -l                                        -> 27
+  ls -d .opencode/plans/Archives/*/00-lecciones-capitalizadas.md | wc -l      -> 2 planes con 00- triable
+    - PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+    - TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+
+VEREDICTO: EL TEST CORRIO. Cero saltos en la seleccion.
+  casos de test_triage_corpus_real.py que PASARON            : 4
+  lineas SKIPPED en run_tests.txt (-v -rs)                   : 0
+  casos ejecutados en la seleccion (lineas con ::)           : 56
+  linea de resumen de la corrida                             : ============================= 56 passed in 16.57s =============================
+  (esta es la **corrida final**, re-hecha sobre el arbol ya cerrado; la primera dio 56 passed en 17.02s
+   y el recuento de casos y de saltos no cambio: 4 corpus_real PASSED y SKIPPED = 0 en las dos)
+
+COMANDO LITERAL:
+  ./venv/Scripts/python.exe -m pytest tests/quality_gates/lesson_relevance -v -rs
+  (salida completa en FASE-C/run_tests.txt; el -rs es lo que habria declarado un salto)
+
+QUE PRUEBA EL TEST QUE CORRIO (sobre archivos ajenos a esta fase, no fixture propio):
+  - tria los dos planes archivados reales: lee su §2 del disco y exige anchored_after ==
+    anchored_before y removed == [] sobre filas que esta fase no escribio;
+  - compara el sha256 del 00- archivado antes y despues de la corrida y observa las operaciones
+    de escritura del proceso dentro del directorio del plan (deben ser []): no se escribe sobre
+    §2 de otro plan ni por prueba;
+  - falla, no salta, si el §2 del archivado no produce filas leidas: un corpus mal leido no puede
+    disfrazarse de skip. El skipif solo cubre la ausencia del corpus.
+
+LIMITES DE ESTE VERDE:
+  - el emisor de los juicios es el proveedor FALSO (el informe publica falso=true): AC13 prueba
+    mecanica sobre corpus real, no pertinencia (eso es AC15/E4, NO-EJERCITADO);
+  - el corpus triable son 2 de los 27 archivados: los otros 25 no tienen 00- y por lo tanto no
+    tienen §2 que preservar; ese es el denominador de AC13, publicado aqui y no en otro documento.

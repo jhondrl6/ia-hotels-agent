@@ -1,0 +1,26 @@
+# PAR POST de AC16 - capturado sobre el arbol final de FASE-C
+fecha: 2026-09-24T21:26:14Z
+HEAD (sin commitear): da382b1
+comandos:
+  grep -cE '^\s*print\(f?"\[[0-9]+/11\]' scripts/run_all_validations.py
+  grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit
+quick_checks_11: 11
+hook_pasos_7: 7
+def_test_total: 4508
+def_test_en_lesson_relevance: 46
+indice_ids: 
+diff_agentes: 3
+
+
+# CORRECCION datada de este mismo archivo (medicion A6 sobre mi propia medicion)
+# La primera version de la linea indice_ids salio VACIA: el patron de grep no caso con la
+# salida, porque build_lesson_index --check imprime la cifra entre parentesis y con acentos
+# que la consola de Git Bash no entrega en UTF-8. Re-medido con patron explicito:
+indice_ids_check_POST: 334
+indice_ids_pre_apertura: 332
+delta_indice: +2; la causa es esta fase, que define L-VCF-13 y L-VCF-14 en 10-analisis
+quick_POST: 11/11 con exit 0 (ver run_all_validations_quick_post.txt)
+agentes_sucias_ajenas: 3 rutas, preexistentes al abrir la sesion; C no escribio en .agents/
+   M .agents/workflows/phased_project_executor.md
+   M .agents/workflows/templates/lecciones-capitalizadas-template.md
+   M .agents/workflows/templates/prompt-fase-template.md

@@ -1,0 +1,38 @@
+# Corrida de evidencia del triaje — FASE-C (2026-09-24)
+# Comando LITERAL (el proveedor falso se pasa por entorno; la puerta no tiene default):
+#   IAH_DECISION_PROVIDER=falso-pertinencia \
+#   IAH_DECISION_PROVIDERS_DIR=tests/quality_gates/lesson_relevance/falsos_proveedores_triage \
+#   ./venv/Scripts/python.exe scripts/triage_lesson_relevance.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --report \
+#     --out evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/informe.json --coverage-out evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json --ac10-out evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json
+# HEAD: da382b1   destino declarado explicitamente (L-VCF-12: ningun default dentro de evidencia de otra fase)
+
+[TRIADO] plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | suelo FRESCO (2 lecturas del JSON por el check propio de C)
+  §2 antes=14 despues=14 removed=[] cuestionadas=['D-V2.1', 'L-HF1', 'L-NC10', 'L-PF10', 'L-PF6', 'L-R.1', 'L-R.3', 'L-R.4', 'L-V2.1', 'L-V2.2', 'L-V2.3']
+  candidatos triados: 33 (propuesto=3, a-revisar-humano=16)
+  umbral: confidence >= 0.8 (`por_si` se publica y NO gobierna) | emisor: falso-pertinencia falso=True
+  aceptacion: NO-EJERCITADO — D6 dormida
+  denominador: 33 de 332 IDs juzgados, familias juzgadas ['D', 'DA', 'L'], no juzgadas ['S']
+  terminos de la capa fria: verificador mec=0, pertinencia=0, denominador=2, cobertura medida=2, falso verde=2, fosiliz=7, renumer=1, capa fria=0, triaje=0, lecciones capitalizadas=0
+  §2 escrita por este script: False (propuestas sin revision humana: 3)
+  [DESTINO DECLARADO] el informe se escribe solo donde --out lo nombra; no hay ruta por defecto dentro de la evidencia de otra fase (L-VCF-12)
+  informe escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/informe.json
+  coverage escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json
+  ac10_delta escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json
+EXIT=0
+
+# SEGUNDA CORRIDA (artefactos finales, sobre el arbol final verificado tras regenerar el indice)
+# fecha: 2026-09-24T21:28:48Z  HEAD: da382b1
+# mismo comando literal de arriba
+[TRIADO] plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | suelo FRESCO (2 lecturas del JSON por el check propio de C)
+  §2 antes=14 despues=14 removed=[] cuestionadas=['D-V2.1', 'L-HF1', 'L-NC10', 'L-PF10', 'L-PF6', 'L-R.1', 'L-R.3', 'L-R.4', 'L-V2.1', 'L-V2.2', 'L-V2.3']
+  candidatos triados: 35 (propuesto=5, a-revisar-humano=16)
+  umbral: confidence >= 0.8 (`por_si` se publica y NO gobierna) | emisor: falso-pertinencia falso=True
+  aceptacion: NO-EJERCITADO — D6 dormida
+  denominador: 35 de 334 IDs juzgados, familias juzgadas ['D', 'DA', 'L'], no juzgadas ['S']
+  terminos de la capa fria: verificador mec=0, pertinencia=0, denominador=2, cobertura medida=2, falso verde=2, fosiliz=7, renumer=1, capa fria=0, triaje=1, lecciones capitalizadas=0
+  §2 escrita por este script: False (propuestas sin revision humana: 5)
+  [DESTINO DECLARADO] el informe se escribe solo donde --out lo nombra; no hay ruta por defecto dentro de la evidencia de otra fase (L-VCF-12)
+  informe escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/informe.json
+  coverage escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json
+  ac10_delta escrito en: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json
+REPORT_EXIT=0

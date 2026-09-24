@@ -1,0 +1,9 @@
+# PAR PRE de AC16 - capturado ANTES de la primera edicion de codigo de FASE-C
+fecha: 2026-09-24T20:36:46Z
+HEAD: da382b1
+comandos:
+  grep -cE '^\s*print\(f?"\[[0-9]+/11\]' scripts/run_all_validations.py
+  grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit
+  grep -nE '^#?[[:space:]]*\[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit | grep -c ''
+quick_checks_11: 11
+hook_pasos_7: 7

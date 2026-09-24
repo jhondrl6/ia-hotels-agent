@@ -1,0 +1,113 @@
+{
+  "tool": "triage_lesson_relevance.py",
+  "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+  "head": "da382b1",
+  "generated_at": "2026-09-24T21:28:48Z",
+  "index_status": "FRESCO",
+  "coverage_basis": {
+    "poblacion_leida_del_indice": {
+      "ids_con_definicion": 334,
+      "ids_citados_sin_definicion": 51,
+      "archivos_md_escaneados": 417,
+      "archivos_analysis_escaneados": 16,
+      "archivos_contexto_escaneados": 39,
+      "fuente": "bloque `cobertura` del JSON leido en esta corrida (cifra no pineada: L-V2.3)"
+    },
+    "ids_que_recibieron_juicio": 35,
+    "denominador_juicio": "35 de 334",
+    "ancladas_en_seccion_dos": 14,
+    "familias_del_indice": [
+      "D",
+      "DA",
+      "L",
+      "S"
+    ],
+    "familias_juzgadas": [
+      "D",
+      "DA",
+      "L"
+    ],
+    "familias_no_juzgadas": [
+      "S"
+    ],
+    "familias_excluidas_por_el_generador": [
+      "AC-* (criterios de aceptación por plan)",
+      "NR*/R2.x (reglas del executor, no del corpus)"
+    ],
+    "ids_numericos": {
+      "no_juzgados": 0,
+      "ejemplos": [],
+      "metodo": "regex ^[0-9][0-9.]*$ sobre el `id` del indice"
+    },
+    "terminos_capa_fria": {
+      "archivo": "C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\LECCIONES-INDEX.md",
+      "bytes": 120253,
+      "metodo": "conteo de coincidencias de la cadena literal, case-insensitive, sobre el indice generado — el mismo atajo que el Paso 0 ya usaba, publicado con sus ceros",
+      "ceros": [
+        "verificador mec",
+        "pertinencia",
+        "capa fria",
+        "lecciones capitalizadas"
+      ],
+      "conteos": [
+        {
+          "termino": "verificador mec",
+          "coincidencias": 0
+        },
+        {
+          "termino": "pertinencia",
+          "coincidencias": 0
+        },
+        {
+          "termino": "denominador",
+          "coincidencias": 2
+        },
+        {
+          "termino": "cobertura medida",
+          "coincidencias": 2
+        },
+        {
+          "termino": "falso verde",
+          "coincidencias": 2
+        },
+        {
+          "termino": "fosiliz",
+          "coincidencias": 7
+        },
+        {
+          "termino": "renumer",
+          "coincidencias": 1
+        },
+        {
+          "termino": "capa fria",
+          "coincidencias": 0
+        },
+        {
+          "termino": "triaje",
+          "coincidencias": 1
+        },
+        {
+          "termino": "lecciones capitalizadas",
+          "coincidencias": 0
+        }
+      ]
+    },
+    "pool_no_sometido_a_juicio": {
+      "nota": "se juzgo el pool «el plan lo define o lo cita, y §2 no lo ancla» mas las filas ancladas re-preguntadas. El resto del indice NO se juzgo: los IDs definidos por otros planes y ni citados ni anclados por este son otro corte. Decirlo es el denominador (AC15), no un descarte."
+    },
+    "lecturas_del_json_por_corrida": 2
+  },
+  "aceptacion": {
+    "estado": "NO-EJERCITADO",
+    "valor": null,
+    "muestra": null,
+    "metodo": null,
+    "motivo": "no hay proveedor de decisiones activo en este plan (deuda D7): el emisor del juicio es un proveedor FALSO determinista, asi que `propuesto / a-revisar-humano` mide la mecanica del camino y no la pertinencia. Publicar aqui una aceptabilidad seria fabricar el disparador de la deuda D6 (contrato E4)",
+    "deuda_afectada": {
+      "D6": "dormida — se re-evalua al existir proveedor real, no antes",
+      "D7": "activar el proveedor; no bloquea una FASE-C offline"
+    },
+    "prohibido": "simular la aceptabilidad con el proveedor falso para cerrar AC15 en verde (E4)"
+  },
+  "denominador_juicio": "35 de 334"
+}
