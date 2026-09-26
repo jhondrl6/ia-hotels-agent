@@ -22,6 +22,16 @@ QUE HACE
     Cada ID lleva: enunciado, dueño (plan o CONTEXT), sección donde se define,
     cuántas veces y en qué planes se cita, y en qué planes se re-definió.
 
+FECHAS (S15)
+    `fecha_plan` sale de una **fuente versionada**, en dos cortes: la fecha del nombre del
+    plan y, si el nombre no la trae, la del ultimo commit que toco su documento. El `mtime`
+    esta **prohibido** como origen: no es versionado, asi que dos checkouts del mismo commit
+    publicaban fechas distintas para las mismas lecciones y `--check` fallaba en el segundo
+    (medido el 2026-09-25 sobre `da382b1` y `5817edd`: `LECCIONES-INDEX.md` renderiza identico
+    y solo `lecciones_index.json` difiere, en 11 campos `fecha_plan`). Sin ninguna de las dos
+    fuentes se publica el estado explicito `SIN-FUENTE` con fecha `0000-00-00`, y `--check`
+    lo declara en su salida — nunca una fecha aproximada.
+
 PROHIBIDO EDITAR A MANO
     Los dos artefactos se regeneran. Un indice mantenido a mano deriva y deja de
     servir como evidencia. `--check` falla si estan vencidos.
@@ -39,6 +49,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -66,6 +77,13 @@ ID_RE = re.compile(r"\b((?:DA|D|L|S)-[A-Z0-9][A-Za-z0-9._-]*)")
 ANALISIS_RE = re.compile(r"^(?:09|10)-.*an[aá]lisis.*\.md$", re.IGNORECASE)
 HEADING_RE = re.compile(r"^(#{2,6})\s+(.*)$")
 DATE_RE = re.compile(r"(20\d{2}-\d{2}-\d{2})")
+
+# Fuentes de fecha admitidas (S15). `mtime` ya no esta en la lista: no es una fuente versionada.
+FUENTE_NOMBRE = "nombre"
+FUENTE_COMMIT = "commit"
+FUENTE_SIN_FUENTE = "SIN-FUENTE"
+FECHA_SIN_FUENTE = "0000-00-00"
+
 MAX_STATEMENT_CHARS = 200
 MIN_STATEMENT_CHARS = (
     12  # los enunciados falsos cortos medían 1-8 chars; los largos se caen por `_plausible`
@@ -104,18 +122,60 @@ def _plan_of(path: Path, plans_dir: Path) -> str:
     return rel.parts[0] if len(rel.parts) > 1 else "(raíz)"
 
 
+def _git_fecha(path: Path) -> str | None:
+    """Fecha del ultimo commit que toco `path`, o `None` si no tiene fuente versionada.
+
+    `%aI` y no `%ad`: la fecha del autor sale con su propio offset, asi que recortar los
+    primeros 10 caracteres da la misma cadena en cualquier maquina; `%ad --date=short` la
+    re-formatearia en la zona horaria de quien lee y volveriamos a tener una fecha que
+    depende del entorno. Un documento sin commit (una copia, un arbol extraido, un plan
+    aun sin versionar) devuelve `None`: es un estado, no una fecha aproximada.
+    """
+    try:
+        rel = path.resolve().relative_to(ROOT)
+    except ValueError:
+        return None
+    try:
+        salida = subprocess.run(
+            ["git", "log", "-1", "--format=%aI", "--", rel.as_posix()],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=20,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if salida.returncode != 0:
+        return None
+    for linea in salida.stdout.splitlines():
+        marca = linea.strip()
+        if marca:
+            return marca[:10] if DATE_RE.match(marca) else None
+    return None
+
+
 def _plan_date(plan: str, files: list[Path]) -> tuple[str, str]:
-    """Fecha del plan: la del nombre; si no, la mtime del archivo (aprox)."""
+    """Fecha del plan: la de su nombre; si no, la de su ultima version commiteada.
+
+    Prohibido el `mtime` (S15, ver el docstring). No hay tercer recurso: sin fuente
+    versionada se publica `SIN-FUENTE`, que `--check` declara, en lugar del `max(mtime)`
+    aproximado con el que dos checkouts del mismo commit publicaban fechas distintas.
+    """
     match = DATE_RE.search(plan)
     if match:
-        return match.group(1), "nombre"
-    mtimes = [f.stat().st_mtime for f in files]
-    if mtimes:
-        import datetime
+        return match.group(1), FUENTE_NOMBRE
+    candidatas = [marca for marca in (_git_fecha(f) for f in files) if marca]
+    if candidatas:
+        return max(candidatas), FUENTE_COMMIT
+    return FECHA_SIN_FUENTE, FUENTE_SIN_FUENTE
 
-        stamp = datetime.datetime.fromtimestamp(max(mtimes)).date()
-        return stamp.isoformat(), "mtime"
-    return "0000-00-00", "desconocida"
+
+def _rank_fecha(fuente: str) -> int:
+    """Lo `SIN-FUENTE` ordena despues: un duplicado sin commitear no le usurpa el dueño a
+    la definición versionada. Con `mtime` eso quedaba al azar del reloj de la máquina."""
+    return 1 if fuente == FUENTE_SIN_FUENTE else 0
 
 
 def _valid_match(match: re.Match, text: str) -> bool:
@@ -255,22 +315,28 @@ def _owner_dates(sources: list[dict]) -> dict[str, list[Path]]:
 
 
 def build(plans_dir: Path, context_dir: Path | None = None) -> tuple[dict, dict]:
-    """Devuelve (indice, cobertura). Puro: no escribe archivos."""
+    """Devuelve (indice, cobertura). No escribe archivos; si consulta el historial de git."""
     sources, stats = _sources(plans_dir, context_dir)
     raw_definitions, citations = _scan(sources)
     owner_files = _owner_dates(sources)
+
+    # Una fecha por dueño, calculada una vez: el sort la llama por cada pareja de definiciones
+    # y cada tier 2 es un `git log`, que sin memoización se pagaría O(n log n) veces.
+    fechas: dict[str, tuple[str, str]] = {}
+
+    def fecha_de(owner: str) -> tuple[str, str]:
+        if owner not in fechas:
+            fechas[owner] = _plan_date(owner, owner_files.get(owner, []))
+        return fechas[owner]
 
     lessons: dict[str, dict] = {}
     for lesson_id, defs in raw_definitions.items():
         ordered = sorted(
             defs,
-            key=lambda d: (
-                _plan_date(d["plan"], owner_files.get(d["plan"], []))[0],
-                d["plan"],
-            ),
+            key=lambda d: (_rank_fecha(fecha_de(d["plan"])[1]), fecha_de(d["plan"])[0], d["plan"]),
         )
         owner = ordered[0]
-        fecha, fuente_fecha = _plan_date(owner["plan"], owner_files.get(owner["plan"], []))
+        fecha, fuente_fecha = fecha_de(owner["plan"])
         cite = citations.get(lesson_id, {"total": 0, "planes": {}})
         citing = sorted(cite["planes"].items(), key=lambda kv: (-kv[1], kv[0]))
         lessons[lesson_id] = {
@@ -305,12 +371,17 @@ def build(plans_dir: Path, context_dir: Path | None = None) -> tuple[dict, dict]
         key=lambda e: (-e["total_citas"], _sort_key(e["id"])),
     )
 
+    por_fuente = {FUENTE_NOMBRE: 0, FUENTE_COMMIT: 0, FUENTE_SIN_FUENTE: 0}
+    for entry in lessons.values():
+        por_fuente[entry["fuente_fecha"]] = por_fuente.get(entry["fuente_fecha"], 0) + 1
+
     coverage = {
         "archivos_analysis_escaneados": stats["archivos_analysis"],
         "archivos_contexto_escaneados": stats["archivos_contexto"],
         "archivos_md_escaneados": stats["archivos_md"],
         "ids_con_definicion": len(lessons),
         "ids_citados_sin_definicion": len(undefined),
+        "fechas_por_fuente": por_fuente,
         "familias_incluidas": list(FAMILIES),
         "familias_excluidas": [
             "AC-* (criterios de aceptación por plan)",
@@ -319,6 +390,31 @@ def build(plans_dir: Path, context_dir: Path | None = None) -> tuple[dict, dict]
         "exclusiones_nombre": ["*OBSOLETO* fuera del corpus de definiciones"],
     }
     return {"lessons": lessons, "undefined": undefined}, coverage
+
+
+def _linea_cobertura_fechas(coverage: dict) -> str:
+    """Publica de dónde salió cada `fecha_plan`. Sin esta línea, un `SIN-FUENTE` se leería
+    como una fecha más del corpus (S15)."""
+    por = coverage["fechas_por_fuente"]
+    return (
+        f"- **Fuente de cada `fecha_plan`**: `{por.get(FUENTE_NOMBRE, 0)}` del nombre del plan, "
+        f"`{por.get(FUENTE_COMMIT, 0)}` del último commit que tocó su documento, "
+        f"`{por.get(FUENTE_SIN_FUENTE, 0)}` en estado explícito `SIN-FUENTE`. El `mtime` no es "
+        "una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas."
+    )
+
+
+def _linea_de_fuentes(coverage: dict) -> str:
+    """Declaración ASCII que el check imprime antes de su veredicto: un verde sin esta línea
+    no dice cuántas fechas quedaron sin fuente versionada (S15, y L-VCF-3)."""
+    por = coverage["fechas_por_fuente"]
+    linea = (
+        f"[fechas] nombre={por.get(FUENTE_NOMBRE, 0)} commit={por.get(FUENTE_COMMIT, 0)} "
+        f"sin_fuente={por.get(FUENTE_SIN_FUENTE, 0)}"
+    )
+    if por.get(FUENTE_SIN_FUENTE, 0):
+        linea += f" AVISO: hay lecciones sin fuente versionada, con fecha_plan={FECHA_SIN_FUENTE}"
+    return linea
 
 
 def render_md(index: dict, coverage: dict) -> str:
@@ -356,6 +452,7 @@ def render_md(index: dict, coverage: dict) -> str:
         "- Detecta definiciones por convención de formato (ID en la primera celda de una",
         "  tabla, o encabezando un título/línea en negrita). Una lección redactada fuera",
         "  de esa convención aparece como «citada sin definición», no se pierde.",
+        _linea_cobertura_fechas(coverage),
         "",
         "## Sumario",
         "",
@@ -457,8 +554,10 @@ def main() -> int:
         if stale:
             print(f"[FAIL] Índice de lecciones vencido: {', '.join(stale)}")
             print("Regenera: python scripts/build_lesson_index.py")
+            print(_linea_de_fuentes(coverage))
             return 1
         print(f"[OK] Índice de lecciones fresco ({coverage['ids_con_definicion']} IDs)")
+        print(_linea_de_fuentes(coverage))
         return 0
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -472,6 +571,8 @@ def main() -> int:
     )
     print(f"  -> {_visible(md_path)}")
     print(f"  -> {_visible(json_path)}")
+    # Al final del todo: el resumen abria la salida y hay quien lee esa primera linea (L-VCF-3).
+    print(_linea_de_fuentes(coverage))
     return 0
 
 

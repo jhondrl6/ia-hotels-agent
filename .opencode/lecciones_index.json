@@ -7,6 +7,11 @@
     "archivos_md_escaneados": 422,
     "ids_con_definicion": 339,
     "ids_citados_sin_definicion": 51,
+    "fechas_por_fuente": {
+      "nombre": 328,
+      "commit": 11,
+      "SIN-FUENTE": 0
+    },
     "familias_incluidas": [
       "L",
       "DA",
@@ -3822,7 +3827,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3850,7 +3855,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 18,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -4221,13 +4226,14 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
-      "total_citas": 15,
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
@@ -4243,8 +4249,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4265,8 +4271,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 9,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4287,8 +4293,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 8,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4308,8 +4314,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 8,
       "planes_que_lo_citan": [
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
@@ -4329,8 +4335,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 7,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4350,8 +4356,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 9,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4371,8 +4377,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 8,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4392,8 +4398,8 @@
       "origen": "contexto",
       "archivo": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
       "seccion": "5. Criterios de éxito para el plan DT-2",
-      "fecha_plan": "2026-07-24",
-      "fuente_fecha": "mtime",
+      "fecha_plan": "2026-07-26",
+      "fuente_fecha": "commit",
       "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
@@ -4414,7 +4420,7 @@
       "archivo": "CONTEXT-DT-3-TECH-DEBT-POST-DT2.md",
       "seccion": "6. Criterios de éxito (DoD)",
       "fecha_plan": "2026-08-29",
-      "fuente_fecha": "mtime",
+      "fuente_fecha": "commit",
       "total_citas": 5,
       "planes_que_lo_citan": [
         "Archives/DT-3-TECH-DEBT-2026-07-25",
@@ -4432,11 +4438,12 @@
       "archivo": "CONTEXT-DT-3-TECH-DEBT-POST-DT2.md",
       "seccion": "6. Criterios de éxito (DoD)",
       "fecha_plan": "2026-08-29",
-      "fuente_fecha": "mtime",
-      "total_citas": 5,
+      "fuente_fecha": "commit",
+      "total_citas": 7,
       "planes_que_lo_citan": [
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": []
