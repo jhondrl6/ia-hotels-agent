@@ -3,15 +3,15 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.77.3 | **Codename**: LLMReport honesto cuando ningún provider responde
-> **Release date**: 2026-09-19 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.78.0 | **Codename**: Gobernanza, costura, pertinencia y carga medida
+> **Release date**: 2026-09-25 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 206 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 207 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -36,7 +36,7 @@
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **commercial_documents/** | 9 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
-| **asset_generation/** | 21 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
+| **asset_generation/** | 22 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryAssetState, DeliveryAssetEntry, DeliveryContext; D |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
 | **geo_enrichment/** | 8 | AssetType, AssetResponsibility, AssetResponsibilityContract; GEODashboard; GEOBand, ScoreBreakdown, GEOAssessment, GEODiagnostic; GEOEnrichmentLayer; GeoFlowResult, GeoFlow; HotelSchemaEnricher; LLMsT |
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-20 | v4.77.3 LLMReport honesto cuando ningún provider responde*
+*Auto-generado: 2026-09-25 | v4.78.0 Gobernanza, costura, pertinencia y carga medida*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
