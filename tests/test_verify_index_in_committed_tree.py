@@ -93,3 +93,89 @@ def test_el_arbol_materializado_no_queda_parcial(tmp_path):
     materializadas = re.search(r"\((\d+) rutas materializadas\)", corrida.stdout)
     assert materializadas, corrida.stdout
     assert int(materializadas.group(1)) >= 550, "el checkout dejó un árbol parcial: el veredicto es ruido"
+
+
+# ---------------------------------------------------------------------------
+# S20 — el árbol del clon tiene que ser byte a byte el del commit
+# ---------------------------------------------------------------------------
+
+GOBERNADA = ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md"
+RUTA_CLON = Path(".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20")
+PLAN = "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+
+
+def _blob(rev: str, ruta: str) -> bytes:
+    return subprocess.run(
+        ["git", "show", f"{rev}:{ruta}"], cwd=str(ROOT), capture_output=True, check=True
+    ).stdout
+
+
+def _clon_con_autocrlf(destino: Path, rev: str, autocrlf: str) -> Path:
+    """Clonar `rev` fijando `autocrlf` a voluntad: el control negativo necesita el valor malo."""
+    clon = destino / f"arbol-{autocrlf}"
+    subprocess.run(["git", "-c", "core.autocrlf=input", "clone", "--local", "--no-checkout",
+                    str(ROOT), str(clon)], cwd=str(ROOT), capture_output=True, check=True)
+    subprocess.run(["git", "config", "core.longpaths", "true"], cwd=str(clon), capture_output=True)
+    subprocess.run(["git", "config", "core.autocrlf", autocrlf], cwd=str(clon), capture_output=True)
+    subprocess.run(["git", "checkout", rev, "--", *("scripts", ".opencode")],
+                   cwd=str(clon), capture_output=True, check=True)
+    return clon
+
+
+@pytest.fixture(scope="module")
+def _arbol_fresco(tmp_path_factory):
+    """Un solo clon del verificador para toda la clase: cada materialización cuesta ~6 s."""
+    destino = tmp_path_factory.mktemp("verif-s20")
+    corrida = _correr(REV_FRESCA, destino)
+    assert corrida.returncode == 0, corrida.stdout + corrida.stderr
+    return destino / "arbol"
+
+
+def test_el_arbol_del_verificador_es_byte_identico_al_blob(_arbol_fresco):
+    """Lo que el `--check` de briefing compara son bytes: si el checkout los reescribe, el rojo es del
+    instrumento y no del commit. Medido el 2026-09-26 (S20): `git clone` no copia el `core.autocrlf`
+    local, el `-c` del comando no llega al `checkout`, y el clon heredaba el `true` del ámbito system."""
+    materializado = (_arbol_fresco / GOBERNADA).read_bytes()
+    assert materializado == _blob(REV_FRESCA, GOBERNADA), (
+        "el árbol del clon no es el del commit: S20 volvió (remates reescritos por autocrlf heredado)"
+    )
+    assert materializado.count(b"\r\n") == 0, "el blob es LF; aparecer CRLF es la firma del defecto"
+
+
+def test_control_negativo_con_autocrlf_true_reescribe_los_remates(tmp_path):
+    """Sin esta rama la prueba anterior sería un verde vacío: habría pasado con cualquier árbol."""
+    clon = _clon_con_autocrlf(tmp_path, REV_FRESCA, "true")
+    reescrito = (clon / GOBERNADA).read_bytes()
+    assert reescrito.count(b"\r\n") > 0, "el control no ejercitó la conversión: no vale como control"
+    assert reescrito != _blob(REV_FRESCA, GOBERNADA)
+
+
+def test_briefing_check_no_corta_rojo_falso_en_el_arbol_del_commit(_arbol_fresco):
+    """El síntoma concreto por el que nació S20, y ahora cerrado: los packs comparan sha de bytes.
+
+    `build_phase_briefing.py --check` emite por **stderr** y su criterio es el **código de salida**: leer
+    solo `stdout` daría un vacío que se parecería a un verde.
+    """
+    corrida = subprocess.run(
+        [sys.executable, "scripts/build_phase_briefing.py", "--plan", PLAN, "--check"],
+        cwd=str(_arbol_fresco), capture_output=True, text=True, encoding="utf-8", errors="replace",
+    )
+    salida = corrida.stdout + corrida.stderr
+    assert corrida.returncode == 0, salida
+    assert "[OK]" in salida and "SHA-DISTINTO" not in salida, (
+        "falso rojo de S20: el --check de briefing ve fuentes movidas donde el árbol es idéntico"
+    )
+
+
+def test_briefing_check_si_corta_rojo_falso_con_autocrlf_true(tmp_path):
+    """La otra mitad del control: sobre el mismo commit, con el valor heredado, el rojo aparece."""
+    clon = _clon_con_autocrlf(tmp_path, REV_FRESCA, "true")
+    corrida = subprocess.run(
+        [sys.executable, "scripts/build_phase_briefing.py", "--plan", PLAN, "--check"],
+        cwd=str(clon), capture_output=True, text=True, encoding="utf-8", errors="replace",
+    )
+    salida = corrida.stdout + corrida.stderr
+    assert corrida.returncode != 0 and "SHA-DISTINTO" in salida, (
+        "el control negativo dejó de ejercer el defecto con autocrlf=true forzado: o el writer dejó "
+        "de comparar bytes y esta prueba ya no mide S20, o hay que re-anclarla a otra revisión"
+    )

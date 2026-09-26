@@ -508,4 +508,30 @@ y las dos fallan silenciosamente si el árbol no es fiel.
 barrido acotado al corpus —
 `grep -rn --exclude-dir=node_modules --exclude-dir=Archives 'S20' .opencode/plans .opencode/context` — da **0**,
 que es la afirmación que importa. `S20` está libre. Los números en uso en este libro son
-S1, S8, S10-S13, S16, S17, S18, S19.
+S1, S8, S10-S13, S16, S17, S18, S19 y esta misma S20.
+
+⟦**S20 curada el 2026-09-26, por instrucción del operador de seguir el orden propuesto.** Aplicada en
+`scripts/verify_index_in_committed_tree.py`: `clon_fiel()` fija `core.longpaths=true` **y**
+`core.autocrlf=input` dentro del clon antes del `checkout`, y **lee el valor efectivo** — si no es `input`,
+sale `EXIT=2` con motivo, porque un árbol infiel no puede dar ni verde ni rojo. Se separó el materializado
+del `--check` porque hay un segundo consumidor: `scripts/verify_packs_in_committed_tree.py` (abajo). Verificado
+sobre `c85dff9`, una revisión publicada fija: con `input` el `--check` de briefing da `EXIT=0` y los packs del
+clon son **byte a byte** los del blob (`git ls-files --eol` dice `i/lf w/lf`, y el clone devolver `i/lf w/crlf`
+era la firma del defecto); con `true` forzado el mismo commit da `EXIT=1` con `SHA-DISTINTO`. La batería vive en
+`tests/test_verify_index_in_committed_tree.py` (9 funciones, cuatro nuevas) y su control negativo **ejerce** el
+defecto en lugar de simularlo, con la advertencia de re-anclaje si el `--check` dejara de ser ciego. Detalle de
+instrumento corregido en el camino: contar remates con `grep -c $'\r'` da **todas las líneas del archivo**, no
+los retornos de carro; se cuenta por bytes (`b"\r\n"`) o con `tr -dc`.⟧
+
+⟦**Cura (b) de S19 implementada el 2026-09-26**, en la misma instrucción: `scripts/verify_packs_in_committed_tree.py`
+materializa la revisión con `clon_fiel`, regenera los packs con `--briefing-dir` hacia un scratch **dentro del
+árbol del commit** (sin `--informe` ni `--carga`, que es la guarda de S12), y compara cada pack por `sha256`
+**normalizado**. La normalización es la que dejó la medición de `19-`: el sello `· generado \`<UTC>\``,
+`generated_at` y `head`, que AC21 ya declaró no gobernantes. Veredictos: `0` reproduce, `1` diverge, `2` no
+evaluable — y esa tercera salida existe por una medición que hice mal primero: el clon materializaba solo
+`scripts` y `.opencode`, así que FASE-RELEASE, que declara `docs/CONTRIBUTING.md`, salía como `PACK-AUSENTE` y
+mi verificador lo contaba como divergencia. Amplié el materializado a `docs` y `.agents` (~1 s) y dejé la
+clasificación honesta para lo que quede fuera. El control negativo no simula: muta en el clon el literal `[8/11]`
+que el propio escritor copia al pack y exige **dos** cosas a la vez — que este verificador dé `EXIT=1` con la
+diferencia señalada, y que `build_phase_briefing.py --check` dé `EXIT=0` sobre ese mismo árbol. Ese par es S19
+convertido en máquina. `tests/test_verify_packs_in_committed_tree.py`: 5 funciones.⟧

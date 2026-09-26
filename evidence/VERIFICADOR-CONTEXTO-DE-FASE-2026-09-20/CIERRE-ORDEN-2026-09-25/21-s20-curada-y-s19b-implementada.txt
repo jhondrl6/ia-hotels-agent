@@ -1,0 +1,163 @@
+21 — S20 curada y (b) de S19 implementada, con los dos defectos que la construcción de la herramienta reveló
+Medido 2026-09-26, sobre `d25d44d`. Ejecuta el orden que propuso la revisión de la lista de pendientes:
+higiene → S20 → (b) de S19 → el costo de atarlos al `--quick`, con números.
+
+## 0. Qué se autorizó y qué no
+
+Instrucción del operador: «sigue el orden de prioridades que propones». Cubría (1) el commit de higiene
+(hecho: `d25d44d`, 2 rutas de evidencia, hook 7/7), (2) la cura de S20 y (3) la implementación de la cura (b)
+de S19 — ambas son código, y ese fue precisamente el consentimiento que se pidió. **No** cubre (4): atar los
+dos verificadores al `--quick`, que es una decisión con denominador (12 → 13) y re-anclaje de pines. Su costo
+está medido en §6 y la decisión queda en el operador.
+
+## 1. S20: la fidelidad del materializado es propiedad del clon, no del comando
+
+Cura en `scripts/verify_index_in_committed_tree.py`. Se extrajo `clon_fiel(destino, rev)` — el materializado
+dejó de ser un paso interno de `revisar()` porque hay un segundo verificador que necesita el mismo árbol, y
+duplicar el clon sería duplicar la trampa. Dentro de `clon_fiel`, antes del `checkout`:
+
+    core.longpaths=true      (ya estaba; S15)
+    core.autocrlf=input      (nuevo; S20)
+
+y después, una **lectura del valor efectivo**: si `git config --get core.autocrlf` en el clon no devuelve
+`input`, el script sale `2` con motivo. No es paranoia decorativa: un árbol infiel produce un veredicto que no
+mide el commit, y ese veredicto no merece ni el verde ni el rojo.
+
+Medición del defecto sobre `c85dff9`, revisión publicada fija, mismo commit en ambos experimentos:
+
+| Materialización | `--check` de briefing | packs vs blob |
+|-----------------|-----------------------|---------------|
+| `autocrlf` heredado del ámbito system (`true`) | `EXIT=1`, `SHA-DISTINTO` en 7 rutas | `i/lf w/crlf` |
+| `autocrlf=input` escrito dentro del clon | `EXIT=0`, los cinco `[OK] … fuentes frescas` | `i/lf w/lf` |
+
+Y la comprobación que corta la especulación: `git ls-files --eol` sobre las rutas gobernadas dice **`i/lf w/lf`**
+en el repo, y los packs del clon curado son `bytes == blob` (`sha256` igual a 12 prefijos: `db9baf0a4268`,
+`304274798800`, `0c923f4b91ec`). Es decir: el árbol del clon curado **es** el árbol del commit.
+
+**Anulación de una cifra que publiqué hoy mismo.** `20-` §2 transcribe «466 líneas con CR en el clon, igual que en
+el árbol de trabajo», medida con `grep -c $'\r'`. Ese conteo es inválido: `-c` cuenta **líneas que casan** y el
+patrón `$'\r'` llega a grep como patrón vacío, así que casaba **todas** las líneas del archivo. Los archivos
+gobernados tienen **0** `b"\r\n"`. La conclusión de `20-` (el rojo era artefacto del clon, y con `input` da
+verde) sigue siendo cierta: se sostuvo en los códigos de salida, no en ese conteo. Queda anotado en la propia
+fila S20 del libro de deuda.
+
+## 2. Batería de S20 (4 funciones nuevas en `tests/test_verify_index_in_committed_tree.py`, 9 en total)
+
+- `test_el_arbol_del_verificador_es_byte_identico_al_blob` — compara el pack gobernado del clon contra
+  `git show <rev>:<ruta>`, y exige 0 pares CRLF. Su mensaje dice que el blob es LF, para que un futuro fallo
+  se lea como «S20 volvió» y no como misterio.
+- `test_control_negativo_con_autocrlf_true_reescribe_los_remates` — clona el mismo commit fijando `true`, y
+  **demuestra** que aparecen CRLF y que el bytes difiere del blob. Sin esta rama, la prueba anterior sería un
+  verde vacío: pasaría con cualquier árbol.
+- `test_briefing_check_no_corta_rojo_falso_en_el_arbol_del_commit` — el síntoma concreto: `EXIT=0` y sin
+  `SHA-DISTINTO` en el árbol curado.
+- `test_briefing_check_si_corta_rojo_falso_con_autocrlf_true` — y su inverso: `EXIT≠0` con `SHA-DISTINTO` en
+  el árbol enfermado. Las dos leen **stdout + stderr** y deciden por **código**: `build_phase_briefing --check`
+  emite sus hallazgos por stderr, y mirar solo stdout daría un vacío que se parece a un verde.
+
+## 3. La (b) de S19, y los dos defectos que su construcción encontró
+
+Herramienta nueva: `scripts/verify_packs_in_committed_tree.py`. Materializa con `clon_fiel`, regenera con
+`--briefing-dir` hacia un scratch **dentro del árbol del commit** (sin `--informe` ni `--carga`: la guarda de
+S12), y compara cada pack por `sha256` **normalizado**. La normalización es la que midió `19-`: el sello
+`· generado \`<UTC>\``, `generated_at` y `head` — los tres no-gobernantes por diseño (AC21), y los únicos
+53 caracteres volátiles de 9.481 líneas. Veredictos: `0` reproduce, `1` diverge, `2` no evaluable.
+
+**Defecto 1, mío, y silencioso.** Con `--keep temp/x`, la ruta del scratch era **relativa**, y el subprocess
+corre con `cwd=clon`: el escritor resolvió esa relativa **dentro del clon**, escribió allí, y mi comparación
+no encontró nada. El veredicto fue `NO-PRODUCIDO` para los **cinco** packs, o sea un `EXIT=1` rotundo que no
+medía absolutamente nada. Se corta por dos vías: `clon_fiel` devuelve ahora la ruta `resolve()`d, y
+`test_un_destino_relativo_no_escribe_dentro_del_clon` materializa con un destino relativo a propósito y exige
+árbol absoluto, ausencia de `NO-PRODUCIDO` y `EXIT=0`.
+
+**Defecto 2, de alcance del materializado.** El clon traía `scripts` y `.opencode`, pero FASE-RELEASE declara
+entre sus fuentes **`docs/CONTRIBUTING.md`**. Sin esa ruta el escritor la marca `FUENTE-AUSENTE`, no emite el
+pack, y mi primera versión lo contaba como divergencia — acusando al commit de algo que el instrumento no
+había materializado. Se arregla por los dos lados: la materialización pasa a `scripts`, `.opencode`, `docs` y
+`.agents` (cuesta ~1 s y hace evaluable al pack), y queda además la clasificación honesta
+`[NO-EVALUABLE] … (el escritor no lo emite: fuente fuera del árbol: …)` con salida `2`, ejercitada por
+`test_una_fuente_fuera_del_arbol_no_se_disfraza_de_verde`, que borra `docs/` del clon y exige que el veredicto
+**no** sea ni verde ni `DIVERGE`.
+
+Consecuencia sobre lo ya transcrito: el árbol del verificador era **565** rutas (el número que aparece en `20-`
+§2, con `scripts` + `.opencode`), pasó a **587** al añadir `docs` y `.agents`, y es **588** en el árbol de este
+commit — el script nuevo y su test también cuentan. Es un **derivado del árbol, no un invariante**: se lee con
+`git -C <clon> ls-files -z -- scripts .opencode docs .agents | tr '\0' "\n" | wc -l` y sube con cada archivo
+versionado. El bloque de `20-` no se re escribe: es cita exacta de la corrida que fue.
+
+Y confesión de método: en un borrador de §6 yo escribía «610 rutas», que no era el materializado sino el
+**total del repo** (6.106) leído con un cero de más. Lo cazó la medición directa, no la lectura.
+
+Además, en el intento de corregir esta misma cifra usé `python -c "…"` con backticks dentro de comillas
+dobles y la shell los **ejecutó** como sustitución de comando («docs: command not found»). Es el defecto que
+este repo ya pagó en `626c737` y que la fila S20 del libro repite: el intento no corrompió el archivo porque
+ninguna sustitución casó, pero la salida con errores era fácil de leer como «ya quedó corregido». Las
+ediciones de texto van por herramienta de edición, no por `sed`/`python -c` con backticks.
+
+## 4. El control que convierte S19 en máquina
+
+No se simula el defecto: se ejerce sobre una revisión publicada. En un clon curado de `c85dff9` se cambia el
+literal `[8/11]` del **escritor** por `[8/99]` (mismo largo, misma línea: solo el producto del escritor se
+mueve; las fuentes no). El mismo árbol da entonces:
+
+    build_phase_briefing.py --check            →  EXIT=0   (la ceguera de S19, reproducida)
+    verify_packs_in_committed_tree.py --clon    →  EXIT=1   [DIVERGE] FASE-RELEASE.md (1 líneas) L18 ...
+                                                       ...escanea `validate_opencode_refs.py` ([8/11]) -> ...([8/99])
+
+`test_detecta_la_edicion_del_escritor_que_el_check_no_ve` afirma las **dos** cosas a la vez. Si alguien
+gobernara al escritor desde `--check` (la cura (a), descartada en `19-`), la primera aserción cae y el test
+avisa que este verificador sobra. Es la señal de que el control todavía tiene dientes.
+
+Detalle de atribución que también fue error mío: la primera versión del `[DIVERGE]` imprimía el **prefijo** de
+la línea (110 caracteres). Como las líneas de un pack son frases largas y el token cambia está al final, el
+veredicto mostraba `docs/CONTRIBUTING.md — 19763 bytes…` y ocultaba el `[8/99]`. Ahora `_primera_diferencia`
+calcula el prefijo común de las dos líneas y muestra 24 caracteres de contexto y 34 de diferencia por lado.
+Un `[DIVERGE]` sin la diferencia a la vista obliga a reproducir la corrida a mano, que es justo lo que se
+evitó.
+
+## 5. Cifras que esta ejecución movió
+
+- Funciones test del método canónico: **4.573 → 4.582** (+9: 4 en la batería de S20, 5 en la nueva de la (b),
+  todas en `tests/*.py`). `git grep -c -E "^\s*def test_" HEAD -- tests` sigue dando 4.573 hasta que este
+  commit viaje; viaja con la nota, que es la regla de la casa.
+- Fila `root test files`: **946 → 955**; suma comprobada de las 22 filas: **4.582** = encabezado.
+- Instrumento del lector (`pytest --collect-only -q`): **4.647 → 4.656** items; desviación con 4.582 publicado
+  = **1,6 %**, `check_2_test_count` pasa (`validate_agents_md.py` `EXIT=0`).
+- Cola canónica tras la escritura de corpus: packs `EXIT=0`, índice `EXIT=0`
+  (`nombre=328 commit=11 sin_fuente=0`), `--check` del índice `EXIT=0` (339 IDs), `--check` de packs `EXIT=0`,
+  `--quick` **12/12 `EXIT=0`** con `Plan Citations: 743 históricas, 0 nuevas, 0 crecimientos`. El par del
+  índice **no cambió de contenido**: las dos notas nuevas del libro no mencionan ningún `L-…`.
+- Baterías tocadas (`test_verify_index_in_committed_tree`, `test_verify_packs_in_committed_tree`,
+  `test_build_lesson_index_s15_fecha_versionada`, `quality_gates/governance_numbers/`,
+  `quality_gates/phase_briefing/`): **116 passed** en 77,69 s.
+- Suite completa posterior a todo (`pytest tests/ -q`, con el exit escrito **dentro** del archivo porque el de
+  la notificación en segundo plano es el de la cadena shell):
+  **`4 failed, 4608 passed, 41 skipped, 4 xfailed, 230 warnings in 342.45 s (0:05:42)`, `EXIT=1`**. Los
+  pasados suben de 4.599 a 4.608 — **+9, exactamente las dos baterías nuevas** — y los cuatro rojos son **los
+  mismos cuatro nombres** que el baseline (`18-` §6/§8, atribuidos contra clon en `17-` §5): pricing
+  dependiente del orden, geo, la capitalización del plan TRIBUNAL archivado y `test_validate_wiring` con la
+  contaminación `tmp_test/venv-jev-sdk`. Ninguna regresión.
+- Modo completo `run_all_validations.py` (16 checks, no forma parte del mandato de cierre pero lo corro por
+  haber añadido scripts): **15/16**, y el único rojo es `[Tests]`, que ejecuta pytest y tropieza con esos
+  cuatro preexistentes. `Wiring` subió de 1.355 a **1.359** archivos sin que ningún check pinee ese número
+  (es de los que imprime la corrida).
+
+## 6. Costo medido de atar los dos verificadores al `--quick` (decisión pendiente)
+
+    verificador del índice en el árbol del commit:   5.518 ms
+    verificador de packs en el árbol del commit:     2.392 ms
+    --quick completo hoy:                           31.987 ms   (12 checks)
+
+Atarlos a los dos: **+7,9 s, o sea +25 %** del rápido, y dos clones de **588 rutas** cada uno (§3 tiene el
+comando con el que se mide, y la advertencia de que el número sube con cada archivo). Atar solo el de packs:
++2,4 s (+7,5 %) y es el que cierra S19, el hueco que
+**ningún** otro check ve. Mi lectura: si se ata
+uno, el de packs; los dos, sobre un rápido que ya se usa en cada cierre de fase, es un costo que merece tu
+palabra y no mi iniciativa. Cada uno que se ate **mueve el denominador 12 → 13 (o 14)** y re-ancla los cinco
+pines que D2 fijó hoy, así que el costo real no son los segundos sino la tercera ronda de re-anclaje.
+
+## 7. Lo que NO se hizo
+
+No se ató nada al `--quick`. No se aplicó la opción `generado_por_sha`. No se escribió la convención (c) en
+`.agents/**` (config central, pide instrucción explícita). No se tocó `.cursorrules`. No se empujó nada: este
+commit queda local, y el push pide instrucción aparte con su gate L3 ofrecido.

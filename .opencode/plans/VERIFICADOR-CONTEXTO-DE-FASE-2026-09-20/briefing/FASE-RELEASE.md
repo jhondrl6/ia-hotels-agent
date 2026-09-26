@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+- **procedencia**: HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -414,7 +414,7 @@ sin instruccion literal, y no hagas ninguna llamada remota sin su autorizacion p
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md` · sha256 `b6b8eb825b61f450191a800050df7bff0cb2ed757b5baffa40b54c5a62ada934` · 31443 bytes copiados de 31443 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md` · sha256 `b6b8eb825b61f450191a800050df7bff0cb2ed757b5baffa40b54c5a62ada934` · 31443 bytes copiados de 31443 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -675,7 +675,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `01-plan-maestro.md` §6
 
@@ -697,7 +697,7 @@ en silencio una restricción del plan.
 | D9 | Write-back de `10-analisis-post-implementacion.md` a QMind | Este plan, FASE-RELEASE | Orden R2.5/R2.10: `--upload` **antes** del `git mv`, y segunda regeneración del índice obligatoria después |
 | **D10** | **Re-leer la interfaz del write-back antes del cierre.** `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (commiteado, PENDIENTE, con disparador anterior al `FASE-RELEASE` de `REFACTOR-WHATSAPP`) declara dentro de su alcance `scripts/validate_qmind_writeback.py` **y su connection en `scripts/run_all_validations.py`**, y piensa añadir `--title`/`--file` y fin de la degradación a PASS. El orden de cierre de este plan (§`04-contrato-ejecucion.md`) invoca ese script | Este plan, FASE-RELEASE | Que al llegar el RELEASE se ejecute `validate_qmind_writeback.py --help` contra el árbol vigente y el orden se re-escriba si la interfaz cambió. **No** es dependencia de ejecución: este plan puede correr antes o después, y AC16 (delta 0) sigue protegiendo el conteo |
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 7195 bytes copiados de 54033 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 7195 bytes copiados de 54033 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `04-contrato-ejecucion.md` §Dos momentos del cierre
 
@@ -720,7 +720,7 @@ cierre offline ni la sustituye una subida pendiente. Con la aceptación remota p
 **puede** archivar solo si el operador lo autoriza expresamente sabiendo que la fuente no se publicó;
 si no, deja checkpoint. Nunca se promueve un resultado parcial a éxito del cierre (§Orden del cierre).
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 1874 bytes copiados de 29211 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 1874 bytes copiados de 29211 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `04-contrato-ejecucion.md` §Carga total y frescura del pack
 
@@ -764,7 +764,7 @@ el pack con la ruta ya trasladada y **después** verificarlo. Regenerar un artef
 propio generador es operación de cierre autorizada a RELEASE; **modificar `build_phase_briefing.py`
 para que el check pase no lo es** (§Restricciones del prompt de RELEASE: RELEASE no modifica código).
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 3250 bytes copiados de 29211 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 3250 bytes copiados de 29211 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `04-contrato-ejecucion.md` §Orden del cierre
 
@@ -783,7 +783,7 @@ autorización propia del archivado.
 
 ```bash
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 928 bytes copiados de 29211 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 928 bytes copiados de 29211 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` (documento completo)
 
@@ -1066,7 +1066,7 @@ y su `--check` en verde—. Su recuento **no se copia a este `.md`**: sería la 
 transcrita al corpus queda vencida por el propio acto de transcribirla (**L-VCF-19**).
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 53192 bytes copiados de 53192 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 53192 bytes copiados de 53192 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `06-checklist-implementacion.md` (documento completo)
 
@@ -1432,7 +1432,7 @@ Cumplido en su parte offline, con la evidencia en `evidence/…/FASE-RELEASE/` (
 - [ ] Todos los ACs con estado alcanzable declarado, incluidos ⚠️ y `NO-EJERCITADO`.
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md` · sha256 `304274798800bab9f9ecf470d3634850e280a58780cda1b7f8a205fabffa3d1f` · 47959 bytes copiados de 47959 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md` · sha256 `304274798800bab9f9ecf470d3634850e280a58780cda1b7f8a205fabffa3d1f` · 47959 bytes copiados de 47959 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -1946,10 +1946,36 @@ y las dos fallan silenciosamente si el árbol no es fiel.
 barrido acotado al corpus —
 `grep -rn --exclude-dir=node_modules --exclude-dir=Archives 'S20' .opencode/plans .opencode/context` — da **0**,
 que es la afirmación que importa. `S20` está libre. Los números en uso en este libro son
-S1, S8, S10-S13, S16, S17, S18, S19.
+S1, S8, S10-S13, S16, S17, S18, S19 y esta misma S20.
+
+⟦**S20 curada el 2026-09-26, por instrucción del operador de seguir el orden propuesto.** Aplicada en
+`scripts/verify_index_in_committed_tree.py`: `clon_fiel()` fija `core.longpaths=true` **y**
+`core.autocrlf=input` dentro del clon antes del `checkout`, y **lee el valor efectivo** — si no es `input`,
+sale `EXIT=2` con motivo, porque un árbol infiel no puede dar ni verde ni rojo. Se separó el materializado
+del `--check` porque hay un segundo consumidor: `scripts/verify_packs_in_committed_tree.py` (abajo). Verificado
+sobre `c85dff9`, una revisión publicada fija: con `input` el `--check` de briefing da `EXIT=0` y los packs del
+clon son **byte a byte** los del blob (`git ls-files --eol` dice `i/lf w/lf`, y el clone devolver `i/lf w/crlf`
+era la firma del defecto); con `true` forzado el mismo commit da `EXIT=1` con `SHA-DISTINTO`. La batería vive en
+`tests/test_verify_index_in_committed_tree.py` (9 funciones, cuatro nuevas) y su control negativo **ejerce** el
+defecto en lugar de simularlo, con la advertencia de re-anclaje si el `--check` dejara de ser ciego. Detalle de
+instrumento corregido en el camino: contar remates con `grep -c $'\r'` da **todas las líneas del archivo**, no
+los retornos de carro; se cuenta por bytes (`b"\r\n"`) o con `tr -dc`.⟧
+
+⟦**Cura (b) de S19 implementada el 2026-09-26**, en la misma instrucción: `scripts/verify_packs_in_committed_tree.py`
+materializa la revisión con `clon_fiel`, regenera los packs con `--briefing-dir` hacia un scratch **dentro del
+árbol del commit** (sin `--informe` ni `--carga`, que es la guarda de S12), y compara cada pack por `sha256`
+**normalizado**. La normalización es la que dejó la medición de `19-`: el sello `· generado \`<UTC>\``,
+`generated_at` y `head`, que AC21 ya declaró no gobernantes. Veredictos: `0` reproduce, `1` diverge, `2` no
+evaluable — y esa tercera salida existe por una medición que hice mal primero: el clon materializaba solo
+`scripts` y `.opencode`, así que FASE-RELEASE, que declara `docs/CONTRIBUTING.md`, salía como `PACK-AUSENTE` y
+mi verificador lo contaba como divergencia. Amplié el materializado a `docs` y `.agents` (~1 s) y dejé la
+clasificación honesta para lo que quede fuera. El control negativo no simula: muta en el clon el literal `[8/11]`
+que el propio escritor copia al pack y exige **dos** cosas a la vez — que este verificador dé `EXIT=1` con la
+diferencia señalada, y que `build_phase_briefing.py --check` dé `EXIT=0` sobre ese mismo árbol. Ese par es S19
+convertido en máquina. `tests/test_verify_packs_in_committed_tree.py`: 5 funciones.⟧
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `db9baf0a42686f89180d7e42cff40533bcb7f2c22bb62521c71596502be68538` · 67203 bytes copiados de 67203 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `9761dc93df55fbfbbe60e1503a02ea5906b94dc52c2e785b9feb6c1727c25d54` · 69818 bytes copiados de 69818 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `10-analisis-post-implementacion.md` (documento completo)
 
@@ -2360,7 +2386,7 @@ autorización— es exactamente donde quedaron los permisos.
   viaja en el commit siguiente por la razón de siempre: un commit no puede nombrarse a sí mismo.⟧
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md` · sha256 `b66723f1c3c507cc29034b705c24709d72fa88493fba5277ff8f61382d3dc337` · 92574 bytes copiados de 92574 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md` · sha256 `b66723f1c3c507cc29034b705c24709d72fa88493fba5277ff8f61382d3dc337` · 92574 bytes copiados de 92574 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `05-prompt-inicio-sesion-fase-A.md` (documento completo)
 
@@ -2591,7 +2617,7 @@ que puedan probar: VERIFICADO OFFLINE con rojo y verde, o ⚠️.
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2` · 15552 bytes copiados de 15552 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2` · 15552 bytes copiados de 15552 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `05-prompt-inicio-sesion-fase-B.md` (documento completo)
 
@@ -2791,7 +2817,7 @@ Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-imp
 `06-checklist-implementacion.md`.
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `0f4e51282983f59cc79bb13d7536bf7bf0a732e38a275464a632757f1ef90006` · 12245 bytes copiados de 12245 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `0f4e51282983f59cc79bb13d7536bf7bf0a732e38a275464a632757f1ef90006` · 12245 bytes copiados de 12245 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `05-prompt-inicio-sesion-fase-C.md` (documento completo)
 
@@ -3143,7 +3169,7 @@ quedan terminados por haber corrido el piloto. No re-transcribas cifras: enlaza 
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md` · sha256 `ea361c4696797a9a36df482636378040e57c20797af5ec6efd1ef8fc37df0832` · 27571 bytes copiados de 27571 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md` · sha256 `ea361c4696797a9a36df482636378040e57c20797af5ec6efd1ef8fc37df0832` · 27571 bytes copiados de 27571 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ## Fuente: `05-prompt-inicio-sesion-fase-D.md` (documento completo)
 
@@ -3418,7 +3444,7 @@ Deja checkpoint si falta autorizacion.
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591` · 19703 bytes copiados de 19703 del documento · HEAD `941530e` · generado `2026-09-26T20:45:25Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591` · 19703 bytes copiados de 19703 del documento · HEAD `d25d44d` · generado `2026-09-26T23:12:28Z`
 
 ---
 
@@ -3430,8 +3456,8 @@ Deja checkpoint si falta autorizacion.
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "941530e",
-    "generated_at": "2026-09-26T20:45:25Z"
+    "head": "d25d44d",
+    "generated_at": "2026-09-26T23:12:28Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 20372 bytes fuera de lo declarado (4, 6)",
@@ -3480,7 +3506,7 @@ Deja checkpoint si falta autorizacion.
     },
     {
       "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "db9baf0a42686f89180d7e42cff40533bcb7f2c22bb62521c71596502be68538",
+      "sha256": "9761dc93df55fbfbbe60e1503a02ea5906b94dc52c2e785b9feb6c1727c25d54",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

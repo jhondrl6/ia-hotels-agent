@@ -404,14 +404,15 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,573 funciones totales)
+### Cobertura por Modulo (4,582 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
-> **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`. Los dos
-> comandos dieron el mismo numero al cerrar la orden del 2026-09-26: **4,573** cada uno. Eso es el estado de
-> aquel dia, no un invariante: en cuanto un commit deje funciones test fuera del arbol versionado, las dos
-> cifras vuelven a separarse.
+> **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`. En el commit
+> que lleva esta nota los dos comandos dan **4,582**: las nueve funciones nuevas (las dos baterias de S20 y
+> de la cura (b) de S19) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese commit**,
+> no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos cifras
+> vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
 >
 > Antecedente, vigente hasta el 2026-09-25: las dos cifras eran distintas (4,470 en HEAD `5817edd` contra
 > 4,564 en el arbol de trabajo) y la diferencia (+94) era trabajo sin commitear, no deuda ni error. Lo que
@@ -421,17 +422,23 @@ python scripts/run_all_validations.py           # Completo
 > Medido 2026-09-26 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
 > (no `pytest --collect-only`; las filas suman el total). Nota de instrumento para no volver a confundirlas:
 > `scripts/validate_agents_md.py::check_2_test_count` **no** usa el metodo grep sino
-> `pytest --collect-only -q` sobre items (**4,647** al medir el 2026-09-26) con tolerancia **±5 %** — con
-> **4,573** publicado la desviacion es **1,6 %** y el check pasa (exit 0). Antecedente: el 2026-09-25 medía
+> `pytest --collect-only -q` sobre items (**4,656** al medir el 2026-09-26, +9 con las dos baterias nuevas)
+> con tolerancia **±5 %** — con **4,582** publicado la desviacion es **1,6 %** y el check pasa (exit 0).
+> Antecedente: el 2026-09-25 medía
 > 4,638 items y daba el mismo 1,6 % con 4,564 publicado; con el 4,246 anterior la desviacion llegaba a 8,5 %
 > y el check fallaba. No hay que "arreglar"
 > esta cifra hacia el numero de items: son dos instrumentos distintos y el publicado es el del metodo
 > canonico.
-> Cifra anterior: **4,564** (v4.78.0, medido 2026-09-25). La diferencia (+9) son dos baterias de la orden del
-> 2026-09-26, ambas caen en la fila `root test files`: 4 funciones de
-> `tests/test_build_lesson_index_s15_fecha_versionada.py` (la cura S15, con su control anclado a la revision
-> publicada) y 5 de `tests/test_verify_index_in_committed_tree.py` (el verificador que corta en el arbol del
-> commit, no en el de trabajo). Suma comprobada al medir: las 22 filas de la tabla dan exactamente 4,573.
+> Cifra anterior: **4,573** (medido 2026-09-26, misma orden, dos sesiones antes). La diferencia (+9) vuelve a
+> ser dos baterias y vuelve a caer en la fila `root test files` (946 → **955**): 4 funciones de
+> `tests/test_verify_index_in_committed_tree.py` (la cura de **S20**: el clon del verificador heredaba el
+> `core.autocrlf` del ambito system y su `--check` de packs cortaba rojo falso sobre un commit correcto) y 5
+> de `tests/test_verify_packs_in_committed_tree.py` (la cura **(b) de S19**: regenera los packs en scratch
+> dentro del arbol del commit y compara por sha normalizado; su control negativo muta el literal que el
+> escritor copia al pack y exige a la vez que este verificador pierda y que `build_phase_briefing --check`
+> siga dando verde). Previa, del mismo dia: **4,564 → 4,573** (+4 de `test_build_lesson_index_s15_fecha_versionada.py`
+> y +5 de la primera bateria de `test_verify_index_in_committed_tree.py`). Suma comprobada al medir: las 22
+> filas de la tabla dan exactamente **4,582**.
 > Previa: 4,246 (v4.77.3, medido 2026-09-19). La diferencia (+318) se desglosa por fila de la
 > tabla: `quality_gates` +229 (decision_client y su arnes de mutacion del bloque A/B de la orden de calidad,
 > `lesson_relevance` del piloto FASE-C, `phase_briefing` de FASE-D y su cura AC23, y los gates tocados en
@@ -469,7 +476,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 946 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las dos baterias de la orden 2026-09-26: S15 y el verificador del arbol del commit) |
+| root test files | 955 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19) |
 
 ---
 

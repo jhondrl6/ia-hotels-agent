@@ -10,6 +10,11 @@ No se usa `git archive` para extraer el árbol: `_git_fecha` del generador devue
 documento sin repositorio, así que una extracción limpia declara `SIN-FUENTE` en las 11 entradas
 fechadas por commit y el check falla **por diseño** esté el índice como esté. Un clon sí trae historial.
 
+Y el clon se configura **por dentro** antes de materializar (S20): `git clone` no copia el config local de
+la fuente, así que sin `core.autocrlf=input` escrito en el clon el `checkout` hereda el `true` del ámbito
+system y reescribe LF→CRLF. Sobre ese árbol re-escrito, cualquier comparación de bytes —el `--check` de
+briefing, no el del índice— corta rojo falso.
+
 Salida: 0 = fresco en ese árbol; 1 = vencido; 2 = el método no pudo producir un árbol evaluable.
 """
 
@@ -24,7 +29,11 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MATERIALIZAR = ("scripts", ".opencode")
+# `docs` y `.agents` no las consume el índice, pero sí los packs de briefing: FASE-RELEASE declara como
+# fuente `docs/CONTRIBUTING.md`, y sin esa ruta en el árbol el escritor la declara `FUENTE-AUSENTE` y no
+# emite el pack (medido 2026-09-26 al construir verify_packs_in_committed_tree). Materializar la unión
+# cuesta ~1 s más y hace evaluable al verificador de derivados.
+MATERIALIZAR = ("scripts", ".opencode", "docs", ".agents")
 GENERADOR = "scripts/build_lesson_index.py"
 # Sin esto, el hijo escribe en la codepage de la consola (cp1252 en Windows) y quien capture la salida
 # guarda bytes ilegibles en UTF-8: el veredicto sobrevive, la línea `[fechas]` ya no es comparable.
@@ -53,40 +62,68 @@ def _presentes(clon: Path, rutas: list[str]) -> list[str]:
     return [r for r in rutas if not (clon / r).is_file()]
 
 
-def revisar(rev: str, destino: Path) -> int:
-    """Materializar `rev` en un clon propio y correr ahí el `--check` del generador."""
-    clon = destino / "arbol"
+def clon_fiel(destino: Path, rev: str) -> tuple[Path | None, list[str]]:
+    """Materializar `rev` en un clon cuyo árbol sea byte a byte el del commit.
+
+    Devuelve `(clon, [])` o `(None, [motivo])`. Está separado de `revisar` porque hay un segundo
+    verificador de derivados que necesita el mismo árbol: la fidelidad es propiedad del materializado,
+    no del check, y duplicar el clon sería duplicar también la trampa de S20.
+    """
+    clon = (destino / "arbol").resolve()
     if clon.exists():
         shutil.rmtree(clon, ignore_errors=True)
 
     if _git(["rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"], ROOT).returncode != 0:
-        print(f"[ERROR] revisión inexistente en este repositorio: {rev}")
-        return 2
+        return None, [f"revisión inexistente en este repositorio: {rev}"]
 
     clonada = _git(
         ["-c", "core.autocrlf=input", "clone", "--local", "--no-checkout", str(ROOT), str(clon)],
         ROOT,
     )
     if clonada.returncode != 0:
-        print(f"[ERROR] no se pudo clonar el repositorio: {clonada.stderr.strip()[:400]}")
-        return 2
+        return None, [f"no se pudo clonar el repositorio: {clonada.stderr.strip()[:400]}"]
 
-    # Sin longpaths, el checkout aborta en las rutas largas de .opencode/.qoder y deja un árbol
-    # parcial (medido: 519 de 6106 archivos) con el que cualquier veredicto es ruido.
-    _git(["config", "core.longpaths", "true"], clon)
+    # Las dos trampas del materializado se resuelven DENTRO del clon, no en la línea de comandos:
+    # `git clone` no copia el config local de la fuente, y el `-c` que se le pasa solo gobierna ese
+    # proceso. El `checkout` de abajo corre ya dentro del clon y lee la config **del clon**.
+    # - Sin `longpaths`, el checkout aborta en las rutas largas de `.opencode/.qoder` y deja un árbol
+    #   parcial (medido: 519 de 6106 archivos) con el que cualquier veredicto es ruido.
+    # - Sin `autocrlf`, el clon hereda el `true` del ámbito *system* de Windows y el checkout reescribe
+    #   LF→CRLF al materializar (medido 2026-09-26, S20, sobre `c85dff9`): con `input` el `--check` de
+    #   briefing da `EXIT=0`, con `true` da `EXIT=1` y `SHA-DISTINTO` **en el mismo commit**.
+    for clave, valor in (("core.longpaths", "true"), ("core.autocrlf", "input")):
+        fijada = _git(["config", clave, valor], clon)
+        if fijada.returncode != 0:
+            return None, [f"no se pudo fijar {clave}={valor}: "
+                          f"{(fijada.stderr or fijada.stdout).strip()[:200]}"]
+
+    # Se lee el valor efectivo en lugar de asumir que escribirlo funcionó: si el árbol no es fiel, el
+    # veredicto no mide el commit y no debe salir como 0 ni como 1.
+    efectiva = _git(["config", "--get", "core.autocrlf"], clon).stdout.strip()
+    if efectiva != "input":
+        return None, [f"autocrlf efectivo del clon es {efectiva!r}, no 'input': su árbol reescribe "
+                      "remates y no es evaluable por bytes"]
+
     checkout = _git(["checkout", rev, "--", *MATERIALIZAR], clon)
     if checkout.returncode != 0:
-        print(f"[ERROR] checkout parcial de {rev}: {checkout.stderr.strip()[:400]}")
-        return 2
+        return None, [f"checkout parcial de {rev}: {checkout.stderr.strip()[:400]}"]
 
     esperadas = _rutas_esperadas(clon, rev)
     faltantes = _presentes(clon, esperadas)
     if faltantes:
-        print(f"[ERROR] árbol incompleto: faltan {len(faltantes)} de {len(esperadas)} rutas")
-        for ruta in faltantes[:5]:
-            print(f"    - {ruta}")
+        return None, [f"árbol incompleto: faltan {len(faltantes)} de {len(esperadas)} rutas"]
+
+    return clon, []
+
+
+def revisar(rev: str, destino: Path) -> int:
+    """Correr en el árbol de `rev` el `--check` del generador de índice."""
+    clon, motivo = clon_fiel(destino, rev)
+    if clon is None:
+        print(f"[ERROR] {motivo[0]}")
         return 2
 
+    esperadas = _rutas_esperadas(clon, rev)
     corrida = subprocess.run(
         [sys.executable, GENERADOR, "--check"],
         cwd=str(clon),
