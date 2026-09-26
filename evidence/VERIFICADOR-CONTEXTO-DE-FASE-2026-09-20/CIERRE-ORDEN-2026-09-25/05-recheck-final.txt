@@ -1,0 +1,23 @@
+### 05 re-check del arbol final tras escribir 03 y 04 -- 2026-09-25T21:20:47Z
+Escrituras posteriores al 02-quick-post: solo archivos .txt/.json bajo evidence/ (fuera del corpus que recorre build_lesson_index.py y validate_plan_citations.py).
+
+$ scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (339 IDs)
+EXIT=0
+
+$ scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT=0
+
+$ python scripts/run_all_validations.py --quick  (re-corrida de confirmacion)
+  [+] Wiring: 183 llamadas descubiertas en 1353 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+EXIT=0

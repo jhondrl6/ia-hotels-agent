@@ -1,0 +1,142 @@
+## Pendientes por ejecutar y prompts — cierre de sesión 2026-09-25T22:10Z
+
+Estado medido al escribir esto: `HEAD = 5817edd`; `git status --porcelain` = **78** líneas;
+`git ls-files --others --exclude-standard` = **2.031** archivos; `--quick` **11/11 `exit 0`**; par del
+índice **339 IDs**; packs **5 COMPLETO / 37 fuentes**; selección de la cura **24 passed**.
+
+### A. Higiene local — no necesita mandato nuevo
+
+1. `.agent/SYSTEM_STATUS.md` sigue **`i/lf w/crlf` con 58 pares CRLF** (residuo del escritor defectuoso,
+   generado antes de la cura). Se arregla regenerándolo: `python scripts/doctor.py --status`.
+2. **Suite completa no corrida tras la cura**: hoy se corrió la selección (24). Falta `pytest tests -q`.
+   Rojos ya declarados, no absorbibles: `test_medido_contra_el_predecesor_entra_en_alcance…` (dueño:
+   registros de `REFACTOR-WHATSAPP` FASE-G/0), `test_diagnostic_geo_metrics`,
+   `test_validate_lesson_capitalization[…TRIBUNAL-ENFORCEMENT-OBS…]` y `test_function_default_flags`
+   (flaky, mecanismo pendiente).
+3. Rojo de conteo en `AGENTS.md`: `validate_agents_md.py::test_count` — publica **4.246**, el método
+   canónico da **4.564** en disco (7 las aporta `tests/test_sync_writers_lf_y_fecha_readme.py`). Se cura
+   editando `AGENTS.md` → **mandato literal** (config central).
+4. Un `⟦…⟧` sin cerrar en `10-analisis-post-implementacion.md`, fila 1 de «Decisiones de FASE-C» ( authoría:
+   conciliación 2026-09-25, trabajo sin commitear). Declarado en `04-nota-integridad-documental.txt`.
+
+### B. Código y configuración central — cada uno con su mandato
+
+5. **S15** — `build_lesson_index.py`: la rama `fuente_fecha = "mtime"` de `_plan_date` hace que `[6/7]`
+   no sea reproducible entre checkouts. Cura = código + tests.
+6. **S16** — escribir la convención `Lee …` en `.agents/workflows/templates/prompt-fase-template.md` §8
+   (y por arrastre los prompts de los planes vivos). Requiere mandato sobre `.agents/`.
+7. **D2** — promover `validate_governance_numbers.py` a check del quick (11 → 12), renumerando y barriendo
+   quién pinea «11 checks».
+8. **D3 completa** — rebanar el workflow canónico por fase. Es lo que de verdad movería el delta de carga
+   (hoy muy por debajo del tercio porque el workflow entra en los dos lados).
+
+### C. Público / permisos — el portón
+
+9. **Commit y push del árbol** (opción C). Nada de lo anterior queda publicado sin esto, y cada sesión nueva
+   añade superficie al mismo árbol. Decisiones que hay que tomar antes: si viajan los **1.858 archivos
+   (≈18 MB)** de `evidence/…/BLOQUE-B-REMEDIACION-2026-09-23/*-hijos`, y si `AGENTS.md` + `.cursorrules`
+   viajan (nombrarlos explícitamente).
+10. **D8** — re-corrida de la consulta Q7 contra QMind (`--nb 01a04d98-b7bd-778c-8441-26fdc7e35f45`; el
+    nombre `iah-cli-lecciones` da `Bad request`). Su premisa («el corpus cambió») sigue **no comprobada**.
+11. **D9** — `--upload` de `10-analisis-post-implementacion.md` a QMind, **antes** del `git mv`, verificando
+    por contenido descargado + sha, no por título (D10: la firma del writer no cambió).
+12. **Archivado** — `git mv` del plan a `.opencode/plans/Archives/` → regenerar el pack con la ruta
+    trasladada → índice → `--check` del pack → `--check` del índice → quick (orden R2.5/R2.10).
+13. **D7 + S10** — activar Jev detrás de `decision_client.py` (credencial y presupuesto), decidir dónde vive
+    el `import` del SDK y correr la comparación de proveedores. Al activarse: **D6** despierta y AC15 deja
+    de ser `NO-EJERCITADO`.
+
+### D. Decisiones humanas (no las ejecuta un agente)
+
+14. **`L-VCF-10…14`** — aceptar o rechazar cada propuesta, con el motivo publicado y quién decidió (**E3**);
+    si entra, va al §2 del `00-` con su «qué cambia» real; si se rechaza, la fila no desaparece.
+15. **Muestra BORRADOR de JEV** + la decisión del *gap* de interfaz que su FASE-B plantea.
+
+### E. Planes hermanos (cada uno con su propio mandato de fase)
+
+16. `EVALUACION-JEV-TYPESAFE-2026-09-21` → FASE-B (bloqueante humano: ítem 15).
+17. `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` → C/D/E/F/H/E2E/VERIFY/RELEASE, con deuda AC5 y el residuo de
+    «tres observaciones» en su `05-prompt-inicio-sesion-fase-G.md`.
+18. `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` → su fase única (conserva la propiedad del writer).
+
+> **S14** no está en la lista como «esperando»: su disparador real es correr el triaje con `--plans-dir`
+> sobre un árbol **extraído** (`git archive`), no el `git mv` dentro del repo. Es ejecutable cuando se
+> quiera cerrar, y es una medición, no código.
+
+---
+
+## PROMPT 1 — culminar esta sesión (higiene y registro, sin mandatos nuevos)
+
+```text
+Cierra la sesión de la orden .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md en
+C:/Users/Jhond/Github/iah-cli. Alcance: SOLO higiene local y registro. Sin commit, sin push, sin red,
+sin QMind, sin archivado, y sin editar AGENTS.md, .cursorrules, .agents/** ni docs de fase cerrada.
+
+1) Regenera .agent/SYSTEM_STATUS.md con su writer (python scripts/doctor.py --status) y comprueba por
+   bytes que quede en LF. Hoy esta en i/lf w/crlf con 58 pares CRLF: es residuo del escritor defectuoso
+   que se curó el 2026-09-25 (S17). No lo edite a mano: se arregla regenerando.
+2) Corre la suite que esta sesion NO corrio:
+   PYTHONDONTWRITEBYTECODE=1 python -m pytest tests -q -p no:cacheprovider
+   En primer plano y sin escritores concurrentes bajo evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/
+   (el test de S12 toma huellas de todo el directorio del plan). Rojos preexistentes ya declarados, que
+   se atribuyen y NO se absorben: test_medido_contra_el_predecesor_entra_en_alcance (dueno: registros
+   REFACTOR-WHATSAPP FASE-G/0), test_diagnostic_geo_metrics,
+   test_validate_lesson_capitalization del plan TRIBUNAL-ENFORCEMENT-OBS archivado, y
+   test_function_default_flags (flaky, mecanismo pendiente).
+3) Re-corre la cola derivada sobre el arbol final, en este orden y con su exit impreso:
+   python scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+   python scripts/build_lesson_index.py
+   python scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+   python scripts/build_lesson_index.py --check
+   python scripts/run_all_validations.py --quick
+4) Escribe evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/13-cierre-de-sesion.txt
+   con: HEAD y rutas sucias medidos (git rev-parse --short HEAD; git status --porcelain | wc -l;
+   git ls-files --others --exclude-standard | wc -l), las salidas de 1-3 con exit por comando, la cuenta
+   canonica de tests (grep -rE "^\s*def test_" tests --include=*.py | wc -l) frente al 4.246 que publica
+   AGENTS.md, el desbalance de anotadores de 10-analisis-post-implementacion.md, y la lista de pendientes
+   por ejecutar sin inventar duenos nuevos.
+No re-escribas expedientes cerrados (FASE-A..D, BLOQUE-B/C, CONCILIACION-FINAL, FASE-RELEASE): la escritura
+nueva va solo al directorio CIERRE-ORDEN-2026-09-25/. Si algo de lo pedido requiere un destino no nombrado
+aqui, para y reporta checkpoint en vez de escribir.
+```
+
+## PROMPT 2 — iniciar sesión nueva: publicar el árbol (opción C)
+
+```text
+Sesion nueva en C:/Users/Jhond/Github/iah-cli: puerta C — publicar el arbol de la orden de calidad
+(.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md, cerrada el 2026-09-25 en su alcance
+aprobado; despues de ese cierre se curaron S17 y S18). Esta sesion NO cura codigo, NO edita docs de plan
+y NO toca AGENTS.md ni .cursorrules salvo que yo los nombre.
+
+Pre-flight de lectura primero, sin escribir nada:
+  git fetch origin --quiet
+  git rev-list --left-right --count origin/master...HEAD
+  git status --porcelain | wc -l
+  git ls-files --others --exclude-standard | wc -l
+  du -sh evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23
+Referencia del ultimo estado medido por esta agente (2026-09-25T22:10Z): HEAD 5817edd, 78 lineas de
+porcelain, 2031 archivos sin tracking, ~18 MB en ese expediente, quick 11/11. Si el remoto no cuadra con
+5817edd o hay divergencia, PARAR y reportar: no hacer rebase, reset ni stash por cuenta propia.
+
+Inventario con sub-agente (solo lectura, sin git de escritura): usa el agente Explore para que recorra el
+arbol sucio y devuelva, agrupado por procedencia — bloque B de la orden, bloque C (enmiendas y remediacion),
+piloto FASE-C, FASE-D, FASE-RELEASE offline, CONCILIACION-FINAL, CIERRE-ORDEN y curacion S17/S18 — cuantos
+archivos y cuantos bytes aporta cada grupo, y que rutas son PRODUCTO ejecutable (scripts/, tests/,
+.opencode/plans/*/briefing/, el par .opencode/LECCIONES-INDEX.md + lecciones_index.json) frente a las que
+son EVIDENCIA (evidence/). Que senale tambien los 1858 archivos de las carpetas *-hijos del expediente de B:
+cuantos son, que contienen y si algun verificador los necesita para reproducir un verde. El sub-agente
+reporta; no decide y no escribe.
+
+Con ese inventario, presentame opciones con letras (A/B/C/D) de que viaja y que queda fuera, con su frontera
+declarada: (a) scripts y tests de la cura, (b) producto de FASE-C/FASE-D aun sin rastrear
+(build_phase_briefing.py y sus casos, los 5 packs), (c) docs de los cuatro planes + par del indice + orden,
+(d) expedientes de evidence/, incluida la decision explicita de comitear / archivar / borrar las carpetas
+*-hijos. Toda cifra que cites, con el comando exacto que la imprime.
+
+El commit y el push requieren mi instruction escrita, una por una. Si autorizo commit: respeta el hook
+versionado (7 checks; el [2/7] sync_versions.py --check ahora si goberna la fecha legible del README, asi que
+el commit exige tener el sync corrido), nombra explicitamente AGENTS.md y .cursorrules si deben viajar, y
+separa los grupos (a)-(d) en commits distintos con su mensaje. Ofrece /security-scan (L3) antes de cualquier
+push y muestra el pre-flight de alcance (cuantos commits y que rutas visibles van a publicarse). No prometas
+que un verde del indice viaja bien a otro checkout: S15 sigue abierta.
+```

@@ -1,0 +1,33 @@
+### 14 medicion con efecto colateral: el generador re-escribe los packs al "solo mirar" -- 2026-09-25T22:18Z
+
+**Lo que paso.** Para responder si el paso 3 del PROMPT-1 necesita `--informe`, se corro
+`build_phase_briefing.py --plan <plan>` **sin** ese flag. Resultado medido: **exit 0 y los 5 packs
+re-escritos** (5 de 5 mtimes movidos). O sea: `--informe` solo controla el JSON del informe; los packs se
+escriben en toda corrida que no sea `--check`. Un comando invocado "para mirar" es un escritor.
+
+**Lo que escribi primero y despues rectifique.** En el chat afirmé que esa corrida "re-vencio el indice".
+**No fue asi, y la comprobacion lo muestra antes y despues:**
+
+```
+indice ANTES de regenerar:  [OK] Índice de lecciones fresco (339 IDs)   EXIT=0
+indice DESPUES:             [OK] 339 IDs definidos + 51 sin definicion (16 analisis, 422 .md citados)
+check del pack:              [OK] FASE-RELEASE: 10 fuentes frescas
+check del indice:            [OK] Índice de lecciones fresco (339 IDs)
+quick:                       TOTAL: 11/11 validations passed
+```
+
+**Por que no lo vencio (y por que esto es S15 en la cara).** La frescura del índice se calcula por **fecha**
+derivada de `mtime` de las fuentes: una re-escritura el mismo dia no cambia la fecha, asi que el `--check`
+del índice **no puede verla**. El pack, en cambio, se goberna por **sha256 de sus fuentes** (AC21) y si la
+detecta. Dos instrumentos sobre el mismo árbol, dos sensibilidades distintas — y la mas floja es la que viaja
+en el hook `[6/7]`. Queda como material para S15, con su dueño (`build_lesson_index.py`, la rama
+`fuente_fecha = "mtime"` de `_plan_date`); no se curó aqui porque ese mandato no alcanzo el generador del
+indice.
+
+**Estado del arbol al cerrar esta medicion:** packs re-sellados, par del índice regenerado y fresco, `--check`
+de ambos en verde, quick **11/11 `exit 0`**. Ninguna ruta fuera del expediente nuevo fue tocada por esta
+corrida (los 5 packs ya estaban sucios del cierre).
+
+**Como evitarlo la proxima vez:** para inspeccionar sin escribir, usar `--check` o `--listar-declarado`. Si
+se necesita el informe en disco, `--informe <ruta del expediente>`; si se necesita `--carga`, `-` (stdout),
+nunca la ruta de `FASE-D/carga.json` (evidencia cerrada, **S12**).

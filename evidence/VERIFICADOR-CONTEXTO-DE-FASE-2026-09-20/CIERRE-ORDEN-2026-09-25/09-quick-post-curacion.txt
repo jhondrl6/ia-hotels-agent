@@ -1,0 +1,45 @@
+### 09 quick POST-cura y conteo canonico -- 2026-09-25T22:00:53Z
+conteo canonico (grep -rE '^\s*def test_' tests --include=*.py):
+4564
+  (AGENTS.md publica 4.246: rojo de conteo ya declarado en el cierre de RELEASE, no absorbido; este mandato no toca AGENTS.md)
+
+$ cola derivada: packs -> par del indice -> dos --check
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/09-packs.json
+packs EXIT=0
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+indice EXIT=0
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+check-pack EXIT=0
+[OK] Índice de lecciones fresco (339 IDs)
+check-indice EXIT=0
+
+$ python scripts/run_all_validations.py --quick
+[10/11] Checking lesson capitalization (Paso 0 del executor)...
+[11/11] Checking signal wiring by AST (AC7/AC16)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1333 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2521 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1354 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+EXIT=0

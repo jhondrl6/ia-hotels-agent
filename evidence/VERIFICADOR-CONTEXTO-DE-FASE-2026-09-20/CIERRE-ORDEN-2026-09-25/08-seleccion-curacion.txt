@@ -1,0 +1,10 @@
+### 08 seleccion de tests de la curacion S17/S18 -- 2026-09-25T21:58:44Z
+Mandato: curar los dos defectos con tests (autorizacion del operador, opcion B). Baseline PRE del quick: 00-quick-pre.txt (11/11, antes de la cura).
+
+$ PYTHONDONTWRITEBYTECODE=1 python -m pytest tests/test_sync_writers_lf_y_fecha_readme.py tests/test_registry_fecha_documental.py tests/test_doctor_reads_are_utf8_pinned.py -q -p no:cacheprovider
+........................                                                 [100%]
+24 passed in 2.42s
+EXIT=0
+
+$ ... misma seleccion con el escritor defectuoso de HEAD (control de que los 7 nuevos no son verdes vacios)
+ver 08b: se ejecuta el mismo archivo contra git show HEAD:scripts/... dentro del propio test

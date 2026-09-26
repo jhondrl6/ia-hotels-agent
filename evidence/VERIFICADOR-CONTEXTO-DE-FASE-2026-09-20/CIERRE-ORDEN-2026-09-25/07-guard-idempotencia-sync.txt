@@ -1,0 +1,28 @@
+### 07 guard de idempotencia del sync sobre el arbol real -- 2026-09-25T21:51:50Z
+
+Segunda corrida del mismo comando, con la pareja de huellas (sha256 + mtime_ns + tamano) del
+`tests/support_observador_escrituras.py` tomada antes y despues sobre las 10 rutas vigiladas
+(`README.md`, `VERSION.yaml`, `AGENTS.md`, `.cursorrules`, `CHANGELOG.md`, `docs/CONTRIBUTING.md`,
+`docs/GUIA_TECNICA.md`, `.agent/knowledge/DOMAIN_PRIMER.md`, los dos `.agents/workflows/...`):
+
+```
+exit 0 | ultima linea: Result: All files in sync
+rutas movidas (contenido o mtime): []
+ALCANCE del observador: proceso actual (pytest): pathlib + builtins.open + os + shutil, incluidas
+  rutas indirectas; NO cubre procesos hijos
+```
+
+Leido asi: con la fecha ya alineada, el escritor **no abre nadie** de los vigilados — no es que escriba
+bytes identicos, es que el motor reporta `IN_SYNC` y no escribe. La prueba es la pareja de huellas y no
+el registro de operaciones porque el comando corre en un `subprocess`, que esta fuera del alcance
+declarado del observador.
+
+Por que existe esta corrida y no vale con la de `06-sync-readme.txt`: la 06 pidio sus huellas dentro de un
+`python -c` y la variable de entorno `OUT` no existia en ese proceso (`NameError`, declarado en el propio
+log, no ocultado), asi que la comparacion antes/despues no llego a tomarse. En la 06 quedaron validos el
+`EXIT=0`, el `git diff --numstat README.md` (2/2, con el 1/1 del release ya dentro), los 0 CRLF y la
+linea 5 leida.
+
+Nota de higiene del shell (medida al armar este comando): un eco entre comillas dobles que contenga
+acento grave execute sustitucion de comando — la primera version de esta linea imprimi6 el usage de
+`python -c` dentro del expediente. El registro se re-escribio limpio; el error queda aqui nombrado.

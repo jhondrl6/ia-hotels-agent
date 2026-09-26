@@ -1,0 +1,275 @@
+# 13 — Cierre de sesión (higiene local y registro) — 2026-09-25T23:24Z
+
+Orden: `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` (cerrada en su alcance aprobado el
+2026-09-25; esta sesión ejecuta su PROMPT-1 «culminar esta sesión»).
+
+**Alcance respetado:** sin commit, sin push, sin red, sin QMind, sin archivado; no se editó `AGENTS.md`,
+`.cursorrules`, `.agents/**` ni ningún documento de fase cerrada. Única escritura nueva de esta sesión:
+**este archivo**. Los demás destinos tocados son los que la propia cola derivada gobierna: los 5 packs de
+`.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/` y el par
+`.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json`.
+
+---
+
+## 1. HEAD y rutas sucias, medidos (no citados)
+
+| Medida | Comando | Valor |
+|---|---|---|
+| HEAD | `git rev-parse --short HEAD` | `5817edd` |
+| Rutas sucias | `git status --porcelain \| wc -l` | **79** (64 ` M` + 15 `??`) |
+| Sin tracking | `git ls-files --others --exclude-standard \| wc -l` | **2.035** (y **2.036** al cerrar, porque este archivo suma 1) |
+
+Medidas al **abrir** la sesión: 79→**78** líneas y 2.035 archivos. Los dos deltas se explican y no se
+atribuyen a esta sesión donde no le corresponden:
+
+- **porcelain 78 → 79 (+1):** es `.agent/SYSTEM_STATUS.md`, y lo produjo el paso 1 de esta sesión. Antes de
+  regenerarlo **no estaba reportado como sucio**: el blob de HEAD pesa **1.874** bytes
+  (`git cat-file -s $(git rev-parse HEAD:.agent/SYSTEM_STATUS.md)`) y el archivo en disco pesaba **1.932**
+  con **58 pares CRLF y 0 LF sueltos** — 1.932 − 58 = 1.874, identidad salvo EOL (con `core.autocrlf=input`
+  esa diferencia no ensucia). Tras la regeneración hay cambio de contenido real: `git diff --numstat` da
+  **12 añadidas / 11 borradas**. Con `--ignore-cr-at-eol` el diff sigue dando 12/11, así que el cambio no
+  es de finales de línea.
+- **untracked 2.031 → 2.035 (+4):** no son de esta sesión. Los cuatro archivos se escribieron en la sesión
+  anterior **después** de la medición que los publicaba (`12-pendientes-y-prompts.txt` 18:02,
+  `PROMPT-1-culminar-sesion.txt` 18:03, `PROMPT-2-sesion-nueva-publicar.txt` 18:03,
+  `14-indice-revencido-por-medicion.txt` 18:07, local). Queda registrado para que el `2.031` de esa nota no
+  se lea como vigente.
+  ⟦**Rectificado la misma noche del 2026-09-25**: de esos cuatro archivos quedan **tres** en disco.
+  `PROMPT-2-sesion-nueva-publicar.txt` fue **borrado** por instrucción escrita del operador después de la
+  cura B (su texto ya estaba vencido: los 4 rojos de AC23 y el conteo de `AGENTS.md` que daban costo a las
+  opciones (b) y (c) quedaron curados, y la versión vigente de ese prompt se ejecuta en otra sesión desde
+  el chat). Es archivo **sin rastrear**: git no lo devuelve. Su versión original (v1) **no se perdió**:
+  sigue íntegra en `12-pendientes-y-prompts.txt` §«PROMPT 2». El conteo de esta fila vuelve así a **2.036**
+  sin tracking; HEAD `5817edd` y porcelain `79` no cambian.⟧
+
+Rastreo del producto (para el momento (3) de la orden): `scripts/build_phase_briefing.py`,
+`tests/quality_gates/phase_briefing/` y los 5 packs siguen **sin rastrear**; el par del índice **sí está
+rastreado** y aparece como ` M`.
+
+---
+
+## 2. Paso 1 — `.agent/SYSTEM_STATUS.md` regenerado con su writer
+
+Comando y exit:
+
+```
+PYTHONDONTWRITEBYTECODE=1 python scripts/doctor.py --status
+[OK] SYSTEM_STATUS.md regenerado (1 skills, 1218 shadow logs, 10 sesiones)
+EXIT=0
+```
+
+Comprobación por bytes (no a mano — el mandato prohíbe editarlo y no se editó):
+
+| | antes | después |
+|---|---|---|
+| `git ls-files --eol` | `i/lf    w/crlf` | `i/lf    w/lf` |
+| pares CRLF en disco | 58 | **0** |
+| LF sueltos | 0 | 59 |
+| bytes | 1.932 | 2.231 |
+| sha256 | `6f87cee6e98fd6564e09d90a07f5af8e67804c4c2eadadc2ce45104144f45a86` | `fd6cc0b0c9569ad9380707da0ed792c3788671c352a958b1f065cebfb36ac846` |
+
+El residuo desaparece porque el escritor ya está curado (S17): `scripts/doctor.py:594` escribe con
+`newline="\n"` (y `:333` igual). No hubo edición manual.
+
+El contenido también se actualizó (eso es el 12/11): versión del proyecto **4.76.0 → 4.78.0**, skills con la
+descripción vigente (cinco cortes, Paso 0, `[7/7]`), shadow logs **1.214 → 1.218**, sesiones activas
+**18 → 10**, config files **10/10 → 11/11** (entra `client_material_policy.yaml`), y las fechas/URL del
+retrato de datos movidas de 2026-09-11 a 2026-09-19/2026-09-23. Cabecera: sigue diciendo
+`Auto-generado: 2026-09-25 23:14:06 UTC`, que es la marca de esta corrida.
+
+---
+
+## 3. Paso 2 — suite completa (la que esta sesión no había corrido)
+
+```
+PYTHONDONTWRITEBYTECODE=1 python -m pytest tests -q -p no:cacheprovider
+EXIT=1
+8 failed, 4586 passed, 41 skipped, 4 xfailed, 230 warnings in 328.56s (0:05:28)
+```
+
+Primer plano, sin escritores concurrentes bajo `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`: entre
+la regeneración del paso 1 y esta corrida no se escribió nada en ese directorio (medido con
+`find … -type f -newermt "2026-09-25 18:10"` → **0 archivos**; ver §6).
+
+**Aquí está lo que hay que leer con cuidado: son 8 rojos, no los 4 que declaraba el mandato.** Se
+desglosan, no se absorben:
+
+| # | Test id | Estado |
+|---|---|---|
+| 1 | `tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags` | **declarado** (flaky, mecanismo pendiente). Firma medida: `assert 437500.0 == 2500000` |
+| 2 | `tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics` | **declarado** (cae igual en HEAD extraído, §5-bis de la orden) |
+| 3 | `tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]` | **declarado**. Nota de forma: el mandato nombraba esto y «`test_validate_lesson_capitalization` del plan TRIBUNAL-ENFORCEMENT-OBS archivado» como dos rojos; en este árbol son **un solo caso parametrizado**. Dueños ya publicados: registros `REFACTOR-WHATSAPP` FASE-G/0 y el archivado del plan TRIBUNAL |
+| 4 | `tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion` | **declarado en otra fuente** (§5-bis de la orden: contaminación de `tmp_test/venv-jev-sdk/`, regla `.gitignore:28`; pasa en extracción sin ese directorio). No estaba en la lista de cuatro del mandato |
+| 5-8 | `tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::{test_verde_con_el_guard_activo, test_rojo_con_el_guard_apagado, test_el_rojo_es_mas_corto_que_el_verde_y_no_lo_dice, test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno}` | **NO declarados. Causa medida abajo. No se absorben** |
+
+### Los cuatro rojos nuevos: el arnés de AC23 perdió su muestra con recorte
+
+Firma leída de la corrida: `AssertionError: la muestra dejo de tener recorte: el mutation check quedaria
+verde vacio — assert 'COMPLETO' == 'SECCION-NO-RESUELTA'`, y `el pack mutante no se achico (394378 vs
+394378)`.
+
+Causa, con las dos lecturas que la demuestran:
+
+- El arnés fija la fase que debe traer recorte: `FASE_CON_RECORTE = "RELEASE"`
+  (`tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py:34`), y genera el pack **sobre el
+  árbol real** del plan (`medir()` → `bpb.generar(PLAN, …)`).
+- En la evidencia de FASE-D ese pack era `SECCION-NO-RESUELTA` con 279.306 bytes
+  (`evidence/…/FASE-D/mutation/verde_baseline.json`; idéntico estado en su `informe.json`). Hoy el mismo pack
+  sale **`COMPLETO` con 394.378 bytes** y `secciones_no_resueltas: []` en las tres fuentes gobernadas — las
+  secciones que se pedían («Dos momentos del cierre», «Carga total y frescura del pack», «Orden del cierre»)
+  las escribió el cierre de **FASE-RELEASE del 2026-09-25**.
+
+Es decir: no es un defecto del generador ni de esta sesión; es el rojo **diseñado** por AC23 —el verde sin
+oportunidad de perder se corta con aserción, no se tolera— disparado porque la muestra dejó de tener
+recorte. Los otros tres casos del archivo pasan porque comparan verde contra rojo, no contra la presencia de
+recorte.
+
+- **Reproducido aislado, no es artefacto del orden:**
+  `python -m pytest tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py -q -p no:cacheprovider`
+  → `4 failed, 3 passed in 1.29s`, **`EXIT=1`** (medido sin pipe; con `| tail` el exit que sale es el de
+  `tail`, que dio 0 en la primera comprobación).
+- **Dueño:** el propio arnés de AC23, producto de FASE-D del plan CONTEXTO. La cura es re-anclar la muestra
+  a una fuente que conserve un recorte real (o fijarla a un árbol controlado), y **es edición de `tests/`**:
+  fuera del mandato de higiene+registro de esta sesión. Se reporta como pendiente (§7 ítem A2), con el dueño
+  que ya tiene; no se inventa otro ni se le baja la aserción.
+
+---
+
+## 4. Paso 3 — cola derivada sobre el árbol final, en el orden pedido
+
+| # | Comando | Salida | EXIT |
+|---|---|---|---|
+| C1 | `python scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` | 5 packs `COMPLETO`; denominador `5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0`; frescura `FASE-A/B/C/D: 4 fuentes frescas`, `FASE-RELEASE: 10` | 0 |
+| C2 | `python scripts/build_lesson_index.py` | `[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)` → `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` | 0 |
+| C3 | `python scripts/build_phase_briefing.py --plan … --check` | 5× `[OK] … fuentes frescas` (4,4,4,4,10) | 0 |
+| C4 | `python scripts/build_lesson_index.py --check` | `[OK] Índice de lecciones fresco (339 IDs)` | 0 |
+| C5 | `python scripts/run_all_validations.py --quick` | `TOTAL: 11/11 validations passed`, `STATUS: ALL VALIDATIONS PASSED` | 0 |
+
+Todos con `PYTHONDONTWRITEBYTECODE=1`. Detalle del C5 que importa declarar: `[9/11] Plan Citations` **743
+citas históricas, 0 nuevas, 0 crecimientos** (79 archivos); `[5/11] Client Material` **SIN_HALLAZGOS** (2.521
+rutas, 1 grandfathered con dueño); `[11/11] Wiring` 183 llamadas en 1.354 archivos, gobernadas 75, omisiones
+0, violaciones 0, **receptores no resueltos 30** (divulgado, no bloqueante); `[10/11] Lesson Capitalization`
+`[OK]` con su advertencia publicada: *no verifica pertinencia*.
+
+Escritura efectivamente tocada: C1 reescribió los **5 packs** (comportamiento ya registrado en
+`14-indice-revencido-por-medicion.txt`: `--informe` no controla los packs; quien no quiere escribir usa
+`--check` o `--listar-declarado`). C2 reescribió el par del índice. **No se corrió `--carga`**, así que
+`evidence/…/FASE-D/carga.json` quedó intacto: mtime **2026-09-24 19:59**, sha256
+`0d1755ce0e0a981ec7f007472c222f798ca34e42dd880723d877e631d5564b7c`.
+
+Orden declarado: la cola se corrió **después** de la suite (paso 2), que es lo que pedía la restricción de
+escritores concurrentes. Que los packs y el índice estén ahora re-sellados no cambia el diagnóstico de AC23:
+ese arnés regenera el pack él mismo sobre el árbol, no lee estos archivos.
+
+---
+
+## 5. Cuenta canónica de tests frente a lo que publica `AGENTS.md`
+
+| | Valor | Fuente |
+|---|---|---|
+| Método canónico | **4.564** | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` |
+| Publicado | **4.246** | `AGENTS.md:407` («Cobertura por Modulo (4,246 funciones totales)») |
+| Delta | **+318** | |
+
+Consecuencia medida, no deducida: el rojo de conteo de `validate_agents_md.py::test_count` sigue vivo y es
+de configuración central — **su cura exige mandato literal sobre `AGENTS.md`**, que esta sesión no tiene ni
+usa. No se editó. (Del delta, 7 funciones las aporta
+`tests/test_sync_writers_lf_y_fecha_readme.py`, la prueba de la cura S17/S18.)
+
+---
+
+## 6. Desbalance de anotadores en `10-analisis-post-implementacion.md`
+
+Archivo: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md`
+(este plan; no se tocó en esta sesión).
+
+- Aperturas `⟦` (U+27E6): **23**
+- Cierres `⟧` (U+27E7): **22**
+- **Desbalance: +1** (profundidad final 1 con pila de marcadores; **0 cierres huérfanos**)
+- El anotador sin cerrar es la **apertura de la línea 167**, que es la **fila 1 de la tabla «Decisiones de
+  FASE-D (2026-09-24)»** (encabezado en línea 160): `| 1 | **El pack no sustituye ninguna lectura
+  canónica**: …`.
+
+**Rectificación de posición:** `12-pendientes-y-prompts.txt:19` ubica ese anotador huérfano en «fila 1 de
+*Decisiones de FASE-C*». Medido con pila sobre el archivo, el huérfano está en la tabla de **FASE-D**
+(«Decisiones de FASE-C» es el encabezado de la línea 123 y sus filas casan). La cuenta (+1) es la misma;
+cambia solo el dónde, y se consigna porque esa fila es la que hay que cerrar.
+
+Cura: editar un documento de fase cerrada → **fuera del mandato** de esta sesión (la orden prohíbe
+re-escribir expedientes y docs de fase cerrada). Queda como pendiente A3 con el dueño que ya tiene publicado
+(authoría: conciliación 2026-09-25, trabajo sin commitear; declarado también en
+`04-nota-integridad-documental.txt`).
+
+**Integridad de la evidencia durante esta sesión:** `find evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+-type f -newermt "2026-09-25 18:10"` devolvió **0 archivos** antes de escribir este documento. Ningún
+expediente cerrado (FASE-A..D, BLOQUE-B/C, CONCILIACION-FINAL, FASE-RELEASE) fue tocado.
+
+---
+
+## 7. Pendientes por ejecutar — sin dueños nuevos
+
+Se re-publica la cola de `12-pendientes-y-prompts.txt` con lo que esta sesión cerró y lo que añadió. Los
+dueños son los ya publicados por los documentos del plan; aquí no se asigna ninguno.
+
+**Cerrados por esta sesión (higiene):**
+
+1. ✅ `.agent/SYSTEM_STATUS.md` en LF por regeneración (era ítem A1).
+2. ✅ Suite completa corrida con su exit y sus 8 rojos atribuidos (era ítem A2). **Añade** un pendiente: el
+   ítem A1 nuevo de abajo.
+
+**Pendientes de higiene/registro que NO necesitan mandato nuevo:**
+
+- **A1 (nuevo, nacido de la medición de hoy): CURADO esa misma noche** — re-anclar la muestra del arnés
+  AC23 (`tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py:34`,
+  ~~`FASE_CON_RECORTE = "RELEASE"`~~). La cura no re-pineó otra fase del plan vivo: el arnés **planta** su
+  insumo con la factoría `plantear()` del conftest, con control de que muerde (delta 709 B con recorte,
+  0 B sin recorte). Medición y corridas: `15-curaciones-previas-B.txt`. Suite tras la cura: **4 failed,
+  4590 passed**, exit 1 — los cuatro declarados, ya sin rojo propio de esta orden.
+- **A2: CURADO esa misma noche** — rojo de conteo de `AGENTS.md` (publicaba 4.246). Ahora
+  **4.564** con la sección reescrita entera, y `validate_agents_md.py` da **exit 0** (1,6 % frente a los
+  4.638 items que mide su propio instrumento). Mandato literal del operador usado; no se tocó
+  `.cursorrules`. Detalle en `15-curaciones-previas-B.txt`.
+- **A3:** el `⟦` sin cerrar en la fila 1 de «Decisiones de FASE-D» del `10-analisis…` (§6) → edición de doc
+  de fase cerrada, con su autoría publicada.
+- **A4:** residuo de cuota «tres observaciones» en `REFACTOR-WHATSAPP…/05-prompt-inicio-sesion-fase-G.md:52`
+  (dueño y fila ya registrados en §4.C de la orden).
+
+**Pendientes de código/configuración central, cada uno con su mandato:** **S15** (`build_lesson_index.py`,
+rama `fuente_fecha = "mtime"` de `_plan_date`), **S16** (`.agents/workflows/templates/prompt-fase-template.md`
+§8), **D2** (promover el verificador de gobernanza al quick, 11→12 y renumerar), **D3 completa** (rebanar el
+workflow canónico por fase), **D7 + S10** (activar Jev tras `decision_client.py`; al activarse despierta
+**D6** y AC15 deja de ser `NO-EJERCITADO`).
+
+**Pendientes de permiso (el portón, no esta orden):** commit y push del árbol (decisión del operador, con las
+dos fronteras que hay que nombrar antes: las carpetas `*-hijos` del expediente de B y si `AGENTS.md` +
+`.cursorrules` viajan); momento remoto **D8** (re-corrida Q7, premisa no comprobada) y **D9** (`--upload`
+verificando por contenido descargado + sha); **archivado** `git mv` con su cola (orden R2.5/R2.10).
+
+**Decisiones humanas:** `L-VCF-10…14` (aceptar/rechazar con motivo, contrato **E3**; dueño: el operador);
+muestra **BORRADOR** de JEV y la decisión del *gap* de interfaz.
+
+**Planes hermanos, cada uno con su propio mandato de fase:** JEV → FASE-B; WHATSAPP → C/D/E/F/H/E2E/VERIFY/
+RELEASE con deuda AC5; ESCRITURA-QMIND → su fase única.
+
+**S14** no es «esperando»: su disparador real es correr el triaje con `--plans-dir` sobre un árbol
+**extraído** (`git archive`), no el `git mv` del repo. Es medición, no código.
+
+---
+
+## 8. Lo que esta sesión afirmó y lo que no
+
+- Afirmó: higiene (LF del generado), suite completa corrida con exit, cola derivada en verde sobre el árbol
+  final, y las tres mediciones que pedía el mandato (cuenta canónica, desbalance de anotadores, rutas sucias).
+- **No** afirmó: commit (HEAD sigue `5817edd` y el árbol sigue sucio), push, paridad con el remoto,
+  publicación QMind, archivado, ni cierre de fase o deuda alguna. Los cuatro planes y las deudas
+  D2/D3/D6/D7/S10/S14/S15/S16 siguen con sus dueños y sus disparadores intactos.
+- Re-medida **después** de escribir este archivo: HEAD `5817edd`, `git status --porcelain | wc -l` = **79**
+  (64 ` M` + 15 `??`; el cierre no sube líneas porque su directorio ya estaba colapsado como `??`),
+  `git ls-files --others --exclude-standard | wc -l` = **2.036**.
+- El propio archivo está en **LF**: 0 pares CRLF, medido por bytes
+  (`python -c "print(open(r'<esta ruta>','rb').read().count(b'\r\n'))"`). **Su tamaño y su número de líneas
+  no se publican aquí**: cada edición que publica esa cifra la invalida, así que se leen con el comando.
+  (La primera versión de esta nota decía 16.510/257 y quedó vencida por sus propias correcciones; se retira
+  la cifra en lugar de re-copiarla.)
+- Los cuatro rojos nuevos de AC23 se entregan **con causa y con dueño ya existente**; no se curaron porque
+  curarlos es editar `tests/`, y este mandato es de higiene y registro.

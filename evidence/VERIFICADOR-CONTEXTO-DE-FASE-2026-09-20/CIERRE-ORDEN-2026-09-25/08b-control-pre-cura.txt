@@ -1,0 +1,191 @@
+### 08b control: los mismos 7 tests contra los scripts de HEAD (sin la cura) -- 2026-09-25T21:59:15Z
+Reproduccion del rojo PRE sobre disco, sin tocar el arbol del proyecto: copia del archivo de test con sus
+tres constantes apuntadas a `git show HEAD:scripts/...` materializado en scratch/cura-pre.
+reanclado: True
+
+$ python -m pytest scratch/cura_pre_tests.py -q -p no:cacheprovider
+FF.FF.F                                                                  [100%]
+================================== FAILURES ===================================
+________ test_el_writer_de_sync_emite_lf_y_el_commiteado_escribe_crlf _________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-747/test_el_writer_de_sync_emite_l0')
+
+    @SIN_TRADUCCION
+    def test_el_writer_de_sync_emite_lf_y_el_commiteado_escribe_crlf(tmp_path):
+        """Verde y rojo del mismo camino: el writer de hoy contra el de `HEAD`, mismo espejo y entorno."""
+        # allanar=False: deja version/codename reales, asi que el motor tiene que escribir y se ve que emite.
+        readme = _readme_espejo(tmp_path, fecha_leible=FECHA_VIEJA_LEIBLE, allanar=False)
+    
+        nuevo = _repo_sync(tmp_path / "nuevo", script_src=SYNC_SCRIPT, config_src=SYNC_CONFIG,
+                           readme_src=readme)
+        _correr_sync(nuevo)
+        bytes_nuevo = (nuevo / README_REL).read_bytes()
+    
+        control = tmp_path / "control"
+        viejo = _repo_sync(tmp_path / "viejo",
+                           script_src=_fuente_commiteada("scripts/sync_versions.py", control),
+                           config_src=SYNC_CONFIG,
+                           readme_src=readme)
+        _correr_sync(viejo)
+        bytes_viejo = (viejo / README_REL).read_bytes()
+    
+>       assert b"\r" not in bytes_nuevo, (
+            f"sync_versions sigue re-CRLF-eando un archivo que git almacena en LF "
+            f"({bytes_nuevo.count(bytes([13]))} CR en {len(bytes_nuevo)} bytes): S17")
+E       AssertionError: sync_versions sigue re-CRLF-eando un archivo que git almacena en LF (305 CR en 16090 bytes): S17
+E       assert b'\r' not in b'# IA Hoteles Agent CLI\r\n\r\n**Plataforma ag\xc3\xa9ntica de diagn\xc3\xb3stico de visibilidad digital hotelera: au...ELES AGENT (c) 2026**\r\n*Diagnosticando la invisibilidad digital hotelera y recuperando reservas que hoy van a OTAs.*'
+
+scratch\cura_pre_tests.py:229: AssertionError
+---------------------------- Captured stdout call -----------------------------
+OK: README.md (readme_version_header) - updated
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\.cursorrules
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\docs\CONTRIBUTING.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\docs\GUIA_TECNICA.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\nuevo\repo\docs\contributing\REGISTRY.md
+OK: README.md (readme_version_header) - updated
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\.cursorrules
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\docs\CONTRIBUTING.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\docs\GUIA_TECNICA.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_el_writer_de_sync_emite_l0\viejo\repo\docs\contributing\REGISTRY.md
+__________ test_los_dos_writers_de_doctor_emiten_lf_y_los_de_head_no __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-747/test_los_dos_writers_de_doctor0')
+
+    @SIN_TRADUCCION
+    def test_los_dos_writers_de_doctor_emiten_lf_y_los_de_head_no(tmp_path):
+        """`run_regenerate_domain_primer` y `run_status`, ambos sobre un proyecto temporal minimo.
+    
+        `run_status` no estaba nombrado en S17: es la tercera escritura de la misma familia dentro del
+        mismo archivo, hallada al curar, y se declara en el expediente junto con su prueba.
+        """
+        control = tmp_path / "c-doctor"
+        commiteado = _fuente_commiteada("scripts/doctor.py", control)
+    
+        raiz_v, doctor_v = _proyecto_doctor(tmp_path / "d-vigente", script_src=DOCTOR_SCRIPT)
+        assert doctor_v.run_regenerate_domain_primer() is True
+        assert doctor_v.run_status() is True
+        par_v = ((raiz_v / ".agent" / "knowledge" / "DOMAIN_PRIMER.md").read_bytes().count(b"\r\n"),
+                 (raiz_v / ".agent" / "SYSTEM_STATUS.md").read_bytes().count(b"\r\n"))
+>       assert par_v == (0, 0), (
+            f"doctor.py sigue escribiendo CRLF: DOMAIN_PRIMER {par_v[0]} y SYSTEM_STATUS {par_v[1]} pares "
+            "(S17: la cura cubre sus dos escrituras)")
+E       AssertionError: doctor.py sigue escribiendo CRLF: DOMAIN_PRIMER 73 y SYSTEM_STATUS 47 pares (S17: la cura cubre sus dos escrituras)
+E       assert (73, 47) == (0, 0)
+E         
+E         At index 0 diff: 73 != 0
+E         Use -v to get more diff
+
+scratch\cura_pre_tests.py:255: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[OK] DOMAIN_PRIMER.md regenerado en .agent\knowledge\DOMAIN_PRIMER.md
+     0 archivos Python, 0 clases en 0 modulos (0 en modules/, 0 root)
+[OK] SYSTEM_STATUS.md regenerado (0 skills, 0 shadow logs, 0 sesiones)
+__________ test_check_detecta_la_fecha_desfasada_y_el_commiteado_no ___________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-747/test_check_detecta_la_fecha_de0')
+
+    def test_check_detecta_la_fecha_desfasada_y_el_commiteado_no(tmp_path):
+        """El corte de cobertura declarado en S18: `[3/11] Version Sync` dio PASS con la fecha vieja."""
+        readme = _readme_espejo(tmp_path, fecha_leible=FECHA_VIEJA_LEIBLE, allanar=True)
+        control = tmp_path / "r-old"
+    
+        vigente = _repo_sync(tmp_path / "r-new", script_src=SYNC_SCRIPT, config_src=SYNC_CONFIG,
+                             readme_src=readme)
+        ok_vigente, results_vigente = _correr_sync(vigente, check_only=True)
+    
+        viejo = _repo_sync(tmp_path / "r-old-repo",
+                           script_src=_fuente_commiteada("scripts/sync_versions.py", control),
+                           config_src=_fuente_commiteada("scripts/sync_config.yaml", control),
+                           readme_src=readme)
+        ok_viejo, results_viejo = _correr_sync(viejo, check_only=True)
+    
+>       assert results_vigente["readme_version_header"] == "FAIL", (
+            f"la regla sigue sin gobernar la fecha legible: el check dice "
+            f"{results_vigente['readme_version_header']!r} sobre un README con "
+            f"«{FECHA_VIEJA_LEIBLE}» y un VERSION.yaml con {FECHA_ESPEJO} (S18)")
+E       AssertionError: la regla sigue sin gobernar la fecha legible: el check dice 'IN_SYNC' sobre un README con «11 Septiembre 2026» y un VERSION.yaml con 2026-09-25 (S18)
+E       assert 'IN_SYNC' == 'FAIL'
+E         
+E         - FAIL
+E         + IN_SYNC
+
+scratch\cura_pre_tests.py:300: AssertionError
+---------------------------- Captured stdout call -----------------------------
+OK: README.md (readme_version_header) - in sync
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\.cursorrules
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\docs\CONTRIBUTING.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\docs\GUIA_TECNICA.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-new\repo\docs\contributing\REGISTRY.md
+OK: README.md (readme_version_header) - in sync
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\.cursorrules
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\docs\CONTRIBUTING.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\docs\GUIA_TECNICA.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_check_detecta_la_fecha_de0\r-old-repo\repo\docs\contributing\REGISTRY.md
+_______ test_sync_alinea_la_fecha_en_su_formato_largo_sin_escribir_iso ________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-747/test_sync_alinea_la_fecha_en_s0')
+
+    def test_sync_alinea_la_fecha_en_su_formato_largo_sin_escribir_iso(tmp_path):
+        """Escribe la fecha que el README muestra hoy, no un ISO que cambie el formato de la cabecera."""
+        readme = _readme_espejo(tmp_path, fecha_leible=FECHA_VIEJA_LEIBLE, allanar=True)
+        raiz = _repo_sync(tmp_path / "green", script_src=SYNC_SCRIPT, config_src=SYNC_CONFIG,
+                          readme_src=readme)
+        _correr_sync(raiz)
+        linea = next(l for l in (raiz / README_REL).read_text(encoding="utf-8").splitlines()
+                     if l.startswith("**v"))
+    
+>       assert f"Actualizado {FECHA_LARGA_ESPEJO}" in linea, (
+            f"la fecha sincronizada no salio en el formato legible del README: {linea!r}")
+E       AssertionError: la fecha sincronizada no salio en el formato legible del README: '**v9.9.9** -- Espejo temporal de prueba | Actualizado 11 Septiembre 2026'
+E       assert 'Actualizado 25 Septiembre 2026' in '**v9.9.9** -- Espejo temporal de prueba | Actualizado 11 Septiembre 2026'
+
+scratch\cura_pre_tests.py:319: AssertionError
+---------------------------- Captured stdout call -----------------------------
+OK: README.md (readme_version_header) - in sync
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\AGENTS.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\.cursorrules
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\docs\CONTRIBUTING.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\docs\GUIA_TECNICA.md
+WARN: File not found: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-747\test_sync_alinea_la_fecha_en_s0\green\repo\docs\contributing\REGISTRY.md
+______________ test_la_regla_sigue_vigente_en_el_config_del_repo ______________
+
+    def test_la_regla_sigue_vigente_en_el_config_del_repo():
+        """El contrato de la regla, leido en su fuente: un solo escritor para version, codename y fecha."""
+        config = yaml.safe_load(SYNC_CONFIG.read_text(encoding="utf-8"))
+        regla = next((r for r in config["rules"] if r.get("id") == "readme_version_header"), None)
+        assert regla is not None, "readme_version_header desaparecio del config"
+        pares = [(r["pattern"], r["template"]) for r in regla["replacements"]
+                 if "Actualizado" in r.get("template", "")]
+        assert len(pares) == 1, f"la fecha de la cabecera tiene {len(pares)} escritores en la misma regla"
+        pattern, template = pares[0]
+>       assert "{date_text}" in template, (
+            f"el template vuelve a dejar la fecha sin gobernar ({template!r}): S18 reaparece")
+E       AssertionError: el template vuelve a dejar la fecha sin gobernar ('**v{version}** -- {codename} | Actualizado'): S18 reaparece
+E       assert '{date_text}' in '**v{version}** -- {codename} | Actualizado'
+
+scratch\cura_pre_tests.py:363: AssertionError
+=========================== short test summary info ===========================
+FAILED scratch/cura_pre_tests.py::test_el_writer_de_sync_emite_lf_y_el_commiteado_escribe_crlf
+FAILED scratch/cura_pre_tests.py::test_los_dos_writers_de_doctor_emiten_lf_y_los_de_head_no
+FAILED scratch/cura_pre_tests.py::test_check_detecta_la_fecha_desfasada_y_el_commiteado_no
+FAILED scratch/cura_pre_tests.py::test_sync_alinea_la_fecha_en_su_formato_largo_sin_escribir_iso
+FAILED scratch/cura_pre_tests.py::test_la_regla_sigue_vigente_en_el_config_del_repo
+5 failed, 2 passed in 0.79s
+EXIT=1
+
+### limpieza declarada del scratch de esta reproduccion -- 2026-09-25T21:59:41Z
+Se retiran scratch/cura-pre/ y scratch/cura_pre_tests.py: son copias de scripts/ sin tracking, y la
+poblacion que mide AC6 (escaner de .py del arbol vs `git ls-files '*.py'`) las contaria como residuo
+y produciria un rojo ajeno a cualquier fase (familia S11 / L-VCF-11). El rojo de arriba queda registrado
+aqui; la reproduccion es efimera por disenio.
+scratch existe: no
+residuos: 0

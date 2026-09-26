@@ -1,0 +1,30 @@
+Cierra la sesión de la orden .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md en
+C:/Users/Jhond/Github/iah-cli. Alcance: SOLO higiene local y registro. Sin commit, sin push, sin red,
+sin QMind, sin archivado, y sin editar AGENTS.md, .cursorrules, .agents/** ni docs de fase cerrada.
+
+1) Regenera .agent/SYSTEM_STATUS.md con su writer (python scripts/doctor.py --status) y comprueba por
+   bytes que quede en LF. Hoy esta en i/lf w/crlf con 58 pares CRLF: es residuo del escritor defectuoso
+   que se curó el 2026-09-25 (S17). No lo edite a mano: se arregla regenerando.
+2) Corre la suite que esta sesion NO corrio:
+   PYTHONDONTWRITEBYTECODE=1 python -m pytest tests -q -p no:cacheprovider
+   En primer plano y sin escritores concurrentes bajo evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/
+   (el test de S12 toma huellas de todo el directorio del plan). Rojos preexistentes ya declarados, que
+   se atribuyen y NO se absorben: test_medido_contra_el_predecesor_entra_en_alcance (dueno: registros
+   REFACTOR-WHATSAPP FASE-G/0), test_diagnostic_geo_metrics,
+   test_validate_lesson_capitalization del plan TRIBUNAL-ENFORCEMENT-OBS archivado, y
+   test_function_default_flags (flaky, mecanismo pendiente).
+3) Re-corre la cola derivada sobre el arbol final, en este orden y con su exit impreso:
+   python scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+   python scripts/build_lesson_index.py
+   python scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+   python scripts/build_lesson_index.py --check
+   python scripts/run_all_validations.py --quick
+4) Escribe evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/13-cierre-de-sesion.txt
+   con: HEAD y rutas sucias medidos (git rev-parse --short HEAD; git status --porcelain | wc -l;
+   git ls-files --others --exclude-standard | wc -l), las salidas de 1-3 con exit por comando, la cuenta
+   canonica de tests (grep -rE "^\s*def test_" tests --include=*.py | wc -l) frente al 4.246 que publica
+   AGENTS.md, el desbalance de anotadores de 10-analisis-post-implementacion.md, y la lista de pendientes
+   por ejecutar sin inventar duenos nuevos.
+No re-escribas expedientes cerrados (FASE-A..D, BLOQUE-B/C, CONCILIACION-FINAL, FASE-RELEASE): la escritura
+nueva va solo al directorio CIERRE-ORDEN-2026-09-25/. Si algo de lo pedido requiere un destino no nombrado
+aqui, para y reporta checkpoint en vez de escribir.

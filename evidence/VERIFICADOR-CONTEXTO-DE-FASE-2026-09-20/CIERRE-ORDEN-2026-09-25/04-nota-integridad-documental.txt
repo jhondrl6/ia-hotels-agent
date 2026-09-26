@@ -1,0 +1,27 @@
+### 04 defecto de integridad documental encontrado y NO tocado — 2026-09-25
+
+Al barrer los marcadores de anotación `⟦…⟧` de los archivos que este cierre editó, uno quedó desbalanceado
+**fuera de esta sesión**:
+
+- `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md`, fila **1** de
+  «Decisiones de FASE-C (2026-09-24)»: **2 aperturas y 1 cierre en la misma línea**. La que no cierra abre la
+  nota `⟦**Rectificación con atribución, 2026-09-25**: esta fila publicitaba «108.017 bytes por fase»…`, de
+  modo que el lector no puede saber dónde termina la rectificación. Autoría: la conciliación del 2026-09-25
+  (trabajo sin commitear), no esta sesión.
+
+**Qué se hizo con esto: declararlo, no curarlo.** Es un carácter de un documento de una fase ya cerrada, y
+ninguna comprobación lo corta — `--quick` dio **11/11 `exit 0`** con él presente, en PRE y en POST — así que
+no es un rojo que haya que absorber para cerrar la orden. El balance verificado en los seis archivos que este
+cierre escribió: `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` 45/45, `dependencias-fases.md` 13/13,
+`00-lecciones-capitalizadas.md` 3/3, `06-checklist-implementacion.md` 15/15 (en `10-analisis…` queda el 21/20
+de arriba, con su única línea desbalanceada nombrada). `CHANGELOG.md` no usa el marcador.
+
+Comando con el que se midió, para re-ejecutarlo sin repetir este texto:
+
+```bash
+python -c "import sys;sys.stdout.reconfigure(encoding='utf-8');p='.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md';[print(i,l.count(chr(10214)),l.count(chr(10215))) for i,l in enumerate(open(p,encoding='utf-8').read().split(chr(10)),1) if l.count(chr(10214))!=l.count(chr(10215))]"
+```
+
+Nota de lectura: un `⟦` que abre en una línea y cierra en la siguiente es **normal** en este corpus (hay
+tres casos así en el mismo archivo, en las líneas 147/148, 306/310 y 337/338). Lo que hace falta revisar es
+la paridad **por fila lógica completa**, no por línea física, y por eso esta salida no es un rojo automático.

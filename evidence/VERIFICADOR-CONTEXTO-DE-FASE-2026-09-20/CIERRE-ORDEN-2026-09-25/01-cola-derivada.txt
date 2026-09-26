@@ -1,0 +1,34 @@
+### 01 cola derivada del cierre -- 2026-09-25T21:16:18Z
+
+$ scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --informe evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/01-packs.json
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/01-packs.json
+EXIT=0
+
+$ scripts/build_lesson_index.py
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+
+$ scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT=0
+
+$ scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (339 IDs)
+EXIT=0

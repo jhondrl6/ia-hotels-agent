@@ -1,0 +1,71 @@
+### 03 registro del cierre de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 — 2026-09-25T21:20Z
+
+Mandato del operador (texto literal con el que se abrió la sesión): cerrar la orden **en su alcance
+aprobado**; registrar los dos defectos de writers como **S17 y S18 con dueño y disparador, sin curarlos**;
+mantener el **bloque A bajo «Sin publicar»**; dejar **`DOMAIN_PRIMER` declarado, no alineado**; declarar
+**`L-VCF-10…14` pendientes con su dueño**; y al final **regenerar índice y packs y verificar con
+`--quick`**. Sin commit, sin push, sin red, sin archivado, sin tests de pytest (no autorizados).
+
+## Qué se escribió y dónde
+
+| # | Escrito | Destino | Naturaleza |
+|---|---|---|---|
+| 1 | Cierre de la orden: encabezado de estado, los cuatro momentos, §4.A (bloque A bajo «Sin publicar»), §6 (criterio + «Firmas del cierre» + deudas S17/S18 + cola de permisos), §7 (defectos renombrados y nota final) | `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` | Estado documental |
+| 2 | **S17** y **S18** con dueño, disparador, remedio provisional y alternativa descartada (fuente única de deuda) | `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` §S17/§S18 | Deuda nueva, **no** ejecutada |
+| 3 | Filas S17/S18 en la matriz de deudas, y las tres decisiones del cierre (bloque A, `DOMAIN_PRIMER`, `L-VCF-10…14`) en su §Estado del cierre | `…/10-analisis-post-implementacion.md` | Eco con referencia a la fuente |
+| 4 | Dueño de las cinco propuestas (`L-VCF-10…14`) = operador vía **E3**; §2 intacto en sus catorce filas (**AC10**) | `…/00-lecciones-capitalizadas.md` §4 | Declaración de pendiente |
+| 5 | Puntero S17/S18 en las dos casillas que ya los declaraban, y la casilla nueva de `DOMAIN_PRIMER` **declarado y no alineado** | `…/06-checklist-implementacion.md` | Estado del cierre de RELEASE |
+| 6 | Decisión sobre el bloque A: **permanece bajo «Sin publicar»**, entrada sin reescribir ni acreditar a `[4.78.0]` | `CHANGELOG.md` (nota del bloque A y «Lo que queda abierto») | Decisión del operador registrada |
+| 7 | La misma decisión en la nota datada, sin tocar `version`/`codename`/`release_date`/`date` | `VERSION.yaml` | Comentario; no es sync |
+
+## Lo que NO se tocó (comprobado, no asumido)
+
+- `.agent/knowledge/DOMAIN_PRIMER.md`: `git diff --numstat` sigue en **5/5**, el que dejó FASE-RELEASE, y su
+  mtime es anterior a esta sesión. No se corrió `doctor.py --regenerate-domain-primer`. **Alinear su
+  política** habría exigido editar `AGENTS.md` y `docs/CONTRIBUTING.md`: no se editó **ninguna**
+  configuración central (`AGENTS.md`, `.cursorrules`, `README.md`, `docs/CONTRIBUTING.md`,
+  `docs/GUIA_TECNICA.md` conservan el diff que ya traían del cierre de RELEASE).
+- **S17/S18 no se curaron**: `scripts/sync_versions.py`, `scripts/doctor.py` y `scripts/sync_config.yaml`
+  intactos (el config con mtime del 2026-09-23).
+- `scripts/build_phase_briefing.py` se corrió **sin** `--carga`: `evidence/…/FASE-D/carga.json` (evidencia
+  cerrada, **S12**) no se re-escribió. Tampoco hubo `--fix`, `--update-baseline` ni `git` de escritura.
+- `docs/contributing/REGISTRY.md` y su tracker no se movieron: cerrar un documento de política no registra
+  una fase, y `log_phase_completion.py` es aditivo (volver a correrlo apila una entrada duplicada).
+
+## Mediciones del cierre
+
+**PRE antes de escribir** (`00-quick-pre.txt`): `run_all_validations.py --quick` → **11/11, `exit 0`**;
+citas **743** históricas, 0 nuevas, 0 crecimientos; HEAD `5817edd`; `git status --porcelain` → **75** rutas.
+El POST vuelve a **75**: este cierre no abrió ninguna ruta nueva fuera de las que ya estaban sucias
+(los cinco documentos de plan, `CHANGELOG.md`, `VERSION.yaml`, el par del índice y los cinco packs se
+contaban ya; lo único nuevo es este directorio de evidencia, que `git status` agrupa en una línea).
+
+Cola derivada en su orden canónica (`01-cola-derivada.txt`), los cuatro pasos en `exit 0`:
+
+1. `build_phase_briefing.py --plan … --informe <este expediente>/01-packs.json` → **5 packs COMPLETO ·
+   0 SECCION-NO-RESUELTA · 0 FUENTE-AUSENTE · 37 fuentes · 23/23 secciones**.
+2. `build_lesson_index.py` → **339 IDs definidos + 51 sin definición, 16 análisis, 422 `.md` citados**.
+3. `build_phase_briefing.py --check` → cinco líneas `[OK] … fuentes frescas`.
+4. `build_lesson_index.py --check` → `[OK] Índice de lecciones fresco (339 IDs)`.
+
+**POST** (`02-quick-post.txt`): `--quick` → **11/11, `exit 0`**, con la composición **intacta** (11 checks,
+delta 0 contra el PRE, AC16) y **743 citas, 0 nuevas, 0 crecimientos**. El denominador del par regenerado
+(**339 IDs definidos + 51 sin definición, 16 análisis, 422 `.md` citados**) coincide con el que imprimió
+FASE-RELEASE en `evidence/…/FASE-RELEASE/07-cierre-verificacion.txt`: las ediciones de este cierre no
+definieron ningún ID de lección nuevo ni añadieron `.md` al corpus. Motivo, leído en el generador: `ID_RE`
+exige guion, así que **S17**/**S18** no entran al conteo, y `L-VCF-10…14` ya estaban definidas en
+`10-analisis-post-implementacion.md`. **No es una medición PRE propia** — no se le tomó sha antes de
+escribir—, es una comparación contra el registro de la fase anterior. **Límite: un verde local de `[6/7]`
+no certifica otro checkout — es S15 y sigue abierta.**
+
+## Estado final
+
+**Re-chequeo del árbol final** (`05-recheck-final.txt`, después de escribir los anexos 03 y 04):
+`build_lesson_index.py --check` → `[OK] Índice de lecciones fresco (339 IDs)` `exit 0`;
+`build_phase_briefing.py --check` → cinco `[OK] … fuentes frescas` `exit 0`; `--quick` → **11/11 `exit 0`**.
+
+La orden queda **cerrada en su alcance aprobado** (§6, «Firmas del cierre»). Los cuatro momentos del
+encabezado siguen separados y **se miden, no se citan**: este cierre aporta documentos y expediente, y no
+ejecutó commit ni push. Con `git status --short` y
+`git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD` se lee el estado
+vigente; HEAD al cerrar era `5817edd` y esa referencia caduca con el primer commit.

@@ -1,0 +1,120 @@
+# 15 — Curaciones previas a publicar (opción B) — 2026-09-25T23:55Z
+
+Mandato: instrucción escrita del operador — «proceder con las curaciones previas de la opción B», la
+opción que presentó la sesión de cierre (`13-cierre-de-sesion.txt` §7, ítems A1 y A2). Superficie
+autorizada y usada: `tests/quality_gates/phase_briefing/` y `AGENTS.md`. **No** se tocó `scripts/`,
+`.cursorrules`, `.agents/**` ni documentos de fase cerrada. Sin commit y sin push: son otra puerta.
+
+## Qué se curó
+
+### 1. AC23 — el arnés de mutación se queda sin muestra (era el rojo nuevo de §3 del cierre)
+
+**Causa confirmada antes de editar:** el arnés fijaba `FASE_CON_RECORTE = "RELEASE"` y generaba el pack
+sobre el plan vivo. Al cerrar FASE-RELEASE sus tres secciones quedaron resueltas y el pack pasó a
+`COMPLETO`, así que las cuatro pruebas se cortaban exactamente por lo que debían cortar
+(`la muestra dejo de tener recorte: el mutation check quedaria verde vacio`).
+
+**Cura elegida: plantar el insumo, no re-pinear otra fase.** `tests/quality_gates/phase_briefing/`
+ya tiene la factoría `plantear()` (conftest), y con ella el recorte se produce **por construction**
+(`§99` no existe en el `01-doc.md` plantado). Re-anclar a otra fase del plan vivo habría repetido el
+mismo defecto la próxima vez que esa fase cerrara; el arnés deja de depender del corpus.
+
+Cambios en `test_briefing_mutation_no_truncar.py`: `medir(bpb, mut, caso)` recibe el caso;
+`correr_a_destino(destino, caso, bpb=None)` — **ninguno de los dos argumentos obligatorios tiene
+default**, así que la prueba de que el destino no puede heredarse de otra fase sigue viva (y ahora
+tampoco se hereda el insumo); las siete pruebas pasan `plantear(lectura=LECTURA_CON_RECORTE)`. El
+símbolo mutado sigue siendo el real: `build_phase_briefing.GUARD_NO_TRUNCAMIENTO_ACTIVO`, leído por
+`_declarar_recorte()` en tiempo de escritura (`scripts/build_phase_briefing.py:521`, usado también en
+`:604`). **No se bajó ninguna aserción.**
+
+**Control de que el verde no es verde vacío** (medido con el arnés curado sobre dos muestras plantadas,
+fuera del repo; `/tmp/control_ac23.py`):
+
+| Muestra | VERDE (guard activo) | ROJO (guard apagado) | delta bytes | la aserción del arnés pasaría |
+|---|---|---|---|---|
+| **con** recorte (`§99`) | `SECCION-NO-RESUELTA`, declara=True, 2.888 B | `SECCION-NO-RESUELTA`, declara=False, 2.179 B | **709** | sí |
+| **sin** recorte (solo `§1`) | `COMPLETO`, declara=False, 2.149 B | `COMPLETO`, declara=False, 2.149 B | **0** | **no** — y por eso el arnés exige la primera |
+
+Es decir: apagado el guard, la muestra plantada **sí cambia algo** (709 bytes de declaración que
+desaparecen en silencio). Con una muestra sin recorte el mutation check sería decorativo, y el arnés la
+rechaza. El delta es lo que prueba que la mutación muerde.
+
+Selección: `pytest tests/quality_gates/phase_briefing/ -q -p no:cacheprovider` → **49 passed**, exit 0.
+
+### 2. `AGENTS.md` — el conteo de cobertura estaba vencido y el lector usa otro instrumento
+
+**Lo que se publicó como pendiente:** `validate_agents_md.py::check_2_test_count` leía **4.246** del
+documento y medía **4.638** → 8,5 % contra una tolerancia de **±5 %** → `FAIL` (`[1/6 FAILED]:
+test_count`).
+
+**Medición para decidir la cifra (no se copió la del grep sin más):**
+
+| Instrumento | Qué mide | Valor |
+|---|---|---|
+| método canónico publicado | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` | **4.564** |
+| lo que compara el validador | `pytest --collect-only -q` (items) | **4.638** |
+| cifra **commiteada** | `git grep -c -E "^\s*def test_" HEAD -- tests` | **4.470** (HEAD `5817edd`) |
+
+4.564 queda a **1,6 %** de 4.638 → el check pasa **sin traicionar el método canónico**: no hubo que
+publicar la cuenta de items. La brecha entre los dos instrumentos (grep de funciones vs items
+parametrizados) y la tolerancia ±5 % quedan escritas en la misma sección, para que la próxima sesión no
+«arregle» el número hacia 4.638 ni vuelva a encontrarse el rojo.
+
+**La sección se reescribió entera, no solo el encabezado** (regla de fuente única): total
+4.246 → **4.564**; filas movidas `quality_gates` 630 → **859**, `root test files` 862 → **937**,
+`commercial_documents` 351 → **363**, `asset_generation` 470 → **472**; las demás intactas y **las filas
+vuelven a sumar el total** (4.564 medido por grupo con el mismo método). El +318 queda desglosado en esa
+suma y la cadena de previas (`4.245`, `4.240`, `4.233`, `4.063`) se conserva como antecedente. El
+encabezado decía «retrato de una revisión commiteada» y **eso era falso con este método** (el grep corre
+sobre el disco): la nota ahora dice retrato del **árbol de trabajo** y publica aparte el número
+commiteado (4.470) con su comando, que es lo que faltaba para que ambas frases fueran verdaderas.
+
+## Corridas de verificación (exit por comando)
+
+| Comando | Salida | EXIT |
+|---|---|---|
+| `pytest tests/quality_gates/phase_briefing/ -q -p no:cacheprovider` | `49 passed in 4.69s` | 0 |
+| `python -m pytest tests -q -p no:cacheprovider` (completa, primer plano) | `4 failed, 4590 passed, 41 skipped, 4 xfailed, 230 warnings in 315.89s` | **1** |
+| `python scripts/validate_agents_md.py` | `test_count: PASS, agents_md_count 4564, pytest_count 4638, pct_diff 1.6` | **0** |
+| `python scripts/build_phase_briefing.py --plan … --check` | 5× `[OK] … fuentes frescas` | 0 |
+| `python scripts/build_lesson_index.py --check` | `[OK] Índice de lecciones fresco (339 IDs)` | 0 |
+| `python scripts/run_all_validations.py --quick` | `TOTAL: 11/11 validations passed` | 0 |
+
+**PRE (antes de curar), para que el POST no sea auto-atribución:** suite `8 failed, 4586 passed … in
+328.56s` exit 1; selección AC23 aislada `4 failed, 3 passed` exit 1; `validate_agents_md.py`
+`[1/6 FAILED]: test_count` (4.246 vs 4.638, 8,5 %). Todo medido en
+`13-cierre-de-sesion.txt` §3 y §5 y re-verificado al abrir esta sesión.
+
+## Los cuatro rojos que quedan, atribuidos y NO absorbidos
+
+Son los declarados, ya sin ninguno propio de esta orden: `test_function_default_flags` (flaky,
+mecanismo pendiente), `test_diagnostic_geo_metrics`, `test_validate_lesson_capitalization[…
+TRIBUNAL-ENFORCEMENT-OBS…]` (plan archivado) y `test_validate_wiring` (contaminación
+`tmp_test/venv-jev-sdk`). Ninguno se tocó ni se absolvió.
+
+## Estado del árbol al cerrar esto
+
+HEAD sigue `5817edd` (sin commit). `git status --porcelain | wc -l` = **79**,
+`git ls-files --others --exclude-standard | wc -l` = **2.036** — los mismos conteos del cierre: esta
+sesión **editó dos rutas que ya estaban en el árbol** (`AGENTS.md` ya estaba ` M`; el test sigue sin
+rastrear) y añadió este archivo, que cae dentro de una carpeta `??` ya colapsada. `git diff --numstat --
+AGENTS.md` da **46/41**, pero eso es lo acumulado contra el índice **incluida la edición previa sin
+commitear de la propia orden**; el cambio de esta sesión es una sola sección (§Cobertura por Modulo), no
+todo ese diff. Ambas rutas quedaron en **LF** (0 pares CRLF, medido por bytes):
+`AGENTS.md` 31.534 B / 557 LF; el test 10.773 B / 203 LF.
+
+## Qué deja esto para la puerta C
+
+- El ítem **A1** de `13-cierre-de-sesion.txt` §7 queda **curado**: ya no hay 4 tests rojos que declarar
+  al comitear `tests/quality_gates/phase_briefing/`; el costo 1 de las opciones del `PROMPT-2` v2
+  desaparece. ⟦**Y el archivo `PROMPT-2-sesion-nueva-publicar.txt` quedó BORRADO esa misma noche**, por
+  instrucción escrita del operador y para no dejar en el expediente un texto que estas dos curas ya
+  vencían: su versión vigente (v3, con el acoplamiento (b)↔(c) por los +94 y con los 4 rastreados en CRLF)
+  se entregó en el chat y se está ejecutando en otra sesión. Sin rastrear, git no lo devuelve; la v1 sigue
+  íntegra en `12-pendientes-y-prompts.txt` §«PROMPT 2».⟧
+- El ítem **A2** (rojo de conteo de `AGENTS.md`) queda **curado** y `validate_agents_md.py` da exit 0.
+- Sigue **A3**: el `⟦` sin cerrar en la línea 167 del `10-analisis-post-implementacion.md` de CONTEXTO
+  (doc de fase cerrada, fuera de este mandato).
+- Sigue **A4**: la cuota «tres observaciones» en `WHATSAPP/05-prompt-inicio-sesion-fase-G.md:52`.
+- Sigue la **puerta C** con su instrucción escrita por commit y por push, y los permisos D8/D9,
+  archivado, S15, S16, D2, D3 completa, D7/S10 y las decisiones humanas.

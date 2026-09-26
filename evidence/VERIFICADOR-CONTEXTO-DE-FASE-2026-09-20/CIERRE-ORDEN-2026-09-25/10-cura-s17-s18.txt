@@ -1,0 +1,81 @@
+### 10 registro de la curación de S17 y S18 — 2026-09-25T22:02Z
+
+Mandato del operador: continuar con la opción **B** de la lista que él mismo pegó — «Curar primero y luego
+A»: autorizar `scripts/sync_versions.py`, `scripts/doctor.py` y `scripts/sync_config.yaml` (+ sus tests),
+«dos `newline="\n"` y una regla más», con rojo/verde por causa. **A ya estaba ejecutado** (00–05 de este
+expediente), así de B solo quedaba la cura. Sin commit, sin push, sin red, sin archivado.
+
+## Qué cambió en código
+
+| # | Archivo | Cambio | Familia |
+|---|---|---|---|
+| 1 | `scripts/sync_versions.py` (`SyncEngine.sync_rule`) | `write_text(..., encoding="utf-8", newline="\n")` | S17 |
+| 2 | `scripts/doctor.py` (`run_regenerate_domain_primer`) | igual | S17 |
+| 3 | `scripts/doctor.py` (`run_status`) | igual — **tercera escritura de la familia, no estaba nombrada en S17**; se halló midiendo `git ls-files --eol`, que mostraba `.agent/SYSTEM_STATUS.md` en `i/lf w/crlf` | S17 |
+| 4 | `scripts/sync_config.yaml` (`readme_version_header`) | el patrón llega hasta la fecha (`… \| Actualizado[^\n|]*`) y el template emite `{date_text}` (forma larga: «25 Septiembre 2026»; no ISO) | S18 |
+| 5 | `README.md` línea 5 | escrita **por su escritor**, no a mano: `sync_versions.py --rule readme_version_header`, con `README.md` autorizado como destino aparte | S18 |
+
+## Prueba
+
+`tests/test_sync_writers_lf_y_fecha_readme.py`, **7 funciones**. Corre los escritores reales sobre
+repositorios temporales y afirma sobre los bytes emitidos; cada rojo lleva su control contra la versión
+**commiteada** del instrumento (`git show HEAD:…`, sin `checkout` ni `stash`):
+
+- S17: `test_el_writer_de_sync_emite_lf_y_el_commiteado_escribe_crlf` (y exige que la diferencia entre los
+  dos escritores sea *solo* `\n` vs `\r\n`: `nuevo.replace(b"\n", b"\r\n") == viejo`),
+  `test_los_dos_writers_de_doctor_emiten_lf_y_los_de_head_no`,
+  `test_los_escritores_no_tocan_el_arbol_del_proyecto` (guard de destino sobre 10 rutas vigiladas).
+- S18: `test_check_detecta_la_fecha_desfasada_y_el_commiteado_no` (verde `FAIL` / rojo de control
+  `IN_SYNC`), `test_sync_alinea_la_fecha_en_su_formato_largo_sin_escribir_iso`,
+  `test_repeticion_es_idempotente_y_no_toca_la_segunda_mencion` (señuelo con la palabra «Actualizado» en
+  otra línea), `test_la_regla_sigue_vigente_en_el_config_del_repo`.
+
+**Secuencia real, no reconstruida:** PRE con los `scripts/` intactos → **5 failed, 2 passed** (los cinco por
+su causa nombrada: 305 CR del sync, 73/47 pares de doctor, `IN_SYNC` con la fecha vieja, la fecha sin
+gobernar, el template sin `{date_text}`). Después de la cura → **7 passed**. Reproducido sobre disco en
+`08b-control-pre-cura.txt` con una copia del archivo de test re-anchada a los `scripts/` de `HEAD`
+(**5 failed, `exit 1`**), y esa copia se borró después: un `.py` suelto en el árbol sería residuo de la
+población que mide AC6 (familia S11 / L-VCF-11).
+
+**Límite declarado de la prueba de bytes:** la traducción `\n` → `\r\n` es propiedad del SO. El archivo
+**mide** si este SO traduce (`_traduce_a_crlf()`) y, donde no traduzca, las tres comprobaciones de bytes se
+saltan con motivo en vez de dar un verde que no observó nada. Las de S18 son portables: gobiernan texto.
+
+## Consecuencia medida de gobernar la fecha (lo que obligó a pedir el destino)
+
+Al activar la detección, el árbol real quedó en rojo: `--check` pasó a
+`FAIL: README.md (readme_version_header) - needs update` y con él `tests/test_registry_fecha_documental.py`
+(que aserta el `--check` real en verde) y `[3/11] Version Sync` del quick. No se absorbió el rojo con un
+`--fix` ni se rebajó la aserción: se **pidió autorización para escribir `README.md`**, se corrió el escritor
+y el rojo se cerró por su causa. Delta comprobado (`06`, `07`): la **línea 5**, 306 líneas antes y después,
+**0 CRLF** (S17 ya no reescribe en CRLF), y una segunda corrida del mismo comando no mueve **ninguna** de
+las diez rutas vigiladas.
+
+## Verificaciones
+
+| Paso | Salida | Exit |
+|---|---|---|
+| selección `test_sync_writers_lf_y_fecha_readme` + `test_registry_fecha_documental` + `test_doctor_reads_are_utf8_pinned` | `24 passed` | 0 |
+| `sync_versions.py --check` | `Result: All files in sync` (6 reglas) | 0 |
+| packs → par del índice → `--check` del pack → `--check` del índice | 5 `COMPLETO`, 37 fuentes; `339 IDs`; los dos checks frescos | 0 los cuatro |
+| `run_all_validations.py --quick` | **11/11 validations passed** | 0 |
+
+Baseline del quick antes de tocar nada en esta sesión: `00-quick-pre.txt`, también 11/11, con **743 citas**
+históricas y 0 crecimientos — cifra que el POST-cura conserva. El wiring subió de 1353 a **1354** archivos:
+es el fichero de test nuevo, atribuido.
+
+## Rojo declarado y no absorbido
+
+`validate_agents_md.py` sigue con su desfase de conteo: `AGENTS.md` publica **4.246** funciones de test y el
+método canónico (`grep -rE "^\s*def test_" tests --include=*.py`) da **4.564** en disco. **7 de ese delta
+las aporta este mandato** (el archivo nuevo). No se editó `AGENTS.md`: es configuración central y este
+mandato nombró `scripts/` y sus tests. El rojo ya estaba declarado desde el cierre de FASE-RELEASE.
+
+## Estado de las deudas
+
+**S17 y S18: curadas el 2026-09-25**, con su estado vigente en §S17/§S18 de `dependencias-fases.md` de
+CONTEXTO. Barrido de sedes que las declaraban sin cura: `dependencias-fases.md`, `10-analisis…`,
+`06-checklist…`, `00-lecciones…`, `CHANGELOG.md` (sección de defectos y «Lo que queda abierto») y la orden
+(encabezado, §6 «Qué NO afirma», condición de cierre, firma 3 y §7). **S14, S15 y S16 siguen abiertas** con
+su dueño; `DOMAIN_PRIMER` sigue **declarado y no alineado** (mandato literal sobre `AGENTS.md` y
+`docs/CONTRIBUTING.md`); `L-VCF-10…14` siguen **pendientes con el operador**. Commit y push: sin autorizar.
