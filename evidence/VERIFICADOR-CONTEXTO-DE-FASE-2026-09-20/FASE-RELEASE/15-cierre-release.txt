@@ -1,0 +1,22 @@
+{
+  "hora": "2026-09-25T19:58:18Z",
+  "head": "5817edd",
+  "staged": "(vacio)",
+  "rutas_nuevamente_sucias": [
+    ".cursorrules",
+    "CHANGELOG.md",
+    "README.md",
+    "VERSION.yaml",
+    "docs/GUIA_TECNICA.md",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE/"
+  ],
+  "nuevas_fuera_del_alcance": [
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE/"
+  ],
+  "rutas_que_dejaron_de_estar_sucias": [],
+  "lineas_de_diff_total": 61,
+  "total_rutas_sucias": 74,
+  "rutas_sucias_al_abrir": 68
+}
+
+Aclaracion de la lectura anterior: `evidence/…/FASE-RELEASE/` aparece en "nuevas_fuera_del_alcance" solo porque el conjunto de rutas comparado en el script no incluyo el propio expediente, que SI es destino autorizado por el mandato ("evidence/…/FASE-RELEASE/"). Las cinco demas (.cursorrules, CHANGELOG.md, README.md, VERSION.yaml, docs/GUIA_TECNICA.md) son las escrituras esperadas de la release. Ninguna ruta dejo de estar sucia y HEAD sigue 5817edd con staging vacio.

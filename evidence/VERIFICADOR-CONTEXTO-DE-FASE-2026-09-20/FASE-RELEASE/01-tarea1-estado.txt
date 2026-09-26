@@ -1,0 +1,24 @@
+### 01 Tarea 1 - estado de A/B/C/D re-medido en disco - 2026-09-25T17:44:14Z
+scripts/validate_governance_numbers.py: existe_en_disco=True rastreado_por_git=True
+scripts/decision_client.py: existe_en_disco=True rastreado_por_git=True
+scripts/triage_lesson_relevance.py: existe_en_disco=True rastreado_por_git=True
+scripts/build_phase_briefing.py: existe_en_disco=True rastreado_por_git=False
+evidence/FASE-A/: 16 entradas
+evidence/FASE-B/: 27 entradas
+evidence/FASE-C/: 25 entradas
+evidence/FASE-D/: 31 entradas
+
+build_phase_briefing --check EXIT=0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+
+build_lesson_index --check EXIT=0
+[OK] Índice de lecciones fresco (339 IDs)
+
+
+acceptance de FASE-C = NO-EJERCITADO | revision_humana.n_pendientes = 5 | propuestas = ['L-VCF-10', 'L-VCF-11', 'L-VCF-12', 'L-VCF-13', 'L-VCF-14']
+AC15 sigue NO-EJERCITADO y D6 dormida: se viajan al cierre asi, sin promocionar (contrato E4).
+D8 (consulta Q7) y D9 (--upload): NO EJECUTADAS. Consulta y subida se pidieron aparte; la premisa "el notebook cambió desde 2026-09-20" NO se pudo comprobar sin red -> se declara no comprobada, no se omite.

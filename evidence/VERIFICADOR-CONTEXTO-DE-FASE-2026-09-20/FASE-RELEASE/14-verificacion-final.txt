@@ -1,0 +1,17 @@
+### 14 verificacion final tras citar por simbolo - 2026-09-25T19:56:52Z
+
+packs          EXIT=0  
+indice         EXIT=0  
+check pack     EXIT=0  
+check indice   EXIT=0  [OK] Índice de lecciones fresco (339 IDs)
+citas          EXIT=0  
+refs           EXIT=0  
+integracion    EXIT=0  RESULT: All checks passed
+capitalizacion EXIT=0  
+gobierno       EXIT=0  "status": "SIN-HALLAZGOS",
+quick          EXIT=0  TOTAL: 11/11 validations passed
+
+validate_agents_md test_count (medido por esta sesion con el metodo canonico del propio archivo):
+  AGENTS.md publica 4246 · disco 4557 (deriva +7.3%) · solo HEAD 4470 (deriva +5.3%)
+  El rojo es PREVIO a esta fase: ya con solo lo commiteado la deriva supera la tolerancia +/-5%.
+  Curarlo es editar AGENTS.md (configuracion central, fuera de todo mandato dado) -> se declara, no se absorbe.

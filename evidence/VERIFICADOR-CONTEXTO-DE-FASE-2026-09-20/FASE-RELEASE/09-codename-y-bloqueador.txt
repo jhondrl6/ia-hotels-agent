@@ -1,0 +1,63 @@
+# 09 · Codename elegido y el bloqueante que aparece al escribir VERSION.yaml
+
+## Codename de 4.78.0 (elegido por esta sesión porque el operador lo delegó: «procede con el codename»)
+
+**`Gobernanza, costura, pertinencia y carga medida`** (47 caracteres)
+
+Cada palabra corresponde a una fase entregada y verificada offline de `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`:
+
+| Término | Fase | Entregable |
+|---|---|---|
+| Gobernanza | A | `validate_governance_numbers.py` — aserción contra fuente dinámica, denominador, tres estados (AC1–AC5) |
+| Costura | B | `decision_client.py` — puerta neutra de decisión, contract test con proveedor falso (AC6–AC9) |
+| Pertinencia | C | `triage_lesson_relevance.py` — capa de pertinencia **aditiva** sobre el índice (AC10–AC15, con AC15 `NO-EJERCITADO`) |
+| Carga medida | D | `build_phase_briefing.py` — pack por fase, frescura por sha y delta de carga total (AC19–AC23) |
+
+Candidatos **descartados**, con su porqué (se registran, no se tiran):
+
+1. `Verificador de contexto con packs por fase` — nombra solo el entregable de D; deja fuera gobernanza y
+   pertinencia, que son las dos capas que el resto del lote verificó.
+2. `El proceso de fase se audita a sí mismo` — describe la intención pero no los instrumentos, y suelta el
+   sujeto: no permite recuperar qué cuatro artefactos entraron al repo.
+
+Formato verificado contra `scripts/sync_config.yaml` → plantilla de `agents_header_banner`:
+`> **v{version} -- {codename} COMPLETADO**`. La cabecera actual de `AGENTS.md:5` ya tiene esa forma, así que
+el cambio de cabecera será solo el tramo `v4.77.3 → v4.78.0` y el nombre.
+
+## Bloqueante medido: escribir VERSION.yaml deja el quick en rojo si no se regenera DOMAIN_PRIMER
+
+- `docs/…/DOMAIN_PRIMER.md:6-7` fija `**Version del sistema**: 4.77.3` y `**Release date**: 2026-09-19`.
+- `scripts/validate_document_integration.py:435-472` compara esas dos cifras con `VERSION.yaml` de forma
+  **exacta**: `Version mismatch: DOMAIN_PRIMER=…, VERSION.yaml=…` y `Release date mismatch: …` son issues.
+- Ese check es el `[6/11] Document Integration` de `run_all_validations.py --quick`.
+- Consecuencia: en cuanto `VERSION.yaml` diga `4.78.0 / 2026-09-25`, el quick pasa de 11/11 a **10/11**
+  hasta que `DOMAIN_PRIMER.md` se regenere con **su propio writer**
+  (`python scripts/doctor.py --regenerate-domain-primer`). `docs/CONTRIBUTING.md:196` lo dice explícito:
+  «DOMAIN_PRIMER es regenerable automaticamente. NO editar manualmente», y `AGENTS.md:66` lo sitúa en
+  FASE-RELEASE — o sea, en esta fase.
+
+**Por qué no lo hago por mi cuenta, teniendo writer y mandato de fase:** el archivo está
+**modificado por otra sesión** (bloque B de la orden: `git status` lo lista ` M` sin commitear) y
+`.agent/knowledge/` **no está** entre los destinos que el operador autorizó (su lista nombró README,
+CHANGELOG, GUIA_TECNICA, CONTRIBUTING, AGENTS, .cursorrules, VERSION, REGISTRY + tracker, documentos del
+plan, briefing, par del índice y el expediente). Regenerar ahora mezclaría en mi pasada el contenido que
+esa sesión aún no decidió commitear: es la familia «un verificador que escribe pisa el pasado».
+
+## Lo que queda listo para dispararse con esa única autorización
+
+En orden, con verificación después de cada paso:
+
+```bash
+# 1) fuente unica (VERSION.yaml -> 4.78.0 | codename nuevo | release_date y date = 2026-09-25)
+# 2) python scripts/sync_versions.py                    (YA autorizado y ejercido)
+# 3) git diff README.md AGENTS.md .cursorrules docs/CONTRIBUTING.md docs/GUIA_TECNICA.md   # solo tokens de cabecera
+# 4) python scripts/sync_versions.py --check && python scripts/version_consistency_checker.py
+# 5) python scripts/doctor.py --regenerate-domain-primer   # <-- FALTA ESTA AUTORIZACION
+# 6) python scripts/validate_document_integration.py       # [6/11] vuelve a verde
+# 7) entrada [4.78.0] en CHANGELOG.md (borrador ya escrito en 10-borrador-changelog.txt)
+# 8) python scripts/log_phase_completion.py --dry-run ...  # inspeccion antes de escribir REGISTRY
+# 9) cola final: packs -> indice -> dos --check -> --quick
+```
+
+Mientras falte el paso 5, **no** escribo `VERSION.yaml`: dejaría la fuente única y el quick en desacuerdo
+con la evidencia de dominio, y un rojo a reposo es peor que una pausa declarada.

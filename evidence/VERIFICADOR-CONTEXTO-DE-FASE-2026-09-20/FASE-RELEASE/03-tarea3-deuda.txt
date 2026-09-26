@@ -1,0 +1,56 @@
+### 03 Tarea 3 - deuda leida con numeros, no con opinion  (hora 17:49:19Z)
+Version corregida: la primera pasada publicaba «3 pins del quick» sin distinguir la naturaleza de cada coincidencia.
+
+D1 - `validate_governance_numbers.py --report` sin destino: EXIT=0, status=SIN-HALLAZGOS, hallazgos=0.
+     El rojo A1-A4 que la orden documentaba ya no existe en este arbol porque el bloque B, con autorizacion propia, edito `.agents/`.
+     Su veredicto vigente sigue siendo la matriz §13 de la fuente unica de B. Esta fase LEYO el estado y NO repara .agents/.
+
+AC6/S10 - `decision_client.py --scan-imports`: EXIT=0
+     [SIN-HALLAZGOS] decision_client.py - aislamiento de imports (AC6)
+       0 import(s) prohibido(s) fuera de la puerta | 0 carga(s) dinamica(s) hallada(s) | 26 mencion(es) no-import (no son hallazgos) | 0 archivo(s) no parseable(s)
+       poblacion: 747/9708 .py | nodos de import vistos 4682 | excluidos {'venv': 7618, '.venv-wsl': 582, 'tmp_test': 690, 'site-packages': 8889, 'build': 14, 'temp': 71} | tokens ['typesafe', 'typesafe_sdk', 'typesafe-sdk', 'jev', 'httpx2', 'typesafe_adapter', 'adapter_typesafe', 'system_one_adapter']
+     El 0 de AC6 se mantiene por medicion. S10 sigue abierta con su dueno (quien ejecute D7).
+
+D2 - lineas de prompt que nombran una fraccion N/M junto a "quick"/"validaciones": 5 coincidencias, 1 en fases PENDIENTES.
+     REFACTOR-WHATSAPP-EN                  fase-A.md:23   CERRADA   fraccion=9/10   ...ado de Google en HTML scrapeado, no credencial del operador.** Re-medir el quick al inicio: el 9/10 del 2026-09-18 era cuatro docu...
+     REFACTOR-WHATSAPP-EN                  fase-A.md:23   CERRADA   fraccion=10/10  ...r el quick al inicio: el 9/10 del 2026-09-18 era cuatro documentos sucios en el árbol y hoy da 10/10 con esos archivos idénticos a...
+     REFACTOR-WHATSAPP-EN                  fase-A.md:47   CERRADA   fraccion=10/10  ...Cierre incremental y validaciones completos o checkpoint INCOMPLETA. **CERRADO**: validaciones 10/10, índice fresco, registro en `...
+     REFACTOR-WHATSAPP-EN                  fase-G.md:70   CERRADA   fraccion=11/11  ...json` publicado (`.opencode/`, copia saneada en la evidencia), conectado al quick como check **11/11** y con 7 límites declarados....
+     REFACTOR-WHATSAPP-EN            fase-RELEASE.md:31   PENDIENTE fraccion=15/15  ...FASE-G/qmind-writeback-G.md`): `scripts/run_all_validations.py` invoca el validador como **[15/15]** (cola del método `run()`, den...
+     Lectura: la unica coincidencia en fase pendiente nombra **[15/15]**, que es la posicion del write-back en el modo COMPLETO, no el
+     denominador del quick. Las otras dos son registros de fases CERRADAS (evidencia historica que no se reescribe).
+     => D2 sigue ABIERTA con su dueno: renumerar el quick toca pins de tests/ y configuracion central, y ninguna de las dos esta
+     autorizada en esta fase. Su disparador no se da por satisfecho, pero tampoco se afirma cerrado: se declara medido.
+
+D3 - workflow_canonico_bytes = [108017] por fase, presente en los dos lados de la resta: el workflow sigue leyendose aparte.
+     => D3 PARCIAL, dueno "Plan propio, posterior". Su superficie es .agents/** (configuracion central + instruccion literal).
+
+D4/D5 - dueno intacto en TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 §Deuda. No se reasignan.
+
+D6 - DORMIDA con causa medida: acceptance = NO-EJERCITADO (evidence/FASE-C/informe.json).
+     Con D7 inactiva no hay aceptabilidad que medir (contrato E4); la rama activada no se deja como opcion abierta del cierre.
+
+D7 - costo de anadir proveedor: files_changed_to_add_provider = 1 (evidence/FASE-B/informe.json).
+     No se activa aqui: sin autorizacion, sin proveedor real y sin presupuesto.
+
+D8/D9 - NO EJECUTADAS (consulta y subida se pidieron aparte). La premisa de D8, "el notebook cambio desde la auditoria del
+     2026-09-20", no se pudo comprobar sin red: se declara NO COMPROBADA en vez de omitirse.
+     Estado para el cierre: PENDIENTE-AUTORIZACION con causa y dueno (operador).
+
+D10 - firma del writer leida sin llamarla (--help, EXIT=0):
+     presentes: --nb, --strict, --upload | ausentes: --title, --file
+     => la firma que D10 anticipaba NO cambio (el mini-plan ESCRITURA-QMIND no se ejecuto): el orden del cierre no se reescribe.
+     Medicion con fecha en 02-tarea1-firma-writer.txt.
+
+S11/S12/S13 - aceptadas fuera de esta fase (bloque A en fdd397f; bloque B en su matriz §13). No se re-registran.
+
+S14 - ABIERTA con disparador corregido: el git mv del cierre dentro del repo no la dispara (no llama al triaje con rutas trasladadas).
+S15 - ABIERTA: un verde local de [6/7] no certifica otro checkout; reparar build_lesson_index.py es alcance tecnico separado.
+S16 - ABIERTA; dueno .agents/workflows/templates/prompt-fase-template.md, fuera del permiso de esta sesion.
+
+E3 - propuestas pendientes de revision humana: 5 ['L-VCF-10', 'L-VCF-11', 'L-VCF-12', 'L-VCF-13', 'L-VCF-14'], registros=0,
+     seccion_dos_editada_por_este_script=False. No se aceptan ni se rechazan desde este cierre: viajan como pendientes con su dueno.
+
+Acotacion del cierre: Tarea 2 (sync y campos de cabecera) NO se ejecuto porque VERSION.yaml exige una version y una fecha que el
+     mandato dejo como "X" e "Y", y porque el sync quedo explicitamente apartado del permiso. Ver 04-preflight-version.txt.
+

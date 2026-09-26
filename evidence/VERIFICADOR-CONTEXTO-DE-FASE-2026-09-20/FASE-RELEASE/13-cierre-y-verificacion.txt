@@ -1,0 +1,18 @@
+### 13 cierre de FASE-RELEASE y verificacion final - 2026-09-25T19:51:47Z
+
+EOL de los archivos editados en la sesion (0 = ya estaban en LF): {"VERSION.yaml": 525, "CHANGELOG.md": 0, ".opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md": 0, ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md": 0, ".opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md": 0, ".opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md": 0, ".opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md": 0}
+packs           EXIT=0  
+indice          EXIT=0  
+check pack      EXIT=0  
+check indice    EXIT=0  [OK] Índice de lecciones fresco (339 IDs)
+integracion     EXIT=0  RESULT: All checks passed
+refs            EXIT=0  
+citas           EXIT=1  [FAIL] Plan citations: 3 violacion(es) (inventario actual: 753 citas)
+capitalizacion  EXIT=0  
+gobierno        EXIT=0  
+agents_md       EXIT=1  "status": "FAIL", | [1/6 FAILED]: test_count
+quick           EXIT=1  TOTAL: 10/11 validations passed | STATUS: 1 VALIDATION(S) FAILED
+
+frente a la apertura de la fase, divergentes de los 25 destinos inventariados: [".cursorrules", ".opencode/LECCIONES-INDEX.md", ".opencode/lecciones_index.json", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md", ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md", "AGENTS.md", "CHANGELOG.md", "README.md", "VERSION.yaml", "docs/CONTRIBUTING.md", "docs/GUIA_TECNICA.md", "docs/contributing/.last_doc_phase.json", "docs/contributing/REGISTRY.md"]
+staged: []
+HEAD: 5817edd

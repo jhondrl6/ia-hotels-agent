@@ -1,0 +1,31 @@
+### 08 sync_versions.py ejecutado con autorizacion literal del operador - 2026-09-25T19:03:56Z
+Autorizacion recibida: "autorizo a ejecutar scripts/sync_versions.py". No se recibio el codename de 4.78.0,
+asi que VERSION.yaml sigue en 4.77.3 y el writer no tiene nada que propagar.
+
+[1] sync_versions.py --check (antes, lectura): EXIT=0
+[2] sync_versions.py (SCRITOR, autorizado): EXIT=0
+    OK: README.md (readme_version_header) - in sync
+    OK: AGENTS.md (agents_version_comment) - in sync
+    OK: AGENTS.md (agents_header_banner) - in sync
+    OK: .cursorrules (cursorrules_header) - in sync
+    OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+    OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+    Result: All files in sync
+[3] sync_versions.py --check (despues): EXIT=0
+[4] version_consistency_checker.py (lectura): EXIT=0
+    ----------------------------------------
+      Status: ✅ SINCRONIZADO
+    
+    ============================================================
+    RESULTADO: ✅ TODO SINCRONIZADO
+    ============================================================
+
+### Prueba de que el escritor NO toco nada (sha256 por destino)
+cambiados_por_el_writer: ninguno
+identico_a_la_apertura_de_esta_fase: {"README.md": true, "AGENTS.md": true, ".cursorrules": true, "docs/CONTRIBUTING.md": true, "docs/GUIA_TECNICA.md": true, "VERSION.yaml": true, "CHANGELOG.md": true, "docs/contributing/REGISTRY.md": true, "docs/contributing/.last_doc_phase.json": true}
+
+### Conclusion
+El permiso de sync queda EJERCIDO y verificado: corre, sale 0 y no escribe porque la fuente única
+todavia no cambia. Para que el sync haga su trabajo falta primero VERSION.yaml con 4.78.0 + codename;
+sin codename no se escribe la fuente unica (ver 05-valores-release.txt). CHANGELOG y REGISTRY siguen
+despues del sync, en ese orden, porque log_phase_completion estampa la version ya fijada.

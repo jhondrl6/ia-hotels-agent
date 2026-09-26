@@ -1,0 +1,42 @@
+# 05 · Valores de release decididos por el operador (2026-09-25) y lo que sigue abierto
+
+Decisión declarada por el dueño de la versión a través del formulario de esta sesión. Se registra aquí
+porque **VERSION.yaml aún no puede escribirse** y el valor no debe perderse.
+
+| Campo de `VERSION.yaml` | Valor decidido | Estado en disco al medir | ¿Se escribió? |
+|---|---|---|---|
+| `version` | **4.78.0** | `4.77.3` | **No** |
+| `release_date` | **2026-09-25** | `2026-09-19` | **No** |
+| `date` | **2026-09-25** (debe ir igual a `release_date`, ver el comentario de la propia línea 6-11 de `VERSION.yaml`: si falta, `sync_versions.py` lo inyecta con `datetime.now()` y el check caduca a las 00:00) | `2026-09-19` | **No** |
+| `codename` | **pendiente**: el operador indicó «+ codename nuevo» pero no lo dictó | `LLMReport honesto cuando ningún provider responde` (es el de 4.77.3) | **No** |
+
+## Por qué no se escribió VERSION.yaml con tres de cuatro campos
+
+`VERSION.yaml` es la fuente única y la **entrada** del sync. Escribir `4.78.0` con el codename de `4.77.3`
+produce exactamente el estado que la orden de calidad denuncia: una cabecera versionada que afirma una
+release nueva con el nombre de la anterior, y que `sync_versions.py` propagaría a los cinco consumidores
+(`agents_header_banner` plantilla `> **v{version} -- {codename} COMPLETADO**`). Un valor de release no se
+rellena por defecto ni por suposición. Queda una decisión tuya, con su texto.
+
+## Secuencia que el operador fijó para la sesión que retome
+
+1. `VERSION.yaml` → `version: 4.78.0`, `codename: <el que indiques>`, `release_date: 2026-09-25`,
+   `date: 2026-09-25` (y la entrada de release en el bloque de comentarios del propio archivo).
+2. `python scripts/sync_versions.py` — **solo tras autorización literal**; es el único escritor legítimo de
+   las cabeceras de `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`.
+3. `git diff` — verificar que el delta son **solo tokens de cabecera** en esos cinco archivos.
+4. `python scripts/sync_versions.py --check` y `python scripts/version_consistency_checker.py` → verde
+   (`[1/7]` y `[2/7]` del hook).
+5. Después, y en este orden: entrada `[4.78.0]` en `CHANGELOG.md` y luego el registro en `REGISTRY.md` por
+   su escritor (`log_phase_completion.py`), porque estampa la versión ya fijada. Registrar antes escribiría
+   `4.77.3` en la entrada.
+
+## Estado de la fase mientras tanto
+
+- **Tarea 1 y Tarea 3: ejecutadas y medidas** (`01-`, `02-`, `03-`).
+- **Tarea 2: no ejecutada**, por los dos huecos de arriba. Su salida legítima declarada es
+  **cierre documental parcial**.
+- `C1` consulta, `C2` subida, `C3` archivado, `C4` writers de corpus, `C5` commit, `C6` push: **sin
+  autorización** en esta sesión; cada uno sigue siendo un checkpoint aparte.
+- Los documentos del plan **no** se escribieron como «RELEASE ✅»: hacerlo sobre una fase con Tarea 2
+  pendiente sería promover un resultado parcial a éxito.

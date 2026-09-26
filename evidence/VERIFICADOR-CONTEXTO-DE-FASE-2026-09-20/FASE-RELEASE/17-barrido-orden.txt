@@ -1,0 +1,18 @@
+### 17 barrido de citas vencidas en la orden y re-verificacion - 2026-09-25T20:53:47Z
+la orden sigue en LF (sin normalizar)
+busqueda «sigue PENDIENTE de su autorización»: 0 coincidencias
+busqueda «no se ejecutó, no se autorizó»: 1 coincidencias
+busqueda «Le faltan FASE-RELEASE»: 0 coincidencias
+busqueda «a CONTEXTO le falta FASE-RELEASE»: 0 coincidencias
+busqueda «sin mandato. Lo que ya»: 0 coincidencias
+busqueda «prerequisite»: 0 coincidencias
+
+packs         EXIT=0  
+indice        EXIT=0  
+check pack    EXIT=0  
+check indice  EXIT=0  [OK] Índice de lecciones fresco (339 IDs)
+integracion   EXIT=0  RESULT: All checks passed
+refs          EXIT=0  
+citas         EXIT=0  
+quick         EXIT=0  TOTAL: 11/11 validations passed
+todo exit 0

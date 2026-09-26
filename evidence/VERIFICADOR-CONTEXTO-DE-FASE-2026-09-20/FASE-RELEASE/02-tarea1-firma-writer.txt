@@ -1,0 +1,16 @@
+### 02 D10 - firma del writer, leida sin llamarlo - 2026-09-25T17:44:14Z
+$ validate_qmind_writeback.py --help
+EXIT=0
+usage: validate_qmind_writeback.py [-h] [--nb NB] [--strict]
+                                   [--upload PLAN_DIR]
+
+Valida el write-back QMind de los 10-analisis de planes archivados
+
+options:
+  -h, --help         show this help message and exit
+  --nb NB            ID del notebook (default: buscar 'iah-cli-lecciones')
+  --strict           Falla también cuando qmind no está disponible (en vez de
+                     WARN + fallback :468)
+  --upload PLAN_DIR  Write-back: sube el 10-analisis y CONTEXT con declaración
+                     durable del plan indicado
+

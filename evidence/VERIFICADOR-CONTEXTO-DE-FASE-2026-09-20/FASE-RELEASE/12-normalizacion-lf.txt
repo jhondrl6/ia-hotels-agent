@@ -1,0 +1,105 @@
+{
+  "antes": {
+    "docs/CONTRIBUTING.md": {
+      "sha": "cf1c42402a6c",
+      "crlf": 430,
+      "lf_sueltos": 0,
+      "atributo_git": "docs/CONTRIBUTING.md: text: unspecified\ndocs/CONTRIBUTING.md: eol: unspecified",
+      "numstat_vs_HEAD": "22\t6\tdocs/CONTRIBUTING.md"
+    },
+    ".agent/knowledge/DOMAIN_PRIMER.md": {
+      "sha": "27ad34f768b1",
+      "crlf": 86,
+      "lf_sueltos": 0,
+      "atributo_git": ".agent/knowledge/DOMAIN_PRIMER.md: text: unspecified\n.agent/knowledge/DOMAIN_PRIMER.md: eol: unspecified",
+      "numstat_vs_HEAD": "5\t5\t.agent/knowledge/DOMAIN_PRIMER.md"
+    },
+    "AGENTS.md": {
+      "sha": "079d61e9931d",
+      "crlf": 546,
+      "lf_sueltos": 0,
+      "atributo_git": "AGENTS.md: text: unspecified\nAGENTS.md: eol: unspecified",
+      "numstat_vs_HEAD": "26\t32\tAGENTS.md"
+    },
+    "README.md": {
+      "sha": "a85e7768802e",
+      "crlf": 306,
+      "lf_sueltos": 0,
+      "atributo_git": "README.md: text: unspecified\nREADME.md: eol: unspecified",
+      "numstat_vs_HEAD": "2\t2\tREADME.md"
+    },
+    "docs/GUIA_TECNICA.md": {
+      "sha": "c70c0d5e563d",
+      "crlf": 2544,
+      "lf_sueltos": 0,
+      "atributo_git": "docs/GUIA_TECNICA.md: text: unspecified\ndocs/GUIA_TECNICA.md: eol: unspecified",
+      "numstat_vs_HEAD": "2\t2\tdocs/GUIA_TECNICA.md"
+    },
+    ".cursorrules": {
+      "sha": "636237c9f7a7",
+      "crlf": 22,
+      "lf_sueltos": 0,
+      "atributo_git": ".cursorrules: text: unspecified\n.cursorrules: eol: unspecified",
+      "numstat_vs_HEAD": "1\t1\t.cursorrules"
+    }
+  },
+  "normalizados_a_lf": [
+    "docs/CONTRIBUTING.md",
+    ".agent/knowledge/DOMAIN_PRIMER.md",
+    "AGENTS.md",
+    "README.md",
+    "docs/GUIA_TECNICA.md",
+    ".cursorrules"
+  ],
+  "despues": {
+    "docs/CONTRIBUTING.md": {
+      "sha": "d6945f828ba1",
+      "crlf": 0,
+      "lf_sueltos": 430,
+      "atributo_git": "docs/CONTRIBUTING.md: text: unspecified\ndocs/CONTRIBUTING.md: eol: unspecified",
+      "numstat_vs_HEAD": "22\t6\tdocs/CONTRIBUTING.md"
+    },
+    ".agent/knowledge/DOMAIN_PRIMER.md": {
+      "sha": "f7e84e20abf3",
+      "crlf": 0,
+      "lf_sueltos": 86,
+      "atributo_git": ".agent/knowledge/DOMAIN_PRIMER.md: text: unspecified\n.agent/knowledge/DOMAIN_PRIMER.md: eol: unspecified",
+      "numstat_vs_HEAD": "5\t5\t.agent/knowledge/DOMAIN_PRIMER.md"
+    },
+    "AGENTS.md": {
+      "sha": "4fd7c042775b",
+      "crlf": 0,
+      "lf_sueltos": 546,
+      "atributo_git": "AGENTS.md: text: unspecified\nAGENTS.md: eol: unspecified",
+      "numstat_vs_HEAD": "26\t32\tAGENTS.md"
+    },
+    "README.md": {
+      "sha": "cad97ed1ca45",
+      "crlf": 0,
+      "lf_sueltos": 306,
+      "atributo_git": "README.md: text: unspecified\nREADME.md: eol: unspecified",
+      "numstat_vs_HEAD": "2\t2\tREADME.md"
+    },
+    "docs/GUIA_TECNICA.md": {
+      "sha": "d18603693636",
+      "crlf": 0,
+      "lf_sueltos": 2544,
+      "atributo_git": "docs/GUIA_TECNICA.md: text: unspecified\ndocs/GUIA_TECNICA.md: eol: unspecified",
+      "numstat_vs_HEAD": "2\t2\tdocs/GUIA_TECNICA.md"
+    },
+    ".cursorrules": {
+      "sha": "07856c3ef0ba",
+      "crlf": 0,
+      "lf_sueltos": 22,
+      "atributo_git": ".cursorrules: text: unspecified\n.cursorrules: eol: unspecified",
+      "numstat_vs_HEAD": "1\t1\t.cursorrules"
+    }
+  },
+  "validate_document_integration": {
+    "exit": 0,
+    "lineas_clave": [
+      "[PASS] Line endings (bytes reales LF)",
+      "RESULT: All checks passed"
+    ]
+  }
+}

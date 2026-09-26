@@ -1,0 +1,144 @@
+(numeracion: era 06-cierre-verificacion.txt; se re-numero a 07 para no chocar con 06-packs.json, que es el informe del generador citado en la primera linea de comando. Los comandos registrados abajo son los que se corrieron, con esa ruta.)
+
+### 07 cola de verificacion de la pasada RELEASE offline - 2026-09-25T18:56:06Z
+No se ejecuto sync en escritura, ni registro de fases, ni red, ni git de escritura.
+
+$ scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --informe C:\Users\Jhond\Github\iah-cli\evidence\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\FASE-RELEASE\06-packs.json
+EXIT=0
+no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE/06-packs.json
+
+
+$ scripts/build_lesson_index.py
+EXIT=0
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+
+
+$ scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+EXIT=0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+
+
+$ scripts/build_lesson_index.py --check
+EXIT=0
+[OK] Índice de lecciones fresco (339 IDs)
+
+
+$ scripts/validate_document_integration.py
+EXIT=0
+it almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+
+
+$ scripts/validate_opencode_refs.py
+EXIT=0
+[PASS] OpenCode References: todas las referencias existen
+
+
+$ scripts/validate_plan_citations.py
+EXIT=0
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+
+
+$ scripts/validate_lesson_capitalization.py
+EXIT=0
+OHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+cobertura: 4 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 27 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (—)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+
+
+$ scripts/validate_governance_numbers.py --report
+EXIT=0
+ta conteos de checks)"
+      }
+    ],
+    "excluded": [
+      {
+        "documento": "C:/Users/Jhond/Github/iah-cli/.agents/workflows/templates/prompt-fase-template.md",
+        "instancias_detectadas": 1,
+        "motivo": "el maestro §1 declara objetos auditados solo dos: el workflow canonico y su template de lecciones; este template vive en el mismo directorio y se mide aqui para que la exclusion no sea silencio",
+        "evidencia_prosa": []
+      },
+      {
+        "documento": ".agents/workflows/** (restante)",
+        "instancias_detectadas": null,
+        "motivo": "el plan fija como poblacion los dos documentos de gobierno; el resto de .agents/ no se escribe ni se audita en FASE-A (AC17)"
+      }
+    ],
+    "comando": "python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA — S12)",
+    "medido_el": "2026-09-25"
+  }
+}
+# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe
+
+
+$ scripts/run_all_validations.py --quick
+EXIT=0
+randfathered con dueño)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1353 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+
+
+### RESULTADO
+{
+  "VERSION.yaml": true,
+  "AGENTS.md": true,
+  ".cursorrules": true,
+  "README.md": true,
+  "CHANGELOG.md": true,
+  "docs/GUIA_TECNICA.md": true,
+  "docs/CONTRIBUTING.md": true,
+  "docs/contributing/REGISTRY.md": true,
+  "docs/contributing/.last_doc_phase.json": true,
+  "destinos_inventariados": 25,
+  "sin_cambio": 19,
+  "cambiados": [
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md"
+  ],
+  "inesperados_fuera_de_espera": [],
+  "desaparecidos": [],
+  "packs": {
+    "FASE-A": "COMPLETO",
+    "FASE-B": "COMPLETO",
+    "FASE-C": "COMPLETO",
+    "FASE-D": "COMPLETO",
+    "FASE-RELEASE": "COMPLETO"
+  },
+  "head": "5817edd",
+  "staged": [],
+  "fallos_de_validacion": []
+}

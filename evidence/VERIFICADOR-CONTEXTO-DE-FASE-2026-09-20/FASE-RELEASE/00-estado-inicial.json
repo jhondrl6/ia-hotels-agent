@@ -1,0 +1,168 @@
+{
+  "capturado_en": "2026-09-25T17:43:49Z",
+  "head": "5817edd",
+  "rama": "master",
+  "staged": [],
+  "rutas_sucias": 68,
+  "VERSION_yaml_vigente": {
+    "project": "IA Hoteles Agent CLI",
+    "version": "4.77.3",
+    "codename": "LLMReport honesto cuando ningún provider responde",
+    "release_date": "2026-09-19",
+    "date": "2026-09-19",
+    "plan_maestro_version": "v2.6.0",
+    "agent_harness_version": "3.2.0"
+  },
+  "destinos_inventariados": {
+    "README.md": {
+      "existe": true,
+      "sha256": "127397cb3dc7c4142c00cd987231d44e0057289cf358bbd9e99ef292e0e690cc",
+      "bytes": 16144,
+      "mtime": "2026-09-19 14:56:09"
+    },
+    "CHANGELOG.md": {
+      "existe": true,
+      "sha256": "128609ce6296e2094a518a671b0b55158fc9ea77511912fe37f1a8387190097b",
+      "bytes": 414747,
+      "mtime": "2026-09-22 20:14:55"
+    },
+    "docs/GUIA_TECNICA.md": {
+      "existe": true,
+      "sha256": "3ab78159830012e8c32e6943463e2d5ba18b670a40f8c1dbfc36395255288676",
+      "bytes": 206654,
+      "mtime": "2026-09-20 18:31:17"
+    },
+    "docs/CONTRIBUTING.md": {
+      "existe": true,
+      "sha256": "5f8c73e8cc7250ae5e9d4b408c4e2d4bdb8b4b5143adf0523b03e6b9da93ac38",
+      "bytes": 19763,
+      "mtime": "2026-09-23 21:14:09"
+    },
+    "AGENTS.md": {
+      "existe": true,
+      "sha256": "e10904247fac09b437a2478cd9155bf22b9daa5a81f49c3f86d3309e30124115",
+      "bytes": 30396,
+      "mtime": "2026-09-23 21:14:09"
+    },
+    ".cursorrules": {
+      "existe": true,
+      "sha256": "11411fba4bb9f4216bbea12ffc20b8cb3eb669c289209012194a98705052846e",
+      "bytes": 739,
+      "mtime": "2026-09-19 14:56:09"
+    },
+    "VERSION.yaml": {
+      "existe": true,
+      "sha256": "f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905",
+      "bytes": 34290,
+      "mtime": "2026-09-22 15:54:42"
+    },
+    "docs/contributing/REGISTRY.md": {
+      "existe": true,
+      "sha256": "b929dfd99943acba6b64f57d67738e4857f8d3630d293f814193794507b0fda0",
+      "bytes": 347010,
+      "mtime": "2026-09-24 19:46:39"
+    },
+    "docs/contributing/.last_doc_phase.json": {
+      "existe": true,
+      "sha256": "bb16521b4fab0395a6fe85349f097754b5da27fe717b6f60db8cfd657a4531cd",
+      "bytes": 18043,
+      "mtime": "2026-09-24 19:46:39"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md": {
+      "existe": true,
+      "sha256": "654489bd80b57e77d3890472795318b319b135400776c5e5897b53251f221c22",
+      "bytes": 39516,
+      "mtime": "2026-09-25 12:22:09"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md": {
+      "existe": true,
+      "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+      "bytes": 51507,
+      "mtime": "2026-09-24 11:13:04"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md": {
+      "existe": true,
+      "sha256": "c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5",
+      "bytes": 29211,
+      "mtime": "2026-09-25 12:17:59"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md": {
+      "existe": true,
+      "sha256": "bc24a2196b71cf836dd6d37e20fa9d99e478fdfb08268f8f0e017648116fbbb9",
+      "bytes": 43103,
+      "mtime": "2026-09-25 11:08:48"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md": {
+      "existe": true,
+      "sha256": "532c3c1a7acffde0cd24e6e0ff22f851085e77963cba6a100cb25399e8260208",
+      "bytes": 29026,
+      "mtime": "2026-09-25 11:08:20"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md": {
+      "existe": true,
+      "sha256": "448d1306b7588ab5db1cd65b2f8afe4523e0d06f424a758dc5cdc3e30b82bc2a",
+      "bytes": 77277,
+      "mtime": "2026-09-25 12:20:10"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md": {
+      "existe": true,
+      "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+      "bytes": 49143,
+      "mtime": "2026-09-24 19:58:44"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md": {
+      "existe": true,
+      "sha256": "9c74991707d58984def4de2ab5d4b35319009d2435ad88acebf5f1003268d586",
+      "bytes": 48777,
+      "mtime": "2026-09-25 12:20:01"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md": {
+      "existe": true,
+      "sha256": "e345453e7d1a587d238b25668c35ccf3217f782d4f1ba78849cca3941f625325",
+      "bytes": 29356,
+      "mtime": "2026-09-25 12:19:09"
+    },
+    ".opencode/LECCIONES-INDEX.md": {
+      "existe": true,
+      "sha256": "0b76630935d01a74862cb6580f4ca9724c099db1b847c11073028bed66374eb2",
+      "bytes": 121887,
+      "mtime": "2026-09-25 12:23:44"
+    },
+    ".opencode/lecciones_index.json": {
+      "existe": true,
+      "sha256": "ceaaf8344e2a02ee4de98719e9258cf7a8296756b482fd596ffe49b1798725dd",
+      "bytes": 323145,
+      "mtime": "2026-09-25 12:23:44"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md": {
+      "existe": true,
+      "sha256": "f0a55e6af579d7a41395278a40cb93ebbee11ba963f5d3558ae9c49668c135cd",
+      "bytes": 157786,
+      "mtime": "2026-09-25 12:23:43"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md": {
+      "existe": true,
+      "sha256": "698c4b91e0f5e55a8159ce27ac66bd35f2a44fe7e5d4f3d391a0381f6c0a75b0",
+      "bytes": 142716,
+      "mtime": "2026-09-25 12:23:43"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md": {
+      "existe": true,
+      "sha256": "84f10f262aeda6de5170b9bf95b62de06cd719bf4f3ccbbc5bff6b8f994d7d8c",
+      "bytes": 150834,
+      "mtime": "2026-09-25 12:23:43"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md": {
+      "existe": true,
+      "sha256": "1772d0f5c1b917d7e37712e9355693e36e1d28b3dee7ff8194b9180f994c7a50",
+      "bytes": 152248,
+      "mtime": "2026-09-25 12:23:43"
+    },
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md": {
+      "existe": true,
+      "sha256": "e767d205f3de15d0eb23e5f3e6389ce1281474aafc9ed529d258aa6fc258d157",
+      "bytes": 371109,
+      "mtime": "2026-09-25 12:23:43"
+    }
+  }
+}

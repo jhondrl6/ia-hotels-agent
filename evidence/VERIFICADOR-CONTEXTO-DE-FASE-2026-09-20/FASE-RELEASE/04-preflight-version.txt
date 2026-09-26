@@ -1,0 +1,55 @@
+# 04 · Preflight de la Tarea 2: dos cosas faltan, no se rellenan por supuesto
+
+Hora: 2026-09-25 (UTC). FASE-RELEASE autorizada **offline** con destinos de escritura nombrados.
+Tarea 1 y Tarea 3 ejecutadas y medidas (`01-`, `02-`, `03-`). **Tarea 2 no se ejecutó**, y no por
+olvido: el mandato trae dos huecos que esta fase no puede cerrar por su cuenta.
+
+## 1. `VERSION.yaml` pide una versión y una fecha que el mandato dejó como placeholders
+
+El mandato autoriza: «`VERSION.yaml` con la versión **X** y fecha **Y**». X e Y no llegaron.
+
+- Estado medido en disco (`00-estado-inicial.json`): `version: 4.77.3`, `codename: LLMReport honesto
+  cuando ningún provider responde`, `release_date: 2026-09-19`.
+- `VERSION.yaml` es **fuente única** y es la **entrada** del sync: todo lo que se escriba en
+  `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md` sale de
+  esos tres campos. Elegirlos aquí sería inventar una cifra de release, y la regla del propio
+  repo es no hardcodear versiones ni producir defaults donde falta una decisión.
+- Tampoco se puede cerrar sin decidir **qué tipo** de salto corresponde: `4.77.4` (arreglos
+  documentales y de instrumento, sin cambio de producto) o `4.78.0` (las cuatro fases del verificador
+  de contexto se cuentan como funcionalidad nueva). Es decisión del operador, no interpretación.
+
+## 2. El sync quedó explícitamente apartado, y es el único escritor legítimo de esos campos
+
+El mandato autoriza la escritura de esos seis archivos **«solo para sus campos de versión/fecha/
+codename»** y, en la línea siguiente, dice **«Sync … se piden aparte»**. Las dos cosas conviven mal:
+
+- Esos campos no se editan a mano en este repo: los produce `scripts/sync_versions.py` desde
+  `VERSION.yaml` (`scripts/sync_config.yaml` es la regla; `agents_header_banner`,
+  `cursorrules_header`, `contributing_version_header`, `guia_tecnica_header`,
+  `readme_version_header`). Escribirlos a mano es justamente lo que la regla «fuente única»
+  prohíbe, y dejaría el árbol en `sync_versions --check` FAIL — que es `[2/7]` del hook.
+- Por eso pido la palabra explícita: **autorización para ejecutar `sync_versions.py`** (o, si se
+  prefiere no correrlo, que se decida dejar los campos sin sincronizar y registrar RELEASE como
+  cierre documental **parcial**, que es una salida legítima y ya contemplada por el prompt).
+
+## Lo que **sí** está autorizado y ya se hizo en esta pasada
+
+Lecturas de estado y verificación sin escritura (`validate_governance_numbers.py --report`,
+`decision_client.py --scan-imports`, `build_phase_briefing.py --check`, `build_lesson_index.py
+--check`, `validate_qmind_writeback.py --help`), y la escritura de este expediente nuevo
+`evidence/…/FASE-RELEASE/`.
+
+## Lo que sigue esperando, cada cosa en su checkpoint
+
+| Checkpoint | Falta | Salida si no llega |
+|---|---|---|
+| Tarea 2 (sync + cabeceras + `CHANGELOG`) | versión X y fecha Y; permiso para correr `sync_versions.py` | RELEASE queda **cierre documental parcial**: sin entrada en CHANGELOG ni cabeceras sincronizadas, declarado con su causa |
+| C · registro en `REGISTRY.md` | **Orden**: `log_phase_completion.py` estampa versión y fecha; registrar antes de fijar X/Y escribiría una entrada con la versión vieja | Se registra después, con su valor real |
+| C1 consulta Q7 (D8) | autorización literal + presupuesto; además la premisa «el notebook cambió» sigue **no comprobada** | `PENDIENTE-AUTORIZACION` con causa |
+| C2 subida `--upload` (D9) | autorización literal + presupuesto | `PENDIENTE-AUTORIZACION`; y el writer sigue sin `--title`/`--file` (D10 medido), así que la ingesta final se hace con `qmind source upload` directo y **así debe decirse** |
+| C3 archivado | autorización propia | el plan queda en raíz, referencias vivas intactas |
+| C4 correcciones de corpus (`--fix` / `--update-baseline`) | no pedidas | los checks corren sin writer; ningún baseline se toca |
+| C5 commit · C6 push | instrucción literal separada | árbol sin commitear, con la frontera declarada |
+
+**Nada de esto se promotions a éxito**: el `09`/`10` del plan no se escriben como «RELEASE ✅» hasta
+que su Tarea 2 tenga decisión, para no dejar un cierre declarado sobre una fase a medias.
