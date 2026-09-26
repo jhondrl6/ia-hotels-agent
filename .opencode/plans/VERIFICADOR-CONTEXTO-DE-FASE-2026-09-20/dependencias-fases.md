@@ -464,3 +464,48 @@ De ahí una cuarta opción que la medición hizo visible y no se aplica: sellar 
 procedencia **no gobernante** (coste ~el de la normalización, no re-vence nada, y (b) lo necesita para atribuir
 el rojo). **No se toca `.agents/`**: la convención de cierre sigue sin escribirse en el executor por falta de
 instrucción explícita, no por falta de acuerdo.⟧
+
+### S20 — el clon del verificador hereda `autocrlf` de sistema y su `--check` de packs da rojo falso (nueva, 2026-09-26)
+
+**Medido al verificar el commit `941530e` en su propio árbol.** `scripts/verify_index_in_committed_tree.py`
+salió `EXIT=0` (`[OK] índice en el árbol de HEAD (565 rutas materializadas)`), pero al re-usar ese mismo clon
+para el otro derivado, `build_phase_briefing.py --check` cortó **`EXIT=1`** con `SHA-DISTINTO` en siete rutas
+gobernadas (`06-checklist-implementacion.md`, `dependencias-fases.md`, `10-analisis-post-implementacion.md` y
+los cuatro `05-prompt-inicio-sesion-fase-*.md`). **El árbol no estaba mal**: los packs y el par del índice se
+commitearon consistentes y el `--quick` del árbol de trabajo daba 12/12. Estaba mal el instrumento.
+
+**Causa, medida por ámbitos de configuración** y no inferida: `core.autocrlf` vale **`true` en el ámbito
+system** (`C:\Program Files\Git\etc\gitconfig`), no tiene valor en global, y vale **`input` en el config local
+de este repositorio**. Un `git clone` **no copia** el `core.autocrlf` local de la fuente, así que el clon que
+fabrica el verificador nace sin valor local y hereda el `true` de sistema. El `-c core.autocrlf=input` que el
+script pasa al comando `clone` (en `revisar`, antes del `checkout`) solo gobierna ese proceso de clonado: el
+`git checkout <rev> -- <rutas>` posterior corre dentro del clon, lee la config **del clon**, y convierte LF →
+CRLF al materializar. Un verificador que compara `sha256` de bytes en disco pasa a comparar bytes re-escritos.
+
+**Prueba de la atribución, sin tocar código:** clonar igual pero escribiendo `core.autocrlf=input` en la config
+del clon **antes** del checkout. Sobre `941530e` con ese árbol, los dos verificadores dan verde:
+`build_phase_briefing.py --check` → cinco líneas `[OK] … fuentes frescas (procedencia distinta, no vence)` con
+`EXIT=0`, y `build_lesson_index.py --check` → `[OK] Índice de lecciones fresco (339 IDs)` con `EXIT=0`.
+
+**Por qué el rojo salió en un derivado y en el otro no:** la comprobación del índice **parsea contenido**, así
+que sobrevive al cambio de remates; la de los packs **compara shas de bytes**, así que el cambio la mata. Es la
+misma familia de la trampa que obligó a poner `core.longpaths` **dentro** del clon (S15), pero con el síntoma
+invertido: allí el árbol llegaba parcial (519 de 6.106) y el veredicto era ruido; aquí el árbol llega completo
+y el veredicto es falso. Un verde o un rojo que dependen de los remates del sistema invitado no miden el
+commit.
+
+**Cura y coste.** Una línea: fijar `core.autocrlf=input` en la config del clon junto con `core.longpaths`, antes
+del `checkout`, en `revisar()`. Su batería de pruebas necesita un caso que **no exista hoy**: un `--check` de
+comparación byte-exacta corrido en el árbol del commit, porque el defecto es invisible para la batería actual
+(que solo ejercita el índice, y el índice es tolerante). Es código, así que **dueño: decisión del operador**.
+**Disparador:** la primera vez que alguien intente re-usar el verificador para un derivado que compare bytes —
+que es exactamente lo que pide la cura (b) de S19, todavía sin implementar. Las dos comparten árbol materializado
+y las dos fallan silenciosamente si el árbol no es fiel.
+
+**Nota de instrumento para la próxima numeración.** La fila S19 justifica su número con
+`grep -rn "S19" .opencode/`, y ese comando barrido `node_modules`: medido hoy, `grep -rn 'S20' .opencode/` da
+**10 coincidencias** todas dentro de `.opencode/node_modules/` (substrings en JS minificado), mientras que el
+barrido acotado al corpus —
+`grep -rn --exclude-dir=node_modules --exclude-dir=Archives 'S20' .opencode/plans .opencode/context` — da **0**,
+que es la afirmación que importa. `S20` está libre. Los números en uso en este libro son
+S1, S8, S10-S13, S16, S17, S18, S19.

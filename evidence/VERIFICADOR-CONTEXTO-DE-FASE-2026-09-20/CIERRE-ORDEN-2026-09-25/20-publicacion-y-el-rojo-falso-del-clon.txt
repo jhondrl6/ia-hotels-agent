@@ -1,0 +1,146 @@
+20 — Publicación en dos commits, y el rojo falso que el verificador del árbol del commit fabrica
+Medido 2026-09-26, después de `941530e`. Continúa a `19-s19-medicion-de-los-dos-riesgos.txt`.
+
+## 0. Lo que se autorizó y lo que se hizo
+
+Instrucción del operador: **«commit estas rutas pendientes»** sobre las 18 rutas que dejó la sesión. Se
+ejecutó en **dos** commits, separados por procedencia, y **no se empujó nada** (el push pide instrucción
+aparte).
+
+| Commit | rutas | contenido | hook |
+|--------|-------|-----------|------|
+| `85b2b86` | 1 | `AGENTS.md` — la cifra de cobertura 4.564 → **4.573**, con el par de comandos y el antecedente de las dos cifras separadas conservado como fechado | **7/7 PASSED** |
+| `941530e` | 17 | D2 (runner renumerado, punteros del writer, tres tests re-anclados, cinco packs, par del índice, tres documentos de corpus anotados) + S19 (su fila en `dependencias-fases.md` y el expediente `19-`) + `18-` | **7/7 PASSED** |
+
+Antes de escribir la cifra en `85b2b86` se midió en los dos árboles, para no publicar un número que su propio
+árbol refute: `git grep -c -E "^\s*def test_" HEAD -- tests` → **4.573** y `grep` canónico sobre el árbol →
+**4.573**, y las tres rutas de `tests/` que viajaban en el commit siguiente no suman ni restan ninguna función
+(0 coincidencias de `def test_` en sus diffs, medido con `git diff -U0 -- tests`). El `numstat` salió
+quirúrgico pese al aviso de normalización CRLF en dos rutas: `scripts/run_all_validations.py` **65/15** y
+`test_governance_numbers_reproduce_A1_A4.py` **15/5**, no archivos completos reescritos.
+
+## 1. Por qué D2 y S19 viajan juntos, y qué se midió para decidirlo
+
+Partirlos no produce dos commits atómicos: produce **un commit cuyo árbol falla su propio verificador**. Los
+cinco packs de `briefing/` citan secciones de `dependencias-fases.md`, así que su contenido es función del
+corpus **final**. Si el commit de D2 llevara los packs con la anotación de S19 dentro pero el corpus sin ella,
+el `--check` de ese árbol cortaría rojo — y si llevara packs regenerados sin la anotación, habría que
+fabricar un estado intermedio que ya no existe. El control que lo comprueba se corrió de verdad y está
+transcrito en `19-` §8: editada una fuente gobernada, `build_phase_briefing.py --check` da **`EXIT=1`**
+nombrando `dependencias-fases.md` en los cinco packs.
+
+La alternativa de tres commits con `git add -p` sobre los hunks de esa fila quedó descartada por eso mismo. La
+frontera entre los dos hilos queda escrita en el mensaje de `941530e` y en el §0 de esta nota, en vez de
+forzar un commit mixto con un rojo adentro.
+
+## 2. Verificación en el árbol del commit: el rojo que salió, y de qué era
+
+Con el árbol limpio, la instrucción de la casa es verificar en el árbol del commit, no en el de trabajo. Se
+corrió el verificador que se construyó para esto:
+
+    python scripts/verify_index_in_committed_tree.py --rev HEAD --keep temp/verif-HEAD
+    [OK] Índice de lecciones fresco (339 IDs)
+    [fechas] nombre=328 commit=11 sin_fuente=0
+    [OK] índice en el árbol de HEAD (565 rutas materializadas)      VERIFIER_RC=0
+
+Y encima, reutilizando ese mismo clon para el otro derivado:
+
+    cd temp/verif-HEAD/arbol && python scripts/build_phase_briefing.py --plan … --check
+    [VENCIDO] … SHA-DISTINTO: …/06-checklist-implementacion.md, …/dependencias-fases.md,
+              …/10-analisis-post-implementacion.md, …/05-prompt-inicio-sesion-fase-{A,B,C,D}.md
+    PACKS_CHECK=1
+
+**Ese `EXIT=1` no era un defecto del commit.** Causa medida por niveles de configuración:
+
+| Ámbito | `core.autocrlf` |
+|--------|-----------------|
+| system (`C:\Program Files\Git\etc\gitconfig`) | **`true`** |
+| global (`~/.gitconfig`) | sin valor |
+| local en iah-cli | `input` |
+| efectivo en el repo de trabajo | `input` |
+| efectivo en el clon que fabrica el verificador | **`true`** (no tiene valor local: hereda el de sistema) |
+
+`git clone` **no copia** el `core.autocrlf` local del repositorio fuente. El `-c core.autocrlf=input` que el
+verificador pasa al comando `clone` (línea 67 de `scripts/verify_index_in_committed_tree.py`) gobierna solo el
+proceso de clonado; el `git checkout <rev> -- <rutas>` posterior (línea 80) corre ya dentro del clon y usa la
+config **del clon**, o sea `true`, y entonces convierte LF→CRLF al materializar. Un `--check` que compara
+`sha256` de bytes en disco pasa a comparar bytes re-escritos: rojo sobre contenido idéntico.
+
+Prueba de la atribución, sin tocar código: clonar igual pero escribiendo `core.autocrlf=input` **dentro** del
+clon antes del checkout, y correr los dos verificadores ahí.
+
+    temp/clon-input (HEAD 941530e, 466 lineas con CR, igual que el arbol de trabajo)
+    python scripts/build_phase_briefing.py --plan … --check   →  5 x [OK] · PACKS_CHECK=0
+    python scripts/build_lesson_index.py --check              →  [OK] 339 IDs · INDICE_CHECK=0
+
+**El árbol de `941530e` es correcto en sus dos verificadores de frescura.** Y hay una asimetría que explica
+por qué el rojo solo salió en uno: la comprobación del índice **parsea contenido**, así que sobrevive al
+cambio de remates; la de los packs **compara shas de bytes**, así que el cambio la mata. Es la misma familia
+de la trampa de `core.longpaths` dentro del clon (S15), pero en el otro campo y con el síntoma invertido: allí
+el árbol llegaba parcial y el veredicto era ruido; aquí el árbol llega completo y el veredicto es falso.
+
+## 3. Consecuencia que se registra como deuda (S20)
+
+`verify_index_in_committed_tree.py` es correcto para lo que verifica hoy y **falso-rojo para cualquier
+comprobación byte-exacta que se le monte encima**. Su cura es una línea: escribir `core.autocrlf=input` en la
+config del clon antes del `checkout`, igual que ya se hace con `core.longpaths`. No se aplicó en esta sesión
+porque es código y no había instrucción para ello; se registra con dueño **decisión del operador** y su
+disparador es la próxima vez que alguien intente re-usar el verificador para un derivado que compare bytes —
+que es exactamente lo que pide la cura (b) de S19, que aún espera autorización.
+
+Detalle que conviene no perder: el re-uso fallido de esta nota **no invalida nada publicado**. El `--quick` de
+la cola canónica corre sobre el árbol de trabajo, donde el `input` local sí aplica, y ese dio **12/12
+`EXIT=0`** tres veces (`19-` §8). Lo inválido era el instrumento de verificación post-commit, no el artefacto
+verificado.
+
+## 4. Estado de publicación
+
+Comando canónico (no se publica la cifra porque este mismo archivo la mueve al nombrar los commits):
+
+    git rev-list --left-right --count origin/master...HEAD
+
+Medido al cerrar: **`0 2`** con `origin/master` en `de336b6`. Dos commits locales esperan; **no se empujó** y
+no se ofreció el gate L3 porque no hay push en esta instrucción.
+
+## 5. Suite post-commit y registro de S20
+
+La suite completa se corrió **después** de los dos commits, con el exit escrito dentro del archivo (el
+`exit code 0` de la notificación en segundo plano es el de la cadena shell, no el de pytest):
+
+    4 failed, 4599 passed, 41 skipped, 4 xfailed, 230 warnings in 277.91s (0:04:37)   EXIT=1
+
+Los cuatro rojos son **los mismos cuatro nombres** y el mismo recuento de pasados que el baseline previo al
+commit (`18-` §6 y §8: `4 failed, 4599 passed, 41 skipped, 4 xfailed`), atribuidos contra clon en `17-` §5:
+`test_pricing_resolution_wrapper::test_function_default_flags`,
+`test_diagnostic_geo_metrics::test_diagnostic_includes_geo_metrics`,
+`test_validate_lesson_capitalization::test_medido_contra_el_predecesor…[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS…]`
+y `test_validate_wiring::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion`. **Los dos commits no
+movieron ningún resultado.**
+
+S20 quedó registrada en el libro de deuda de este plan (`dependencias-fases.md`, sección `### S20`) con su
+medición por ámbitos de configuración, la prueba de atribución y su cura de una línea marcada como **código sin
+autorizar**, dueño decisión del operador y disparador el primer re-uso byte-exacto del verificador. La cola
+canónica tras esa escritura: `PACKS=0`, `INDICE=0` (`nombre=328 commit=11 sin_fuente=0`), `--check` del índice
+`EXIT=0` (339 IDs), `--check` de packs `EXIT=0`, `--quick` **12/12 `EXIT=0`** con `Plan Citations: 743 citas
+históricas, 0 nuevas y 0 crecimientos`. El par del índice **no cambió de contenido** (ninguna mención nueva de
+ID), así que las rutas que viajan son seis: la fila S20 (+45/0) y los cinco packs que la citan.
+
+**Nota de instrumento, nacida de un falso alarm propio.** Al barrer el archivo nuevo se reportó
+`asteriscos ** : IMPAR` y se habría leído como defecto mío. Medido contra `HEAD`: el archivo **ya estaba impar**
+(717 marcas), y mi aporte es **+42, par**. El total de este corpus no es un gate usable porque hay negritas que
+spanean saltos de línea (dos líneas con 3 marcas cada una, seis en total) y marcados sueltos heredados; lo que
+sí gobierna es que **el delta sea par**. Backticks: 1.158, par. Anotadores: 18/18. CJK: **cero tras
+corrección** — en la primera redacción de la fila S20 se coló «Su电池 de pruebas», como en la de S19 se había
+colado «cada option» (`19-` §9); los dos están corregidos y barridos, y el patrón se repite en prosa española
+escrita a presión, así que el barrido de CJK y de anglicismos va **después** de cada bloque nuevo, no al final.
+Tercer defecto de la misma familia: una línea llegó con dos palabras pegadas («commitearonconsistentes»), que
+ningún check de marcado detecta. Y un cuarto, menor pero instructivo: **el barrido de CJK hay que saber leerlo**.
+Sobre este expediente devuelve **2 caracteres**, y son los de la cita de más arriba, transcritos a propósito,
+como manda la costumbre de la casa de escribir el defecto con su texto (precedente:
+`17-` con los dos asuntos erróneos). En `dependencias-fases.md`, que es corpus gobernable, el barrido da **cero**.
+Un conteo que no separa la cita declarada de la fuga nueva es un verde vacío.
+
+Scratch de esta nota, borrado al cerrar: `temp/verif-HEAD` (clon del verificador), `temp/clon-input` (clon de
+prueba con `autocrlf=input`), `temp/r1…r5.txt` (salidas de la cola) y `temp/suite-post-commit.txt`; el crudo
+relevante queda transcrito aquí.
+
