@@ -16,9 +16,10 @@ dependencias-fases.md` §S17 y §S18 (fuente única); este archivo es la cura, n
 Cómo se prueba (y por qué no basta con mirar los bytes):
 
 * Corre el **escritor real** sobre un repositorio temporal, nunca sobre el árbol del proyecto.
-* Rojo y verde se comparan **en el mismo entorno** contra la versión **commiteada** del instrumento
-  (`git show HEAD:…`, solo lectura; sin `checkout` ni `stash` que muevan árbol ajeno). Si el par
-  old-CRLF / new-LF no se resuelve en bytes, la diferencia la hace el parámetro, no la máquina.
+* Rojo y verde se comparan **en el mismo entorno** contra la versión **del control**
+  (`git show REV_CONTROL_DEFECTUOSO:…`, solo lectura; sin `checkout` ni `stash` que muevan árbol
+  ajeno). Si el par old-CRLF / new-LF no se resuelve en bytes, la diferencia la hace el parámetro, no
+  la máquina.
 * La traducción `\n` → `\r\n` es propiedad del SO: se **mide** (`_traduce_a_crlf()`), no se asume.
   Donde no traduzca, las tres pruebas de bytes se saltan con motivo declarado, en lugar de dar un
   verde que no observó nada. Las de S18 son portables: gobiernan texto, no finales de línea.
@@ -51,6 +52,15 @@ CODENAME_ESPEJO = "Espejo temporal de prueba"
 FECHA_ESPEJO = "2026-09-25"
 FECHA_LARGA_ESPEJO = "25 Septiembre 2026"
 FECHA_VIEJA_LEIBLE = "11 Septiembre 2026"   # la que dejó la release en el README real
+
+# Ancla del control negativo. **No puede ser `HEAD`**: al comitear esta cura, HEAD pasa a contener el
+# writer corregido y el control se queda sin rojo con el que compararse — medido en `bdd1c4c`, donde
+# tres pruebas de este archivo cayeron exactamente por eso (`el control negativo no ejercito el
+# defecto`). `5817edd` es el último commit con `write_text(...)` sin `newline="\n"` en sync_versions.py
+# (:161) y en doctor.py (:331 y :590), y con la regla `readme_version_header` cortando en «Actualizado»
+# (`scripts/sync_config.yaml:38-39`). Verificado con `git show` antes de fijarlo. Mismo patrón que su
+# hermana `tests/test_registry_fecha_documental.py:44` (`REV_ESCRITOR_DEFECTUOSO`).
+REV_CONTROL_DEFECTUOSO = "5817edd"
 
 # La poblacion que `validate_document_integration.py` corta por finales de linea, mas README y
 # VERSION.yaml: son los archivos que estas pruebas NO pueden tocar.
@@ -89,7 +99,7 @@ def _cargar(nombre: str, ruta: Path):
     return mod
 
 
-def _fuente_commiteada(rel: str, tmp_path: Path, rev: str = "HEAD") -> Path:
+def _fuente_commiteada(rel: str, tmp_path: Path, rev: str = REV_CONTROL_DEFECTUOSO) -> Path:
     """Materializa `rev:rel` con `git show` (solo lectura) en un temporal.
 
     Sin fuente el control falla ruidosamente: un instrumento caido no puede leerse como «el defecto ya
@@ -99,7 +109,7 @@ def _fuente_commiteada(rel: str, tmp_path: Path, rev: str = "HEAD") -> Path:
                           encoding="utf-8", cwd=str(ROOT))
     assert proc.returncode == 0, (
         f"no se pudo leer {rel} en {rev} (git salio {proc.returncode}: {proc.stderr.strip()}): sin "
-        "fuente commiteada el control negativo no demuestra nada")
+        "la fuente del control el control negativo no demuestra nada")
     destino = tmp_path / "commiteado" / Path(rel).name
     destino.parent.mkdir(parents=True, exist_ok=True)
     destino.write_bytes(proc.stdout.encode("utf-8"))
@@ -209,7 +219,11 @@ def _proyecto_doctor(tmp_path: Path, *, script_src: Path) -> tuple[Path, object]
 
 @SIN_TRADUCCION
 def test_el_writer_de_sync_emite_lf_y_el_commiteado_escribe_crlf(tmp_path):
-    """Verde y rojo del mismo camino: el writer de hoy contra el de `HEAD`, mismo espejo y entorno."""
+    """Verde y rojo del mismo camino: el writer de hoy contra el del control, mismo espejo y entorno.
+
+    El control se lee en `REV_CONTROL_DEFECTUOSO` (no en `HEAD`, que desde `bdd1c4c` ya contiene la
+    cura y dejaría el control sin rojo que comparar).
+    """
     # allanar=False: deja version/codename reales, asi que el motor tiene que escribir y se ve que emite.
     readme = _readme_espejo(tmp_path, fecha_leible=FECHA_VIEJA_LEIBLE, allanar=False)
 
@@ -243,6 +257,10 @@ def test_los_dos_writers_de_doctor_emiten_lf_y_los_de_head_no(tmp_path):
 
     `run_status` no estaba nombrado en S17: es la tercera escritura de la misma familia dentro del
     mismo archivo, hallada al curar, y se declara en el expediente junto con su prueba.
+
+    El nombre dice «head» porque así se escribió la cura; el control es ahora
+    `REV_CONTROL_DEFECTUOSO`. No se renombra: `08b-control-pre-cura.txt` y `10-cura-s17-s18.txt` citan
+    esta firma textual.
     """
     control = tmp_path / "c-doctor"
     commiteado = _fuente_commiteada("scripts/doctor.py", control)
