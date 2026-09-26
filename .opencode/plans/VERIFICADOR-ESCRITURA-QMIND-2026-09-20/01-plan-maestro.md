@@ -1,6 +1,9 @@
 # Plan maestro — VERIFICADOR-ESCRITURA-QMIND-2026-09-20
 
-**Estado: PENDIENTE de ejecución. Una fase, una sesión.** Ningún AC de este documento está implementado.
+**Estado: PENDIENTE de ejecución. Una fase, una sesión, y —desde el 2026-09-24— dos momentos de aceptación
+(§6).** Ningún AC de este documento está implementado. ⟦Re-medido el 2026-09-24 contra el árbol vigente,
+sigue siendo cierto: el writer no expone `--title` ni `--file`, `is_ingested()` decide por título y la
+indisponibilidad del CLI devuelve `exit 0`; el check [15/15] no corre en `--quick` ni en el hook⟧.
 Versión base del repo al concebir el plan: `4.77.3`, HEAD `7296732` (este mini-plan no cambia `VERSION.yaml`).
 
 ## 1. Premisas medidas (no heredadas)
@@ -19,11 +22,11 @@ Versión base del repo al concebir el plan: `4.77.3`, HEAD `7296732` (este mini-
 | AC | Criterio | Instrumento esperado |
 |---|---|---|
 | AC1 | El writer permite publicar con **título y archivo explícitos** (`--title`, `--file`), sin cambiar el comportamiento por defecto de `--upload <PLAN>` | tests propios sobre el parser y sobre `do_upload()` con un directorio temporal |
-| AC2 | La verificación es **por contenido**: [15/15] exige que la fuente ingerida case con una instantánea versionada en el repo (sha de la copia + prueba de sha inverso del saneado). Título coincidente con contenido distinto ⇒ **rojo** | mutación M1: editar la copia versionada sin re-subir → rojo; re-subir → verde |
-| AC3 | La indisponibilidad del CLI deja de ser PASS silencioso: el check lo invoca con `--strict` o el resumen distingue un tercer estado explícito | mutación M2: PATH sin `qmind` → FAIL o WARN declarado, nunca PASS |
-| AC4 | Un plan no puede tener **dos fuentes vigentes**: tras publicar con título nuevo, la anterior queda retirada o marcada, y la verificación lo comprueba | mutación M3: dos fuentes del mismo plan sin marca de reemplazo → rojo |
+| AC2 | La verificación es **por contenido**: [15/15] exige que la fuente ingerida case con una instantánea versionada en el repo (sha de la copia + prueba de sha inverso del saneado). Título coincidente con contenido distinto ⇒ **rojo** | **offline:** mutación M1 sobre la instantánea versionada — editarla sin re-subir → rojo; re-subir → verde. La comparación de contenido **no** necesita tocar el servicio: lo que se coteja es el sha de la copia del repo. **El verde definitivo de esta AC contra el servicio real pertenece a la aceptación remota (§6), no a esta fase** |
+| AC3 | La indisponibilidad del CLI deja de ser PASS silencioso: el check lo invoca con `--strict` o el resumen distingue un tercer estado explícito | mutación M2: PATH sin `qmind` → FAIL o WARN declarado, nunca PASS. **Medible íntegramente offline**, y es la AC que hace que lo demás sea creíble: sin ella, la ausencia del instrumento se reporta como éxito |
+| AC4 | Un plan no puede tener **dos fuentes vigentes**: tras publicar con título nuevo, la anterior queda retirada o marcada, y la verificación lo comprueba | **offline:** mutación M3 sobre el conjunto de fuentes esperado — dos fuentes del mismo plan sin marca de reemplazo → rojo. **Remoto:** comprobar que el marcado llegó al notebook, con su evidencia (§6) |
 | AC5 | Los tres rojos se demuestran **por el guard**, no por error de sintaxis ni de import, y el árbol se restaura por sha256 | `mutation_report.json` del mini-plan, con la misma forma que el de FASE-G |
-| AC6 | El prompt de FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` pasa a mandar el writer con `--title`, y su texto deja de depender de que alguien recuerde el título pre-acordado | diff del prompt + [15/15] verde sobre el plan padre tras la ingesta de cierre |
+| AC6 | ⟦Desdoblada el 2026-09-24 por el bloque C de la orden de calidad: esta fila era la circular⟧ | **AC6-entrega (offline, es de esta fase):** el prompt de FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` pasa a mandar el writer con `--title`, y su texto deja de depender de que alguien recuerde el título pre-acordado. Instrumento: `diff` del prompt + tests del parser de AC1. **AC6-aceptación (remota, NO es condición de esta fase):** `[15/15]` verde sobre el plan padre **tras su ingesta de cierre**, que es un evento que ocurre **después** del disparador de esta sesión. Dueño y disparador: §6 |
 
 ## 3. Alcance y no-alcance
 
@@ -39,19 +42,57 @@ contenido ya publicado fuera del repo.
 
 ## 4. Riesgos y decisiones pendientes
 
-- **Riesgo de cronología:** si FASE-RELEASE del plan padre llega antes que este mini-plan, su write-back se
-  hace por CLI directo con el título pre-acordado y AC2–AC4 quedan como deuda viva. No bloquea el cierre.
+- **Riesgo de cronología, en las dos direcciones** (⟦el 2026-09-24 el bloque C de la orden de calidad
+  registró que solo se había previsto una⟧):
+  - *El padre llega primero:* su write-back se hace por CLI directo con el título pre-acordado (§5) y
+    AC2–AC4 quedan como deuda viva con dueño. No bloquea el cierre del padre.
+  - *Este mini-plan llega primero —el caso para el que está concebido—:* entonces **AC6-aceptación no
+    puede cerrarse todavía**, porque su evento (la ingesta de cierre del padre) está en el futuro. Eso
+    **no** es un fallo de esta fase ni la obliga a esperar: su evidencia pertenece al momento B de §6 y se
+    hereda al RELEASE del padre con dueño y disparador. Sin esta segunda línea, el plan exigía a una sesión
+    cerrar una AC cuyo disparador era ella misma.
 - **Riesgo de verde hueco:** añadir un check de contenido que llama a un servicio externo puede colgar o
   fallar por red. Decisión de diseño: la comparación de contenido se hace contra la **instantánea versionada
   en el repo**; la llamada al servicio solo se usa para traer el contenido ingerido, y su ausencia cae del
-  lado de AC3 (nunca del lado de PASS).
+  lado de AC3 (nunca del lado de PASS). **Esta AC es verificable offline precisamente por eso**: lo que se
+  prueba es el predicado del verificador, no la disponibilidad del backend.
 - **Decisión no tomada aquí:** si AC4 debe borrar la fuente antigua (`qmind source delete`) o marcarla.
   Borrar es irreversible sobre contenido publicado; el mini-plan entra proponiendo **marcar** y deja borrar
-  como opción explícita del operador.
+  como opción explícita del operador. La decisión se toma en el momento B de §6, con su autorización.
 
 ## 5. Fallback si el disparador vence
 
-Ejecutar el write-back de cierre con `qmind source upload --nb … --file <copia saneada> --title "<título
-nuevo>"`, verificar por descarga + sha256 (no por título), y registrar en el `10-analisis` del plan padre que
-AC2–AC4 siguen abiertos con dueño. Es exactamente el camino que recorrió FASE-G el 2026-09-20, y está
-documentado en su evidencia.
+**Procedimiento de aceptación remota condicionado** (⟦reclasificado el 2026-09-24: este §5 es el camino de
+hoy sin el instrumento mejorado, y **no** es una operación que la fase pueda ejecutar por su cuenta ⟧ —
+pertenece al momento B de §6): ejecutar el write-back de cierre con `qmind source upload --nb … --file
+<copia saneada> --title "<título nuevo>"`, verificar por descarga + sha256 (no por título), y registrar en
+el `10-analisis` del plan padre que AC2–AC4 siguen abiertos con dueño. Es exactamente el camino que recorrió
+FASE-G el 2026-09-20, y está documentado en su evidencia. Requiere la misma autorización literal y el mismo
+presupuesto que se listan en §6; la prohibición de red de esta sesión **no** lo habilita ni lo exime.
+
+## 6. Los dos momentos: entregable, responsable, disparador y evidencia
+
+⟦Añadido el 2026-09-24 por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, fila
+`ESCRITURA-QMIND`. Su §5, decisión «Entrega y permisos remotos», seguía **PENDIENTE** a esa fecha: este §6
+define el procedimiento y lo que cada momento necesita, **no** lo autoriza ni ejecuta acceso remoto⟧.
+
+| | **Momento A — entrega offline** | **Momento B — aceptación remota** |
+|---|---|---|
+| Qué es | Escribir/corregir el writer, el check, sus tests, las mutaciones M1–M3, la instantánea versionada y el prompt de RELEASE del padre | Usar ese writer en la ingesta de cierre del padre y comprobar que el notebook coincide con la instantánea |
+| Red | **Ninguna** | Sí, y solo contra el notebook `iah-cli-lecciones` |
+| Entregable | `scripts/validate_qmind_writeback.py` con `--title`/`--file`, su conexión en `run_all_validations.py` con el tercer estado, `tests/` del verificador, `mutation_report.json`, la **copia saneada versionada** con su sha, y el `diff` del prompt del padre | Fuente publicada con el título pre-acordado del padre, **más** la evidencia del estado de la fuente anterior (AC4) |
+| Responsable | Quien ejecute la fase única de este mini-plan | El **RELEASE del plan padre**, con la autorización del operador; este mini-plan entrega el instrumento, no ejecuta la subida ajena |
+| Disparador | Mandato propio de la sesión, sin prerrequisito remoto | La ingesta de cierre del padre, que a su vez exige el momento A entregado |
+| Evidencia | Salidas de pytest y de las tres mutaciones, sha de la copia saneada, `git diff` del prompt del padre | **Descarga byte a byte + sha256 contra la instantánea**; nunca el título, nunca un `SKIP` leído como actualización |
+| ACs que cierra | AC1, AC3, AC5 y la parte offline de AC2/AC4, **más AC6-entrega** | La parte remota de AC2/AC4 y **AC6-aceptación** |
+| Si falta el permiso | No hay permiso que esperar: es trabajo offline | `PENDIENTE-AUTORIZACION` con causa y presupuesto. **Prohibido** cerrar por omisión, y prohibido que el check diga PASS sin instrumento (eso es AC3) |
+
+**Autorización y presupuesto que el momento B va a necesitar** — se documentan para que nadie los invente
+sobre la marcha; **esta sesión no concede ninguno**: (i) instrucción literal que nombre el notebook
+`iah-cli-lecciones` (ID `01a04d98-b7bd-778c-8441-26fdc7e35f45`), la operación (`source upload`, y para AC4
+`source delete` **o** marcado) y el archivo concreto que sube; (ii) confirmación de que el contenido es
+**copia saneada** con su prueba de sha inverso, sin material del cliente ni secretos; (iii) presupuesto y
+cota de reintentos, porque el backend **no sobrescribe** y un reintento mal interpretado **crea** el
+duplicado que AC4 tiene que cazar; (iv) si se elige borrar, decisión escrita aparte — es irreversible sobre
+contenido ya publicado. La limpieza retroactiva de las dos fuentes de `TRIBUNAL-OFFLINE-2026-09-09` sigue
+fuera de alcance por la misma razón.
