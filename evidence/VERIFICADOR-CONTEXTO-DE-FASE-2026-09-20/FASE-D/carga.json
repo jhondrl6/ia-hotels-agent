@@ -1,0 +1,238 @@
+{
+  "tool": "build_phase_briefing.py",
+  "ac": "AC20",
+  "plan": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+  "head": "5817edd",
+  "generated_at": "2026-09-25T00:59:08Z",
+  "method": {
+    "comando_bytes": "stat -c %s <ruta>",
+    "comando_generacion": "./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+    "divisor_tokens": 4,
+    "suma_de_lado": "stat -c %s sobre cada ruta de `rutas_stat.before` / `rutas_stat.after` y sumar: las rutas salen repetidas por fase porque cada sesion abre su copia; deduplicarlas daria una lista que no reproduce la suma medida",
+    "reproduccion": "./venv/Scripts/python.exe ./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --carga evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json",
+    "sumandos": {
+      "workflow_obligatorio": "lo que la fase lee aparte del pack. En `before` es TODA la lectura declarada (todavia no existe pack, todo se lee aparte); en `after` queda reducido al workflow canonico mas las fuentes declaradas que no se pudieron copiar. Se publica separado `workflow_canonico_bytes` para no confundir la clave con el solo workflow",
+      "coste_de_generacion": "la corrida del generador que la sesion ejecuta: bytes de la invocacion literal + bytes de la linea que imprime",
+      "pack_consumido": "bytes del pack que la fase efectivamente lee"
+    },
+    "resta": "delta = total_before - total_after, y por construccion debe cuadrar con omitido_declarado_bytes - andamiaje_del_pack_bytes - coste_de_generacion. Se publica el resultado de esa comprobacion en `resta_comprobada`",
+    "regla": "la resta va entre CARGAS TOTALES, no entre «fuentes» y «pack». Concatenar no es ahorrar: el unico ahorro atribuible al pack es `omitido_declarado_bytes`, lo que no entro porque no se declaro. Un delta cero o negativo es resultado valido y se explica (L-D3)."
+  },
+  "rutas_stat": {
+    "before": [
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+      "docs/CONTRIBUTING.md"
+    ],
+    "after": [
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md",
+      ".agents/workflows/phased_project_executor.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md",
+      ".agents/workflows/phased_project_executor.md",
+      "docs/CONTRIBUTING.md",
+      ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md"
+    ],
+    "cuenta": {
+      "before": 33,
+      "after": 11
+    },
+    "nota": "las fuentes que no existen no tienen ruta que `stat` pueda abrir: entran al total con 0 bytes y se declaran en `fuentes_ausentes` de cada fase"
+  },
+  "por_fase": [
+    {
+      "fase": "FASE-A",
+      "estado": "COMPLETO",
+      "before": {
+        "workflow_obligatorio": 298770,
+        "coste_de_generacion": 0,
+        "pack_consumido": 0,
+        "total": 298770,
+        "tokens_estimados": 74692
+      },
+      "after": {
+        "workflow_obligatorio": 108017,
+        "coste_de_generacion": 157,
+        "pack_consumido": 154349,
+        "total": 262523,
+        "tokens_estimados": 65630
+      },
+      "total_before": 298770,
+      "total_after": 262523,
+      "delta_bytes": 36247,
+      "delta_tokens_estimados": 9062,
+      "workflow_canonico_bytes": 108017,
+      "copiado_a_pack_bytes": 148889,
+      "andamiaje_del_pack_bytes": 5460,
+      "omitido_declarado_bytes": 41864,
+      "resta_comprobada": true,
+      "fuentes_ausentes": []
+    },
+    {
+      "fase": "FASE-B",
+      "estado": "COMPLETO",
+      "before": {
+        "workflow_obligatorio": 295463,
+        "coste_de_generacion": 0,
+        "pack_consumido": 0,
+        "total": 295463,
+        "tokens_estimados": 73865
+      },
+      "after": {
+        "workflow_obligatorio": 108017,
+        "coste_de_generacion": 157,
+        "pack_consumido": 139279,
+        "total": 247453,
+        "tokens_estimados": 61863
+      },
+      "total_before": 295463,
+      "total_after": 247453,
+      "delta_bytes": 48010,
+      "delta_tokens_estimados": 12002,
+      "workflow_canonico_bytes": 108017,
+      "copiado_a_pack_bytes": 134172,
+      "andamiaje_del_pack_bytes": 5107,
+      "omitido_declarado_bytes": 53274,
+      "resta_comprobada": true,
+      "fuentes_ausentes": []
+    },
+    {
+      "fase": "FASE-C",
+      "estado": "COMPLETO",
+      "before": {
+        "workflow_obligatorio": 310789,
+        "coste_de_generacion": 0,
+        "pack_consumido": 0,
+        "total": 310789,
+        "tokens_estimados": 77697
+      },
+      "after": {
+        "workflow_obligatorio": 108017,
+        "coste_de_generacion": 157,
+        "pack_consumido": 148987,
+        "total": 257161,
+        "tokens_estimados": 64290
+      },
+      "total_before": 310789,
+      "total_after": 257161,
+      "delta_bytes": 53628,
+      "delta_tokens_estimados": 13407,
+      "workflow_canonico_bytes": 108017,
+      "copiado_a_pack_bytes": 142309,
+      "andamiaje_del_pack_bytes": 6678,
+      "omitido_declarado_bytes": 60463,
+      "resta_comprobada": true,
+      "fuentes_ausentes": []
+    },
+    {
+      "fase": "FASE-D",
+      "estado": "COMPLETO",
+      "before": {
+        "workflow_obligatorio": 302921,
+        "coste_de_generacion": 0,
+        "pack_consumido": 0,
+        "total": 302921,
+        "tokens_estimados": 75730
+      },
+      "after": {
+        "workflow_obligatorio": 108017,
+        "coste_de_generacion": 157,
+        "pack_consumido": 148811,
+        "total": 256985,
+        "tokens_estimados": 64246
+      },
+      "total_before": 302921,
+      "total_after": 256985,
+      "delta_bytes": 45936,
+      "delta_tokens_estimados": 11484,
+      "workflow_canonico_bytes": 108017,
+      "copiado_a_pack_bytes": 143704,
+      "andamiaje_del_pack_bytes": 5107,
+      "omitido_declarado_bytes": 51200,
+      "resta_comprobada": true,
+      "fuentes_ausentes": []
+    },
+    {
+      "fase": "FASE-RELEASE",
+      "estado": "SECCION-NO-RESUELTA",
+      "before": {
+        "workflow_obligatorio": 440166,
+        "coste_de_generacion": 0,
+        "pack_consumido": 0,
+        "total": 440166,
+        "tokens_estimados": 110041
+      },
+      "after": {
+        "workflow_obligatorio": 127780,
+        "coste_de_generacion": 180,
+        "pack_consumido": 279306,
+        "total": 407266,
+        "tokens_estimados": 101816
+      },
+      "total_before": 440166,
+      "total_after": 407266,
+      "delta_bytes": 32900,
+      "delta_tokens_estimados": 8225,
+      "workflow_canonico_bytes": 108017,
+      "copiado_a_pack_bytes": 270612,
+      "andamiaje_del_pack_bytes": 8694,
+      "omitido_declarado_bytes": 41774,
+      "resta_comprobada": true,
+      "fuentes_ausentes": [
+        "los cuatro prompts de fase"
+      ]
+    }
+  ],
+  "total": {
+    "before": {
+      "workflow_obligatorio": 1648109,
+      "coste_de_generacion": 0,
+      "pack_consumido": 0,
+      "total": 1648109,
+      "tokens_estimados": 412027
+    },
+    "after": {
+      "workflow_obligatorio": 559848,
+      "coste_de_generacion": 808,
+      "pack_consumido": 870732,
+      "total": 1431388,
+      "tokens_estimados": 357847
+    },
+    "delta_bytes": 216721,
+    "delta_tokens_estimados": 54180
+  }
+}

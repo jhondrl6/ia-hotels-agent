@@ -1,0 +1,66 @@
+# FASE-D — seleccion propia: tests/quality_gates/phase_briefing/ (10 archivos de test + conftest + __init__)
+# corrida de cierre (arbol asentado): 2026-09-25T01:03:19Z
+$ ./venv/Scripts/python.exe -m pytest tests/quality_gates/phase_briefing -v -p no:cacheprovider
+
+# Criterio R2.5: la seleccion se corre con el guard de red autouse montado, y hay prueba
+#   explicita de que el guard dispara (test_briefing_cero_red.py) — ver cero-red.txt.
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 49 items
+
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_por_fase_los_tres_sumandos_en_los_dos_lados PASSED [  2%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_el_workflow_sigue_entrando_en_los_dos_lados PASSED [  4%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_los_bytes_cuadran_con_stat_sobre_las_rutas_publicadas PASSED [  6%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_la_resta_cuadra_con_lo_omitido_menos_el_andamiaje PASSED [  8%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_el_andamiaje_del_pack_se_publica_como_coste PASSED [ 10%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_un_delta_negativo_es_resultado_valido_y_se_publica PASSED [ 12%]
+tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_el_metodo_declara_comando_divisor_y_sumandos PASSED [ 14%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_el_guard_de_red_dispara_dentro_de_la_seleccion PASSED [ 16%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_el_guard_tambien_corta_la_resolucion_de_nombres PASSED [ 18%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_la_superficie_de_imports_del_generador_esta_auditada PASSED [ 20%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_los_permisos_por_escritura_no_se_usan_para_llamar PASSED [ 22%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_cargar_el_generador_no_arrasta_clientes_a_sys_modules PASSED [ 24%]
+tests/quality_gates/phase_briefing/test_briefing_check_vence_con_arbol.py::test_editar_una_fuente_en_disco_vence_el_check PASSED [ 26%]
+tests/quality_gates/phase_briefing/test_briefing_check_vence_con_arbol.py::test_mover_una_fuente_de_lugar_la_vence_por_ausencia PASSED [ 28%]
+tests/quality_gates/phase_briefing/test_briefing_check_vence_con_arbol.py::test_un_pack_que_no_existe_no_puede_estar_fresco PASSED [ 30%]
+tests/quality_gates/phase_briefing/test_briefing_check_vence_con_arbol.py::test_la_causa_ilegible_no_colapsa_con_las_otras_dos PASSED [ 32%]
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_el_corpus_real_existe_y_es_legible PASSED [ 34%]
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_genera_el_pack_de_una_fase_de_un_plan_archivado_real PASSED [ 36%]
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_un_archivado_sin_declara_lectura_no_se_informa_como_verde PASSED [ 38%]
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_el_denominador_del_corpus_se_publica_con_su_medicion PASSED [ 40%]
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_generar_un_archivado_no_escribe_dentro_del_corpus PASSED [ 42%]
+tests/quality_gates/phase_briefing/test_briefing_fuente_ausente.py::test_fuente_ausente_no_emite_el_pack_y_nombre_la_ruta_buscada PASSED [ 44%]
+tests/quality_gates/phase_briefing/test_briefing_fuente_ausente.py::test_la_ausencia_se_distingue_del_vacio PASSED [ 46%]
+tests/quality_gates/phase_briefing/test_briefing_fuente_ausente.py::test_el_check_no_dice_ok_sobre_cero_fuentes PASSED [ 48%]
+tests/quality_gates/phase_briefing/test_briefing_head_no_es_la_llave_de_caducidad.py::test_head_distinto_con_fuentes_identicas_no_vence_el_pack PASSED [ 51%]
+tests/quality_gates/phase_briefing/test_briefing_head_no_es_la_llave_de_caducidad.py::test_el_pack_no_esta_en_su_propio_conjunto_de_fuentes PASSED [ 53%]
+tests/quality_gates/phase_briefing/test_briefing_head_no_es_la_llave_de_caducidad.py::test_avanzar_el_head_reales_no_cambia_el_dictamen_sobre_fuentes_iguales PASSED [ 55%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_verde_con_el_guard_activo PASSED [ 57%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_rojo_con_el_guard_apagado PASSED [ 59%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_el_rojo_es_mas_corto_que_el_verde_y_no_lo_dice PASSED [ 61%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_apagar_el_guard_no_altera_los_otros_dos_estados PASSED [ 63%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno PASSED [ 65%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_el_destino_no_puede_apuntar_a_otra_fase_por_defecto PASSED [ 67%]
+tests/quality_gates/phase_briefing/test_briefing_mutation_no_truncar.py::test_resumen_publica_el_alcance_del_observador_y_las_dos_salidas PASSED [ 69%]
+tests/quality_gates/phase_briefing/test_briefing_resuelve_plan_archivado.py::test_resuelve_el_plan_por_nombre_aunque_viva_bajo_archives PASSED [ 71%]
+tests/quality_gates/phase_briefing/test_briefing_resuelve_plan_archivado.py::test_resuelve_tambien_la_ruta_vigente_completa PASSED [ 73%]
+tests/quality_gates/phase_briefing/test_briefing_resuelve_plan_archivado.py::test_generar_y_verificar_sobre_un_archivado_no_toca_nada PASSED [ 75%]
+tests/quality_gates/phase_briefing/test_briefing_resuelve_plan_archivado.py::test_un_plan_inexistente_no_se_confunde_con_un_plan_vacio PASSED [ 77%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_un_pack_por_cada_fase_del_plan PASSED [ 79%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte PASSED [ 81%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_el_pack_no_copia_el_workflow_ni_escribe_agents PASSED [ 83%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_declado_es_del_prompt_no_de_una_configuracion PASSED [ 85%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia PASSED [ 87%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_check_del_plan_real_pasa_sobre_el_arbol PASSED [ 89%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_sin_ruta_explicita_el_informe_no_se_escribe_en_ninguna_parte PASSED [ 91%]
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_el_informe_publica_no_incluye_y_proveniencia_por_pack PASSED [ 93%]
+tests/quality_gates/phase_briefing/test_briefing_seccion_no_resuelta.py::test_la_seccion_no_resuelta_se_declara_con_su_ruta_intentada PASSED [ 95%]
+tests/quality_gates/phase_briefing/test_briefing_seccion_no_resuelta.py::test_los_tres_estados_no_colapsan PASSED [ 97%]
+tests/quality_gates/phase_briefing/test_briefing_seccion_no_resuelta.py::test_un_item_en_prosa_no_se_adivina_se_declara PASSED [100%]
+
+============================= 49 passed in 4.29s ==============================
+EXIT=0

@@ -1,0 +1,15 @@
+{
+  "mut": false,
+  "simbolo": "build_phase_briefing.GUARD_NO_TRUNCAMIENTO_ACTIVO",
+  "guard_activo": true,
+  "estado": "SECCION-NO-RESUELTA",
+  "emitido": true,
+  "bytes_pack": 279306,
+  "declara_recorte": true,
+  "conserva_lo_resuelto": true,
+  "lista_los_tres_estados": [
+    "COMPLETO",
+    "FUENTE-AUSENTE",
+    "SECCION-NO-RESUELTA"
+  ]
+}

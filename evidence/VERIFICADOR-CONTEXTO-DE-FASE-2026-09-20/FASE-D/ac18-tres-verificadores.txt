@@ -1,0 +1,33 @@
+# AC18 — los tres verificadores sobre el MISMO arbol final verificado (FASE-D)
+# capturado: 2026-09-25T01:13:06Z   (ultima tanda; re-impreso tras el ultimo .md del corpus)
+# HEAD: 5817edd  (la fase no commiteo: la cabecera no se movio)
+
+$ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick   # trae [9/11] citas y [10/11] capitalizacion
+  [9/11] Checking plan citations (simbolos, no numeros de linea)...
+  [10/11] Checking lesson capitalization (Paso 0 del executor)...
+  TOTAL: 11/11 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  exit=0
+
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check   # el paso [6/7] del hook
+  [OK] Ã�ndice de lecciones fresco (339 IDs)
+  exit=0
+
+$ ./venv/Scripts/python.exe scripts/validate_lesson_capitalization.py
+  [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  exit=0
+
+$ ./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+  [OK] FASE-A: 4 fuentes frescas
+  [OK] FASE-B: 4 fuentes frescas
+  [OK] FASE-C: 4 fuentes frescas
+  [OK] FASE-D: 4 fuentes frescas
+  [OK] FASE-RELEASE: 6 fuentes frescas
+  exit=0
+
+# Tambien verde en el mismo arbol: la seleccion de C (consumidora del indice) y la de D,
+# 105 passed en 22.25 s (`lesson_relevance` + `phase_briefing`, crudo en run_tests.txt para D).
+# Los tres verdes se midieron DESPUES del ultimo .md escrito, incluida la entrada que apilo
+# log_phase_completion.py sobre docs/contributing/REGISTRY.md. No hay commit que los
+# certifique: ver baseline-pre-post.md §6 (deuda declarada) y L-VCF-15/S15 — un clon fresco
+# de este arbol daria [FAIL] de indice por el mtime, no por el contenido.

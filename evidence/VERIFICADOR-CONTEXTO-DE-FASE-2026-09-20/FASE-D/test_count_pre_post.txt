@@ -1,0 +1,21 @@
+# Crudo del recomputo de la fila «def test_ en tests/» del 09 §D — FASE-D
+# Motivo: la fila publicaba PRE 4.360 / POST 4.404 y ese par NO reproduce con el metodo canonico.
+# reimpresso al cerrar (tras anadir test_briefing_cero_red.py): 2026-09-25T00:33:06Z
+
+$ grep -rE "^\s*def test_" tests --include=*.py | wc -l                      # POST en disco
+4557
+
+$ grep -rE "^\s*def test_" tests --include=*.py --exclude-dir=phase_briefing | wc -l   # POST - lo propio = PRE reconstruido
+4508
+
+$ grep -rE "^\s*def test_" tests/quality_gates/phase_briefing --include=*.py | wc -l   # contribucion propia de D
+49
+
+$ git grep -cE "^[[:space:]]*def test_" HEAD -- tests | awk -F: "{s+=\$NF} END {print s}"   # lo que hay commiteado, sin el trabajo ajeno
+4470
+
+HEAD: 5817edd
+
+# Resta publicada: 4557 - 4508 = 49 (= contribucion propia, verificada con el tercer comando).
+# El 4508 ademas reproduce exacto el POST que publico FASE-C en esta misma fila: dos caminos,
+# el mismo numero.

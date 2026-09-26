@@ -1,0 +1,38 @@
+# R2.6 / AC19 — el generador contra planes REALES archivados (no fixture)
+# corrida de cierre: 2026-09-25T01:03:19Z
+$ ./venv/Scripts/python.exe -m pytest tests/quality_gates/phase_briefing/test_briefing_corpus_real.py -v -rs -s -p no:cacheprovider
+
+# Criterio R2.6: si un test se salta, el salto se DECLARA. NO hubo saltos: 5/5 PASSED con -rs.
+# -s esta para que el denominador que imprime el propio test quede en la evidencia
+#   (prompts_archivados / con_declaracion_lee / planes): eso es S16 y el corte del generador.
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 5 items
+
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_el_corpus_real_existe_y_es_legible PASSED
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_genera_el_pack_de_una_fase_de_un_plan_archivado_real [pack] FASE-1: COMPLETO -> FASE-1.md
+[pack] FASE-2: COMPLETO -> FASE-2.md
+[pack] FASE-3: COMPLETO -> FASE-3.md
+[pack] FASE-4: COMPLETO -> FASE-4.md
+[pack] FASE-5: COMPLETO -> FASE-5.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 6 packs · COMPLETO 6 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+PASSED
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_un_archivado_sin_declara_lectura_no_se_informa_como_verde PASSED
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_el_denominador_del_corpus_se_publica_con_su_medicion [r26] corpus={'prompts_archivados': 121, 'con_declaracion_lee': 0, 'planes': 16} skipif=NO salto
+PASSED
+tests/quality_gates/phase_briefing/test_briefing_corpus_real.py::test_generar_un_archivado_no_escribe_dentro_del_corpus [pack] FASE-1: COMPLETO -> FASE-1.md
+[pack] FASE-2: COMPLETO -> FASE-2.md
+[pack] FASE-3: COMPLETO -> FASE-3.md
+[pack] FASE-4: COMPLETO -> FASE-4.md
+[pack] FASE-5: COMPLETO -> FASE-5.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 6 packs · COMPLETO 6 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+PASSED
+
+============================== 5 passed in 0.32s ==============================
+EXIT=0

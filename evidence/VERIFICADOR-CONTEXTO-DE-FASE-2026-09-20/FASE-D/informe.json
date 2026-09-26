@@ -1,0 +1,1631 @@
+{
+  "tool": "build_phase_briefing.py",
+  "acs": [
+    "AC19",
+    "AC21",
+    "AC22"
+  ],
+  "plan": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+  "head": "5817edd",
+  "head_fuente": "git rev-parse --short HEAD",
+  "generated_at": "2026-09-25T00:59:08Z",
+  "status": "EMITIDO",
+  "packs": [
+    {
+      "fase": "FASE-A",
+      "ruta_pack": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md",
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "no_incluye": [
+        "01-plan-maestro.md — 17023 bytes fuera de lo declarado (1, 4)",
+        "00-lecciones-capitalizadas.md — 24841 bytes fuera de lo declarado (2, 4)"
+      ],
+      "lectura_aparte_obligatoria": [
+        ".agents/workflows/phased_project_executor.md"
+      ],
+      "provenance": {
+        "head": "5817edd",
+        "generated_at": "2026-09-25T00:59:08Z",
+        "head_fuente": "git rev-parse --short HEAD"
+      },
+      "sources": [
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md",
+          "sha256": "03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2",
+          "gobernada": false,
+          "documento": "05-prompt-inicio-sesion-fase-A.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "gobernada": true,
+          "documento": "01-plan-maestro.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "1",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "gobernada": true,
+          "documento": "04-contrato-ejecucion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "gobernada": true,
+          "documento": "00-lecciones-capitalizadas.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "2",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "2",
+            "4"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "gobernada": true,
+          "documento": "dependencias-fases.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        }
+      ],
+      "fuentes_completas": [
+        {
+          "declarado": "05-prompt-inicio-sesion-fase-A.md",
+          "documento": "05-prompt-inicio-sesion-fase-A.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2",
+          "bytes_documento": 15552,
+          "bytes_copiados": 15552,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md",
+            "C:/Users/Jhond/Github/iah-cli/05-prompt-inicio-sesion-fase-A.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": true
+        },
+        {
+          "declarado": "01-plan-maestro.md §1 (la tabla A1-A4 con su rectificacion de A3, la medicion A7 y la poblacion A8)",
+          "documento": "01-plan-maestro.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "bytes_documento": 51507,
+          "bytes_copiados": 34484,
+          "calificador": "la tabla A1-A4 con su rectificacion de A3, la medicion A7 y la poblacion A8",
+          "secciones_pedidas": [
+            "1",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Plan maestro — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Medición que justifica el plan (no suposición)",
+            "2. Matriz de decisión",
+            "3. Alcance y no-alcance",
+            "4. Criterios de aceptación",
+            "5. Única corrida y límites",
+            "6. Deuda con dueño y disparador",
+            "7. Nota final"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/01-plan-maestro.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "04-contrato-ejecucion.md",
+          "documento": "04-contrato-ejecucion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "bytes_documento": 27364,
+          "bytes_copiados": 27364,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/04-contrato-ejecucion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "00-lecciones-capitalizadas.md §2",
+          "documento": "00-lecciones-capitalizadas.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "bytes_documento": 49143,
+          "bytes_copiados": 24302,
+          "calificador": "",
+          "secciones_pedidas": [
+            "2",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "2",
+            "4"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Lecciones Capitalizadas — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Consultas ejecutadas (literales, re-ejecutables)",
+            "2. Lecciones capitalizadas",
+            "3. Candidatos evaluados y descartados",
+            "4. Cobertura declarada de este documento",
+            "5. Balance de FASE-A (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "6. Balance de FASE-B (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "7. Balance de FASE-D (2026-09-24): qué se aplicó de verdad, lección por lección"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/00-lecciones-capitalizadas.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "dependencias-fases.md",
+          "documento": "dependencias-fases.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "bytes_documento": 47187,
+          "bytes_copiados": 47187,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/dependencias-fases.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "el workflow canónico",
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "clase": "workflow",
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 108017,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.agents/workflows/phased_project_executor.md"
+          ],
+          "motivo": "no se copia: lectura aparte obligatoria mientras D3 no lo rebane"
+        }
+      ]
+    },
+    {
+      "fase": "FASE-B",
+      "ruta_pack": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md",
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "no_incluye": [
+        "01-plan-maestro.md — 19097 bytes fuera de lo declarado (2, 4)",
+        "00-lecciones-capitalizadas.md — 34177 bytes fuera de lo declarado (2)"
+      ],
+      "lectura_aparte_obligatoria": [
+        ".agents/workflows/phased_project_executor.md"
+      ],
+      "provenance": {
+        "head": "5817edd",
+        "generated_at": "2026-09-25T00:59:08Z",
+        "head_fuente": "git rev-parse --short HEAD"
+      },
+      "sources": [
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md",
+          "sha256": "0f4e51282983f59cc79bb13d7536bf7bf0a732e38a275464a632757f1ef90006",
+          "gobernada": false,
+          "documento": "05-prompt-inicio-sesion-fase-B.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "gobernada": true,
+          "documento": "01-plan-maestro.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "2",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "2",
+            "4"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "gobernada": true,
+          "documento": "04-contrato-ejecucion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "gobernada": true,
+          "documento": "00-lecciones-capitalizadas.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "2"
+          ],
+          "secciones_resueltas": [
+            "2"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "gobernada": true,
+          "documento": "dependencias-fases.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        }
+      ],
+      "fuentes_completas": [
+        {
+          "declarado": "05-prompt-inicio-sesion-fase-B.md",
+          "documento": "05-prompt-inicio-sesion-fase-B.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "0f4e51282983f59cc79bb13d7536bf7bf0a732e38a275464a632757f1ef90006",
+          "bytes_documento": 12245,
+          "bytes_copiados": 12245,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md",
+            "C:/Users/Jhond/Github/iah-cli/05-prompt-inicio-sesion-fase-B.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": true
+        },
+        {
+          "declarado": "01-plan-maestro.md §2 (las filas del proveedor y D7)",
+          "documento": "01-plan-maestro.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "bytes_documento": 51507,
+          "bytes_copiados": 32410,
+          "calificador": "las filas del proveedor y D7",
+          "secciones_pedidas": [
+            "2",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "2",
+            "4"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Plan maestro — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Medición que justifica el plan (no suposición)",
+            "2. Matriz de decisión",
+            "3. Alcance y no-alcance",
+            "4. Criterios de aceptación",
+            "5. Única corrida y límites",
+            "6. Deuda con dueño y disparador",
+            "7. Nota final"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/01-plan-maestro.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "04-contrato-ejecucion.md (permisos y la regla de cero red)",
+          "documento": "04-contrato-ejecucion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "bytes_documento": 27364,
+          "bytes_copiados": 27364,
+          "calificador": "permisos y la regla de cero red",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/04-contrato-ejecucion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "00-lecciones-capitalizadas.md §2",
+          "documento": "00-lecciones-capitalizadas.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "bytes_documento": 49143,
+          "bytes_copiados": 14966,
+          "calificador": "",
+          "secciones_pedidas": [
+            "2"
+          ],
+          "secciones_resueltas": [
+            "2"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Lecciones Capitalizadas — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Consultas ejecutadas (literales, re-ejecutables)",
+            "2. Lecciones capitalizadas",
+            "3. Candidatos evaluados y descartados",
+            "4. Cobertura declarada de este documento",
+            "5. Balance de FASE-A (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "6. Balance de FASE-B (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "7. Balance de FASE-D (2026-09-24): qué se aplicó de verdad, lección por lección"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/00-lecciones-capitalizadas.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "dependencias-fases.md",
+          "documento": "dependencias-fases.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "bytes_documento": 47187,
+          "bytes_copiados": 47187,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/dependencias-fases.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "el workflow canónico",
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "clase": "workflow",
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 108017,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.agents/workflows/phased_project_executor.md"
+          ],
+          "motivo": "no se copia: lectura aparte obligatoria mientras D3 no lo rebane"
+        }
+      ]
+    },
+    {
+      "fase": "FASE-C",
+      "ruta_pack": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md",
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "no_incluye": [
+        "01-plan-maestro.md — 9879 bytes fuera de lo declarado (1, 4, 2)",
+        "00-lecciones-capitalizadas.md — 10426 bytes fuera de lo declarado (1, 2, 3, 4)",
+        "dependencias-fases.md — 40158 bytes fuera de lo declarado (Conciliacion)"
+      ],
+      "lectura_aparte_obligatoria": [
+        ".agents/workflows/phased_project_executor.md"
+      ],
+      "provenance": {
+        "head": "5817edd",
+        "generated_at": "2026-09-25T00:59:08Z",
+        "head_fuente": "git rev-parse --short HEAD"
+      },
+      "sources": [
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md",
+          "sha256": "ea361c4696797a9a36df482636378040e57c20797af5ec6efd1ef8fc37df0832",
+          "gobernada": false,
+          "documento": "05-prompt-inicio-sesion-fase-C.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "gobernada": true,
+          "documento": "01-plan-maestro.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "1",
+            "4",
+            "2"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4",
+            "2"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "gobernada": true,
+          "documento": "04-contrato-ejecucion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "gobernada": true,
+          "documento": "00-lecciones-capitalizadas.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "gobernada": true,
+          "documento": "dependencias-fases.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "Conciliacion"
+          ],
+          "secciones_resueltas": [
+            "Conciliacion"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        }
+      ],
+      "fuentes_completas": [
+        {
+          "declarado": "05-prompt-inicio-sesion-fase-C.md",
+          "documento": "05-prompt-inicio-sesion-fase-C.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "ea361c4696797a9a36df482636378040e57c20797af5ec6efd1ef8fc37df0832",
+          "bytes_documento": 27571,
+          "bytes_copiados": 27571,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md",
+            "C:/Users/Jhond/Github/iah-cli/05-prompt-inicio-sesion-fase-C.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": true
+        },
+        {
+          "declarado": "01-plan-maestro.md §1 (la medicion del grep con cero coincidencias)",
+          "documento": "01-plan-maestro.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "bytes_documento": 51507,
+          "bytes_copiados": 41628,
+          "calificador": "la medicion del grep con cero coincidencias",
+          "secciones_pedidas": [
+            "1",
+            "4",
+            "2"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4",
+            "2"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Plan maestro — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Medición que justifica el plan (no suposición)",
+            "2. Matriz de decisión",
+            "3. Alcance y no-alcance",
+            "4. Criterios de aceptación",
+            "5. Única corrida y límites",
+            "6. Deuda con dueño y disparador",
+            "7. Nota final"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/01-plan-maestro.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "04-contrato-ejecucion.md (permisos, regla de cero red y la seccion «Enmiendas prospectivas ya resueltas para FASE-C» E1-E5)",
+          "documento": "04-contrato-ejecucion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "bytes_documento": 27364,
+          "bytes_copiados": 27364,
+          "calificador": "permisos, regla de cero red y la seccion «Enmiendas prospectivas ya resueltas para FASE-C» E1-E5",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/04-contrato-ejecucion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "00-lecciones-capitalizadas.md §1-§4",
+          "documento": "00-lecciones-capitalizadas.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "bytes_documento": 49143,
+          "bytes_copiados": 38717,
+          "calificador": "",
+          "secciones_pedidas": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Lecciones Capitalizadas — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Consultas ejecutadas (literales, re-ejecutables)",
+            "2. Lecciones capitalizadas",
+            "3. Candidatos evaluados y descartados",
+            "4. Cobertura declarada de este documento",
+            "5. Balance de FASE-A (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "6. Balance de FASE-B (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "7. Balance de FASE-D (2026-09-24): qué se aplicó de verdad, lección por lección"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/00-lecciones-capitalizadas.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "dependencias-fases.md (su fila de C y la §Conciliacion)",
+          "documento": "dependencias-fases.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "bytes_documento": 47187,
+          "bytes_copiados": 7029,
+          "calificador": "su fila de C y la §Conciliacion",
+          "secciones_pedidas": [
+            "Conciliacion"
+          ],
+          "secciones_resueltas": [
+            "Conciliacion"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Dependencias y bloqueantes — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "Cadena",
+            "Qué debe heredar cada fase",
+            "Conflictos de archivo",
+            "Prerrequisitos y límites visibles",
+            "Deuda registrada (dueño y disparador, no silencio)",
+            "Bloque C de la orden de calidad (2026-09-24) — qué se concilió en este plan",
+            "Rutas ajenas en el árbol al commitear FASE-B (medido, no supuesto)",
+            "Conciliación con la remediación del bloque A — aceptación de S11 y S12 (2026-09-23)"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/dependencias-fases.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "el workflow canónico vigente",
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "clase": "workflow",
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 108017,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.agents/workflows/phased_project_executor.md"
+          ],
+          "motivo": "no se copia: lectura aparte obligatoria mientras D3 no lo rebane"
+        }
+      ]
+    },
+    {
+      "fase": "FASE-D",
+      "ruta_pack": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md",
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "no_incluye": [
+        "01-plan-maestro.md — 17023 bytes fuera de lo declarado (1, 4)",
+        "00-lecciones-capitalizadas.md — 34177 bytes fuera de lo declarado (2)"
+      ],
+      "lectura_aparte_obligatoria": [
+        ".agents/workflows/phased_project_executor.md"
+      ],
+      "provenance": {
+        "head": "5817edd",
+        "generated_at": "2026-09-25T00:59:08Z",
+        "head_fuente": "git rev-parse --short HEAD"
+      },
+      "sources": [
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md",
+          "sha256": "0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591",
+          "gobernada": false,
+          "documento": "05-prompt-inicio-sesion-fase-D.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "gobernada": true,
+          "documento": "01-plan-maestro.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "1",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "gobernada": true,
+          "documento": "04-contrato-ejecucion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "gobernada": true,
+          "documento": "00-lecciones-capitalizadas.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "2"
+          ],
+          "secciones_resueltas": [
+            "2"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "gobernada": true,
+          "documento": "dependencias-fases.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        }
+      ],
+      "fuentes_completas": [
+        {
+          "declarado": "05-prompt-inicio-sesion-fase-D.md",
+          "documento": "05-prompt-inicio-sesion-fase-D.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591",
+          "bytes_documento": 19703,
+          "bytes_copiados": 19703,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md",
+            "C:/Users/Jhond/Github/iah-cli/05-prompt-inicio-sesion-fase-D.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": true
+        },
+        {
+          "declarado": "01-plan-maestro.md §1 (medicion A7 y la nota de divisor de tokens)",
+          "documento": "01-plan-maestro.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "bytes_documento": 51507,
+          "bytes_copiados": 34484,
+          "calificador": "medicion A7 y la nota de divisor de tokens",
+          "secciones_pedidas": [
+            "1",
+            "4"
+          ],
+          "secciones_resueltas": [
+            "1",
+            "4"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Plan maestro — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Medición que justifica el plan (no suposición)",
+            "2. Matriz de decisión",
+            "3. Alcance y no-alcance",
+            "4. Criterios de aceptación",
+            "5. Única corrida y límites",
+            "6. Deuda con dueño y disparador",
+            "7. Nota final"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/01-plan-maestro.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "04-contrato-ejecucion.md",
+          "documento": "04-contrato-ejecucion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "bytes_documento": 27364,
+          "bytes_copiados": 27364,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/04-contrato-ejecucion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "00-lecciones-capitalizadas.md §2",
+          "documento": "00-lecciones-capitalizadas.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "bytes_documento": 49143,
+          "bytes_copiados": 14966,
+          "calificador": "",
+          "secciones_pedidas": [
+            "2"
+          ],
+          "secciones_resueltas": [
+            "2"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Lecciones Capitalizadas — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Consultas ejecutadas (literales, re-ejecutables)",
+            "2. Lecciones capitalizadas",
+            "3. Candidatos evaluados y descartados",
+            "4. Cobertura declarada de este documento",
+            "5. Balance de FASE-A (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "6. Balance de FASE-B (2026-09-21): qué se aplicó de verdad, lección por lección",
+            "7. Balance de FASE-D (2026-09-24): qué se aplicó de verdad, lección por lección"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/00-lecciones-capitalizadas.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "dependencias-fases.md (cadena y la regla de donde vive el pack generado)",
+          "documento": "dependencias-fases.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "bytes_documento": 47187,
+          "bytes_copiados": 47187,
+          "calificador": "cadena y la regla de donde vive el pack generado",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/dependencias-fases.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "el workflow canonical",
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "clase": "workflow",
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 108017,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.agents/workflows/phased_project_executor.md"
+          ],
+          "motivo": "no se copia: lectura aparte obligatoria mientras D3 no lo rebane"
+        }
+      ]
+    },
+    {
+      "fase": "FASE-RELEASE",
+      "ruta_pack": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md",
+      "estado": "SECCION-NO-RESUELTA",
+      "declaracion": "DECLARADA",
+      "no_incluye": [
+        "01-plan-maestro.md — 19801 bytes fuera de lo declarado (4, 6)",
+        "04-contrato-ejecucion.md — 21973 bytes fuera de lo declarado (Dos momentos del cierre, Carga total y frescura del pack, Orden del cierre)",
+        "los cuatro prompts de fase — declarado en prosa, sin ruta: queda por leer aparte",
+        "docs/CONTRIBUTING.md — declarada por el prompt pero vive fuera de `.opencode/`: se lee aparte para no ampliar la poblacion que escanea validate_opencode_refs.py"
+      ],
+      "lectura_aparte_obligatoria": [
+        ".agents/workflows/phased_project_executor.md",
+        "docs/CONTRIBUTING.md"
+      ],
+      "provenance": {
+        "head": "5817edd",
+        "generated_at": "2026-09-25T00:59:08Z",
+        "head_fuente": "git rev-parse --short HEAD"
+      },
+      "sources": [
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+          "sha256": "08817a01dc1325802e8d33f5ec69f743d4c820abd99396388a68dd454e5d26ab",
+          "gobernada": false,
+          "documento": "05-prompt-inicio-sesion-fase-RELEASE.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "gobernada": true,
+          "documento": "01-plan-maestro.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "4",
+            "6"
+          ],
+          "secciones_resueltas": [
+            "4",
+            "6"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "gobernada": true,
+          "documento": "04-contrato-ejecucion.md",
+          "en_pack": true,
+          "secciones_pedidas": [
+            "Dos momentos del cierre",
+            "Carga total y frescura del pack",
+            "Orden del cierre"
+          ],
+          "secciones_resueltas": [
+            "Dos momentos del cierre",
+            "Carga total y frescura del pack",
+            "Orden del cierre"
+          ],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "gobernada": true,
+          "documento": "00-lecciones-capitalizadas.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md",
+          "sha256": "55a2216ce54de928cd1a53019c39d869e890cceeed5e1a99884c76c8d65b3862",
+          "gobernada": true,
+          "documento": "06-checklist-implementacion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "gobernada": true,
+          "documento": "dependencias-fases.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+          "sha256": "c9583316cab145d5d689a93a8f7cc6d5f83e0728b7d7ac67feffd0c12acae1de",
+          "gobernada": true,
+          "documento": "10-analisis-post-implementacion.md",
+          "en_pack": true,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": null,
+          "sha256": null,
+          "gobernada": false,
+          "documento": "los cuatro prompts de fase",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [
+            "(el item no nombra un archivo)"
+          ]
+        },
+        {
+          "ruta": "docs/CONTRIBUTING.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": "docs/CONTRIBUTING.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        },
+        {
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "sha256": null,
+          "gobernada": false,
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "en_pack": false,
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": []
+        }
+      ],
+      "fuentes_completas": [
+        {
+          "declarado": "05-prompt-inicio-sesion-fase-RELEASE.md",
+          "documento": "05-prompt-inicio-sesion-fase-RELEASE.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "08817a01dc1325802e8d33f5ec69f743d4c820abd99396388a68dd454e5d26ab",
+          "bytes_documento": 19957,
+          "bytes_copiados": 19957,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+            "C:/Users/Jhond/Github/iah-cli/05-prompt-inicio-sesion-fase-RELEASE.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": true
+        },
+        {
+          "declarado": "01-plan-maestro.md §4",
+          "documento": "01-plan-maestro.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+          "bytes_documento": 51507,
+          "bytes_copiados": 31706,
+          "calificador": "",
+          "secciones_pedidas": [
+            "4",
+            "6"
+          ],
+          "secciones_resueltas": [
+            "4",
+            "6"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Plan maestro — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "1. Medición que justifica el plan (no suposición)",
+            "2. Matriz de decisión",
+            "3. Alcance y no-alcance",
+            "4. Criterios de aceptación",
+            "5. Única corrida y límites",
+            "6. Deuda con dueño y disparador",
+            "7. Nota final"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
+            "C:/Users/Jhond/Github/iah-cli/01-plan-maestro.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "04-contrato-ejecucion.md (§Dos momentos del cierre, §Carga total y frescura del pack y §Orden del cierre)",
+          "documento": "04-contrato-ejecucion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": false,
+          "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+          "bytes_documento": 27364,
+          "bytes_copiados": 5391,
+          "calificador": "§Dos momentos del cierre, §Carga total y frescura del pack y §Orden del cierre",
+          "secciones_pedidas": [
+            "Dos momentos del cierre",
+            "Carga total y frescura del pack",
+            "Orden del cierre"
+          ],
+          "secciones_resueltas": [
+            "Dos momentos del cierre",
+            "Carga total y frescura del pack",
+            "Orden del cierre"
+          ],
+          "secciones_no_resueltas": [],
+          "candidatos": [
+            "Contrato de ejecución — VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+            "Permisos de la sesión",
+            "Dos momentos del cierre (añadido por el bloque C de la orden de calidad §4.C)",
+            "Enmiendas prospectivas ya resueltas para FASE-C (registradas el 2026-09-23)",
+            "Dónde se escribe la evidencia (corregido en la auditoría del 2026-09-20)",
+            "Corte de presupuesto (R2.1)",
+            "Cierres incrementales obligatorios por fase",
+            "Reglas sobre el pack generado (FASE-D)",
+            "Carga total y frescura del pack (añadido por el bloque C de la orden de calidad §4.C)",
+            "Reglas de forma aplicadas a los artefactos de este plan",
+            "Orden del cierre (R2.5 / R2.10, no permutable)",
+            "⟦remoto⟧ — aceptación remota, autorización y presupuesto propios",
+            "⟦traslado⟧ — el archivado es un tercer momento, con autorización expresa",
+            "regenerar el pack con las rutas ya trasladadas, ANTES de verificarlo (§Carga total y frescura).",
+            "`--plan` nombra el plan **en su ruta vigente**: AC19 obliga a que el generador resuelva también",
+            "un plan bajo `Archives/`, porque este bloque lo llama después del `git mv`.",
+            "FASE-VERIFY: no aplica, con la razón medida"
+          ],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+            "C:/Users/Jhond/Github/iah-cli/04-contrato-ejecucion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "00-lecciones-capitalizadas.md completo",
+          "documento": "00-lecciones-capitalizadas.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "121921e1ebd0afeb25210aee836e0373830b269da869d4da3efc1b689e967934",
+          "bytes_documento": 49143,
+          "bytes_copiados": 49143,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md",
+            "C:/Users/Jhond/Github/iah-cli/00-lecciones-capitalizadas.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "06-checklist-implementacion.md",
+          "documento": "06-checklist-implementacion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "55a2216ce54de928cd1a53019c39d869e890cceeed5e1a99884c76c8d65b3862",
+          "bytes_documento": 42867,
+          "bytes_copiados": 42867,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md",
+            "C:/Users/Jhond/Github/iah-cli/06-checklist-implementacion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "dependencias-fases.md",
+          "documento": "dependencias-fases.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "8f8cf932b9e66ce360c4e491c26bc7642c938c517de3628b03df12b611dbca61",
+          "bytes_documento": 47187,
+          "bytes_copiados": 47187,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+            "C:/Users/Jhond/Github/iah-cli/dependencias-fases.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "10-analisis-post-implementacion.md",
+          "documento": "10-analisis-post-implementacion.md",
+          "clase": "archivo",
+          "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+          "existe": true,
+          "gobernada": true,
+          "en_pack": true,
+          "copia_documento_completo": true,
+          "sha256": "c9583316cab145d5d689a93a8f7cc6d5f83e0728b7d7ac67feffd0c12acae1de",
+          "bytes_documento": 74361,
+          "bytes_copiados": 74361,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+            "C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+            "C:/Users/Jhond/Github/iah-cli/10-analisis-post-implementacion.md"
+          ],
+          "motivo": null,
+          "es_prompt_propio": false
+        },
+        {
+          "declarado": "los cuatro prompts de fase",
+          "documento": "los cuatro prompts de fase",
+          "clase": "prosa",
+          "ruta": null,
+          "existe": false,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 0,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [
+            "(el item no nombra un archivo)"
+          ],
+          "candidatos": [],
+          "rutas_intentadas": [],
+          "motivo": "el prompt nombra un conjunto en prosa, no una ruta: no se adivina"
+        },
+        {
+          "declarado": "docs/CONTRIBUTING.md",
+          "documento": "docs/CONTRIBUTING.md",
+          "clase": "aparte",
+          "ruta": "docs/CONTRIBUTING.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 19763,
+          "bytes_copiados": 0,
+          "calificador": "",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "docs/CONTRIBUTING.md"
+          ],
+          "copia_documento_completo": false,
+          "motivo": "fuera de .opencode/: lectura aparte, no se copia"
+        },
+        {
+          "declarado": "el workflow canonical (FASE-RELEASE)",
+          "documento": ".agents/workflows/phased_project_executor.md",
+          "clase": "workflow",
+          "ruta": ".agents/workflows/phased_project_executor.md",
+          "existe": true,
+          "gobernada": false,
+          "en_pack": false,
+          "sha256": null,
+          "bytes_documento": 108017,
+          "bytes_copiados": 0,
+          "calificador": "FASE-RELEASE",
+          "secciones_pedidas": [],
+          "secciones_resueltas": [],
+          "secciones_no_resueltas": [],
+          "candidatos": [],
+          "rutas_intentadas": [
+            "C:/Users/Jhond/Github/iah-cli/.agents/workflows/phased_project_executor.md"
+          ],
+          "motivo": "no se copia: lectura aparte obligatoria mientras D3 no lo rebane"
+        }
+      ]
+    }
+  ],
+  "verificacion_check": [
+    {
+      "fase": "A",
+      "causa": null,
+      "incidencias": [],
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "fuentes": 4,
+      "sin_fuentes": false,
+      "procedencia_distinta": false,
+      "head_pack": "5817edd",
+      "head_arbol": "5817edd"
+    },
+    {
+      "fase": "B",
+      "causa": null,
+      "incidencias": [],
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "fuentes": 4,
+      "sin_fuentes": false,
+      "procedencia_distinta": false,
+      "head_pack": "5817edd",
+      "head_arbol": "5817edd"
+    },
+    {
+      "fase": "C",
+      "causa": null,
+      "incidencias": [],
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "fuentes": 4,
+      "sin_fuentes": false,
+      "procedencia_distinta": false,
+      "head_pack": "5817edd",
+      "head_arbol": "5817edd"
+    },
+    {
+      "fase": "D",
+      "causa": null,
+      "incidencias": [],
+      "estado": "COMPLETO",
+      "declaracion": "DECLARADA",
+      "fuentes": 4,
+      "sin_fuentes": false,
+      "procedencia_distinta": false,
+      "head_pack": "5817edd",
+      "head_arbol": "5817edd"
+    },
+    {
+      "fase": "RELEASE",
+      "causa": null,
+      "incidencias": [],
+      "estado": "SECCION-NO-RESUELTA",
+      "declaracion": "DECLARADA",
+      "fuentes": 6,
+      "sin_fuentes": false,
+      "procedencia_distinta": false,
+      "head_pack": "5817edd",
+      "head_arbol": "5817edd"
+    }
+  ],
+  "coverage_basis": {
+    "poblacion": "los 05-prompt-inicio-sesion-fase-*.md del plan nombrado por --plan; ningun otro archivo de plan se recorre",
+    "archivos_rastreados": 5,
+    "archivos_prompts": {
+      "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20": 5
+    },
+    "fuentes_declaradas": 34,
+    "secciones_pedidas": 23,
+    "secciones_resueltas": 23,
+    "secciones_no_resueltas": 0,
+    "recortes_declarados_en_el_pack": 1,
+    "packs_por_estado": {
+      "COMPLETO": 4,
+      "SECCION-NO-RESUELTA": 1,
+      "FUENTE-AUSENTE": 0
+    },
+    "packs_sin_declaracion_de_lectura": 0,
+    "no_emitidos_por_fuente_ausente": 0,
+    "familias_no_cubiertas": [
+      "el workflow canonico: se declara como lectura aparte, nunca se copia (AC17/D3)",
+      "el codigo de scripts/: no es lectura declarada por los prompts",
+      "la evidencia de otras fases (evidence/): no entra en el pack",
+      "los archivos que un prompt nombra en prosa sin ruta: se declaran, no se adivinan",
+      "las plantillas de documentacion dentro del workflow: ~un quinto de su volumen, propiedad de D3"
+    ],
+    "unidad_bytes": "stat -c %s <ruta>",
+    "divisor_tokens": 4,
+    "comando": "./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+    "medido_el": "2026-09-25T00:59:08Z"
+  }
+}

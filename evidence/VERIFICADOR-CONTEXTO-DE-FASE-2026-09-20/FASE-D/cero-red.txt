@@ -1,0 +1,44 @@
+# Cero red y cero proveedor de FASE-D — con instrumento, no con la palabra (L-VCF-10)
+# corrida: 2026-09-25T00:19:28Z
+
+## 1. El guard autouse de la seleccion DISPARA (sin esto, «cero red» no tendria detector)
+$ ./venv/Scripts/python.exe -m pytest tests/quality_gates/phase_briefing/test_briefing_cero_red.py -v -p no:cacheprovider
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 5 items
+
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_el_guard_de_red_dispara_dentro_de_la_seleccion PASSED [ 20%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_el_guard_tambien_corta_la_resolucion_de_nombres PASSED [ 40%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_la_superficie_de_imports_del_generador_esta_auditada PASSED [ 60%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_los_permisos_por_escritura_no_se_usan_para_llamar PASSED [ 80%]
+tests/quality_gates/phase_briefing/test_briefing_cero_red.py::test_cargar_el_generador_no_arrasta_clientes_a_sys_modules PASSED [100%]
+
+============================== 5 passed in 0.10s ==============================
+EXIT=0
+
+## 2. Superficie de imports del generador (AST sobre el archivo real, sin filtro)
+    importados: ['__future__', 'argparse', 'datetime', 'hashlib', 'json', 'pathlib', 're', 'subprocess', 'sys', 'unicodedata']
+    capaces de red presentes: subprocess, os (auditados en el punto 3); ningun socket/ssl/http/urllib/requests/httpx/aiohttp/websocket/smtplib/ftplib/xmlrpc/asyncio
+
+## 3. Unico subprocess del generador, auditado por AST (test_los_permisos_por_escritura_no_se_usan_para_llamar)
+136:        r = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=str(raiz),
+    destino: git rev-parse --short HEAD (procedencia, punto 4 del contrato AC21). No es un canal y no resuelve nombres de red.
+
+## 4. Cero proveedor: la puerta de decisiones no se toca
+$ grep -cE "decision_client|importlib" scripts/build_phase_briefing.py
+0
+$ grep -cE "IAH_PROVIDER|PROVEEDOR|api_key|API_KEY|OPENAI|ANTHROPIC" scripts/build_phase_briefing.py
+0
+    0 coincidencias de proveedor o credencial. La cifra NO se redondea desde 16: el patron ancho
+    «token» si da 16 coincidencias, y las 16 son «tokens estimados» por divisor 4 (lineas 6, 107,
+    108, 515, 552, 566, 618, 777, 778, 790, 803, 805, 806, 848, 880, 946), ninguna es credencial.
+    Se publica el residuo con su nombre y su linea, no un cero comodo (L-V2.3).
+
+## Salida
+cero red: VERIFICADO con detector que dispara (5 casos: socket, getaddrinfo, superficie AST,
+  auditoria de subprocess y diff de sys.modules al cargar el modulo) + cero proveedor con su
+  residuo de patron desglosado. D no importo el SDK y no instancio el proveedor falso de C.

@@ -1,0 +1,149 @@
+# Regresion de la familia quality_gates tras FASE-D â€” las SIETE corridas, con las tres rojas
+# Comando identico en todas:
+$ ./venv/Scripts/python.exe -m pytest tests/quality_gates -q -rs -p no:cacheprovider
+# escrita: 2026-09-25T01:07:59Z
+
+No se conserva solo el verde. Las siete corridas de esta fase, en orden, con su resultado y su
+atribucion medida:
+
+| # | resultado | arbol al correr | atribucion |
+|---|---|---|---|
+| 1 | 14 failed, 835 passed, 10 skipped, 26 errors, `exit 1` (88.20 s) | indice **vencido** por los 5 packs y los `.md` de cierre que la fase acababa de escribir | todos los rojos en `tests/quality_gates/lesson_relevance/` (la seleccion de **C**), con `SueloNoLeible: VENCIDO` en `triage_lesson_relevance.py:208`. C comprueba la frescura del indice **por su cuenta**, y el indice era el de C. **L-VCF-17** midiendose en el cierre: no es un defecto del codigo de D |
+| 2 | **875 passed, 10 skipped, `exit 0`** (107.36 s) | indice regenerado (`build_lesson_index.py`) y su `--check` verde | la cura es el orden del contrato: generar packs -> regenerar el par -> comprobar |
+| 3 | 13 failed, 842 passed, 10 skipped, 20 errors, `exit 1` (86.73 s) | **error de procedimiento**: esta sesion edito `09` y `README` (corpus del indice) mientras corria la seleccion | corrida **invalidada como medicion**, conservada con su numero. El patron es el de la memoria de la casa: correr el instrumento mientras se mueve su insumo |
+| 4 | **875 passed, 10 skipped, `exit 0`** (58.72 s) | arbol asentado | verde, pero la numeracion de la fase seguia escribiendose: no se tomo como referencia |
+| 5 | 4 failed, 858 passed, 10 skipped, 13 errors, `exit 1` (61.58 s) | otra edicion de corpus (`00` Â§7) **durante** la corrida | **rojo espurio y re-caido del mismo error**: es la segunda vez que la sesion se lo produce, y por eso la leccion se escribe (**L-VCF-17**, parrafo de la secuencia) |
+| 6 | **875 passed, 10 skipped, 10 warnings, `exit 0`** (59.81 s) | packs y par de indice regenerados tras el **ultimo** `.md`, `--check` de ambos en verde, y **cero escrituras durante la corrida** | **corrida de referencia del cierre** |
+| 7 | **875 passed, 10 skipped, 10 warnings, `exit 0`** (57.40 s) | confirmatoria, tras la ultima escritura de `09` y su regeneracion de indice | el conteo no se movio entre la 6 y la 7: la deriva era del indice, no del codigo |
+
+## Crudo de la corrida 6 (la de referencia)
+
+........................................................................ [  8%]
+........................................................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 32%]
+........................................................................ [ 40%]
+........................................................................ [ 48%]
+........................................................................ [ 56%]
+........................................................................ [ 65%]
+........................................................................ [ 73%]
+................................s....................................... [ 81%]
+.................................................sssssss................ [ 89%]
+.........................................ss............................. [ 97%]
+.....................                                                    [100%]
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] tests\quality_gates\test_publication_gates.py:1480: No asset_generation_report.json found in output/v4_complete/ — requires a v4complete run first
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:47: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:54: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:64: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:74: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:85: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:91: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:100: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:264: baseline ZIP SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:284: baseline dir SalentoReal no disponible
+875 passed, 10 skipped, 10 warnings in 59.81s
+EXIT=0
+
+## Crudo de la corrida 7 (confirmatoria)
+
+........................................................................ [  8%]
+........................................................................ [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 32%]
+........................................................................ [ 40%]
+........................................................................ [ 48%]
+........................................................................ [ 56%]
+........................................................................ [ 65%]
+........................................................................ [ 73%]
+................................s....................................... [ 81%]
+.................................................sssssss................ [ 89%]
+.........................................ss............................. [ 97%]
+.....................                                                    [100%]
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+875 passed, 10 skipped, 10 warnings in 57.40s
+EXIT=0
+
+## Los 10 saltos, declarados con su motivo (R2.6, impresos por -rs arriba)
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:47: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:54: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:64: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:74: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:85: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:91: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:100: baseline SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:264: baseline ZIP SalentoReal no disponible
+  SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:284: baseline dir SalentoReal no disponible
+  Binary file tmp_reg.txt matches
+
+## Seleccion propia de FASE-D en el mismo arbol (49 casos, exit 0; crudo en run_tests.txt)
+
+============================= 49 passed in 4.29s ==============================
+EXIT=0
+
+## Por que las tres rojas no se borran del registro
+Dos de ellas tienen la firma de `SueloNoLeible: VENCIDO`: no son fallos de FASE-D sino el
+instrumento de FASE-C funcionando, y son la evidencia de L-VCF-17 (un artefacto generado
+re-vence el indice del corpus donde cae). La tercera y la quinta son un error de esta sesion
+-correr la medicion mientras se edita su insumo- y se conservan con su numero para que nadie
+lea el cierre como si la secuencia hubiera sido limpia.
+## Salida: sin regresiones atribuibles a FASE-D.

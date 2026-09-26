@@ -1,0 +1,26 @@
+# PAR POST de AC16 - capturado sobre el ARBOL FINAL verificado de FASE-D
+fecha: 2026-09-25T00:43:56Z
+HEAD: 5817edd
+comandos:
+  grep -cE '^\s*print\(f?"\[[0-9]+/11\]' scripts/run_all_validations.py
+  grep -cE '^#   \[[0-9]+/[0-9]+\]' scripts/git_hooks/pre-commit
+  git status --porcelain .agents/
+  find .agents -name '*.md' -type f | sort | xargs sha256sum
+quick_checks_11: 11
+hook_pasos_7: 7
+agent_rutas_sucias_ajenas_a_la_fase: 3
+run_all_validations --quick: 11/11 con exit 0 (ver faseD_quick_post.txt)
+
+--- git status --porcelain .agents/ (POST: las mismas 3 rutas ajenas del PRE) ---
+ M .agents/workflows/phased_project_executor.md
+ M .agents/workflows/templates/lecciones-capitalizadas-template.md
+ M .agents/workflows/templates/prompt-fase-template.md
+
+--- sha256 de TODOS los .md bajo .agents/ (POST) ---
+46f32c164060e907e2150e4ba98d7d4c27457333717445592a7b4288bbbca0ab *.agents/workflows/README.md
+0933566d3cf6f05a1978bbc651257bfd2493902ad7e82a703f6b06ddc0e92e40 *.agents/workflows/phased_project_executor.md
+269df5c4e5c3fd2186d18d8ec0572d0244aebbe6042f2bbf75648e6777bb04c4 *.agents/workflows/templates/lecciones-capitalizadas-template.md
+f3d5d75d02ecda035a0fd5f40ca036140629dc9873cb4914be49cc2b775dde20 *.agents/workflows/templates/prompt-fase-template.md
+
+--- diff PRE vs POST de los cuatro sha256 (vacío = cero bytes aportados por la fase) ---
+(identicos)

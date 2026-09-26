@@ -1,0 +1,5 @@
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 6 fuentes frescas

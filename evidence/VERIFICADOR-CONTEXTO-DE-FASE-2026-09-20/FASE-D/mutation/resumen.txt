@@ -1,0 +1,11 @@
+AC23 — mutation check del guard que niega el truncamiento silencioso (FASE-D)
+simbolo mutado: build_phase_briefing.GUARD_NO_TRUNCAMIENTO_ACTIVO (leido por _declarar_recorte al escribir el pack)
+alcance del observador de escrituras: proceso actual (pytest): pathlib + builtins.open + os + shutil, incluidas rutas indirectas; NO cubre procesos hijos
+destino declarado por el cierre: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/mutation
+VERDE  (guard activo): estado=SECCION-NO-RESUELTA declara_el_recorte=True bytes=279306
+ROJO   (guard apagado): estado=SECCION-NO-RESUELTA declara_el_recorte=False bytes=278773
+lectura: apagado el guard, el pack de FASE-RELEASE conserva el estado SECCION-NO-RESUELTA
+  pero pierde el bloque que nombra la seccion pedida y las rutas intentadas — se achica
+  sin decirlo. Eso es lo que assertiona test_briefing_seccion_no_resuelta con el mismo
+  insumo, y por que el verde no es un verde por ausencia de oportunidad de recortar.
+

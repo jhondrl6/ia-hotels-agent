@@ -1,0 +1,15 @@
+# PAR POST (carga de lectura) — FASE-D, medido 2026-09-25T00:59:08Z
+# comando: stat -c %s <ruta>, una linea por fase-lectura; sin deduplicar (cada sesion abre su copia)
+# rutas: las publica carga.json en rutas_stat.after
+108017 .agents/workflows/phased_project_executor.md
+154349 .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+108017 .agents/workflows/phased_project_executor.md
+139279 .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+108017 .agents/workflows/phased_project_executor.md
+148987 .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+108017 .agents/workflows/phased_project_executor.md
+148811 .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+108017 .agents/workflows/phased_project_executor.md
+19763 docs/CONTRIBUTING.md
+279306 .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+SUMA 1430580

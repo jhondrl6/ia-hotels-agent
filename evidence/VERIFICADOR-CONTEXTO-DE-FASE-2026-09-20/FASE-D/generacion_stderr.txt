@@ -1,0 +1,14 @@
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: SECCION-NO-RESUELTA -> FASE-RELEASE.md
+    - los cuatro prompts de fase: el prompt nombra un conjunto en prosa, no una ruta: no se adivina | pedidas ['(el item no nombra un archivo)'] | rutas []
+[denominador] 5 packs · COMPLETO 4 · SECCION-NO-RESUELTA 1 · FUENTE-AUSENTE 0 · fuentes 34 · secciones pedidas 23, resueltas 23, declaradas no resueltas 1
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 6 fuentes frescas
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json
