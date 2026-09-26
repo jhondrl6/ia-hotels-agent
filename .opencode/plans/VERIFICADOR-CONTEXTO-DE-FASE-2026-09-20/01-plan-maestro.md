@@ -15,8 +15,17 @@ aquel no pudo cerrar.
 
 ## 1. Medición que justifica el plan (no suposición)
 
-Cuatro aserciones sobre cuántos checks corren están **hoy** vencidas respecto del código que
-las ejecuta. Medido en esta sesión con `grep -oE 'print\("\[[0-9]+/[0-9]+\]' scripts/run_all_validations.py`
+**Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido
+contractualmente por su propia matriz. El **bloque C** de esa orden quedó autorizado el 2026-09-24
+solo como enmiendas prospectivas sobre los documentos de los cuatro planes — **el piloto FASE-C de
+este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`
+**§13, única matriz vigente**; §1–§12 son antecedentes rectificados, no aceptación actual.
+Las mediciones A1–A8 y el contrato original de FASE-A se conservan como históricos; no certifican
+el árbol actual ni obligan a reproducir el rojo A1–A4 fuera de su contraejemplo congelado.
+
+Cuatro aserciones sobre cuántos checks corren estaban vencidas al concebir el plan respecto del código que
+las ejecutaba. Medido en aquella sesión con `grep -oE 'print\("\[[0-9]+/[0-9]+\]' scripts/run_all_validations.py`
 (fuente dinámica de verdad) contra lo que el workflow y el template afirman (texto estático).
 **La lectura útil de ese grep no es la lista de etiquetas: es a qué `def _check_*` pertenece cada
 una** — sin ese emparejamiento se confunde la del check de dependencias con la del write-back
@@ -120,7 +129,7 @@ de que sea cero.
 
 | Decisión | Resuelto | Base |
 |---|---|---|
-| **¿Se toca `run_all_validations.py` o el hook para añadir checks?** | **NO.** Ninguna fase de este plan altera el número de checks | `REFACTOR-WHATSAPP` está en vuelo y pinea la cifra. **Sitios medidos el 2026-09-20** (no es el prompt de FASE-C, como decía la primera versión de esta fila): el bloque de arranque de FASE-B de su `README.md` («El quick son 11 checks.»), `06-checklist-implementacion.md` («el modo rápido pasó de 10 a **11 checks** y da 11/11»), `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md`. Promover algo al set de 11 invalida la medición de fases ajenas. Y **`run_all_validations.py` no está libre**: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara dentro de su alcance (ver D10). Queda como deuda con disparador (§Deuda) |
+| **¿Se toca `run_all_validations.py` o el hook para añadir checks?** | **NO.** Ninguna fase de este plan altera el número de checks | `REFACTOR-WHATSAPP` está en vuelo y pinea la cifra. **Sitios medidos el 2026-09-20** (no es el prompt de FASE-C, como decía la primera versión de esta fila): el bloque de arranque de FASE-B de su `README.md` («El quick son 11 checks.»), `06-checklist-implementacion.md` («el modo rápido pasó de 10 a **11 checks** y da 11/11»), `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md`. Promover algo al set de 11 invalida la medición de fases ajenas. **⟦Re-medido el 2026-09-24 por el bloque C de la orden de calidad⟧**: el bloque de arranque de su `README.md` **ya no está en esa lista** —sus enmiendas lo sustituyeron por el comando que imprime la cifra—, y quienes la conservan (`06-`, `09-`, `10-`, su `dependencias-fases.md`, su prompt de FASE-G) son registros de fases cerradas. Eso **no debilita esta fila**: la razón de fondo sigue en pie, porque las mediciones ya publicadas son precisamente esas. Y **`run_all_validations.py` no está libre**: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara dentro de su alcance (ver D10). Queda como deuda con disparador (§Deuda) |
 | **¿Se edita `.agents/` para corregir A1–A4 a mano?** | **NO.** El verificador **reporta**, no reescribe | Quien corrige la frase a mano produce la fosilización siguiente (Q6: la cura es un writer o un verificador, no el edit). Precedente: `validate_plan_citations.py` reporta sin reescribir, decisión DA-HF3 |
 | **¿Arquitectura de los nuevos verificadores?** | Script **standalone** en `scripts/`, invocable suelto; el set de 11 queda intacto | Es el patrón de la casa: `[9/11]` y `[10/11]` son wrappers de 4 líneas que delegan a `validate_plan_citations.py` y `validate_lesson_capitalization.py` |
 | **¿Se construye un cliente HTTP propio del proveedor?** | **NO.** Costura neutra `decision_client.py` que resuelve al proveedor configurado; el SDK oficial o el adapter quedan detrás | **Origen declarado del dato:** el operador reportó el 2026-09-20 que el SDK del proveedor rompió compatibilidad dos veces en sus primeros nueve días de público (redefinió los criterios de una primitiva; migró de serializador). **No verificable desde este repo** — no hay registro ni changelog del SDK versionado aquí—, así que se cita como dato externo y la decisión no depende de él: nombrar la costura, no el proveedor, es la cura estructural tanto si el historial es de dos rupturas como de ninguna, y así añadir un proveedor nuevo después es **un** archivo |
@@ -132,7 +141,7 @@ de que sea cero.
 | **¿`confidence` es lo mismo que la probabilidad de sí? (⟦decidido el 2026-09-23, orden §4.C⟧)** | **NO.** La pregunta de pertinencia es `choice` de dos opciones, y el umbral de AC12 se aplica a `confidence` **nombrando el campo** en `basis` | Confirmado contra `scripts/decision_client.py`, no contra su docstring: `RespuestaEleccion` exige `confidence` y `RespuestaNoul` la trae en `None` con `confidence_motivo` —la primitiva no la expone—. Un umbral sobre `probabilidad_si` mediría otra cosa y cerraría AC12 con una métrica que el AC no describe |
 | **¿El JSON del índice puede leerse confiando en que `[6/7]` lo regeneró? (⟦decidido el 2026-09-23⟧)** | **NO. AC11 toma la ruta (b):** C consume el JSON **tras ejecutar ella misma** la comprobación de frescura | L-V2.2 (`PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`): un verificador no apoya su conclusión en el artefacto de otro gate. La ruta (a) (`build()` en memoria) habría **borrado** el estado `VENCIDO`; elegirla aquí sin decirlo dejaría un AC que pide tres estados sobre un diseño que solo produce dos. Coste aceptado: C es responsable de su suelo y mide dos lecturas por corrida |
 | **¿Una lección propuesta por el proveedor falso entra en §2 del `00-`? (⟦decidido el 2026-09-23⟧)** | **NO, no en automático.** Propuesta ≠ pertinente: exige **revisión humana explícita** y su aceptación o rechazo **registrada** con quién decidió | Lo que prueba el falso es la mecánica del camino, no la pertinencia. Auto-triarse con respuestas sintéticas y escribir el resultado en §2 fabricaría la evidencia que AC15 declara `NO-EJERCITADO`, y rechazar en silencio es la familia del filtro que la matriz ya descartó arriba (`VACUOUS_RECALL`). El rechazo también se publica: una fila no desaparece |
-| **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** hoy vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó **solo su bloque A**; su bloque B (proceso común: `AGENTS.md`, executor, plantilla, fecha de REGISTRY) y el C (enmiendas a los otros planes) están **PENDIENTES de autorización**. Ejecutarlos dentro de C sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
+| **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó su bloque A (conciliado, §5-ter) y su **bloque B, concluido contractualmente por su matriz §13, que es la única fuente de su estado**; el **bloque C** —estas enmiendas prospectivas— quedó autorizado el **2026-09-24** solo sobre los documentos de los cuatro planes, y el **piloto FASE-C sigue sin autorización**. Ejecutar una mejora de proceso dentro de la fase sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
 
 ## 3. Alcance y no-alcance
 
@@ -172,10 +181,10 @@ QMind.
 | AC15 | Denominador del triaje con términos usados, ceros incluidos y familias no juzgadas, **más la aceptabilidad que dispara D6** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` |
 | AC16 | El quick sigue en 11 checks y el hook en 7, en **todo** el plan | los cuatro `baseline-pre-post.md`, delta 0 |
 | AC17 | `.agents/` intocado en escritura y límites de cobertura declarados | `coverage.json` → `families_not_covered[]` + `git status` sobre `.agents/` |
-| AC18 | Capitalización, citas e índice verdes sobre los artefactos de este plan | salida de los tres verificadores, mismo commit |
-| AC19 | `build_phase_briefing.py` emite un pack por fase, **sin tocar `.agents/`**, declarando `no_incluye[]` y la lectura aparte obligatoria | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` |
-| AC20 | El delta de carga de lectura se mide con el **mismo comando** antes y después, bytes exactos y tokens con el divisor declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json` → `before`, `after`, `method` + par pre/post con la resta |
-| AC21 | Cada pack declara HEAD, fecha y sha por fuente; `--check` lo vence contra el árbol | ídem → `provenance` ; prueba re-editando una fuente y re-midiendo en disco |
+| AC18 | Capitalización, citas e índice verdes sobre los artefactos de este plan | salida de los tres verificadores sobre el mismo árbol final verificado (commit opcional posterior autorizado) |
+| **AC19** | `build_phase_briefing.py` emite un pack por fase, **sin tocar `.agents/`**, declarando `no_incluye[]` y la lectura aparte obligatoria; **resuelve un plan también en su ruta archivada** (⟦bloque C 2026-09-24⟧: sin eso, el `--check` posterior al `git mv` del RELEASE no es ejecutable) | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` |
+| AC20 | El **delta de carga total** de lectura se mide con el **mismo comando** antes y después, bytes exactos y tokens con el divisor declarado, contando **workflow obligatorio + coste de generar el pack + pack leído** (⟦bloque C 2026-09-24⟧ concatenar no es ahorrar) | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/carga.json` → `before`, `after`, `method` + par pre/post con la resta |
+| AC21 | Cada pack declara HEAD, fecha y sha por fuente; **la frescura la gobierna el sha de las fuentes relevantes, y HEAD es procedencia, no clave de caducidad** (⟦bloque C 2026-09-24⟧, para que el commit del propio generado no lo venza) | ídem → `provenance` ; prueba re-editando una fuente y re-midiendo en disco |
 | AC22 | Sección declarada y no resuelta es un estado propio: **prohibido emitir un pack más corto en silencio** | ídem → `status ∈ {COMPLETO, SECCION-NO-RESUELTA, FUENTE-AUSENTE}` + tres tests |
 | AC23 | Mutation check sobre el guard que impide el truncamiento silencioso | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/mutation/` con rojo y verde |
 
@@ -348,9 +357,30 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   reporta sobre las fases de **este** plan; la fila de `REFACTOR-WHATSAPP` se publica como
   referencia, no como objetivo. **Un delta cero o negativo es un resultado válido y se explica**: lo
   prohibido es afirmarlo sin medir.
+  - **⟦Carga total, añadida el 2026-09-24 por el bloque C de la orden §4.C, fila `CONTEXTO/D`⟧**
+  La resta de AC20 se saca entre **cargas totales**, no entre «bytes de las fuentes» y «bytes del
+  pack». Cada lado publica los tres sumandos definidos en el contrato (§Carga total y frescura del
+  pack): `workflow_obligatorio` (lo que la fase sigue leyendo aparte, con el workflow canónico a la
+  cabeza mientras D3 no lo rebane), `coste_de_generacion` (la corrida del generador que la sesión
+  ejecuta para obtener el pack) y `pack_consumido`. **Prohibido describir la concatenación como
+  ahorro**: unir N documentos no reduce la suma de sus bytes y puede subirla. Lo que AC20 puede
+  acreditar es cuánto deja de leerse porque **no** entró al pack, y eso solo se ve si se publica
+  también lo omitido (`no_incluye[]`). Si la carga total sube, el resultado es ese y se explica.
 - **AC21** — Cada pack declara `provenance` con `head`, `generated_at` y `sha256` por fuente;
   `--check` falla contra un árbol modificado. La prueba se hace **editando una fuente y re-midiendo
   en disco**, no leyendo el objeto en memoria (L-V2.3, R2.4).
+  - **⟦Frescura por entradas relevantes, añadida el 2026-09-24 (orden §4.C, fila `CONTEXTO/D`)⟧**
+  El predicado de caducidad es **el sha256 de cada fuente listada en `sources[]` contra el árbol
+  vigente**, con sus tres causas distinguibles (`FUENTE-AUSENTE` / sha distinto / fuente ilegible).
+  `head` identifica de qué árbol salió el pack; **no** es la llave de caducidad. Razón: el pack es un
+  generado versionado, de modo que si HEAD gobernara, el commit que lo guarda lo dejaría vencido en
+  el mismo commit — invalidación circular. Consecuencias probables y con test: HEAD distinto con
+  fuentes idénticas **no** produce `VENCIDO` (se informa como procedencia distinta); el pack no está
+  en su propio conjunto de fuentes; y mover una fuente sí lo vence.
+  - **⟦Traslado del plan, mismo bloque⟧** AC19 obliga al generador a resolver un plan **también bajo
+    `Archives/`**, porque el cierre del RELEASE regenera y verifica el pack **después** del `git mv`.
+    El rojo de un `--check` llamado sobre rutas ya movidas no se repara editando código: se repara
+    regenerando con la ruta vigente (§Orden del cierre del contrato).
 - **AC22** — Tres estados, ninguno colapsado: `COMPLETO`, `SECCION-NO-RESUELTA` (nombra la sección
   pedida y las rutas intentadas) y `FUENTE-AUSENTE` (ruta buscada). **Prohibido emitir un pack más
   corto en silencio**: el recorte no resuelto es un estado, no una reducción. Un `except` que devuelva
@@ -374,9 +404,10 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `docs/contributing/REGISTRY.md` con «check 8»/`[9/9]`/`[10/10]`/`10/10…14`—; pins de conteo en
   `tests/`; y toda fuente dinámica que no sea etiqueta impresa) y, para cada una, si queda como
   límite permanente o como trabajo de **D1**. Un `families_not_covered[]` genérico no cierra AC17.
-- **AC18** — Los artefactos del plan pasan, en el mismo commit que los escribe,
+- **AC18** — Los artefactos del plan pasan, sobre el mismo árbol final verificado,
   `validate_lesson_capitalization.py` (C1–C8), `validate_plan_citations.py` y
-  `build_lesson_index.py --check`. Ningún AC ni prompt cita `archivo:número` (R2.2).
+  `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
+  no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
 ## 5. Única corrida y límites
 
@@ -392,9 +423,9 @@ en silencio una restricción del plan.
 
 | # | Deuda | Dueño | Disparador |
 |---|---|---|---|
-| D1 | Corregir o retirar las aserciones A1–A4 en `.agents/` (eliminar la aserción del documento y dejar que el verificador la imprima es la opción que no se desfasa) | Este plan, FASE-RELEASE, **solo con instrucción literal del operador**: `.agents/` es configuración central | Verificador verde y decisión escrita sobre la forma de la corrección |
-| D2 | Promover `validate_governance_numbers.py` a un check adicional del `--quick`, renumerando de 11 a 12 y midiendo quién afirma el número (L-V2.3) | Plan propio, posterior | Sesión previa a `FASE-RELEASE` de `REFACTOR-WHATSAPP`: ya no hay fases en vuelo que pineen «11 checks» |
-| D3 | Rebanar el workflow canónico por fase (bajar la carga de lectura por sesión: **263.973 bytes ≈ 65.993 tokens** re-medidos el 2026-09-20 sobre la sesión de FASE-B de `REFACTOR-WHATSAPP`; la cifra de concepción era 254.010 y venció el mismo día — ver A7) | Plan propio, posterior | Mismo disparador; exige medir qué parte del documento consume cada fase. **Distinto de FASE-D**: el pack unifica lecturas, no recorta la fuente |
+| D1 | Corregir o retirar las aserciones A1–A4 en `.agents/` (eliminar la aserción del documento y dejar que el verificador la imprima es la opción que no se desfasa) | Este plan, FASE-RELEASE, **solo con instrucción literal del operador**: `.agents/` es configuración central | **Estado vigente: matriz §13 de la fuente única (§1); no se certifica aquí.** El disparador fue reformulado a verificador operativo con mutation check y decisión escrita del operador. **Antecedente retirado, no aceptación vigente:** «Verificador verde y decisión escrita sobre la forma de la corrección». **⟦El dictamen anterior decía EJECUTADA el 2026-09-23 por el bloque B de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, con instrucción literal del operador y ampliación expresa para tocar `lecciones-capitalizadas-template.md` (fuente de A4): las cuatro aserciones se retiraron desde su fuente, el árbol real sale `SIN-HALLAZGOS`, y A1–A4 quedaron como contraejemplo congelado con sus mutantes. El disparador circular («verificador verde») se reformuló en la fila D1 de `dependencias-fases.md` y se cumplió. Ver `dependencias-fases.md` §Ejecución del bloque B y la evidencia `…/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/`.⟧** |
+| D2 | Promover `validate_governance_numbers.py` a un check adicional del `--quick`, renumerando de 11 a 12 y midiendo quién afirma el número (L-V2.3) | Plan propio, posterior | Sesión previa a `FASE-RELEASE` de `REFACTOR-WHATSAPP`: ya no hay fases en vuelo que pineen «11 checks». **⟦Estado del disparador, bloque C de la orden de calidad, 2026-09-24: su rama literal se cumplió en parte** — las instrucciones prospectivas de ese plan ya no pinean la cifra, que ahora imprimen la corrida y `validate_governance_numbers.py` —, **pero D2 no queda abierta por eso.** Su otra mitad sigue viva: renumerar toca los pins del denominador que FASE-A dejó en `tests/` (fila S8 de `10-analisis`) y contradice AC16, que exige delta 0. Dueño y decisión intactos; ver la aclaración datada en la fila D2 de `dependencias-fases.md`⟧ |
+| D3 | Rebanar el workflow canónico por fase (bajar la carga de lectura por sesión: **263.973 bytes ≈ 65.993 tokens** re-medidos el 2026-09-20 sobre la sesión de FASE-B de `REFACTOR-WHATSAPP`; la cifra de concepción era 254.010 y venció el mismo día — ver A7) | Plan propio, posterior | Mismo disparador; exige medir qué parte del documento consume cada fase. **Distinto de FASE-D**: el pack unifica lecturas, no recorta la fuente. **⟦Adelanto parcial, no cierre (bloque B, 2026-09-23): los principios de proporcionalidad/reuso y los cinco cortes sin commit quedaron escritos como pautas del executor; el rebanado completo y su medición de carga siguen diferidos a este disparador, con el dueño original intacto («Plan propio, posterior»)⟧** |
 | D4 | Verificador de la resta del par pre/post (R2.7 sigue sin instrumento mecánico) | `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` §Deuda de proceso | Ya asignado antes que este plan; no se reasigna |
 | D5 | Instrumento que compruebe que `evidence/FASE-X/` contiene el par verde/rojo (R2.8) | `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` §Deuda de proceso | Mismo tramo que D4 |
 | **D6** | **Lint de contradicciones semánticas** entre los prompts de fase y el estado real del plan (`validate_plan_semantics.py`): fila que sigue llamando PENDIENTE a una fase cerrada, dos ACs incompatibles, instrucción de fase que choca con una regla del executor. Con falsos positivos medidos contra los 27 archivados | Plan propio, posterior — **mismo directorio si el disparador se cumple dentro de la vigencia de este plan** | **Condicionado al resultado de FASE-C**: que el triaje de pertinencia entregue candidatos que el Paso 0 no ancló, con la aceptabilidad medida (propuestos que resultaron pertinentes sobre el total propuestos) publicada en el informe. Si el triaje sale inaceptable, D6 **no** se activa: no se apila un segundo consumidor sobre una base que no funcionó |

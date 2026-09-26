@@ -1,14 +1,29 @@
 # FASE-C — Capa de pertinencia sobre el índice de lecciones (aditiva, nunca filtro)
 
-> **Estado de este prompt al 2026-09-23: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue
-> siendo la sesión siguiente y **no** se corrió al conciliar FASE-B. Contiene cuatro enmiendas
+> **Estado de este prompt al 2026-09-24: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue
+> siendo la sesión siguiente y **no** se corrió ni al conciliar FASE-B ni al redactar las enmiendas del
+> bloque C de la orden de calidad. Contiene cinco enmiendas
 > prospectivas ya resueltas por este plan (**E1–E5** en `04-contrato-ejecucion.md`, orden de calidad
 > §4.C, con autorización local del operador sobre CONTEXTO/C): la elección de fuente de **AC11 está
 > cerrada en la ruta (b)**, la pregunta binaria es **`choice` con `confidence` independiente**, las
 > propuestas del proveedor falso **no** entran en §2 sin **revisión humana registrada**, el tramo
 > semántico de **AC15** sigue `NO-EJERCITADO` con **D6 dormida**, y **C conserva el workflow canónico y
-> el proceso común vigentes** (los bloques B y C de la orden quedan **diferidos, no aplicados**). Donde
+> el proceso común vigentes**. ⟦Actualizado el 2026-09-24⟧ el **bloque B está concluido
+> contractualmente por su matriz §13** y el **bloque C de esa orden quedó autorizado solo como
+> enmiendas prospectivas sobre los documentos de los cuatro planes**; **el piloto FASE-C —es decir,
+> ejecutar este prompt— sigue sin autorización**. Fuente única de resultados y estados B/D1/S13:
+> `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`
+> **§13, única matriz vigente**; §1–§12 y los dictámenes anteriores quedan como antecedentes
+> rectificados, no aceptación actual. Evidencia de las enmiendas:
+> `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/`. Donde
 > una instrucción de este archivo contradiga ese párrafo, manda el párrafo y está mal conciliado: decirlo.
+>
+> **Reconfirmación contra el cliente real (2026-09-24, sin renegociar).** E1 y E2 se volvieron a
+> contrastar con `scripts/decision_client.py` y su forma sigue siendo la que asumen: `RespuestaEleccion`
+> exige `confidence` en su validación y `RespuestaNoul` la fija en `None` con la puerta **rechazando**
+> que un `noul` la reporte. Ninguna de las cinco enmiendas se mueve; lo que cambió en este bloque es lo
+> que la fila `CONTEXTO/D` y `CONTEXTO/RELEASE` pedían, no la forma de la pregunta ni el destino de las
+> propuestas.
 
 **ID**: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 / FASE-C
 **Objetivo**: escribir `scripts/triage_lesson_relevance.py`, la mitad que
@@ -194,9 +209,10 @@ de `acceptance`.)*
 1. `dependencias-fases.md` — FASE-C ✅ con fecha y notas.
 2. `README.md` — progreso y estado real de AC10–AC15.
 3. `06-checklist-implementacion.md` — casillas correspondientes.
-4. `09-documentacion-post-proyecto.md` — Secciones A, B, D, E.
-5. `10-analisis-post-implementacion.md` — fila de la fase, lecciones nuevas, métricas reales,
-   seguimientos, decisiones (incluida la de **no** dejar que el triaje filtre, y su alternativa rechazada).
+4. `09-documentacion-post-proyecto.md` — Secciones A, B, D (fuente de métricas con enlace a la evidencia), E.
+5. `10-analisis-post-implementacion.md` — fila de la fase, lecciones nuevas (o «sin lecciones nuevas»),
+   análisis del delta por referencia a `09` §D, sin transcribir cifras; seguimientos y decisiones
+   (incluida la de **no** dejar que el triaje filtre, y su alternativa rechazada).
 6. `00-lecciones-capitalizadas.md` — ⟦RESCRITO el 2026-09-23 por la orden §4.C / contrato E3; la
    versión anterior mandaba «aplicar los candidatos que el triaje proponga», y esa instrucción ya **no**
    está vigente⟧. **El triaje se corre sobre el `00-` de este propio plan y se publica, pero sus
@@ -245,7 +261,9 @@ de `acceptance`.)*
 - [ ] `validate_lesson_capitalization.py` sigue verde sobre `00-lecciones-capitalizadas.md` **después**
   de aplicar solo los candidatos **aceptados** (AC18).
 - [ ] `--quick` verde sin haber alterado su composición (AC16).
-- [ ] Post-ejecución completa e índice regenerado en el mismo commit.
+- [ ] Post-ejecución completa e índice regenerado y comprobado sobre el mismo árbol final verificado.
+      El commit es opcional, posterior y requiere autorización explícita; no condiciona ninguno de
+      los cinco cortes del proceso común.
 
 ## Restricciones
 
@@ -308,12 +326,21 @@ contradicciones sobre una base que nunca juzgo nada.
 Las propuestas del falso van a `a-revisar-humano` y **solo entran en §2 tras revision humana explicita,
 con su aceptacion o rechazo registrado** (fecha, motivo, quien decidio). El rechazo se publica; una fila
 no se borra.
-C conserva el workflow canonico y el proceso comun vigentes (E5): no apliques las mejoras generales de
-ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md. Sus bloques B y C estan **diferidos, no aplicados ni
-cerrados**. No renumeres checks: quick 11 y hook 7, delta 0 (AC16).
+C conserva el workflow canonico y el proceso comun vigentes (E5): el proceso comun que dejo el bloque B
+de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md, cuyo estado se lee en la matriz §13 de la fuente unica
+citada al inicio, no en los dictamenes retirados. No apliques dentro de la fase ninguna otra mejora
+general de esa orden: el bloque C de la orden autorizo enmendar documentos, no cambiar el gobierno del
+proceso. Este prompt no se autoriza a si mismo: si tu mandato no nombra explicitamente la ejecucion del
+piloto FASE-C, para y deja checkpoint. No renumeres checks: AC16 es delta
+0 contra el par pre/post que mide la propia fase, y el numero lo imprime la corrida.
 Cero red en serio: si necesitas llamar a un servicio real, para y deja checkpoint (es la deuda D7,
 fuera de este plan). No toques build_lesson_index.py, validate_lesson_capitalization.py,
 validate_governance_numbers.py, decision_client.py, .agents/, run_all_validations.py, el hook ni ningun
-plan vivo. Regenera el indice de lecciones en el mismo commit y registra la fase con
-log_phase_completion.py. Deja checkpoint si falta autorizacion.
+plan vivo. Regenera y comprueba el indice de lecciones sobre el mismo arbol final verificado y registra
+la fase con log_phase_completion.py. Los cinco cortes no requieren commit: es opcional, posterior y
+necesita autorizacion explicita. Deja checkpoint si falta autorizacion.
+Al cerrar, reconcilia la seccion §6 de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md por referencia: la
+casilla del piloto se cierra con la evidencia de esta fase (instrumento, unidad declarada y limites),
+y marca expresamente que ni los cuatro planes ni sus deudas externas (D2, D3 completa, D6, D7, S10)
+quedan terminados por haber corrido el piloto. No re-transcribas cifras: enlaza a 09 §D y a tu evidencia.
 ```
