@@ -196,9 +196,14 @@ Archivo: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-po
 cambia solo el dónde, y se consigna porque esa fila es la que hay que cerrar.
 
 Cura: editar un documento de fase cerrada → **fuera del mandato** de esta sesión (la orden prohíbe
-re-escribir expedientes y docs de fase cerrada). Queda como pendiente A3 con el dueño que ya tiene publicado
+re-escribir expedientes y docs de fase cerrada). ⟦Queda como pendiente A3 con el dueño que ya tiene publicado
 (authoría: conciliación 2026-09-25, trabajo sin commitear; declarado también en
-`04-nota-integridad-documental.txt`).
+`04-nota-integridad-documental.txt`).⟧ **A3 quedó cerrado el 2026-09-26**, cuando la sesión que sí trae
+mandato de corpus escribió el `⟧` que faltaba al cierre de esa fila 1, justo tras la palabra «falso». Medido
+esa vez sobre las dos revisiones con la pila que excluye código inline y `fence`: `6b02532` → 26 `⟦` / 25
+`⟧`, **1 abierto originado en la línea 167**; árbol vigente → 28 / 28, **0 abiertos y 0 huérfanos**. Sigue
+**sin commitear** (viaja en el commit (a) de esa sesión), así que un clon de `6b02532` todavía lee el
+anotador huérfano. Su par en el expediente: `15-curaciones-previas-B.txt`, ítem A3.
 
 **Integridad de la evidencia durante esta sesión:** `find evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
 -type f -newermt "2026-09-25 18:10"` devolvió **0 archivos** antes de escribir este documento. Ningún
@@ -229,8 +234,10 @@ dueños son los ya publicados por los documentos del plan; aquí no se asigna ni
   **4.564** con la sección reescrita entera, y `validate_agents_md.py` da **exit 0** (1,6 % frente a los
   4.638 items que mide su propio instrumento). Mandato literal del operador usado; no se tocó
   `.cursorrules`. Detalle en `15-curaciones-previas-B.txt`.
-- **A3:** el `⟦` sin cerrar en la fila 1 de «Decisiones de FASE-D» del `10-analisis…` (§6) → edición de doc
-  de fase cerrada, con su autoría publicada.
+- **A3:** ⟦el `⟦` sin cerrar en la fila 1 de «Decisiones de FASE-D» del `10-analisis…` (§6) → edición de doc
+  de fase cerrada, con su autoría publicada.⟧ **CERRADO el 2026-09-26** con el `⟧` que faltaba; medición en
+  su par `15-curaciones-previas-B.txt` (28/28 y pila en 0 sobre el árbol, 1 abierto sobre `6b02532`).
+  **Sin commitear al escribir esta nota**: viaja en el commit (a).
 - **A4:** residuo de cuota «tres observaciones» en `REFACTOR-WHATSAPP…/05-prompt-inicio-sesion-fase-G.md:52`
   (dueño y fila ya registrados en §4.C de la orden).
 

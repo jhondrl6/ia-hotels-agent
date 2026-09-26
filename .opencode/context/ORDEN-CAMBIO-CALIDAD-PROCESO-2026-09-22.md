@@ -464,8 +464,14 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
   una **calidad semántica real medida** — el piloto juzgó con proveedor falso y AC15 sigue
   `NO-EJERCITADO`; (3) que las **deudas** D2, D3 completa, D6, D7, S10, S14, S15, S16, **S17** y **S18**
   estén cerradas — las dos últimas nacen **de** este cierre, con dueño y disparador, y no se curaron;
+  ⟦**S15 salió de esa lista el 2026-09-26**: se curó en `scripts/build_lesson_index.py` con el corte
+  «último commit que tocó el documento», ratificado por el operador ese día; su estado vigente, sus cifras
+  re-medidas (11 de 339, de dos planes y no de uno) y el límite que la cura conserva viven en la fila S15 de
+  `10-analisis-post-implementacion.md` de CONTEXTO, que es su fuente única — esta orden no los re-transcribe⟧;
   ⟦**S17 y S18 se curaron después, en otra sesión con mandato propio (2026-09-25)**: siguen vivas D2, D3
-  completa, D6, D7, S10, S14, S15 y S16⟧;
+  completa, D6, D7, S10, S14, S15 y S16⟧ ⟦**tercera pasada sobre esa misma lista, 2026-09-26: de esas ocho
+  sigue viva todo menos S15**, que se curó en `scripts/build_lesson_index.py` con mandato de código del
+  operador; la enumeración anterior se conserva como se escribió, no se lima para que parezca conforme⟧;
   (4) que el trabajo esté **commiteado o publicado** — ver la tabla de cuatro momentos del encabezado.
   ⟦**Precisión del mismo 2026-09-25, causada por la propia ejecución del cierre**: esta casilla decía «a
   CONTEXTO le falta FASE-RELEASE». FASE-RELEASE se ejecutó y cerró **en su parte offline** ese día con la
@@ -487,14 +493,24 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
   «Firmas del cierre» de abajo⟧. ⟦**Vencido ese «ningún mandato» el mismo 2026-09-25**: llegó un mandato de
   código y la cura se hizo en una sesión aparte, con `README.md` autorizado además como destino de
   escritura. El cierre no se movió: firmó «declarar con dueño y no curar aquí»⟧.
-- **S14, S15 y S16 con su estado conciliado** (definiciones y dueño en `10-analisis-post-implementacion.md`
+- **S14, S15 y S16 con su estado conciliado** ⟦**nota de 2026-09-26 sobre este encabezado: de esas tres, S15
+  cerró curada en `scripts/build_lesson_index.py` con mandato de código del operador; S14 y S16 siguen como
+  se conciliaron aquí**⟧ (definiciones y dueño en `10-analisis-post-implementacion.md`
   y `dependencias-fases.md` de CONTEXTO; esta orden no los re-transcribe): **S14** sigue **abierta** y su
   disparador **no** se dio por satisfecho — se comprobó, leyendo el texto definitorio y la CLI real, que
   el `git mv` del cierre dentro del propio repositorio **no** lo dispara (no llama al triaje con rutas
   trasladadas), de modo que la nota que lo daba por «justo el caso del RELEASE» queda rectificada;
-  **S15** sigue **abierta** y su límite queda explícito: el verde local de `[6/7]` **no** certifica otro
+  ⟦**S15** sigue **abierta** y su límite queda explícito: el verde local de `[6/7]` **no** certifica otro
   checkout, y reparar el generador (`build_lesson_index.py`, fuente de la fecha) es **alcance técnico
-  separado** que ninguna fase de esta orden autoriza; **S16** sigue **abierta**, con dueño en
+  separado** que ninguna fase de esta orden autoriza⟧ — **ese «sigue abierta» y ese «alcance técnico
+  separado que ninguna fase autoriza» quedaron vencidos el 2026-09-26**: llegó el mandato de código del
+  operador, la rama `mtime` de `_plan_date` fue **retirada** (no rebajada) y la fecha sale del nombre del
+  plan, del último commit que tocó su documento, o del estado explícito `SIN-FUENTE`; el verde de `[6/7]` ya
+  no depende del reloj de la máquina que generó el par. **El límite que la cura conserva** — que el último
+  commit que tocó un archivo **no es** la fecha en que se escribió, y que un `git mv` masivo de
+  `.opencode/context/Historico/` colapsaría las dos fechas del tier 2 y dejaría el desempate en el nombre
+  del plan — con su dueño y su medición, viven en la fila S15 de la fuente única; no se re-transcriben aquí;
+  **S16** sigue **abierta**, con dueño en
   `.agents/workflows/templates/prompt-fase-template.md` y disparador «la próxima vez que un mandato
   autorice editar el template».
 

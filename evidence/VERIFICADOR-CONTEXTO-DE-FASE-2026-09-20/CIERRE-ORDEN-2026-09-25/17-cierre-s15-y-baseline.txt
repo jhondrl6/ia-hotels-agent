@@ -1,0 +1,272 @@
+17 - CIERRE DE SESIÓN 2026-09-26: S15 en el registro, lo que su publicación venció, y la baseline
+ ================================================================================================
+
+Sesión ejecutada en `C:/Users/Jhond/Github/iah-cli` sobre HEAD `6b02532`. Las seis tareas del mandato, y
+ninguna otra. Todo lo numérico de este archivo fue medido en esta sesión; cuando tomo una cifra de otra
+sesión lo digo en la misma línea.
+
+Pre-flight (lectura, sin escribir):
+- `git fetch origin --quiet`
+- `git rev-list --left-right --count origin/master...HEAD` → `0 0`
+- `git rev-parse --short HEAD` → `6b02532`
+- `git status --porcelain | wc -l` → `13`, y las 13 rutas eran exactamente las de los dos commits del
+  mandato: 9 del commit (a) + 4 del (b). No hubo otra sesión tocando el árbol.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+1) CIERRE DEL REGISTRO S15 — nueve sitios anotados
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Sitios (leídos antes de escribir; los números los dio la sesión del 2026-09-26 y se movieron):
+1. `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md` fila 115
+   (la fila S15: estado vigente, divergencia del corte, límite conservado, cifras corregidas, prueba).
+2. mismo archivo, la obligación de la cola que enunciaba «sigue vigente el límite de **S15**» (línea 224
+   al leer; quedó desplazada por la fila 115, que sigue siendo una sola línea).
+3. mismo archivo, la viñeta «Sin promociones» con su enumeración D2/D3/D7/S10/S14/S15/S16 (línea 379).
+4. `README.md` del plan, fila «Índice de lecciones — D añadió corpus al índice y eso lo vence» (línea 251).
+5. `05-prompt-inicio-sesion-fase-RELEASE.md`, punto 7 «S15 declarado, no absorbido» (líneas 267-269).
+6-9. `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` líneas 465, 468, 490 y 495.
+
+En los nueve el texto original quedó conservado como antecedente con `⟦…⟧`; nada se borró ni se reescribió
+para parecer conforme. Dos enmiendas quedaron escritas como notas fechadas y no como reescritura: la
+fila S15 registra que el plan prescribía «fuente declarada en el documento» y que la cura usa el commit
+(ratificado por el operador el 2026-09-26), con la razón medida.
+
+Trampa evitada: la línea 90 del mismo `10-` es la fila **L-VCF-15**, que menciona a S15 y trae la misma
+frase de «9 de las 335 entradas»; un grep del literal `S15` la caza y fabrica un décimo sitio. No se tocó.
+**Y se declara**: esa línea sigue publicando la cifra refutada (9 de 335) porque el mandato cerró el barrido
+a nueve sitios. Su dueño es la próxima pasada sobre `L-VCF-15`, no esta sesión.
+
+Mediciones propias que entraron en la fila 115 (instrumento: el generador **de `6b02532`** extraído con
+`git show` a `temp/old_build_lesson_index_s15.py` y corrido con `--out-dir temp/s15-old-index`, sobre el
+árbol vigente; el par publicado no se tocó):
+- total de entradas: **339**; con `fuente_fecha = "mtime"`: **11** — `context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL` **9**,
+  `context/CONTEXT-DT-3-TECH-DEBT-POST-DT2` **2**. Los dos archivos viven bajo `.opencode/context/Historico/` y el
+  índice etiqueta a los dueños por **stem** (`_sources` construye `context/{p.stem}`), por eso la carpeta no
+  aparecía en la medición del 2026-09-24, que habló de 9 entradas de un solo archivo.
+- con la cura, esos mismos 11 salen `fuente_fecha = "commit"`: `git log -1 --format=%aI` → DT-2
+  `2026-07-26T09:38:42-05:00`, DT-3 `2026-08-29T09:03:33-05:00`. El orden que daba el `mtime`
+  (`2026-07-24` / `2026-08-29`) se conserva.
+- cobertura con la cura: `nombre 328 / commit 11 / SIN-FUENTE 0`.
+- alternativa medida y descartada: `git log --diff-filter=A --format=%aI` da `2026-07-26T09:38:42-05:00` para
+  **los dos** (DT-3 se creó en el mismo commit que DT-2), así que la fecha dejaría de distinguirlos y el
+  dueño quedaría solo en el desempate por nombre.
+- los 11 ids del tier 2 son `S-1`…`S-11`.
+- ancla del control negativo verificada: `git show 6b02532:scripts/build_lesson_index.py`, línea 112 es
+  `mtimes = [f.stat().st_mtime for f in files]` (el test la cita así).
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+2) EL ANOTADOR SIN CERRAR QUE SÍ LO ES — `09-documentacion-post-proyecto.md`
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Antes: crudo `⟦`=9 / `⟧`=8; pila (excluyendo código inline) = **1 abierto, originado en la línea 137**,
+0 cierres huérfanos. La apertura está en la columna 1089 (1-based) y la línea tiene 30 backticks (pares),
+así que no era artefacto del instrumento. Se cerró al final de esa celda, antes del `|`.
+Después: 9 / 9, pila 0 abiertos / 0 huérfanos, `git diff --numstat` = **1/1** (no se re-codificó el archivo).
+
+Declaración pedida — **ningún verificador corta ese balance**:
+- `grep -rlP "\x{27E6}" scripts tests` → vacío, `EXIT=1`
+- `grep -rlP "\x{27E7}" scripts tests` → vacío, `EXIT=1`
+- población medida con `find scripts tests -type f | wc -l` = **1182** (434 trackeadas por git + 747 `.pyc`
+  de `__pycache__` + 1 test sin commitear). El antecedente de la sesión del 2026-09-26 dijo 1179; la
+  diferencia es bytecode de corridas, no fuentes.
+- control positivo: `grep -rlP "\x{27E6}" .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` → **16 archivos**
+  (los once del plan más `README.md`, `dependencias-fases.md` y los packs `FASE-A/B/C/D/RELEASE`).
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+3) HIGIENE DE BACKTICS — `REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md`
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Crudo del archivo: 2 `⟦` / 2 `⟧` (balanceado). La fila «Cierre documental central» (línea 77, len 1489)
+traía **25 backticks** (impares) y su pila daba **1 anotador abierto** — el falso positivo que la sesión
+anterior reportó como «anotador sin cerrar».
+
+El delimitador suelto está en la **columna 1192**: el ` `` ` que sigue a `solo en RELEASE` en
+`**verificar con \`--context\` solo en RELEASE\`;`**. No estaba al final de la línea, como sugería la lectura
+rápida del síntoma.
+
+Las dos curas posibles se midieron antes de elegir (script `temp/t77_alternativas.py`, sobre la fila anclada
+por contenido y con guarda de sha):
+- **borrar el backtick de la 1192** → 24 backticks (pares), span de código más largo 25 caracteres,
+  0 anotadores abiertos, 0 huérfanos, y las negritas de la fila quedan **14 marcas, 0 sueltas**. ✔ aplicada.
+- convertirlo en `**` (cerrar la negrita que ese tramo parecía pedir) → 24 backticks ✔ pero **15 marcas de
+  negrita con 1 suelta** ✘. Descartada por medida: no es un `**` perdido, es un ` `` ` de más. El contraste
+  está en la misma fila, celda 3: `**verificar** (\`--context\`) solo en RELEASE;` sin backtick.
+Después: numstat **1/1**, sha del archivo `715b23762782…`, y ninguna línea del archivo queda con backticks
+impares salvo las dos de `fence` legítimas (línea 9 ```` ```text ```` y línea 20 ```` ``` ````).
+
+Nota de instrumento (para no volver a pagarla): mis dos primeras pasadas sobre este archivo leyeron **otra
+línea** — reportaron 35.676 B y 27 backticks para un archivo de 25.791 B con 25, y una tercera medición
+dijo que la línea 77 estaba limpia. La causa no fue un árbol móvil (el archivo está intacto respecto de
+`377b7f4`: `git show` y disco casan por sha) sino contar líneas con `splitlines()`, que parte también en
+`\x0b`, `\x0c`, `\u2028`, etc. Desde ahí todas las mediciones de este archivo se anclaron **por contenido**
+(«Cierre documental central»), con `split("\n")` y aserción de sha256 en la propia corrida.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+4) LO QUE LA PUBLICACIÓN VENCÓ
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+**A3 cerrado el 2026-09-26**, anotado como antecedente fechado en tres lugares (lea antes, las líneas se
+habían movido: 116→116, 189→199 y 232→232):
+- `15-curaciones-previas-B.txt` (ítem «Sigue A3» y, en la misma nota, la enumeración «Siguen pendientes …
+  S15, …»): A3 cerrado y **S15 retirado de esa lista de pendientes**.
+- `13-cierre-de-sesion.txt` §7 (el párrafo «Cura: … Queda como pendiente A3 …») y su lista de pendientes
+  (el bullet **A3**).
+Medición con la que se afirma (pila de marcadores excluyendo código inline y bloques `fence`, sobre
+`git show HEAD:<ruta>` y sobre el disco del mismo archivo):
+- HEAD `6b02532` → `⟦`=26 / `⟧`=25, **1 abierto originado en la línea 167**, 0 huérfanos.
+- árbol vigente → 28 / 28, **0 abiertos y 0 huérfanos**. Los cuatro marcadores extra son las notas datadas
+  de la tarea 1 (dos pares) y el cierre (un `U+27E7`).
+- La cura de A3 es el `U+27E7` escrito tras la palabra «falso» en esa fila 1 de «Decisiones de FASE-D»; llegó con
+  el **1/1** que el archivo ya traía sucio al pre-flight, no con esta sesión. Su autoría es de la sesión del
+  2026-09-26 que sí trae mandato de corpus.
+- Estado: **sin commitear**. Viaja en el commit (a); hasta ese commit cualquier clon de `6b02532` sigue
+  leyendo el anotador abierto (`U+27E6`) huérfano. Lo que el cierre no toca: el texto decisional de la fila.
+  **Nota sobre los marcadores de este archivo**: los `⟦`/`⟧` que aparecen entre backticks son **menciones**
+  del carácter (para poder decir «26 aperturas / 25 cierres»), no anotaciones de antecedente; donde hacía
+  falta nombrar uno solo se escribió `U+27E6` o `U+27E7`, para que un barrido por el literal no lea en este
+  expediente un anotador sin cerrar. Medido en este archivo: 5 `U+27E6` y 5 `U+27E7`, con las tres líneas que
+  mencionaban un marcador suelto ya convertidas a nombre.
+
+**Segunda variante refutada del sha del manifiesto**, registrada en `16-archivo-de-evidencia.txt`:
+- medido y publicado en ese expediente (línea 51) con tres instrumentos idénticos (`hashlib`, `sha256sum`,
+  `Get-FileHash`): `486d95a87ba9e0eecb20e4c22e3bd6fda888b560de2cf385afe4735ee1a69357`, 409.302 B,
+  1.833 filas de datos (1.834 líneas no vacías).
+- variante 1 (mandato del 2026-09-26): `…afe473`**`9`**`ee…` — ya estaba refutada en el expediente.
+- variante 2 (lista de pendientes del mismo día): `…afe473`**`7`**`…` — se registra aquí como refutada.
+  **Ninguna de las dos se escribe como hecho**; el único valor publicado es el medido. El tamaño y la
+  población sí casan en ambas citas, así que el desvío es de la transcripción del hash, no del archivo.
+- **Esta sesión no re-midió el manifiesto**: el archivador vive fuera del workspace
+  (`C:/Users/Jhond/Github/iah-evidence-archive/2026-09-26-puerta-c/`) y la lectura de esa ruta fue negada por
+  el clasificador de permisos. La nota lo declara en el propio expediente en vez de citar de memoria.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+5) COLA CANÓNICA Y BASELINE
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Cola después de la última escritura de corpus (tareas 1-4), en serie y en este orden:
+1. writers: ninguno aplicado — no hubo cambio de versión ni cierre de fase, así que `sync_versions.py` y
+   `log_phase_completion.py` no correspondían. Se declara, no se omite en silencio.
+2. packs: `scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --carga - --informe -`
+   → `EXIT=0`, y el propio aviso de no escribir: «[aviso] no se escribió ningún archivo: pase una ruta para
+   publicar el artefacto». Las banderas `-` son la regla S12: publicar `carga.json` con la clave por defecto
+   pisaría evidencia cerrada de FASE-D.
+3. par del índice: `scripts/build_lesson_index.py` → `[OK] 339 IDs definidos + 51 sin definición
+   (16 análisis, 422 .md citados)` y `[fechas] nombre=328 commit=11 sin_fuente=0`.
+4. los dos `--check`: `build_lesson_index.py --check` → `[OK] Índice de lecciones fresco (339 IDs)` +
+   `[fechas] nombre=328 commit=11 sin_fuente=0`, `EXIT=0`. `build_phase_briefing.py --plan … --check
+   --informe - --carga -` → `[OK] FASE-A/B/C/D: 4 fuentes frescas` y `[OK] FASE-RELEASE: 10 fuentes frescas`,
+   `EXIT=0`.
+5. `scripts/run_all_validations.py --quick` → **11/11**, `EXIT=0`. Entre ellos: `[9/11] Plan Citations:
+   743 citas históricas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)` y `[11/11] Wiring: 183
+   llamadas descubiertas en 1355 archivos | violaciones 0 | receptores no resueltos 30`. Las cifras de
+   carga/tamaño de pack **no** se transcriben aquí: el documento que las copiara sería medido por el propio
+   instrumento que las publica (L-VCF-19), así que quedan en `carga.json` y en el.stdout de la corrida.
+
+**Baseline** (corrida volcada a `temp/suite-post-s15.txt` con el `EXIT=1` escrito **dentro** del archivo, no
+del pipe; **el auxiliar ya no está en disco**: el mandato manda borrar los auxiliares propios de `temp/` al
+terminar, así que el crudo que se conserva es el de este expediente, y lo que no cabe aquí se re-corre con el
+comando de arriba):
+`4 failed, 4594 passed, 41 skipped, 4 xfailed, 230 warnings in 274.12s (0:04:34)`
+- Contra el antecedente declarado (`4 failed, 4590 passed`): delta **+4 passed** y **mismos 4 rojos**. Los
+  cuatro son los de S15, re-medidos en el árbol: `pytest tests/test_build_lesson_index_s15_fecha_versionada.py`
+  → `4 passed in 12.59s`. No suman rojo.
+- Atribución de cada rojo contra un clon (`git -c core.autocrlf=input -c core.longpaths=true clone --local
+  --no-checkout . temp/clon-atribucion`, materializado con `git checkout HEAD -- <top-level sin .opencode/.qoder>`;
+  HEAD del clon `6b02532`):
+  1. `tests/test_diagnostic_geo_metrics.py::…::test_diagnostic_includes_geo_metrics` → **FAILED también en el
+     clon** → preexistente, ajeno a esta sesión.
+  2. `tests/test_validate_lesson_capitalization.py::…[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]` →
+     **FAILED también en el clon** → preexistente (el plan archivado).
+  3. `tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion` →
+     **PASSED en el clon**. Su crudo en el árbol nombra la población:
+     `tmp_test/venv-jev-sdk/Lib/site-packages/pydantic/v1/fields.py:989 ('field')`, `:1147 ('sub_field')` y
+     `…/v1/main.py:1097 ('field')` → contaminación de un venv sin rastrear dentro del árbol, no código.
+     Preexistente respecto de esta sesión: `git status --porcelain modules config data data_models enums
+     pytest.ini` = **0** rutas.
+  4. `tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags`
+     → **PASSED en el clon** (selección de los cuatro), **PASSED 3 de 3** aislado en el árbol, **36/36 PASSED**
+     al correr su archivo entero, y **FAILED** solo dentro de la suite completa (`assert result.monthly_price_cop
+     == 2_500_000`). Es un rojo dependiente del orden de la corrida, no de esta sesión: ningún archivo de su
+     cadena (`modules/`, `config/pricing.yaml`, `data/`, `data_models/`, `enums/`, `pytest.ini`) está sucio.
+- **Y se declara el instrumento que NO sirvió**: la suite **completa** corrida dentro del clon no es baseline.
+  Dio `19 failed, 4537 passed, 44 skipped, 4 xfailed, 35 errors in 213.08s` porque la materialización es
+  parcial y el entorno del clon no trae lo que ciertos tests piden (el crudo de los errores muestra
+  `FileNotFoundError: [WinError 2]` y `shell not found: neither %ComSpec% nor %SystemRoot% is set` en
+  `tests/quality_gates/lesson_relevance/`, 26 de los 35 errores). Sirve para atribuir por selección, no para
+  publicar un total. No lo uso como cifra.
+- La selección de los cuatro se corrió en el clon como `2 failed, 2 passed` — esos dos fallados son los
+  puntos 1 y 2 de la lista.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+6) PUBLICACIÓN — estado al cerrar este archivo
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+**Ejecutada con la decisión del operador del 2026-09-26 («Opción C, un commit a la vez»): tres commits,
+las dos listas del mandato intactas y lo que ninguna cubría en el tercero.**
+
+- **(a) `970fa7d`** — 9 archivos, `312(+) 72(-)`, hook `7/7 OK`. Verificado en su propio árbol y no en el
+  de trabajo: `git show HEAD:…/10-analisis-post-implementacion.md`, línea 115, empieza por
+  `| S15 | **ESTADO VIGENTE 2026-09-26 — ✅ CERRADA…**`, así que la fila cerrada viaja.
+- **(b) `911f8d7`** — 4 archivos, `439(+) 42(-)`, hook `7/7 OK`. El control negativo quedó anclado a la
+  revisión publicada (`tests/test_build_lesson_index_s15_fecha_versionada.py:41`,
+  `REV_CONTROL_DEFECTUOSO = "6b02532"`) y no a HEAD; re-corridos los cuatro tests **con la cura ya
+  commiteada** → `4 passed in 15.29s`, que es lo que prueba que el anclaje no se quedó sin rojo.
+
+**Descuadre que el mandato no cierra y que se frena antes de commitear:** las rutas de (a) y (b) suman 13,
+que son exactamente las 13 del pre-flight — es decir, el trabajo de la sesión anterior. Las escrituras que
+**esta** orden manda en las tareas 1 a 4 caen en **7 rutas que no están en ninguna de las dos listas**, más
+este archivo:
+- (a-no-listadas) `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md` (sitio 4)
+- `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md` (sitio 5)
+- `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md` (tarea 2)
+- `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md` (tarea 3)
+- `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` (sitios 6-9)
+- `evidence/…/CIERRE-ORDEN-2026-09-25/13-cierre-de-sesion.txt` y `…/15-curaciones-previas-B.txt` (tarea 4)
+- `evidence/…/CIERRE-ORDEN-2026-09-25/17-cierre-s15-y-baseline.txt` (este archivo)
+Si solo se stagean las 13 rutas del mandato, el árbol queda con siete escrituras de registro **sin
+commitear** y la fila S15 diría «cerrada» en una ruta que no viaja. No se amplía la lista por iniciativa del
+agente: se pidió decisión al operador (viajan en (a) / commit aparte / se dejan sin commitear).
+⟦**Decidido el 2026-09-26 por el operador: Opción C, tres commits, uno por uno.** Ninguna de las tres
+salidas propuestas era exacta: las ocho rutas van en un **tercer** commit, lo que deja las dos listas del
+mandato sin tocar y las publica. La medición de la prueba del (b), más abajo, le dio la razón al
+diagnóstico de este párrafo: con solo (a)+(b) el HEAD publicado **fallaba su propio `--check`** por la
+18.ª cita de `L-VCF-17`, que vive en `README.md`.⟧
+
+**La prueba del (b), y el método del mandato refutado por medida.** El mandato pedía extraer
+`git archive HEAD` a un directorio limpio y correr ahí `build_lesson_index.py --check`. Corrido así da
+`[FAIL]` con `[fechas] nombre=328 commit=0 sin_fuente=11` y `EXIT=1` **incluso con la cura puesta**:
+`_git_fecha` devuelve `None` para un documento sin repositorio — el propio docstring de
+`scripts/build_lesson_index.py:131` enumera «un árbol extraído» entre los casos —, así que las once fechas
+pasan a `SIN-FUENTE` por diseño y no por defecto. Ese método no distingue la cura del rojo: se sustituye
+por un clon, que es lo único que trae historial.
+
+**Trampa del clon, medida antes de fiar el verde.** `git clone -c core.longpaths=true` no deja la opción
+registrada en el repositorio clonado, y el `checkout` sin ella aborta en
+`.opencode/.qoder/repowiki/…` con `Filename too long` **materializando 519 de 6.106 archivos**. Un `--check`
+corrido sobre ese árbol parcial no significa nada. Con `git config core.longpaths true` dentro del clon,
+`checkout HEAD -- scripts .opencode` queda completo: 564 rutas esperadas, 564 presentes. (Dos archivos de
+`context/Historico/` parecían faltar y eran las comillas de `core.quotepath` en `git ls-files`; resuelto
+mediando `-z`.)
+
+**Diferencial en el mismo clon, con mtimes forzadas** (383 archivos `.md`/`.json`/`.py` tocados a 12:50 y
+a 12:55, o sea relojes más nuevos que cualquier commit):
+- **HEAD puro `911f8d7`** → `[FAIL]` / `EXIT=1`, pero con `commit=11 sin_fuente=0`. **La fecha ya no es el
+  defecto**: el rojo es de frescura y quedó atribuido. Las citas de `L-VCF-17` por archivo en el árbol de
+  trabajo: `00-lecciones-capitalizadas.md` 1, `05-prompt-inicio-sesion-fase-RELEASE.md` 3,
+  `10-analisis-post-implementacion.md` 5, `briefing/FASE-RELEASE.md` 9, `README.md` 1. En HEAD `git grep`
+  marca las cuatro primeras y deja fuera el `README.md`, que es una de las ocho rutas sin commitear;
+  `git diff -U0` señala el `+` que la añade. Y el hook no lo veía porque `[6/7]` lee el árbol de trabajo,
+  no el árbol del commit.
+- **Con las cinco rutas de corpus de (c) superpuestas** — el árbol exacto que (c) va a publicar — y mtimes
+  nuevas → `[OK] Índice de lecciones fresco (339 IDs)` / `nombre=328 commit=11 sin_fuente=0` / `EXIT=0`.
+  **Ésta es la prueba que S15 debía dar:** los archivos llegan con reloj nuevo, las fechas salen del commit
+  y el par del índice no se mueve.
+- **(c)** lleva esas cinco rutas más `13-cierre-de-sesion.txt`, `15-curaciones-previas-B.txt` y este
+  archivo. Commitear no cambia un byte del corpus, así que el `EXIT=0` de arriba es el que produce el HEAD
+  resultante por construcción, no por analogía.
+
+Push: **no autorizado en esta sesión** (instrucción aparte del commit). Al llegar, se ofrece el gate L3 y se
+declara si se pasó o se saltó, con su resultado. AGENTS.md y `.cursorrules` no se tocaron: la regla del
+clasificador exige instrucción explícita para el `.md` central, y no hay rojo que curar — AGENTS publica
+4.564 funciones y el disco da 4.568 (+4 de S15), dentro de la tolerancia ±5 % del instrumento de
+`validate_agents_md.py::check_2_test_count`.
+
+**Auxiliares y saldo.** Los clones y la extracción de esta sección viven en `temp/prueba-s15/` y se borran
+al terminar: el crudo que queda como evidencia es el de este expediente, y el comando de cada medición está
+escrito arriba para quien la quiera re-correr. Lo que la sesión deja sin cerrar, con su dueño: la fila
+`L-VCF-15` (línea 90 del `10-analisis`) sigue publicando «9 de las 335 entradas», cifra refutada por la
+medición de la tarea 1, porque el mandato cerró el barrido a nueve sitios y esa fila no era uno de ellos.

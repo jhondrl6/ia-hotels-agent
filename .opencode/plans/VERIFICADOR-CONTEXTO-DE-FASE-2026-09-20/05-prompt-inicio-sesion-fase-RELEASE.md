@@ -264,9 +264,20 @@ dicen qué quedó pendiente, y ningún `[OK]` se imprime por omisión.
    sobre el árbol final. Si el `git mv` del traslado ya ocurrió, la cola se corre con la ruta ya
    trasladada. **El orden de verificación es: escrituras → packs → índice → checks**; invertir produce un
    pack `SHA-DISTINTO` o un índice `VENCIDO` que la sesión reporta como verde ajeno (**L-VCF-17**).
-   **S15 declarado, no absorbido**: el verde de `[6/7]` en esta máquina **no** certifica otro checkout; si
+   ⟦**S15 declarado, no absorbido**: el verde de `[6/7]` en esta máquina **no** certifica otro checkout; si
    el `--check` da `FAIL` en un árbol extraído, es S15 y se declara con su dueño, no se re-registra el par
-   «para que cuadre» ni se toca `build_lesson_index.py` (RELEASE no repara código).
+   «para que cuadre» ni se toca `build_lesson_index.py` (RELEASE no repara código).⟧
+   **Este punto se escribió para una sesión en la que S15 seguía abierta y tocar el generador estaba
+   prohibido; las dos premisas cambiaron el 2026-09-26**: S15 quedó curada en `scripts/build_lesson_index.py`
+   con mandato de código del operador y el corte «último commit que tocó el documento» (fuente versionada, con
+   estado explícito `SIN-FUENTE` cuando no la hay). Lo que **perdura** de este punto, y no se retira: un verde
+   de `[6/7]` en esta máquina **no** es la prueba — la prueba son los dos checkouts del mismo commit en
+   `tests/test_build_lesson_index_s15_fecha_versionada.py` y la extracción del árbol del propio commit; y si
+   el `--check` da `FAIL`, **tampoco se re-registra el par «para que cuadre»**: se lee primero la línea
+   `[fechas] nombre=… commit=… sin_fuente=…` que el check imprime en verde y en rojo, y se declara el corte
+   que falla. Lo que **cambia** para quien reabra este prompt: un `FAIL` en un clon ya no se atribuye a S15
+   (atribución histórica: los vistos sobre `da382b1` y `5817edd` sí lo fueron); hay que clonar con
+   `-c core.autocrlf=input`, porque el `system` es `true` y `git clone` no lee la config local del clon.
 
 RELEASE **no** invoca `log_phase_completion.py` sobre fases ajenas: solo sincroniza y valida.
 

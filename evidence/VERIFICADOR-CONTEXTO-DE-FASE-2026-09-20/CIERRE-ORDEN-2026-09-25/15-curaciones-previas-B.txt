@@ -113,8 +113,23 @@ todo ese diff. Ambas rutas quedaron en **LF** (0 pares CRLF, medido por bytes):
   se entregó en el chat y se está ejecutando en otra sesión. Sin rastrear, git no lo devuelve; la v1 sigue
   íntegra en `12-pendientes-y-prompts.txt` §«PROMPT 2».⟧
 - El ítem **A2** (rojo de conteo de `AGENTS.md`) queda **curado** y `validate_agents_md.py` da exit 0.
-- Sigue **A3**: el `⟦` sin cerrar en la línea 167 del `10-analisis-post-implementacion.md` de CONTEXTO
-  (doc de fase cerrada, fuera de este mandato).
+- ⟦Sigue **A3**: el `⟦` sin cerrar en la línea 167 del `10-analisis-post-implementacion.md` de CONTEXTO
+  (doc de fase cerrada, fuera de este mandato).⟧ **A3 quedó CERRADO el 2026-09-26** y la nota de arriba se
+  conserva como antecedente de cuándo se declaró. La cura es el `⟧` escrito al cierre de esa misma fila 1 de
+  «Decisiones de FASE-D» (justo tras la palabra «falso»), por la sesión que sí trae el mandato de corpus.
+  **Medido con pila de marcadores, excluyendo código inline y bloques `fence`, sobre las dos revisiones**
+  (`git show HEAD:<ruta>` y el disco; el árbol no difiere de `6b02532` en el resto del archivo):
+  HEAD → `⟦`=26 / `⟧`=25, **1 abierto sin cerrar originado en la línea 167**, 0 cierres huérfanos;
+  árbol vigente → 28 / 28, **0 abiertos y 0 huérfanos** (los dos pares extra son las notas datadas de la
+  tarea 1 de esta sesión). **La cura está en el árbol y sin commitear: viaja en el commit (a)**, así que
+  hasta ese commit cualquier clon de `6b02532` sigue leyendo el `⟦` huérfano. Lo que el cierre NO toca: el
+  texto de la fila, que sigue siendo evidencia decisional de FASE-D.
 - Sigue **A4**: la cuota «tres observaciones» en `WHATSAPP/05-prompt-inicio-sesion-fase-G.md:52`.
-- ⟦**Puerta C EJECUTADA el 2026-09-26**: 22 commits `5817edd..a81da09` con 7/7 del hook en cada uno, L3 sin hallazgos y push verificado (paridad `0 0`). Con ella quedan publicados los dos items que esta nota dejaba como carga pendiente de publicación (A1 y A2).⟧ Siguen pendientes los permisos D8/D9,
-  archivado, S15, S16, D2, D3 completa, D7/S10 y las decisiones humanas.
+- ⟦**Puerta C EJECUTADA el 2026-09-26**: 22 commits `5817edd..a81da09` con 7/7 del hook en cada uno, L3 sin hallazgos y push verificado (paridad `0 0`). Con ella quedan publicados los dos items que esta nota dejaba como carga pendiente de publicación (A1 y A2).⟧ ⟦Siguen pendientes los permisos D8/D9,
+  archivado, S15, S16, D2, D3 completa, D7/S10 y las decisiones humanas.⟧ **De esa enumeración, S15 dejó de
+  estar pendiente el 2026-09-26**: la rama `fuente_fecha = "mtime"` de `_plan_date` fue retirada en
+  `scripts/build_lesson_index.py` y la fecha sale del nombre del plan, del último commit que tocó su
+  documento o del estado explícito `SIN-FUENTE`; su cierre, sus cifras re-medidas (11 de 339, de dos planes
+  y no de uno) y el límite que la cura conserva viven en la fila S15 de `10-analisis-post-implementacion.md`
+  (fuente única). **Todavía sin commitear**: viaja en el commit (b) con su par de índice y su prueba, así que
+  al leer esta nota el cambio está en el árbol y no en `origin/master`. Los demás siguen como estaban.
