@@ -30,7 +30,7 @@ No hay inferencias, etiquetas humanas del piloto, muestra congelada, presupuesto
 |---|---|---|---|---|
 | Inferencias Jev | 0 | PENDIENTE | PENDIENTE | PENDIENTE |
 | Inferencias DeepSeek | 0 | PENDIENTE | PENDIENTE | PENDIENTE |
-| Tests nuevos del piloto | 0 | PENDIENTE | PENDIENTE | No código previsto |
+| Tests nuevos del piloto | 0 | **Entregados por A**: `tests/quality_gates/jev_pilot/test_jev_pilot_offline.py` (7 funciones `def test_`, corrida «7 passed» en `10-analisis-post-implementacion.md`), más `scripts/evaluate_jev_pilot.py` con sus modos `prepare`/`check` y `run`/`decide` negados explícitamente. ⟦Rectificado el 2026-09-24 por el bloque C de la orden de calidad: esta celda decía «PENDIENTE»⟧ | PENDIENTE | No código previsto |
 | Calidad semántica | NO-EJERCITADA | NO-EJERCITADA | NO-EJERCITADA | PENDIENTE |
 | Consumo/coste del piloto | NO-EJERCITADO | NO-EJERCITADO | NO-EJERCITADO | PENDIENTE |
 

@@ -7,7 +7,7 @@
 | Fase | Estado | Evidencia / iteraciones |
 |---|---|---|
 | Preparación documental | AJUSTADA el 2026-09-21 | Lecturas, consultas QMind y validación documental; no es fase de código |
-| FASE-A | PENDIENTE | Sin ejecución |
+| FASE-A | **EJECUTADA offline el 2026-09-21** (checker + 7 tests en verde + selftest; muestra **BORRADOR**, AC3 parcial por falta de revisión humana) | ⟦Fila rectificada el 2026-09-24 por el bloque C de la orden de calidad: publicaba «PENDIENTE / Sin ejecución», contradicha por el propio §Ejecución de FASE-A de este archivo, por `06-checklist` (AC3 PARCIAL, AC10 FASE-A HECHA) y por `README.md`⟧. Su evidencia quedó commiteada y empujada (`9665c57..51b0793`) |
 | FASE-B | BLOQUEADA POR DEPENDENCIA | Sin ejecución |
 | FASE-C | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN | Sin ejecución |
 | FASE-RELEASE | PENDIENTE | Sin ejecución |

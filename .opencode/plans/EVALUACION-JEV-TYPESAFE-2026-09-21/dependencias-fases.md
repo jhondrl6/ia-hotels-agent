@@ -28,6 +28,24 @@ FASE-RELEASE propia: revisión / transferencia autorizada / cierre
 
 El hermano es `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`. Su cadena A→B→C→D→RELEASE y su prohibición de inferencias permanecen intactas. El piloto real corre en este plan, no dentro de sus fases.
 
+## Orden de cierre: hermano primero (decisión del operador, 2026-09-21)
+
+Se serializa la única superficie que de verdad cruza —el índice de lecciones
+`.opencode/LECCIONES-INDEX.md` / `.opencode/lecciones_index.json` y el write-back—: el hermano
+**se cierra antes de que este plan publique**.
+
+- El hermano no queda con fases abiertas que regeneren el índice compartido en la ventana en que
+  JEV integra o hace su propio write-back/archivado. Cerrar y congelar el índice del hermano
+  (incl. su RELEASE) primero; write-back y archivado de JEV, después. Sin sesiones concurrentes
+  sobre esa pareja de archivos.
+- **No es una dependencia técnica nueva:** FASE-B propia se desbloquea en B+C del hermano
+  (`decision_client.py` AC6–AC9 y `triage_lesson_relevance.py` AC10–AC14 + AC15 mecánico). D y el
+  RELEASE del hermano **no son precondición de FASE-B**; postergar la integración sobre la costura
+  hasta cerrar al hermano es regla de **orden (gobernanza / commits no cruzados)**. No se rebaja la
+  puerta de B+C por este orden, ni se le añade al piloto el trabajo de D/RELEASE del hermano.
+- El archivado (`git mv`) del hermano mueve sus `.md` de plan, no los `scripts/` de producto que
+  JEV integra; cerrar y archivar al hermano antes deja la costura entregada y sin edición concurrente.
+
 ## Hitos y evidencia de entrada
 
 | Hito | Evidencia requerida | Estado inicial |
