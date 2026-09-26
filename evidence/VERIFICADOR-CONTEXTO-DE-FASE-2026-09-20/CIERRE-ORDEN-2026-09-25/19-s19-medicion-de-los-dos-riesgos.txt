@@ -224,7 +224,11 @@ Rutas que esta nota dejó distintas a como estaban al empezar:
 `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` (fila S19 anotada), más lo que
 la cola arrastra consigo: los cinco packs de `briefing/` y el par `.opencode/LECCIONES-INDEX.md` +
 `lecciones_index.json`. **Código: cero. Configuración central: cero.** El resto de las rutas sucias son las que
-ya estaban del trabajo D2 y `AGENTS.md`, sin commitear, esperando instrucción.
+ya estaban del trabajo D2 y `AGENTS.md`, sin commitear, esperando instrucción. ⟦**Vencido el mismo día por dos
+instrucciones posteriores.** Esas rutas viajaron en `85b2b86` (la cifra de `AGENTS.md`) y `941530e` (D2 + esta
+nota + S19), y **ambas revisiones están publicadas**: `de336b6..36f7ece` empujado a `origin/master`, con las dos
+verificadas como alcanzables por `git merge-base --is-ancestor`. Lo que sigue vigente de esa frase es lo que
+declaraba sobre el momento: nada de esto estaba commiteado cuando se escribió.⟧
 
 Scratch de esta nota: `temp/s19-r1`, `temp/s19-r2`, `temp/s19-gen1.log`, `temp/s19-gen2.log`,
 `temp/s19-check.txt` **borrados antes de la cola** (como declara §7). Los auxiliares de la cola
@@ -240,5 +244,6 @@ el código.
 
 Lo que **no** se hizo, para que no se lea como hecho: implementar (b) (código, y pide instrucción), escribir (c)
 en el executor (config central, pide instrucción), sellar `generado_por_sha` (§6), ni comitear nada de lo que
-esta nota tocó.
+esta nota tocó. ⟦Esas tres siguen sin hacer. Lo cuarto sí se hizo después, por instrucción separada del
+operador: `git commit` primero y `git push` después — ver `20-` §0 y su anotación de publicación.⟧
 

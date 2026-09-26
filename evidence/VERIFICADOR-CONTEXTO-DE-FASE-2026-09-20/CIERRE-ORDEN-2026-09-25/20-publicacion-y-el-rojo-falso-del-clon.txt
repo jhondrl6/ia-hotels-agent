@@ -102,6 +102,17 @@ Comando canónico (no se publica la cifra porque este mismo archivo la mueve al 
 Medido al cerrar: **`0 2`** con `origin/master` en `de336b6`. Dos commits locales esperan; **no se empujó** y
 no se ofreció el gate L3 porque no hay push en esta instrucción.
 
+⟦**Refutado por la instrucción siguiente, el mismo 2026-09-26.** El párrafo de arriba describe el minuto en que
+se escribió y se conserva tal cual por esa razón. Lo que pasó después, redactado sin la variable que caduca
+(costumbre de la casa, precedente `2026-09-23`): **push ejecutado, rango publicado
+`de336b6..36f7ece`**, verificado por **identidad de objeto** en el remoto
+(`git ls-remote origin refs/heads/master` = `36f7ece9a02d7f5acf8195b843e7333870c73bc9` = `HEAD` local), con
+`de336b6` **ancestro** de `origin/master` y las tres revisiones de esta orden (`85b2b86`, `941530e`, `36f7ece`)
+verificadas como alcanzables con `git merge-base --is-ancestor` (las tres `SI`). En el remoto solo existe
+`refs/heads/master`. **Gate L3 ejecutado y pasado, no saltado**: `findings_count: 0` antes del push. No se
+publica paridad como cifra porque el commit de higiene que anota esta misma línea la devuelve a no-cero: se lee
+con `git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD`.⟧
+
 ## 5. Suite post-commit y registro de S20
 
 La suite completa se corrió **después** de los dos commits, con el exit escrito dentro del archivo (el
@@ -134,11 +145,19 @@ corrección** — en la primera redacción de la fila S20 se coló «Su电池 de
 colado «cada option» (`19-` §9); los dos están corregidos y barridos, y el patrón se repite en prosa española
 escrita a presión, así que el barrido de CJK y de anglicismos va **después** de cada bloque nuevo, no al final.
 Tercer defecto de la misma familia: una línea llegó con dos palabras pegadas («commitearonconsistentes»), que
-ningún check de marcado detecta. Y un cuarto, menor pero instructivo: **el barrido de CJK hay que saber leerlo**.
-Sobre este expediente devuelve **2 caracteres**, y son los de la cita de más arriba, transcritos a propósito,
-como manda la costumbre de la casa de escribir el defecto con su texto (precedente:
-`17-` con los dos asuntos erróneos). En `dependencias-fases.md`, que es corpus gobernable, el barrido da **cero**.
-Un conteo que no separa la cita declarada de la fuga nueva es un verde vacío.
+ningún check de marcado detecta. Y un cuarto, menor pero instructivo: **el barrido de CJK hay que saber leerlo,
+y saber qué cuenta.** Medido al cerrar con la clase construida por `chr()` desde hex (sin escapes en el patrón):
+`dependencias-fases.md` **0**, `19-` **0**, y este expediente **2 caracteres en 1 línea** — los del literal de
+la línea 144, transcrito a propósito, como manda la costumbre de la casa de escribir el defecto con su texto
+(precedente: `17-` con los dos asuntos erróneos). `grep -cP` sobre ese mismo archivo devuelve **1**: no
+contradice a Python, cuenta **líneas**; dos unidades distintas, no dos instrumentos opuestos. Lo que sí fue fallo
+de instrumento: una barrida previa de esta misma nota imprimió **CJK: 0** para este archivo cuando el literal ya
+estaba adentro —un **cero falso**, porque el mismo texto de patrón por otras dos vías dio 2— y su mecanismo
+quedó **no atribuido**. Esa barrida es la que sostuvo el «corregido y barrido» de dos párrafos más arriba, así
+que la afirmación se hizo sobre la fuerza de un cero que no se pudo reproducir. Regla que sale: el barrido de
+no-ASCII se corre con constructor por `chr()` y verificación cruzada por unidad (caracteres y líneas), y ningún
+cero de un patrón con escapes se cree solo. Un conteo que además no separa la cita declarada de la fuga nueva es
+un verde vacío.
 
 Scratch de esta nota, borrado al cerrar: `temp/verif-HEAD` (clon del verificador), `temp/clon-input` (clon de
 prueba con `autocrlf=input`), `temp/r1…r5.txt` (salidas de la cola) y `temp/suite-post-commit.txt`; el crudo
