@@ -1,6 +1,6 @@
 ---
-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código —o, si el commit no está autorizado, en «listo para revisión» (ver *Cinco cortes* en «Proceso común»). El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/7]` del pre-commit). Ejecutado por agentes AI.
-version: v2.25.0
+description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código. El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/7]` del pre-commit). Ejecutado por agentes AI.
+version: v2.24.0
 ---
 
 # Skill: Phased Project Executor
@@ -26,12 +26,8 @@ version: v2.25.0
 > **R1: Una fase por sesión.** No se permite ejecutar múltiples fases en una misma sesión.
 >
 > **R2: El presupuesto de iteraciones se MIDE, no se estima.** Instrumento canónico:
-> `evidence/FASE-D/measure_iterations.py`. Corte fijo: **hasta el commit de código** — una acción
-> posterior y separada del cierre documental, que ocurre antes (tercer corte); lo que se escriba
-> después del commit no cuenta contra el presupuesto de implementación. Cuando la
-> sesión no trae autorización de commit, el corte equivalente es **«hasta listo para revisión»** y se
-> declara cuál de los dos se usó: el commit no puede ser condición de un corte que él mismo autoriza
-> (ver *Cinco cortes* en «Proceso común: proporcionalidad y reuso»). Si la
+> `evidence/FASE-D/measure_iterations.py`. Corte fijo: **hasta el commit de código** (lo que se
+> escriba después es cierre documental y no cuenta contra el presupuesto de implementación). Si la
 > fase no puede correr el instrumento, el auto-reporte se publica **en la unidad usada**
 > (`tool_use`, `ids únicos`, etc.) y se declara que no es comparable con las demás. Ver §R2.1-R2.10.
 
@@ -56,9 +52,7 @@ una unidad distinta porque el instrumento canónico no corre bajo la política d
 Un número que no se puede medir ni comparar no restringe nada (L-B3).
 
 **Regla**: toda fase declara presupuesto **y** el instrumento con que lo corta (corte: commit de
-código; si la sesión no trae autorización de commit, el corte equivalente es «hasta listo para
-revisión», declarándolo). Al cerrar, o (a) el presupuesto se recalibra **×3** sobre la distribución
-medida, o
+código). Al cerrar, o (a) el presupuesto se recalibra **×3** sobre la distribución medida, o
 (b) **se retira la métrica** del plan y se declara fuera de servicio. Prohibido: reportar un
 cumplimiento estimado, o mezclar unidades en un total.
 
@@ -75,10 +69,8 @@ Una cita de línea en un plan multi-fase caduca **durante la ejecución del prop
 fase desplaza las líneas que las siguientes citan. Antes de editar una región ya citada hay que
 confirmarla con `grep`/`Read` y, si difiere, corregir la cita y avisar.
 
-**Verificador mecánico**: `scripts/validate_plan_citations.py`, un check de
-`run_all_validations.py --quick` (su ordinal vigente lo imprime la propia corrida y lo contrasta
-`scripts/validate_governance_numbers.py`; no se fija en este documento porque cambia con cada check
-nuevo — cifra D2). Escribe la regla y no medirla es el mecanismo que acabó en S15.
+**Verificador mecánico**: `scripts/validate_plan_citations.py` (check 8 de
+`run_all_validations.py --quick`). Escribe la regla y no medirla es el mecanismo que acabó en S15.
 
 ### R2.3 — No-regresión de conteos como **delta**, con par pre/post (S26 / DA-V2)
 
@@ -144,10 +136,8 @@ El orden, con su verificación medida y su pata degradada, es la regla **R2.10**
 regeneración del índice es obligatoria porque el índice publica el plan dueño **con su ruta** y
 `[6/7]` del pre-commit falla contra el árbol final.
 
-El cierre documental de RELEASE termina en «listo para revisión»; el commit único **posterior y
-separado** (opcional, con autorización expresa del operador) materializa RELEASE + archivado y deja
-las referencias vivas (memoria de sesión, QMind) apuntando a la ruta nueva. `Archives/` queda fuera
-del alcance de `validate_plan_closure.py`
+Un commit único cierra RELEASE + archivado y las referencias vivas (memoria de sesión, QMind)
+apuntan a la ruta nueva. `Archives/` queda fuera del alcance de `validate_plan_closure.py`
 (histórico congelado); salir de RELEASE con el plan en raíz garantiza el reproceso que esta
 regla elimina.
 
@@ -321,9 +311,8 @@ bloqueó el que editó un plan.
 **Verificador mecánico**: **parcial, ya activo, con una pata que se degrada.**
 - Pata del índice: **dura** — `[6/7]` del pre-commit (`build_lesson_index.py --check`) bloquea el
   commit con el índice vencido contra el árbol.
-- Pata de QMind: **condicional** — solo corre en `run_all_validations.py` **completo** (un check del
-  modo completo, fuera de `--quick`; su etiqueta vigente la imprime la corrida y la contrasta
-  `validate_governance_numbers.py`) y degrada a WARN con salida 0 si el CLI `qmind` no está disponible;
+- Pata de QMind: **condicional** — solo corre en `run_all_validations.py` **completo** (check
+  `[12/12]`, fuera de `--quick`) y degrada a WARN con salida 0 si el CLI `qmind` no está disponible;
   `--strict` es lo único que la vuelve fallida. En una máquina sin `qmind` esta pata no está
   verificada.
 - Ninguno de los dos comprueba el **orden en el momento del `git mv`**: comprueban el resultado
@@ -644,36 +633,6 @@ Cuando la fase no completa por agotamiento:
 | Agent parent agota el presupuesto de la fase antes de v4complete | Presupuesto mal calculado | Dividir: subagente para v4complete |
 | Docs cascade no se ejecuta post-v4complete | Agent se agoto al final | Guardar evidencia ANTES, docs en sesion separada |
 
-### Proceso común: proporcionalidad y reuso (bloque B de la orden de calidad 2026-09-22)
-
-> [!IMPORTANT]
-> Estas son **pautas de proceso**, no una regla R2 nueva: una R2 exige su propia medición y dueño
-> (política L-R.4), y promoverla o renumerar checks pertenece a CONTEXTO/D2, no a esta simplificación.
-> Tampoco introduce un framework de reportes: reutiliza los informes y registros que ya existen.
-
-- **Proporcionalidad.** Se re-ejecutan solo las lecturas y comprobaciones que el cambio de la fase
-  afecta. No se reconstruyen tiempos activos ni tool calls sin instrumento.
-- **Reuso válido.** Un resultado anterior puede reutilizarse únicamente si coinciden entradas,
-  configuración y entorno relevantes. Cualquier cambio que toque la comprobación la invalida y hay
-  que volver a medirla. Declarar **cuándo deja de valer** un resultado reutilizado.
-- **Un resultado, una fuente.** Se registra en su artefacto (test, informe, `10-analisis`) y se
-  **referencia** desde los demás cierres; no se transcribe la misma cifra en varios documentos. Esto
-  retira la duplicación que hacía divergir la plantilla (`4/4`), AGENTS (`10/10`) y la corrida real.
-- **Rojo deliberado ≠ error accidental.** Un rojo de mutation check o control negativo (R2.8) es una
-  **prueba** que se conserva y se atribuye, no un fallo que se lima para conseguir verde.
-- **Cinco cortes, utilizables sin commit.** *Implementación terminada* → *verificación terminada* →
-  *cierre documental* → *listo para revisión* → *espera de autorización*. Los cinco se
-  declaran y se verifican **sin commitear**: el `git commit` NO es el quinto corte ni condición de
-  ninguno — es una acción posterior y separada, opcional, que pertenece al operador (§6 «Cierre
-  documental»). Por eso §R2.1 corta su presupuesto «hasta el commit
-  de código» **cuando el commit está autorizado**; cuando no lo está, el corte utilizable es «hasta
-  listo para revisión» y se declara cuál se usó — el commit no puede ser condición de un corte que él
-  mismo autoriza. "Listo para revisión" termina al cerrar el documento; el tiempo de esperar una
-  autorización no es trabajo activo de la fase y, sin instrumento, se reporta **NO MEDIDO**.
-- **Sin cuota de lecciones.** "Sin lecciones nuevas" es un resultado declarado, no un fracaso que
-  deba rellenarse. El ≥3 descartes de `00-lecciones-capitalizadas.md` §3 mide que se **consultó** el
-  corpus, no cuántas lecciones nuevas hay que fabricar.
-
 ## Pre-requisitos
 - [ ] Proyecto con división clara en fases/sprints/etapas
 - [ ] Estructura de directorio `.opencode/plans/` o similar
@@ -713,9 +672,7 @@ Las lecciones de §2 se inyectan en el contexto de los prompts de fase (§2 del 
 
 **Verificación mecánica del output** (desde v2.24.0). El artefacto lo comprueba
 `scripts/validate_lesson_capitalization.py`, cableado como `[7/7]` del hook versionado
-`scripts/git_hooks/pre-commit` y como un check de `run_all_validations.py --quick` (su ordinal y
-denominador vigentes los imprime la corrida y los contrasta `validate_governance_numbers.py`; fijarlos
-aquí sería una cifra D2 que caduca al añadir checks). Verifica
+`scripts/git_hooks/pre-commit` y como check `[9/9]` de `run_all_validations.py --quick`. Verifica
 **forma y trazabilidad**: `C1` el archivo existe y se lee · `C2` tiene §1–§4 · `C3` ≥1 consulta a una
 capa corpus-wide con su comando copy-pasteable · `C4` ≥1 fila de §2 nombra un AC **que existe** en
 `01-plan-maestro.md` · `C5` ≥3 descartes · `C6` §4 nombra al verificador y declara su límite ·
@@ -781,10 +738,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
         --fase FASE-X --desc "..." \
         --archivos-mod "..." --tests "N" --check-manual-docs
 
-□ FASE-RELEASE: NO registra fases anteriores. Solo verifica el registro, sincroniza y valida.
-  Motivo medido: `log_phase_completion.py` es aditivo — cada corrida apila una entrada nueva
-  (tests/test_registry_fecha_documental.py). Re-registrar desde RELEASE duplicaria entradas de
-  ejecuciones ya cerradas; por eso el Paso 4.5.1 **verifica** y solo escribe la fase que falte.
+□ FASE-RELEASE: NO registra fases anteriores. Solo sincroniza y valida.
 
 □ Si el plan muestra T1 de FASE-RELEASE = "registrar FASE-1 a FASE-5" → ERROR.
   Las fases 1-5 DEBEN registrarse a sí mismas al completar.
@@ -848,18 +802,17 @@ crea vacío); los otros dos se crean con estructura vacía:
 > Esto evita el reproceso de crearlo después de que las lecciones ya se perdieron.
 > Estructura: ver ejemplo real en `COHERENCIA-MODULO-ENTREGA-2026-08-03/10-analisis-post-implementacion.md`.
 
-**Después de cada fase completada**, editar directamente CHANGELOG.md y GUIA_TECNICA.md con los cambios de esa fase (segun template §6). La acumulacion en 09-documentacion-post-proyecto.md es **la fuente de los datos** que consume FASE-RELEASE (no un duplicado que haya que mantener a mano en otros documentos):
+**Después de cada fase completada**, editar directamente CHANGELOG.md y GUIA_TECNICA.md con los cambios de esa fase (segun template §6). La acumulacion en 09-documentacion-post-proyecto.md es un backup de datos para FASE-RELEASE:
 
 - Sección A: Módulos nuevos
 - Sección B: Funcionalidades nuevas
-- Sección D: Métricas acumulativas — **fuente canónica del número por fase**
+- Sección D: Métricas acumulativas
 - Sección E: Archivos afiliados actualizados
 
 **Y actualizar `10-analisis-post-implementacion.md`** con los datos de la fase:
 - Resumen de Ejecución (tabla de fases)
-- Lecciones Aprendidas nuevas (formato: qué pasó / por qué / qué lo previene) o «sin lecciones nuevas»
-- Métricas de Ejecución: **referencia** a 09 §D y al log o informe de la corrida, no la misma cifra
-  transcrita (transcribirla en dos cierres es lo que los hace divergir)
+- Lecciones Aprendidas nuevas (formato: qué pasó / por qué / qué lo previene)
+- Métricas de Ejecución (tests, coherencia, etc.)
 - Seguimientos abiertos detectados
 
 **Write-back de lecciones (al cierre de cada fase)** — cierra el ciclo del Paso 0:
@@ -925,7 +878,7 @@ Cada fase completa su columna "Fase". FASE-RELEASE usa los datos acumulados para
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY si aplica; si no, al cierre de última fase impl)
 | # | Hallazgo | Expected | Real | Status |
 
-## Lecciones Aprendidas (llenar; "sin lecciones nuevas" es un resultado valido, no se rellena con cuota)
+## Lecciones Aprendidas (llenar — mínimo 3 por fase completada)
 Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXCLUIR)
 
 ### Lecciones capitalizadas de planes anteriores (espejo de `00-lecciones-capitalizadas.md` §2)
@@ -937,7 +890,7 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 ## Seguimientos abiertos (llenar conforme avancen las fases)
 | Tema | Estado | Acción futura |
 
-## Métricas de Ejecución (llenar al cierre: referencia a 09 §D y al log/informe, no copia del numero)
+## Métricas de Ejecución (llenar al cierre)
 
 ## Decisiones Arquitectónicas (llenar cuando aplique)
 | ID | Decisión | Rationale | Alternativas rechazadas | Fase |
@@ -957,12 +910,11 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 ```
 Plan de documentación (09-documentacion-post-proyecto.md)
     │
-    ├── Paso 4.5.1: Verificar el registro de cada fase (NO re-registrar)
-    │   └── Cada fase ya se registró a sí misma al cerrar (§2.5); aquí solo se comprueba
+    ├── Paso 4.5.1: Ejecutar log_phase_completion.py por cada fase
+    │   └── Registrar en REGISTRY.md (automático)
     │
     ├── Paso 4.5.2: Ejecutar sync_versions.py
-    │   └── Sincroniza VERSION.yaml → los archivos que lista sync_config.yaml
-    │       (REGISTRY.md no entra: su fecha la escribe el registro de la fase, §6)
+    │   └── Sincronizar VERSION.yaml → 6 archivos
     │
     ├── Paso 4.5.3: Validar CHANGELOG.md formato
     │   └── Verificar secciones requeridas por CONTRIBUTING.md
@@ -980,25 +932,12 @@ Plan de documentación (09-documentacion-post-proyecto.md)
         └── git mv a plans/Archives/ + refs --fix + citas --update-baseline + --quick (mismo commit)
 ```
 
-#### Paso 4.5.1: Verificar el registro de las fases (no re-registrar)
+#### Paso 4.5.1: Registrar Fases en REGISTRY.md
 
-Cada fase de implementación **ya se registró a sí misma** al cerrar (§2.5). Este paso solo comprueba
-que el registro exista; **no vuelve a ejecutar el escritor sobre una fase ya registrada**, porque
-`log_phase_completion.py` es aditivo: cada corrida apila una entrada `## FASE-…` nueva (así está
-implementado y así lo prueba `tests/test_registry_fecha_documental.py::
-test_repetir_el_registro_y_cambiar_de_dia`). Re-registrar llenaría el REGISTRY de entradas duplicadas
-de ejecuciones cerradas.
+Para cada fase mencionada en el plan, ejecutar:
 
 ```bash
-# Comprobar que cada fase del plan tiene su entrada (lectura, no escritura)
-grep -c "^## FASE-GEO-BRIDGE - " docs/contributing/REGISTRY.md
-```
-
-Si **una** fase del plan no tiene entrada (porque su sesión la saltó), se registra esa fase concreta
-una sola vez, con los datos de aquella ejecución:
-
-```bash
-# Ejemplo: solo para una fase que resultó sin registrar
+# Ejemplo: Registrar FASE-GEO-BRIDGE
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-GEO-BRIDGE \
     --desc "Bridge enrichment geo_enriched → delivery" \
@@ -1008,18 +947,12 @@ una sola vez, con los datos de aquella ejecución:
     --check-manual-docs
 ```
 
-**Regla**: una entrada por fase, escrita por esa fase al cerrar. El cierre documental **verifica**, no
-repite. Lo que se declara en el REGISTRY es lo que quien registra pasó al script: el escritor no
-ejecuta tests ni verifica contratos y ya no publica esas garantías como cumplidas
-(`docs/contributing/documentation_rules.md §8`).
+**Regla**: Ejecutar UNA vez por cada fase documentada en el plan.
 
 #### Paso 4.5.2: Sincronizar Versiones
 
 ```bash
-# Sincroniza VERSION.yaml → los archivos que declaran las reglas de scripts/sync_config.yaml
-# (README, AGENTS, .cursorrules, CONTRIBUTING, GUIA_TECNICA). REGISTRY.md NO entra: su
-# "> **Ultima actualizacion:**" es la fecha de la ultima entrada documental y la escribe el
-#  registro de la fase (Paso 4.5.1 / §6), no la sincronizacion.
+# Sincronizar VERSION.yaml → AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
 ./venv/Scripts/python.exe scripts/sync_versions.py
 
 # Verificar sincronización
@@ -1048,8 +981,7 @@ Verificar que la entrada de CHANGELOG tenga el formato requerido por `docs/CONTR
 |---------|--------|
 
 ### Tests
-- Referencia a la fuente del resultado (corrida o informe en `evidence/`); no re-transcribir cifras
-  ni prellenar «0 regresiones» — los fallos ajenos se atribuyen por causa
+- N tests nuevos, 0 regresiones
 ```
 
 **Checklist CHANGELOG:**
@@ -1123,13 +1055,10 @@ python scripts/validate_qmind_writeback.py --strict
 #### Ejemplo Completo de Ejecución
 
 ```bash
-# 1. Verificar que cada fase del plan tiene SU entrada en REGISTRY (cada fase la escribio al cerrar)
-for f in FASE-GEO-BRIDGE FASE-CONF-GATE; do
-  printf '%s: %s\n' "$f" "$(grep -c "^## $f - " docs/contributing/REGISTRY.md)"
-done
-# Solo si alguna sale en 0, registrar ESA fase una vez:
-#   ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-GEO-BRIDGE --desc "..." \
-#       --check-manual-docs
+# 1. Registrar cada fase del plan
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-GEO-BRIDGE --desc "..." --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-CONF-GATE --desc "..." --check-manual-docs
+# ... repetir para cada fase
 
 # 2. Sincronizar versiones
 ./venv/Scripts/python.exe scripts/sync_versions.py
@@ -1152,7 +1081,7 @@ Después de ejecutar el plan, verificar:
 
 | Verificación | Comando | Estado |
 |--------------|---------|--------|
-| Cada fase del plan tiene SU entrada en REGISTRY.md (verificada, no re-registrada) | `grep -c "^## FASE-<X> - " docs/contributing/REGISTRY.md` por fase | [ ] |
+| Fases registradas en REGISTRY.md | `grep "## FASE-" docs/contributing/REGISTRY.md` | [ ] |
 | Versiones sincronizadas | `scripts/sync_versions.py` | [ ] |
 | CHANGELOG formato correcto | Manual: verificar secciones | [ ] |
 | GUIA_TECNICA actualizada | Manual: verificar notas técnicas | [ ] |
@@ -1198,7 +1127,7 @@ FASE-VERIFY es una fase de **verificación sin código**: certifica formalmente 
 | 3 | Comparar antes/después (si hay baseline) | Diff narrativo/técnico documentado |
 | 4 | Greps residuales de strings que deberían haber desaparecido | Tabla de patrones con 0 matches |
 | 5 | Completar matriz de verificación del `10-analisis` | Todas las filas con Real/Status |
-| 6 | Registrar lecciones aprendidas de la verificación (o declarar "sin lecciones nuevas") | Lecciones reales, sin cuota |
+| 6 | Registrar lecciones aprendidas de la verificación | Mínimo 3 lecciones nuevas |
 | 7 | Ejecutar `log_phase_completion.py` (SIN `--release`) + `run_all_validations.py --quick` | Registro + validación |
 
 #### Reglas Específicas
@@ -1375,11 +1304,7 @@ Después de ejecutar `log_phase_completion.py`, verificar:
 - [ ] No hay [GAP] en DOCUMENTATION AUDIT
 - [ ] Si fue RELEASE: VERSION SYNC GATE pasó (no hubo `(!)`)
 - [ ] CHANGELOG.md actualizado (si fue release)
-- [ ] Cierre documental hecho. **El `git add`/`git commit` NO es parte del «listo para revisión»:**
-      es una acción posterior y separada, opcional, con autorización explícita del operador; no es
-      otro corte ni condición de ninguno de los cinco cortes. Sin autorización se deja el árbol sin
-      commitear y se declara. Staging amplio (`git add -A`) solo tras revisar qué entra (ver política
-      de trabajo ajeno y secretos).
+- [ ] `git add -A && git commit`
 
 ---
 
@@ -1431,7 +1356,7 @@ Los siguientes estandares aplican a TODOS los documentos del workflow. La fuente
 ./venv/Scripts/python.exe scripts/sync_versions.py
 ```
 
-Sincroniza VERSION.yaml → los archivos que declaren las reglas vigentes de `scripts/sync_config.yaml` (AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, entre otros). **REGISTRY.md no está gobernado por `sync_versions`**: su cabecera la escribe solo `scripts/log_phase_completion.py` (la regla `registry_last_update` fue retirada de `sync_config.yaml`)
+Sincroniza VERSION.yaml → 6 archivos: AGENTS.md, README.md, .cursorrules, CONTRIBUTING.md, GUIA_TECNICA.md, REGISTRY.md
 
 - [ ] sync_versions.py ejecutado sin errores
 
@@ -1457,8 +1382,7 @@ Formato segun `docs/contributing/documentation_rules.md §Formato-CHANGELOG`:
 |---------|--------|
 
 ### Tests
-- Referencia a la fuente del resultado (corrida en `evidence/`); «N tests» es una declaración de
-  quien registra, con su comando, no una cifra re-transcrita
+- N tests en `test_xxx.py`
 ```
 
 **Regla de validacion-only**: Si la fase NO modifica codigo (solo validacion/documentacion), NO crear entrada `[X.Y.Z+1]`. Agregar como subsection dentro de la version existente.
@@ -1545,15 +1469,10 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 
 **Checklist README audit:**
 - [ ] Test count en README.md (linea del banner `vX.Y.Z`) coincide con `pytest --collect-only`
+- [ ] Test count en `## Estado del Proyecto` y `## Calidad Garantizada` coincide
 - [ ] Module count en README.md coincide con `find modules/`
 - [ ] Fecha de actualizacion en el banner es la fecha actual
-- [ ] **Cada cifra del README sale de un comando o de su fuente (`09` §D), no de otra copia del
-      mismo numero dentro del documento.** Si `## Estado del Proyecto` y `## Calidad Garantizada`
-      repiten el conteo, la correccion no es mantener las dos copias sincronizadas a mano: es dejar
-      una con el valor (la que verifica el comando) y convertir la otra en referencia a ella
-- [ ] Si hay discrepancia → corregir **desde la fuente** (el comando o `09` §D) y referenciar; el
-      reemplazo mecánico de cadenas solo se usa cuando las dos ocurrencias ya apuntaban a la misma
-      fuente y queda declarado en el cierre
+- [ ] Si hay discrepancia → corregir con `replace_all=True` y commit separado post-release
 
 ---
 
@@ -1576,14 +1495,13 @@ find modules/ -name '*.py' ! -path '*__pycache__*' | wc -l
 - **FASE-VERIFY incluida en plan simple** → evaluar si los 3 criterios de activación se cumplen; si no, eliminar y documentar por qué en `dependencias-fases.md`
 
 ## Versiones
-- **v2.25.0** (2026-09-23): Bloque B de la orden `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22`. Nueva sección **Proceso común: proporcionalidad y reuso** (pautas, no una R2 nueva: promoverla es D2) que deja por escrito lo que el flujo ya hacía a medias — verificar solo lo que el cambio afecta, reutilizar un resultado únicamente si coinciden entradas/configuración/entorno y declarar cuándo caduca, registrar cada cifra una vez en su fuente y referenciarla (elimina la divergencia entre la plantilla, AGENTS y la corrida real en el conteo de `--quick`), distinguir rojo deliberado de mutation check de error accidental, separar implementación → verificación → cierre → espera de autorización, y permitir declarar «sin lecciones nuevas» (se retiran las cuotas «mínimo 3 lecciones» del cierre de fase y de FASE-VERIFY; el ≥3 descartes de §3 sigue midiendo consulta al corpus, no producción de lecciones). **D1**: se retiraron de su fuente las cuatro aserciones de conteo vencidas que el verificador marcaba en rojo —el ordinal de `validate_plan_citations.py`, `validate_lesson_capitalization.py` y `validate_qmind_writeback.py` en el executor y uno en el template de lecciones—; ahora el texto dice que el valor vigente lo imprime la corrida y lo contrasta `validate_governance_numbers.py`. Las dos salidas del mutation check quedaron reancladas a un **contraejemplo congelado** en `tests/…/governance_numbers/fixtures/`, con una regresión de que el árbol real ya sale `SIN-HALLAZGOS`. **S13**: el arnés de mutación ya no escribe en `evidence/…/FASE-A/`; vuelca en destino temporal explícito y prueba que re-medir no re-pisa expedientes cerrados (compara hash **y** mtime). **Fecha de REGISTRY**: un solo escritor (`log_phase_completion.py`, fecha de última entrada documental); `sync_config.yaml` retiró `registry_last_update`. **Remediación del mismo día** (mandato §2/§3, sin nuevo incremento de versión): se resuelve la contradicción que dejaba el principio escrito pero la instrucción mandando lo contrario — §2.5 dice «FASE-RELEASE no registra fases anteriores» y §4.5 ordenaba «ejecutar el escritor por cada fase»; §4.5 Paso 4.5.1 pasa a **verificar** el registro y escribir solo la fase que falte, con el motivo medido de que el escritor es aditivo (`tests/test_registry_fecha_documental.py`). Las métricas dejan de copiarse: `09` §D es la fuente y README/`10-analisis` la referencian (también en E8b, que deja de pedir mantener dos copias sincronizadas a mano). Los cortes pasan de cuatro a **cinco utilizables sin commit** y §R2.1 declara su alternativa «hasta listo para revisión» cuando el commit no está autorizado, para que el corte no dependa de un permiso que la sesión puede no tener. Y el registro **declara, no aprueba**: el escritor ya no publica `- [x] Tests passing` ni `- [x] Capability contract verificado` que no haya ejecutado. Cambio de workflow y docs: no toca código de producción, `VERSION.yaml`, la composición de `run_all_validations.py` ni los denominadores del hook (eso es D2).
 - **v2.24.0** (2026-09-12): El Paso 0 deja de ser una norma sostenida solo por disciplina. **Origen medido**: un archivo `00-lecciones-capitalizadas.md` en todo el repo sobre **26** planes = **3,8 %** de cobertura de la regla que este workflow declaró obligatoria en v2.22.0; y la prosa del propio workflow y de su template seguía diciendo «24 planes archivados» cuando el corpus ya tiene **25** (se archivó `TRIBUNAL-OFFLINE-2026-09-09`), que es exactamente la fosilización que la lección L-NC10 denuncia. **Qué se instrumentó**: `scripts/validate_lesson_capitalization.py` con ocho checks (C0 publica la población mirada; C1 presencia; C2 §1–§4; C3 consulta a una capa corpus-wide con comando copy-pasteable; C4 AC nombrado que **existe** en el maestro; C5 ≥3 descartes; C6 §4 nombra al verificador y declara su límite; C7 ID definido y atribuido al dueño que publica el índice; C8 ≥2 fuentes distintas), tres estados distinguibles conforme a **R2.9** y sin auto-fix. **Dónde corre**: `[7/7]` del hook versionado `scripts/git_hooks/pre-commit` —el único enforcement real hoy, según registró `CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29` al mantener vigente la Opción 1— y check `[9/9]` de `run_all_validations.py --quick`, para que también corra en un clon donde nadie instaló el hook. Consecuencia documental: los seis checks anteriores del hook pasan a denominador `/7`, las **5 referencias normativas** al `[6/6]` se actualizan a `[6/7]` y las **4 menciones históricas** de medición (dos en R2.10, dos en el changelog) se conservan literales. **Lo que NO verifica**: la *pertinencia* —qué lección debía capitalizarse y si el efecto alegado es real— y que los prompts de fase copien las filas de §2; ambos límites van escritos en el propio texto. **Lo que deliberadamente NO se hizo**: promover esta norma a **R2.11** de la familia R2, que requiere su propia medición y dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` §Deuda, ítem (i), cerrado por el plan `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`). Cambio de workflow y tooling: no toca código de producción ni `VERSION.yaml`.
 - **v2.23.1** (2026-09-12): Corrección medida de **R2.10**, descubierta al cerrar la trazabilidad del plan que promovió R2.8/R2.9. La regla afirmaba que el índice vence **por rutas**; es más barato de lo pensado: el índice publica el **conteo de citas por ID y por plan**, así que dos menciones nuevas en el §7 de `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` bastaron para vencerlo (`L-R.4` 8→9, `DA-C3` 9→10) y `[6/6]` bloqueó ese commit. R2.10 pasa a cuatro hechos medidos, con el invariante explícito de que **todo** commit que edite un `.md` de `plans/` o `context/` lleva su índice regenerado en el mismo commit — lo que el hook ya comprobaba, escrito por primera vez. Sin cambios en R2.8/R2.9 ni en el resto de la familia; la cabecera de la sección sube a v2.23.1 por coherencia con el archivo. El propio commit quedó como evidencia: `docs(TRIBUNAL)` del §7 con el índice regenerado dentro.
 - **v2.23.0** (2026-09-12): Tres reglas nuevas a la familia R2 (la cabecera de la sección sube de v2.21.0 a v2.23.0), del Paso 0 horizontal del plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`. **R2.8** asciende **NR7** a regla global — *mutation check*: todo AC de detección o bloqueo se cierra revirtiendo el guard y mostrando el test en rojo, con las **dos salidas** en `evidence/FASE-X/`; origen medido **D-T4B-A1** (T4-B certificó ✅ con 7/7 verdes + test de serialización + `--quick` en paz, y `_load_proposal()` leía dos niveles por encima de donde el pipeline escribe la propuesta → `total_cg_count: 0` y `BLOQUEAR` espurio), con **L-T4A.5** y **L-VUP-5** como antecedentes del corpus y **L-T2C.4** como la razón de exigirlo por AC. **R2.9** asciende **NR8** — *tri-estado*: sin hallazgos / artefacto ausente / lector fallido tienen que ser distinguibles por quien lee el artefacto, cada uno con su test **nombrado por su causa**; origen **L-PF6** (parser de JSON-LD en ARRAY tragado como ERROR → audit publicando «0 schemas» y un pain falso HIGH con cifra económica), **L-PF10** (`critical_recall` BLOCKED «metric not found» sobre una lista vacía porque el fix había funcionado) y **DA-C3** (`vacío ≠ ausente`, el contrato ya vigente que NR8 subsume y que el plan dejaba pendiente en §3.b). **R2.10** nombra el timing que estaba disperso sin dueño de sección: write-back de QMind y `build_lesson_index.py` **antes** del `git mv` a `Archives/`, más la regeneración del índice **después** del movimiento; los tres hechos están leídos en el código de los verificadores (el `--upload` resuelve `.opencode/plans/<PLAN>` por nombre, su comprobación solo escanea `Archives/`, y `--check` compara byte a byte un índice que publica rutas). Se reflejan en el bloque de R2.5 y en la nota «QMind y archivado» del §4. **Lo que NO verifica todavía**: **R2.8 y R2.9 nacen sin verificador mecánico y lo declaran en su propio texto** (política **L-R.4**, precedente R2.7), con el verificador pedido en el mismo tramo de deuda de `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`; R2.10 sí trae checks pero **parciales** — `[6/6]` bloquea el índice vencido, la pata de QMind solo corre en el modo completo y degrada a WARN sin el CLI, y **ninguno comprueba el orden en el momento del `git mv`**, solo el resultado final. Cambio documental: no toca código de producción ni el template de prompt de fase.
 - **v2.22.0** (2026-09-12): El Paso 0 deja de ser una instrucción y produce un artefacto. **Origen medido**: de los 24 planes archivados, la sección «Lecciones capitalizadas de planes anteriores» —que este workflow ordenaba escribir desde v2.17.0— aparece en **6** (18 %), y la plantilla la marcaba `(si aplica)`; el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` citaba solo a su predecesor con 24 planes más en el corpus, y el defecto que descubrió esta sesión (Tier A inalcanzable en `v4complete`) ya estaba documentado en `EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31`. Cambios: **nueva capa fría** (`.opencode/LECCIONES-INDEX.md`, generado por `scripts/build_lesson_index.py` — cada ID con dueño, sección y citas, definido en análisis *y* `CONTEXT-*.md`; el conteo vigente está en el encabezado del índice, no en el workflow); **`00-lecciones-capitalizadas.md`** creado antes del plan maestro con template propio (`.agents/workflows/templates/lecciones-capitalizadas-template.md`): consultas literales re-ejecutables, «qué cambia en este plan» obligatorio por fila, ≥3 descartes motivados y cobertura declarada; gate nuevo en §2.5 (sin archivo lleno no se crean prompts de fase); §4 pasa de dos a tres archivos de concepción; el write-back del §4 y R2.5 ahora incluyen `build_lesson_index.py` **antes** del `git mv` a `Archives/`. **Lo que NO verifica todavía**: la *pertinencia* de lo capitalizado — ningún script comprueba que las filas de §2 sean lecciones reales aplicadas y no ceremonial; se declara en §4 del propio archivo, y el verificador queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), misma política de R2.7.
 - **v2.21.0** (2026-09-11): Dos reglas endosadas por FASE-VERIFY del plan `TRIBUNAL-OFFLINE-2026-09-09` (decisión **D-V.3**, ejecutada en su FASE-RELEASE-4.76.0). **R2.6** — toda fase que escriba un lector de artefactos del pipeline debe tener ≥1 test contra el baseline real (`output/FASE-D_salentoreal_post_guard/`) con `skipif` explícito, y el ✅ de la fase lo exige: es la causa común de D1/D5/S1/S2/S3, causó el desvío D-T2C-A1 y dejó AC8 ❌ (la sonda `verify_probe_ac8.py` fijó 2 capas: `deliveries/` es ZIP-only y `_is_template_stub()` cuenta `---`/boilerplate como contenido). **R2.7** — el par pre/post de NR1 se valida **restando**: `suma_post − suma_pre` debe diferir en exactamente `tests_nuevos`, y una resta 0 significa baseline contaminado (medido: T4-B reportó `4018 → 4025` contra la pareja real `4029 → 4036`; los +11 de D-T2C-A1 faltaban en el `pre`). A diferencia de R2.2 y R2.5, **R2.7 nace sin verificador mecánico**: el script queda como deuda con dueño (`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), declarado en la propia regla para que la norma no se lea como ya cumplida.
 - **v2.20.0** (2026-09-04): Nueva **R2.5** «El cierre archiva»: FASE-RELEASE termina con el plan movido a `.opencode/plans/Archives/` (git mv + `validate_opencode_refs.py --fix` + `validate_plan_citations.py --update-baseline` + `--quick` verde, un commit único), en lugar de archivarlo como reproceso en la sesión siguiente (medido: `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` se cerró con v4.75.0 y quedó en raíz pese a que la convención ya existía). Enforcement mecánico: dos checks nuevos en el pre-commit — `[4/5]` citas de línea en planes (R2.2, `validate_plan_citations.py`) y `[5/5]` cierre de planes (`scripts/validate_plan_closure.py`: un plan que declara «Cierre del plan» + COMPLETADO no puede publicar filas «⬜ Pendiente»; `Archives/` fuera de alcance). Paso 4.5.6 añadido al flujo documental §4.5.
-- **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, un check de `run_all_validations.py --quick` (⟦rectificado 2026-09-23, D1 del bloque B: la entrada original afirmaba aquí un ordinal fijo del quick que se desfasaba; su literal exacto vive en `git show da382b1:.agents/workflows/phased_project_executor.md`, entrada v2.19.0, y el texto vigente dice que el ordinal lo imprime la corrida⟧); **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.
+- **v2.19.0** (2026-09-04): Cuatro reglas de proceso propuestas por FASE-VERIFY del plan `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, que el archivo **no contenía** (medido: 0 coincidencias de «recalibr», «números de línea», «hasta el commit de código», «delta»). Nuevas §R2.1-§R2.4: **R2.1** presupuesto de iteraciones medido con `evidence/FASE-D/measure_iterations.py` y corte fijo «hasta el commit de código», con la orden de recalibrar ×3 **o retirar** la métrica (S22/DA-V6: nueve fases excedieron 2,4×-8,6× y reportaron en unidades distintas); **R2.2** prohibición de números de línea en ACs y prompts — citar símbolos (L-A6/L-V4/L-H4: 14 de 16 citas ya desfasadas al certificar) y su verificador mecánico nuevo `scripts/validate_plan_citations.py`, check 8 de `run_all_validations.py --quick`; **R2.3** no-regresión de conteos formulada como **delta** con par pre/post obligatorio (S26/DA-V2); **R2.4** regla de certificación — *un AC no legible en el artefacto que el sistema produce es ⚠️, no ✅; un ✅ que solo respalda un string en el código no existe* (L-V1/DA-V3). **R2 deja de prometer «máximo 60 iteraciones»**: la cabecera y la regla mandatoria ahora ordenan medir, no estimar.
 - **v2.18.0** (2026-09-02): Write-back de CONTEXT por aporte, no por edición. Los `CONTEXT-*.md` de `.opencode/context/` se ingieren a QMind solo cuando **autodeclaran** una lección durable con etiqueta explícita (`Lección de forma:`); el criterio es binario para que no dependa de un juicio de relevancia inferido (§4). La pregunta se hace en el Cierre Obligatorio de Sesión (paso 3 nuevo), que es donde el archivo se escribe, para que el disparador no sea letra muerta. Se aclara en el Paso 0 que un CONTEXT ausente del notebook no es un olvido. Origen medido: `CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md` no estaba en el notebook (40 fuentes, última ingesta 2026-08-31) pese a declarar en §13.5 *"Lección de forma: revalidar citas de código no revalida premisas"* — el ciclo v2.17.0 solo disparaba sobre `10-analisis-post-implementacion.md` al cierre de fase, y un CONTEXT de análisis/auditoría no es cierre de fase.
 - **v2.17.0** (2026-08-28): Ciclo de capitalización de lecciones aprendidas. Nuevo Paso 0 obligatorio (recuperación desde memoria del proyecto + notebook QMind `iah-cli-lecciones` antes de planificar), inyección de lecciones pertinentes en prompts de fase (§2), y write-back al cierre de cada fase (§4): lecciones INCLUIR a memoria del proyecto y re-ingesta del 10-analisis a QMind. Fallback explícito si el notebook no está disponible.
 - **v2.16.0** (2026-08-24): Nueva etapa condicional FASE-VERIFY (§4.6) entre Implementación y RELEASE. Certificación formal de ACs contra output E2E real, sin modificar código. Criterios de activación: ≥3 fases impl + E2E + ACs cross-fase. Resuelve gap: la referencia "llenar en FASE-E o FASE-F" en la matriz de verificación no tenía definición formal. Metodología mínima generalizable (7 pasos). Origen: FASE-R0-F del plan REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (12/12 ACs certificados con diff narrativo antes/después).

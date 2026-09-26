@@ -8,9 +8,8 @@ version: v1.1.0
 > [!IMPORTANT]
 > Este archivo se crea **antes** de escribir `01-plan-maestro.md` y los prompts de fase,
 > y es el output verificable del Paso 0 del executor. No es un anexo del análisis final:
-> ni este archivo ni `10-analisis-post-implementacion.md` se escriben solo al cierre —
-> ambos se crean desde la concepción del plan y se actualizan incrementalmente por fase
-> (executor v2.15.0); capitalizar únicamente cuando el plan ya cerró ya no previene nada.
+> el análisis (`10-analisis-post-implementacion.md`) se escribe cuando el plan ya cerró,
+> y capitalizar a esas alturas ya no previene nada.
 
 **Por qué existe (medido, no supuesto).** De 24 planes archivados, la sección
 "Lecciones capitalizadas de planes anteriores" aparece en **6** (18 %), y la plantilla del
@@ -60,9 +59,7 @@ debe moverse a §3.
 |----|-------------------------------|
 
 **Obligatorio, mínimo 3 filas.** Es la única prueba de que se miró el corpus y no solo el
-predecesor. Descartar con motivo es un resultado, no un fracaso. **No es una cuota de lecciones
-nuevas**: este §3 mide la consulta al corpus; declarar «sin lecciones nuevas» al cerrar la fase
-sigue siendo un resultado valido (executor, *Proceso común: proporcionalidad y reuso*).
+predecesor. Descartar con motivo es un resultado, no un fracaso.
 
 ## 4. Cobertura declarada de este documento
 
@@ -72,8 +69,8 @@ sigue siendo un resultado valido (executor, *Proceso común: proporcionalidad y 
   obligatorio, y su forma debe poder comprobarse — una frase de las formas «no verifico…»,
   «no comprueba…» o «no garantiza…»:
   - [ ] Este archivo es verificado por `scripts/validate_lesson_capitalization.py`
-    (check `[7/7]` del hook `scripts/git_hooks/pre-commit` y un check de
-    `run_all_validations.py --quick`, cuyo ordinal y denominador vigentes imprime la corrida), que comprueba **forma y trazabilidad**: consultas a
+    (check `[7/7]` del hook `scripts/git_hooks/pre-commit` y `[10/10]` de
+    `run_all_validations.py --quick`), que comprueba **forma y trazabilidad**: consultas a
     una capa corpus-wide, ≥3 descartes, AC nombrado que existe en el plan maestro, ID con el
     dueño que publica el índice generado y ≥2 fuentes distintas. Un `[OK]` suyo significa
     «la forma exigida está», nunca «capitalicé bien».

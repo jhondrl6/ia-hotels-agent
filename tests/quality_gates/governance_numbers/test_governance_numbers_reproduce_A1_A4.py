@@ -1,7 +1,16 @@
-"""AC1 + AC2 — `validate_governance_numbers.py` reproduce A1-A4 del maestro §1 y ninguna otra.
+"""AC1 + AC2 — el verificador reproduce A1-A4 del maestro §1 sobre un contraejemplo congelado.
 
-El verde de este archivo no puede venir de haber recortado la poblacion a mano: por eso afirma
-tambien el conteo de `historical_excluded[]` (A8) y la suma interna de las tres clases.
+Desde el bloque B de la orden `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (D1), el árbol real de
+`.agents/` **ya no** contiene esas cifras vencidas: las aserciones se retiraron de su fuente para que
+no vuelvan a desfasar (la opción que el propio plan de CONTEXTO recomienda). Por eso la detección de
+A1-A4 se prueba ahora contra `fixtures/`, una copia congelada de los documentos **antes** de D1, que
+reproduce exactamente las cuatro aserciones, las dos occurrences de A1, las 24 instancias y las 8
+menciones históricas congeladas. Con el mismo `run_all_validations.py` y hook reales, los `observed`
+son idénticos a los del maestro §1. Y `test_arbol_real_honesto_tras_d1` fija el otro lado: el árbol
+vigente sale `SIN-HALLAZGOS`.
+
+El verde no puede venir de recortar la población a mano: por eso se afirman también
+`historical_excluded[]` (A8) y la suma interna de las tres clases.
 """
 
 import json
@@ -13,10 +22,14 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "validate_governance_numbers.py"
+FIXTURES = ROOT / "tests" / "quality_gates" / "governance_numbers" / "fixtures"
+DOC_EJECUTOR = FIXTURES / "phased_project_executor.md"
+DOC_TEMPLATE = FIXTURES / "lecciones-capitalizadas-template.md"
+DOC_ARGS = ["--governance-doc", str(DOC_EJECUTOR), "--governance-doc", str(DOC_TEMPLATE)]
 
 
 def _informe(destino: Path) -> dict:
-    r = subprocess.run([sys.executable, str(SCRIPT), "--report", str(destino)],
+    r = subprocess.run([sys.executable, str(SCRIPT), "--report", str(destino), *DOC_ARGS],
                        capture_output=True, text=True)
     assert r.returncode == 1, f"se esperaban hallazgos, salio {r.returncode}: {r.stdout}{r.stderr}"
     return json.loads(destino.read_text(encoding="utf-8"))
@@ -26,6 +39,13 @@ def _informe(destino: Path) -> dict:
 def informe_real(tmp_path_factory) -> dict:
     destino = tmp_path_factory.mktemp("gn") / "informe.json"
     return _informe(destino)
+
+
+def test_arbol_real_honesto_tras_d1():
+    """D1 cerró las cuatro aserciones vencidas: el árbol de `.agents/` vigente ya no da hallazgos."""
+    r = subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert r.stdout.splitlines()[0].startswith("[SIN-HALLAZGOS]"), r.stdout
 
 
 def test_findings_son_exactamente_A1_A4(informe_real: dict):
@@ -76,9 +96,10 @@ def test_marca_de_estado_en_ascii(informe_real: dict):
     Es el contrato que fija `_estado_a_imprimir`: la salida de este script va a logs y a
     consolas que no son UTF-8 (lección «evidencia de consola no es UTF-8» del indice).
     """
-    r = subprocess.run([sys.executable, str(SCRIPT), "--quiet"] , capture_output=True, text=True)
+    r = subprocess.run([sys.executable, str(SCRIPT), "--quiet", *DOC_ARGS],
+                       capture_output=True, text=True)
     assert r.stdout == ""
-    r2 = subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True)
+    r2 = subprocess.run([sys.executable, str(SCRIPT), *DOC_ARGS], capture_output=True, text=True)
     linea0 = r2.stdout.splitlines()[0]
     assert linea0.isascii(), f"la marca de estado no es ASCII: {linea0!r}"
     assert linea0.startswith("[HALLAZGOS]"), linea0

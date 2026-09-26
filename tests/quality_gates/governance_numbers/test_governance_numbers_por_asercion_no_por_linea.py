@@ -1,9 +1,13 @@
 """AC1 — un hallazgo es **una asercion**, no una linea.
 
-A1 esta escrita en dos sitios del workflow canonico (`scripts/validate_plan_citations.py`, check 8
-de `--quick` — el parrafo «Verificador mecanico» de R2.2 y la entrada v2.19.0 de `## Versiones`).
-Cuenta como **un** hallazgo con dos `occurrences[]`: si no, el conteo de hallazgos dependeria de
-cuantas veces se repita la frase y dejaria de medir contratos.
+A1 esta escrita en dos sitios del **contraejemplo congelado** (`fixtures/phased_project_executor.md`,
+copiada del workflow canonico: el parrafo «Verificador mecanico» de R2.2 y la entrada v2.19.0 de
+`## Versiones`). Cuenta como **un** hallazgo con dos `occurrences[]`: si no, el conteo de hallazgos
+dependeria de cuantas veces se repita la frase y dejaria de medir contratos.
+
+Desde D1 el arbol real ya NO tiene esas dos frases: alli `check 8` es un valor que imprime la corrida
+y lo contrasta el verificador. Que el arbol sale `SIN-HALLAZGOS` lo prueba
+`test_governance_numbers_reproduce_A1_A4.py`, no este archivo.
 """
 
 import json
@@ -15,20 +19,24 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "validate_governance_numbers.py"
-WORKFLOW = ROOT / ".agents" / "workflows" / "phased_project_executor.md"
+FIXTURES = ROOT / "tests" / "quality_gates" / "governance_numbers" / "fixtures"
+WORKFLOW = FIXTURES / "phased_project_executor.md"
+DOC_TEMPLATE = FIXTURES / "lecciones-capitalizadas-template.md"
+DOC_ARGS = ["--governance-doc", str(WORKFLOW), "--governance-doc", str(DOC_TEMPLATE)]
 
 
 @pytest.fixture(scope="module")
 def informe(tmp_path_factory) -> dict:
     destino = tmp_path_factory.mktemp("gn_occ") / "informe.json"
-    r = subprocess.run([sys.executable, str(SCRIPT), "--report", str(destino)],
+    r = subprocess.run([sys.executable, str(SCRIPT), "--report", str(destino), *DOC_ARGS],
                        capture_output=True, text=True)
     assert r.returncode == 1
     return json.loads(destino.read_text(encoding="utf-8"))
 
 
 def _contar_afirmaciones_en_el_documento() -> int:
-    """Medicion independiente del patron interno: cuantos sitios escriben «check 8» hoy."""
+    """Medicion independiente del patron interno: cuantos sitios escriben «check 8» en el
+    contraejemplo congelado (tras D1 el arbol real ya no los tiene; ver reproduce_A1_A4)."""
     texto = WORKFLOW.read_text(encoding="utf-8")
     return texto.count("check 8")
 
