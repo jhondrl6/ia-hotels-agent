@@ -10,7 +10,10 @@ Validates cross-document consistency for the INTEGRACION-DOCUMENTAL plan:
 5. AGENTS.md cross-reference table completeness
 6. Template version header has "v" prefix
 7. No hardcoded line references (§NN-MM) in executor/CONTRIBUTING
-8. Line endings: real file bytes govern every Git state; read/reader failures are findings.
+8. Line endings: what git *stores* governs clean tracked files (bytes, not `read_text()`, which
+   translates CRLF away and made the old detector unable to fail); a file with unstaged changes or
+   an untracked (new) file is judged by its **real bytes**, because an LF index says nothing about
+   modified content; read/reader failures are findings, never "no hallazgos".
 
 Each check is computed exactly once per execution and its stored result is what the summary
 prints and counts (mandato §5 del bloque B de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22).
@@ -74,7 +77,13 @@ def extract_line_refs(content: str) -> List[str]:
 
 
 def eol_en_disco(path: Path) -> str:
-    """Read bytes because text mode silently normalizes CRLF."""
+    """Estado de finales de linea **en bytes del archivo**, no lo que devuelve `read_text()`.
+
+    `read_text()` abre en universal-newlines y traduce CRLF a LF antes de que nadie lo vea: la
+    version anterior de este detector buscaba `'\\r\\n' in content` sobre ese texto traducido, de modo
+    que la respuesta era siempre False y el check no podia fallar nunca (mandato §6 del bloque B de
+    ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22: «no declares LF a partir de read_text()»).
+    """
     try:
         datos = path.read_bytes()
     except Exception:
@@ -83,15 +92,18 @@ def eol_en_disco(path: Path) -> str:
         return "VACIO"
     crlf = datos.count(b"\r\n")
     lf = datos.count(b"\n") - crlf
-    if datos.count(b"\r") > crlf:
-        return "CR"
     if crlf and lf:
         return "MIXTO"
     return "CRLF" if crlf else "LF"
 
 
 def eol_tocada(path: Path, repo_root: Path) -> str:
-    """Git status is provenance, not a substitute for reading file bytes."""
+    """«SUCIO» si el archivo tiene cambios sin confirmar (stageados o no) frente al indice.
+
+    Un `git status --porcelain` vacio significa LIMPIO: el indice describe el contenido. Cualquier
+    salida no vacia (` M`, `M `, `MM`, `A `, …) significa SUCIO. Un lector roto es LECTOR-FALLIDO,
+    nunca «limpio por defecto»: el estado ilegible no puede leerse como conformidad.
+    """
     try:
         rel = path.relative_to(repo_root).as_posix()
     except ValueError:
@@ -107,23 +119,78 @@ def eol_tocada(path: Path, repo_root: Path) -> str:
 
 
 def eol_veredicto(path: Path, repo_root: Path) -> dict:
-    disco = eol_en_disco(path)
+    """Veredicto de finales de linea con la matriz completa del mandato del bloque B:
+
+    - tracked y LIMPIO: gobierna lo que git almacena (`i/lf`); el arbol de trabajo se publica
+      como detalle porque `core.autocrlf` puede traducirlo sin que sea el defecto guardado.
+    - tracked y SUCIO: el indice describe la version VIEJA, no el archivo que se va a confirmar:
+      se juzga por los **bytes reales** del archivo modificado (mandato: «un indice Git en LF no
+      demuestra que el archivo modificado sea conforme»).
+    - SIN-REGISTRAR (archivo nuevo): no hay lado almacenado que gobernar; se juzga por bytes
+      reales. CRLF en un archivo nuevo es hallazgo, no «no cubierto» silencioso.
+    - lectura fallida del archivo o de git: hallazgo (LECTOR-FALLIDO / ERROR-LECTURA), jamas
+      «sin hallazgos».
+
+    Limite declarado: en checkouts con `core.autocrlf=true` un archivo SUCIO cuyos bytes solo
+    difieren en CRLF de checkout tambien caeria; aqui rige `autocrlf=input` y el criterio es la
+    conformidad del archivo, no la del checkout.
+    """
     estado = eol_almacenado(path, repo_root)
-    lector_ok = estado["almacenado"] not in ("LECTOR-FALLIDO", "FUERA-DE-REPO")
-    if lector_ok and estado["almacenado"] != "SIN-REGISTRAR":
-        tocada = eol_tocada(path, repo_root)
-        lector_ok = tocada in ("LIMPIO", "SUCIO")
-        estado["detail"] += f"; estado Git {tocada}"
-    estado["disco"] = disco
-    estado["ok"] = lector_ok and disco in ("LF", "VACIO")
-    estado["detail"] += f"; bytes reales {disco}"
-    if disco == "ERROR-LECTURA":
-        estado["detail"] += "; lectura fallida: no se puede certificar conformidad"
+    if estado["almacenado"] in ("LECTOR-FALLIDO", "FUERA-DE-REPO"):
+        estado["ok"] = False
+        return estado
+    try:
+        rel = path.relative_to(repo_root).as_posix()
+    except ValueError:
+        rel = str(path)
+
+    if estado["almacenado"] == "SIN-REGISTRAR":
+        disco = eol_en_disco(path)
+        if disco in ("CRLF", "MIXTO"):
+            estado.update(disco=disco, ok=False,
+                          detail=f"{rel}: sin registrar en git (archivo nuevo) y con {disco} "
+                                 f"en bytes reales: no hay lado almacenado que lo salve")
+        elif disco == "ERROR-LECTURA":
+            estado.update(disco=disco, ok=False,
+                          detail=f"{rel}: sin registrar en git y lectura fallida: "
+                                 "no se puede certificar su conformidad")
+        else:
+            estado.update(disco=disco,
+                          detail=f"{rel}: sin registrar en git (archivo nuevo); "
+                                 f"gobernado por bytes reales ({disco})")
+        return estado
+
+    tocada = eol_tocada(path, repo_root)
+    if tocada.startswith("LECTOR-FALLIDO") or tocada == "FUERA-DE-REPO":
+        estado.update(ok=False,
+                      detail=f"{estado['detail']} | estado git ilegible ({tocada}): "
+                             "el indice no certifica nada")
+        return estado
+    if tocada == "SUCIO":
+        disco = eol_en_disco(path)
+        if disco in ("CRLF", "MIXTO"):
+            estado.update(disco=disco, ok=False,
+                          detail=f"{rel}: modificado sin confirmar y con {disco} en bytes reales "
+                                 f"(el indice en {estado['almacenado']} describe la version vieja, "
+                                 "no este archivo)")
+        elif disco == "ERROR-LECTURA":
+            estado.update(disco=disco, ok=False,
+                          detail=f"{rel}: modificado sin confirmar y lectura fallida")
+        else:
+            estado.update(disco=disco,
+                          detail=f"{rel}: modificado sin confirmar; bytes reales {disco} "
+                                 f"(indice {estado['almacenado']})")
+        return estado
     return estado
 
 
 def eol_almacenado(path: Path, repo_root: Path) -> dict:
-    """Inspect the index; its verdict alone does not certify working-tree bytes."""
+    """Lo que git **almacena** para ese archivo: `i/…` (indice) y `w/…` (arbol de trabajo).
+
+    Decide el lado almacenado porque es el que entra a un commit; el arbol de trabajo puede ser CRLF
+    por el checkout de Windows (`core.autocrlf=input`) sin que eso sea el defecto que este check
+    guarda. Con `git ls-files --eol` (solo lectura, sin red).
+    """
     salida = {"almacenado": "SIN-REGISTRAR", "disco": "SIN-REGISTRAR", "detail": "", "ok": True}
     try:
         rel = path.relative_to(repo_root).as_posix()
@@ -144,16 +211,13 @@ def eol_almacenado(path: Path, repo_root: Path) -> dict:
         return salida
     linea = proc.stdout.strip()
     if not linea:
-        salida["detail"] = f"{rel}: sin registrar en git"
+        # No esta en el indice: no hay lado almacenado que gobernar. Se publica, no se cuenta como OK.
+        salida["disco"] = eol_en_disco(path)
+        salida["detail"] = f"{rel}: sin registrar en git; gobernado solo el disco ({salida['disco']})"
         return salida
     tokens = linea.split()
     i = next((t for t in tokens if t.startswith("i/")), "i/?")
     w = next((t for t in tokens if t.startswith("w/")), "w/?")
-    estados_git = {"lf", "crlf", "mixed", "none", "-text"}
-    if len(linea.splitlines()) != 1 or i[2:] not in estados_git or w[2:] not in estados_git:
-        salida.update(almacenado="LECTOR-FALLIDO", ok=False,
-                      detail=f"git ls-files --eol devolvio una respuesta ilegible para {rel}")
-        return salida
     salida["almacenado"] = i[2:]
     salida["disco"] = w[2:]
     salida["ok"] = i[2:] in ("lf",)
@@ -560,7 +624,12 @@ def validate_readme_counts() -> ValidationResult:
 
 
 def validate_line_endings() -> ValidationResult:
-    """Inspect real bytes in every Git state; unreadable files cannot pass."""
+    """Line endings of the governed documents: stored side for clean tracked files, real bytes
+    for modified/untracked files, read failures as findings (ver `eol_veredicto`).
+
+    Un archivo sin registrar en git se publica como no cubierto por el lado almacenado, pero sus
+    bytes reales SI lo gobiernan: CRLF en un archivo nuevo o modificado sin confirmar es hallazgo.
+    """
     issues = []
     details = []
     no_cubiertos = []
@@ -583,11 +652,11 @@ def validate_line_endings() -> ValidationResult:
             details.append(f"{path.name}: {estado['detail']}")
 
     if no_cubiertos:
-        details.append("sin cobertura de indice Git; bytes reales comprobados (sin registrar en git): "
+        details.append("no cubiertos por este check (sin registrar en git): "
                        + ", ".join(sorted(no_cubiertos)))
 
     return ValidationResult(
-        check="Line endings (bytes reales LF)",
+        check="Line endings (LF almacenado)",
         passed=len(issues) == 0,
         issues=issues,
         details=details
@@ -603,7 +672,7 @@ def run_all(verbose: bool = False) -> bool:
         ("AGENTS.md cross-reference table", validate_agents_cross_ref_table),
         ("DOMAIN_PRIMER vs VERSION.yaml", validate_domain_primer_version),
         ("README.md numerical counts vs code", validate_readme_counts),
-        ("Line endings (bytes reales LF)", validate_line_endings),
+        ("Line endings (LF almacenado)", validate_line_endings),
     ]
 
     print("=" * 60)
