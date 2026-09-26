@@ -260,7 +260,7 @@ RELEASE con deuda AC5; ESCRITURA-QMIND → su fase única.
 
 - Afirmó: higiene (LF del generado), suite completa corrida con exit, cola derivada en verde sobre el árbol
   final, y las tres mediciones que pedía el mandato (cuenta canónica, desbalance de anotadores, rutas sucias).
-- **No** afirmó: commit (HEAD sigue `5817edd` y el árbol sigue sucio), push, paridad con el remoto,
+- **No** afirmó: commit (HEAD sigue `5817edd` y el árbol sigue sucio), push, paridad con el remoto ⟦**vencido el 2026-09-26**: HEAD `a81da09`, cero rutas ` M`, paridad `0 0` medida tras `git fetch`. Esta línea se conserva como antecedente de lo que esa sesión no afirmó, no como estado vigente⟧,
   publicación QMind, archivado, ni cierre de fase o deuda alguna. Los cuatro planes y las deudas
   D2/D3/D6/D7/S10/S14/S15/S16 siguen con sus dueños y sus disparadores intactos.
 - Re-medida **después** de escribir este archivo: HEAD `5817edd`, `git status --porcelain | wc -l` = **79**

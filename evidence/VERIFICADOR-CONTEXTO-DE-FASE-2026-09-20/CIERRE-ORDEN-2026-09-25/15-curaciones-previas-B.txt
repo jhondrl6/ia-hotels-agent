@@ -116,5 +116,5 @@ todo ese diff. Ambas rutas quedaron en **LF** (0 pares CRLF, medido por bytes):
 - Sigue **A3**: el `⟦` sin cerrar en la línea 167 del `10-analisis-post-implementacion.md` de CONTEXTO
   (doc de fase cerrada, fuera de este mandato).
 - Sigue **A4**: la cuota «tres observaciones» en `WHATSAPP/05-prompt-inicio-sesion-fase-G.md:52`.
-- Sigue la **puerta C** con su instrucción escrita por commit y por push, y los permisos D8/D9,
+- ⟦**Puerta C EJECUTADA el 2026-09-26**: 22 commits `5817edd..a81da09` con 7/7 del hook en cada uno, L3 sin hallazgos y push verificado (paridad `0 0`). Con ella quedan publicados los dos items que esta nota dejaba como carga pendiente de publicación (A1 y A2).⟧ Siguen pendientes los permisos D8/D9,
   archivado, S15, S16, D2, D3 completa, D7/S10 y las decisiones humanas.

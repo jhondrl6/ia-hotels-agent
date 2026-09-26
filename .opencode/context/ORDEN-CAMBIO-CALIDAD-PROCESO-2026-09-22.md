@@ -39,10 +39,12 @@ expediente, no commitea ni empuja. Que siga siendo cierto que el producto de FAS
 el par del índice y esta propia orden están fuera del commit, se re-mide con los dos comandos de la tabla
 anterior; ninguna fila de este documento lo fija como cifra vigente.
 
+⟦**Vencido el 2026-09-26 por la puerta C**: `scripts/build_phase_briefing.py` está rastreado desde `ae21d09` y los documentos de cierre de C, D y RELEASE, el par del índice y esta propia orden quedaron commiteados y empujados (`5817edd..a81da09`). Lo que sigue fuera del árbol publicado es decisión del operador, no prohibición de mandato: `CORRECCION-2026-09-24/`, `REVALIDACION-2026-09-23/` y `CONCILIACION-FINAL-ORDEN-2026-09-25/20-permisos-pre.json`.⟧
+
 El dictamen de §12 del resumen también se retiró el 2026-09-24 por insuficiencia de evidencia.
 El estado y la aceptación vigentes se deciden exclusivamente en **§13 de la fuente única de resultados**
 (enlazada abajo); §1–§12 y los demás dictámenes retirados se conservan como antecedentes rectificados. El árbol de B sigue **SIN commitear** (el mandato prohíbe
-commit/push). El bloque C (enmiendas prospectivas a los cuatro planes) se ejecutó el 2026-09-24 **solo
+commit/push). ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧ El bloque C (enmiendas prospectivas a los cuatro planes) se ejecutó el 2026-09-24 **solo
 en su parte documental**; ⟦**antecedente vencido el mismo 2026-09-24**: «el piloto FASE-C sigue PENDIENTE
 de su autorización y no se inició» describía el árbol antes de su propio mandato; el piloto se ejecutó y
 cerró ese día (§6) y **FASE-D también**⟧.
@@ -51,7 +53,7 @@ quedan retirados** y se conservan únicamente como antecedentes rectificados (§
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/00-resumen-bloque-B.md`).
 Su fuente única de resultados es ahora
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`.
-**El árbol de B está SIN commitear (el mandato prohíbe commit/push).** El bloque C (enmiendas
+**El árbol de B está SIN commitear (el mandato prohíbe commit/push).** ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧ El bloque C (enmiendas
 prospectivas a los cuatro planes) se autorizó y ejecutó el **2026-09-24 en su parte documental**, sin
 commit ni push (el mandato de esta sesión también los prohíbe); su resumen único está en
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md`.
@@ -188,7 +190,7 @@ intactas y toda operación remota sin autorización ni presupuesto**.
 
 | Decisión | Recomendación | Estado |
 |---|---|---|
-| Alcance de implementación | Aprobar A, B y C por bloques y archivos concretos; autorizar expresamente los cambios centrales/configuración necesarios | **PARCIAL**: A ejecutado+conciliado; **B autorizado; estado exclusivo en su fuente única** — retirado también el dictamen de la revalidación del 2026-09-23; el veredicto vigente se decide en §13 del resumen (§4.B; árbol sin commitear porque el mandato de B prohíbe commit/push); **C autorizado y ejecutado el 2026-09-24 en su parte documental** (los archivos concretos que nombraba su mandato; sin código, sin tests, sin `.agents/**`, sin `AGENTS.md`, sin commit ni push). ⟦**Antecedente vencido el 2026-09-24**: «El piloto sigue sin autorizar»⟧ — **el piloto FASE-C y después FASE-D se autorizaron y ejecutaron ese día, cada uno con su mandato propio y su permiso explícito de archivos**; ninguno de los dos trajo consigo FASE-RELEASE, que sigue **sin autorización** |
+| Alcance de implementación | Aprobar A, B y C por bloques y archivos concretos; autorizar expresamente los cambios centrales/configuración necesarios | **PARCIAL**: A ejecutado+conciliado; **B autorizado; estado exclusivo en su fuente única** — retirado también el dictamen de la revalidación del 2026-09-23; el veredicto vigente se decide en §13 del resumen (§4.B; árbol sin commitear porque el mandato de B prohíbe commit/push ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧); **C autorizado y ejecutado el 2026-09-24 en su parte documental** (los archivos concretos que nombraba su mandato; sin código, sin tests, sin `.agents/**`, sin `AGENTS.md`, sin commit ni push). ⟦**Antecedente vencido el 2026-09-24**: «El piloto sigue sin autorizar»⟧ — **el piloto FASE-C y después FASE-D se autorizaron y ejecutaron ese día, cada uno con su mandato propio y su permiso explícito de archivos**; ninguno de los dos trajo consigo FASE-RELEASE, que sigue **sin autorización** |
 | Encaje con deudas | Enlazar A con S11/S12 y B con D1/D3 de CONTEXTO, sin crear propietarios paralelos; mantener D2 y activación D7 fuera. Adelantar D3 respecto a su disparador actual requiere decisión expresa, no interpretación | **PARCIAL**: el enlace A↔S11/S12 está hecho y aceptado (§5-ter). **B↔D1 ejecutado y revalidado** (D1 cerrado desde su fuente, con contraejemplo congelado y el árbol real `SIN-HALLAZGOS`). **S13: reabierto el 2026-09-23 por la remediación** — B movió el destino de escritura pero no observaba las operaciones de escritura; su estado vigente es el de la matriz de cierre. ⟦Rectificado 2026-09-23 (revalidación): ningún estado de D1/D3/S13 queda declarado desde esta fila — todos vuelven a la matriz §13 del resumen, que los re-examina tras el retiro del tercer cierre⟧ **D3 adelantado solo en la parte que B necesitaba**, sin declarar D3 cerrado y **sin mudar su dueño**, que sigue siendo el del maestro §6 («Plan propio, posterior»): la simplificación que B recibió expresamente NO se difiere a D2, al bloque C ni al piloto. D2 y D7 fuera, como pedía la fila. El mandato de B autorizó expresamente adelantar D3 respecto a su disparador. **⟦D2 sigue fuera, como pedía la fila: el bloque C documentó por qué su disparador literal se cumplió en parte y por qué eso no lo abre — ver la fila D2 de `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`⟧** |
 | Fecha de REGISTRY | Un único escritor para fecha de última entrada; fecha de release por separado, sin cambiar VERSION para reparar el registro | **PARCIAL al momento del retiro, demostrado en la remediación**: `registry_last_update` está retirada de `sync_config.yaml` y `VERSION.yaml` no se toca —eso sí estaba hecho—, pero el «cubierto por `tests/test_registry_fecha_documental.py`» **sobreafirmaba**: esas pruebas no redirigían las rutas del `SyncEngine` ni `VERSION.yaml` al mismo expediente temporal, corrían la sincronización solo en modo `--check` (que no escribe) y dejaban sin ejercer la interacción registro→sync en modo escritura, su repeticion, las fechas distintas release/entrada y el control negativo. Estado vigente: §13 del resumen en `evidence/…/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md` (revalidación; la demostración previa de la remediación queda como antecedente §1–§11) |
 | Entrega y permisos remotos | Entrega offline verificable, aceptación remota posterior con autorización y presupuesto propios; no fingir que una prohibición de red permite una subida | **ESCRITO, NO EJECUTADO (bloque C, 2026-09-24).** La separación ya es contrato en los tres planes que la necesitaban: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (§Momentos y la división **AC6-entrega / AC6-aceptación**), `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`04-contrato-ejecucion.md` §Dos momentos del cierre) y `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (su FASE-RELEASE, con el momento remoto etiquetado `PENDIENTE-AUTORIZACION`). Ninguna subida ni consulta real se hizo ni se autoriza por esta redacción: sigue faltando permiso literal y presupuesto |
@@ -388,16 +390,16 @@ reemplazó ninguna anterior. **⟦Frase sobre commits/autorizaciones vencida par
 - **«las autorizaciones separadas de bloque B, bloque C y piloto»** — **parcialmente vencido**: el
   **bloque B se autorizó y ejecutó el 2026-09-23** (§4.B, evidencia
   `…/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/`); su árbol propio está **sin commitear** porque el mandato de
-  B prohíbe commit/push (así queda la deuda vigente). **El bloque C y el piloto FASE-C conservan su
+  B prohíbe commit/push (así queda la deuda vigente). ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧ **El bloque C y el piloto FASE-C conservan su
   autorización pendiente** y no se iniciaron. ⟦**Vencido en su primera parte el 2026-09-24**: el **bloque C**
   se autorizó y ejecutó como enmiendas documentales (fila `Alcance de implementación` de §5 y
   `evidence/…/BLOQUE-C-ENMIENDAS-2026-09-24/`), también **sin commitear** — su mandato prohíbe commit/push,
-  igual que el de B —. Del piloto FASE-C esta frase **sigue vigente al pie de la letra**: sin autorización y
+  igual que el de B —. ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧ Del piloto FASE-C esta frase **sigue vigente al pie de la letra**: sin autorización y
   sin iniciar.⟧ ⟦**Vencido en su tercera parte el 2026-09-24**: el **piloto FASE-C** recibió su mandato propio
   y **se ejecutó y cerró**, y **FASE-D** hizo lo mismo en una sesión posterior del mismo día. De las tres
   autorizaciones que esta fila separaba, **ninguna** sigue pendiente en B/C/piloto: lo que queda pendiente es
   una cuarta que esta redacción nunca otorgó — **FASE-RELEASE de CONTEXTO** —, más las dos remotas (D8, D9),
-  el archivado, D7 y el commit/push. Estado por fase: la tabla de fases de
+  el archivado, D7 y ~~el commit/push~~ ⟦**el commit/push quedó hecho el 2026-09-26**⟧. Estado por fase: la tabla de fases de
   `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`⟧
 
 

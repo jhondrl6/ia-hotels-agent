@@ -14,8 +14,8 @@ S12 aceptadas** (corrección técnica ajena, en `fdd397f`) y **AC9 declarado con
 cabeceras por su writer, `DOMAIN_PRIMER` regenerado, CHANGELOG y registro en `REGISTRY` por su único
 escritor). Sus cuatro momentos quedan así: **offline cerrado** · **remoto pendiente** (Q7/D8 y
 `--upload`/D9, cada uno con autorización literal y presupuesto) · **traslado pendiente** (`git mv` a
-`Archives/`) · **publicación pendiente** (commit y push, decisión del operador). FASE-D cerró con el mismo
-corte («hasta listo para revisión») y **sin commit ni push**, que no fueron autorizados en su sesión: su
+`Archives/`) · **publicación pendiente** ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧ (commit y push, decisión del operador). FASE-D cerró con el mismo
+corte («hasta listo para revisión») y **sin commit ni push**, que no fueron autorizados en su sesión ⟦**y sí lo fueron el 2026-09-26**: `scripts/build_phase_briefing.py` y sus 49 tests entraron en `ae21d09`, los 5 packs y el par del índice en `4e837fa`⟧: su
 producto
 (`scripts/build_phase_briefing.py`, 12 archivos de selección y los **5 packs** generados en
 `briefing/`) está verificado sobre el árbol de trabajo y su deuda de viaje está declarada en
