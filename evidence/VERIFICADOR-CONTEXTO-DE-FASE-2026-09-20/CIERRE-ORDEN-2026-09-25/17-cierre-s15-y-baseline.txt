@@ -328,3 +328,42 @@ ofrecido antes), `AGENTS.md` (config central: 4.564 publicado contra 4.568 en HE
 y su nota de desglose «+94 sin commitear» ya no describe nada), el typo «del mandatos» en el mensaje de
 `2a675fa` (enmendar exige instrucción explícita) y la verificación del sha del manifiesto del archivador,
 que vive fuera del workspace y cuya lectura negó el clasificador.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+8) ERRATA DE DOS MENSAJES DE COMMIT — corregido el registro, no el objeto
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Dos textos de commit de esta sesión dicen algo que no es. Se transcriben aquí **con el defecto**, porque
+el acuerdo fue no reescribirlos:
+
+- **`c85dff9`, asunto**: `evidence(PUBLICACION): lo que empujar los tres commits vencio y el rojo que ese
+  barrido fabrico`. El verbo está mal: **nada fue empujado**. Lo que venció esas dos citas fue
+  **versionarlas** — commit (c) —, que es una acción distinta y con dueño propio. La enmienda a esta nota
+  no pudo limitarse a citar la primera: su propia versión inicial publicaba `origin/master...HEAD` = `0 5`
+  en tiempo presente, y el commit que la contenía era el que la convertía en `0 6`. Lo que resiste la
+  lectura es el comando `git rev-list --left-right --count origin/master...HEAD`, y junto a él un hecho que
+  sí es estable: `origin/master` sigue en `6b02532`, o sea **cero empujado en esta sesión**. El cuerpo del
+  mismo commit no arrastra el error: habla de «commitear» y de las rutas que viajan.
+- **`2a675fa`, primera línea del cuerpo**: `Ni la lista (a) ni la (b) del mandatos cubrian las escrituras…`.
+  Errata por «del mandato», plural metido entre dos frases. No afecta a ninguna afirmación: las listas que
+  enumera después son exactas.
+
+**Por qué se dejan así, con el costo medido antes de decidir.** Corregir el mensaje de un commit que no es
+HEAD reescribe también a sus descendientes: tocar `2a675fa` y `c85dff9` mueve el sha de `f288a67`, y quedan
+alcanzables tres commits nuevos. Las menciones que se quedarían sin referente son **65**, medidas con
+`git grep -oE` sobre HEAD: **63** a `2a675fa` —una en el `10-analisis`, dos en este expediente y **60
+dentro de los cinco packs de briefing**, como sellos `"head"` uno por sección— y **2** a `c85dff9`
+(`REV_FRESCA` de `tests/test_verify_index_in_committed_tree.py` y su docstring). Y el punto que decide:
+**regenerar los packs no repara esos 63**, porque el sello no afirma ascendencia, registra el HEAD que había
+*al generar*; tras la reescritura volvería a nombrar un commit anterior al que lo contiene, por construcción
+uno por detrás. O sea, la reescritura rompe los 63 punteros y no deja ninguno en verde. Se eligió la nota.
+
+**Consecuencia sobre el anclaje, para quien lea el test después de esto.** `REV_VENCIDA = 911f8d7` es un
+ancestro **no reescrito**, así que su rojo fijo sobrevive a cualquier decisión sobre los tres últimos
+commits; `REV_FRESCA = c85dff9` es de los que cambiarían de sha. Si alguna vez se reescribe la cadena, el
+test no falla en silencio: su propia guarda imprime «el anclaje del control se perdió» con la revisión
+ausente. Ese es el comportamiento esperado y hay que leerlo como re-anclar, no como relajar a HEAD.
+
+Esta sección viaja en el commit hijo directo de `f288a67` (verificable con `git rev-list --parents -n1 HEAD`).
+No tocó corpus ni artefactos generados — es la única ruta del commit —, así que la cola canónica no se
+re-ejecutó: packs e índice siguen describiendo el mismo árbol y el verificador de §7 lo confirma en el árbol
+de `f288a67` (`[OK] … 565 rutas materializadas`, `EXIT=0`).
