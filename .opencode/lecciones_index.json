@@ -4,8 +4,8 @@
   "cobertura": {
     "archivos_analysis_escaneados": 16,
     "archivos_contexto_escaneados": 39,
-    "archivos_md_escaneados": 417,
-    "ids_con_definicion": 332,
+    "archivos_md_escaneados": 422,
+    "ids_con_definicion": 339,
     "ids_citados_sin_definicion": 51,
     "familias_incluidas": [
       "L",
@@ -385,10 +385,11 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 115,
+      "total_citas": 175,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
       "redefiniciones": []
     },
@@ -833,10 +834,10 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 12,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -1314,10 +1315,10 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 34,
+      "total_citas": 36,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/TRIBUNAL-OFFLINE-2026-09-09"
       ],
       "redefiniciones": []
     },
@@ -1331,7 +1332,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -1514,7 +1515,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 58,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2015,7 +2016,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ],
@@ -2073,10 +2074,10 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 33,
+      "total_citas": 70,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -2199,7 +2200,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
@@ -2266,12 +2267,12 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 86,
+      "total_citas": 109,
       "planes_que_lo_citan": [
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
       ],
@@ -2752,10 +2753,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 52,
+      "total_citas": 96,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -2812,10 +2813,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 62,
+      "total_citas": 103,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -2864,7 +2865,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 43,
+      "total_citas": 61,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -2899,7 +2900,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 30,
+      "total_citas": 61,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -2918,12 +2919,12 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 56,
+      "total_citas": 80,
       "planes_que_lo_citan": [
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -2972,13 +2973,13 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 67,
+      "total_citas": 69,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -3010,14 +3011,14 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 49,
+      "total_citas": 51,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
     },
@@ -3299,11 +3300,11 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 66,
+      "total_citas": 83,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
@@ -3421,7 +3422,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 85,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
@@ -3440,7 +3441,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 21,
+      "total_citas": 62,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3457,7 +3458,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 33,
+      "total_citas": 86,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -3536,7 +3537,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ],
@@ -3621,7 +3622,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 15,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3635,7 +3636,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3649,7 +3650,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 3,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3663,7 +3664,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3677,7 +3678,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 13,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3691,7 +3692,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 21,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3705,7 +3706,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 9,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3719,7 +3720,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3733,7 +3734,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 11,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3747,8 +3748,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
-      "planes_que_lo_citan": [],
+      "total_citas": 24,
+      "planes_que_lo_citan": [
+        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
+      ],
       "redefiniciones": []
     },
     {
@@ -3761,7 +3764,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 43,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -3775,10 +3778,108 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 56,
       "planes_que_lo_citan": [
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-13",
+      "familia": "L",
+      "enunciado": "El primer diseño del triaje no podía perder: el pool de candidatos se construía excluyendo por definición las filas ya ancladas en §2, así que removed: [] era cierto sobre un conjunto donde no existía nada que borrar, y el mutante de AC14 no tenía rojo que producir. Hubo que re-preguntar también por las ancladas (opción por defecto activa) para que el emisor falso dijera no-pertinente sobre once filas y el guard tuviera trabajo real — Un candado aditivo probado sobre el conjunto vacío es la variante silenciosa de L-HF1: el verde no miente sobre el presente, miente sobre la cobertura de la prueba. El bug al que sobrevive un guard no está en el camino feliz, está en el camino que el fixture nunca instancia",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 9,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-14",
+      "familia": "L",
+      "enunciado": "El check de frescura propio de C reventó con AttributeError: 'str' object has no attribute 'get' sobre un JSON de prueba que sí existía y sí se parseaba, pero cuya clave lecciones no era lista. Es decir: el lector caído se reportaba como excepción del programa, no como estado del artefacto, justo en el instrumento cuya tesis es que un lector roto no se lee como ausencia — R2.9 nombra tres causas (no está / vencido / no se puede parsear) y deja una cuarta implícita: parseable no es conforme. Un except que solo cubre JSONDecodeError traduce un problema de forma a traceback, y un traceback no es un estado publicable",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 7,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-15",
+      "familia": "L",
+      "enunciado": "Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO. Dos controles fallaron antes de dar con la causa: copiar el par de índice del árbol de trabajo no lo arregló, y copiar además los documentos de los cuatro planes tampoco. Pasó a 56 passed únicamente al regenerar el par *dentro* de ese árbol. El hook había dado 7/7 en verde durante el commit — [6/7] build_lesson_index.py --check corre contra el árbol de trabajo, así que su verde describe el árbol que se dejó, no el commit que se escribió. Y el par generado no es reubicable: es función de todo el corpus de .opencode/plans/ —incluidas las fuentes de planes ajenos que tampoco están commiteadas—, por lo que copiarlo de otro árbol produce un artefacto que no corresponde a ningún corpus de ese árbol",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-16",
+      "familia": "L",
+      "enunciado": "El primer ancla del mutante de AC23 no atribuyó: apagado GUARD_NO_TRUNCAMIENTO_ACTIVO, el pack de FASE-RELEASE perdía el bloque de declaración pero la aserción nombra_la_fuente_pedida seguía en True, porque el texto que miraba —el nombre de la sección pedida— también está en los documentos del corpus que el pack copia. El rojo existía en bytes y era ciego en lectura — Un mutante hay que anclarlo al texto que el generador produce, no al texto que el generador traslada: en un artefacto derivado de un corpus, casi cualquier cadena del artefacto pertenece al corpus, y ahí el ancla no distingue «el programa escribió» de «el programa copió». Es L-V2.1 en un terreno nuevo —no «el id equivocado» ni «la lista entera», sino «la cadena no es del mutado»",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 7,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-17",
+      "familia": "L",
+      "enunciado": "Escribir los packs rompió un gate ajeno: docs/CONTRIBUTING.md entraba al pack por una sección declarada, y la regla de la fase era «el pack se escribe dentro del plan». Copiarlo a .opencode/plans/<PLAN>/briefing/ dejó 2 referencias rotas nuevas y el quick pasó de 11/11 a 10/11 con [8/11] en rojo — un verificador de integridad de rutas del corpus, que FASE-D no tocó ni leyó. Y en el mismo gesto el artefacto generado volvió a envejecer el índice de lecciones: 5 .md nuevos dentro del corpus que build_lesson_index.py recorre — Un artefacto derivado no es neutro respecto al directorio donde cae: pasa a ser corpus para todo verificador que lo recorra por glob, así que hereda las obligaciones de un documento escrito a mano (referencias válidas, presencia en el índice) sin tenerlas. El plan elegía la ruta del pack por conveniencia de cierre, no por el radio de acción de los gates que viven ahí",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 17,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-18",
+      "familia": "L",
+      "enunciado": "FASE-D publicó en 09 §D un par def test_ 4.360 → 4.404 («medido al abrir la fase»). Al cerrar, el mismo comando canónico no dio 4.360 sobre ningún árbol: disco 4.557, git grep sobre HEAD 4.470, y disco − contribución propia 4.508 — que es exacto el POST que publicó FASE-C. El par refutado no tenía crudo en evidence/, así que no había de dónde defenderlo — Es A6 y «quién produce el dato publicado» aplicados a mí mismo: una cifra transcrita de memoria y redactada sin su comando al lado entra al documento con la misma apariencia que una medida, y el plan no tiene cómo distinguirlas. El daño no es el número —la resta propia sí cuadraba con su contribución— sino que se verificaba contra un minuendo que nadie midió",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 5,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-19",
+      "familia": "L",
+      "enunciado": "FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el before y el after subieron los dos (más fuentes crecidas en ambos lados) y el total quedó dos veces desfasado del número publicado. Lo mismo con el par de tamaños de AC23, que cambió cuando la declaración dejó de incluir la ruta absoluta intentada. Las cifras se retiraron de los tres .md y quedaron solo en carga.json / carga-pre-post.md / mutation/resumen.txt — Es A6 con un mecanismo nuevo: no es que el documento envejezca al medir otra cosa — es que el documento medido es parte de lo medido. Un generador que embeddinga sus propias fuentes de gobierno crea un punto fijo inestable: cualquier cifra de tamaño que se publique en un .md que el pack copia cambia la próxima medición del tamaño. El verificador no está mal: lo que está mal es el *canal*",
+      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 54,
+      "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
@@ -3849,7 +3950,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -3912,10 +4013,10 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 48,
+      "total_citas": 69,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
@@ -5159,10 +5260,10 @@
     {
       "id": "S-B1",
       "familia": "S",
-      "total_citas": 7,
+      "total_citas": 9,
       "planes_que_lo_citan": [
-        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
       ]
     },
     {
@@ -5252,6 +5353,14 @@
       ]
     },
     {
+      "id": "D-E",
+      "familia": "D",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "L-QW.1",
       "familia": "L",
       "total_citas": 3,
@@ -5301,14 +5410,6 @@
       "total_citas": 2,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24"
-      ]
-    },
-    {
-      "id": "D-E",
-      "familia": "D",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
