@@ -255,9 +255,21 @@ a 12:55, o sea relojes más nuevos que cualquier commit):
   nuevas → `[OK] Índice de lecciones fresco (339 IDs)` / `nombre=328 commit=11 sin_fuente=0` / `EXIT=0`.
   **Ésta es la prueba que S15 debía dar:** los archivos llegan con reloj nuevo, las fechas salen del commit
   y el par del índice no se mueve.
-- **(c)** lleva esas cinco rutas más `13-cierre-de-sesion.txt`, `15-curaciones-previas-B.txt` y este
-  archivo. Commitear no cambia un byte del corpus, así que el `EXIT=0` de arriba es el que produce el HEAD
-  resultante por construcción, no por analogía.
+- **(c) `2a675fa`** — lleva esas cinco rutas más `13-cierre-de-sesion.txt`, `15-curaciones-previas-B.txt`
+  y este archivo: 8 archivos, `338(+) 17(-)`, hook `7/7 OK`. Commitear no cambia un byte del corpus, así que
+  el `EXIT=0` de arriba es el que produce el HEAD resultante por construcción, no por analogía.
+
+**Confirmación pos-commit, medida sobre el árbol ya publicado (después de (c)).** Clon nuevo de `2a675fa`
+(`--local --no-checkout`, `git config core.longpaths true` dentro del clon, `checkout HEAD -- scripts
+.opencode` → `CHECKOUT_RC=0`), con **481 archivos** de `.opencode`/`scripts` forzados a un mtime posterior
+a todos los commits → `[OK] Índice de lecciones fresco (339 IDs)` / `nombre=328 commit=11 sin_fuente=0` /
+`EXIT=0`. Lo que el bullet anterior argumentaba por construcción queda así medido en el árbol del propio
+commit, y el saldo del árbol justo al cerrar (c) fue `git status --porcelain` = **0** rutas, con
+`origin/master...HEAD` = `0 3`. (La única ruta sucia a partir de ese instante es este archivo, por el
+párrafo que el lector tiene delante.)
+⟦Nota de autoría: este párrafo se escribió **después** de commitear `2a675fa`, así que no pudo viajar
+dentro de él. Queda sin commitear porque la instrucción del operador cubrió tres commits; su destino es un
+`(d)` expreso o el próximo commit del plan. Ninguna de las cifras de arriba depende de esta nota.⟧
 
 Push: **no autorizado en esta sesión** (instrucción aparte del commit). Al llegar, se ofrece el gate L3 y se
 declara si se pasó o se saltó, con su resultado. AGENTS.md y `.cursorrules` no se tocaron: la regla del
@@ -265,8 +277,54 @@ clasificador exige instrucción explícita para el `.md` central, y no hay rojo 
 4.564 funciones y el disco da 4.568 (+4 de S15), dentro de la tolerancia ±5 % del instrumento de
 `validate_agents_md.py::check_2_test_count`.
 
-**Auxiliares y saldo.** Los clones y la extracción de esta sección viven en `temp/prueba-s15/` y se borran
-al terminar: el crudo que queda como evidencia es el de este expediente, y el comando de cada medición está
-escrito arriba para quien la quiera re-correr. Lo que la sesión deja sin cerrar, con su dueño: la fila
-`L-VCF-15` (línea 90 del `10-analisis`) sigue publicando «9 de las 335 entradas», cifra refutada por la
-medición de la tarea 1, porque el mandato cerró el barrido a nueve sitios y esa fila no era uno de ellos.
+**Auxiliares y saldo.** Los clones y la extracción de esta sección (`temp/prueba-s15/`) y los auxiliares de
+la cola (`temp/_q_*.txt`, `temp/_l90.txt`) se borran al terminar: el crudo que queda como evidencia es el de
+este expediente, y el comando de cada medición está escrito arriba para quien la quiera re-correr.
+⟦Saldo declarado al escribir el §6: «la fila `L-VCF-15` (línea 90 del `10-analisis`) sigue publicando
+«9 de las 335 entradas», cifra refutada por la medición de la tarea 1, porque el mandato cerró el barrido a
+nueve sitios y esa fila no era uno de ellos».⟧ Ese saldo quedó cerrado en la segunda pasada, abajo.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+7) SEGUNDA PASADA — lo que la publicación de §6 venció, y el rojo que el propio barrido fabricó
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Ejecutada sobre `2a675fa`, con la lista de pendientes re-medida y autorizada por el operador. Dos escrituras
+de corpus, las dos en `10-analisis-post-implementacion.md`, texto original conservado como antecedente:
+
+- **La afirmación de no-versionado** (viñeta «Lo que este cierre no afirma», línea 400): decía que el
+  producto de D, los cierres documentales y el expediente seguían **solo en el árbol de trabajo**. Falso
+  desde (c). Anotado con los tres shas, `git status --porcelain` = 0 y paridad `0 3`.
+- **La fila `L-VCF-15`** (línea 90): publicaba «**9 de las 335** entradas con `fuente_fecha = mtime`» y
+  recetaba «`git archive HEAD` extraído a un árbol limpio y correr ahí» como verificador de autosuficiencia
+  del commit. Las dos cosas están vencidas por lo medido en §6: la cifra es **11 de 339**, y el instrumento
+  recetado **falla por diseño** con la cura puesta (`_git_fecha` devuelve `None` ante un árbol sin
+  repositorio → `commit=0 sin_fuente=11`), así que el sustituto es un clon con `core.longpaths` activado
+  dentro. La lección de fondo no se toca: verde en mi árbol no es verde en mi commit, y `[6/7]` lee el
+  árbol de trabajo. **Su línea 90 sigue citada aquí por número, y el número vale mientras nadie edite la
+  fila por encima de ella.**
+
+**El rojo que esta pasada fabricó, y por qué el instrumento tenía razón.** La primera corrida de
+`run_all_validations.py --quick` terminó `EXIT=1` con `[9/11] Plan Citations` en rojo: la anotación de la
+fila 90 citaba `scripts/build_lesson_index.py:131` **por número de línea**, que es exactamente lo que
+prohíbe R2.2 del executor y lo que a esta sesión le costó dos re-lecturas de anclajes (§1 y §4: «lea antes,
+esas líneas se movieron»). Cura: la cita pasó a símbolo (`_git_fecha`, su docstring). No se tocó el
+baseline con `--update-baseline` — el registro no creció legítimamente, la cita estaba mal escrita.
+Después de la cola completa: `[OK] Plan citations: 743 citas históricas, 0 nuevas y 0 crecimientos`,
+packs `5/5 frescas` con `EXIT=0`, índice `[OK] … (339 IDs)` / `nombre=328 commit=11 sin_fuente=0` con
+`EXIT=0`, y `--quick` **11/11** `EXIT=0`.
+
+**Y el acoplamiento se midió sobre sí mismo.** La cuenta de citas de `L-VCF-17` pasó de **18 a 20** al
+escribir estas dos anotaciones: **+1** por la mención dentro de la fila 90 y **+1** por la copia de esa fila
+en el pack `briefing/FASE-RELEASE.md`, que vive dentro del corpus que el índice escanea. Es L-VCF-17
+documentándose a sí misma: escribir sobre el instrumento mueve la cifra que el instrumento publica. Por eso
+el par del índice viaja en este mismo commit y no en otro.
+
+**Commit (d)** — hijo directo de `2a675fa` (verificable con `git rev-list --parents -n1 HEAD`), 9 rutas: el
+`10-analisis`, los cinco packs, el par `.opencode/LECCIONES-INDEX.md` + `lecciones_index.json` y este
+expediente. Su `numstat`, caso por caso: `10-analisis` 6/1, packs `10/10, 9/9, 13/13, 9/9, 24/19`, par `1/1` y `1/1`.
+Ninguna escritura de esta pasada re-codificó un archivo: `CR = 0` en los dos documentos editados y
+pila de marcadores `0` abiertos / `0` huérfanos en ambos (`10-analisis` crudo 29/29, este expediente 7/7).
+Lo que sigue sin cerrar tras (d), con su dueño: el push de los cuatro commits (instrucción aparte, gate L3
+ofrecido antes), `AGENTS.md` (config central: 4.564 publicado contra 4.568 en HEAD **y** en árbol, delta 0,
+y su nota de desglose «+94 sin commitear» ya no describe nada), el typo «del mandatos» en el mensaje de
+`2a675fa` (enmendar exige instrucción explícita) y la verificación del sha del manifiesto del archivador,
+que vive fuera del workspace y cuya lectura negó el clasificador.
