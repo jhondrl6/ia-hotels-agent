@@ -1,0 +1,177 @@
+{
+  "scope": "Archivos rastreados y no ignorados inventariados en 20-permisos-pre.json; contenido y mtime, no prueba de operaciones transitorias",
+  "changed": [
+    {
+      "path": ".opencode/LECCIONES-INDEX.md",
+      "before": {
+        "sha256": "0b76630935d01a74862cb6580f4ca9724c099db1b847c11073028bed66374eb2",
+        "bytes": 121887,
+        "mtime_ns": 1790353762272157100
+      },
+      "after": {
+        "sha256": "0b76630935d01a74862cb6580f4ca9724c099db1b847c11073028bed66374eb2",
+        "bytes": 121887,
+        "mtime_ns": 1790356334187051300
+      }
+    },
+    {
+      "path": ".opencode/lecciones_index.json",
+      "before": {
+        "sha256": "ceaaf8344e2a02ee4de98719e9258cf7a8296756b482fd596ffe49b1798725dd",
+        "bytes": 323145,
+        "mtime_ns": 1790353762273158500
+      },
+      "after": {
+        "sha256": "ceaaf8344e2a02ee4de98719e9258cf7a8296756b482fd596ffe49b1798725dd",
+        "bytes": 323145,
+        "mtime_ns": 1790356334188054100
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+      "before": {
+        "sha256": "4d85d9a12a3640f9790f9857df7187455fad890e0baf873e0445ca102d3a36b6",
+        "bytes": 27364,
+        "mtime_ns": 1790266363351001300
+      },
+      "after": {
+        "sha256": "551a091fd2667614eedeec1d6889ece6459637c176d488426579acf5152f2b71",
+        "bytes": 28426,
+        "mtime_ns": 1790356122091806700
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "before": {
+        "sha256": "bc9cf7383347092c65e4ee0594873945fd7b25ea786e897699fe9527304255d3",
+        "bytes": 25035,
+        "mtime_ns": 1790352828355746900
+      },
+      "after": {
+        "sha256": "7b68c4db09168a551576b44f6bc7344403b554de814cedca3966d2b0e2e2b7d6",
+        "bytes": 28537,
+        "mtime_ns": 1790356263511238300
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md",
+      "before": {
+        "sha256": "c996c447f878ade8210586b3ab75a2a8e05e5f9e2f92cedaa53c31bcfc4a16e8",
+        "bytes": 155255,
+        "mtime_ns": 1790353761599172700
+      },
+      "after": {
+        "sha256": "4b0adaeb41956730c15b2bf2fb31cd1195682b778519cfa1e67a80cfd857a8c5",
+        "bytes": 156317,
+        "mtime_ns": 1790356333574458000
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md",
+      "before": {
+        "sha256": "f78346b8302925ca0656b3451b6cabaa7a06084d01b1d71b03680ad221442ecb",
+        "bytes": 140185,
+        "mtime_ns": 1790353761610726300
+      },
+      "after": {
+        "sha256": "24cc095c80e6cd2d53fa459c0ee348ee622d6440b079c38232acb7adae0f0728",
+        "bytes": 141247,
+        "mtime_ns": 1790356333585533000
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md",
+      "before": {
+        "sha256": "af62d8c865440bb63376a646e58df8d8a364f707db7a3cc5ef443077f485026f",
+        "bytes": 148987,
+        "mtime_ns": 1790353761624209100
+      },
+      "after": {
+        "sha256": "ebbd206f7909ee470a7686f8f928bccf44aa437600e98b8256c374a33e621408",
+        "bytes": 150049,
+        "mtime_ns": 1790356333600364000
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md",
+      "before": {
+        "sha256": "46966ef43b69291b33c6f13baafe69daecadee9fa982b956fd52a1d57b3ddc96",
+        "bytes": 149717,
+        "mtime_ns": 1790353761634408300
+      },
+      "after": {
+        "sha256": "2005ed4b122ab5e540ca7b3c77a41f5a5bf640ea1c96a25138e30b84653f62b9",
+        "bytes": 150779,
+        "mtime_ns": 1790356333611394600
+      }
+    },
+    {
+      "path": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md",
+      "before": {
+        "sha256": "a1a8aafcb6ec828d65372c4e3c828fad30fd70f2dbb9bd4b4a0722562d3179af",
+        "bytes": 365182,
+        "mtime_ns": 1790353761656356200
+      },
+      "after": {
+        "sha256": "9765fcba1ebbfab30b55a216c221aadba7f67b7543bf25f60288d6a8e7db51b4",
+        "bytes": 369345,
+        "mtime_ns": 1790356333632691000
+      }
+    },
+    {
+      "path": "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/04-prompt-fase-release.md",
+      "before": {
+        "sha256": "dab17a2be0230da901f5270221a959ed4b1e59c87649d458a7f49cb82b91ae2a",
+        "bytes": 9998,
+        "mtime_ns": 1790353745287910900
+      },
+      "after": {
+        "sha256": "707538df4a2c409fa93bd232ec1812b088a983dc02fa3517044a8993d532ff41",
+        "bytes": 12485,
+        "mtime_ns": 1790356273697570200
+      }
+    }
+  ],
+  "missing": [],
+  "outside_allowlist": [],
+  "new_outside_dossier": [],
+  "new_in_dossier": [
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/20-permisos-pre.json",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/21-contrato-antes.txt",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/22-prompt-canonico-antes.txt",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/23-prompt-pegable-antes.txt",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/24-rectificacion-permisos.md",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/25-packs-permisos.json",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/26-validacion-permisos.txt"
+  ],
+  "checks": {
+    "C0_en_pack": true,
+    "bloqueo_en_pack": true,
+    "cuatro_prompts_explicitos": true,
+    "todos_completos": true,
+    "HEAD_igual": true,
+    "staged_vacio": true
+  },
+  "packs": [
+    {
+      "fase": "FASE-A",
+      "estado": "COMPLETO"
+    },
+    {
+      "fase": "FASE-B",
+      "estado": "COMPLETO"
+    },
+    {
+      "fase": "FASE-C",
+      "estado": "COMPLETO"
+    },
+    {
+      "fase": "FASE-D",
+      "estado": "COMPLETO"
+    },
+    {
+      "fase": "FASE-RELEASE",
+      "estado": "COMPLETO"
+    }
+  ]
+}

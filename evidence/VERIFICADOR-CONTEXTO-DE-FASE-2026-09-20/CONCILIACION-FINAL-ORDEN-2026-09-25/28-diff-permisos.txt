@@ -1,0 +1,283 @@
+--- 21-contrato-antes.txt
++++ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+@@ -47,8 +47,15 @@
+ 
+ | Momento | Qué contiene | Red | Autorización | Qué se publica si falta |
+ |---|---|---|---|---|
+-| **Cierre offline** | sync de versiones, CHANGELOG, `GUIA_TECNICA`, `REGISTRY` por su escritor, las Secciones A/B/D/E de `09`, verificación de la interfaz del write-back con `--help` (lectura de su firma, no llamada), y los verificadores de solo lectura de la tabla §Tests y validaciones | **No** | Es el cierre propio de la fase | — |
++| **Cierre offline** | Lecturas y verificadores sin escritura; sync, documentos, registro y derivados únicamente sobre destinos autorizados | **No** | Mandato de RELEASE más autorización literal de los archivos escribibles, comprobada en C0 del prompt RELEASE | Detenerse antes de escribir si falta un destino necesario: `PENDIENTE-AUTORIZACION`, no cierre cumplido |
+ | **Aceptación remota** | re-corrida de la consulta Q7 (D8) y `--upload` del `10-analisis` antes del `git mv` (D9) | **Sí** | **Literal y propia para cada una**, con presupuesto escrito | Estado `PENDIENTE-AUTORIZACION` con su causa, **no** un PASS ni un `[OK]` por omisión |
++
++**Rectificación 2026-09-25:** «cierre propio de la fase» no otorgaba permiso sobre configuración central.
++Rige **C0 del `05-prompt-inicio-sesion-fase-RELEASE.md`**: releer los destinos reales antes de escribir.
++`sync_versions.py --check` no escribe; el sync en escritura requiere autorización literal para sus
++consumidores de `scripts/sync_config.yaml`. `VERSION.yaml` es entrada, con permiso propio para cambiarla.
++La alineación de política de DOMAIN_PRIMER no se autoriza mediante el sync de cabeceras. Tampoco se
++actualizan baselines para absorber errores. Sin permiso suficiente, checkpoint previo, no cierre completo.
+ 
+ El archivado (`git mv`) es un **tercer** momento y conserva su autorización separada: no la concede el
+ cierre offline ni la sustituye una subida pendiente. Con la aceptación remota pendiente, el plan
+@@ -275,14 +282,14 @@
+ ./venv/Scripts/python.exe scripts/build_lesson_index.py
+ # ⟦traslado⟧ — el archivado es un tercer momento, con autorización expresa
+ git mv .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
++# Cola final tras todas las escrituras autorizadas: no modificar baselines para absorber errores.
++./venv/Scripts/python.exe scripts/validate_opencode_refs.py
++./venv/Scripts/python.exe scripts/validate_plan_citations.py
++# Resolver cualquier corrección de corpus autorizada antes de regenerar los derivados.
++./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan <ruta-vigente-del-plan>
+ ./venv/Scripts/python.exe scripts/build_lesson_index.py
+-# regenerar el pack con las rutas ya trasladadas, ANTES de verificarlo (§Carga total y frescura).
+-# `--plan` nombra el plan **en su ruta vigente**: AC19 obliga a que el generador resuelva también
+-# un plan bajo `Archives/`, porque este bloque lo llama después del `git mv`.
+-./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan <ruta-vigente-del-plan>
+-./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix
+-./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline
+ ./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan <ruta-vigente-del-plan> --check
++./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+ ```
+ 
+@@ -293,7 +300,12 @@
+ 
+ *(Forma unificada el 2026-09-20: los prompts de fase ya usaban el intérprete del `venv`; este bloque
+ canónico decía `python`, que bajo Git Bash resuelve al intérprete sin dependencias del proyecto. El
+-orden y sus argumentos no cambian.)*
++orden y sus argumentos no cambiaron en aquella intervención.)*
++
++**Rectificación 2026-09-25:** retiradas las escrituras automáticas `--fix` y `--update-baseline` de la
++secuencia; requieren alcance propio y nunca absorben errores. La cola del prompt y del contrato queda
++alineada: últimas escrituras autorizadas → packs → índice → checks, sin sustituir C0 ni los permisos
++remotos y de traslado. Si no hubo archivado autorizado, verificar en la ruta actual y declararlo pendiente.
+ 
+ ## FASE-VERIFY: no aplica, con la razón medida
+ 
+--- 22-prompt-canonico-antes.txt
++++ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+@@ -31,9 +31,37 @@
+ 
+ | Momento | Operaciones | Qué lo habilita | Si falta el permiso |
+ |---|---|---|---|
+-| **Offline** (propio de la fase) | sync, CHANGELOG, `GUIA_TECNICA`, `REGISTRY` por su escritor, `09` A/B/D/E, `validate_qmind_writeback.py --help` (lectura de firma), y los verificadores de solo lectura | El mandato de este RELEASE | — |
++| **Offline** | Lecturas y verificadores sin escritura; documentos, sync, registro y derivados solo sobre destinos autorizados en C0 | Mandato de RELEASE **más autorización literal de los archivos escribibles**; offline significa sin red, no permiso de escritura | Detenerse en C0 antes de escribir; declarar `PENDIENTE-AUTORIZACION`, no cierre offline cumplido |
+ | **Remoto** | re-corrida de la consulta Q7 (D8) y `--upload` del `10-analisis` (D9) | **Autorización literal propia + presupuesto escrito**, por separado para cada uno | Estado `PENDIENTE-AUTORIZACION` con su causa. **Prohibido** el PASS por omisión y prohibido promover el cierre parcial a éxito |
+ | **Traslado** | `git mv` a `Archives/` y lo que se le sigue | **Autorización propia del archivado** (no la concede el cierre documental) | Checkpoint con la operación pendiente nombrada |
++
++## C0 — Permisos de escritura antes de iniciar RELEASE
++
++**Rectificación 2026-09-25:** la versión anterior incluía `sync` en «OFFLINE (tu mandato)» y a la vez
++reservaba permisos para sus destinos centrales. Esa autorización implícita queda retirada: este prompt
++describe operaciones, **no concede permisos** sobre sus salidas. Antes de cualquier escritura de RELEASE,
++contrastar el mandato literal con las entradas y salidas reales de cada writer; si falta un destino,
++pedir autorización y detenerse. Solo pueden continuar las lecturas ya autorizadas.
++
++- `sync_versions.py --check` **no escribe**. Sin `--check`, el writer puede modificar `README.md` de la
++  raíz, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md`, según las reglas
++  vigentes de `scripts/sync_config.yaml`. El permiso debe nombrar esos destinos y limitarse a sus campos
++  de versión/fecha/codename. Releer el config al retomar: esta lista no autoriza futuras reglas.
++- `VERSION.yaml` es una **entrada** del sync, no una salida. Cambiarla requiere autorización propia con
++  versión y fecha aprobadas; no elegir un incremento por el nombre de la fase ni para corregir un rojo.
++- La escritura de contenido en `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, documentos del plan, el registro
++  `docs/contributing/REGISTRY.md` y su tracker `docs/contributing/.last_doc_phase.json` (si se pasa
++  `--archivos-mod`) requiere destinos explícitos en el mandato. Igual para `briefing/`, el par del índice
++  y el expediente nuevo de RELEASE. Preservar los
++  cambios preexistentes; no re-registrar fases ya registradas.
++- La alineación de política de **DOMAIN_PRIMER** es una decisión separada de sincronizar cabeceras.
++  Presentar la propuesta para `AGENTS.md` y `docs/CONTRIBUTING.md`; si no se autoriza literalmente,
++  conservarla pendiente, sin aplicarla ni regenerar `.agent/knowledge/DOMAIN_PRIMER.md` por arrastre.
++- `--fix`, `--update-baseline` y hooks no son vías para eludir C0. No actualizar baselines para absorber
++  errores. Red, archivado, commit y push conservan sus checkpoints separados.
++
++Si falta permiso para una escritura necesaria, el resultado es **preflight incompleto / checkpoint C0**,
++no «sync realizado» ni cierre offline completo. Ningún verde de solo lectura demuestra autorización.
+ 
+ ## Contexto
+ 
+@@ -85,10 +113,12 @@
+ 
+ ### Tarea 2: Sincronizar versiones y publicar documentación
+ 
+-`sync_versions` → CHANGELOG → `GUIA_TECNICA` → `docs/contributing/REGISTRY.md` (los cuatro módulos y
+-su check), y las Secciones A/B/D/E de `09-documentacion-post-proyecto.md`. Verificar con
+-`version_consistency_checker.py` y `sync_versions.py --check`, que son `[1/7]` y `[2/7]` del hook: si el
+-sync queda pendiente, el propio commit no pasa.
++**Solo tras completar C0.** Ejecutar las escrituras autorizadas: sync → CHANGELOG → `GUIA_TECNICA` →
++`docs/contributing/REGISTRY.md` por su escritor, sin duplicar entradas, y las Secciones A/B/D/E de `09`.
++Verificar con `version_consistency_checker.py` sin `--fix` y `sync_versions.py --check`.
++Si faltan permisos, no ejecutar sync ni un subconjunto no aprobado: registrar el checkpoint con los
++destinos pendientes. Un desajuste puede bloquear los checks del commit, pero **no** autoriza repararlo;
++si el check ya pasa, tampoco prueba que se haya escrito nada. Commit sigue siendo una acción separada.
+ 
+ ### Tarea 3: Cerrar la deuda con números, no con opinión
+ 
+@@ -148,11 +178,10 @@
+ # ⟦traslado⟧ — tercer momento, con autorización expresa
+ git mv .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
+ # ---- cola fija del cierre: se corre DESPUES de la ultima escritura de documentos ----
+-# (1) writers del corpus primero, porque reescriben .md y vencen todo lo derivado
+-#     ⟦PERMISO APARTE: --fix reescribe .opencode/**/*.md; --update-baseline escribe
+-#       .opencode/plans/plan_citations_baseline.json, que NO es un documento de este plan⟧
+-./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix
+-./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline
++# (1) comprobaciones sin escritura; no absorber errores actualizando baselines
++./venv/Scripts/python.exe scripts/validate_opencode_refs.py
++./venv/Scripts/python.exe scripts/validate_plan_citations.py
++# Si hacen falta correcciones, solicitar sus destinos antes de escribir; luego regenerar derivados.
+ # (2) el pack con la ruta ya trasladada (contrato §Carga total y frescura)
+ ./venv/Scripts/python.exe scripts/build_phase_briefing.py --plan <ruta-vigente-del-plan>
+ # (3) el par del indice DESPUES de los packs: los packs son corpus del indice
+@@ -274,9 +303,17 @@
+ workflow canonical (FASE-RELEASE).
+ Primero re-mide en disco el estado real de A, B, C y D: un AC en ⚠️ o NO-EJERCITADO viaja al cierre con
+ ese estado, no se promociona.
+-Tres momentos, tres permisos. OFFLINE (tu mandato): sync, CHANGELOG, GUIA_TECNICA, REGISTRY por su
+-escritor, 09 A/B/D/E, validate_qmind_writeback.py --help (lectura de la firma, no una llamada) y los
+-verificadores de solo lectura. REMOTO (D8 y D9): la re-corrida de Q7 y el --upload; cada uno necesita
++Antes de cualquier escritura, completa C0: este prompt no autoriza cambios centrales por llamarse
++RELEASE ni por ser offline. Contrasta el mandato literal con scripts/sync_config.yaml y los writers.
++Sin --check, sync_versions.py puede escribir README.md de raiz, AGENTS.md, .cursorrules,
++docs/CONTRIBUTING.md y docs/GUIA_TECNICA.md: exige autorizacion literal para esos destinos y sus campos
++de version/fecha/codename. VERSION.yaml es una entrada: modificarla exige version y fecha aprobadas.
++CHANGELOG, contenido de GUIA_TECNICA, REGISTRY y trackers, documentos del plan, packs, indice y expediente
++nuevo tambien deben estar nombrados como destinos autorizados. Si falta alguno necesario, detente antes
++de escribir: checkpoint C0, no cierre offline cumplido. Solo continúan las lecturas autorizadas,
++como sync_versions.py --check, validate_qmind_writeback.py --help y verificadores sin escritura.
++Alinear la politica de DOMAIN_PRIMER requiere otra decision literal; no lo autoriza el sync de cabeceras.
++REMOTO (D8 y D9): la re-corrida de Q7 y el --upload; cada uno necesita
+ autorizacion literal propia y presupuesto escrito. Sin ellos se declaran PENDIENTE-AUTORIZACION con su
+ causa y su dueno, no se omiten y no se cierran como hechos. TRASLADO: el git mv a Archives tiene su
+ propia autorizacion, separada del cierre documental.
+@@ -292,11 +329,13 @@
+ D6 queda DORMIDA: con D7 inactiva AC15 solo puede publicar NO-EJERCITADO, asi que la rama activada no es
+ alcanzable y no se la deja como opcion abierta. D7 se confirma con files_changed_to_add_provider y no se
+ activa aqui.
+-Tarea 4: conserva el orden write-back -> indice -> git mv -> refs --fix -> citas --update-baseline ->
+-REGENERAR el pack con la ruta trasladada -> REGENERAR el par del indice -> check del pack -> check del
+-indice -> quick, sin ejecutar operaciones que no tengan su autorizacion propia. Los dos writers de corpus
+-van ANTES de los derivados porque reescriben .md; el indice va DESPUES de los packs porque los packs son
+-.md dentro de su corpus (L-VCF-17). Y esa cola entera se corre otra vez al final, despues de las ultimas
++Tarea 4: consulta, subida y archivado conservan sus permisos y dependencias; sin ellos no se ejecutan.
++Tras las escrituras autorizadas y, solo si fue autorizado, el traslado: refs y citas SIN --fix ni
++--update-baseline -> REGENERAR los packs en la ruta vigente -> REGENERAR el par del indice -> check del
++pack -> check del indice -> quick. No actualizar baselines para absorber errores. Si hacen falta
++correcciones de corpus, pedir permiso para sus archivos y hacerlas ANTES de generar los derivados;
++el indice va DESPUES de los packs porque son .md dentro de su corpus (L-VCF-17).
++La cola de generacion y comprobacion se corre al final, despues de las ultimas
+ escrituras documentales del Post-ejecucion (paso 7), no solo a mitad de fase. El --check del pack despues
+ del traslado falla por diseno si no lo regeneraste: la
+ cura es regenerar el derivado, nunca editar build_phase_briefing.py ni su proveniencia para que pase. Si
+--- 23-prompt-pegable-antes.txt
++++ evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/04-prompt-fase-release.md
+@@ -9,15 +9,28 @@
+ declarada). Este archivo es una **copia pegable**, no una segunda fuente de estados: si el prompt canónico
+ cambia, manda el canónico.
+ 
+-## Alcance OFFLINE exacto (lo único que cubre el mandato de la fase)
++## C0 — Autorizar destinos antes de escribir
++
++**Rectificación 2026-09-25:** la versión inicial de este entregable confundía «offline» con permiso de
++escritura y agrupaba `sync_versions.py` con su modo `--check`. Se retira esa lectura; el antecedente se
++conserva en `23-prompt-pegable-antes.txt`. Rige C0 del prompt canónico y de su contrato.
++
++Antes de cualquier escritura de RELEASE, contrastar los destinos reales de los writers con una
++instrucción literal del operador. Iniciar RELEASE no autoriza por sí solo `AGENTS.md`, `.cursorrules`,
++`VERSION.yaml`, `REGISTRY`, sus trackers ni otros archivos centrales. Si falta un destino necesario,
++detenerse y pedirlo; solo continuar lecturas autorizadas. No declarar cierre offline completo con C0
++incompleto. La alineación de política de DOMAIN_PRIMER se decide aparte del sync de cabeceras.
++
++## Operaciones offline previstas (sujetas a C0; no son permisos concedidos)
+ 
+ | Operación | Comando / destino | Naturaleza |
+ |---|---|---|
+ | Confirmar estado de A/B/C/D **en disco** | `git ls-files scripts/decision_client.py scripts/triage_lesson_relevance.py scripts/build_phase_briefing.py`, `git status --short`, tablas de `dependencias-fases.md` | lectura |
+ | Leer la firma del writer sin llamarlo (D10) | `./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --help` | lectura local, **no** es remota |
+-| Sincronizar versiones | `sync_versions.py` y su `--check` → escribe `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md` desde `VERSION.yaml` | escritura local (gobernada por `[1/7]`/`[2/7]`) |
+-| Publicar documentación de cierre | `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `09-documentacion-post-proyecto.md` §A/B/D/E | escritura local |
+-| Registrar la fase | `scripts/log_phase_completion.py` — **único** escritor de la cabecera `> **Ultima actualizacion:**` de `docs/contributing/REGISTRY.md` | escritura local |
++| Verificar sincronización | `sync_versions.py --check` | solo lectura; un rojo no autoriza escribir |
++| Sincronizar versiones | `sync_versions.py` **sin `--check`** puede escribir `README.md` de raíz, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md`, según `scripts/sync_config.yaml` | requiere permiso literal de esos destinos para versión/fecha/codename; no concede edición de política |
++| Publicar documentación de cierre | `CHANGELOG.md`, contenido de `docs/GUIA_TECNICA.md`, documentos del plan y `09` §A/B/D/E | escritura solo con destinos autorizados en C0 |
++| Registrar la fase | `scripts/log_phase_completion.py` sobre `docs/contributing/REGISTRY.md`; también `docs/contributing/.last_doc_phase.json` si se pasa `--archivos-mod` | permiso explícito sobre todas sus salidas; sin duplicar fases |
+ | Verificar sin escribir | `validate_governance_numbers.py --report` (**sin destino**), `validate_document_integration.py`, `validate_lesson_capitalization.py`, `validate_plan_citations.py`, `validate_opencode_refs.py` (**sin `--fix`**), `run_all_validations.py **--quick**` | lectura |
+ | Cierre de derivados (cola fija, **después** de la última escritura de documentos) | `build_phase_briefing.py --plan <ruta>` → `build_lesson_index.py` → `build_phase_briefing.py --plan <ruta> --check` → `build_lesson_index.py --check` → `run_all_validations.py --quick` | escritura en `briefing/` y en el par `.opencode/LECCIONES-INDEX.md` + `lecciones_index.json` |
+ 
+@@ -30,8 +43,9 @@
+ 
+ ## Destinos de sincronización (qué archivo es de quién)
+ 
+-- `VERSION.yaml` → fuente única de versión; solo el RELEASE la mueve, y con ella el hook `version-sync`
+-  reescribe los consumidores nombrados arriba. **Nunca** se edita un consumidor a mano.
++- `VERSION.yaml` → entrada del sync, no salida. Su cambio exige autorización propia con versión y fecha
++  aprobadas; ni el nombre RELEASE ni un hook autorizan un incremento. El permiso para sincronizar
++  cabeceras no autoriza editar su política ni cambiar código/configuración del writer.
+ - `docs/contributing/REGISTRY.md` → **solo** por `log_phase_completion.py`; su regla de fecha
+   (`registry_last_update`) **fue retirada** de `sync_config.yaml` a propósito — no reintroducirla.
+ - `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` → **solo** por `build_lesson_index.py`,
+@@ -41,14 +55,15 @@
+ - `docs/CONTRIBUTING.md`, `docs/contributing/*.md`, `AGENTS.md`, `.cursorrules`, `.agents/**` → **configuración
+   central**: cualquier edición suya exige instrucción literal **separada** del mandato de RELEASE.
+ 
+-## Checkpoints separados (cinco + dos). Cada uno se pide y se reporta aparte
++## Checkpoints separados. C0 precede las escrituras; cada permiso se pide y se reporta aparte
+ 
+ | # | Checkpoint | Operación | Qué lo habilita | Si falta el permiso, se publica como |
+ |---|---|---|---|---|
++| C0 | **Destinos offline** | Contrastar salidas reales de sync, registro y demás writers con los archivos permitidos | Mandato literal con destinos y campos de sincronización; permiso propio para cambiar VERSION y para alinear política | Preflight incompleto: no escribir ni declarar cierre offline completo |
+ | C1 | **Consulta** QMind (D8) | re-corrida de Q7 con `--nb 01a04d98-b7bd-778c-8441-26fdc7e35f45` (la forma con el nombre da `Bad request`) | autorización literal + presupuesto de lectura | `PENDIENTE-AUTORIZACION` con la causa, **no** «verificada» ni omitida |
+ | C2 | **Subida** QMind (D9) | `validate_qmind_writeback.py --upload <plan>` con el plan **aún en raíz** (R2.10) | autorización literal + presupuesto; re-leer la firma (writer decide **por título**, degrada a `exit 0` sin CLI) | `PENDIENTE-AUTORIZACION`, y la ingesta final por `qmind source upload` directo **dicho explícitamente** |
+ | C3 | **Archivado** | `git mv .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/` + re-regeneración de packs e índice con la ruta trasladada | autorización propia del traslado, separada del cierre documental | no se mueve nada; el plan queda en raíz y se declara |
+-| C4 | **Writers de corpus** | `validate_opencode_refs.py --fix` (reescribe `.opencode/**/*.md`) y `validate_plan_citations.py --update-baseline` (escribe `.opencode/plans/plan_citations_baseline.json`) | permiso **aparte** por archivo: ambos tocan rutas fuera del plan | se corre el check **sin** `--fix`; el rojo se declara con su lista |
++| C4 | **Correcciones de corpus** | Comprobar refs y citas sin `--fix` ni `--update-baseline`; presentar cualquier corrección necesaria | Permiso aparte por archivo antes de escribir; no actualizar baselines para absorber errores | El rojo se declara con su lista, sin reescrituras automáticas |
+ | C5 | **Commit** | `git commit` del árbol (o del subconjunto que se nombre) | instrucción literal; el hook `[1/7]…[7/7]` puede reescribir `AGENTS.md`/`VERSION.yaml`/`.cursorrules` — por eso se decide **antes** qué viaja | árbol sin commitear, con la **frontera declarada** (qué rutas propias vs. ajenas, como hizo FASE-C con sus 37 rutas y 164 hunks) |
+ | C6 | **Push** | `git push` | instrucción literal separada del commit | `PENDIENTE-AUTORIZACION`; el estado del remoto **se mide**, no se infiere |
+ 
+@@ -71,15 +86,24 @@
+ workflow canonical (FASE-RELEASE).
+ Re-mide en disco el estado de A, B, C y D antes de tocar nada: AC15 sigue NO-EJERCITADO y D6 dormida,
+ y ese estado viaja al cierre tal cual. La dependencia tecnica de JEV ya se entrego; eso no autoriza nada.
+-Momento OFFLINE (tu mandato): sync, CHANGELOG, GUIA_TECNICA, REGISTRY por su unico escritor
+-(log_phase_completion.py), 09 A/B/D/E, validate_qmind_writeback.py --help (leer la firma, no llamarla) y
+-los verificadores de solo lectura. validate_governance_numbers.py es LEER el estado, no reparar .agents/.
++Primero C0, antes de escribir: este prompt no concede permisos sobre los destinos de los writers.
++Relee scripts/sync_config.yaml: sync_versions.py SIN --check puede modificar README.md de raiz,
++AGENTS.md, .cursorrules, docs/CONTRIBUTING.md y docs/GUIA_TECNICA.md. Exige autorizacion literal para
++esos archivos y sus campos de version/fecha/codename; --check solo lee. VERSION.yaml es entrada, no
++salida del sync: cambiarla exige version y fecha aprobadas. Exige tambien destinos autorizados para
++CHANGELOG, contenido de GUIA_TECNICA, REGISTRY y trackers, documentos del plan, packs, indice y expediente.
++Si falta alguno necesario, detente antes de escribir: checkpoint C0, no cierre offline completo.
++Solo pueden continuar lecturas autorizadas: sync_versions.py --check, validate_qmind_writeback.py --help
++y verificadores sin escritura. Alinear la politica de DOMAIN_PRIMER exige otra decision literal:
++el permiso de sincronizar cabeceras no autoriza esa alineacion ni regenerar el primer.
++validate_governance_numbers.py es LEER el estado, no reparar .agents/.
+ No corras run_all_validations.py sin --quick: el modo completo invoca el write-back de QMind.
+ Checkpoints que NO estan autorizados por este prompt y se piden uno a uno: C1 consulta Q7 (D8), C2 subida
+---upload (D9), C3 git mv a Archives, C4 refs --fix y citas --update-baseline (escriben fuera del plan),
+-C5 commit, C6 push. Sin su permiso literal se declaran PENDIENTE-AUTORIZACION con causa y dueno, nunca
+-se omiten en silencio ni se promociona el cierre parcial a exito.
+-Cola final despues de la ultima escritura de documentos: refs/citas si fueron autorizados -> regenerar
++--upload (D9), C3 git mv a Archives, C4 correcciones de corpus, C5 commit, C6 push.
++Sin su permiso literal se declaran PENDIENTE-AUTORIZACION con causa y dueno, nunca
++se omiten en silencio ni se promociona el cierre parcial a exito. No actualizar baselines para absorber
++errores. Refs y citas se verifican sin --fix ni --update-baseline; cualquier correccion requiere permiso.
++Cola final despues de la ultima escritura autorizada: regenerar
+ packs -> regenerar el par del indice -> check del pack -> check del indice -> quick. Nunca al reves: los
+ packs son .md dentro del corpus del indice (L-VCF-17).
+ No uses --carga ni --informe apuntando a evidence/.../FASE-D/: esa evidencia esta cerrada (S12). Usa - o
+@@ -95,13 +119,14 @@
+ Las cinco propuestas pendientes de revision humana (E3) no se aceptan ni se rechazan desde el cierre:
+ viajan como pendientes con su dueno.
+ Termina en «listo para revision» con la matriz requisito -> evidencia -> estado -> remanente, la frontera
+-del arbol (que es de esta fase, que es ajeno, que esta sin commitear) y los cinco checkpoints listados.
++del arbol (que es de esta fase, que es ajeno, que esta sin commitear) y los checkpoints C0-C6 listados.
+ ```
+ 
+ ## Qué se espera como salida legítima
+ 
+-Un **cierre documental offline** con: deuda D1–D10 leída desde sus fuentes (§13 de B para D1/S13), D6
+-dormida con causa, D2 y D7 sin tocar; C1–C6 declarados con su estado real; `09`/`10` cerrados por
++Con C0 incompleto, **checkpoint previo sin escritura**, no cierre completo. Con permisos suficientes y
++las tareas offline verificadas, un **cierre documental offline** con deuda D1–D10 leída desde sus fuentes
++(§13 de B para D1/S13), D6 dormida con causa, D2 y D7 sin tocar; C0–C6 declarados con su estado real; `09`/`10` cerrados por
+ referencia a sus artefactos; packs e índice regenerados sobre el árbol final y verificados con sus dos
+ `--check` + `--quick`; y la evidencia nueva en `evidence/…/FASE-RELEASE/` sin sobrescribir ningún
+ expediente anterior. Un resultado así **no** dice «calidad semántica medida» ni «los cuatro planes

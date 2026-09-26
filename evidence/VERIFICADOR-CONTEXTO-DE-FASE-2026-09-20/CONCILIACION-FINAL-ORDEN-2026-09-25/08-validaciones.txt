@@ -1,0 +1,154 @@
+### 08 validaciones offline realmente ejecutadas - 2026-09-25T16:23:05Z
+
+### prueba de que ninguna corrida toco evidencia cerrada:
+### git status --porcelain evidence/ | grep '^ M'  ->
+(sin lineas M: ninguna evidencia modificada; las ?? son expedientes sin rastrear)
+
+=== validate_document_integration.py ===
+      Release date aligned: 2026-09-19
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: no claim found in README
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (bytes reales LF)
+      CONTRIBUTING.md: docs/CONTRIBUTING.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT=0
+=== validate_governance_numbers.py --report (sin destino: no escribe) ===
+    ],
+    "comando": "python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA — S12)",
+    "medido_el": "2026-09-25"
+  }
+}# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe
+
+EXIT=0
+### 09 refs, citas, capitalizacion, indice y quick - 2026-09-25T16:24:28Z
+### (la orden se edito despues de la corrida anterior: el par se regenera otra vez y luego se verifica)
+
+=== validate_opencode_refs.py (SIN --fix) ===
+[PASS] OpenCode References: todas las referencias existen
+EXIT=0
+=== validate_plan_citations.py (sin --update-baseline) ===
+[FAIL] Plan citations: 1 violacion(es) (inventario actual: 744 citas)
+  - NUEVO con citas numericas (1): REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+EXIT=1
+=== validate_lesson_capitalization.py ===
+  EVALUACION-JEV-TYPESAFE-2026-09-21: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18: 5 fuentes capitalizadas -> Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20: 6 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+cobertura: 4 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 27 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (—)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+EXIT=0
+=== [regen] build_lesson_index.py ===
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+=== build_lesson_index.py --check ===
+[OK] Índice de lecciones fresco (339 IDs)
+EXIT_CHECK_IDX=0
+=== build_phase_briefing.py --plan <P> --check ===
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_CHECK_PACK=0
+=== run_all_validations.py --quick ===
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1333 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2521 rutas contra 4 marcadores (1 grandfathered con dueño)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [-] Plan Citations: Line-number citations introduced or grown in plans (fix: cite symbols, or --update-baseline if the record legitimately grew)
+      - NUEVO con citas numericas (1): REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+  [+] Lesson Capitalization: [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1353 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 10/11 validations passed
+============================================================
+  STATUS: 1 VALIDATION(S) FAILED
+EXIT_QUICK=1
+
+### 10 cola final sobre el arbol definitivo - 2026-09-25T16:26:04Z
+### causa: la corrida anterior dejo un rojo propio (cita de linea en el 10- de WHATSAPP, regla R2.2). Se cito por simbolo/seccion y se re-corre la cola.
+=== packs (regen) ===
+EXIT_PACKS=0
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+=== indice (regen) ===
+EXIT_IDX=0
+=== pack --check ===
+CHECK_PACK=0
+=== index --check ===
+CHECK_IDX=0
+=== refs (sin --fix) ===
+REFS=0
+=== citations (sin --update-baseline) ===
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+CITAS=0
+=== capitalization ===
+CAPIT=0
+=== document integration ===
+VDI=0
+=== governance numbers --report (sin destino) ===
+status SIN-HALLAZGOS findings 0
+GOV=0
+=== quick ===
+  [+] Wiring: 183 llamadas descubiertas en 1353 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+QUICK=0
+
+### 16 COLA DEFINITIVA sobre el arbol final - 2026-09-25T16:29:21Z (dependencias-fases.md y README se editaron despues de la corrida 3)
+### orden real: escrituras -> packs -> indice -> checks -> quick
+PACKS_EXIT=0
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+IDX_EXIT=0
+CHECK_PACK=0
+CHECK_IDX=0
+REFS=0
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+CITAS=0
+CAPIT=0
+VDI=0
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+QUICK=0
+### git status --porcelain evidence/ | grep '^ M' ->
+(vacio: ninguna evidencia cerrada modificada)

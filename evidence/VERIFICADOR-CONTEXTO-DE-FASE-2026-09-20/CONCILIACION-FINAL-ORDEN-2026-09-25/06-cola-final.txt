@@ -1,0 +1,30 @@
+### 06 cola final de regeneracion y checks - 2026-09-25T16:22:28Z - HEAD=5817edd
+
+=== [1/6] build_phase_briefing.py (escribe los 5 packs; --carga - y --informe - para NO tocar evidencia ajena) ===
+EXIT_PACKS=0
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+=== [2/6] build_lesson_index.py (regenera el par, DESPUES de los packs) ===
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT_INDICE=0
+=== [3/6] build_phase_briefing.py --check ===
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_CHECK_PACK=0
+=== [4/6] build_lesson_index.py --check ===
+[OK] Índice de lecciones fresco (339 IDs)
+EXIT_CHECK_INDICE=0

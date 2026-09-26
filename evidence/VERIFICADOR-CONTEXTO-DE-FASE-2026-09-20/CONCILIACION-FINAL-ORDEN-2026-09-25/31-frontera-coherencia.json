@@ -1,0 +1,40 @@
+{
+  "cambiados_en_estas_dos_pasadas": [
+    ".opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md",
+    ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/03-matriz-conciliacion.md",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/04-prompt-fase-release.md",
+    "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/05-permisos-y-decisiones.md"
+  ],
+  "fuera_de_permiso": [],
+  "desaparecidos": [],
+  "nuevos_fuera_de_expediente": [],
+  "checks": {
+    "packs": {
+      "FASE-A": "COMPLETO",
+      "FASE-B": "COMPLETO",
+      "FASE-C": "COMPLETO",
+      "FASE-D": "COMPLETO",
+      "FASE-RELEASE": "COMPLETO"
+    },
+    "C0_en_pack": true,
+    "cuatro_prompts": true,
+    "dependencias_cuatro": true,
+    "HEAD_igual": true,
+    "staged_vacio": true,
+    "evidencia_cerrada_intacta": true,
+    "carga_json_sha": {
+      "esperado": "(ver 12-huellas-post §F)",
+      "actual": "0d1755ce0e0a981e"
+    }
+  }
+}

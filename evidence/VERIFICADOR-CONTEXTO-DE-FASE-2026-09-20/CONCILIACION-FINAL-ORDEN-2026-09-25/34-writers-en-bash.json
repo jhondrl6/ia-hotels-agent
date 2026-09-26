@@ -1,0 +1,30 @@
+{
+  "supersede": "33-writers-en-secuencia.json",
+  "motivo": "33 contaba cualquier bloque fenced, incluido el ```text del prompt pegable, donde la frase \"SIN --fix ni --update-baseline\" es prosa de prohibicion. Aqui solo bloques bash y solo lineas de comando (se descartan comentarios).",
+  "medida": {
+    "prompt_canonico": {
+      "comandos_no_comentario_en_bloques_bash": 10,
+      "invocaciones_de_writer": [],
+      "cero": true
+    },
+    "contrato": {
+      "comandos_no_comentario_en_bloques_bash": 10,
+      "invocaciones_de_writer": [],
+      "cero": true
+    },
+    "copia_pegable": {
+      "comandos_no_comentario_en_bloques_bash": 0,
+      "invocaciones_de_writer": [],
+      "cero": true
+    }
+  },
+  "control_negative": {
+    "descripcion": "Se reintroduce a propositos una invocacion en un fichero temporal para comprobar que el predicado SI puede perder",
+    "resultado": {
+      "detectado": true,
+      "linea": [
+        "./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline"
+      ]
+    }
+  }
+}

@@ -1,0 +1,174 @@
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --informe C:\Users\Jhond\Github\iah-cli\evidence\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\CONCILIACION-FINAL-ORDEN-2026-09-25\29-packs-coherencia.json
+STDOUT
+
+STDERR
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+[escrito] C:/Users/Jhond/Github/iah-cli/evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/29-packs-coherencia.json
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/build_lesson_index.py
+STDOUT
+[OK] 339 IDs definidos + 51 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/build_phase_briefing.py --plan .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+STDOUT
+
+STDERR
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/build_lesson_index.py --check
+STDOUT
+[OK] Índice de lecciones fresco (339 IDs)
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_document_integration.py
+STDOUT
+============================================================
+DOCUMENT INTEGRATION VALIDATOR
+============================================================
+Project: C:\Users\Jhond\Github\iah-cli
+
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+      Executor section refs: 14
+      CONTRIBUTING section name entries: 7
+      Executor line refs (§LNN-MM): 0
+
+[PASS] CHANGELOG format consistency
+      Checked 3 recent entries
+      Last entry uses em-dash separator (correct)
+
+[PASS] Version headers with 'v' prefix
+      EXECUTOR: version v2.25.0 (OK)
+      TEMPLATE: version v1.6.0 (OK)
+      AGENTS.md: version v4.77.3 (OK)
+
+[PASS] Python path consistency (WSL)
+      phased_project_executor.md: python path OK
+
+[PASS] AGENTS.md cross-reference table
+      Cross-reference table has 6 entries
+
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.77.3
+      Release date aligned: 2026-09-19
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: no claim found in README
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (bytes reales LF)
+      CONTRIBUTING.md: docs/CONTRIBUTING.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_opencode_refs.py
+STDOUT
+[PASS] OpenCode References: todas las referencias existen
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_plan_citations.py
+STDOUT
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_lesson_capitalization.py
+STDOUT
+  EVALUACION-JEV-TYPESAFE-2026-09-21: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18: 5 fuentes capitalizadas -> Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20: 6 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+cobertura: 4 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 27 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (—)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+
+STDERR
+
+EXIT=0
+
+$ C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/run_all_validations.py --quick
+STDOUT
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-25 12:23:48
+Mode: FULL
+============================================================
+
+[1/11] Checking for residual files...
+[2/11] Checking Plan Maestro sync...
+[3/11] Checking version synchronization...
+[4/11] Checking for hardcoded secrets (tracked + staged)...
+[5/11] Checking client material policy (tracked + staged)...
+[6/11] Checking document integration...
+[7/11] Checking prompts for --release flag in intermediate phases...
+[8/11] Checking .opencode references...
+[9/11] Checking plan citations (simbolos, no numeros de linea)...
+[10/11] Checking lesson capitalization (Paso 0 del executor)...
+[11/11] Checking signal wiring by AST (AC7/AC16)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1333 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2521 rutas contra 4 marcadores (1 grandfathered con dueño)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1353 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+
+STDERR
+
+EXIT=0
+

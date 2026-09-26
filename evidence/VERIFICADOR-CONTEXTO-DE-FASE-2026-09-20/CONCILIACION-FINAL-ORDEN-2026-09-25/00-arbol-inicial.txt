@@ -1,0 +1,74 @@
+### 00 arbol inicial - capturado 2026-09-25T15:59:17Z
+### HEAD = 5817edd  branch = master
+### git status --porcelain (lineas: 68)
+ M .agent/knowledge/DOMAIN_PRIMER.md
+ M .agents/workflows/phased_project_executor.md
+ M .agents/workflows/templates/lecciones-capitalizadas-template.md
+ M .agents/workflows/templates/prompt-fase-template.md
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/04-contrato-ejecucion.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/06-checklist-implementacion.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/09-documentacion-post-proyecto.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/README.md
+ M .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/00-lecciones-capitalizadas.md
+ M .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/05-prompt-inicio-sesion.md
+ M .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/README.md
+ M AGENTS.md
+ M docs/CONTRIBUTING.md
+ M docs/contributing/.last_doc_phase.json
+ M docs/contributing/REGISTRY.md
+ M docs/contributing/documentation_rules.md
+ M docs/contributing/validation.md
+ M scripts/log_phase_completion.py
+ M scripts/sync_config.yaml
+ M scripts/validate_document_integration.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_por_asercion_no_por_linea.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py
+?? .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-REMEDIACION-2026-09-24/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/
+?? scripts/build_phase_briefing.py
+?? tests/quality_gates/governance_numbers/fixtures/
+?? tests/quality_gates/phase_briefing/
+?? tests/test_registry_fecha_documental.py
+?? tests/test_validate_document_integration.py
+
+### git diff --cached --numstat (staged)
+(vacio = nada staged)

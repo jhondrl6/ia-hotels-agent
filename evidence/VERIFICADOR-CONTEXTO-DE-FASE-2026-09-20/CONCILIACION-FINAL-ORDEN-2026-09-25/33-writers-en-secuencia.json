@@ -1,0 +1,35 @@
+{
+  "supersede": "32-frontera-corregida.json (campo cero_writers_automaticos)",
+  "motivo": "32 buscaba el literal en TODO el texto: las menciones en prosa que lo PROHIBEN contaban como invocacion y daban un rojo falso. Aqui se corta por bloques de comando y se excluyen comentarios.",
+  "medida": {
+    "prompt_canonico": {
+      "invocaciones_en_bloques_de_comando": [
+        "--update-baseline -> REGENERAR los packs en la ruta vigente -> REGENERAR el par del indice -> check del"
+      ],
+      "cero_invocaciones": false,
+      "menciones_totales_en_texto": 6
+    },
+    "contrato": {
+      "invocaciones_en_bloques_de_comando": [],
+      "cero_invocaciones": true,
+      "menciones_totales_en_texto": 2
+    },
+    "copia_pegable": {
+      "invocaciones_en_bloques_de_comando": [
+        "errores. Refs y citas se verifican sin --fix ni --update-baseline; cualquier correccion requiere permiso."
+      ],
+      "cero_invocaciones": false,
+      "menciones_totales_en_texto": 7
+    },
+    "pack_RELEASE": {
+      "invocaciones_en_bloques_de_comando": [
+        "--update-baseline -> REGENERAR los packs en la ruta vigente -> REGENERAR el par del indice -> check del",
+        "| `CONTEXTO/RELEASE` | **Cuatro permisos, no tres** ⟦rectificado 2026-09-25; la etiqueta «tres momentos» sigue siendo el título-history del bloque por sus cinco referencias vivas⟧: **C0 destinos escribibles** (offline = sin red, **no** permiso de escritura: `sync_versions.py` sin `--check` puede reescribir `README.md` de raíz, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md` según `sync_config.yaml`; `VERSION.yaml` es entrada y REGISTRY + `.last_doc_phase.json` salen del escritor del registro) · **cierre offline verificado** · **remoto** (D8 y D9, cada uno con autorización literal y presupuesto) · **traslado**. Se separa el mandato de la fase de esos permisos, con `PENDIENTE-AUTORIZACION` en vez de omisión. **Leer el estado ≠ reparar**: correr `validate_governance_numbers.py` es verificación y la reparación de `.agents/` no vuelve a hacerse aquí. **Sin writers automáticos**: `--fix` y `--update-baseline` salieron de la secuencia; los checks no escriben y ningún baseline se actualiza para absorber errores. **El `--check` posterior al traslado se apoya en una regeneración prevista**, y un rojo de un derivado no autoriza editar código. **D2 no se da por satisfecho** por las enmiendas de `REFACTOR-WHATSAPP` | contrato §Dos momentos del cierre y §Orden del cierre, prompt FASE-RELEASE |",
+        "`--update-baseline`** → **regenerar el"
+      ],
+      "cero_invocaciones": false,
+      "menciones_totales_en_texto": 10
+    }
+  },
+  "nota": "Las menciones en prosa son esperadas: son justamente la prohibicion y la trampa declarada."
+}
