@@ -1,7 +1,7 @@
 # Contribuir con la Documentacion Oficial
 
 > Este archivo responde a **una sola pregunta**: como se actualiza la documentacion oficial del repositorio con suficiencia y claridad.
-> **Version:** v4.77.3 | Consulta REGISTRY.md para el historial de fases completadas.
+> **Version:** v4.78.0 | Consulta REGISTRY.md para el historial de fases completadas.
 
 ---
 
@@ -14,7 +14,10 @@ Si quieres actualizar **cualquier documento** del repositorio, sigue este flujo:
 2. Ve al fragmento correspondiente en docs/contributing/
 3. Sigue los pasos listados
 4. Ejecuta validaciones antes del commit
-5. Commit → la sincronizacion automatica actualiza VERSION en todos los archivos
+5. Los cinco cortes (implementación → verificación → cierre documental → listo para revisión →
+   espera de autorización) se alcanzan SIN commit. El commit es una acción posterior y separada,
+   opcional, y requiere autorización explícita; al ejecutarse, la sincronización automatica
+   actualiza VERSION en los archivos gobernados
 ```
 
 ---
@@ -46,10 +49,17 @@ FASE completada
     └── Paso 6: Documentacion Post-Fase
         ├── Lee docs/contributing/documentation_rules.md para checklist
         ├── Ejecuta: python scripts/log_phase_completion.py --fase N
-        │   ├── Registra en docs/contributing/REGISTRY.md (auto)
+        │   ├── Registra en docs/contributing/REGISTRY.md (auto) y estampa con la fecha de HOY
+        │   │   su "> **Ultima actualizacion:**" (fecha de la ultima ENTRADA DOCUMENTAL)
+        │   ├── Escribe solo lo declarado por quien registra: el script NO ejecuta tests ni
+        │   │   verifica contratos, asi que ninguna garantia sale marcada como cumplida
         │   └── Muestra POR_HACER para docs manuales
         └── Verifica capability contracts en docs/contributing/capabilities.md
 ```
+
+**Una entrada por fase, escrita por esa fase al cerrar.** El cierre documental (RELEASE / plan de
+documentacion) **verifica** que cada fase tenga su entrada y solo escribe la que falte: el script es
+aditivo y re-ejecutarlo duplicaria la entrada de una ejecucion ya cerrada (executor §4.5 Paso 4.5.1).
 
 **Registro reciente de fases** (check-manual-docs resuelto): FASE-SR-E (2026-08-28, plan
 SR-PIPELINE-FIXES — fix falso negativo de detección de schema + contabilización única de
@@ -91,7 +101,10 @@ python main.py --doctor
 python scripts/sync_versions.py
 ```
 
-Esto sincroniza VERSION.yaml → 6 archivos sin modificacion manual. Si hay discrepancia, el script la corrige.
+Esto sincroniza VERSION.yaml → los archivos versionados de `sync_config.yaml` (README, AGENTS,
+.cursorrules, CONTRIBUTING, GUIA_TECNICA) sin modificacion manual. Si hay discrepancia, el script la
+corrige. **La fecha de REGISTRY.md NO se sincroniza aqui**: es la fecha de la ultima entrada
+documental y la escribe solo `log_phase_completion.py` (ver Paso 1).
 
 ### Paso 3: Verificar CHANGELOG.md (manual)
 
@@ -153,7 +166,7 @@ git diff --stat
 | docs/CONTRIBUTING.md | Auto-sync header + manual contenido | Header auto (paso 2) |
 | docs/GUIA_TECNICA.md | Auto-sync header + manual notas tecnicas | Se VERIFICA y se ACTUALIZA (paso 4) |
 | CHANGELOG.md | MANUAL | Se VERIFICA y se ACTUALIZA (paso 3) |
-| docs/contributing/REGISTRY.md | Auto-sync desde log_phase_completion.py | Se verifica (paso 2) |
+| docs/contributing/REGISTRY.md | Auto: fecha de ultima entrada documental, la escribe `log_phase_completion.py` | NO la toca sync (regla retirada) |
 | .agents/workflows/README.md | MANUAL | Se VERIFICA (paso 5) |
 | `.agent/SYSTEM_STATUS.md` | AUTO via scripts/doctor.py --status | Se REGENERA (paso 6) |
 | ROADMAP.md | MANUAL | NO (solo si el usuario dice especificamente que actualizar Roadmap) |
@@ -274,7 +287,10 @@ El comando `python main.py --doctor` incluye un check de "Symlink integrity" que
 | `.cursorrules` | Version + fecha |
 | `docs/CONTRIBUTING.md` | Version header |
 | `docs/GUIA_TECNICA.md` | Version + fecha |
-| `docs/contributing/REGISTRY.md` | Fecha ultima actualizacion |
+
+> `docs/contributing/REGISTRY.md` **no** esta aqui: su `> **Ultima actualizacion:**` es la fecha de
+> la ultima entrada documental y la escribe `log_phase_completion.py` al registrar una fase, no la
+> sincronizacion desde VERSION.yaml. `sync_config.yaml` retiro la regla `registry_last_update`.
 
 ### Actualizacion manual (requiere agente)
 

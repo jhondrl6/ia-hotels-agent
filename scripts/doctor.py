@@ -328,7 +328,9 @@ Scripts de validacion:
 - `python scripts/doctor.py --status` -- Regenerar este archivo
 """
 
-    sys_status.write_text(content, encoding="utf-8")
+    # Tercera escritura de la familia S17, hallada al curar las dos nombradas: SYSTEM_STATUS.md
+    # tambien se re-escribia en CRLF (medido: git lo almacena i/lf y el arbol quedaba w/crlf).
+    sys_status.write_text(content, encoding="utf-8", newline="\n")
     print(f"[OK] SYSTEM_STATUS.md regenerado ({len(skills)} skills, {shadow_count} shadow logs, {session_count} sesiones)")
     return True
 
@@ -587,7 +589,9 @@ def run_regenerate_domain_primer() -> bool:
 """
 
     target_path.parent.mkdir(parents=True, exist_ok=True)
-    target_path.write_text(content, encoding="utf-8")
+    # newline="\n": DOMAIN_PRIMER lo almacena git en LF y la traduccion del modo texto lo
+    # re-escribiria en CRLF (deuda S17, cortada por el detector de finales de linea).
+    target_path.write_text(content, encoding="utf-8", newline="\n")
     total_classes = sum(
         sum(len(cls_list) for cls_list in info["classes"].values())
         for info in mod.values()

@@ -181,7 +181,8 @@ def generar_entrada_registry(args):
             desc = Path(arch).stem.replace("_", " ").title()
             lines.append(f"| `{arch}` | {tipo} | {desc} |\n")
     else:
-        lines.append("_Ninguno_\n")
+        lines.append("_Sin dato declarado: quien registra no paso `--archivos-nuevos`. "
+                     "No significa «no hay»: este script no inspecciona el arbol._\n")
     
     lines.append("\n### Archivos Modificados\n")
     
@@ -192,18 +193,32 @@ def generar_entrada_registry(args):
             desc = Path(arch).stem.replace("_", " ").title()
             lines.append(f"| `{arch}` | {desc} |\n")
     else:
-        lines.append("_Ninguno_\n")
+        # `_Ninguno_` afirmaba una ausencia que el instrumento no habia comprobado: es el mismo
+        # defecto que publicar `- [x] Tests passing` sin correr tests (mandato §3, bloque B de
+        # ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22).
+        lines.append("_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que "
+                     "este script escriba `.last_doc_phase.json`, asi que se omite a proposito "
+                     "cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._\n")
     
     lines.append("\n### Validaciones\n")
-    lines.append("- [x] Tests passing")
+    # Este script NO ejecuta tests, NO corre la suite NEVER_BLOCK y NO verifica contratos: durante
+    # anos publico esas garantias como `- [x]` sin tenerlas. Las entradas historicas de REGISTRY.md
+    # quedan como estan (no se reescribe el pasado); a partir de aqui el registro solo declara lo que
+    # quien registra le paso y dice explicitamente que el instrumento no lo verifico
+    # (mandato §3 del bloque B de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22).
+    lines.append("_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni "
+                 "verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado "
+                 "aqui», no «falla»._\n")
     if args.tests:
-        lines.append(f" ({args.tests})")
-    lines.append("\n")
-    lines.append("- [x] Suite NEVER_BLOCK passing\n")
+        lines.append(f"- [ ] Tests: {args.tests} (declarado; no verificado por este script)\n")
+    else:
+        lines.append("- [ ] Tests: sin dato declarado\n")
     if args.coherence is not None:
         status = "PASO" if args.coherence >= 0.8 else "FALLO"
-        lines.append(f"- [x] Coherence >= 0.8: {args.coherence} ({status})\n")
-    lines.append("- [x] Capability contract verificado\n")
+        lines.append(f"- [ ] Coherence >= 0.8: {args.coherence} ({status}; declarado, medido fuera "
+                     "de este script)\n")
+    lines.append("- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este "
+                 "instrumento\n")
     
     lines.append("\n---\n\n")
     
@@ -219,7 +234,11 @@ def actualizar_registry(entrada):
     
     content = REGISTRY_FILE.read_text(encoding="utf-8")
     
-    # Actualizar header con fecha
+    # Actualizar header con la fecha de la ULTIMA ENTRADA DOCUMENTAL (hoy, al registrar la fase).
+    # Semantica: NO es la fecha de release (esa vive en VERSION.yaml/CHANGELOG y la propaga
+    # sync_versions a otros encabezados). Este es el UNICO escritor de "> **Ultima actualizacion:**"
+    # en REGISTRY.md; sync_config.yaml ya no tiene regla sobre REGISTRY para no pisar esta fecha
+    # con la de release (conflicto repetido resuelto en el bloque B de ORDEN-CAMBIO-CALIDAD 2026-09-22).
     lines = content.splitlines()
     for i, line in enumerate(lines):
         if line.startswith("> **Ultima actualizacion:**"):
@@ -284,7 +303,8 @@ def save_last_documented_phase(fase_id, archivos_actualizados):
     tracker = get_last_documented_phase()
     for arch in archivos_actualizados:
         tracker[arch] = fase_id
-    LAST_DOC_TRACKER.write_text(json.dumps(tracker, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    LAST_DOC_TRACKER.write_text(json.dumps(tracker, indent=2, ensure_ascii=False) + "\n",
+                                encoding="utf-8", newline="\n")
 
 
 # Mapeo de archivos de codigo -> archivos de documentacion que deben mencionarlos
@@ -725,7 +745,10 @@ def main():
     # Actualizar REGISTRY.md
     print("\n[1/2] Actualizando REGISTRY.md...")
     nuevo_content = actualizar_registry(entrada)
-    REGISTRY_FILE.write_text(nuevo_content + "\n", encoding="utf-8")
+    # newline="\n": el lado almacenado de REGISTRY.md es LF; sin este parametro write_text
+    # re-escribia el archivo entero con CRLF en disco en Windows (el editor del registro no debe
+    # cambiar los finales de linea del expediente que solo declara).
+    REGISTRY_FILE.write_text(nuevo_content + "\n", encoding="utf-8", newline="\n")
     print(f"       (R) {REGISTRY_FILE}")
     
     # Actualizar tracker de documentacion si hay archivos modificados

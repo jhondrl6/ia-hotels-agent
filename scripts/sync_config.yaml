@@ -35,8 +35,13 @@ rules:
     file: "README.md"
     description: "Version and date in README header"
     replacements:
-      - pattern: '\*\*v[\d.]+\*\* -- [^*|]+\| Actualizado'
-        template: '**v{version}** -- {codename} | Actualizado'
+      # El patron llega hasta la fecha legible: antes se detenia en «Actualizado» y dejaba detras
+      # «11 Septiembre 2026» intacta, con release_date ya en otra fecha - y el --check saliendole
+      # IN_SYNC al lado (deuda S18). {date_text} es la forma larga que el README siempre mostro
+      # («25 Septiembre 2026»), no un ISO que cambie la cabecera. [^\n|]* no cruza la linea ni
+      # salta el separador, asi que no alcanza otras menciones de «Actualizado».
+      - pattern: '\*\*v[\d.]+\*\* -- [^*|]+\| Actualizado[^\n|]*'
+        template: '**v{version}** -- {codename} | Actualizado {date_text}'
       - pattern: '## Estado del Proyecto \(v[\d.]+ -- [^*]+\)'
         template: '## Estado del Proyecto (v{version} -- {codename})'
 
@@ -97,11 +102,14 @@ rules:
         template: '**Versión:** v{version} ({codename})'
 
   # ============================================================
-  # REGISTRY.md
+  # REGISTRY.md — SIN REGLA DE FECHA (a proposito)
   # ============================================================
-  - id: "registry_last_update"
-    file: "docs/contributing/REGISTRY.md"
-    description: "Last update timestamp in registry"
-    replacements:
-      - pattern: '> \*\*Ultima actualizacion:\*\*\s*[\d-]+'
-        template: '> **Ultima actualizacion:** {date}'
+  # La cabecera "> **Ultima actualizacion:**" de REGISTRY.md significa "fecha de la ultima
+  # ENTRADA DOCUMENTAL" (el dia que se registro una fase), NO la fecha de release. Su unico
+  # escritor es scripts/log_phase_completion.py, que la estampa con datetime.now() al registrar.
+  # Antes existia la regla "registry_last_update" que la re-escribia con {date} = release_date
+  # anclado en VERSION.yaml: dos escritores con semantica distinta, y al dia siguiente de loguear
+  # una fase el "sync_versions --check" marcaba FAIL contra una fecha de entrada correcta (el
+  # conflicto repetido de fechas que describe ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22). Se retiro
+  # la regla; la fecha de release viaja por CHANGELOG/README/version-sync, no por REGISTRY.
+  # No anadir aqui ninguna regla que toque REGISTRY.md.

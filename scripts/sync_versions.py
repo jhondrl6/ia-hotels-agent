@@ -158,7 +158,11 @@ class SyncEngine:
             print(f"FAIL: {rule['file']} ({rule_id}) - needs update")
             return False
         
-        filepath.write_text(content, encoding="utf-8")
+        # newline="\n" a proposito: git almacena estos documentos en LF y write_text sin el
+        # parametro traduce \n a \r\n en Windows, lo que deja el arbol en CRLF contra su propio
+        # indice (deuda S17; lo corta el detector de finales de linea de
+        # validate_document_integration.py).
+        filepath.write_text(content, encoding="utf-8", newline="\n")
         self.results[rule_id] = "UPDATED"
         print(f"OK: {rule['file']} ({rule_id}) - updated")
         return True
