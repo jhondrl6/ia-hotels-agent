@@ -1,0 +1,20 @@
+### pasada de cierre (tras las últimas rectificaciones de la orden y del README de CONTEXTO)
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+validate_plan_citations EXIT=0
+validate_lesson_capitalization EXIT=0
+validate_document_integration EXIT=0
+validate_opencode_refs EXIT=0
+validate_plan_closure EXIT=0
+quick EXIT=0
+  TOTAL: 11/11 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+diffcheck EXIT=0
+11	11	.opencode/LECCIONES-INDEX.md
+22	21	.opencode/lecciones_index.json

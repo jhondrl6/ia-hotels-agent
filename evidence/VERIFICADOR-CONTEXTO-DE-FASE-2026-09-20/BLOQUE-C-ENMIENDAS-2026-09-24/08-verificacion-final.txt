@@ -1,0 +1,144 @@
+### $ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check   (antes de regenerar, con la orden ya editada)
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+EXIT=1
+
+### $ ./venv/Scripts/python.exe scripts/build_lesson_index.py   (regeneración autorizada: único escritor de la pareja)
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check   (después)
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+
+### $ git diff --numstat de la pareja
+11	11	.opencode/LECCIONES-INDEX.md
+22	21	.opencode/lecciones_index.json
+
+### $ ./venv/Scripts/python.exe scripts/validate_plan_citations.py
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/validate_lesson_capitalization.py
+  EVALUACION-JEV-TYPESAFE-2026-09-21: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18: 5 fuentes capitalizadas -> Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20: 6 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+cobertura: 4 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 27 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (—)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/validate_document_integration.py
+============================================================
+DOCUMENT INTEGRATION VALIDATOR
+============================================================
+Project: C:\Users\Jhond\Github\iah-cli
+
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+      Executor section refs: 14
+      CONTRIBUTING section name entries: 7
+      Executor line refs (§LNN-MM): 0
+
+[PASS] CHANGELOG format consistency
+      Checked 3 recent entries
+      Last entry uses em-dash separator (correct)
+
+[PASS] Version headers with 'v' prefix
+      EXECUTOR: version v2.25.0 (OK)
+      TEMPLATE: version v1.6.0 (OK)
+      AGENTS.md: version v4.77.3 (OK)
+
+[PASS] Python path consistency (WSL)
+      phased_project_executor.md: python path OK
+
+[PASS] AGENTS.md cross-reference table
+      Cross-reference table has 6 entries
+
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.77.3
+      Release date aligned: 2026-09-19
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: no claim found in README
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (bytes reales LF)
+      CONTRIBUTING.md: docs/CONTRIBUTING.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/validate_opencode_refs.py
+[PASS] OpenCode References: todas las referencias existen
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/validate_plan_closure.py
+[OK] Cierre de planes: ningún plan vivo declara cierre con filas pendientes
+EXIT=0
+
+### $ ./venv/Scripts/python.exe scripts/validate_governance_numbers.py --report   (sin destino: no escribe, S12)
+EXIT=0
+(stdout completo en evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/09-gobierno-final.txt; aquí solo las 8 últimas líneas)
+        "motivo": "el plan fija como poblacion los dos documentos de gobierno; el resto de .agents/ no se escribe ni se audita en FASE-A (AC17)"
+      }
+    ],
+    "comando": "python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA — S12)",
+    "medido_el": "2026-09-24"
+  }
+}# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe
+
+
+### $ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick --check
+EXIT=0
+(stdout completo en evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/10-quick-final.txt; aquí solo el resumen final)
+[10/11] Checking lesson capitalization (Paso 0 del executor)...
+[11/11] Checking signal wiring by AST (AC7/AC16)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1318 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2483 rutas contra 4 marcadores (1 grandfathered con dueño)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1328 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+
+### $ git diff --check
+warning: in the working copy of '.agents/workflows/templates/lecciones-capitalizadas-template.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/REGISTRY.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/validation.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py', CRLF will be replaced by LF the next time Git touches it
+EXIT=0
+
+### $ git status --porcelain   (final)
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/
+?? tests/quality_gates/governance_numbers/fixtures/
+?? tests/support_observador_escrituras.py
+?? tests/test_registry_fecha_documental.py
+?? tests/test_validate_document_integration.py
+(solo rutas no-M: vacío = sin altas ni bajas propias)
+### fin

@@ -1,0 +1,30 @@
+### build_lesson_index.py --check (pre)
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+### regenerar
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+### --check (post)
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+### validate_plan_citations
+EXIT=0
+### validate_lesson_capitalization
+EXIT=0
+### validate_document_integration
+EXIT=0
+### validate_opencode_refs
+EXIT=0
+### validate_plan_closure
+EXIT=0
+### quick --check
+EXIT=0
+### git diff --check
+warning: in the working copy of '.agents/workflows/templates/lecciones-capitalizadas-template.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/REGISTRY.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/validation.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py', CRLF will be replaced by LF the next time Git touches it
+EXIT=0

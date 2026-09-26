@@ -1,0 +1,39 @@
+$ ./venv/Scripts/python.exe -m pytest -q --no-header     tests/test_build_lesson_index.py     tests/test_validate_plan_citations.py     tests/test_validate_plan_closure.py     tests/test_validate_lesson_capitalization.py     tests/test_validate_document_integration.py     tests/quality_gates/governance_numbers/
+--- start 2026-09-24T16:20:30Z ---
+..............................................................F......... [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+================================== FAILURES ===================================
+_ test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] _
+
+cutoff = '2026-09-11', plan_esperado = 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11'
+
+    @pytest.mark.parametrize(
+        "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
+    )
+    def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
+        cutoff: str, plan_esperado: str
+    ):
+        """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
+    
+        Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+        verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+        esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+        cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+        seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+        fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+        su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
+        """
+        vs, pobo = vlc.verificar(
+            vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
+        )
+>       assert plan_esperado in pobo["alcance"], pobo["alcance"]
+E       AssertionError: ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+
+tests\test_validate_lesson_capitalization.py:389: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+1 failed, 172 passed in 35.48s
+EXIT=1
+--- end 2026-09-24T16:21:07Z ---

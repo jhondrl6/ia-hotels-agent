@@ -1,0 +1,13 @@
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+
+--- git diff --numstat de la pareja ---
+10	10	.opencode/LECCIONES-INDEX.md
+19	19	.opencode/lecciones_index.json
