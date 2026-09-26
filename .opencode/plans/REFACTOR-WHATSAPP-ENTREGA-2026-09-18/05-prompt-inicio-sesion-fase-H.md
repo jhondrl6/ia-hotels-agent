@@ -1,6 +1,6 @@
 # FASE-H — Integración offline, onboarding derivado y runner de intento único
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-G completa; comprobar cierres previos, incluida acreditación operativa de F.
+**Estado:** PENDIENTE. **Dependencia inmediata:** **FASE-F cerrada**, según la cadena `A → G → 0 → B → C → D → E → F → H` que publica `dependencias-fases.md`; comprobar además los cierres previos, incluida la acreditación operativa de F. ⟦Rectificado el 2026-09-24 por el bloque C de la orden de calidad: esta línea nombraba **G** como dependencia inmediata. G aporta el guard AST que protege las ediciones de B–F, pero no es el predecesor de H; leerla como «G basta» habría permitido abrir H con F abierta⟧.
 **Complejidad técnica:** ALTA: identidad y frescura del input, integración real offline y reserva persistente antes del único proceso externo.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para H, sin v4complete real.
 
@@ -83,7 +83,7 @@ Brief: objetivo, allowlist de código/tests, prohibidos datos sensibles/imports/
 
 ## Post-ejecución
 
-Actualizar prompt, checklist, dependencias, índice, 00/09/10, ACs y al menos tres observaciones medidas; CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`.
+Actualizar prompt, checklist, dependencias, índice, 00/09/10, ACs y las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas**; CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`.
 Sustituir variables por archivos/tests medidos; registro propio sin `--release`:
 
 ```bash
@@ -95,11 +95,11 @@ Sustituir variables por archivos/tests medidos; registro propio sin `--release`:
 ```
 
 Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; rojos o permisos faltantes implican checkpoint, no cambiar baselines/configuración para cerrar.
-DOMAIN_PRIMER solo por writer según resolución de A; write-back durable solo autorizado y saneado, con frescura comprobada, o checkpoint explícito. No VERSION, commit, push ni release implícitos.
+DOMAIN_PRIMER **regenerado** solo por su writer según la resolución de A (regenerar cierra esta fase; **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas); write-back durable **solo con su autorización literal propia** y saneado, con la frescura comprobada por descarga y sha —no por título—, o checkpoint explícito con `PENDIENTE-AUTORIZACION`. No VERSION, commit, push ni release implícitos.
 
 ## Presupuesto y checklist
 
-Referencia **60 tool_use hasta el commit de código**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte.
+Referencia **60 tool_use hasta el corte que la sesión tenga autorizado** («hasta el commit» solo si el commit lo está; si no, «hasta listo para revisión», declarando cuál se usó — **los cinco cortes se sostienen sin commit**); instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte.
 Si no medible o denegado: **FUERA DE SERVICIO (R2.1)**; retirar métrica/comparación, auto-reporte separado sin estimaciones ni evasión. Medición válida permite recalibrar; sin commit autorizado, checkpoint sin fingir corte.
 - [ ] G y prerrequisitos cerrados; PRE/POST y mutantes acreditan contratos offline, no una corrida real.
 - [ ] YAML derivado conserva 2026-07-22 y valores; fuente/hash/URLs trazables, loader real acepta sin bypass.

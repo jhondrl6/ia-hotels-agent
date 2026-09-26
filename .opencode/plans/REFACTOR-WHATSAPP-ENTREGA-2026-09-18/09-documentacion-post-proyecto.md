@@ -1,6 +1,6 @@
 # Documentación post-proyecto — REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
-Estado: PREPARACIÓN. Ninguna fase ejecutada. No sustituye la documentación incremental de cada fase ni permite registrar retrospectivamente todas las fases en RELEASE.
+Estado al 2026-09-24: **cuatro fases cerradas con su documentación incremental propia** (A, G, 0 y B; B con deuda AC5 → dueño C-D). Punto de reanudación: FASE-C. ⟦Reconciliado por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`; la línea anterior decía «PREPARACIÓN. Ninguna fase ejecutada», que es el retrato de la concepción y quedó vencido⟧. Este archivo **no** sustituye la documentación incremental de cada fase ni permite registrar retrospectivamente todas las fases en RELEASE, y **no re-transcribe** métricas que ya viven en su fase: las referencia.
 
 ## Sección A: Módulos nuevos
 

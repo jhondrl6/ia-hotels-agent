@@ -55,7 +55,7 @@ Aplicar cierre completo del contrato y registrar datos medidos:
 - [ ] Ningún wa.me vacío o destino tomado de un teléfono no validado en HTML/ZIP.
 - [ ] El boost por presencia no neutraliza conflictos ni baja confianza requerida.
 - [ ] PRE/POST, mutaciones y cierre incremental completos.
-- Presupuesto referencia 60 tool_use; instrumento `measure_iterations.py`, corte commit de código, retirar métrica si no medible.
+- Presupuesto referencia 60 tool_use; instrumento `measure_iterations.py`. El corte es el que la sesión tenga autorizado: con el commit de código autorizado, «hasta el commit»; sin él, «hasta listo para revisión», y se declara cuál de los dos se usó — **los cinco cortes se sostienen sin commit**. Retirar la métrica si no es medible; nunca estimar cumplimiento.
 - No archivar domain_gates ni implementar F-B/F-E. No v4complete. D se ejecuta en nueva sesión.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`

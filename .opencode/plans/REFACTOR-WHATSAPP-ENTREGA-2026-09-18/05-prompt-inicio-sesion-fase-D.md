@@ -43,5 +43,5 @@ Actualizar 00/09/10, checklist, dependencias y estado de este prompt; CHANGELOG 
 - [ ] No se generaron assets tras error del pre-gate.
 - [ ] AC5 intacto y PRE/POST conciliado.
 - [ ] Cierre incremental completo, sin regresiones ni GAP.
-- Presupuesto: referencia 60 tool_use; instrumento `measure_iterations.py`, corte commit de código. Si no puede medirse, FUERA DE SERVICIO conforme al contrato; nunca cumplimiento estimado.
+- Presupuesto: referencia 60 tool_use; instrumento `measure_iterations.py`. El corte es el que la sesión tenga autorizado — «hasta el commit» solo si el commit lo está; si no, «hasta listo para revisión», declarando cuál se usó (**los cinco cortes se sostienen sin commit**). Si no puede medirse, FUERA DE SERVICIO conforme al contrato; nunca cumplimiento estimado.
 - No ejecutar E2E, cambiar umbrales, relajar Juez ni corregir hallazgos ajenos. Finalizar la sesión; E será otra sesión.

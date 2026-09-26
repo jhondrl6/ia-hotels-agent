@@ -61,7 +61,7 @@ El principal revisa el inventario, decide los cambios mínimos y verifica diff, 
 ## Post-ejecución
 
 Actualizar estado de este prompt, `06-checklist-implementacion.md`, `dependencias-fases.md` e índice del plan con resultados reales, sin marcar completos requisitos pendientes.
-Actualizar `00-lecciones-capitalizadas.md`, `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md`: AC13, delta, límites y al menos tres observaciones medidas.
+Actualizar `00-lecciones-capitalizadas.md`, `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md`: AC13, delta, límites y las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas** (una fase puede declarar «sin lecciones nuevas»).
 Añadir subsección F a CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`; no cambiar VERSION ni anticipar release.
 Sustituir variables por archivos y tests realmente medidos antes de ejecutar el registro propio, sin `--release`:
 
@@ -74,15 +74,15 @@ Sustituir variables por archivos y tests realmente medidos antes de ejecutar el 
 ```
 
 Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; si hay rojos fuera de alcance, checkpoint INCOMPLETA, sin modificar baselines ni permisos.
-DOMAIN_PRIMER solo mediante writer y según resolución documentada en A; no editar manualmente ni resolver la divergencia cambiando contexto global.
+DOMAIN_PRIMER **regenerado** solo mediante su writer, según la resolución documentada en A y en `04-contrato-ejecucion.md` paso 4: regenerar es operación de este cierre de fase y **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas. No editar manualmente ni resolver la divergencia cambiando el contexto global.
 Write-back durable solo con autorización y contenido saneado; ausencia de permiso/acceso implica checkpoint del cierre. SKIP por título no prueba frescura.
 No commit, push, tag, rotación ni cambios centrales sin autorización expresa; el registro documental no declara revocación que el operador no haya acreditado.
 
 ## Presupuesto y corte
 
-Referencia: **60 tool_use hasta el commit de código**. Instrumento: `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`; registrar duración de pared aparte.
+Referencia: **60 tool_use hasta el corte que la sesión tenga autorizado** — «hasta el commit» solo si el commit lo está; si no, «hasta listo para revisión», declarando cuál se usó (**los cinco cortes se sostienen sin commit**). Instrumento: `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`; registrar duración de pared aparte.
 Si transcript/instrumento no es accesible o la medición es denegada: **FUERA DE SERVICIO (R2.1)** desde ese momento; retirar comparación con 60, no estimar cumplimiento ni evadir permisos.
-Auto-reporte separado con su unidad; si hay medición válida, recalibrar según R2.1. Sin commit autorizado, registrar checkpoint, no fingir el corte de código.
+Auto-reporte separado con su unidad; si hay medición válida, recalibrar según R2.1. Sin commit autorizado se registra el checkpoint correspondiente y **no se finge un corte de código**, pero la ausencia de commit **no** deja ningún corte «no consumado»: el corte utilizable de esta fase es «hasta listo para revisión».
 
 ## Checklist de completitud
 
@@ -90,5 +90,5 @@ Auto-reporte separado con su unidad; si hay medición válida, recalibrar según
 - [ ] Sanitización existente calificada; solo brechas concretas modificadas, sin reconstrucción general de providers.
 - [ ] AC13 cubre consola, archivos y nuevas salidas; mutantes fallan por fuga sintética real.
 - [ ] Informes sin secretos; revocación acreditada por operador o F explícitamente INCOMPLETA/PENDIENTE.
-- [ ] Evidencia propia, al menos tres observaciones y cierre incremental sin GAP ni regresiones ocultas.
+- [ ] Evidencia propia, las observaciones medidas que existan (**sin cuota de lecciones nuevas**) y cierre incremental sin GAP ni regresiones ocultas.
 - [ ] R2 medido o retirado explícitamente; ninguna ejecución externa ni siguiente fase iniciada.

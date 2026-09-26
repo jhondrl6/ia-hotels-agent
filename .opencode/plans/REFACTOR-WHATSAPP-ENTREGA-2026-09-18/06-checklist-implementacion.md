@@ -1,6 +1,6 @@
 # Checklist de implementación
 
-**Estado documental inicial: todo PENDIENTE. Contador v4complete: 0/1. Siguiente sesión: A.** No se han ejecutado fases, validaciones o pruebas en esta escritura. Ningún casillero implica aprobación o certificación.
+**Estado documental reconciliado el 2026-09-24 por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`. Cerradas y empujadas: A, G, 0 y B (B con deuda AC5 → dueño C-D). Contador v4complete: 0/1. Punto de reanudación: FASE-C.** La cabecera que este archivo publicaba antes —«todo PENDIENTE … Siguiente sesión: A»— era la descripción de la escritura original, no el estado vivo; las fases cerradas conservan su evidencia y **nadie debe leerla como orden de repetirlas**. Ningún casillero de este archivo implica aprobación o certificación.
 
 Contratos: [maestro](01-plan-maestro.md), [ejecución](04-contrato-ejecucion.md), [lecciones](00-lecciones-capitalizadas.md) y [dependencias](dependencias-fases.md). Las rutas de evidencia citadas son salidas futuras bajo `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-<ID>/`, no archivos cuya existencia se afirme aquí.
 
@@ -64,7 +64,7 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 - [ ] G cierra **antes** de B: el verificador AST es el guard de las ediciones de callers de B–F, no un cierre de calidad posterior.
 - [ ] B/C gobernan AC19a: el lector declara qué rutas inspeccionó, C unifica o designa los dos lectores de WhatsApp, y B no convierte una señal negativa sin alcance verificado en ausencia confirmada del canal. **Y su inverso medido:** tampoco convierte una huella de plugin en número verificado.
 - [ ] H prueba **qué sucursal** tomó el loader y congela `--permission-mode` efectivo y snapshot de `.agent/memory`; `--output` no aísla la memoria compartida.
-- [ ] A resuelve el mandato documental de DOMAIN_PRIMER antes de regenerarlo; no cambia reglas centrales para eliminar la divergencia.
+- [ ] DOMAIN_PRIMER: **regenerar con su writer al cerrar cada fase de implementación** y **verificar con `doctor.py --context` solo en RELEASE** — dos operaciones distintas, ninguna sustituye a la otra (resuelto por A el 2026-09-19 y confirmado por el bloque C de la orden de calidad el 2026-09-24; `04-contrato-ejecucion.md` paso 4 del cierre es la instrucción ejecutable). No se cambian reglas centrales para eliminar la divergencia: `AGENTS.md` y la tabla de `CONTRIBUTING` quedan declarados con su dueño.
 - [ ] A mantiene F-B privacidad/D1 diferida: no PII WhatsApp nueva en warehouse ni cambios de formulario/esquema sin decisión escrita. El setup no certifica cierre de esa deuda.
 - [ ] A/H conservan fuente del 2026-07-22 y comprueban vigencia frente a `ONBOARDING_FRESHNESS_HOURS`, sin leer secretos ni falsear fecha o defaults.
 - [ ] A/H registran binding local explícito: original `https://hoteldonalfonso.com/`, solicitada `https://www.donalfonsohotel.com/`; selector único y hash, sin alias universal ni redirección inferida.
@@ -106,9 +106,9 @@ Aplicar dentro de la fase correspondiente, no diferir todo a RELEASE. Esta check
 - [ ] Se realiza documentación incremental y registro de fase del contrato, sin anticipar versión nueva en fases intermedias ni tocar históricos P4.
 - [ ] Se obtiene TOTAL PASS real de validaciones aplicables y ausencia de GAP dentro del alcance autorizado; si no, queda INCOMPLETA. El quick histórico 9/10 no se rebautiza verde.
 - [ ] Write-back, configuración central, commit, push, tag y operaciones remotas tienen autorización específica cuando corresponda; consulta QMind no la sustituye.
-- [ ] R2 registra presupuesto de referencia de 60 tool_use hasta el commit de código autorizado, instrumento `evidence/FASE-D/measure_iterations.py`, transcript y corte ISO; tiempo de pared separado.
+- [ ] R2 registra presupuesto de referencia de 60 tool_use **hasta el corte que la sesión tenga autorizado**, instrumento `evidence/FASE-D/measure_iterations.py`, transcript y corte ISO; tiempo de pared separado. **Se publica cuál de los dos cortes se usó** («hasta el commit», si está autorizado; «hasta listo para revisión», si no).
 - [ ] Si transcript no existe o se deniega acceso, se declara desde ese momento **FUERA DE SERVICIO (R2.1)**; auto-reporte con unidad separado, sin sumarlo/compararlo al instrumento ni estimar cumplimiento.
-- [ ] Sin commit autorizado, no se declara consumado ese corte de R2. En fases sin código, se informa corte documental separado, nunca un commit de código ficticio.
+- [ ] ⟦Regla del proceso común, alineada el 2026-09-24 con el bloque B de la orden de calidad⟧: **los cinco cortes se declaran y verifican sin commit** —implementación terminada, verificación terminada, cierre documental, listo para revisión, espera de autorización—. La falta de autorización **no** deja un corte «no consumado»: fija el corte medido en «listo para revisión» y deja el `git commit` como acción posterior, separada, opcional y con autorización explícita. En fases sin código se informa el corte documental separado, nunca un commit de código ficticio.
 - [ ] Presupuesto agotado o requisito pendiente producen checkpoint y nueva sesión para retomar; no se inicia otra fase ni se repite trabajo ya completado.
 - [ ] VERIFY distingue SUPERADO, FALLA y NO EJERCITADO con régimen offline/E2E explícito. RELEASE refleja esa conclusión sin prometer certificación universal a partir de un hotel.
 

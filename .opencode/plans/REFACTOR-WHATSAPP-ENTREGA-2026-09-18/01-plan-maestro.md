@@ -1,6 +1,6 @@
 # Plan maestro — REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
-**Estado: DISEÑADO, SIN IMPLEMENTAR.** Preparación del 2026-09-18 contra HEAD `7d91c9f`, versión 4.77.0. Objetivo de release propuesto: 4.78.0; no se cambia VERSION.yaml en esta sesión.
+**Estado: en ejecución por fases — A, G, 0 y B cerradas y empujadas; punto de reanudación FASE-C** (reconciliado el 2026-09-24 por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, leyendo los cierres y sus commits). Preparación del 2026-09-18 contra HEAD `7d91c9f`, versión 4.77.0. Objetivo de release propuesto: 4.78.0; no se cambia VERSION.yaml sin mandato. La cabecera que este archivo publicaba antes («DISEÑADO, SIN IMPLEMENTAR») describía la escritura original y quedó vencida por las fases cerradas: no es una orden de repetirlas.
 
 **Revisión 2 (2026-09-19, contra HEAD `938f59f`).** Re-medición del diseño completo contra código vivo y contra una corrida real ya archivada (`output/TAREA7-2026-09-19/`, 15:01 del 2026-09-19, mismo hotel y misma URL del §5). Resultado: **cuatro premisas del §1 quedan rectificadas**, se añade **AC20** y una **FASE-0** porque el plan, tal como estaba, no podía alcanzar su propia meta de entrega. Detalle de cada medición en §1 (filas marcadas "medido 2026-09-19"), §6 y `10-analisis-post-implementacion.md`.
 
@@ -96,7 +96,7 @@ R1: cada fila corresponde a **una sesión nueva**. PRE/POST, tests y documentaci
 | 11 | VERIFY | Leer artefactos; certificar matriz/diff; triar y extraer lecciones; cierre | ALTA: juicio transversal y límites causales | DIRECTA obligatoria; no delegar | 0 |
 | 12 | RELEASE | Diagnóstico/versionado; docs oficiales; validación/write-back; archivado/cierre | MEDIA: sincronización y orden del cierre | delegate_task documental con allowlist autorizada | 0 |
 
-Presupuesto por fase e instrumento: `04-contrato-ejecucion.md` §R2. Referencia 60 tool_use al commit de código; retirar métrica si no es medible, nunca reportar estimaciones. No es estimación de duración de pared ni autorización para completar varias fases.
+Presupuesto por fase e instrumento: `04-contrato-ejecucion.md` §R2. Referencia 60 tool_use **al corte que la sesión tenga autorizado** — «hasta el commit de código» solo cuando el commit lo está; sin esa autorización, «hasta listo para revisión», declarando cuál se usó, porque **los cinco cortes se sostienen sin commit** (proceso común del bloque B de la orden de calidad, alineado el 2026-09-24). Retirar la métrica si no es medible, nunca reportar estimaciones. No es estimación de duración de pared ni autorización para completar varias fases.
 
 ## 4. Criterios de aceptación y pares de evidencia
 

@@ -47,7 +47,7 @@ DIRECTA para el diseño del límite interno/cliente y el orden temporal. `delega
 
 ## Post-ejecución
 
-Actualizar estado de este prompt, checklist, dependencias, índice del plan, 00/09/10 con al menos tres observaciones medidas; subsección E en CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`. Sustituir variables por datos medidos; registro propio sin `--release`:
+Actualizar estado de este prompt, checklist, dependencias, índice del plan, 00/09/10 con las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas**: la fase puede cerrar declarando «sin lecciones nuevas» (proceso común del bloque B de la orden de calidad); subsección E en CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`. Sustituir variables por datos medidos; registro propio sin `--release`:
 
 ```bash
 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-E --desc "REFACTOR-WHATSAPP-ENTREGA: entrega real revalidada y revisión con snapshot interno" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
@@ -57,11 +57,11 @@ Actualizar estado de este prompt, checklist, dependencias, índice del plan, 00/
 ./venv/Scripts/python.exe scripts/validate_document_integration.py
 ```
 
-Confirmar REGISTRY sin GAP y TOTAL PASS dinámico dentro del alcance autorizado; rojos ajenos o permisos faltantes implican checkpoint, no rebautizar el PRE histórico 9/10 como verde. DOMAIN_PRIMER solo por writer según resolución de A. Write-back durable solo si está autorizado y saneado; sin autorización, checkpoint explícito. No commit, push ni release implícitos.
+Confirmar REGISTRY sin GAP y TOTAL PASS dinámico dentro del alcance autorizado; rojos ajenos o permisos faltantes implican checkpoint, no rebautizar el PRE histórico 9/10 como verde. DOMAIN_PRIMER: **regenerar** con su writer al cerrar esta fase de implementación, según la resolución de A; **verificar** con `doctor.py --context` es la otra operación y pertenece a RELEASE — dos operaciones distintas, ninguna sustituye a la otra. Write-back durable solo si está **autorizado con permiso propio** y saneado; sin autorización, checkpoint explícito. No commit, push ni release implícitos.
 
 ## Presupuesto y checklist
 
-Referencia **60 tool_use hasta el commit de código**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)**, retirar la comparación y emitir auto-reporte con su unidad; nunca cumplimiento estimado. Sin commit autorizado no se declara ese corte consumado.
+Referencia **60 tool_use hasta el corte que la sesión tenga autorizado**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte. Con el commit de código autorizado el corte es «hasta el commit»; sin él es «hasta listo para revisión», y se declara cuál se usó. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)**, retirar la comparación y emitir auto-reporte con su unidad; nunca cumplimiento estimado. **La ausencia de commit no deja ningún corte «no consumado»**: los cinco cortes se declaran y verifican sin commit, y el commit es una acción posterior, separada y opcional con autorización explícita.
 
 - [ ] D cerrada; PRE tomado antes de editar y POST conciliado en el mismo entorno.
 - [ ] Estado real de F-P4.1 documentado con mutación, no con la cita del contexto.

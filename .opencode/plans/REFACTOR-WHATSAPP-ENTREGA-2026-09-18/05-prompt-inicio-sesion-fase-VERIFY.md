@@ -1,7 +1,7 @@
 # FASE-VERIFY — Certificación transversal sobre evidencia existente
 
 **Estado:** PENDIENTE. **Dependencia inmediata:** FASE-E2E cerrada con evidencia preservada (o checkpoint explícito de corrida no consumida).
-**Complejidad técnica:** ALTA: juicio transversal sobre 18 ACs, límites causales y una sola muestra.
+**Complejidad técnica:** ALTA: juicio transversal sobre **las veinte filas de la matriz AC1–AC20** (con AC19 leída en sus dos mitades, 19a aditiva y 19b diferida), límites causales y una sola muestra. ⟦Rectificado el 2026-09-24 por el bloque C de la orden de calidad: esta línea y el registro de fase decían «18 ACs / AC1-AC18», población que dejó de ser la del plan cuando la revisión 2 añadió AC20 y partió AC19; certificar sobre 18 habría cerrado VERIFY con dos filas sin verificación y sin decirlo⟧.
 **Scope R3:** 4 tareas, 0 comandos largos externos. **Ejecución DIRECTA obligatoria: VERIFY no se delega.** Sin código nuevo, sin tests, sin v4complete, sin remediación.
 
 ## Contexto e inicio
@@ -36,10 +36,10 @@ Entrada: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-*/`, `output/REFACT
 
 ## Post-ejecución
 
-Actualizar documentos de cierre con datos medidos y al menos tres observaciones; subsección VERIFY en CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`. Sustituir variables por datos reales; registro propio sin `--release`:
+Actualizar documentos de cierre con datos medidos y las observaciones que realmente existan — **sin cuota de lecciones nuevas**; subsección VERIFY en CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`. Sustituir variables por datos reales; registro propio sin `--release`:
 
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-VERIFY --desc "REFACTOR-WHATSAPP-ENTREGA: certificación AC1-AC18, triaje y límites de muestra" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-VERIFY --desc "REFACTOR-WHATSAPP-ENTREGA: certificación AC1-AC20 (AC19 en sus dos mitades), triaje y límites de muestra" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
 ./venv/Scripts/python.exe scripts/validate_lesson_capitalization.py
