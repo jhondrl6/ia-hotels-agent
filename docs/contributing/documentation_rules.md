@@ -56,7 +56,8 @@ Cuando agregues un nuevo modulo Python o realices una migracion tecnica:
 | `ruta/existente.py` | Descripcion del cambio |
 
 ### Tests
-- X tests en `test_xxx.py`
+- Referencia a la fuente del resultado (corrida o informe en `evidence/`), con los fallos ajenos
+  atribuidos por causa; no re-transcribir cifras ni prellenar «0 regresiones»
 ```
 
 ---
@@ -92,7 +93,38 @@ python scripts/sync_versions.py --validate # Validate config
 | `.cursorrules` | Version, fecha |
 | `docs/CONTRIBUTING.md` | Version header, version footer |
 | `docs/GUIA_TECNICA.md` | Version, fecha |
-| `docs/contributing/REGISTRY.md` | Fecha ultima actualizacion |
+
+> **REGISTRY.md ya NO esta en la lista de sincronizados.** Su cabecera
+> `> **Ultima actualizacion:**` es la **fecha de la ultima entrada documental** (el dia que
+> `log_phase_completion.py` registra una fase), no la fecha de release. Ese script es su unico
+> escritor; `sync_config.yaml` retiro la regla `registry_last_update` para que la sincronizacion no
+> la pise con `release_date` (conflicto repetido, resuelto en el bloque B de
+> `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22`).
+>
+> Dos reglas mas del mismo contrato:
+> - **Una entrada por fase.** El escritor es aditivo: cada corrida apila una entrada `## FASE-…`.
+>   El cierre documental verifica el registro y solo escribe la fase que falte (executor §4.5,
+>   Paso 4.5.1). Re-registrar una ejecucion cerrada duplica su entrada.
+> - **El registro declara, no aprueba.** `log_phase_completion.py` no ejecuta tests, no corre la
+>   suite NEVER_BLOCK ni verifica capability contracts, y por eso ya no publica esas garantias como
+>   cumplidas: lo que consta es lo declarado por quien registra, mas el coherence solo si se paso
+>   `--coherence` (con su `PASO`/`FALLO` sin casilla marcada).
+> - **El registro no afirma ausencias.** Si quien registra no paso `--archivos-nuevos` ni
+>   `--archivos-mod`, esas secciones dicen «Sin dato declarado», no `_Ninguno_`: el script no
+>   inspecciona el arbol de trabajo, asi que «ninguno» seria una garantia que no tiene. (Pasar
+>   `--archivos-mod` hace que el escritor escriba ademas `.last_doc_phase.json`; se omite cuando el
+>   mandato no autoriza esa escritura auxiliar.)
+>
+> Cubierto por `tests/test_registry_fecha_documental.py`, que corre el escritor real y el
+> `SyncEngine` real sobre **un repositorio temporal** (VERSION.yaml incluido, configuracion real de
+> sincronizacion): registrar → sincronizar **en modo escritura** → verificar, repetidos ambos
+> comandos, con fecha de release distinta de la de entrada y con cambio de dia; comprueba tambien que
+> el auxiliar `.last_doc_phase.json` queda **dentro del expediente** (su apertura observada y su
+> contenido); y su control negativo, que restituye la autoridad competidora **solo en una copia
+> temporal** y pone roja la misma exigencia por discrepancia de fecha. El otro control negativo corre
+> el escritor **commiteado antes del bloque B** (`git show da382b1:scripts/log_phase_completion.py`)
+> sobre el mismo expediente: el rojo lo provoca el instrumento defectuoso real, no una parodia escrita
+> dentro de la prueba.
 
 ### Archivos que se Actualizan Manualmente
 

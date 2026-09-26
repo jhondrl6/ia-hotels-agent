@@ -1,6 +1,6 @@
 ---
 description: Template para prompts de inicio de fase en proyectos phased_project_executor
-version: v1.5.0
+version: v1.6.0
 ---
 
 # Template: Prompt de Inicio de Fase
@@ -114,19 +114,20 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
 2. **`README.md` del plan** (o archivo de índice principal)
    - Actualizar tabla de progreso
    - Marcar fase como completada
-   - Actualizar métricas (tests, validaciones)
+   - Métricas (tests, validaciones): **referencia** a `09-documentacion-post-proyecto.md` §D o al
+     informe que las produce, no una copia del número (ver «Fuente única por dato» más abajo)
 
 3. **`09-documentacion-post-proyecto.md`** (ACUMULATIVO - usado por FASE-RELEASE)
    - **Seccion A**: Agregar modulos nuevos de esta fase
    - **Seccion B**: Agregar funcionalidades nuevas
-   - **Seccion D**: Actualizar metricas acumulativas
+   - **Seccion D**: Actualizar metricas acumulativas — **aqui vive el numero**
    - **Seccion E**: Marcar archivos afiliados actualizados
    - **Importante**: Este archivo es la fuente de datos para FASE-RELEASE al generar CHANGELOG y GUIA_TECNICA
 
 4. **`10-analisis-post-implementacion.md`** (ACUMULATIVO - capitalización de experiencia)
    - **Resumen de Ejecución**: Actualizar fila de la fase completada (estado, iteraciones, notas)
-   - **Lecciones Aprendidas**: Registrar lecciones nuevas (formato: qué pasó / por qué / qué lo previene + pertinencia INCLUIR/EXCLUIR)
-   - **Métricas de Ejecución**: Actualizar con datos reales (tests collected, coherencia, etc.)
+   - **Lecciones Aprendidas**: Registrar lecciones nuevas (formato: qué pasó / por qué / qué lo previene + pertinencia INCLUIR/EXCLUIR) o declarar «sin lecciones nuevas»
+   - **Métricas de Ejecución**: **referencia** a 09 §D y al log/informe de la corrida (p. ej. «ver 09 §D; stdout en `evidence/{NOMBRE-PLAN}/FASE-{N}/run_tests.txt`»), no la misma cifra transcrita
    - **Seguimientos abiertos**: Documentar temas detectados que requieren acción futura
    - **Decisiones Arquitectónicas**: Si aplica, registrar decisión + rationale + alternativas rechazadas
    - **Importante**: Este archivo se crea DESDE LA CONCEPCIÓN del plan (no al final) para evitar reprocesos
@@ -136,11 +137,16 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
    - **§1/§3**: si esta fase descubrió una fuente que el Paso 0 no consultó, agregar la consulta y su descarte
    - **§4**: actualizar la declaración de cobertura al estado real del cierre
 
-6. **`evidence/fase-{N}/`** (si aplica)
+6. **`evidence/{NOMBRE-PLAN}/FASE-{N}/`** (si aplica)
    - Crear directorio si hay evidencia que preservar
    - Guardar logs, screenshots, reportes, etc.
 
 **NO esperar a la siguiente sesión para documentar.** La documentación incremental evita pérdida de contexto.
+
+**Fuente única por dato.** `09-documentacion-post-proyecto.md` es el acumulador canónico de métricas
+por fase (lo consume FASE-RELEASE). Un conteo o resultado se registra una vez ahí y en README /
+`10-analisis` se **referencia** (p. ej. «ver 09 §D» o el enlace al informe), no se re-transcribe la
+misma cifra a mano: transcribirla en varios cierres es justo lo que los hace divergir.
 ```
 
 ### 6. Criterios de Completitud (CHECKLIST)
@@ -151,11 +157,28 @@ Al finalizar esta fase, actualizar INMEDIATAMENTE (antes de cerrar la sesión):
 ⚠️ **Verificar ANTES de marcar como ✅ COMPLETADA** ⚠️
 
 - [ ] **Tests nuevos pasan**: Todos los tests de esta fase ejecutan exitosamente
-- [ ] **Validaciones del proyecto**: `python scripts/run_all_validations.py --quick` pasa 4/4
+- [ ] **Validaciones del proyecto**: `python scripts/run_all_validations.py --quick` pasa **todos sus
+  checks** (el numero es dinamico: lo imprime la propia corrida, no se fija en este template)
+- [ ] **Verificaciones proporcionales al cambio**: solo se re-ejecutan las lecturas/comprobaciones
+  afectadas por lo que toco esta fase. Una comprobacion anterior se reutiliza solo si coinciden
+  entradas, configuracion y entorno relevantes; cualquier cambio que la afecte la invalida y se
+  vuelve a correr. Un rojo deliberado (mutation check, control negativo) NO es un error accidental:
+  se registra como prueba, no se "arregla" para conseguir verde.
+- [ ] **Cierre sin transcripcion repetida**: un resultado se registra una vez en su fuente (test,
+  informe, `09` §D, `10-analisis`) y se referencia desde los demas cierres, no se copia la misma cifra
+  en varios documentos. Separar los **cinco cortes**: *implementación terminada* → *verificación
+  terminada* → *cierre documental* → *listo para revisión* → *espera de autorización*. Los cinco son
+  utilizables **sin commit**: el commit (y el push) es una acción aparte, opcional y
+  posterior, sujeto a autorización explícita — no un corte ni la condición para poder cerrar los
+  anteriores.
+- [ ] **Lecciones**: puede declararse "sin lecciones nuevas" sin fabricar una cuota; si las hay,
+  se registran con su formato (que paso / por que / que lo previene + pertinencia).
 - [ ] **`dependencias-fases.md` actualizado**: Estado de esta fase marcado
-- [ ] **Métricas consistentes**: Conteo de tests, versión, fechas coinciden con fases anteriores
+- [ ] **Métricas consistentes con su fuente**: el conteo vive en `09` §D (o en el informe de la
+  corrida) y lo demas lo referencia; version y fechas coinciden con fases anteriores **leidas desde
+  su fuente**, no re-transcritas a mano
 - [ ] **Documentación afiliada**: CHANGELOG.md, GUIA_TECNICA.md, etc. actualizados (ver Paso 4 Sección E de la skill)
-- [ ] **Evidencia preservada**: Archivos en `evidence/fase-{N}/` si aplica
+- [ ] **Evidencia preservada**: Archivos en `evidence/{NOMBRE-PLAN}/FASE-{N}/` si aplica
 - [ ] **Post-ejecución completada**: Todos los puntos de la sección anterior realizados
 
 **NO marcar la fase como completada si algún criterio falla.**
@@ -248,6 +271,24 @@ Antes de usar este prompt, verificar:
 
 ## Versión
 
+- **v1.6.0** (2026-09-23): Bloque B de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` — proceso común sin
+  capa extra de burocracia. El checklist de Criterios de Completitud (§6) deja de fijar el conteo
+  `4/4` de `--quick` (es dinamico, lo imprime la corrida) y anade cuatro criterios proporcionales al
+  cambio: re-ejecutar solo las verificaciones afectadas y reutilizar resultados solo si coinciden
+  entradas/configuracion/entorno; distinguir **rojo deliberado** (mutation check / control negativo)
+  de error accidental en lugar de "arreglarlo" para conseguir verde; registrar cada resultado una vez
+  en su fuente y referenciarlo en vez de transcribir la misma cifra en varios cierres; separar
+  implementacion → verificacion → cierre → **espera de autorizacion**; y permitir declarar «sin
+  lecciones nuevas» sin cuota. Ademas D1: la `[10/10]` de `validate_lesson_capitalization.py` en
+  `lecciones-capitalizadas-template.md` se retiro (la cifra vigente la imprime la corrida).
+  **Remediación del mismo día** (mandato §2, sin nuevo incremento de versión): los pasos 2/3/4 de
+  Post-Ejecución **dejaron de mandar copiar métricas** — `09` §D es la fuente del número y README /
+  `10-analisis` lo **referencian** (antes el template ordenaba transcribirlo en tres sitios y a la vez
+  declaraba la fuente única, que es justo la contradicción que había que resolver); el criterio
+  «Métricas consistentes» se reformuló como «consistentes **con su fuente**»; y los cortes pasan de
+  cuatro a **cinco utilizables sin commit** (implementación → verificación → cierre documental →
+  listo para revisión → espera de autorización), porque el commit no puede ser condición de un corte
+  que él mismo autoriza.
 - **v1.5.0** (2026-09-12): Dos secciones nuevas que el executor ordenaba desde v2.17.0 pero el template no tenía — por eso la capitalización aparecía en 6 de 24 planes. **§2 Contexto** gana «Lecciones capitalizadas aplicables a esta fase» (filas copiadas de `00-lecciones-capitalizadas.md` §2, cada una obligada a nombrar un criterio/tarea/restricción de la fase) y su ítem en el Checklist de Calidad. **§5 Post-Ejecución** pasa a 6 pasos: el nuevo 5 actualiza `00-lecciones-capitalizadas.md` al cierre de cada fase. Sale de la revisión del plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` y de executor v2.22.0.
 - **v1.4.0** (2026-08-05): Sección 5 (Post-Ejecución) — incluye actualización de `10-analisis-post-implementacion.md` como paso 4 obligatorio: lecciones aprendidas, métricas, seguimientos, decisiones. El archivo se crea desde la concepción del plan, no al final.
 - **v1.3.0** (2026-03-04): Template inicial para skill phased_project_executor v1.3.0

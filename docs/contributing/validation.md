@@ -39,8 +39,8 @@ python .agents/workflows/v4_regression_guardian.py --quick
 
 | Comando | Descripcion |
 |---------|-------------|
-| `python scripts/run_all_validations.py` | Todas las validaciones (13 checks; 9 de ellos en modo rapido) |
-| `python scripts/run_all_validations.py --quick` | Validaciones esenciales (9 checks) |
+| `python scripts/run_all_validations.py` | Todas las validaciones (el numero de checks lo imprime la propia corrida; crece al anadir validaciones — no se fija aqui, es cifra D2) |
+| `python scripts/run_all_validations.py --quick` | Validaciones esenciales (subconjunto de las anteriores; el conteo vigente sale de la salida `[i/N]`) |
 | `python scripts/validate.py --plan` | Validar coherencia Plan Maestro |
 | `python scripts/validate.py --security` | Detectar secrets hardcoded |
 | `python scripts/validate.py --content <file>` | Validar contenido de archivo |
@@ -296,7 +296,14 @@ Ejecuta validaciones cruzadas:
 | Version headers | Todos usan prefijo `v` (version: vX.Y.Z) |
 | DOMAIN_PRIMER | Version coincide con VERSION.yaml |
 | Python path | Consistencia en todos los .md de workflows |
-| Line endings | Sin CRLF (solo LF) |
+| README counts | Las cifras del README contra el codigo real; un verificador caido es hallazgo, no detalle |
+| Line endings | Archivos **limpios** frente al índice: gobierna lo que **git almacena** (`git ls-files --eol`). Archivo **modificado sin confirmar** o **nuevo (sin registrar)**: se juzga por sus **bytes reales** — un índice en LF no certifica el archivo modificado. Lectura del archivo o del lector git rota: hallazgo, nunca «sin hallazgos». Antes se comparaba `'\\r\\n'` contra `read_text()`, que traduce los finales de linea: el check no podia fallar nunca |
+
+Cada check se calcula **una sola vez por ejecucion** y el resumen reutiliza ese resultado: antes, al
+haber algun fallo, el conteo de hallazgos volvia a llamar a los verificadores y el numero impreso ya
+no tenia por que salir del diagnostico impreso (cifras PRE/POST y procedencia: resumen del bloque B
+de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22`, §4.1). Pruebas y
+negativos por causa en `tests/test_validate_document_integration.py`.
 
 ### 13.2 Ejecutar el Gate
 
@@ -304,7 +311,8 @@ Ejecuta validaciones cruzadas:
 # Directo
 python scripts/validate_document_integration.py
 
-# Integrado en run_all_validations.py (check 5/9 en modo quick)
+# Integrado en run_all_validations.py (check de modo rapido; su ordinal y su denominador los
+# imprime la corrida, no se fijan aqui)
 python scripts/run_all_validations.py --quick
 ```
 
