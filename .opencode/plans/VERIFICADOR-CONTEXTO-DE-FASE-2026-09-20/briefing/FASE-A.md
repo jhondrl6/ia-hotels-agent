@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+- **procedencia**: HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -18,7 +18,7 @@
 
 ## Que **no** incluye este pack
 
-- 01-plan-maestro.md — 17023 bytes fuera de lo declarado (1, 4)
+- 01-plan-maestro.md — 18349 bytes fuera de lo declarado (1, 4)
 - 00-lecciones-capitalizadas.md — 24841 bytes fuera de lo declarado (2, 4)
 
 ---
@@ -254,7 +254,7 @@ que puedan probar: VERIFICADO OFFLINE con rojo y verde, o ⚠️.
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2` · 15552 bytes copiados de 15552 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `03cffe5f708db67a566f56dc5c8ecdb5e1b0e43bcd8022608974c052827469d2` · 15552 bytes copiados de 15552 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `01-plan-maestro.md` §1
 
@@ -370,7 +370,7 @@ sesión cada una y cada fase re-mide once validaciones; eso este plan **no lo to
 mitad medible aquí y AC20 publica qué parte del delta consiguió realmente, incluida la posibilidad
 de que sea cero.
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 9218 bytes copiados de 51507 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 9218 bytes copiados de 54033 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -396,7 +396,7 @@ de que sea cero.
 | AC13 | ≥1 test contra corpus real archivado, con skip visible y declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` |
 | AC14 | Mutation check sobre el guard real de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` |
 | AC15 | Denominador del triaje con términos usados, ceros incluidos y familias no juzgadas, **más la aceptabilidad que dispara D6** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` |
-| AC16 | El quick sigue en 11 checks y el hook en 7, en **todo** el plan | los cuatro `baseline-pre-post.md`, delta 0 |
+| AC16 | El quick sigue en 11 checks y el hook en 7, en **todo** el plan | los cuatro `baseline-pre-post.md`, delta 0 ⟦**Vencido como cifra, cumplido como delta (2026-09-26).** D2 se ejecutó por instrucción expresa y el quick son **12** checks; el modo completo, **16**. Las cuatro aserciones de este plan siguen siendo verdades sobre **sus** fases: ninguna alteró un conteo, y el delta 0 que miden A, B, C y D se midió contra 11 y contra 7, que era el árbol de aquel día. Lo que ya no vale es leer «11» como estado vigente: eso lo publica la corrida con `run_all_validations.py --quick` y lo audita `validate_governance_numbers.py`, que desde esa fecha corre dentro del propio quick. Evidencia: `evidence/…/CIERRE-ORDEN-2026-09-25/18-d2-quick-doce.txt`.⟧ |
 | AC17 | `.agents/` intocado en escritura y límites de cobertura declarados | `coverage.json` → `families_not_covered[]` + `git status` sobre `.agents/` |
 | AC18 | Capitalización, citas e índice verdes sobre los artefactos de este plan | salida de los tres verificadores sobre el mismo árbol final verificado (commit opcional posterior autorizado) |
 | **AC19** | `build_phase_briefing.py` emite un pack por fase, **sin tocar `.agents/`**, declarando `no_incluye[]` y la lectura aparte obligatoria; **resuelve un plan también en su ruta archivada** (⟦bloque C 2026-09-24⟧: sin eso, el `--check` posterior al `git mv` del RELEASE no es ejecutable) | `…/briefing/FASE-X.md` + `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/informe.json` → `packs[]` |
@@ -460,6 +460,11 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `*_baseline_post.txt` y la resta comprobada (R2.3, R2.7, L-D3, L-V2.3). Artefacto:
   `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/baseline-pre-post.md`, delta esperado **0**; una resta 0 con tests nuevos
   declarados = baseline contaminado y la fase no cierra en ✅.
+  ⟦**La forma sobrevivió a la cifra (2026-09-26).** D2 promovió `validate_governance_numbers.py` al quick y
+  lo renumeró: el quick son **12** checks y el completo **16**. AC5 sigue siendo cierta donde gobierna — las
+  cuatro fases de este plan no alteraron ningún conteo y su resta se midió contra 11 y contra 7 — y su
+  lección resultó ser justo la de L-D3: formulado el invariante como **delta** con par de artefactos, la
+  reenumeración no invalida la verificación de la fase, solo el número que alguien leyera como vigente.⟧
 
 ### FASE-B — `decision_client.py` (costura de proveedor neutro)
 
@@ -626,7 +631,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 25266 bytes copiados de 51507 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -953,7 +958,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 29211 bytes copiados de 29211 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 29211 bytes copiados de 29211 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -978,7 +983,7 @@ comparación.
 
 Dueños distintos representados: **6** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA-NARRATIVA, SR-PIPELINE-FIXES, ESTABILIZACION-PRE-TRIBUNAL, PASO0-VERIFICADOR-CAPITALIZACION y VALIDADOR-URL-PROPIA. Satisface C8 (≥2) con holgura y no repite solo al predecesor. **Doble corrección del 2026-09-20**: la fila decía **7** cuando las once originales ya tenían **6** dueños nombrables (L-R.3 aplicado a este propio archivo: el conteo se re-mide, no se copia), y las tres lecciones nuevas de la capa tibia **no suman dueño** — `D-V2.1` está definida en `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`, no en `TRIBUNAL-ENFORCEMENT-OBS`, que es donde la **reproducen** cuatro fases seguidas. Lo detectó `validate_lesson_capitalization.py` con su checks `C7` (atribución contra el índice), no una lectura humana: es el verificador de forma de este mismo plan funcionando sobre su propio `00-`.
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 14966 bytes copiados de 53192 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 14966 bytes copiados de 53192 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §4
 
@@ -1094,7 +1099,7 @@ Dueños distintos representados: **6** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
   mirar el default de escritura de un verificador antes de correrlo (**L-VCF-12**) y arreglar un dato
   en su escritor, no con un tercero que lo reescriba a mano⟧.
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 13385 bytes copiados de 53192 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 13385 bytes copiados de 53192 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -1158,7 +1163,7 @@ habilita la fase siguiente.
 |---|---|---|
 | `.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json` | **Este plan y las fases vivas de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`** | **Conflicto real, ya latente.** `[6/7]` del hook bloquea el commit con el índice vencido contra el árbol, así que **ambos planes lo regeneran**. Regla: regenerar en el mismo commit, nunca `--check` contra un índice ajeno; si aparece un diff que no proviene de tu edición, re-generar y volver a medir, no `git checkout` |
 | `…/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/` | Solo FASE-D, y solo como **generado** (**existe desde el 2026-09-24: 5 packs**) | **Efecto colateral medido por D**: los packs son `.md` dentro del corpus que escanea `build_lesson_index.py`, así que **generarlos vuelve a vencer el par del índice** (A6 sobre un artefacto derivado). La cura no es editar el generado ni el JSON: es el paso 5 del contrato — regenerar el índice sobre el árbol final. Vive dentro del plan a propósito. En `.agents/workflows/` alteraría los contadores de skills (`validate_agent_ecosystem.py`, `sync_data.py`, `doctor.py` usan `glob("*.md")`) y exigiría seguimiento en su `README.md` — y AC17 prohíbe escribir en `.agents/` |
-| `scripts/run_all_validations.py` | **Este plan: solo lectura** (AC16). **Pero no está libre**: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara dentro de su alcance («su connection en `scripts/run_all_validations.py`») | Corregido el 2026-09-20: la cifra de 11 checks **no la pinea el prompt de FASE-C** de `REFACTOR-WHATSAPP` sino cuatro documentos suyos (arranque de FASE-B en su `README.md`, `06-`, `09-`, `10-`). **⟦Re-contado el 2026-09-24 por el bloque C de la orden de calidad: esa fila quedó vencida⟧** — su bloque de arranque ya no pinea la cifra, que fue sustituida por el comando que la imprime. Lo que hoy la contiene (`06-`, `09-`, `10-`, su `dependencias-fases.md` y su prompt de FASE-G, medido el 2026-09-24 con `grep -rl` sobre las dos formas de la cifra) son **registros de fases cerradas**: evidencia histórica que no se reescribe. Consecuencia para AC16: el delta 0 se contrasta contra la corrida propia, no contra esas filas. Y ese tercer plan en vuelo puede cambiar **la etiqueta y la invocación** del write-back `[15/15]` — que es justamente la fuente de verdad de A3 y del fix de AC1. Regla: AC16 (delta 0) obliga a re-medir aquí; **D10** obliga a re-leer la interfaz del write-back antes del `--upload` de este RELEASE |
+| `scripts/run_all_validations.py` | **Este plan: solo lectura** (AC16). **Pero no está libre**: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` lo declara dentro de su alcance («su connection en `scripts/run_all_validations.py`») | Corregido el 2026-09-20: la cifra de 11 checks **no la pinea el prompt de FASE-C** de `REFACTOR-WHATSAPP` sino cuatro documentos suyos (arranque de FASE-B en su `README.md`, `06-`, `09-`, `10-`). **⟦Re-contado el 2026-09-24 por el bloque C de la orden de calidad: esa fila quedó vencida⟧** — su bloque de arranque ya no pinea la cifra, que fue sustituida por el comando que la imprime. Lo que hoy la contiene (`06-`, `09-`, `10-`, su `dependencias-fases.md` y su prompt de FASE-G, medido el 2026-09-24 con `grep -rl` sobre las dos formas de la cifra) son **registros de fases cerradas**: evidencia histórica que no se reescribe. Consecuencia para AC16: el delta 0 se contrasta contra la corrida propia, no contra esas filas. Y ese tercer plan en vuelo puede cambiar **la etiqueta y la invocación** del write-back `[15/15]` — que es justamente la fuente de verdad de A3 y del fix de AC1. Regla: AC16 (delta 0) obliga a re-medir aquí; **D10** obliga a re-leer la interfaz del write-back antes del `--upload` de este RELEASE ⟦**Re-medido el 2026-09-26 y la regla se cumplió en el otro sentido**: el runner cambió de manos fuera de este plan (D2 ejecutada por el operador) y su número pasó de 11 a 12 en el quick y de 15 a 16 en el completo. Esta fila seguía diciendo «solo lectura (AC16)»; lo que gobierna hoy es la segunda mitad: el runner **no está libre**, y el plan de `VERIFICADOR-ESCRITURA-QMIND` lo sigue teniendo dentro de su alcance.⟧ |
 | `evidence/` (raíz) | **Nadie escribe en las rutas legadas** | Corregido el 2026-09-20: `evidence/FASE-A/` … `evidence/FASE-D/` **ya existen y son de `ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`** (guardan `faseA_baseline_pre.txt`, `faseA_baseline_post.txt`, `faseB_baseline.txt`…), que son exactamente los nombres que produciría este plan si escribiera en la raíz: colisión y procedencia mezclada con un plan **archivado**. Toda la evidencia de este plan va a `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-X/`, como hace `REFACTOR-WHATSAPP` con su subdirectorio. **Se conserva la cita de lectura** a `evidence/FASE-D/measure_iterations.py`, que es el instrumento canónico del executor y vive en esa ruta legado |
 | `scripts/git_hooks/pre-commit` | **Nadie** | Sus 7 checks son la otra mitad de AC16 |
 | `.agents/**` | **Nadie en escritura** | AC17. Es el objeto auditado y, desde FASE-D, también la fuente que se lee para componer el pack. Copiar una sección al pack **no** es editar la fuente |
@@ -1204,7 +1209,7 @@ habilita la fase siguiente.
 | # | Deuda | Dueño | Disparador |
 |---|---|---|---|
 | D1 | Corregir o eliminar las aserciones A1–A4 en `.agents/` | Este plan, FASE-RELEASE, con instrucción literal del operador; ejecución adelantada por mandato de B | **Estado vigente: matriz §13 de la fuente única, no certificado aquí.** Antecedente: **Disparador reformulado el 2026-09-21 (FASE-A):** era circular («verificador verde» no puede darse antes de la corrección que el verificador pide); pasa a *verificador operativo con su mutation check en disco* — cumplido el 2026-09-21 — **y** decisión escrita del operador sobre la forma de la corrección |
-| D2 | Promover `validate_governance_numbers.py` a check del `--quick` con renumeración (11 → 12) | Plan propio posterior | Sesión previa a `FASE-RELEASE` de `REFACTOR-WHATSAPP`: ya no hay fases que pineen «11 checks». **⟦Aclaración del bloque C, 2026-09-24: las enmiendas de ese bloque sobre `REFACTOR-WHATSAPP` NO satisfacen este disparador⟧** — convirtieron en «el valor lo imprime la corrida» las **instrucciones prospectivas**, y dejaron intactos los registros de sus fases cerradas (`06-`, `09-`, `10-`, su `dependencias-fases.md` y su prompt de FASE-G), que son evidencia histórica. D2 sigue necesitando su propia sesión y su propia decisión |
+| D2 | Promover `validate_governance_numbers.py` a check del `--quick` con renumeración (11 → 12) | Plan propio posterior | Sesión previa a `FASE-RELEASE` de `REFACTOR-WHATSAPP`: ya no hay fases que pineen «11 checks». **⟦Aclaración del bloque C, 2026-09-24: las enmiendas de ese bloque sobre `REFACTOR-WHATSAPP` NO satisfacen este disparador⟧** — convirtieron en «el valor lo imprime la corrida» las **instrucciones prospectivas**, y dejaron intactos los registros de sus fases cerradas (`06-`, `09-`, `10-`, su `dependencias-fases.md` y su prompt de FASE-G), que son evidencia histórica. D2 sigue necesitando su propia sesión y su propia decisión ⟦**EJECUTADA el 2026-09-26, en una sesión que no es la previa a FASE-RELEASE de `REFACTOR-WHATSAPP`.** Se hace constar la desviación del disparador, no solo el resultado: la orden la dio el operador sobre esta fila, y el disparador literal sigue sin cumplirse. Medido y registrado en `evidence/…/CIERRE-ORDEN-2026-09-25/18-d2-quick-doce.txt`: quick **11 → 12**, completo **15 → 16**, coste del check promovido 0,35 s, cinco pins de `tests/` re-anclados con nota datada (la mitad que la fila S8 tenía reservada para este día), tres punteros de código actualizados, y nueve aserciones normativas de este plan anotadas como antecedente sin borrar su texto. Nace además **S19**, abajo: la frescura de un pack no mira al generador que lo imprime, así que editar el writer deja los packs vencidos con el `--check` en verde.⟧ |
 | D3 | Rebanar el workflow canónico por fase (bajar la carga de lectura de A7: **263.973 bytes ≈ 65.993 tokens** re-medidos el 2026-09-20 sobre la sesión de FASE-B del plan en vuelo; los 254.010 de la concepción vencieron ese mismo día) | Plan propio, posterior | Mismo disparador para el rebanado completo; **D3 parcial**, no cerrada. La simplificación encargada a B no se difiere. **No** es FASE-D: el pack unifica lecturas declaradas, no recorta la fuente |
 | D4 | Verificador de la resta del par pre/post (R2.7 sigue sin instrumento mecánico) | `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` §Deuda de proceso | Ya asignado antes que este plan; no se reasigna |
 | D5 | Instrumento que compruebe que `evidence/FASE-X/` contiene el par verde/rojo (R2.8) | `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` §Deuda de proceso | Mismo tramo que D4 |
@@ -1510,8 +1515,63 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
 - El espejo de prueba allana **las dos** líneas que goberna la regla: con solo la cabecera allanada, el
   `FAIL` llegaba por la segunda sustitución y no por la fecha. Medido, y por eso está escrito.
 
+### S19 — la frescura de un pack no incluye al generador que lo imprime (nueva, 2026-09-26)
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `a38da8ea12a6a54ef5598925e54e6132881306439236419c6b597d2dd4696723` · 56768 bytes copiados de 56768 del documento · HEAD `2a675fa` · generado `2026-09-26T17:49:31Z`
+**Medido, no inferido.** Al ejecutar D2 cambié un literal dentro de `scripts/build_phase_briefing.py`
+(`[8/11]` → `[8/12]`, en un comentario y en el mensaje que el propio script copia dentro de los packs).
+Después de ese cambio, `build_phase_briefing.py --check` dio **`EXIT=0`** con la nota «FASE-C/D/RELEASE:
+fuentes frescas *(procedencia distinta, no vence)*» y, sin embargo, regenerar **modificó los cinco packs**
+(`10/10, 9/9, 13/13, 9/9, 18/18`). La causa está en el código, no en una corrida afortunada: la frescura la
+gobierna el `sha256` de `sources[]` contra el árbol vigente — línea 688: «Frescura por sha de las fuentes
+gobernadas. HEAD solo informa procedencia (AC21)» — y **el escritor no está entre sus propias fuentes**.
+
+**Por qué importa.** Un derivado commiteado puede quedar con texto viejo mientras su verificador dice verde,
+y el único que lo pone al día es quien editó el generador *acordándose*. Hoy me acordé y regeneré; el día que
+no, el `--quick` pasa, el hook pasa, los 7/7 pasan, y el pack publicado miente sobre qué lo generó. Ninguna
+batería lo cubre: no hay test que compare el literal del writer con el contenido del pack.
+
+**Cure posible, y por qué no la aplico en esta sesión.** (a) Meter el sha del writer en la llave de frescura:
+detecta el caso, pero re-vence **todos los packs en cada edición del script**, que es exactamente lo que AC21
+evitó al sacar `head` de la llave. (b) Un gate que regenere en un scratch y compare contra el árbol — no
+cambia la llave, cuesta una corrida y hace falta un verificador nuevo con su propia batería. (c) Convención, la que
+se usó hoy: quien edita un generador regenera los derivados y los comitea en el mismo commit. Se registra con
+dueño **decisión del operador** (ninguna de las tres es un cambio menor) y su disparador es la próxima edición
+de un escritor que emita texto versionado. **No se número antes de esta fila: `S19` estaba libre, medido con
+`grep -rn "S19" .opencode/` sobre el corpus activo.**
+
+⟦**Decidida el 2026-09-26 sobre el árbol, sin esperar al disparador, y con los dos riesgos medidos.** La
+evidencia completa está en `evidence/…/CIERRE-ORDEN-2026-09-25/19-s19-medicion-de-los-dos-riesgos.txt`; aquí va
+el resultado, que reescribe el coste de cada cura. **(a) descartada con medición en contra, no solo con el
+argumento AC21:** dos regeneraciones consecutivas sin ningún cambio entre ellas divergen en 16 a 32 líneas por
+pack, todas el sello `generado` — gobernar al escritor fabricaría un rojo obligatorio de información nula en
+cada edición del script. **(b) viable, y más barata de lo que esta fila suponía:** el destino alterno **ya
+existe** (`--briefing-dir`, líneas 1002-1003 del propio script), así que no hay que editar al paciente para
+operarlo; y el diff es determinista bajo una sola normalización — **53 líneas llevan el sello UTC en todo el
+conjunto de packs, y ese conteo no se mueve entre corridas ni entre ediciones de corpus** (el denominador sí:
+9.481 al medir por primera vez, 9.621 después de escribir esta misma anotación, o sea el ratio que ahí aparece
+es un derivado condenado y no es la cifra que hay que gobernar). Al normalizar esas 53, los cinco packs quedan
+idénticos entre corridas **y** idénticos al versionado. Lo que
+viaja de esa verificación es el comando, no la cifra: `sed -E 's/· generado .[0-9TZ:.+-]+.//g;
+s/"generated_at": "[0-9TZ:.+-]+"/"generated_at": "N"/g' <pack> | sha256sum` sobre los cinco packs, corrido dos
+veces sin cambios entre ellas, da el mismo digest por pack. Los cinco valores que publiqué en el primer borrador
+de esta anotación (`53f0d4f5a4a2` y compañía) **quedaron refutados por mi propia cola canónica** unos minutos
+después de escribirlos: anotar esta fila es editar una fuente gobernada, y eso mueve el contenido de los cinco
+packs. Queda como antecedente fechado el 2026-09-26 y su medición en
+`evidence/…/CIERRE-ORDEN-2026-09-25/19-s19-medicion-de-los-dos-riesgos.txt` §8. Su forma es el patrón ya
+probado en `scripts/verify_index_in_committed_tree.py`: materializar la revisión en un clon, regenerar a
+scratch y comparar por sha normalizado, con controles anclados a una revisión publicada fija y nunca a HEAD.
+**Sigue sin implementar: eso es código, y el dueño de esa decisión es el operador.** **(c) se
+mantiene como puente y queda probada su insuficiencia:** el 2026-09-26 `--check` dio `EXIT=0` con los cinco
+packs ya cambiados por una edición del escritor (244 inserciones / 99 supresiones, 6 líneas de pack citando el
+`[8/12]` nuevo). Prueba estructural leída del artefacto: `sources[]` de FASE-A declara 4 rutas y **ninguna es
+el escritor**, mientras el bloque meta ya publica `generado_por` — el pack nombra a su productor sin casarlo.
+De ahí una cuarta opción que la medición hizo visible y no se aplica: sellar `generado_por_sha` como
+procedencia **no gobernante** (coste ~el de la normalización, no re-vence nada, y (b) lo necesita para atribuir
+el rojo). **No se toca `.agents/`**: la convención de cierre sigue sin escribirse en el executor por falta de
+instrucción explícita, no por falta de acuerdo.⟧
+
+
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `e90c13753d8517136b8ba4e75866a02ac65b24caf271a1c77f151add9bfa6ad9` · 63315 bytes copiados de 63315 del documento · HEAD `de336b6` · generado `2026-09-26T20:29:13Z`
 
 ---
 
@@ -1523,11 +1583,11 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "2a675fa",
-    "generated_at": "2026-09-26T17:49:31Z"
+    "head": "de336b6",
+    "generated_at": "2026-09-26T20:29:13Z"
   },
   "no_incluye": [
-    "01-plan-maestro.md — 17023 bytes fuera de lo declarado (1, 4)",
+    "01-plan-maestro.md — 18349 bytes fuera de lo declarado (1, 4)",
     "00-lecciones-capitalizadas.md — 24841 bytes fuera de lo declarado (2, 4)"
   ],
   "lectura_aparte_obligatoria": [
@@ -1536,7 +1596,7 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
   "sources": [
     {
       "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md",
-      "sha256": "1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7",
+      "sha256": "d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a",
       "documento": "01-plan-maestro.md",
       "secciones": [
         "1",
@@ -1563,7 +1623,7 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
     },
     {
       "ruta": ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "a38da8ea12a6a54ef5598925e54e6132881306439236419c6b597d2dd4696723",
+      "sha256": "e90c13753d8517136b8ba4e75866a02ac65b24caf271a1c77f151add9bfa6ad9",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

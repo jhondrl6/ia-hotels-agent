@@ -447,7 +447,7 @@ def construir_fase(plan_dir: Path, fase: str, prompt: Path, head: str,
         visible = _fuente_vista(ruta, raiz)
         if not visible.startswith(".opencode/"):
             # Copiar un documento de FUERA de `.opencode/` **hacia dentro** cambiaria la
-            # poblacion que escanea `validate_opencode_refs.py` ([8/11] del quick): cada
+            # poblacion que escanea `validate_opencode_refs.py` ([8/12] del quick): cada
             # referencia que ese texto contiene pasaria a contar como referencia nueva del
             # plan, y un derivado no puede reabrir gates ajenos. Se declara lectura aparte,
             # con su ruta y sus bytes, y sigue entrando a la carga de los dos lados.
@@ -562,7 +562,7 @@ def render_pack(paquete: dict, raiz: Path) -> str:
                       "copiarlo aqui seria rebanar `.agents/` por la puerta de atras (AC17)")
         else:
             motivo = ("el prompt la declara pero vive fuera de `.opencode/`: copiarla dentro "
-                      "ampliaria la poblacion que escanea `validate_opencode_refs.py` ([8/11])")
+                      "ampliaria la poblacion que escanea `validate_opencode_refs.py` ([8/12])")
         lineas.append(f"- `{ruta}` — {n} bytes (~{tokens_estimados(n)} tokens). {motivo}.")
     lineas += ["", "## Que **no** incluye este pack", ""]
     lineas += ([f"- {x}" for x in paquete["no_incluye"]]

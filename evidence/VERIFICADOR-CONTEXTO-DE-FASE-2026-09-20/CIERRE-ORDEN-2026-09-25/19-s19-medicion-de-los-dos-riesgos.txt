@@ -1,0 +1,244 @@
+19 — S19: los dos riesgos que la recomendación pedía medir antes de escribir código
+Medido 2026-09-26 (corridas de regeneración entre 20:16:05Z y 20:16:07Z). Sesión: cierre de la orden
+2026-09-25/26, continuación de `18-d2-quick-doce.txt`.
+
+## 0. Qué se ejecutó y qué NO
+
+La recomendación cerraba con un orden: medir los dos riesgos de la cura (b) **antes** de implementar nada, y
+no tocar (a) . Esta nota es esa medición. **No se escribió ni una línea de código**: no hay verificador nuevo,
+no hay cambio en `build_phase_briefing.py`, no hay edición de `.agents/`. Lo único que cambia en el árbol por
+esta nota son dos rutas: este archivo y la fila S19 de `dependencias-fases.md`.
+
+## 1. Riesgo 2 (salida alterna): ya estaba resuelto, y eso baja el coste de (b)
+
+`scripts/build_phase_briefing.py` ya acepta destino alterno. Medido leyendo el parser (líneas 1002-1003) y
+ejecutándolo:
+
+    python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --briefing-dir temp/s19-r1
+    python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --briefing-dir temp/s19-r2
+
+Ambas corridas: `RC=0`, cinco packs emitidos (`FASE-A/B/C/D/RELEASE.md`) en cada directorio, y **ninguna
+escritura en el corpus**: `--informe` y `--carga` se omitieron, así que la guarda de S12 (el default del
+generador pisa evidencia cerrada de FASE-D) no se activó. Consecuencia para el diseño: la cura (b) **no
+obliga a editar al paciente para operarlo**. El círculo que yo había sospechado —«añadir `--out-dir` cambia el
+writer, y eso re-vence los packs»— no existe, porque la opción ya estaba.
+
+## 2. Riesgo 1 (determinismo): confirmado, y acotado a un solo token
+
+Dos corridas consecutivas **sin ningún cambio entre ellas**, separadas 2 s:
+
+| Pack | sha256 crudo r1 | sha256 crudo r2 | veredicto | lineas que difieren |
+|------|-----------------|-----------------|-----------|--------------------|
+| FASE-A | 69ac17ce29d5 | d2cd0fb14041 | DIVERGE | 18 |
+| FASE-B | ec5a810f3aa6 | f034eabbfb3f | DIVERGE | 16 |
+| FASE-C | 1b2515e3bd23 | 9f2dd22405a7 | DIVERGE | 24 |
+| FASE-D | 12dedfba98ec | 9cabbf5590ad | DIVERGE | 16 |
+| FASE-RELEASE | b9d09c7da0ae | d6df955dad3f | DIVERGE | 32 |
+
+Un diff byte a byte, que es lo que yo había recomendado «tal cual», **da rojo siempre**: es un verde vacío por
+su contrario, un verificador que nunca puede aprobar nada. La causa está leída, no supuesta: `generar()`
+línea 641 hace `stamp = ahora_utc()`, y `ahora_utc()` (línea 129) es `datetime.now(timezone.utc)` formateado.
+Ese sello viaja al pack.
+
+Pero la divergencia es **un solo token repetido**, no una deriva estructural. Al normalizar únicamente ese
+token, las dos corridas quedan idénticas entre sí **e idénticas al pack versionado**, los cinco:
+
+| Pack | sha normalizado r1 | sha normalizado r2 | sha normalizado versionado |
+|------|--------------------|--------------------|---------------------------|
+| FASE-A | 53f0d4f5a4a2 | 53f0d4f5a4a2 | 53f0d4f5a4a2 |
+| FASE-B | fa6bc1899c9e | fa6bc1899c9e | fa6bc1899c9e |
+| FASE-C | bc3b4524162b | bc3b4524162b | bc3b4524162b |
+| FASE-D | a60906ef2b3b | a60906ef2b3b | a60906ef2b3b |
+| FASE-RELEASE | c818161f7f63 | c818161f7f63 | c818161f7f63 |
+
+La normalización que hace falta es una expresión sobre dos formas del mismo valor:
+
+- `· generado \`<ISO-UTC>\`` en la línea de procedencia (prosa del pack), y
+- `"generated_at": "<ISO-UTC>"` en el bloque `<!-- BEGIN BRIEFING-META -->`.
+
+Y una segunda, obligatoria en el escenario de clon donde (b) debería correr: `HEAD \`<sha>\``, que dentro de una
+misma corrida no se mueve (valía `de336b6` en las cinco filas de arriba) pero sí cambia entre el commit que
+generó el pack y la revisión que el verificador materializa. Es exactamente el campo que AC21 ya declara
+no-gobernante, así que normalizarlo no debilita ninguna garantía: repite la decisión de diseño que el propio
+plan tomó para `head`.
+
+## 3. Superficie volátil, en números
+
+Sobre los cinco packs versionados: **9.481 líneas** en total.
+
+- 48 líneas llevan el sello `· generado \`<UTC>\``; esas mismas 48 son las que llevan `HEAD \`<sha>\``.
+- 5 líneas son `"generated_at"` en forma JSON (una por pack, dentro del bloque meta).
+- 53 líneas portan un timestamp UTC en cualquier forma = **0,56 % del artefacto**.
+
+**El ratio es un derivado, y esta misma nota lo vio moverse.** Volver a medir al final (§8), después de anotar
+la fila S19 en el corpus: **los 53 sellos siguen siendo 53**, pero el conjunto pasó de 9.481 a 9.621 y de ahí a
+**9.636 líneas** (§8, estado terminal), con el ratio yendo de 0,56 % a 0,55 %. Lo gobernable es el conteo, no el
+porcentaje: el numerador es una propiedad del writer
+(cuántas veces imprime su reloj) y el denominador es una propiedad de lo que las fuentes digan hoy. Ninguna de
+las dos es un invariante, y la que publiqué primero ya estaba refutada por mi propia cola cuando la terminé de
+escribir.
+
+Corte de control: busqué sellos UTC **sin** la palabra `generado` y salieron 48 — las mismas líneas de
+procedencia, ninguna volátil oculta. Y busqué menciones de `generated_at` sin valor (9 líneas): son **prosa
+copiada de las fuentes** (el texto de AC21 y la lección L-VCF-12, que citan el nombre del campo), no contenido
+generado, así que no aportan deriva.
+
+**Auto-declaración de un defecto propio en esta medición.** La primera vez cuantifiqué la superficie con
+`grep -c 'generado'` y publiqué internamente **321 líneas / 3,39 %**. Es falso: ese patrón cazaba la palabra en
+cualquier contexto, incluido el texto de AC21. Con el patrón anclado al valor (`generado \`[0-9]{4}-…Z\``) son
+48. Y en la primera impresión de la tabla de superficie se cayó la fila de FASE-RELEASE sin que ninguna
+aserción lo notara — la segunda corrida la imprimió. Mismo aprendizaje que ya está registrado: contar
+palabras no es medir valores, y un `grep -c` que devuelve 0 hay que mirarlo a la cara.
+
+## 4. El reproductor de la ceguera, con la edición del propio escritor
+
+No hace falta fabricar un caso: esta sesión lo dio. Cambié un literal dentro de
+`scripts/build_phase_briefing.py` (`[8/11]` → `[8/12]`) y ese string **vive solo en el writer**, que lo copia
+al pack. Medido sobre el árbol de trabajo:
+
+    git diff --stat -- .opencode/plans/…/briefing   →  5 files changed, 244 insertions(+), 99 deletions(-)
+    lineas nuevas de pack que citan [8/12]          →  6
+
+Y el verificador de frescura, corriendo ahora mismo sobre ese mismo árbol:
+
+    python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check
+    CHECK_EXIT=0
+    [OK] FASE-B: 4 fuentes frescas · FASE-C: 4 · FASE-D: 4 · FASE-RELEASE: 10
+
+Es decir: **cinco archivos derivados cambiaron su contenido por una edición del generador, y el `--check` que
+los gobierna dice que están frescos.** La prueba estructural, leída del artefacto y no inferida: el bloque meta
+de FASE-A declara `sources[]` con 4 rutas y **ninguna es `build_phase_briefing.py`**; las claves del meta son
+`['declaracion', 'divisor_tokens', 'estado', 'fase', 'generado_por', 'lectura_aparte_obligatoria', 'no_incluye',
+'plan', 'provenance', 'sources']`. Ahí está `generado_por: "scripts/build_phase_briefing.py"` — el pack **ya
+nombra a su productor**, solo que ese nombre no entra en la llave de frescura ni se casa con el contenido.
+
+## 5. Lo que esto decide, por cura
+
+- **(a) sha del escritor en la llave de frescura → descartada, y ahora con la medición en contra además del
+  argumento.** Su coste no es teórico: con `--check` gobernado por el sha del writer, cada edición del script
+  —incluido un renumerado como el de D2— re-vence los cinco packs de golpe. Y el corte del §3 dice cuántas
+  líneas de esas 9.481 cambiarían de todos modos en cada regeneración: 53 por puro reloj. Se convertiría un
+  falso verde en un rojo obligatorio de información nula. Descartada también por coherencia con AC21, que ya
+  sacó `head` de la llave por la misma razón.
+- **(b) verificador que regenera y compara → viable, con dos condiciones que esta nota deja medidas.** (i)
+  emitir a destino alterno: **ya existe** (`--briefing-dir`), sin tocar al paciente. (ii) diff con el token
+  volátil normalizado: **determinista verificado**, 5/5 packs idénticos bajo la normalización de un solo
+  patrón. El diseño concreto sigue siendo el que recomendó el patrón de `scripts/verify_index_in_committed_tree.py`:
+  materializar la revisión en un clon, regenerar ahí con salida a scratch, y comparar por sha256 normalizado
+  cada pack contra el del árbol versionado, con controles negativos anclados a una revisión publicada fija y
+  nunca a HEAD. Eso **no está implementado** y es código: requiere instrucción del operador.
+- **(c) convención de cierre → sigue siendo el puente, y su límite queda demostrado en el §4.** Hoy el defecto
+  lo tapé yo acordándome de regenerar; la prueba de que eso no es un control es que el `--check` daba `EXIT=0`
+  mientras los cinco packs estaban vencidos. No se edita `.agents/` en esta nota: es config central y pide
+  instrucción explícita aparte.
+
+## 6. Complemento barato que la medición hizo visible
+
+El meta ya publica `generado_por`. Sellar también el sha de ese productor (`generado_por_sha`) como
+**procedencia no gobernante** — sin meterlo en la llave — costaría lo mismo que la normalización que ya hace
+falta, y haría que un pack vencido por edición del writer se detecte leyendo el artefacto, sin corrida. No lo
+aplico: cambia los cinco packs y por tanto es escritura de corpus + regeneración en cadena, y su beneficio es
+diagnóstico, no control. Queda anotado como opción de bajo coste para cuando (b) se implemente, porque (b)
+necesita exactamente ese dato para atribuir el rojo.
+
+## 7. Saldo a mitad de nota
+
+Rutas tocadas en ese momento: este archivo (nuevo) y la fila S19 de
+`.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`. Código: **cero**.
+Configuración central: **cero**. Scratch generado en `temp/s19-r1`, `temp/s19-r2`, `temp/s19-gen1.log`,
+`temp/s19-gen2.log`, `temp/s19-check.txt`, borrado antes de la cola, no después. Con la escritura de corpus
+encima: cola `packs → par del índice → --check de ambos → run_all_validations.py --quick`, cuyo resultado está
+en §8. **Este saldo quedó desactualizado por las dos pasadas que siguieron; el vigente es el §10.**
+
+## 8. La cola canónica, tres pasadas, y el control que las tres no daban
+
+Editar la fila S19 es editar una **fuente gobernada**, así que cada anotación obligó a re-correr
+`packs → índice → --check de ambos → --quick`. Tres pasadas, mismo veredicto de los checks, contenido de packs
+distinto cada vez — que es justo la asimetría que S19 describe:
+
+| Pasada | qué la disparó | packs | índice | índice `--check` | packs `--check` | `--quick` |
+|--------|----------------|-------|--------|------------------|-----------------|-----------|
+| 1 | anotación original de S19 | `EXIT=0` | `EXIT=0` · `nombre=328 commit=11 sin_fuente=0` | `EXIT=0` · 339 IDs | `EXIT=0` | **12/12 `EXIT=0`** |
+| 2 | reparación del párrafo (§9) | `EXIT=0` | idem | `EXIT=0` | `EXIT=0` | **12/12 `EXIT=0`** |
+| 3 | convertir el ratio en conteo | `EXIT=0` | idem | `EXIT=0` | `EXIT=0` | **12/12 `EXIT=0`** |
+
+En las tres: `Plan Citations: 743 citas históricas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)` y
+`Governance Numbers: [SIN-HALLAZGOS]`. La anotación no metió ninguna cita por número de línea, que es lo que
+R2.2/R2.3 gobierna, y no movió ningún denominador, que es lo que el check promovido por D2 gobierna.
+
+**El control, que es lo que faltaba para decidir y no sale de las pasadas.** Entre la edición del ratio y su
+regeneración corrí `--check` **sin** regenerar antes:
+
+    [VENCIDO] FASE-A: 1 fuente(s) movidas  - SHA-DISTINTO: …/dependencias-fases.md
+    … (los cinco packs, misma ruta) …
+    CHECK_EXIT=1
+
+Contra el caso del §4, donde una edición **del escritor** dejó `EXIT=0` con los cinco packs ya cambiados. El
+mecanismo de frescura no está roto ni es perezoso: ve perfectamente lo que las fuentes mueven, y lo corta rojo
+nombrando la ruta. Lo que no puede ver es lo que **él mismo imprime**, porque el escritor no está en
+`sources[]`. Eso estrecha (b) de forma útil: no hay que re-diseñar la frescura, hay que cerrar un hueco de un
+solo miembro — el productor — y la normalización que lo hace determinista ya está medida.
+
+**Estado terminal, con el conteo y no con el digest.** Tras la pasada 3: **53 líneas con sello UTC** (9+8+12+8+16,
+el mismo número que en §3 tras dos regeneraciones intermedias) sobre **9.636 líneas** de pack. El numerador es
+propiedad del escritor y no se movió; el denominador es propiedad del corpus y se movió dos veces (9.481 → 9.621
+→ 9.636). Por eso **no publico los shas de la pasada 3**: los de la pasada 2 (`801443f72c07`, `87652d1cc2a3`,
+`2745faa53ea2`, `f0f0100549ec`, `6f6e9b32f2e5`) quedaron refutados por la pasada 3 en cuanto la corrí, y publicar
+la tercera serie sería dejar plantado al lector con un verificador que solo sabe a qué minuto pertenecía. Lo que
+viaja es el comando del §2.
+
+## 9. Defectos propios que esta nota produjo y cómo se cortaron
+
+- **Cifra de superficie falsa (321 líneas / 3,39 %).** Patrón demasiado suelto: contaba la palabra, no el
+  valor. Corregido a 48 + 5 = 53 con el patrón anclado. Detallado en §3.
+- **Falso cero en el conteo de anotadores.** `grep -oP '\x27e6'` no busca U+27E6: PCRE lo lee como `\x27` (una
+  comilla simple) más `e6`, así que contó `'e6` y devolvió 0 — exactamente la forma de cero falso que la
+  lección L-VCF-«prueba de ausencia sin corte» describe. Medido bien con `\x{27E6}` y luego por conteo de
+  carácter en Python: **18 abre / 18 cierra en el archivo, y +3/3 respecto de HEAD** (dos de esas tres ya las
+  había traído la anotación de D2 sin commitear; la mía es una). Backticks: 1.064, par.
+- **Un `Edit` mío rompió el párrafo.** Reemplacé un tramo que incluía el cierre de una cláusula y dejé atrás
+  el comienzo de la siguiente: quedaron una frase huérfana («regenerar a scratch…» sin su introito) y un
+  **duplicado** de «Sigue sin implementar…decisión del operador», y se perdió la referencia a
+  `scripts/verify_index_in_committed_tree.py`. Ningún check lo detectaba — el `--quick` estaba verde con el
+  texto roto. Se cortó leyendo el bloque después de editar y contando ocurrencias de la frase clave (1).
+  Reconstruido en la pasada 2.
+- **Anglicismo en prosa española:** «el coste de cada option». Corregido a «cada cura» y barrido (el único
+  `option|the|and|…` que queda en el archivo es `output E2E` en la línea 99, texto ajeno y preexistente). El
+  barrido de CJK dio **cero** en las dos rutas nuevas.
+- **Fila de la pasada 3 escrita antes de correr la pasada 3.** En el primer borrador del §8 transcribí su
+  renglón con los seis `EXIT=0` cuando todavía no había corrido esa cola: publiqué un hecho futuro. Nadie lo
+  cortaba — ningún check lee esta nota. Se corrigió corriéndola de verdad (q8) y, al hacerlo, la pasada 3 volvió
+  a mover los shas que esa misma sección acababa de publicar.
+- **Borré el §7 al escribir el §10, y el §10 citaba al §7.** Reemplacé el bloque del saldo por tres secciones
+  nuevas sin dejar encabezado, dejando tres referencias colgando («reemplaza el §7», «como declara §7», la
+  cadena de la cola). Detectado listando encabezados y cruzando las menciones, no por ninguna corrida.
+  Restaurado §7 con su contenido y su marca de «vigente es el §10».
+- **Dos sha publicados y refutados por mi propia escritura**, una vez en el documento de gobierno (§ decisión
+  de (b), anotado allí mismo y aquí) y otra vez en §8. La tercera edición del documento ya no publica sha:
+  publica el comando.
+
+## 10. Saldo terminal (reemplaza el §7, que era a mitad de nota)
+
+Rutas que esta nota dejó distintas a como estaban al empezar:
+`evidence/…/CIERRE-ORDEN-2026-09-25/19-s19-medicion-de-los-dos-riesgos.txt` (nueva) y
+`.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` (fila S19 anotada), más lo que
+la cola arrastra consigo: los cinco packs de `briefing/` y el par `.opencode/LECCIONES-INDEX.md` +
+`lecciones_index.json`. **Código: cero. Configuración central: cero.** El resto de las rutas sucias son las que
+ya estaban del trabajo D2 y `AGENTS.md`, sin commitear, esperando instrucción.
+
+Scratch de esta nota: `temp/s19-r1`, `temp/s19-r2`, `temp/s19-gen1.log`, `temp/s19-gen2.log`,
+`temp/s19-check.txt` **borrados antes de la cola** (como declara §7). Los auxiliares de la cola
+(`temp/q1-*` … `temp/q8-*`, incluidas las corridas de control `q7-check-pre-regen.txt` y `q5-quick.txt`) se
+borran al cerrar este archivo; el crudo que queda es el transcrito aquí y quien quiera re-verificar usa los
+comandos nombrados, que son el punto de la nota.
+
+Mediciones que sí cierran y no se mueven solas: **53** líneas con sello UTC sobre **9.636** de pack tras la
+pasada 3; `--check` con edición de fuente → `EXIT=1` nombrando `dependencias-fases.md` en los cinco packs;
+`--check` con edición del escritor → `EXIT=0` con los cinco packs cambiados; `--quick` **12/12** en las tres
+pasadas; `sources[]` de FASE-A con **4** rutas y **ninguna** del escritor; `--briefing-dir` disponible sin tocar
+el código.
+
+Lo que **no** se hizo, para que no se lea como hecho: implementar (b) (código, y pide instrucción), escribir (c)
+en el executor (config central, pide instrucción), sellar `generado_por_sha` (§6), ni comitear nada de lo que
+esta nota tocó.
+

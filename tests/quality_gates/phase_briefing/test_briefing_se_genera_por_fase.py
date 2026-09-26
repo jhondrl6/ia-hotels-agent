@@ -108,7 +108,7 @@ def test_lo_declado_es_del_prompt_no_de_una_configuracion(bpb, tmp_path):
 
 
 def test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia(bpb, tmp_path):
-    """Un derivado no puede ampliar la poblacion que escanea otro gate ([8/11] del quick).
+    """Un derivado no puede ampliar la poblacion que escanea otro gate ([8/12] del quick).
 
     Medido: `docs/CONTRIBUTING.md` declara fases de planes archivados por su ruta vieja. Al
     copiarlo dentro de `.opencode/plans/.../briefing/` esas referencias pasaban a contar como

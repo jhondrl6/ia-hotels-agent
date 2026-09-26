@@ -89,6 +89,7 @@ class ValidationRunner:
         self._check_plan_citations()
         self._check_lesson_capitalization()
         self._check_wiring()
+        self._check_governance_numbers()
         
         if not self.quick:
             self._check_dependencies()
@@ -113,7 +114,7 @@ class ValidationRunner:
     
     def _check_residual_files(self) -> None:
         """Check for residual/backup files."""
-        print("[1/11] Checking for residual files...")
+        print("[1/12] Checking for residual files...")
         
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
@@ -142,7 +143,7 @@ class ValidationRunner:
     
     def _check_plan_maestro_sync(self) -> None:
         """Check if Plan Maestro data is synchronized."""
-        print("[2/11] Checking Plan Maestro sync...")
+        print("[2/12] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
@@ -185,7 +186,7 @@ class ValidationRunner:
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""
-        print("[3/11] Checking version synchronization...")
+        print("[3/12] Checking version synchronization...")
         
         version_file = ROOT_DIR / "VERSION.yaml"
         if not version_file.exists():
@@ -274,7 +275,7 @@ class ValidationRunner:
         (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
         NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
         """
-        print("[4/11] Checking for hardcoded secrets (tracked + staged)...")
+        print("[4/12] Checking for hardcoded secrets (tracked + staged)...")
 
         patterns = self._secret_patterns()
 
@@ -365,7 +366,7 @@ class ValidationRunner:
         de la política queda grandfathered en el config, con dueño declarado y
         disposición pendiente de la puerta AC-S4.
         """
-        print("[5/11] Checking client material policy (tracked + staged)...")
+        print("[5/12] Checking client material policy (tracked + staged)...")
 
         policy_path = ROOT_DIR / "config" / "client_material_policy.yaml"
         policy = None
@@ -448,7 +449,7 @@ class ValidationRunner:
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""
-        print("[6/11] Checking document integration...")
+        print("[6/12] Checking document integration...")
         
         script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
         if not script_path.exists():
@@ -484,7 +485,7 @@ class ValidationRunner:
         log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
         and documentation-only references to --release.
         """
-        print("[7/11] Checking prompts for --release flag in intermediate phases...")
+        print("[7/12] Checking prompts for --release flag in intermediate phases...")
         
         import re
         
@@ -547,7 +548,7 @@ class ValidationRunner:
         Catches forgotten reference updates after archiving plans (Archives/)
         or contexts (Historico/). Repair manually with --fix on the script.
         """
-        print("[8/11] Checking .opencode references...")
+        print("[8/12] Checking .opencode references...")
         
         script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
         if not script_path.exists():
@@ -588,7 +589,7 @@ class ValidationRunner:
         numbers, because a rewritten line citation is the same defect dressed up as
         a fix.
         """
-        print("[9/11] Checking plan citations (simbolos, no numeros de linea)...")
+        print("[9/12] Checking plan citations (simbolos, no numeros de linea)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_plan_citations.py"
         if not script_path.exists():
@@ -630,7 +631,7 @@ class ValidationRunner:
         A green here means FORM AND TRACEABILITY, never relevance: the script publishes
         the population it looked at because an [OK] without a denominator is L-R.3.
         """
-        print("[10/11] Checking lesson capitalization (Paso 0 del executor)...")
+        print("[10/12] Checking lesson capitalization (Paso 0 del executor)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_lesson_capitalization.py"
         if not script_path.exists():
@@ -681,7 +682,7 @@ class ValidationRunner:
         poblacion descubierta esta conforme o registrada, NO que no existan callers
         invisibles.
         """
-        print("[11/11] Checking signal wiring by AST (AC7/AC16)...")
+        print("[11/12] Checking signal wiring by AST (AC7/AC16)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_wiring.py"
         if not script_path.exists():
@@ -721,9 +722,58 @@ class ValidationRunner:
                 details=issues or lineas[:5],
             ))
 
+    def _check_governance_numbers(self) -> None:
+        """Cifras de gobernanza contra su fuente dinamica (D2 de CONTEXTO, promovido 2026-09-26).
+
+        Que gobierna: que los conteos que afirman los documentos de gobierno (`[N/M]` y la forma
+        «check N») cuadren con las etiquetas que este runner imprime y con las del hook. Ni una ni
+        otra cifra se fija en un documento: la fuente de verdad es el codigo.
+
+        Por que corre en `--quick` y no solo en un test: hasta aqui el verificador vivia suelto
+        (S9), asi que el mismo runner que reenumera sus checks podia dejar un documento afirmando el
+        denominador viejo sin que nadie lo cortara hasta la fase siguiente. Es autorreferente por
+        diseno: lee `scripts/run_all_validations.py`, o sea su propia fuente, y por eso la renumeracion
+        tiene que terminar dentro de la misma corrida que la audita.
+
+        Codigos del verificador: 0 SIN-HALLAZGOS, 1 HALLAZGOS, 2 AUSENTE, 3 LECTOR-FALLIDO. Los tres
+        rojos se publican distintos, porque AUSENTE no es «sin hallazgos» (R2.9) y un lector caido no
+        puede disfrazarse de verde.
+        """
+        print("[12/12] Checking governance numbers (documentos de gobierno vs fuente dinamica)...")
+
+        script_path = ROOT_DIR / "scripts" / "validate_governance_numbers.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="Governance Numbers",
+                passed=False,
+                message="validate_governance_numbers.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        lineas = [l for l in output.splitlines() if l.strip()]
+        primera = lineas[0] if lineas else ""
+
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="Governance Numbers",
+                passed=True,
+                message=primera or "SIN-HALLAZGOS"
+            ))
+            return
+
+        estado = {1: "HALLAZGOS", 2: "AUSENTE", 3: "LECTOR-FALLIDO"}.get(exit_code, f"exit {exit_code}")
+        self.results.append(ValidationResult(
+            name="Governance Numbers",
+            passed=False,
+            message=(f"{estado} en cifras de gobernanza (fix: alinear el conteo del documento con la "
+                     "etiqueta que imprime la fuente; NO renumerar el check para que cuadre)"),
+            details=lineas[1:6]
+        ))
+
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[12/15] Checking dependencies...")
+        print("[13/16] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -745,7 +795,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[13/15] Checking core module imports...")
+        print("[14/16] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -781,7 +831,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[14/15] Running tests...")
+        print("[15/16] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -813,7 +863,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[15/15] Checking QMind write-back (planes archivados)...")
+        print("[16/16] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():

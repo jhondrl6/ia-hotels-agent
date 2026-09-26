@@ -1,0 +1,220 @@
+18 - D2 EJECUTADA 2026-09-26: el quick pasa de once a doce checks y el completo de quince a dieciseis
+======================================================================================================
+
+Ejecutada sobre HEAD `de336b6`. Decisión del operador: «¿D2 está vigente? si es así: ejecutar».
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+1) QUÉ DIJO D2, Y SI SU DISPARADOR SE CUMPLE
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+`01-plan-maestro.md` fila D2, transcrito: «Promover `validate_governance_numbers.py` a un check
+adicional del `--quick`, renumerando de 11 a 12 y midiendo quién afirma el número (L-V2.3)». La autoridad
+para hacerlo fuera del plan es `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`: «Renumerar o
+promover checks es CONTEXTO/D2, no esta simplificación».
+
+Su disparador decía: «sesión previa a FASE-RELEASE de REFACTOR-WHATSAPP: ya no hay fases en vuelo que
+pineen «11 checks»». **Leído estrictamente, el disparador no se cumple hoy**: FASE-RELEASE de WHATSAPP no
+ha llegado, y nueve aserciones normativas del plan cerrado de CONTEXTO siguen fijando el 11 (§4). Se ejecuta
+por instrucción expresa del operador, que es la vía que el propio plan reserva («adelantar D3 respecto a su
+disparador actual requiere decisión expresa, no interpretación») y no por reinterpretación del disparador.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+2) BASELINE PRE, Y EL COSTE REAL DE PROMOVERLO
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+`scripts/validate_governance_numbers.py --report` (sin destino: **no escribe**, S12) →
+`[SIN-HALLAZGOS]`, `EXIT=0`, `total observado: hook 7 · quick 11 · full 15`. Tiempo medido con `time`:
+**0,351 s**. Ese número es lo que responde al «rápido» — promoverlo no le añade latencia apreciable, y por
+eso no se discutió el coste.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+3) LA CURA
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+En `scripts/run_all_validations.py` (archivo **CRLF**, 913 CR al leer: las ediciones se hicieron a nivel de
+bytes y se verificó `lone LF = 0` al terminar, para no mezclar finales de línea):
+
+- Los once checks del quick: etiqueta `/11]` → `/12]`.
+- Método nuevo `_check_governance_numbers`, etiqueta `[12/12]`, llamado **antes** del guard
+  `if not self.quick` — que es exactamente de donde el propio verificador deduce el modo (lee `run_all` y
+  clasifica cada llamada según caiga antes o después de esa línea). Sus estados: 0 pasa, y 1 HALLAZGOS /
+  2 AUSENTE / 3 LECTOR-FALLIDO se publican **con nombre distinto**, porque `AUSENTE` no es «sin hallazgos»
+  (R2.9) y un lector caído no puede disfrazarse de verde.
+- Los cuatro exclusivos del modo completo: 12..15 → **13..16** con denominador `/16]`. Esto no lo pedía la
+  letra de D2 (habla de 11→12) y es consecuencia unavoidable: un check promovido corre también en el modo
+  completo, así que los ordinales de los que solo corren allí se desplazan. Medido después: `1/12 … 12/12,
+  13/16 … 16/16`.
+
+**El error de esta ejecución, declarado.** Mi primer script de renumeración contó once etiquetas `/11]`
+dentro del rango correcto, pero aplicó el reemplazo a `b[tope:]`, o sea a la parte del archivo que **no**
+las contiene. El `assert` del conteo pasó igual — porque el conteo y la sustitución miraban rangos
+distintos — y el archivo quedó con sus once etiquetas viejas. Se descubrió al imprimir las etiquetas
+después del cambio, no por ninguna aserción. Regla que deja: un `assert` sobre el valor **antes** no prueba
+la sustitución **después**; hay que medir el resultado, no el insumo.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+4) QUIÉN AFIRMA EL NÚMERO (L-V2.3), MEDIDO ANTES DE TOCAR
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+- **Código vivo, 3 punteros actualizados**: `scripts/build_phase_briefing.py` (2, en un comentario y en el
+  mensaje que se copia dentro de los packs) y
+  `tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:111` (docstring que apunta al
+  gate). Los tres decían `[8/11]` y ahora `[8/12]`.
+- **Pins de tests, 5 re-anclados con nota datada** en `tests/quality_gates/governance_numbers/`:
+  `test_governance_numbers_reproduce_A1_A4.py` observados A1 `[9/11]→[9/12]`, A2 `[10/11]→[10/12]`,
+  A4 `[10/11]→[10/12]`, A3 `[15/15]→[16/16]`, y `fuentes.quick.total 11→12`; más la etiqueta del caso de
+  mutación M-A4 en `test_governance_numbers_mutation_por_asercion.py:105`. Es el tratamiento que S8/L-VCF-5
+  ya tenía escrito: «al renumerar el quick, el test se re-ancla con su nota datada», no se debilita la
+  aserción. Los valores nuevos no se supusieron: salieron del rojo (`[9/12]` en el `AssertionError`) y se
+  verificaron corriendo. Los hallazgos A1–A4 **no desaparecen**: `claimed` sigue siendo la cifra del
+  documento del maestro y el desvío persiste contra otro denominador.
+- **Corpus, 9 aserciones normativas que NO se tocaron**: AC5/AC16 del plan cerrado de CONTEXTO fijan «el
+  quick sigue en 11 checks y el hook en 7 en **todo** el plan» — 3 sitios en `01-plan-maestro.md`, 2 en
+  `00-lecciones-capitalizadas.md`, 2 en `dependencias-fases.md`, 1 en `06-checklist-implementacion.md`, 1 en
+  `05-prompt-inicio-sesion-fase-A.md`; más sus copias dentro de los cinco packs. Y hay **24 menciones en
+  total** en los documentos del plan (fuera de packs) contando las históricas: las que registran los
+  hallazgos A1/A2/A4 con `[9/11]`, `[10/11]` y `[3/11]`, que son medición de su día y se quedan como están.
+  Quedan con dueño y con decisión pendiente (§6): anotarlas como antecedente es **escritura de corpus**, y
+  por lo tanto re-vence packs e índice otra vez.
+- **Los dos «11» que no son este 11** (el barrido por literal los caza y fabrica rojos falsos):
+  `len(BLOCKING_GATE_NAMES) == 11` en `tests/quality_gates/test_gate_severity_lists.py:56` y en
+  `test_publication_gates.py:1795` — son los gates de publicación; y `int(commit) == 11` en
+  `tests/test_verify_index_in_committed_tree.py:71` — son las once entradas fechadas por commit. Ninguno se
+  tocó. Tampoco `docs/GUIA_TECNICA.md` ni los `Archives/`, que hablan de `11/11` de gates y de fases, no del
+  quick.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+5) HALLAZGO NUEVO, CON DUEÑO: LA FRESCURA DE UN PACK NO MIRA AL GENERADOR QUE LO IMPRIME
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Medido en esta pasada, dos hechas sobre el mismo árbol: `build_phase_briefing.py --check` antes de
+regenerar dio **`EXIT=0`** («FASE-C/D/RELEASE: fuentes frescas *(procedencia distinta, no vence)*») y sin
+embargo regenerar cambió **los cinco packs** (`10/10, 9/9, 13/13, 9/9, 18/18`). La razón está en el código,
+no en una corrida afortunada: la frescura la gobierna el `sha256` de `sources[]` contra el árbol vigente
+(linea 688: «Frescura por sha de las fuentes gobernadas. HEAD solo informa procedencia (AC21)») y el
+**generador no está entre sus propias fuentes**. Editar `build_phase_briefing.py` deja entonces los packs
+commiteados con texto viejo y el `--check` en verde; el único que los pone al día es quien editó, acordándose.
+Hoy me acordé y los regeneré. **No se numera la deuda como S19 sin decisión**: `S19` está libre (medido con
+`grep -rn "S19" .opencode/`), pero asignarla es del dueño del registro, no de esta sesión. Su cura posible
+es medir el sha del writer dentro del pack y gobernar frescura con él — con la salvedad de que eso vuelve a
+caducar el pack en cada edición del script, que es justo lo que AC21 quiso evitar al sacar `head` de la
+llave.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+6) VERIFICACIÓN DESPUÉS DEL CAMBIO
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+- Cola canónica: packs regenerados con `--carga - --informe -` (`EXIT=0`, sin escribir carga ni informe),
+  `build_lesson_index.py` (`[fechas] nombre=328 commit=11 sin_fuente=0`), `build_lesson_index.py --check`
+  `EXIT=0` (339 IDs; el par quedó **idéntico**: ninguna mención nueva de ID, así que las once rutas del
+  árbol no se movieron de contenido citacional), `build_phase_briefing.py --check` `EXIT=0`.
+- `run_all_validations.py --quick` → **`TOTAL: 12/12 validations passed`, `EXIT=0`**, con la línea nueva
+  `[+] Governance Numbers: [SIN-HALLAZGOS] …`. El verificador se audita a sí mismo dentro de la corrida que
+  renumeró sus etiquetas y sigue sin hallazgos, porque los dos documentos de gobierno no afirman el
+  denominador (medido con grep sobre `phased_project_executor.md` y `lecciones-capitalizadas-template.md`:
+  cero coincidencias de `[N/11]` ni «11 checks» — D1 los había curado).
+- Baterías tocadas: `governance_numbers/ + phase_briefing/ + test_sync_writers_lf_y_fecha_readme.py +
+  test_verify_index_in_committed_tree.py + test_build_lesson_index_s15_fecha_versionada.py` →
+  **114 passed**. Antes de re-anclar los pins: `2 failed, 47 passed` en `governance_numbers/` (los dos
+  rojos eran exactamente los pins previstos, ninguno inesperado).
+- Suite completa (`tests/ -q`, con el exit escrito dentro del archivo):
+  `4 failed, 4599 passed, 41 skipped, 4 xfailed, 230 warnings in 270.94s (0:04:30)`, `EXIT=1`.
+  Contra la baseline de esta sesión (`4 failed, 4594 passed`): **+5 passed** (las cinco funciones del
+  verificador de `17-…` §7) y **los mismos cuatro rojos**, con los mismos nombres: pricing dependiente del
+  orden, geo, plan TRIBUNAL archivado y contaminación de `tmp_test/venv-jev-sdk`. Ninguno introduce rojo
+  esta pasada.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+7) ANOTACIÓN DE LAS AC16 Y NÚMERO DE DEUDA — la segunda mitad, pedida después del §6
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Siete sitios anotados, siempre conservando el texto original y añadiendo la enmienda como nota dentro de la
+misma celda o del mismo bullet (ningún conteo fue reescrito para parecer conforme):
+
+- `01-plan-maestro.md` fila **AC16** (línea 182): «Vencido como cifra, cumplido como delta» — el delta 0 que
+  midieron A, B, C y D sigue siendo verdad sobre sus fases; lo que ya no vale es leer «11» como estado
+  vigente, y eso lo publica la corrida, no el documento.
+- `01-plan-maestro.md` **AC5** (bulete 241-245): la forma sobrevivió a la cifra, y es literalmente la lección
+  **L-D3** («un baseline numérico hace que cumplir el plan cuente como violación»), formulada como delta con
+  par de artefactos precisamente para esto.
+- `01-plan-maestro.md` fila 132 («¿Se toca `run_all_validations.py`? **NO**»): declarado como alcance de plan,
+  no como prohibición permanente, y vigente en su segunda mitad — el runner **no está libre** (D10).
+- `01-plan-maestro.md` fila **D2** (427) y `dependencias-fases.md` fila **D2** (107): cerradas con la
+  ejecución y con la **desviación del disparador escrita explícitamente**, no solo el resultado: la orden vino
+  del operador sobre la fila, y el disparador literal (sesión previa a FASE-RELEASE de WHATSAPP) sigue sin
+  cumplirse.
+- `06-checklist-implementacion.md` fila AC16 (45): las tres mediciones (A, B, C) quedan como registro de su
+  día.
+- `dependencias-fases.md` fila 61 (`run_all_validations.py` «solo lectura (AC16)»): re-medida en el otro
+  sentido.
+
+**Dejados como historia, con la razón** (no por olvido): `00-lecciones-capitalizadas.md` 22/23/42 — registros
+de re-medición por fase y la lección L-D3 citando el invariante como ejemplo; `05-prompt-inicio-sesion-fase-A.md`
+28/114 — prompt de una fase cerrada; `README.md` 135/170 — récords de re-atribución; las menciones `[9/11]`
+dentro de celdas de `10-analisis` y del propio checklist, que describen la corrida de su fecha;
+`ORDEN-CAMBIO…:90`, que habla de duplicación, no del quick.
+
+**S19 registrada** en `dependencias-fases.md`, después de S18 y con la misma forma: medición (check en verde
+con `EXIT=0` y cinco packs cambiados), causa en el código (línea 688, AC21: la frescura la gobierna el sha de
+`sources[]` y el escritor no es fuente de sí mismo), por qué importa (el único que pone al día al derivado es
+quien editó el generador *acordándose*; ninguna batería compara el literal del writer con el pack), tres curas
+posibles con su coste — (a) meter el sha del writer en la llave, que re-vence todos los packs en cada edición
+del script y es justo lo que AC21 evitó; (b) un gate que regenere en scratch y compare, que pide un verificador
+nuevo con su batería; (c) la convención usada hoy, editar-generador ⇒ regenerar-y-comitear-juntos — y dueño:
+decisión del operador, con disparador «la próxima edición de un escritor que emita texto versionado». El slot
+estaba libre, medido con `grep -rn "S19" .opencode/`.
+
+**Y L-D3 se cobró su propia cita, medido.** Citar la lección dentro de las anotaciones movió su conteo en el
+índice: `total_citas` de **58 a 64** (+6, entre las menciones nuevas y sus copias en los packs, que viven
+dentro del corpus que el instrumento escanea). El par del índice viajó regenerado, `1/1` en cada archivo.
+Es el acoplamiento de L-VCF-17 actuando sobre la lección que advierte de los baselines numéricos.
+
+Cola canónica tras la anotación: packs regenerados `EXIT=0` con `--carga - --informe -`,
+`build_lesson_index.py` `EXIT=0` (`[fechas] nombre=328 commit=11 sin_fuente=0`), `--check` del índice
+`EXIT=0` (339 IDs), `--check` de packs `EXIT=0`, `run_all_validations.py --quick` **12/12 `EXIT=0`** con
+`[+] Governance Numbers: [SIN-HALLAZGOS]` y `[+] Plan Citations: 743 citas históricas, 0 nuevas y 0
+crecimientos` — las anotaciones no introdujeron ninguna cita por número de línea, que es lo que R2.3/R2.2
+gobierna. Barrido de caracteres ajenos en los cinco archivos editados: **cero** (esta sesión colaron dos
+veces secuencias CJK en prosa española y se corrigieron a tiempo).
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+8) SALDO
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+Rutas sin commitear al cerrar este archivo: `scripts/run_all_validations.py`,
+`scripts/build_phase_briefing.py`, los tres tests de `tests/quality_gates/` (más
+`test_briefing_se_genera_por_fase.py`), los cinco packs, el par del índice, los tres documentos de corpus
+anotados, `AGENTS.md` (la cifra de tests, pedida y ejecutada antes que D2, todavía sin comitear) y este
+expediente. Suite completa re-corrida **después** de la anotación de corpus (`pytest tests/ -q`, con el exit
+escrito dentro del archivo; el auxiliar `temp/suite-post-ac16.txt` se borró al cerrar, como manda el mandato,
+así que el crudo que queda es el transcrito aquí y quien lo quiera re-correr usa ese mismo comando): `4 failed, 4599 passed, 41 skipped, 4 xfailed, 230 warnings in 297.14 s
+(0:04:57)`, `EXIT=1` — idéntica en rojos y en pasados a la corrida del §6, así que anotar los contratos no
+movió ningún resultado. Los cuatro son los preexistentes atribuidos contra clon en `17-…` §5, con los mismos
+nombres: `test_pricing_resolution_wrapper…test_function_default_flags` (dependiente del orden),
+`test_diagnostic_geo_metrics…test_diagnostic_includes_geo_metrics`,
+`test_validate_lesson_capitalization…[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]` (plan archivado) y
+`test_validate_wiring…test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion`
+(contaminación `tmp_test/venv-jev-sdk`). Baterías vecinas tras la anotación:
+`governance_numbers/ + phase_briefing/ + lesson_relevance/ + test_validate_lesson_capitalization.py` =
+**182 passed, 1 failed**, y ese único rojo es `test_medido_contra_el_predecesor…[2026-09-11-TRIBUNAL-
+ENFORCEMENT-OBS-2026-09-11]`, uno de los cuatro preexistentes atribuidos contra clon en `17-…` §5, no
+introducido aquí.
+
+Lo que sigue necesitando del operador: la instrucción de commit (ofrecidos como dos: `AGENTS.md` por un lado
+y D2 con su anotación por otro) y la elección de cura para **S19** si quiere cerrarla ahora en vez de con
+convención.
+
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+9) PUSH EJECUTADO — y la refutación fechada de dos frases de `17-…`
+──────────────────────────────────────────────────────────────────────────────────────────────────────
+El operador ordenó «procede con el push con el gate L3». Preflight medido antes de ofrecer la puerta: seis
+commits `970fa7d..de336b6`, `23 files changed, 1429 insertions(+), 133 deletions(-)`, y `git push --dry-run`
+confirmó el mismo alcance (`6b02532..de336b6 master -> master`). **Gate L3 pasado, no saltado: 0 hallazgos.**
+Después del empuje, verificado con `git fetch` en vez de asumido: paridad **`0 0`**, `origin/master` en
+`de336b6`.
+
+Qué NO viajó, declarado porque es lo que hace falta leer después: las diecisiete rutas sucias de `AGENTS.md`,
+D2 y su anotación siguen solo en el árbol de trabajo, así que **el `master` publicado tiene quick de 11 checks
+y `AGENTS.md` con 4.564** — el estado del §6 de este archivo, no el del §7. Quien abra el repositorio remoto
+y busque la reenumeración no la encuentra hasta el commit siguiente.
+
+Y el sha descartado `7724d63` no aparece en nada empujado (medido con `git grep` sobre `origin/master`: **0**
+rutas), que es exactamente por lo que enmendar el tip fue barato y reescribir `2a675fa` o `c85dff9` no lo era.
+
+Dos frases de `17-cierre-s15-y-baseline.txt` quedan refutadas por esta sección y se dejan intactas porque son
+registro de su momento: §6 dice «Push: **no autorizado en esta sesión**» y §8 escribe «la paridad en `0 3`».
+Ambas eran ciertas al escribirse; el push se autorizó y ejecutó después, dentro de la misma sesión, y la
+paridad vigente es la que publica `git rev-list --left-right --count origin/master...HEAD`.
+

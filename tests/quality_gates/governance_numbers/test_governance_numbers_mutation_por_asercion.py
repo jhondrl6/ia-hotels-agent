@@ -102,7 +102,7 @@ MUTANTES = [
     {
         "id": "M-A4",
         "simbolo": "total_discrepa()",
-        "objetivo": K_A4 + " (su unico motivo es el denominador: [10/10] vs [10/11])",
+        "objetivo": K_A4 + " (su unico motivo es el denominador: [10/10] vs [10/12])",
         "apagar": lambda mod: setattr(mod, "total_discrepa", lambda claimed, t: False),
         "esperado": {"perdidos": [K_A4], "presentes": [K_A1, K_A2, K_A3],
                      "reasons_de": {K_A2: ["ordinal"], K_A3: ["ordinal"]}},
