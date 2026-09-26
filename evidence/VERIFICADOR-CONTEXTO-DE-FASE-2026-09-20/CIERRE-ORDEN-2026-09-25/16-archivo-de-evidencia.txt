@@ -1,0 +1,165 @@
+16 — Archivo de evidencia fuera del repositorio (traslado de la puerta C)
+=========================================================================
+
+Registrado el 2026-09-26 por la sesión «cerrar la veracidad del registro» de
+`ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (orden cerrada en alcance el 2026-09-25; publicada hasta
+`6b02532`). Un resultado, una fuente: **este archivo es la fuente del traslado**. `13-cierre-de-sesion.txt`
+y `15-curaciones-previas-B.txt` narran la sesión que lo ejecutó; el mensaje de `bd4d6ed` queda como
+antecedente y se rectifica en §3.
+
+Todo lo de este archivo está **medido hoy sobre disco**, no transcripto de la sesión que ejecutó el
+traslado. Salvo donde se dice expresamente «declarado por la sesión ejecutora».
+
+Pre-flight de esta sesión, antes de escribir: `git fetch origin --quiet` y luego
+`git rev-list --left-right --count origin/master...HEAD` = **0 0**, `git rev-parse --short HEAD` =
+**6b02532**, `git status --porcelain | wc -l` = **0**.
+
+
+§1 — El hecho: 1.833 archivos / 17.152.421 B archivados FUERA del repo
+----------------------------------------------------------------------
+
+- Destino: `C:/Users/Jhond/Github/iah-evidence-archive/2026-09-26-puerta-c/`
+- Contenido: **1.833 archivos**, **17.152.421 B**, conservando la ruta relativa original. Las 1.833
+  rutas empiezan por `evidence/` (medido: **0** rutas fuera de ese prefijo), así que el traslado no
+  se llevó nada de código, docs ni configuración.
+- Distribución por carpeta bajo `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`:
+
+      archivos |        bytes | carpeta
+          1832 |   15.968.245 | BLOQUE-B-REMEDIACION-2026-09-23/
+             1 |    1.184.176 | CONCILIACION-FINAL-ORDEN-2026-09-25/  (es 20-permisos-pre.json, ver §3)
+          1833 |   17.152.421 | TOTAL
+
+  Dentro de `BLOQUE-B-REMEDIACION-2026-09-23/` no hay más que esas dos carpetas, y sus dos sumas cierran
+  el grupo: `CORRECCION-2026-09-24/` **1.729** rutas / **12.178.554 B** y
+  `REVALIDACION-2026-09-23/` **103** rutas / **3.789.691 B** → `1.729 + 103 = 1.832` rutas y
+  `12.178.554 + 3.789.691 = 15.968.245 B`. Con el **1** archivo del dump se cierra el 1.833.
+- Qué eran: **1.832 archivos sin rastrear** más **un `.pyc` ignorado**
+  (`REVALIDACION-2026-09-23/__pycache__/PRE_validate_document_integration.py.cpython-313.pyc`).
+  Ojo, que hay **dos** 1.832 de poblaciones distintas y no son la misma: los 1.832 **sin rastrear** son
+  `1.729 CORRECCION + 102 REVALIDACION + el dump`; los 1.832 de la carpeta `BLOQUE-B-REMEDIACION` de la
+  tabla de arriba son `1.729 + 103`, es decir **sin** el dump y **con** el `.pyc`. El total de ambas
+  cuentas es el mismo 1.833 por caminos distintos.
+  Probado contra el árbol versionado, que es la prueba de que el traslado no borró nada rastreado: la
+  intersección entre las 1.833 rutas del manifiesto y `git ls-tree -r HEAD --name-only` (población
+  **2.725** rutas) es **0**.
+- Manifiesto: `MANIFIESTO-sha256.csv`, **409.302 B**, con cabecera `sha256,bytes,ruta_relativa`,
+  **1.833 filas de datos** (1.834 líneas no vacías), rutas **únicas** (1.833 distintas) y LF puro
+  (**0** CR). Ojo al leerlo: la columna 1 es el hash y la **3ª** es la ruta.
+
+- sha256 del manifiesto, medido hoy con tres instrumentos independientes, los tres idénticos:
+
+      486d95a87ba9e0eecb20e4c22e3bd6fda888b560de2cf385afe4735ee1a69357
+
+  Instrumentos: `hashlib` sobre los bytes del archivo, `sha256sum` (Git Bash) y
+  `Get-FileHash -Algorithm SHA256` (PowerShell).
+  ⟦**Cita refutada por la medición, 2026-09-26**: el mandato de esta sesión traía
+  `486d95a87ba9e0eecb20e4c22e3bd6fda888b560de2cf385afe4739ee1a69357`, que difiere en **un** carácter
+  (`…afe473**9**ee…` frente a `…afe473**5**ee…`). No se copia aquí el valor del mandato: se publica el
+  medido, con sus tres instrumentos. El tamaño citado (409.302 B) **sí** casa, así que el desvío es del
+  hash transcrito, no del archivo.⟧
+
+- ⟦**Segunda variante refutada, misma fecha (2026-09-26)**: la **lista de pendientes** entregada ese día
+  traía el sha terminado en `…afe473**7**…`. Tampoco coincide con lo medido en la línea de arriba
+  (`…afe473**5**ee…`), y tampoco con la primera variante refutada (`…afe473**9**ee…`). **Dos
+  transcripciones del mismo manifiesto, dos variantes distintas, cero coincidencias con la medición.**
+  Ninguna se escribe aquí como hecho: el único valor publicado es el medido con `hashlib`, `sha256sum` y
+  `Get-FileHash`. Lo que sí casa en ambas citas es el **tamaño** (409.302 B) y la población (1.833 filas de
+  datos / 1.834 líneas no vacías), así que el desvío sigue siendo de la transcripción del hash, no del
+  archivo.⟧ **Esta nota tampoco re-midió el manifiesto**: el archivador vive fuera del workspace
+  (`iah-evidence-archive/2026-09-26-puerta-c/`) y la lectura de esa ruta está negada en el modo de permisos
+  actual, así que el valor de referencia sigue siendo la medición de la línea 51. Regla para la próxima
+  cita: se vuelve a medir en el destino o se cita **esta** línea con su número, nunca de memoria ni de
+  prompt.
+
+- Verificación de integridad, corrida hoy sobre el destino ya poblado (no es la de la sesión ejecutora,
+  es una re-verificación independiente): para cada una de las 1.833 filas, el `sha256` del archivo
+  archivado y su tamaño contra lo que declara la fila → **1833 correctos / 0 fallidos / 0 ausentes**.
+  Y en las dos direcciones: rutas del manifiesto que no están en el archivo archivado = **0**; archivos
+  del destino que no están en el manifiesto = **0**. La suma de la columna `bytes` del manifiesto es
+  **17.152.421**, idéntica a la suma de los tamaños en disco.
+- Retirada de los originales, medida hoy: de las 1.833 rutas del manifiesto, las que todavía existen
+  dentro del repositorio son **0**.
+- Declarado por la sesión ejecutora del 2026-09-26 y **no** re-ejecutable desde aquí: el hash por archivo
+  se comparó **también al copiar** (antes de retirar), y tras retirar los originales el barrido de
+  supervivientes dio **0**. Lo que esta sesión aporta es el segundo barrido, el de hoy, que es el punto
+  anterior.
+
+
+§2 — Lo que queda en el árbol del repositorio
+---------------------------------------------
+
+- En `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/CORRECCION-2026-09-24/`
+  solo queda **`PRE_detector.py.snapshot`**: **31.216 B**, **rastreado**, añadido en `630d5d2`
+  (`git log --diff-filter=A` sobre esa ruta), y es el único que `git ls-files` lista en ese directorio.
+- No es un resto suelto: lo exige un test. `tests/test_validate_document_integration.py:13` construye la
+  ruta a ese snapshot y `test_control_snapshot_limpio_omite_bytes_y_post_los_lee` (:281) lo carga. Por
+  eso el traslado no se lo llevó.
+- El expediente de B sigue presente en lo versionado: `BLOQUE-B-REMEDIACION-2026-09-23/` conserva **27**
+  archivos en disco (su `00-resumen-cierre-B.md`, el mandato archivado, `instrumentos/`), y
+  `REVALIDACION-2026-09-23/` **no existe** en el árbol: se podaron los directorios vacíos que dejó la
+  retirada.
+
+
+§3 — Rectificación de la cita de `bd4d6ed`
+-------------------------------------------
+
+`git log -1 --format=%B bd4d6ed` dice de `20-permisos-pre.json`, literal:
+
+    Excluido por tamano y asi Cumplido: `20-permisos-pre.json` (1.184.176 B en disco, 9x el archivo de
+    evidencia mas grande ya versionado) NO entra. Queda intacto y sin rastrear; su sha256 para casarlo
+    cuando se decida destino: 6736b3f49066fd2780ad17da20f452f53f6be81e5c8abc382ad6d6a8ee9cde10
+
+Dos cosas de esa frase, por separado:
+
+- «**sin rastrear**»: sigue siendo cierto, y ahora con prueba. La intersección del manifiesto con
+  `git ls-tree -r HEAD` es **0** (§1) y `find` del nombre dentro del repo devuelve **0** rutas.
+- «**Queda intacto**»: del todo cierto en el **contenido**, no en el **lugar**. Hoy el archivo vive
+  **fuera del repositorio**, en el destino de §1, en la ruta
+  `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CONCILIACION-FINAL-ORDEN-2026-09-25/20-permisos-pre.json`.
+  Medido en el archivador: **1.184.176 B**, y su `sha256` recalculado hoy es
+  `6736b3f49066fd2780ad17da20f452f53f6be81e5c8abc382ad6d6a8ee9cde10` — **idéntico** al que publicó
+  `bd4d6ed`, y coincidente con su fila del manifiesto. O sea: la promesa de «su sha256 para casarlo» se
+  puede cumplir; lo que la cita ya no describe es **dónde** está lo casado. Un lector de hoy que busque
+  ese archivo en el árbol del repo no lo encuentra.
+- El mensaje de `bd4d6ed` **no se reescribe**: está publicado en `origin/master` (`6b02532` también lo
+  está), y enmendar un commit publicado es reescribir historia ya emitida, fuera del alcance de esta
+  sesión. Esta nota es la enmienda fechada.
+- No había otra instancia de esa frase que barrer, **medido antes de escribir este archivo**:
+  `grep -r 'queda intacto y sin rastrear'` sobre el repo (excluyendo `.git`) devolvía **0** coincidencias,
+  así que la frase solo vivía en el mensaje del commit. Re-medido **después** de escribirlo, el único
+  archivo del árbol que la contiene es este propio §3, que la cita como antecedente entrecomillado: el
+  barrido se lo tragó su propia cita, así que se declara el orden de las dos mediciones.
+
+
+§4 — Lo que este archivo NO afirma
+----------------------------------
+
+- No afirma que la suite siga verde después del traslado. Lo que sí sostiene, medido: la retirada no tocó
+  ninguna ruta versionada (intersección **0**, §1), y el pre-flight de esta sesión dio `porcelain` **0**
+  con el traslado ya hecho.
+- No reafirma el hash del manifiesto que traía el mandato: lo refuta y publica el medido (§1).
+- No toca la deuda **S15**: un verde local de `[6/7] build_lesson_index.py --check` sigue sin certificar
+  otro checkout, y ese sigue siendo el portón de la siguiente sesión.
+- No autoriza nada: aquí no hay `git commit` ni `git push`; cada uno exige instrucción escrita aparte.
+
+
+§5 — Comandos con los que se midió (reproducibles)
+---------------------------------------------------
+
+    # estado del repositorio
+    git fetch origin --quiet
+    git rev-list --left-right --count origin/master...HEAD         # 0 0
+    git rev-parse --short HEAD                                     # 6b02532
+    git status --porcelain | wc -l                                 # 0 (pre-flight)
+
+    # identidad del manifiesto (los tres instrumentos, un solo valor)
+    python -c "import hashlib,pathlib; p=pathlib.Path('MANIFIESTO-sha256.csv'); print(hashlib.sha256(p.read_bytes()).hexdigest())"
+    sha256sum MANIFIESTO-sha256.csv
+    powershell -NoProfile -Command "(Get-FileHash -Algorithm SHA256 '<ruta>').Hash.ToLower()"
+
+    # integridad: cada fila del manifiesto contra el archivo archivado (UN proceso, bucle dentro)
+    #   por fila: sha256(archivado) == fila['sha256']  y  stat().st_size == int(fila['bytes'])
+    #                                                             -> 1833 ok / 0 fallidos / 0 ausentes
+    # conjunto: rutas del manifiesto vs rglob del destino           -> 0 y 0
+    # retirada: existe './<ruta>' en el repo por cada fila          -> 0 supervivientes
+    # versionado: rutas del manifiesto INTERSECCION git ls-tree -r HEAD -> 0

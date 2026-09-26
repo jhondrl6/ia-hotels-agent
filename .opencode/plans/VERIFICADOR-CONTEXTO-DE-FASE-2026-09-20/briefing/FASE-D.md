@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+- **procedencia**: HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -298,7 +298,7 @@ Deja checkpoint si falta autorizacion.
 ```
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591` · 19703 bytes copiados de 19703 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `0251cea0a72a07ee99b5e5e0e06a3da17e366cbb7ab8001d9f0ae7a38070f591` · 19703 bytes copiados de 19703 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ## Fuente: `01-plan-maestro.md` §1
 
@@ -414,7 +414,7 @@ sesión cada una y cada fase re-mide once validaciones; eso este plan **no lo to
 mitad medible aquí y AC20 publica qué parte del delta consiguió realmente, incluida la posibilidad
 de que sea cero.
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 9218 bytes copiados de 51507 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 9218 bytes copiados de 51507 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -670,7 +670,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 25266 bytes copiados de 51507 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1872761743009e43998c568717282545ac7a106cc86acfd1285078e995a0b3b7` · 25266 bytes copiados de 51507 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -997,7 +997,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 29211 bytes copiados de 29211 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `c4d18dc91998a0086c93fef0182f8f82a48367b7afcd8aa799bed43577fe06e5` · 29211 bytes copiados de 29211 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -1022,7 +1022,7 @@ comparación.
 
 Dueños distintos representados: **6** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA-NARRATIVA, SR-PIPELINE-FIXES, ESTABILIZACION-PRE-TRIBUNAL, PASO0-VERIFICADOR-CAPITALIZACION y VALIDADOR-URL-PROPIA. Satisface C8 (≥2) con holgura y no repite solo al predecesor. **Doble corrección del 2026-09-20**: la fila decía **7** cuando las once originales ya tenían **6** dueños nombrables (L-R.3 aplicado a este propio archivo: el conteo se re-mide, no se copia), y las tres lecciones nuevas de la capa tibia **no suman dueño** — `D-V2.1` está definida en `PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12`, no en `TRIBUNAL-ENFORCEMENT-OBS`, que es donde la **reproducen** cuatro fases seguidas. Lo detectó `validate_lesson_capitalization.py` con su checks `C7` (atribución contra el índice), no una lectura humana: es el verificador de forma de este mismo plan funcionando sobre su propio `00-`.
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 14966 bytes copiados de 53192 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `f6c1a005848008424dfe9128d48500a0fdff0fa5ba3a967c73b8b5c6eb0b8ec0` · 14966 bytes copiados de 53192 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -1439,7 +1439,7 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
   `FAIL` llegaba por la segunda sustitución y no por la fecha. Medido, y por eso está escrito.
 
 
-> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `a38da8ea12a6a54ef5598925e54e6132881306439236419c6b597d2dd4696723` · 56768 bytes copiados de 56768 del documento · HEAD `a81da09` · generado `2026-09-26T03:06:52Z`
+> **Procedencia**: `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `a38da8ea12a6a54ef5598925e54e6132881306439236419c6b597d2dd4696723` · 56768 bytes copiados de 56768 del documento · HEAD `6b02532` · generado `2026-09-26T16:04:13Z`
 
 ---
 
@@ -1451,8 +1451,8 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "a81da09",
-    "generated_at": "2026-09-26T03:06:52Z"
+    "head": "6b02532",
+    "generated_at": "2026-09-26T16:04:13Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 17023 bytes fuera de lo declarado (1, 4)",
