@@ -1,0 +1,938 @@
+# ================= FINAL 1: python scripts/run_all_validations.py --quick --check
+# MEDIDO: 2026-09-23 19:01:40 sobre el arbol final
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-23 19:01:41
+Mode: CHECK ONLY
+============================================================
+
+[1/11] Checking for residual files...
+[2/11] Checking Plan Maestro sync...
+[3/11] Checking version synchronization...
+[4/11] Checking for hardcoded secrets (tracked + staged)...
+[5/11] Checking client material policy (tracked + staged)...
+[6/11] Checking document integration...
+[7/11] Checking prompts for --release flag in intermediate phases...
+[8/11] Checking .opencode references...
+[9/11] Checking plan citations (simbolos, no numeros de linea)...
+[10/11] Checking lesson capitalization (Paso 0 del executor)...
+[11/11] Checking signal wiring by AST (AC7/AC16)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1318 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2483 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1326 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+EXIT_QUICK_CHECK=0
+
+# ================= FINAL 2: git diff --check
+warning: in the working copy of '.agents/workflows/phased_project_executor.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.agents/workflows/templates/lecciones-capitalizadas-template.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'AGENTS.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/CONTRIBUTING.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/REGISTRY.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/validation.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py', CRLF will be replaced by LF the next time Git touches it
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:1: trailing whitespace.
++"""AC4 — mutation check **por asercion** sobre el simbolo real del guard (R2.8, L-T4A.5, L-V2.1).
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:2: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:3: trailing whitespace.
++Verde a la primera sin rojo es un falso verde potencial (L-VUP-5): este archivo apaga, uno a uno,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:4: trailing whitespace.
++los simbolos reales del guard y exige que **la asercion que dice atacar** sea la que desaparece o
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:5: trailing whitespace.
++cambia su motivo. El anclaje es `assertion_key` (sujeto + afirmacion + documento), **no**
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:6: trailing whitespace.
++`assertion_id`: los ids son posicionales y se re-numeran cuando un hallazgo cae, anclar en ellos
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:7: trailing whitespace.
++daria un rojo que nombra a un tercero (la leccion del corpus L-V2.1 en su variante propia, medida
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:8: trailing whitespace.
++en esta fase y registrada en `10-analisis-post-implementacion.md`).
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:9: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:10: trailing whitespace.
++Tras el bloque B (D1) el arbol de `.agents/` ya no lleva las cifras vencidas, asi que el mutante se
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:11: trailing whitespace.
++corre contra el **contraejemplo congelado** (`fixtures/`, copia de los documentos antes de D1) y el
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:12: trailing whitespace.
++mismo `run_all_validations.py` y hook reales: `observed` e historicas quedan identicas al maestro §1.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:13: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:14: trailing whitespace.
++**S13 — el arnés no escribe en evidencia cerrada, y eso se OBSERVA.** Hasta aqui las salidas se
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:15: trailing whitespace.
++escribian por ruta hardcodeada en `evidence/…/FASE-A/mutation/`, de modo que correr el test re-pisaba
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:16: trailing whitespace.
++7 archivos de otra fase (con `git status` limpio cuando el contenido coincidia, y rojo que pisa
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:17: trailing whitespace.
++cuando ya no). El primer retiro movio el destino a un directorio temporal, pero seguia midiendo
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:18: trailing whitespace.
++**estado final** (instantaneas antes/despues), que no distingue «nadie abrio un archivo» de «alguien
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:19: trailing whitespace.
++lo abrio y devolvio los mismos bytes». Ahora:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:20: trailing whitespace.
++  * el observador compartido (`tests/support_observador_escrituras.py`) registra las **operaciones de
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:21: trailing whitespace.
++    escritura** de toda la ejecucion medida, con su ancla positiva (el arnes SI escribe y se ve) antes
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:22: trailing whitespace.
++    de afirmar la ausencia en `evidence/`;
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:23: trailing whitespace.
++  * se conserva ademas la comparacion de contenido **y** metadatos del expediente protegido;
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:24: trailing whitespace.
++  * los tres controles negativos del mandato (a escritor redirigido a destino protegido, b bytes
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:25: trailing whitespace.
++    identicos, c mtime restaurado) se corren sobre un **expediente desechable** y con el **mismo**
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:26: trailing whitespace.
++    observador y el **mismo** escritor de la prueba positiva;
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:27: trailing whitespace.
++  * el alcance del observador esta declarado y probado: cubre el proceso de pytest, no los hijos.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:28: trailing whitespace.
++"""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:29: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:30: trailing whitespace.
++import importlib.util
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:31: trailing whitespace.
++import json
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:32: trailing whitespace.
++import os
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:33: trailing whitespace.
++import subprocess
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:34: trailing whitespace.
++import sys
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:35: trailing whitespace.
++from pathlib import Path
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:36: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:37: trailing whitespace.
++import pytest
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:38: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:39: trailing whitespace.
++ROOT = Path(__file__).resolve().parents[3]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:40: trailing whitespace.
++SCRIPT = ROOT / "scripts" / "validate_governance_numbers.py"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:41: trailing whitespace.
++WF = "phased_project_executor.md"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:42: trailing whitespace.
++TPL = "lecciones-capitalizadas-template.md"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:43: trailing whitespace.
++N_WF, N_TPL = WF[:-3], TPL[:-3]          # `name` del documento es su stem
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:44: trailing whitespace.
++FIXTURES = ROOT / "tests" / "quality_gates" / "governance_numbers" / "fixtures"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:45: trailing whitespace.
++DOCS = [{"path": FIXTURES / WF, "name": N_WF},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:46: trailing whitespace.
++        {"path": FIXTURES / TPL, "name": N_TPL}]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:47: trailing whitespace.
++SOURCE = ROOT / "scripts" / "run_all_validations.py"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:48: trailing whitespace.
++HOOK = ROOT / "scripts" / "git_hooks" / "pre-commit"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:49: trailing whitespace.
++# Solo lectura: se observa para probar que NADIE escribe aqui (S13). No es destino de escritura.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:50: trailing whitespace.
++EVIDENCIA_SOLO_LECTURA = ROOT / "evidence" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:51: trailing whitespace.
++# Unica implementacion de `huellas` y del observador de escrituras del repo (mandato §4: no
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:52: trailing whitespace.
++# duplicar la funcion de huellas dentro del test).
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:53: trailing whitespace.
++SUPPORT_OBSERVADOR = ROOT / "tests" / "support_observador_escrituras.py"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:54: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:55: trailing whitespace.
++# Claves de las cuatro aserciones del maestro §1 (estables ante re-numeracion).
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:56: trailing whitespace.
++K_A1 = "validate_plan_citations.py|check 8|" + N_WF
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:57: trailing whitespace.
++K_A2 = "validate_lesson_capitalization.py|[9/9]|" + N_WF
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:58: trailing whitespace.
++K_A3 = "validate_qmind_writeback.py|[12/12]|" + N_WF
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:59: trailing whitespace.
++K_A4 = "validate_lesson_capitalization.py|[10/10]|" + N_TPL
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:60: trailing whitespace.
++BASELINE_KEYS = [K_A1, K_A2, K_A3, K_A4]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:61: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:62: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:63: trailing whitespace.
++def _modulo():
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:64: trailing whitespace.
++    """Nombre de modulo unico por carga: un nombre fijo reutilizaba el `sys.modules` ya cargado
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:65: trailing whitespace.
++    y el mutante anterior seguia apagado (rojo que no era por el guard mutado)."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:66: trailing whitespace.
++    global _CARGAS
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:67: trailing whitespace.
++    _CARGAS += 1
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:68: trailing whitespace.
++    spec = importlib.util.spec_from_file_location(f"vgn_mut_{_CARGAS}", SCRIPT)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:69: trailing whitespace.
++    mod = importlib.util.module_from_spec(spec)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:70: trailing whitespace.
++    spec.loader.exec_module(mod)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:71: trailing whitespace.
++    return mod
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:72: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:73: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:74: trailing whitespace.
++_CARGAS = 0
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:75: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:76: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:77: trailing whitespace.
++def _medir(mut=None) -> dict:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:78: trailing whitespace.
++    """Corre el escaneo real contra el arbol vigente con (opcionalmente) un guard apagado."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:79: trailing whitespace.
++    mod = _modulo()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:80: trailing whitespace.
++    if mut:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:81: trailing whitespace.
++        mut(mod)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:82: trailing whitespace.
++    informe = mod.analizar(DOCS, SOURCE, HOOK)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:83: trailing whitespace.
++    return {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:84: trailing whitespace.
++        "keys": [f["assertion_key"] for f in informe["findings"]],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:85: trailing whitespace.
++        "ids": {f["assertion_key"]: f["assertion_id"] for f in informe["findings"]},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:86: trailing whitespace.
++        "reasons": {f["assertion_key"]: f["reasons"] for f in informe["findings"]},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:87: trailing whitespace.
++        "occurrences": {f["assertion_key"]: len(f["occurrences"])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:88: trailing whitespace.
++                        for f in informe["findings"]},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:89: trailing whitespace.
++        "no_resueltas": informe["coverage_basis"]["poblacion"]["clase_no_resuelta"],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:90: trailing whitespace.
++        "historicas": informe["coverage_basis"]["poblacion"]["clase_historica_congelada"],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:91: trailing whitespace.
++    }
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:92: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:93: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:94: trailing whitespace.
++MUTANTES = [
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:95: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:96: trailing whitespace.
++        "id": "M-A1",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:97: trailing whitespace.
++        "simbolo": "check_n_discrepa()",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:98: trailing whitespace.
++        "objetivo": K_A1,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:99: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "check_n_discrepa", lambda claimed, record: False),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:100: trailing whitespace.
++        "esperado": {"perdidos": [K_A1], "presentes": [K_A2, K_A3, K_A4]},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:101: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:102: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:103: trailing whitespace.
++        "id": "M-A4",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:104: trailing whitespace.
++        "simbolo": "total_discrepa()",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:105: trailing whitespace.
++        "objetivo": K_A4 + " (su unico motivo es el denominador: [10/10] vs [10/11])",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:106: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "total_discrepa", lambda claimed, t: False),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:107: trailing whitespace.
++        "esperado": {"perdidos": [K_A4], "presentes": [K_A1, K_A2, K_A3],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:108: trailing whitespace.
++                     "reasons_de": {K_A2: ["ordinal"], K_A3: ["ordinal"]}},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:109: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:110: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:111: trailing whitespace.
++        "id": "M-A2",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:112: trailing whitespace.
++        "simbolo": "ordinal_discrepa()",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:113: trailing whitespace.
++        "objetivo": K_A2 + " — el guard mutado aportaba su motivo «ordinal»",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:114: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "ordinal_discrepa", lambda claimed, record: False),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:115: trailing whitespace.
++        "esperado": {"perdidos": [], "presentes": BASELINE_KEYS,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:116: trailing whitespace.
++                     "reasons_de": {K_A2: ["denominador"], K_A3: ["denominador"]}},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:117: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:118: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:119: trailing whitespace.
++        "id": "M-A3",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:120: trailing whitespace.
++        "simbolo": 'KIND_MARKERS["full"]',
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:121: trailing whitespace.
++        "objetivo": K_A3 + " — sin marcador de modo completo su [12/12] no resuelve fuente",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:122: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "KIND_MARKERS",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:123: trailing whitespace.
++                                      {k: v for k, v in mod.KIND_MARKERS.items() if k != "full"}),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:124: trailing whitespace.
++        "esperado": {"perdidos": [K_A3], "presentes": [K_A1, K_A2, K_A4],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:125: trailing whitespace.
++                     "no_resueltas_suben": True},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:126: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:127: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:128: trailing whitespace.
++        "id": "M-POBLACION",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:129: trailing whitespace.
++        "simbolo": "es_mencion_historica()",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:130: trailing whitespace.
++        "objetivo": "la regla de poblacion A8 (sin ella «y ninguna otra» se rompe)",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:131: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "es_mencion_historica",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:132: trailing whitespace.
++                                      lambda *a, **k: (False, ("sin-guard", "sin-guard"))),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:133: trailing whitespace.
++        "esperado": {"perdidos": [], "presentes": BASELINE_KEYS, "hallazgos_extra": True,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:134: trailing whitespace.
++                     "historicas_a_cero": True},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:135: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:136: trailing whitespace.
++    {
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:137: trailing whitespace.
++        "id": "M-SUJETO",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:138: trailing whitespace.
++        "simbolo": "sujeto_de_la_instancia()",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:139: trailing whitespace.
++        "objetivo": "la atribucion asercion -> check (sin sujeto no hay contraste posible)",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:140: trailing whitespace.
++        "apagar": lambda mod: setattr(mod, "sujeto_de_la_instancia",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:141: trailing whitespace.
++                                      lambda ventana, ancla, pool: None),
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:142: trailing whitespace.
++        "esperado": {"perdidos": BASELINE_KEYS, "presentes": []},
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:143: trailing whitespace.
++    },
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:144: trailing whitespace.
++]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:145: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:146: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:147: trailing whitespace.
++@pytest.fixture(scope="module")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:148: trailing whitespace.
++def verde() -> dict:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:149: trailing whitespace.
++    medida = _medir()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:150: trailing whitespace.
++    assert medida["keys"] == BASELINE_KEYS, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:151: trailing whitespace.
++        f"el baseline debe ser exactamente las cuatro aserciones del maestro §1: {medida['keys']}"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:152: trailing whitespace.
++    )
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:153: trailing whitespace.
++    assert medida["historicas"] == 8, "la poblacion congelada tambien forma parte del verde"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:154: trailing whitespace.
++    return medida
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:155: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:156: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:157: trailing whitespace.
++@pytest.mark.parametrize("mutante", MUTANTES, ids=[m["id"] for m in MUTANTES])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:158: trailing whitespace.
++def test_el_rojo_es_causado_por_el_guard_mutado(mutante: dict, verde: dict):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:159: trailing whitespace.
++    rojo = _medir(mutante["apagar"])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:160: trailing whitespace.
++    esperado = mutante["esperado"]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:161: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:162: trailing whitespace.
++    perdidos = [k for k in verde["keys"] if k not in rojo["keys"]]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:163: trailing whitespace.
++    assert sorted(perdidos) == sorted(esperado["perdidos"]), (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:164: trailing whitespace.
++        f"{mutante['id']}: se esperaba perder {esperado['perdidos']}, se perdio {perdidos} "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:165: trailing whitespace.
++        "— el rojo debe nombrar la asercion mutada (L-V2.1)"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:166: trailing whitespace.
++    )
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:167: trailing whitespace.
++    for presente in esperado["presentes"]:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:168: trailing whitespace.
++        assert presente in rojo["keys"], f"{mutante['id']} no debia tocar {presente}"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:169: trailing whitespace.
++    for clave, reasons in esperado.get("reasons_de", {}).items():
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:170: trailing whitespace.
++        assert rojo["reasons"][clave] == reasons, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:171: trailing whitespace.
++            f"{mutante['id']}: los motivos de {verde['ids'][clave]} debian pasar a {reasons}, "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:172: trailing whitespace.
++            f"quedaron {rojo['reasons'][clave]}"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:173: trailing whitespace.
++        )
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:174: trailing whitespace.
++    if esperado.get("no_resueltas_suben"):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:175: trailing whitespace.
++        assert rojo["no_resueltas"] > verde["no_resueltas"]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:176: trailing whitespace.
++    if esperado.get("hallazgos_extra"):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:177: trailing whitespace.
++        assert len(rojo["keys"]) > len(verde["keys"]), (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:178: trailing whitespace.
++            "apagar la regla de poblacion debe producir hallazgos adicionales: AC1 dice «y "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:179: trailing whitespace.
++            "ninguna otra» justo gracias a ella"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:180: trailing whitespace.
++        )
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:181: trailing whitespace.
++    if esperado.get("historicas_a_cero"):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:182: trailing whitespace.
++        assert rojo["historicas"] == 0
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:183: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:184: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:185: trailing whitespace.
++def _observador():
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:186: trailing whitespace.
++    """El observador compartido: la unica implementacion de huellas y de escritura del repo.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:187: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:188: trailing whitespace.
++    Importado por ruta para que este test y el de interaccion de REGISTRY usen EL MISMO
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:189: trailing whitespace.
++    observador y la MISMA funcion de huellas (mandato §4: no duplicar la funcion dentro del test).
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:190: trailing whitespace.
++    """
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:191: trailing whitespace.
++    global _OBS_MOD
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:192: trailing whitespace.
++    if _OBS_MOD is None:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:193: trailing whitespace.
++        spec = importlib.util.spec_from_file_location(
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:194: trailing whitespace.
++            "observador_escrituras_compartido", SUPPORT_OBSERVADOR)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:195: trailing whitespace.
++        _OBS_MOD = importlib.util.module_from_spec(spec)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:196: trailing whitespace.
++        spec.loader.exec_module(_OBS_MOD)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:197: trailing whitespace.
++    return _OBS_MOD
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:198: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:199: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:200: trailing whitespace.
++_OBS_MOD = None
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:201: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:202: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:203: trailing whitespace.
++def _escribir_salidas(verde: dict, destino: Path) -> None:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:204: trailing whitespace.
++    """Vuelca el verde de baseline y cada mutante en un destino EXPLICITO (nunca en evidence/)."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:205: trailing whitespace.
++    destino.mkdir(parents=True, exist_ok=True)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:206: trailing whitespace.
++    verde_txt = [
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:207: trailing whitespace.
++        "# AC4 VERDE (baseline, guards activos)",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:208: trailing whitespace.
++        f"arbol: {ROOT.name} · script: {SCRIPT.relative_to(ROOT).as_posix()}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:209: trailing whitespace.
++        f"assertion_ids: {verde['ids']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:210: trailing whitespace.
++        f"reasons: {json.dumps(verde['reasons'], ensure_ascii=False, indent=1)}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:211: trailing whitespace.
++        f"occurrences por asercion: {json.dumps(verde['occurrences'], ensure_ascii=False)}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:212: trailing whitespace.
++        f"instancias no resueltas: {verde['no_resueltas']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:213: trailing whitespace.
++        f"instancias historicas congeladas: {verde['historicas']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:214: trailing whitespace.
++        "",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:215: trailing whitespace.
++        "comando de reproduccion:",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:216: trailing whitespace.
++        "  python -m pytest tests/quality_gates/governance_numbers/"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:217: trailing whitespace.
++        "test_governance_numbers_mutation_por_asercion.py -q",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:218: trailing whitespace.
++    ]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:219: trailing whitespace.
++    (destino / "verde_baseline.txt").write_text("\n".join(verde_txt) + "\n", encoding="utf-8")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:220: trailing whitespace.
++    for mut in MUTANTES:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:221: trailing whitespace.
++        rojo = _medir(mut["apagar"])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:222: trailing whitespace.
++        lineas = [
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:223: trailing whitespace.
++            f"# AC4 ROJO — mutante {mut['id']} · objetivo: {mut['objetivo']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:224: trailing whitespace.
++            f"simbolo real apagado: {mut['simbolo']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:225: trailing whitespace.
++            f"aserciones en verde: {verde['keys']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:226: trailing whitespace.
++            f"aserciones en rojo: {rojo['keys']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:227: trailing whitespace.
++            f"perdidos: {[k for k in verde['keys'] if k not in rojo['keys']]}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:228: trailing whitespace.
++            f"gained: {[k for k in rojo['keys'] if k not in verde['keys']]}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:229: trailing whitespace.
++            f"reasons en rojo: {json.dumps(rojo['reasons'], ensure_ascii=False)}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:230: trailing whitespace.
++            f"ids en rojo (posicionales, se re-numerican): {json.dumps(rojo['ids'])}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:231: trailing whitespace.
++            f"no resueltas: {rojo['no_resueltas']} | historicas: {rojo['historicas']}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:232: trailing whitespace.
++            f"esperado por el test: {json.dumps(mut['esperado'], ensure_ascii=False, default=str)}",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:233: trailing whitespace.
++            "",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:234: trailing whitespace.
++            "comando de reproduccion (mismo que genero este archivo):",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:235: trailing whitespace.
++            "  python -m pytest tests/quality_gates/governance_numbers/"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:236: trailing whitespace.
++            "test_governance_numbers_mutation_por_asercion.py -q",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:237: trailing whitespace.
++        ]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:238: trailing whitespace.
++        (destino / f"mutante_{mut['id']}.txt").write_text("\n".join(lineas) + "\n",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:239: trailing whitespace.
++                                                          encoding="utf-8")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:240: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:241: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:242: trailing whitespace.
++SALIDAS_ESPERADAS = ["verde_baseline.txt"] + [f"mutante_{m['id']}.txt" for m in MUTANTES]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:243: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:244: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:245: trailing whitespace.
++def test_las_dos_salidas_quedan_en_destino_exPLICITO(verde: dict, tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:246: trailing whitespace.
++    """AC4 sin el lado rojo en disco queda ⚠️ (R2.4): aqui se escriben el verde y cada mutante,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:247: trailing whitespace.
++    pero en un destino temporal que el llamador nombra, no en el expediente de otra fase."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:248: trailing whitespace.
++    destino = tmp_path / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:249: trailing whitespace.
++    _escribir_salidas(verde, destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:250: trailing whitespace.
++    assert (destino / "verde_baseline.txt").exists()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:251: trailing whitespace.
++    for mut in MUTANTES:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:252: trailing whitespace.
++        assert (destino / f"mutante_{mut['id']}.txt").exists()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:253: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:254: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:255: trailing whitespace.
++def test_la_ejecucion_medida_no_abre_ninguna_escritura_dentro_de_evidence(verde: dict,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:256: trailing whitespace.
++                                                                          tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:257: trailing whitespace.
++    """S13 con el mecanismo real: se observan las APERTURAS de escritura de toda la ejecucion medida.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:258: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:259: trailing whitespace.
++    Antes esta prueba comparaba instantaneas de estado antes/despues alrededor de funciones puras,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:260: trailing whitespace.
++    lo que no distingue «nadie abrio un archivo» de «alguien lo abrio y volvio los mismos bytes».
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:261: trailing whitespace.
++    Ahora el observador compartido registra cada operacion de escritura del bloque, y se afirma el
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:262: trailing whitespace.
++    ancla positiva (el arnes SI escribe, y se ve) antes de afirmar la ausencia en `evidence/`:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:263: trailing whitespace.
++    sin ese ancla, un observador caido daria verde.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:264: trailing whitespace.
++    """
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:265: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:266: trailing whitespace.
++    destino = tmp_path / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:267: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:268: trailing whitespace.
++    with obs.observador_de_escrituras() as registro:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:269: trailing whitespace.
++        _medir()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:270: trailing whitespace.
++        for mut in MUTANTES:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:271: trailing whitespace.
++            _medir(mut["apagar"])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:272: trailing whitespace.
++        _escribir_salidas(verde, destino)          # el escritor real, a destino explicito
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:273: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:274: trailing whitespace.
++    # --- ancla positiva: el observador vio las escrituras reales del arnes ---
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:275: trailing whitespace.
++    vistas = registro.dentro_de(destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:276: trailing whitespace.
++    rutas_vistas = {Path(r).name for _, r, _ in vistas}
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:277: trailing whitespace.
++    assert rutas_vistas >= set(SALIDAS_ESPERADAS), (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:278: trailing whitespace.
++        "el observador no vio las escrituras que el arnes acaba de hacer; una ausencia en evidence/ "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:279: trailing whitespace.
++        f"no significaria nada. Vio: {sorted(rutas_vistas)}")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:280: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:281: trailing whitespace.
++    # --- propiedad: ninguna de esas operaciones apunta a evidence/ ----------------
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:282: trailing whitespace.
++    dentro = registro.dentro_de(EVIDENCIA_SOLO_LECTURA)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:283: trailing whitespace.
++    assert dentro == [], (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:284: trailing whitespace.
++        "el arnés de mutación abrió escrituras dentro de evidence/: re-medir no puede gobernar el "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:285: trailing whitespace.
++        f"registro cerrado de otra fase (S13). Observadas: {dentro}")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:286: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:287: trailing whitespace.
++    # --- y el estado final del expediente protegido tampoco se movio -------------
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:288: trailing whitespace.
++    assert obs.huellas(EVIDENCIA_SOLO_LECTURA), (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:289: trailing whitespace.
++        "el expediente que se protege debe existir para que la prueba signifique algo")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:290: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:291: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:292: trailing whitespace.
++def test_re_medir_no_reescribe_expedientes_cerrados(verde: dict, tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:293: trailing whitespace.
++    """S13, lado de estado: contenido Y metadatos del expediente protegido no cambian.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:294: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:295: trailing whitespace.
++    Se conserva ademas de la observacion de operaciones (la prueba anterior): el mandato pide las
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:296: trailing whitespace.
++    dos cosas. Un `git status` limpio con mtimes movidos es justo lo que solo el mtime delata.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:297: trailing whitespace.
++    """
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:298: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:299: trailing whitespace.
++    antes = obs.huellas(EVIDENCIA_SOLO_LECTURA)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:300: trailing whitespace.
++    assert antes, "el expediente que se protege debe existir para que la prueba signifique algo"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:301: trailing whitespace.
++    _medir()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:302: trailing whitespace.
++    for mut in MUTANTES:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:303: trailing whitespace.
++        _medir(mut["apagar"])
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:304: trailing whitespace.
++    _escribir_salidas(verde, tmp_path / "mutation")          # destino explicito, fuera de evidence/
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:305: trailing whitespace.
++    despues = obs.huellas(EVIDENCIA_SOLO_LECTURA)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:306: trailing whitespace.
++    assert despues == antes, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:307: trailing whitespace.
++        "el arnés de mutación volvió a escribir dentro de evidence/: re-medir no puede gobernar el "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:308: trailing whitespace.
++        "registro cerrado de otra fase (S13)")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:309: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:310: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:311: trailing whitespace.
++def _expediente_desechable(tmp_path: Path) -> Path:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:312: trailing whitespace.
++    """Un expediente «cerrado» simulado, NUNCA evidencia historica real (mandato §4)."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:313: trailing whitespace.
++    protegido = tmp_path / "expediente_cerrado" / "FASE-A" / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:314: trailing whitespace.
++    protegido.mkdir(parents=True)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:315: trailing whitespace.
++    for nombre in SALIDAS_ESPERADAS:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:316: trailing whitespace.
++        (protegido / nombre).write_text("contenido cerrado de otra fase\n", encoding="utf-8")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:317: trailing whitespace.
++    return tmp_path / "expediente_cerrado"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:318: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:319: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:320: trailing whitespace.
++def test_control_a_el_escritor_real_redirigido_a_destino_protegido_es_cazado(tmp_path: Path,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:321: trailing whitespace.
++                                                                             verde: dict):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:322: trailing whitespace.
++    """(a) El escritor real, apuntado a un destino protegido, cae en el MISMO observador."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:323: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:324: trailing whitespace.
++    raiz_protegida = _expediente_desechable(tmp_path)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:325: trailing whitespace.
++    destino_prohibido = raiz_protegida / "FASE-A" / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:326: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:327: trailing whitespace.
++    with obs.observador_de_escrituras() as registro:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:328: trailing whitespace.
++        _escribir_salidas(verde, destino_prohibido)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:329: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:330: trailing whitespace.
++    caza = registro.dentro_de(raiz_protegida)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:331: trailing whitespace.
++    assert caza, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:332: trailing whitespace.
++        "el observador NO detecto que el escritor real volco dentro de un expediente protegido: "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:333: trailing whitespace.
++        "sin este rojo, la prueba de ausencia anterior no tendria dientes")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:334: trailing whitespace.
++    # Misma causa que afirma la prueba positiva: operaciones de escritura, no strings del test.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:335: trailing whitespace.
++    ops = {op for op, _, _ in caza}
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:336: trailing whitespace.
++    assert any("write_text" in op or "mkdir" in op for op in ops), f"observado: {caza}"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:337: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:338: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:339: trailing whitespace.
++def test_control_b_reescribir_bytes_identicos_se_observa_aunque_el_hash_no(verde: dict,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:340: trailing whitespace.
++                                                                          tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:341: trailing whitespace.
++    """(b) Bytes identicos: el hash queda igual y el observador sigue viendo la escritura."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:342: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:343: trailing whitespace.
++    raiz_protegida = _expediente_desechable(tmp_path)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:344: trailing whitespace.
++    destino = raiz_protegida / "FASE-A" / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:345: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:346: trailing whitespace.
++    with obs.observador_de_escrituras() as primera:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:347: trailing whitespace.
++        _escribir_salidas(verde, destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:348: trailing whitespace.
++    estado_1 = obs.huellas(destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:349: trailing whitespace.
++    assert estado_1, "la primera ronda debe haber creado archivos para que la segunda signifique algo"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:350: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:351: trailing whitespace.
++    with obs.observador_de_escrituras() as segunda:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:352: trailing whitespace.
++        _escribir_salidas(verde, destino)          # mismo contenido, bytes identicos
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:353: trailing whitespace.
++    estado_2 = obs.huellas(destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:354: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:355: trailing whitespace.
++    hashes_1 = {k: v[0] for k, v in estado_1.items()}
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:356: trailing whitespace.
++    hashes_2 = {k: v[0] for k, v in estado_2.items()}
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:357: trailing whitespace.
++    assert hashes_1 == hashes_2, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:358: trailing whitespace.
++        "precondition del control: la re-escritura tiene que dejar bytes identicos; si no, este "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:359: trailing whitespace.
++        "rojo seria por otra causa")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:360: trailing whitespace.
++    caza = segunda.dentro_de(raiz_protegida)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:361: trailing whitespace.
++    assert caza, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:362: trailing whitespace.
++        "el observador no vio la re-escritura de bytes identicos: «sin cambio de contenido» se "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:363: trailing whitespace.
++        "leeria como «nadie escribio» (S13)")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:364: trailing whitespace.
++    # Y aqui si que el mtime aporta: la pareja (hash, mtime) cambia donde el hash solo no ve nada.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:365: trailing whitespace.
++    assert estado_1 != estado_2, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:366: trailing whitespace.
++        "la pareja (hash, mtime) tampoco se movio: el sistema de archivos no actualizo el mtime y "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:367: trailing whitespace.
++        "el control b) perderia su lectura complementaria")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:368: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:369: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:370: trailing whitespace.
++def test_control_c_mtime_restaurado_no_oculta_la_escritura_al_observador(verde: dict,
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:371: trailing whitespace.
++                                                                        tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:372: trailing whitespace.
++    """(c) Si alguien restaura el mtime tras escribir, el estado final vuelve a ser igual: solo el
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:373: trailing whitespace.
++    observador de operaciones lo ve. Es el caso que el cierre anterior no cubria.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:374: trailing whitespace.
++    """
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:375: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:376: trailing whitespace.
++    raiz_protegida = _expediente_desechable(tmp_path)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:377: trailing whitespace.
++    destino = raiz_protegida / "FASE-A" / "mutation"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:378: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:379: trailing whitespace.
++    with obs.observador_de_escrituras() as primera:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:380: trailing whitespace.
++        _escribir_salidas(verde, destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:381: trailing whitespace.
++    antes = obs.huellas(destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:382: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:383: trailing whitespace.
++    with obs.observador_de_escrituras() as segunda:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:384: trailing whitespace.
++        _escribir_salidas(verde, destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:385: trailing whitespace.
++    # Restaurar los mtimes al valor previo: mecanismo permitido para este control en desechable.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:386: trailing whitespace.
++    for ruta, (h, mtime_ns, tam) in antes.items():           # noqa: B007
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:387: trailing whitespace.
++        p = Path(ruta)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:388: trailing whitespace.
++        if p.exists():
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:389: trailing whitespace.
++            st = p.stat()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:390: trailing whitespace.
++            os.utime(p, ns=(st.st_atime_ns, mtime_ns))
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:391: trailing whitespace.
++    despues = obs.huellas(destino)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:392: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:393: trailing whitespace.
++    assert {k: (v[0], v[1]) for k, v in antes.items()} == \
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:394: trailing whitespace.
++           {k: (v[0], v[1]) for k, v in despues.items()}, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:395: trailing whitespace.
++        "precondition: tras restaurar el mtime el estado final debe volver a ser igual; si no, el "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:396: trailing whitespace.
++        "control c) no estaria ejercitando lo que dice")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:397: trailing whitespace.
++    assert segunda.dentro_de(raiz_protegida), (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:398: trailing whitespace.
++        "con hash e mtime iguales el observador tampoco vio la escritura: «sin escritura» seria "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:399: trailing whitespace.
++        "indefendible (S13)")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:400: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:401: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:402: trailing whitespace.
++def test_el_observador_declara_que_no_cubre_procesos_hijos(tmp_path: Path):
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:403: trailing whitespace.
++    """El alcance del observador se publica, no se supone: un hijo escapa al parcheo in-process.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:404: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:405: trailing whitespace.
++    Medido, no declarado de oido: se lanza un `subprocess` que escribe dentro de un directorio
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:406: trailing whitespace.
++    «protegido» desechable y el observador NO lo ve, mientras que si ve la escritura in-process
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:407: trailing whitespace.
++    del mismo bloque. La limitacion queda asi probada y leida por quien consuma la prueba anterior.
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:408: trailing whitespace.
++    """
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:409: trailing whitespace.
++    obs = _observador()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:410: trailing whitespace.
++    protegido = tmp_path / "alcance"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:411: trailing whitespace.
++    (protegido / "hijo.txt").parent.mkdir(parents=True, exist_ok=True)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:412: trailing whitespace.
++    destino_hijo = protegido / "hijo.txt"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:413: trailing whitespace.
++    destino_local = protegido / "local.txt"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:414: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:415: trailing whitespace.
++    with obs.observador_de_escrituras() as registro:
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:416: trailing whitespace.
++        subprocess.run([sys.executable, "-c",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:417: trailing whitespace.
++                        f"open(r{str(destino_hijo)!r}, 'w').write('x')"],
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:418: trailing whitespace.
++                       check=True, capture_output=True)
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:419: trailing whitespace.
++        destino_local.write_text("x", encoding="utf-8")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:420: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:421: trailing whitespace.
++    vistas = {Path(r).name for _, r, _ in registro.dentro_de(protegido)}
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:422: trailing whitespace.
++    assert "local.txt" in vistas, "el observador perdio la escritura in-process"
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:423: trailing whitespace.
++    assert "hijo.txt" not in vistas, (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:424: trailing whitespace.
++        "el observador dice cubrir procesos hijos pero no puede: hay que retirarlo del alcance "
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:425: trailing whitespace.
++        "declarado o cubrirlo por otro mecanismo")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:426: trailing whitespace.
++    assert "procesos hijos" in obs.ALCANCE and "NO cubre" in obs.ALCANCE, obs.ALCANCE
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:427: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:428: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:429: trailing whitespace.
++def test_el_arnes_no_conoce_ruta_de_evidencia_como_destino_de_escritura():
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:430: trailing whitespace.
++    """Estructura, no solo conducta: si reaparece una ruta de evidencia hardcodeada como destino de
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:431: trailing whitespace.
++    escritura (`write`/`mkdir` sobre `evidence/`), esto se pone rojo aunque nadie la invoque hoy."""
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:432: trailing whitespace.
++    texto = Path(__file__).read_text(encoding="utf-8")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:433: trailing whitespace.
++    escrituras = [linea.strip() for linea in texto.splitlines()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:434: trailing whitespace.
++                  if "evidence" in linea.lower()
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:435: trailing whitespace.
++                  and not linea.strip().startswith("#")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:436: trailing whitespace.
++                  and any(k in linea for k in ("write_text(", ".mkdir(", "open(", ".write("))]
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:437: trailing whitespace.
++    assert escrituras == [], (
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:438: trailing whitespace.
++        f"el arnés vuelve a nombrar evidence/ como destino de escritura: {escrituras}")
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:439: trailing whitespace.
++
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:439: new blank line at EOF.
+EXIT_GIT_DIFF_CHECK=2
+
+# ================= FINAL 3: validadores sueltos
+{
+  "tool": "scripts/validate_governance_numbers.py",
+  "schema_version": "1.0",
+EXIT_GOBERNANZA=0
+EXIT_DOC_INTEGRATION=0
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT_INDICE=0

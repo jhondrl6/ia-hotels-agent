@@ -1,0 +1,22 @@
+# MEDIDO: 2026-09-23 18:53:27 por medir_deltas_b.py
+# PRE = git show da382b1:… (arbol commiteado antes de TODO B; sin stash ni checkout)
+# POST = arbol de trabajo actual de la remediacion
+# Limite: la primera pasada de B no esta en git (no se commiteo), asi que no es PRE
+
+T1 — una entrada de REGISTRY con los MISMOS args (--tests '13', --coherence 0.5):
+   PRE: casillas `- [x]` = 4 | `- [ ]` = 0 | declara «declarado» = False | 455 chars
+      - - [x] Tests passing (13)
+      - - [x] Suite NEVER_BLOCK passing
+      - - [x] Coherence >= 0.8: 0.5 (FALLO)
+      - - [x] Capability contract verificado
+   POST: casillas `- [x]` = 0 | `- [ ]` = 3 | declara «declarado» = True | 722 chars
+
+T2 — calculos de verificador en `validate_document_integration.run_all()` con un fallo inyectado (POST; el PRE esta preservado en PRE_recalculo_doc_integration.txt):
+   POST: 8 calculos para 8 verificadores, exit 0 (['EXIT=0'])
+
+T3 — plantilla: instrucciones que mandaban transcribir la metrica a un segundo documento: PRE 3 → POST 1 (ahora: referencia a 09 §D)
+T4 — executor: frases que ordenaban (re)registrar por cada fase en el cierre documental: PRE 3 → POST 1
+   PRE: ['├── Paso 4.5.1: Ejecutar log_phase_completion.py por cada fase', '**Regla**: Ejecutar UNA vez por cada fase documentada en el plan.', '# 1. Registrar cada fase del plan']
+   POST: ['- **v2.25.0** (2026-09-23): Bloque B de la orden `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22`. Nueva sección **Proceso común: proporcionalidad y reuso** (pautas, no una R2 nueva: promoverla es D2) que deja por escrito lo que el flujo ya hacía a medias — verificar solo lo que el cambio afecta, reutilizar un resultado únicamente si coinciden entradas/configuración/entorno y declarar cuándo caduca, registrar cada cifra una vez en su fuente y referenciarla (elimina la divergencia entre la plantilla, AGENTS y la corrida real en el conteo de `--quick`), distinguir rojo deliberado de mutation check de error accidental, separar implementación → verificación → cierre → espera de autorización, y permitir declarar «sin lecciones nuevas» (se retiran las cuotas «mínimo 3 lecciones» del cierre de fase y de FASE-VERIFY; el ≥3 descartes de §3 sigue midiendo consulta al corpus, no producción de lecciones). **D1**: se retiraron de su fuente las cuatro aserciones de conteo vencidas que el verificador marcaba en rojo —el ordinal de `validate_plan_citations.py`, `validate_lesson_capitalization.py` y `validate_qmind_writeback.py` en el executor y uno en el template de lecciones—; ahora el texto dice que el valor vigente lo imprime la corrida y lo contrasta `validate_governance_numbers.py`. Las dos salidas del mutation check quedaron reancladas a un **contraejemplo congelado** en `tests/…/governance_numbers/fixtures/`, con una regresión de que el árbol real ya sale `SIN-HALLAZGOS`. **S13**: el arnés de mutación ya no escribe en `evidence/…/FASE-A/`; vuelca en destino temporal explícito y prueba que re-medir no re-pisa expedientes cerrados (compara hash **y** mtime). **Fecha de REGISTRY**: un solo escritor (`log_phase_completion.py`, fecha de última entrada documental); `sync_config.yaml` retiró `registry_last_update`. **Remediación del mismo día** (mandato §2/§3, sin nuevo incremento de versión): se resuelve la contradicción que dejaba el principio escrito pero la instrucción mandando lo contrario — §2.5 dice «FASE-RELEASE no registra fases anteriores» y §4.5 ordenaba «ejecutar el escritor por cada fase»; §4.5 Paso 4.5.1 pasa a **verificar** el registro y escribir solo la fase que falte, con el motivo medido de que el escritor es aditivo (`tests/test_registry_fecha_documental.py`). Las métricas dejan de copiarse: `09` §D es la fuente y README/`10-analisis` la referencian (también en E8b, que deja de pedir mantener dos copias sincronizadas a mano). Los cortes pasan de cuatro a **cinco utilizables sin commit** y §R2.1 declara su alternativa «hasta listo para revisión» cuando el commit no está autorizado, para que el corte no dependa de un permiso que la sesión puede no tener. Y el registro **declara, no aprueba**: el escritor ya no publica `- [x] Tests passing` ni `- [x] Capability contract verificado` que no haya ejecutado. Cambio de workflow y docs: no toca código de producción, `VERSION.yaml`, la composición de `run_all_validations.py` ni los denominadores del hook (eso es D2).']
+
+T5 — ver tiempos de la seleccion afectada: leer PRE_suite_governance_registry.txt y POST_suite_b_remediacion.txt (se publican funcion y duracion aunque el cambio sea adverso).

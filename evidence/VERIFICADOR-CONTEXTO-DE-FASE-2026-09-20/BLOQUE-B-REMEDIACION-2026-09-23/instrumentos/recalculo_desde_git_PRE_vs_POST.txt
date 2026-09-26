@@ -1,0 +1,59 @@
+# COMANDO A: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe instrumentos/medir_recalculo_doc_integration.py --rev da382b1 --forzar-fallo validate_line_endings
+# COMANDO B: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe instrumentos/medir_recalculo_doc_integration.py --forzar-fallo validate_line_endings
+# MEDIDO: 2026-09-23 19:31:36-37
+# Motivo: el PRE de 17 calculos quedo fijado a la fuente versionada, no a «el arbol que estaba al correr»
+
+############ A: PRE (instrumento defectuoso leido con git show da382b1) ############
+# COMANDO: python scripts/validate_document_integration.py  (misma ruta de codigo: run_all())
+# FUENTE MEDIDA: git show da382b1:scripts/validate_document_integration.py
+# VERIFICADORES: stubs puros (medicion estructural)
+# MODO: --forzar-fallo validate_line_endings (fallo sintetico, sin editar archivos)
+# MEDIDO: 2026-09-23 19:31:56 por medir_recalculo_doc_integration.py
+RESULTADO run_all: FAIL (hay al menos un check con hallazgos)
+
+llamadas  verificador
+       2  validate_cross_refs
+       2  validate_changelog_format
+       2  validate_version_headers
+       2  validate_python_path_consistency
+       2  validate_agents_cross_ref_table
+       2  validate_domain_primer_version
+       2  validate_readme_counts
+       3  validate_line_endings
+      17  TOTAL de calculos de verificadores
+
+[HALLAZGO] verificadores calculados mas de una vez por ejecucion:
+   - validate_agents_cross_ref_table: 2 calculos
+   - validate_changelog_format: 2 calculos
+   - validate_cross_refs: 2 calculos
+   - validate_domain_primer_version: 2 calculos
+   - validate_line_endings: 3 calculos
+   - validate_python_path_consistency: 2 calculos
+   - validate_readme_counts: 2 calculos
+   - validate_version_headers: 2 calculos
+   recalculo total: 9 calculos extra sobre 8 verificadores
+EXIT=1
+EXIT_A=1
+
+############ B: POST (arbol de trabajo, codigo corregido) ############
+# COMANDO: python scripts/validate_document_integration.py  (misma ruta de codigo: run_all())
+# FUENTE MEDIDA: scripts/validate_document_integration.py
+# VERIFICADORES: los reales del modulo
+# MODO: --forzar-fallo validate_line_endings (fallo sintetico, sin editar archivos)
+# MEDIDO: 2026-09-23 19:31:57 por medir_recalculo_doc_integration.py
+RESULTADO run_all: FAIL (hay al menos un check con hallazgos)
+
+llamadas  verificador
+       1  validate_cross_refs
+       1  validate_changelog_format
+       1  validate_version_headers
+       1  validate_python_path_consistency
+       1  validate_agents_cross_ref_table
+       1  validate_domain_primer_version
+       1  validate_readme_counts
+       1  validate_line_endings
+       8  TOTAL de calculos de verificadores
+
+[SIN-HALLAZGOS] cada verificador se calculo exactamente una vez por ejecucion
+EXIT=0
+EXIT_B=0

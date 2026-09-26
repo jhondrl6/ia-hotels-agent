@@ -1,0 +1,7 @@
+# SELECCION AMPLIA sobre el arbol final v2 (tras la remediacion pedida por la revision adversaria)
+# COMANDO: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe -m pytest tests/quality_gates/governance_numbers tests/test_registry_fecha_documental.py tests/test_validate_document_integration.py tests/test_validate_wiring.py tests/test_validate_opencode_refs.py tests/test_validate_plan_citations.py tests/test_validate_plan_closure.py tests/test_validate_lesson_capitalization.py tests/test_doctor_reads_are_utf8_pinned.py tests/regression -q -p no:cacheprovider
+# MEDIDO: 2026-09-23 19:50:46
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+2 failed, 171 passed, 13 warnings in 76.14s (0:01:16)
+EXIT_SELECCION=1

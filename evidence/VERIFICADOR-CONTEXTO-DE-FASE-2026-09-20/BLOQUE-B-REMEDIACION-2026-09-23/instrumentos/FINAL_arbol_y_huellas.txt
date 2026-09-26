@@ -1,0 +1,71 @@
+# MEDIDO: 2026-09-23 19:05:39  (revison final de arbol, trabajo ajeno y efectos laterales)
+## staged (debe estar vacio: cero commit)
+EXIT_STAGED_VACIO=0  (sin salida = nada stageado)
+
+## trabajo ajeno (JEV/dependencias-fases.md)
+b55670d7ef7a02c679b00f4d1f752df3c6531c347b18f09decfb0f9124be6486 *.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+huella al abrir la sesion: b55670d7ef7a02c679b00f4d1f752df3c6531c347b18f09decfb0f9124be6486
+
+## evidencia historica de FASE-A (mutation)
+919f08463c52686fa7e5bf0ab22fb23186f537c0ddf7c072130a7304d9377b32 *FASE-A/mutation/mutante_M-A1.txt
+e42cbe632b5bffc36949a3c6b95d06ff563cd3e42174f9108e4256b74445923f *FASE-A/mutation/mutante_M-A2.txt
+32a2f4a5ea0263d1b1ccab5054d33a47b0ded8b61a6ffaf54961c909f8a252d8 *FASE-A/mutation/mutante_M-A3.txt
+fd1b910cb96898c0eb68777500889e309537bb44df718f4af56bbc17320517a1 *FASE-A/mutation/mutante_M-A4.txt
+651de191d6d5bbaecbc1f69e2b89cfbfa4d86756ac02db42bd28ea0a261124f3 *FASE-A/mutation/mutante_M-POBLACION.txt
+48f72b3c7c57c2542002c4b9e75733ad461295a30391a9105dbf07bccbbb3fdd *FASE-A/mutation/mutante_M-SUJETO.txt
+e29a5574d151505f5e999f747f41942463b717cae2972eb9cc7aec688f104c8e *FASE-A/mutation/verde_baseline.txt
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+
+## untracked
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/00-resumen-bloque-B.md
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/CHECKPOINT1_quick_check.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/FINAL_arbol_terminado.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/FINAL_arbol_y_huellas.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/FINAL_gates.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_deltas_b.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_indice_lecciones.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_interaccion_registro_real.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_registro_b.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_suite_b_remediacion.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_suite_seleccion_final.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/POST_validadores_tras_proceso_comun.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/PRE_quick_check.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/PRE_recalculo_doc_integration.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/PRE_suite_governance_registry.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/medir_deltas_b.py
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/instrumentos/medir_recalculo_doc_integration.py
+tests/quality_gates/governance_numbers/fixtures/lecciones-capitalizadas-template.md
+tests/quality_gates/governance_numbers/fixtures/phased_project_executor.md
+tests/support_observador_escrituras.py
+tests/test_registry_fecha_documental.py
+tests/test_validate_document_integration.py
+
+## todo el arbol modificado
+ M .agents/workflows/phased_project_executor.md
+ M .agents/workflows/templates/lecciones-capitalizadas-template.md
+ M .agents/workflows/templates/prompt-fase-template.md
+ M .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+ M .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M AGENTS.md
+ M docs/CONTRIBUTING.md
+ M docs/contributing/REGISTRY.md
+ M docs/contributing/documentation_rules.md
+ M docs/contributing/validation.md
+ M scripts/log_phase_completion.py
+ M scripts/sync_config.yaml
+ M scripts/validate_document_integration.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_por_asercion_no_por_linea.py
+ M tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/
+?? tests/quality_gates/governance_numbers/fixtures/
+?? tests/support_observador_escrituras.py
+?? tests/test_registry_fecha_documental.py
+?? tests/test_validate_document_integration.py

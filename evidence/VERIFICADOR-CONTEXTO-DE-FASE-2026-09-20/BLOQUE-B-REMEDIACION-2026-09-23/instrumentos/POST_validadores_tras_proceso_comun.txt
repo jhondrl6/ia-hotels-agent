@@ -1,0 +1,14 @@
+# GOBERNANZA (arbol real)
+[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 11 | historica-congelada 8 | no-resuelta 0 || fuentes: quick 11 checks | solo-completo 4 (total 15) | hook 7 pasos || familias no cubiertas: 4
+  medido 2026-09-23 con: python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA  S12)
+EXIT=0
+
+# DOC INTEGRATION
+      prompt-fase-template.md: almacenado LF (arbol de trabajo lf)
+      CHANGELOG.md: almacenado LF (arbol de trabajo lf)
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT=0

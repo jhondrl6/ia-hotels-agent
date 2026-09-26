@@ -1,0 +1,82 @@
+# COMANDO: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23 --desc "..." --archivos-nuevos <5 rutas> --tests 69
+# MEDIDO: 2026-09-23 19:47:20  (2a emision: la 1a quedo snapshotneada en REGISTRY_primera_entrada_B_2026-09-23.md.snapshot)
+# Motivo del re-registro: el escritor publicaba '_Ninguno_' como ausencia verificada y la 1a entrada omitia 3 archivos nuevos
+--- huellas ANTES ---
+0c8aa59702ea53c778e50b5ad52506aa5bcc9f041112e880e3febd507eeedc48 *docs/contributing/REGISTRY.md
+e03741e52dfcd6efeab46ee4e8ee7915b3a070a26edd759934e2abb34fa1a0eb *docs/contributing/.last_doc_phase.json
+f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905 *VERSION.yaml
+--- corrida del escritor ---
+============================================================
+LOG PHASE COMPLETION: BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23
+============================================================
+
+[1/2] Actualizando REGISTRY.md...
+       (R) C:\Users\Jhond\Github\iah-cli\docs\contributing\REGISTRY.md
+
+============================================================
+POR_HACER: Documentacion Manual
+============================================================
+
+Segun CONTRIBUTING.md (R8, estos archivos se actualizan manualmente:
+
+  (T) CHANGELOG.md
+     Cuando: Nueva release (registro historico de cambios)
+
+  (T) GUIA_TECNICA.md
+     Cuando: Cambios arquitectonicos o tecnicos
+
+  (T) ROADMAP.md
+     Cuando: Cambios en estrategia de monetizacion
+
+  (T) .agents/workflows/README.md
+     Cuando: Agregar o eliminar skills
+
+  (T) .agent/knowledge/DOMAIN_PRIMER.md
+     Cuando: Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)
+
+============================================================
+Recordatorio: Editar CHANGELOG.md al final de release
+============================================================
+
+============================================================
+DOCUMENTATION AUDIT - Documentacion Huérfana
+============================================================
+
+  (OK) Todos los archivos de documentacion mencionan la fase
+       No se detectaron gaps
+
+
+[2/2] Checklist final:
+       (X) Actualizar CHANGELOG.md (al final del release)
+       (X) Actualizar GUIA_TECNICA.md (si hay cambios arquitectonicos)
+       (X) Verificar sync_versions.py si es release
+       (X) Ejecutar: python scripts/run_all_validations.py --quick
+
+(R) Fase registrada exitosamente
+EXIT_REGISTRO=0
+--- huellas DESPUES ---
+efbd1dcbf04b37b2deb06e37348d53de89f76adc14e3385fc241d5f4fc3e7773 *docs/contributing/REGISTRY.md
+e03741e52dfcd6efeab46ee4e8ee7915b3a070a26edd759934e2abb34fa1a0eb *docs/contributing/.last_doc_phase.json
+f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905 *VERSION.yaml
+--- entrada publicada ---
+## BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23 - 2026-09-23
+**Descripcion:** Bloque B de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 (remediacion, 2a emision): proceso comun (registro verificado, no re-registrado; metricas referenciadas; cinco cortes sin commit), fecha unica de REGISTRY con interaccion real medida y tracker auxiliar assertado, S13 con observacion de escrituras, controles negativos sobre el instrumento versionado (git show da382b1) y D1 revalidado. Fuente de resultados: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/support_observador_escrituras.py` | NUEVO | Support Observador Escrituras |
+| `tests/test_registry_fecha_documental.py` | NUEVO | Test Registry Fecha Documental |
+| `tests/test_validate_document_integration.py` | NUEVO | Test Validate Document Integration |
+| `tests/quality_gates/governance_numbers/fixtures/phased_project_executor.md` | NUEVO | Phased Project Executor |
+| `tests/quality_gates/governance_numbers/fixtures/lecciones-capitalizadas-template.md` | NUEVO | Lecciones-Capitalizadas-Template |
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 69 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---

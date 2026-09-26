@@ -1,0 +1,33 @@
+# ================= FINAL (arbol tras normalizar EOL y registrar B)
+# MEDIDO: 2026-09-23 19:04:12
+# COMANDO A: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe -m pytest tests/quality_gates/governance_numbers tests/test_registry_fecha_documental.py tests/test_validate_document_integration.py -q -p no:cacheprovider
+....................................................................     [100%]
+68 passed in 20.74s
+EXIT_A=0
+# COMANDO B: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick --check
+  [+] Wiring: 183 llamadas descubiertas en 1326 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+
+------------------------------------------------------------
+  TOTAL: 11/11 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+EXIT_B=0
+# COMANDO C: git diff --check
+warning: in the working copy of '.agents/workflows/phased_project_executor.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.agents/workflows/templates/lecciones-capitalizadas-template.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'AGENTS.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/CONTRIBUTING.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/REGISTRY.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/validation.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py', CRLF will be replaced by LF the next time Git touches it
+EXIT_C=0
+# COMANDO D: recalculo tras la correccion
+       1  validate_line_endings
+       8  TOTAL de calculos de verificadores
+
+[SIN-HALLAZGOS] cada verificador se calculo exactamente una vez por ejecucion
+EXIT=0
+EXIT_D=0
+# COMANDO E: indice
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT_E=0

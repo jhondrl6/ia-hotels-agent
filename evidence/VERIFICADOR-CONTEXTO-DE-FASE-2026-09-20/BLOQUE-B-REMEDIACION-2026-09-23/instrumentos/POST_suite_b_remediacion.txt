@@ -1,0 +1,11 @@
+# COMANDO: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe -m pytest tests/quality_gates/governance_numbers tests/test_registry_fecha_documental.py tests/test_validate_document_integration.py -q -p no:cacheprovider --durations=5
+# MEDIDO: 2026-09-23 18:34:30
+....................................................................     [100%]
+============================= slowest 5 durations =============================
+2.36s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_la_ejecucion_medida_no_abre_ninguna_escritura_dentro_de_evidence
+2.34s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_re_medir_no_reescribe_expedientes_cerrados
+2.13s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_control_c_mtime_restaurado_no_oculta_la_escritura_al_observador
+2.11s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_control_b_reescribir_bytes_identicos_se_observa_though_el_hash_no
+1.09s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_las_dos_salidas_quedan_en_destino_exPLICITO
+68 passed in 19.70s
+EXIT=0

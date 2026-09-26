@@ -1,0 +1,64 @@
+# COMANDO: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23 --desc "..." --archivos-nuevos "..." --tests "68"
+# MEDIDO: 2026-09-23 18:55:20  (ampliacion expresa del mandato: REGISTRY solo por su escritor; sin --archivos-mod para no escribir .last_doc_phase.json)
+--- huellas ANTES ---
+6f74a8f3cef2ba9e630e2b8e4f40841feebb6756533c7e50e7a0cd97d8950571 *docs/contributing/REGISTRY.md
+e03741e52dfcd6efeab46ee4e8ee7915b3a070a26edd759934e2abb34fa1a0eb *docs/contributing/.last_doc_phase.json
+f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905 *VERSION.yaml
+551
+============================================================
+LOG PHASE COMPLETION: BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23
+============================================================
+
+[1/2] Actualizando REGISTRY.md...
+       (R) C:\Users\Jhond\Github\iah-cli\docs\contributing\REGISTRY.md
+
+============================================================
+POR_HACER: Documentacion Manual
+============================================================
+
+Segun CONTRIBUTING.md (R8, estos archivos se actualizan manualmente:
+
+  (T) CHANGELOG.md
+     Cuando: Nueva release (registro historico de cambios)
+
+  (T) GUIA_TECNICA.md
+     Cuando: Cambios arquitectonicos o tecnicos
+
+  (T) ROADMAP.md
+     Cuando: Cambios en estrategia de monetizacion
+
+  (T) .agents/workflows/README.md
+     Cuando: Agregar o eliminar skills
+
+  (T) .agent/knowledge/DOMAIN_PRIMER.md
+     Cuando: Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)
+
+============================================================
+Recordatorio: Editar CHANGELOG.md al final de release
+============================================================
+
+============================================================
+DOCUMENTATION AUDIT - Documentacion Huérfana
+============================================================
+
+  (OK) Todos los archivos de documentacion mencionan la fase
+       No se detectaron gaps
+
+
+[2/2] Checklist final:
+       (X) Actualizar CHANGELOG.md (al final del release)
+       (X) Actualizar GUIA_TECNICA.md (si hay cambios arquitectonicos)
+       (X) Verificar sync_versions.py si es release
+       (X) Ejecutar: python scripts/run_all_validations.py --quick
+
+(R) Fase registrada exitosamente
+EXIT_REGISTRO=0
+--- huellas DESPUES ---
+7c044503bea01da36d710b105eca8758c19e53c20a91ae1799c7fccb242c8ec0 *docs/contributing/REGISTRY.md
+e03741e52dfcd6efeab46ee4e8ee7915b3a070a26edd759934e2abb34fa1a0eb *docs/contributing/.last_doc_phase.json
+f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905 *VERSION.yaml
+552
+--- git status docs/contributing ---
+ M docs/contributing/REGISTRY.md
+ M docs/contributing/documentation_rules.md
+ M docs/contributing/validation.md

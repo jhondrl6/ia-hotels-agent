@@ -1,0 +1,288 @@
+Trabaja en C:/Users/Jhond/Github/iah-cli.
+
+OBJETIVO
+Completar y verificar el bloque B —«Proceso común e instrumentos»— de:
+.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+
+Es una continuación correctiva de B, NO FASE-B de CONTEXTO.
+No repetir bloque A, ejecutar bloque C ni iniciar el piloto FASE-C.
+
+CONTEXTO CRÍTICO
+Hubo DOS dictámenes de «B concluido» posteriormente retirados.
+Los documentos, comentarios, nombres de tests y tareas marcadas como
+completadas pueden contener sobreafirmaciones. No son evidencia de aceptación.
+
+Estado de partida que debes REVALIDAR:
+- D1 tiene corrección técnica y fixtures históricos.
+- REGISTRY tiene retirada la segunda autoridad de fecha, pero su interacción
+  real con el registro no quedó demostrada.
+- S13 tiene destino temporal, pero no observación suficiente de escrituras.
+- El proceso común conserva duplicaciones e instrucciones incompatibles.
+- D3 está parcialmente adelantada; su dueño original es «Plan propio,
+  posterior», no CONTEXTO por reasignación implícita.
+- Se omitieron mediciones y operaciones finales exigidas.
+- Se ejecutó indebidamente run_all_validations.py --check completo:
+  incluye el validador QMind. No dar por demostrada la afirmación «cero red».
+- Los anteriores verdes de tests NO bastan para cerrar estas brechas.
+
+AUTORIZACIÓN Y FRONTERAS
+Autorizo terminar B dentro de esta superficie:
+1. AGENTS.md.
+2. .agents/workflows/phased_project_executor.md.
+3. .agents/workflows/templates/prompt-fase-template.md.
+4. .agents/workflows/templates/lecciones-capitalizadas-template.md.
+5. scripts/log_phase_completion.py y scripts/sync_config.yaml.
+6. docs/CONTRIBUTING.md, docs/contributing/documentation_rules.md,
+   docs/contributing/validation.md.
+7. scripts/validate_document_integration.py y pruebas directamente afectadas.
+8. Pruebas de governance_numbers, incluido su arnés de mutación,
+   y pruebas de la fecha/interacción de REGISTRY.
+9. La orden y los registros D1/D3/S13 y referencias directamente afectadas
+   dentro del plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20.
+10. El par del índice de lecciones, SOLO mediante su generador.
+11. Evidencia nueva indispensable en un subdirectorio propio fechado.
+
+Ampliación expresa para el cierre:
+- docs/contributing/REGISTRY.md, exclusivamente mediante el escritor
+  log_phase_completion.py, para registrar ESTE bloque con identificador
+  inequívoco y corregir su fecha mediante la autoridad implementada.
+- docs/contributing/.last_doc_phase.json, únicamente si el escritor realmente
+  lo necesita para este registro; evita escrituras auxiliares innecesarias.
+
+Se mantiene la autorización ya concedida:
+- Conservar el cambio de A4 en lecciones-capitalizadas-template.md.
+- Mantener las versiones documentales v2.25.0 del executor y v1.6.0 de
+  prompt-fase-template.md. No hacer nuevos incrementos.
+
+Preserva íntegramente el trabajo ajeno en:
+.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+No editar, stagear, revertir ni atribuirte ese trabajo.
+
+PROHIBIDO
+- Red, APIs, QMind, fetch, instalaciones, SDKs, credenciales.
+- Pipeline o cambios de producto hotelero.
+- Commit, push, publicación, archivado o cambio de VERSION.yaml.
+- Cambiar .cursorrules, hooks, composición de run_all_validations.py,
+  build_lesson_index.py, o promover/renumerar checks: eso es D2.
+- Cambiar scripts/sync_versions.py sin ampliación expresa.
+- Ejecutar --check completo o una suite global sin haber demostrado antes
+  que todos sus caminos y escritores respetan las fronteras.
+- Sobrescribir evidencia histórica.
+- Declarar fuera de B una obligación de B para poder cerrar.
+- Rebajar aserciones, actualizar baselines para absorber defectos o convertir
+  fallos de instrumento en resultados favorables.
+
+Si necesitas otro archivo, detente SOLO en ese punto, explica por qué,
+presenta el mínimo alcance adicional y pide autorización. No arrastres cambios.
+
+1. ARRANQUE Y CHECKPOINT HONESTO
+Antes de editar:
+- Lee la orden completa, el diff actual y las fuentes reales de las reglas.
+- Lee completos los documentos comunes afectados y las secciones pertinentes
+  de maestro, dependencias, contrato y análisis del plan CONTEXTO.
+- Lee los escritores, consumidores y tests antes de ejecutarlos.
+- Mide git status, staged/unstaged/untracked, archivos ajenos y destinos de
+  escritura. Guarda una huella del trabajo ajeno para compararla al final.
+- Publica un inventario breve: archivo → cambio → garantía que lo exige.
+- Identifica qué pruebas existentes NO demuestran lo que afirman.
+
+La primera edición documental debe retirar el cierre excesivo:
+B EN REMEDIACIÓN, NO CONCLUIDO.
+Preserva los dictámenes anteriores como antecedentes rectificados, no como
+estados vigentes. No reconstruyas ni borres evidencia histórica.
+
+Usa un único resumen de cierre como fuente de resultados. Los demás documentos
+referencian ese resumen y contienen solo sus decisiones/estados propios.
+
+2. COMPLETAR REALMENTE EL PROCESO COMÚN
+No basta con añadir una cláusula que contradice instrucciones anteriores.
+
+- AGENTS debe conservar principios, orientación y referencias canónicas,
+  retirando duplicación operativa y cifras volátiles pertinentes a B.
+- Corrige las instrucciones ejecutables del executor y la plantilla:
+  lecturas proporcionales, resultados reutilizables y cierres sin transcripción.
+- Resuelve la contradicción «RELEASE no registra fases anteriores» frente a
+  «registrar cada fase del plan». No volver a registrar una ejecución cerrada.
+- Revisa qué documentos ordenan copiar métricas en README, 09 y 10:
+  sustituye duplicación por referencias a la fuente del resultado.
+- Una declaración de «sin lecciones nuevas» debe ser compatible con todos
+  los pasos del cierre, sin cuotas de producción artificiales.
+- Define cortes utilizables SIN commit:
+  implementación terminada, verificación terminada, cierre documental,
+  listo para revisión y espera de autorización.
+  El commit es opcional y posterior, no condición circular del corte.
+- Reutiliza una comprobación solo mientras coincidan entradas, configuración
+  y entorno relevantes. Documenta qué cambios invalidan el resultado.
+- Mantén decisiones humanas, permisos y garantías. No construyas un framework
+  nuevo de reportes ni adaptes íntegramente los otros planes.
+
+El rebanado completo D3 puede seguir pendiente; la simplificación expresamente
+encargada a B NO puede diferirse a D2, bloque C o al piloto.
+
+3. REGISTRY: AUTORIDAD Y PRUEBA DE INTERACCIÓN REAL
+Implementa y demuestra una semántica única de «última entrada documental»,
+separada de la fecha de release, sin modificar VERSION.yaml.
+
+No basta con eliminar registry_last_update del YAML y comprobar su ausencia.
+
+Pruebas obligatorias:
+- Preparar un repositorio temporal coherente con los consumidores reales.
+- Redirigir TODAS las raíces/rutas relevantes de log_phase_completion y del
+  SyncEngine al MISMO repositorio temporal, incluida VERSION.yaml.
+- Usar la configuración real de sincronización.
+- Registrar → sincronizar en modo escritura → verificar sincronización.
+- Repetir ambos comandos sobre ese mismo expediente.
+- Probar fechas distintas entre release y entrada, y cambio de día.
+- Comprobar retorno, contenido, fecha, entradas y escrituras observadas.
+- Asegurar que el registro real no publica aprobaciones automáticas de tests
+  o contratos que el instrumento no ejecutó ni recibió como evidencia.
+- Definir explícitamente el comportamiento al repetir un registro.
+  No llamar «idempotente» a una prueba que solo cuenta cabeceras.
+  No borrar entradas previas ni aceptar cambios silenciosos de una entrada.
+
+Control negativo:
+Restituir la autoridad competidora únicamente en una copia temporal debe
+hacer fallar la MISMA prueba por la discrepancia de fecha esperada.
+Un fallo de importación o configuración no sirve como rojo por causa.
+
+Al cerrar, ejecuta el registro autorizado de B y comprueba su interacción
+real con sincronización. No re-registres FASE-B de CONTEXTO ni uses un
+identificador ambiguo. No hagas un sync global que escriba archivos vetados.
+
+4. S13: OBSERVAR ESCRITURAS, NO SOLO EL ESTADO FINAL
+Conserva los contraejemplos históricos de D1 como fixtures explícitos,
+sin debilitar detección, causas, atribución por clave ni población.
+
+Para S13:
+- El arnés real debe escribir solo en destino temporal o explícito autorizado.
+- Observa las operaciones de escritura durante la ejecución completa medida,
+  incluido el escritor real, no solo antes/después de una función.
+- Usa instrumentación apropiada al mecanismo real: aperturas de escritura,
+  creación y sustitución de archivos, incluyendo rutas indirectas pertinentes.
+- Declara el alcance del observador, incluido si cubre procesos hijos.
+- Mantén además comparación de contenido y metadatos del expediente protegido.
+
+Controles negativos, SIEMPRE en un expediente desechable:
+a) El escritor real se redirige indebidamente a un destino protegido de prueba.
+b) Se reescriben bytes idénticos.
+c) Se restaura el mtime después de escribir, si el mecanismo lo permite.
+
+El observador debe detectar la escritura aunque contenido y mtime finales
+coincidan. El control debe ejercitar EL MISMO observador y escritor que usa
+la prueba positiva: no duplicar la función de huellas dentro del test ni
+usar os.utime artificial como sustituto de observar una escritura.
+
+Nunca provoques el control negativo sobre evidencia histórica real.
+Conserva las salidas y los códigos de salida de los controles.
+
+5. MEDICIÓN PRE/POST COMPARABLE
+- No presentar «24 passed / 16 errors» como PRE: fue un estado intermedio
+  posterior a editar D1.
+- Recupera fuentes previas con git show/archive o fixtures explícitos;
+  sin checkout destructivo, stash ni modificación del árbol ajeno.
+- No ejecutes escritores anteriores sobre sus destinos históricos.
+- Compara el mismo trabajo, selección, entradas y entorno, identificando
+  expresamente qué cambia.
+- Mide repeticiones reales: lecturas, invocaciones de verificadores, registros
+  o escaneos pertinentes. No equipares líneas eliminadas con tiempo ahorrado.
+- Examina validate_document_integration.py: su resumen de errores vuelve a
+  llamar validadores. Si corriges ese comportamiento, demuestra que cada
+  resultado se calcula una vez por ejecución, conserva su diagnóstico y no
+  se reutiliza indebidamente en una ejecución posterior con entradas cambiadas.
+- Publica conteos y tiempos de comandos reales, incluso si el ahorro es cero.
+- Separa esos tiempos de tiempo activo del agente y espera de autorización.
+  Sin instrumento, estos últimos quedan NO MEDIDOS.
+
+6. AUTOVERIFICACIÓN OBLIGATORIA
+Antes de implementar, construye en el resumen existente una matriz breve:
+requisito → prueba/artefacto → negativo por causa → estado → límite.
+
+Para cerrar una fila:
+- La prueba ejercita el consumidor/escritor real.
+- Su resultado depende del comportamiento requerido, no solo de strings.
+- La versión defectuosa o mutada falla por la causa esperada.
+- Un error accidental no se contabiliza como mutante detectado.
+- El POST satisface el contrato sin omitir caminos que quedaron detrás del rojo.
+- La evidencia contiene comando exacto, entorno pertinente y exit del proceso.
+- «El archivo existe», «pytest está verde» o «no hay diff» no sustituyen
+  la propiedad requerida.
+
+Conserva stdout/stderr completos de las mediciones relevantes en evidencia
+nueva. No filtres la salida antes de preservarla.
+En tareas en background espera la terminación real y exige resumen final
+y código de salida de pytest, no el exit de la cadena shell.
+
+Revisión adversarial antes del cierre:
+- Revisa el diff y la evidencia contra el mandato, no contra tu resumen.
+- Busca contradicciones residuales en todos los consumidores tocados.
+- Comprueba tablas, fences y archivos nuevos/no rastreados.
+- No declares LF a partir de read_text(): si certificas finales de línea,
+  inspecciona bytes y prueba el detector.
+- Si utilizas un revisor independiente, dale la orden y el diff; verifica
+  sus hallazgos. Su aprobación no reemplaza las pruebas.
+- Si aparece una brecha, conserva B EN REMEDIACIÓN, corrige y repite solo
+  las verificaciones invalidadas. No redactes otro cierre prematuro.
+
+7. CONCILIACIÓN Y FRONTERA DE RED
+- Alinea los estados D1/D3/S13 entre orden, maestro, dependencias, contrato
+  y análisis. No dejes «resuelto» junto a instrucciones que lo suponen pendiente.
+- Mantén el dueño original de D3 y distingue cumplimiento parcial de completo.
+- Rectifica las frases vencidas de commit/push con antecedentes de git.
+  Las referencias locales origin/* no prueban el estado remoto actual.
+- No publiques HEAD/paridad como cifras operativas que el siguiente commit
+  invalide; usa comandos y procedencia fechada cuando corresponda.
+- Revisa SOLO evidencia local de la anterior ejecución --check completa para
+  determinar si QMind fue invocado y qué resultado dejó.
+  No repitas la llamada para investigarlo.
+- Si no puede saberse si hubo tráfico, registra «no determinado» y retira
+  «cero red» del cierre anterior. Esta continuación permanece estrictamente
+  offline.
+
+8. VERIFICACIÓN FINAL SOBRE EL ÁRBOL FINAL
+Después de la última edición de las fuentes:
+1. Ejecutar el generador del índice de lecciones.
+2. Verificar frescura del par generado.
+3. Ejecutar suites pertinentes y negativos por causa.
+4. Ejecutar validaciones documentales y de gobierno pertinentes.
+5. Ejecutar EXACTAMENTE:
+   python scripts/run_all_validations.py --quick --check
+   con el Python del entorno del proyecto.
+6. Ejecutar git diff --check.
+7. Revisar también evidencia nueva y archivos no rastreados.
+8. Comparar trabajo ajeno y evidencia histórica con las huellas iniciales.
+9. Revisar staged/unstaged y cualquier efecto lateral de las pruebas.
+
+No ejecutar --check completo: incluye la comprobación QMind.
+No repetir la suite global para justificar B si las pruebas pertinentes
+pueden verificar su superficie. Si se informa sobre fallos anteriores,
+distinguir identidad de nombres de causa demostrada; no afirmar «0 regresiones»
+solo porque reaparecen los mismos cuatro nombres.
+
+Si una edición posterior invalida una comprobación, volver a ejecutarla.
+Si cambia una fuente del índice, regenerarlo de nuevo antes del check final.
+
+CONDICIÓN DE CIERRE
+B solo puede declararse CONCLUIDO cuando:
+- Todos sus requisitos tienen evidencia suficiente y matriz reconciliada.
+- Proceso, plantilla, documentos y validadores son compatibles.
+- REGISTRY e instrumentos satisfacen sus pruebas reales y negativos.
+- Hay PRE/POST comparable y ahorro medido o ausencia de ahorro declarada.
+- Registro, índice y controles finales están ejecutados sobre el árbol final.
+- No quedan obligaciones de B desplazadas artificialmente a C/D2.
+- Los pendientes restantes están realmente fuera de B, con dueño y motivo.
+
+Si algo impide lograrlo, entregar BLOQUEADO con el requisito exacto y la
+decisión mínima necesaria. Nunca «concluido con pendientes» de su propio alcance.
+No prometer certeza absoluta: demostrar suficiencia contractual.
+
+ENTREGA
+Dictamen breve, con:
+- Estado de B y fuente única de evidencia.
+- Cambios reales.
+- Tests y controles negativos con códigos de salida.
+- Deltas medidos y límites.
+- Estado individual de D1/D3/S13.
+- Fronteras respetadas y cualquier desviación detectada.
+- Si el bloque C queda habilitado para una NUEVA sesión con mandato propio.
+
+No crear commit, publicar ni iniciar C o el piloto automáticamente.

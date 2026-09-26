@@ -1,0 +1,24 @@
+# ================= FINAL v3 (cheques re-medidos tras las ultimas ediciones documentales)
+# MEDIDO: 2026-09-23 19:59:28  (despues de editar ORDEN, documentation_rules.md y dependencias-fases.md)
+# COMANDO A: pytest tests/quality_gates/governance_numbers tests/test_registry_fecha_documental.py tests/test_validate_document_integration.py -q
+.....................................................................    [100%]
+69 passed in 21.66s
+EXIT_A=0
+# COMANDO B: run_all_validations.py --quick --check
+  TOTAL: 11/11 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+EXIT_B=0
+# COMANDO C: git diff --check (2>/dev/null: los avisos de autocrlf no son hallazgos)
+EXIT_C=0
+# COMANDO D: indice (regenerado tras editar una fuente) + frescura + huellas
+EXIT_GENERAR=0
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT_CHECK=0
+897d7954464c5dd157877f6599663e4ae0993fa43ca44559bb70e89d136cfd0f *.opencode/LECCIONES-INDEX.md
+86e92e17c06bef1b3be1b095cab3e32ad66d7ac58f97f77c070d3040e5c5e4db *.opencode/lecciones_index.json
+efbd1dcbf04b37b2deb06e37348d53de89f76adc14e3385fc241d5f4fc3e7773 *docs/contributing/REGISTRY.md
+e03741e52dfcd6efeab46ee4e8ee7915b3a070a26edd759934e2abb34fa1a0eb *docs/contributing/.last_doc_phase.json
+f2cf1a5d9af4b24c010fceadeb19597d641b7cd4affea6cfad4b259fb6368905 *VERSION.yaml
+b55670d7ef7a02c679b00f4d1f752df3c6531c347b18f09decfb0f9124be6486 *.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+# COMANDO E: staged
+EXIT_STAGED_VACIO=0

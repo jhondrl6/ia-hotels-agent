@@ -1,0 +1,8 @@
+..................................................                       [100%]
+============================= slowest 5 durations =============================
+2.34s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_re_medir_no_reescribe_expedientes_cerrados
+1.05s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_las_dos_salidas_quedan_en_destino_exPLICITO
+0.51s call     tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py::test_marca_de_estado_en_ascii
+0.29s call     tests/quality_gates/governance_numbers/test_governance_numbers_s12_report_no_escribe.py::test_report_sin_destino_no_toca_el_expediente_cerrado
+0.27s setup    tests/quality_gates/governance_numbers/test_governance_numbers_por_asercion_no_por_linea.py::test_A1_es_un_hallazgo_con_dos_occurrences
+50 passed in 10.35s

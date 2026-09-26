@@ -1,0 +1,95 @@
+# COMANDO: PYTHONDONTWRITEBYTECODE=1 ./venv/Scripts/python.exe -m pytest <seleccion> -q -p no:cacheprovider --durations=5
+# SELECCION: tests/quality_gates/governance_numbers tests/test_registry_fecha_documental.py tests/test_validate_document_integration.py tests/test_validate_wiring.py tests/test_validate_opencode_refs.py tests/test_validate_plan_citations.py tests/test_validate_plan_closure.py tests/test_validate_lesson_capitalization.py tests/test_doctor_reads_are_utf8_pinned.py tests/regression
+# MEDIDO: 2026-09-23 18:57:57 sobre el arbol final
+EXIT_ESPERADO_AL_FINAL
+........................................................................ [ 41%]
+........F...........................................................F... [ 83%]
+............................                                             [100%]
+================================== FAILURES ===================================
+________ test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion _________
+
+reporte_repo = {'cobertura': {'archivos_en_alcance': 1326, 'archivos_excluidos_por_rol': 8334, 'exclusiones_por_clase': {'ContentVali..._contrafactual.py', 'motivo': 'scripts de medicion historicos; el contrato del plan prohibe reescribirlos'}, ...}, ...}
+
+    def test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion(reporte_repo):
+        """El hueco declarado tiene que ser cero en produccion: alla es donde una senal se esconde.
+    
+        Un \u2705 del check no prueba ausencia de callers invisibles (limite declarado). Lo que si
+        puede probarse es que ningun caller **productivo** quedo sin resolver.
+        """
+        reporte = reporte_repo
+>       assert reporte["cobertura"]["receptores_no_resueltos_en_produccion"] == 0, [
+            (r["archivo"], r["linea"], r["receptor"]) for r in reporte["poblacion"]
+            if r["clasificacion"] == "RECEPTOR_NO_RESUELTO" and not r["en_tests"]]
+E       AssertionError: [('tmp_test/venv-jev-sdk/Lib/site-packages/pydantic/v1/fields.py', 989, 'field'), ('tmp_test/venv-jev-sdk/Lib/site-pac...ntic/v1/fields.py', 1147, 'sub_field'), ('tmp_test/venv-jev-sdk/Lib/site-packages/pydantic/v1/main.py', 1097, 'field')]
+E       assert 5 == 0
+
+tests\test_validate_wiring.py:381: AssertionError
+_ test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] _
+
+cutoff = '2026-09-11', plan_esperado = 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11'
+
+    @pytest.mark.parametrize(
+        "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
+    )
+    def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
+        cutoff: str, plan_esperado: str
+    ):
+        """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
+    
+        Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+        verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+        esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+        cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+        seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+        fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+        su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
+        """
+        vs, pobo = vlc.verificar(
+            vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
+        )
+>       assert plan_esperado in pobo["alcance"], pobo["alcance"]
+E       AssertionError: ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+
+tests\test_validate_lesson_capitalization.py:389: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_web_vs_gbp_conflict_detected
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_consistent_across_sources
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_schema_extraction
+tests/regression/test_whatsapp_conflicts.py::TestWhatsAppConflicts::test_whatsapp_verified_status_assigned
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================= slowest 5 durations =============================
+25.61s setup    tests/test_validate_wiring.py::test_retiro_real_en_el_repo_deja_el_contrato_cerrado
+19.79s call     tests/test_validate_wiring.py::test_exit_codes_del_cli
+16.94s setup    tests/test_validate_wiring.py::test_ignore_known_deja_ver_lo_que_tapan_las_excepciones
+3.34s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_la_ejecucion_medida_no_abre_ninguna_escritura_dentro_de_evidence
+2.49s call     tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py::test_re_medir_no_reescribe_expedientes_cerrados
+=========================== short test summary info ===========================
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+2 failed, 170 passed, 13 warnings in 90.76s (0:01:30)
+EXIT=1
