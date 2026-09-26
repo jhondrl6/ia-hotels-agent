@@ -1,0 +1,30 @@
+### re-aplicacion B1/B2 con el EOL heredado del archivo (LF), tras revertir al snapshot propio
+### el primer intento inyecto 12 CR en archivos LF puros; revertido desde antes/. Ver 03b.
+
+### B1 — README de CONTEXTO
+objetivo            : .opencode\plans\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\README.md
+EOL heredado        : LF  (CR=0 LF=237)
+sha256 antes        : 92e838b5ed63acfc8ae95e4736d684a2a2b9cc275aa33420cfa66b9dbd189650
+tamano antes (bytes): 27713  lineas=237
+coincidencias de viejo: 1
+sha256 despues      : 4e64d83ccd39dadcf7d5cac7bf6271d9011d5c31c6ae74ee40ec524d73fa706a
+tamano despues      : 28936  (delta 1223 bytes)
+CR antes/despues    : 0 / 0
+LF antes/despues    : 237 / 249
+lineas anadidas     : 12
+nuevo presente      : 1   viejo restante: 0
+APLICADOR_EXIT=0
+
+### B2 — 06-checklist de CONTEXTO
+objetivo            : .opencode\plans\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\06-checklist-implementacion.md
+EOL heredado        : LF  (CR=0 LF=224)
+sha256 antes        : 4e29a1b11f0ef6a9a0cb798463aec1a067606a5847463d1b521ae738aaea7dfc
+tamano antes (bytes): 25520  lineas=224
+coincidencias de viejo: 1
+sha256 despues      : d32c5a7c2f4bde39aff4ec01faaa7708b39e176ed7e983469b61a69c2cbd3b68
+tamano despues      : 26743  (delta 1223 bytes)
+CR antes/despues    : 0 / 0
+LF antes/despues    : 224 / 236
+lineas anadidas     : 12
+nuevo presente      : 1   viejo restante: 0
+APLICADOR_EXIT=0

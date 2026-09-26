@@ -1,0 +1,11 @@
+### M6 identidad PRE/POST de lo que no debe moverse — capturado 2026-09-24T19:11:22Z
+--- sha256 manifiesto (56 rutas) en 01-huellas-pre.txt ---
+--- git status --porcelain contado por ruta ---
+.opencode/plans/Archives                                                                     lineas=0 modificadas=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23           lineas=1 modificadas=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23             lineas=1 modificadas=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24               lineas=1 modificadas=0
+.opencode/plans/plan_citations_baseline.json                                                 lineas=0 modificadas=0
+.opencode/refs_baseline.txt                                                                  lineas=0 modificadas=0
+--- numstat del archivo protegido (debe seguir siendo 18 0) ---
+18	0	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md

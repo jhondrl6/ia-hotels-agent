@@ -1,0 +1,34 @@
+### 05 indice de lecciones — par --check y conteo de IDs
+### 2026-09-24T19:27:12Z
+
+--- los tres pasos de §7, extractos literales (comando + EXIT=) ---
+### 1) indice --check (PRE de la regeneracion)
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+
+### 2) regenerador unico del par indice (una sola vez, sobre el arbol final ya editado)
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py
+[OK] 332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+EXIT=0
+
+### 3) indice --check (POST)
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (332 IDs)
+EXIT=0
+
+### 4) validate_plan_citations
+--- numstat del par contra HEAD, antes y despues de regenerar ---
+PRE (capturado en 01-huellas-pre y en la pasada de C: 11/11 y 22/21, mismo estado)
+11	11	.opencode/LECCIONES-INDEX.md
+22	21	.opencode/lecciones_index.json
+--- conteo de IDs (lo imprime el generador, no se transcribe) ---
+332 IDs definidos + 51 sin definición (16 análisis, 417 .md citados)
+--- huellas del par tras la regeneracion ---
+6197c22423dafc1e06ba9d3dcd426c70898c361558b826b2d04dba940d7f3cd7 *.opencode/LECCIONES-INDEX.md
+13de1af83c5c8b672d1830a8bfbb9d0d23d6a90ec8f4ef10a8ca64dd6299cbe4 *.opencode/lecciones_index.json
+--- que NO cambio: el par quedo byte-identico a como estaba antes de esta sesion ---
+6197c22423dafc1e06ba9d3dcd426c70898c361558b826b2d04dba940d7f3cd7  .opencode/LECCIONES-INDEX.md
+13de1af83c5c8b672d1830a8bfbb9d0d23d6a90ec8f4ef10a8ca64dd6299cbe4  .opencode/lecciones_index.json

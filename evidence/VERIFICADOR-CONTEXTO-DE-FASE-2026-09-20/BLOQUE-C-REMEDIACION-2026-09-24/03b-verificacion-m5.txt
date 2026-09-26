@@ -1,0 +1,76 @@
+=== CONTROL M1 del supresor de anotaciones ===
+  bloques ⟦…⟧ que el supresor encuentra en 06-checklist: 12 (la anotacion de E5 es una de ellas: True)
+  suprimirlos deja estrictamente menos caracteres: 24430 < 26271 -> True
+
+=== B1  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md ===
+  lineas antes/despues: 237 / 249   anadidas: 13   sustituidas: 1
+  hunks: 1 -> [('replace', 18, 19, 18, 31)]
+  ORIGINAL RECUPERABLE SUPRIMIENDO LA ANOTACION: SI
+  UNICO CAMBIO = el bloque anotado (no se quedo contenido fuera): SI
+  hunk 18-30: 13 linea(s), 1196 caracteres dentro de ⟦…⟧, el resto del hunk es byte a byte el texto anterior: True
+  bloques de tabla: 3 -> 3  (deben ser iguales: ninguna tabla nacio ni murio)
+  filas por bloque: [7, 11, 11] -> [7, 11, 11]
+  bloques con columnas desiguales ANTES: [(189, 11)]
+  bloques con columnas desiguales DESPUES (offset +12 si se edito): [(201, 11)]
+  tabla desigual introducida por esta edicion: NINGUNA
+  texto anotado, releido desde disco:
+      18 el bloque C y el piloto FASE-C no lo están. ⟦**Vencido en parte el 2026-09-24 y rectificado el
+      19 2026-09-24 al medirlo**: de esta frase queda en pie solo la segunda mitad — **el piloto FASE-C sí sigue sin
+      20 autorización**. El **bloque C** de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` **sí está autorizado y
+      21 ejecutado desde el 2026-09-24**, y lo que ejecutaron fueron **enmiendas documentales sobre los cuatro
+      22 planes**; su matriz y su veredicto viven en el único resumen de C,
+      23 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md`.
+      24 **Y eso no es FASE-C**, en los dos sentidos que este plan distingue: las enmiendas no ejecutaron ninguna
+      25 fase de los cuatro planes, y lo único que separa el estado actual del cierre de la orden sigue siendo el
+      26 piloto. **Causa**: dos afirmaciones contradictorias vivas en este mismo archivo —más abajo ya se declaraba
+      27 el bloque C ejecutado y «eso no es FASE-C»—, sin que la cabecera se llevara detrás de esa corrección y sin
+      28 anotación alguna en torno a la frase falsa. **Autoría no atribuible por evidencia**: la frase no está en
+      29 `HEAD` y no la registra ni el expediente de B ni el de C, que comparten este mismo árbol sin commitear; no
+      30 se le inventa dueño.⟧ Fuente única de resultados y estados D1/S13:
+
+=== B2  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md ===
+  lineas antes/despues: 224 / 236   anadidas: 13   sustituidas: 1
+  hunks: 1 -> [('replace', 9, 10, 9, 22)]
+  ORIGINAL RECUPERABLE SUPRIMIENDO LA ANOTACION: SI
+  UNICO CAMBIO = el bloque anotado (no se quedo contenido fuera): SI
+  hunk 9-21: 13 linea(s), 1196 caracteres dentro de ⟦…⟧, el resto del hunk es byte a byte el texto anterior: True
+  bloques de tabla: 1 -> 1  (deben ser iguales: ninguna tabla nacio ni murio)
+  filas por bloque: [25] -> [25]
+  bloques con columnas desiguales ANTES: []
+  bloques con columnas desiguales DESPUES (offset +12 si se edito): []
+  tabla desigual introducida por esta edicion: NINGUNA
+  texto anotado, releido desde disco:
+       9 el bloque C y el piloto FASE-C no lo están. ⟦**Vencido en parte el 2026-09-24 y rectificado el
+      10 2026-09-24 al medirlo**: de esta frase queda en pie solo la segunda mitad — **el piloto FASE-C sí sigue sin
+      11 autorización**. El **bloque C** de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` **sí está autorizado y
+      12 ejecutado desde el 2026-09-24**, y lo que ejecutaron fueron **enmiendas documentales sobre los cuatro
+      13 planes**; su matriz y su veredicto viven en el único resumen de C,
+      14 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md`.
+      15 **Y eso no es FASE-C**, en los dos sentidos que este plan distingue: las enmiendas no ejecutaron ninguna
+      16 fase de los cuatro planes, y lo único que separa el estado actual del cierre de la orden sigue siendo el
+      17 piloto. **Causa**: dos afirmaciones contradictorias vivas en este mismo archivo —más abajo ya se declaraba
+      18 el bloque C ejecutado y «eso no es FASE-C»—, sin que la cabecera se llevara detrás de esa corrección y sin
+      19 anotación alguna en torno a la frase falsa. **Autoría no atribuible por evidencia**: la frase no está en
+      20 `HEAD` y no la registra ni el expediente de B ni el de C, que comparten este mismo árbol sin commitear; no
+      21 se le inventa dueño.⟧ Fuente única de resultados y estados D1/S13:
+
+=== B3  evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md ===
+  lineas antes/despues: 190 / 190   anadidas: 1   sustituidas: 1
+  hunks: 1 -> [('replace', 24, 25, 24, 25)]
+  ORIGINAL RECUPERABLE SUPRIMIENDO LA ANOTACION: SI
+  UNICO CAMBIO = el bloque anotado (no se quedo contenido fuera): SI
+  hunk 24-24: 1 linea(s), 1498 caracteres dentro de ⟦…⟧, el resto del hunk es byte a byte el texto anterior: True
+  bloques de tabla: 3 -> 3  (deben ser iguales: ninguna tabla nacio ni murio)
+  filas por bloque: [8, 6, 14] -> [8, 6, 14]
+  bloques con columnas desiguales ANTES: []
+  bloques con columnas desiguales DESPUES (offset +12 si se edito): []
+  tabla desigual introducida por esta edicion: NINGUNA
+  texto anotado, releido desde disco:
+      24 | **JEV** — reconciliar arranque y disponibilidad real de la interfaz; integrar contra el contrato corregido sin duplicar cliente ni acomodar silenciosamente al consumidor; separar dependencia técnica
+
+=== M7 segundo camino: el consumidor del dato, no quien lo anoto ===
+  parrafos del gap en JEV/README.md: 1
+  JEV/README.md publica estos seis como los no expuestos -> provider_requested:si, model_requested:si, usage_normalized:si, elapsed_ms:si, attempts:si, error_kind:si
+  JEV/README.md no contiene la cadena '8 de los 11': True
+  [CONTROL M1] la misma cadena '8 de los 11' SI aparece en el expediente de C: 1 linea(s) -> la ausencia anterior no es ceguera del patron
+  B3: el '8' queda conservado, no sobrescrito: 1 linea(s) del expediente lo mantienen

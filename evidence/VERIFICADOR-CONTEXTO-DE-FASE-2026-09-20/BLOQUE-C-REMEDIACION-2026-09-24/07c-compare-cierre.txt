@@ -1,0 +1,8 @@
+manifiesto A: 56 | manifiesto B: 56
+solo en A (bajas): 0
+solo en B (altas): 0
+cambiados: 3
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+  ~ evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md
+identicos: 53

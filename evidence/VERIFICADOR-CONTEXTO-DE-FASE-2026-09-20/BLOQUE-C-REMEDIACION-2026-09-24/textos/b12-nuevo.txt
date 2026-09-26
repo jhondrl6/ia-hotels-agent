@@ -1,0 +1,13 @@
+el bloque C y el piloto FASE-C no lo están. ⟦**Vencido en parte el 2026-09-24 y rectificado el
+2026-09-24 al medirlo**: de esta frase queda en pie solo la segunda mitad — **el piloto FASE-C sí sigue sin
+autorización**. El **bloque C** de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` **sí está autorizado y
+ejecutado desde el 2026-09-24**, y lo que ejecutaron fueron **enmiendas documentales sobre los cuatro
+planes**; su matriz y su veredicto viven en el único resumen de C,
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md`.
+**Y eso no es FASE-C**, en los dos sentidos que este plan distingue: las enmiendas no ejecutaron ninguna
+fase de los cuatro planes, y lo único que separa el estado actual del cierre de la orden sigue siendo el
+piloto. **Causa**: dos afirmaciones contradictorias vivas en este mismo archivo —más abajo ya se declaraba
+el bloque C ejecutado y «eso no es FASE-C»—, sin que la cabecera se llevara detrás de esa corrección y sin
+anotación alguna en torno a la frase falsa. **Autoría no atribuible por evidencia**: la frase no está en
+`HEAD` y no la registra ni el expediente de B ni el de C, que comparten este mismo árbol sin commitear; no
+se le inventa dueño.⟧ Fuente única de resultados y estados D1/S13:

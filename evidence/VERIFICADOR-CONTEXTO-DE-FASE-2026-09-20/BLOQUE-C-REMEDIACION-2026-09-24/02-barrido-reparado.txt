@@ -1,0 +1,180 @@
+### 02 barrido reparado (M1+M2+M3) + re-derivacion de la costura (B3)
+### 2026-09-24T19:24:52Z  HEAD=da382b1
+### El instrumento tuvo dos defectos propios, corregidos y declarados aqui:
+###   (i)  la ventana +/-6 no cerraba una anotacion de 13 lineas que ABRE en la linea falsa:
+###        daba un falso 'vencida sin anotacion' en POST. Se paso de ventana a spans ⟦…⟧.
+###   (ii) el supresor de anotaciones del verificador M5 usaba \N{LEFT WHITE SQUARE BRACKET},
+###        que NO es U+27E6 sino U+301A: 0 coincidencias y un falso 'NO'. Se uso chr(10214).
+### La pasada PRE se mide sobre las copias congeladas en antes/ (no hay stash ni checkout).
+
+=== PRE-copias-de-antes ===
+poblacion: 51 archivos .md (.opencode/plans/*/*.md + .opencode/context/ORDEN-*.md + expediente BLOQUE-C-ENMIENDAS)
+
+=== CONTROL POSITIVO (M1) ===
+  [OK] SABE-PRESENTE 'el bloque C y el piloto FASE-C no lo están' -> True
+  [OK] SABE-PRESENTE 'Estado de B: consultar' -> True
+  [OK] SABE-AUSENTE 'cadena_que_no_existe_en_este_archivo_zzz' -> False
+  pasada PRE sobre copias de antes/: True (2 rutas sustituidas)
+
+=== ETAPA 1 (co-ocurrencia normalizada): 15 coincidencias ===
+
+=== CONTROL POSITIVO de la deteccion de anotacion ===
+  spans ⟦…⟧ en 06-checklist: 11 ; con patron de rectificacion: 2
+  span de E5 (el precedente correcto del arbol) detectado: True (lineas 163-168)
+  spans de MAS DE 6 lineas (los que la ventana a secas no cerraba): 1
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md:106-118  «el dictamen del
+2026-09-23 decia **«s13 …»
+
+=== ETAPA 2: filtro estilo C (adyacencia + raiz 'autorizad*') y su ceguera ===
+  casadas por el filtro C : 1
+  NO casadas (ceguera)    : 14
+  formas que el filtro C no puede casar (cobertura declarada):
+    - copulas sin la raiz 'autorizad*': «no lo esta», «no lo estan», «no la esta»
+    - negaciones con «sigue sin» / «pendiente» / «requiere mandato» a mas de 40 caracteres
+    - cualquier forma en la que la no-autorizacion este en una linea distinta
+  busqueda aparte de las copulas: 2 coincidencias
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+    [CIEGA] .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md:14  | p2 | no existen `scripts/decision_client.py` ni `scripts/triage_lesson_relevance.py` | existencia comprobada con `path.exists()`
+    [CIEGA] .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md:3  **estado: bloqueada por dependencia tecnica.** requiere a propia y **entrega verificada de b y c offline del hermano**. ⟦reconcili
+    [CIEGA] .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:3  **estado: en ejecucion por fases — a, g, 0 y b cerradas y empujadas; punto de reanudacion fase-c** (reconciliado el 2026-09-24 por
+    [CIEGA] .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md:105  estado actual de validacion y medicion (reconciliado el 2026-09-24 por el bloque c de la orden de calidad, leyendo los cierres y s
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132  | **¿se toca `run_all_validations.py` o el hook para anadir checks?** | **no.** ninguna fase de este plan altera el numero de chec
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:162  bloque c y piloto **sin autorizacion**): cero renumeracion (ac16 delta 0).
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:94  | s9 | el verificador **no esta cableado** a ningun gate: corre suelto (`python scripts/validate_governance_numbers.py --report`; 
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:99  | s11 | **✅ aceptada el 2026-09-23 — corregida fuera de este plan.** **el denominador de ac6 admitia un archivo de entorno no decl
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:194  vigentes** (orden de calidad §4.c: el bloque c y el piloto fase-c siguen **sin autorizacion**;
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:57  | `scripts/run_all_validations.py` | **este plan: solo lectura** (ac16). **pero no esta libre**: `verificador-escritura-qmind-2026
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:195  | herencia de forma para c | `coverage_basis` y el tri-estado, ya re-utilizados por b **sin reinventarlos**; y la costura de b com
+    [CIEGA] .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md:322  autorizacion pendiente** y no se iniciaron. ⟦**vencido en su primera parte el 2026-09-24**: el **bloque c**
+
+=== CLASIFICACION (regla mecanica, mutuamente excluyente) ===
+  (b) vencida-con-anotacion : hay un bloque ⟦…⟧ con el patron de rectificacion que cubre la
+                              linea (span que la contiene, o apertura/cierre a +/-6 lineas)
+  (a) vigente               : no (b), y la ventana ya AFIRMA que el bloque C se autorizo/ejecuto
+  (c) vencida-sin-anotacion : ni (b) ni (a)
+  (b) se evalua PRIMERO: una linea rectificada in situ es 'vencida con anotacion', y esa es la
+      categoria que importa para saber si hace falta intervenir.
+  a vigente: 0
+  b vencida-con-anotacion: 7
+  c vencida-sin-anotacion: 8
+  SUMA 0 + 7 + 8 = 15 | total coincidencias etapa 1 = 15 | CIERRA
+
+  DESGLOSE DE PRECISION (limite declarado del instrumento):
+    la etapa 1 es co-ocurrencia, no analisis de dependencia: una linea puede mencionar
+    «bloque C» y una negacion que no le pertenece. Se subdivide (c) y (b) exigiendo que la
+    negacion recaiga predicadamente sobre «bloque C» (regla estrecha, <=60 caracteres).
+    c-1 negada predicadamente del bloque C (las que el mandato pide cazar): 2
+    c-0 co-ocurrencia accidental, no afirma nada sobre el bloque C        : 6
+    suma del desglose (c): 2 + 6 = 8 | clase (c) = 8
+    b-1 negada predicadamente del bloque C, ya anotada                   : 2
+
+--- detalle c-1 (vencida SIN anotacion, negacion predicada) ---
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. fuente unica de resultados y estados d1/s13:
+--- detalle c-0 (fuera de la mira por analisis de predicacion) ---
+  .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md:14  | p2 | no existen `scripts/decision_client.py` ni `scripts/triage_lesson_relevance.py` | existencia comprobada con `path.exists()`; readme del hermano
+  .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md:3  **estado: bloqueada por dependencia tecnica.** requiere a propia y **entrega verificada de b y c offline del hermano**. ⟦reconciliado el 2026-09-24 po
+  .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:3  **estado: en ejecucion por fases — a, g, 0 y b cerradas y empujadas; punto de reanudacion fase-c** (reconciliado el 2026-09-24 por el bloque c de `ord
+  .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md:105  estado actual de validacion y medicion (reconciliado el 2026-09-24 por el bloque c de la orden de calidad, leyendo los cierres y sus commits, no esta 
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132  | **¿se toca `run_all_validations.py` o el hook para anadir checks?** | **no.** ninguna fase de este plan altera el numero de checks | `refactor-whats
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:144  | **¿la futura fase-c aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **no.** c conserva el **workflow canonico**
+--- detalle (b) ---
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:162  bloque c y piloto **sin autorizacion**): cero renumeracion (ac16 delta 0).
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:94  | s9 | el verificador **no esta cableado** a ningun gate: corre suelto (`python scripts/validate_governance_numbers.py --report`; el rojo a1–a4 y el p
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:99  | s11 | **✅ aceptada el 2026-09-23 — corregida fuera de este plan.** **el denominador de ac6 admitia un archivo de entorno no declarado**: `.venv-wsl/
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:194  vigentes** (orden de calidad §4.c: el bloque c y el piloto fase-c siguen **sin autorizacion**;
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:57  | `scripts/run_all_validations.py` | **este plan: solo lectura** (ac16). **pero no esta libre**: `verificador-escritura-qmind-2026-09-20` lo declara d
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:195  | herencia de forma para c | `coverage_basis` y el tri-estado, ya re-utilizados por b **sin reinventarlos**; y la costura de b como **unica** puerta a
+  .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md:322  autorizacion pendiente** y no se iniciaron. ⟦**vencido en su primera parte el 2026-09-24**: el **bloque c**
+--- detalle (a) ---
+BARRIDO_PRE_EXIT=0
+
+=== POST-arbol-vivo ===
+poblacion: 51 archivos .md (.opencode/plans/*/*.md + .opencode/context/ORDEN-*.md + expediente BLOQUE-C-ENMIENDAS)
+
+=== CONTROL POSITIVO (M1) ===
+  [OK] SABE-PRESENTE 'el bloque C y el piloto FASE-C no lo están' -> True
+  [OK] SABE-PRESENTE 'Estado de B: consultar' -> True
+  [OK] SABE-AUSENTE 'cadena_que_no_existe_en_este_archivo_zzz' -> False
+  pasada PRE sobre copias de antes/: False (2 rutas sustituidas)
+
+=== ETAPA 1 (co-ocurrencia normalizada): 15 coincidencias ===
+
+=== CONTROL POSITIVO de la deteccion de anotacion ===
+  spans ⟦…⟧ en 06-checklist: 12 ; con patron de rectificacion: 3
+  span de E5 (el precedente correcto del arbol) detectado: True (lineas 175-180)
+  spans de MAS DE 6 lineas (los que la ventana a secas no cerraba): 3
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md:106-118  «el dictamen del
+2026-09-23 decia **«s13 …»
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9-21  «**vencido en parte el 2026-09-24 y recti…»
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18-30  «**vencido en parte el 2026-09-24 y recti…»
+
+=== ETAPA 2: filtro estilo C (adyacencia + raiz 'autorizad*') y su ceguera ===
+  casadas por el filtro C : 1
+  NO casadas (ceguera)    : 14
+  formas que el filtro C no puede casar (cobertura declarada):
+    - copulas sin la raiz 'autorizad*': «no lo esta», «no lo estan», «no la esta»
+    - negaciones con «sigue sin» / «pendiente» / «requiere mandato» a mas de 40 caracteres
+    - cualquier forma en la que la no-autorizacion este en una linea distinta
+  busqueda aparte de las copulas: 2 coincidencias
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+    .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+    [CIEGA] .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md:14  | p2 | no existen `scripts/decision_client.py` ni `scripts/triage_lesson_relevance.py` | existencia comprobada con `path.exists()`
+    [CIEGA] .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md:3  **estado: bloqueada por dependencia tecnica.** requiere a propia y **entrega verificada de b y c offline del hermano**. ⟦reconcili
+    [CIEGA] .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:3  **estado: en ejecucion por fases — a, g, 0 y b cerradas y empujadas; punto de reanudacion fase-c** (reconciliado el 2026-09-24 por
+    [CIEGA] .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md:105  estado actual de validacion y medicion (reconciliado el 2026-09-24 por el bloque c de la orden de calidad, leyendo los cierres y s
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132  | **¿se toca `run_all_validations.py` o el hook para anadir checks?** | **no.** ninguna fase de este plan altera el numero de chec
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:174  bloque c y piloto **sin autorizacion**): cero renumeracion (ac16 delta 0).
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:94  | s9 | el verificador **no esta cableado** a ningun gate: corre suelto (`python scripts/validate_governance_numbers.py --report`; 
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:99  | s11 | **✅ aceptada el 2026-09-23 — corregida fuera de este plan.** **el denominador de ac6 admitia un archivo de entorno no decl
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:194  vigentes** (orden de calidad §4.c: el bloque c y el piloto fase-c siguen **sin autorizacion**;
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:57  | `scripts/run_all_validations.py` | **este plan: solo lectura** (ac16). **pero no esta libre**: `verificador-escritura-qmind-2026
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+    [CIEGA] .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:207  | herencia de forma para c | `coverage_basis` y el tri-estado, ya re-utilizados por b **sin reinventarlos**; y la costura de b com
+    [CIEGA] .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md:322  autorizacion pendiente** y no se iniciaron. ⟦**vencido en su primera parte el 2026-09-24**: el **bloque c**
+
+=== CLASIFICACION (regla mecanica, mutuamente excluyente) ===
+  (b) vencida-con-anotacion : hay un bloque ⟦…⟧ con el patron de rectificacion que cubre la
+                              linea (span que la contiene, o apertura/cierre a +/-6 lineas)
+  (a) vigente               : no (b), y la ventana ya AFIRMA que el bloque C se autorizo/ejecuto
+  (c) vencida-sin-anotacion : ni (b) ni (a)
+  (b) se evalua PRIMERO: una linea rectificada in situ es 'vencida con anotacion', y esa es la
+      categoria que importa para saber si hace falta intervenir.
+  a vigente: 0
+  b vencida-con-anotacion: 9
+  c vencida-sin-anotacion: 6
+  SUMA 0 + 9 + 6 = 15 | total coincidencias etapa 1 = 15 | CIERRA
+
+  DESGLOSE DE PRECISION (limite declarado del instrumento):
+    la etapa 1 es co-ocurrencia, no analisis de dependencia: una linea puede mencionar
+    «bloque C» y una negacion que no le pertenece. Se subdivide (c) y (b) exigiendo que la
+    negacion recaiga predicadamente sobre «bloque C» (regla estrecha, <=60 caracteres).
+    c-1 negada predicadamente del bloque C (las que el mandato pide cazar): 0
+    c-0 co-ocurrencia accidental, no afirma nada sobre el bloque C        : 6
+    suma del desglose (c): 0 + 6 = 6 | clase (c) = 6
+    b-1 negada predicadamente del bloque C, ya anotada                   : 4
+
+--- detalle c-1 (vencida SIN anotacion, negacion predicada) ---
+--- detalle c-0 (fuera de la mira por analisis de predicacion) ---
+  .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md:14  | p2 | no existen `scripts/decision_client.py` ni `scripts/triage_lesson_relevance.py` | existencia comprobada con `path.exists()`; readme del hermano
+  .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md:3  **estado: bloqueada por dependencia tecnica.** requiere a propia y **entrega verificada de b y c offline del hermano**. ⟦reconciliado el 2026-09-24 po
+  .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:3  **estado: en ejecucion por fases — a, g, 0 y b cerradas y empujadas; punto de reanudacion fase-c** (reconciliado el 2026-09-24 por el bloque c de `ord
+  .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md:105  estado actual de validacion y medicion (reconciliado el 2026-09-24 por el bloque c de la orden de calidad, leyendo los cierres y sus commits, no esta 
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132  | **¿se toca `run_all_validations.py` o el hook para anadir checks?** | **no.** ninguna fase de este plan altera el numero de checks | `refactor-whats
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:144  | **¿la futura fase-c aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **no.** c conserva el **workflow canonico**
+--- detalle (b) ---
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:9  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:174  bloque c y piloto **sin autorizacion**): cero renumeracion (ac16 delta 0).
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:94  | s9 | el verificador **no esta cableado** a ningun gate: corre suelto (`python scripts/validate_governance_numbers.py --report`; el rojo a1–a4 y el p
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:99  | s11 | **✅ aceptada el 2026-09-23 — corregida fuera de este plan.** **el denominador de ac6 admitia un archivo de entorno no declarado**: `.venv-wsl/
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:194  vigentes** (orden de calidad §4.c: el bloque c y el piloto fase-c siguen **sin autorizacion**;
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:57  | `scripts/run_all_validations.py` | **este plan: solo lectura** (ac16). **pero no esta libre**: `verificador-escritura-qmind-2026-09-20` lo declara d
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:18  el bloque c y el piloto fase-c no lo estan. ⟦**vencido en parte el 2026-09-24 y rectificado el
+  .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:207  | herencia de forma para c | `coverage_basis` y el tri-estado, ya re-utilizados por b **sin reinventarlos**; y la costura de b como **unica** puerta a
+  .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md:322  autorizacion pendiente** y no se iniciaron. ⟦**vencido en su primera parte el 2026-09-24**: el **bloque c**
+--- detalle (a) ---
+BARRIDO_POST_EXIT=0

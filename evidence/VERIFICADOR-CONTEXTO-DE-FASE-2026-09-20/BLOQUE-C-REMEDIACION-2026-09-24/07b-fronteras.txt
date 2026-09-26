@@ -1,0 +1,25 @@
+=== 1) lineas de comando REALES del report (prefijo '$ ' de la pasada) ===
+  '$ ./venv/Scripts/python.exe scripts/validate_governance_numbers.py --report'
+  termina en '--report' sin argumento detras: True
+  y en el generador del script:
+    'run $PY scripts/validate_governance_numbers.py --report'
+
+=== 2) el propio informe declara que no escribio (S12) ===
+  }# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe
+
+=== 3) flags que ESCRIBEN, buscados solo en lineas de comando ejecutadas ===
+  --fix                usos en comandos ejecutados: 0 []
+  --update-baseline    usos en comandos ejecutados: 0 []
+  --write-baseline     usos en comandos ejecutados: 0 []
+  --report <destino>   usos en comandos ejecutados: 0 []
+  run_all_validations con flags distintos de --quick --check: 0 []
+  build_lesson_index.py SIN --check (el escritor autorizado, debe ser 1): 1
+    ['$ ./venv/Scripts/python.exe scripts/build_lesson_index.py']
+    (ojo: 'build_lesson_index.py' a secas tambien casa la RUTA DE TEST de pytest; se exige el
+     prefijo 'scripts/' para contar solo la ejecucion del generador)
+
+=== 4) red, con control positivo ===
+    fronteras.py: ['--upload', 'fetch_source_titles']
+    06-registro-cierre-orden.md: ['--upload', 'fetch_source_titles']
+  coincidencias en los 16 artefactos de esta sesion: 4
+  CONTROL POSITIVO (archivo que si menciona API y subidas): ['https://']

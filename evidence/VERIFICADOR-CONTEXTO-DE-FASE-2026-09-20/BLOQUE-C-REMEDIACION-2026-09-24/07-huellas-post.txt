@@ -1,0 +1,53 @@
+### 07 huellas POST + M6 identidad de lo que no debe moverse + git diff --check + numstat final
+### 2026-09-24T19:27:32Z  HEAD=da382b1
+
+--- M6 comparacion del manifiesto PRE vs POST por DICCIONARIOS en Python (no comm/join) ---
+manifiesto A: 56 | manifiesto B: 56
+solo en A (bajas): 0
+solo en B (altas): 0
+cambiados: 3
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+  ~ evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md
+identicos: 53
+COMPARE_EXIT=0
+
+--- sha256 del protegido, que debe seguir siendo b55670d7... ---
+b55670d7ef7a02c679b00f4d1f752df3c6531c347b18f09decfb0f9124be6486  .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+protegido identico: True b55670d7ef7a02c679b00f4d1f752df3c6531c347b18f09decfb0f9124be6486
+ASSERT protegido intacto: OK
+PROTEGIDO_EXIT=0
+
+--- numstat del protegido (debe seguir siendo 18 0) ---
+18	0	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+
+--- git status --porcelain contado por ruta: Archives y expedientes de B (0 modificados) ---
+.opencode/plans/Archives                                                       modificadas=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-ORDEN-CALIDAD-2026-09-23 modificadas=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23 modificadas=0
+
+--- git diff --check ---
+warning: in the working copy of '.agents/workflows/templates/lecciones-capitalizadas-template.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of '.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/REGISTRY.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/contributing/validation.md', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py', CRLF will be replaced by LF the next time Git touches it
+DIFFCHECK_EXIT=0
+
+--- numstat final de las rutas que esta sesion toco ---
+66	17	.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+56	23	.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+(el expediente de C esta sin trackear: git no le da numstat; su delta va en 03b por difflib)
+
+--- re-medicion de cierre (tras escribir todo el expediente) ---
+manifiesto A: 56 | manifiesto B: 56
+solo en A (bajas): 0
+solo en B (altas): 0
+cambiados: 3
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+  ~ .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+  ~ evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/02-resultados-bloque-c.md
+identicos: 53
+HEAD=da382b1  lineas_status=62  quick_final=  [+] Wiring: 183 llamadas descubiertas en 1326 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30   TOTAL: 11/11 validations passed EXIT=0
+[OK] Índice de lecciones fresco (332 IDs)
+INDICE_CHECK_EXIT=0
