@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-19
+> **Ultima actualizacion:** 2026-09-25
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 498
+> **Total fases completadas:** 501
 
 ---
 
@@ -11594,6 +11594,100 @@ _Ninguno_
 - [x] Tests passing (48)
 - [x] Suite NEVER_BLOCK passing
 - [x] Capability contract verificado
+
+---
+
+
+## BLOQUE-B-REMEDIACION-ORDEN-CALIDAD-2026-09-23 - 2026-09-23
+**Descripcion:** Bloque B de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 (remediacion, 2a emision): proceso comun (registro verificado, no re-registrado; metricas referenciadas; cinco cortes sin commit), fecha unica de REGISTRY con interaccion real medida y tracker auxiliar assertado, S13 con observacion de escrituras, controles negativos sobre el instrumento versionado (git show da382b1) y D1 revalidado. Fuente de resultados: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/support_observador_escrituras.py` | NUEVO | Support Observador Escrituras |
+| `tests/test_registry_fecha_documental.py` | NUEVO | Test Registry Fecha Documental |
+| `tests/test_validate_document_integration.py` | NUEVO | Test Validate Document Integration |
+| `tests/quality_gates/governance_numbers/fixtures/phased_project_executor.md` | NUEVO | Phased Project Executor |
+| `tests/quality_gates/governance_numbers/fixtures/lecciones-capitalizadas-template.md` | NUEVO | Lecciones-Capitalizadas-Template |
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 69 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-C - 2026-09-24
+**Descripcion:** triage_lesson_relevance.py: capa de pertinencia aditiva sobre el indice, umbral publicado y denominador (AC10-AC15)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/triage_lesson_relevance.py` | NUEVO | Triage Lesson Relevance |
+| `tests/quality_gates/lesson_relevance` | NUEVO | Lesson Relevance |
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 56 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-D - 2026-09-24
+**Descripcion:** build_phase_briefing.py: pack derivado por fase, proveniencia con sha, negativa a truncar y delta de carga de lectura (AC19-AC23)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/build_phase_briefing.py` | NUEVO | Build Phase Briefing |
+| `tests/quality_gates/phase_briefing` | NUEVO | Phase Briefing |
+| `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing` | NUEVO | Briefing |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` | Verificador-Contexto-De-Fase-2026-09-20 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 49 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE (VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20) - 2026-09-25
+**Descripcion:** Cierre documental offline del verificador de contexto: sync de cabeceras a 4.78.0, DOMAIN_PRIMER regenerado con su writer y verificacion con quick 11/11. Sin pipeline, sin red, sin subida a QMind, sin archivado, sin commit ni push: cada checkpoint conserva su permiso propio.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE` | NUEVO | Fase-Release |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `README.md` | Readme |
+| `AGENTS.md` | Agents |
+| `.cursorrules` | .Cursorrules |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
+| `CHANGELOG.md` | Changelog |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: sin dato declarado
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---
 
