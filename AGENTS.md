@@ -1,8 +1,8 @@
-<!-- agents_version: v4.77.3 | last_update: 2026-09-19 -->
+<!-- agents_version: v4.78.0 | last_update: 2026-09-25 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.77.3 -- LLMReport honesto cuando ningún provider responde COMPLETADO**
+> **v4.78.0 -- Gobernanza, costura, pertinencia y carga medida COMPLETADO**
 
 ---
 
@@ -58,39 +58,29 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 → `docs/contributing/documentation_rules.md` — Checklist de documentacion obligatoria
 → `docs/contributing/validation.md` — Pre-commit hooks y validaciones
 
-**Prompt para el agente:** "Actualizar documentacion oficial:VERSION sync + CHANGELOG + REGISTRY via scripts/log_phase_completion.py"
+**Prompt para el agente:** "Actualizar documentacion oficial segun `docs/CONTRIBUTING.md` (flujo post-fase y gate de release)"
 
-### Flujo Documental Obligatorio (Resumen)
+### Flujo Documental Obligatorio (Principios y referencias canonicas)
 
 > [!IMPORTANT]
 > **DOMAIN_PRIMER se regenera en FASE-RELEASE** (no manualmente). Ver `.opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md` para el plan de integración documental completo.
 >
 > Los vínculos abaixo son **verificables por script** (ver FASE-C del plan de integración).
+>
+> **Este apartado ya no duplica el procedimiento paso a paso**: la secuencia ejecutable vive en
+> `.agents/workflows/phased_project_executor.md` §4.5 y en `docs/CONTRIBUTING.md` (Paso 1-6). Copiarla
+> aqui era lo que hacía divergir tres textos del mismo dato. Quedan los principios que gobiernan ese
+> procedimiento y su referencia canónica:
 
-Cuando se ejecuta un plan de documentación (ej: `09-documentacion-post-proyecto.md`):
-
-```
-1. log_phase_completion.py --fase FASE-X --desc "..." --check-manual-docs
-   → Registra en REGISTRY.md automáticamente
-
-2. sync_versions.py
-   → Sincroniza VERSION.yaml → 6 archivos (AGENTS, README, .cursorrules, CONTRIBUTING, GUIA_TECNICA, REGISTRY)
-
-3. Verificar CHANGELOG.md formato CONTRIBUTING.md:
-   ### Objetivo / ### Cambios / ### Archivos Nuevos / ### Archivos Modificados / ### Tests
-
-4. Verificar GUIA_TECNICA.md tiene nota técnica por fase
-
-5. run_all_validations.py --quick
-   → Validación final (10/10 checks en modo rápido; 14 en el completo)
-
-5b. validate_agents_md.py
-   → Gate de coherencia AGENTS.md (gate count, module refs, etc.)
-```
-
-**Regla**: NO ejecutar planes de documentación directamente. SIEMPRE seguir el flujo anterior.
-
-**Detalle completo**: `.agents/workflows/phased_project_executor.md` §4.5
+- **Un resultado, una fuente.** Cada cifra o estado se registra en su artefacto (`09-documentacion-post-proyecto.md` §D para las métricas por fase, el informe o el test para una medición, `REGISTRY.md` para el registro de fases) y se **referencia** desde los demás documentos. No se re-transcribe a mano.
+- **El registro de fases lo escribe la fase al cerrar**, con `scripts/log_phase_completion.py`. Ese script es el **único** escritor de la cabecera `> **Ultima actualizacion:**` de `REGISTRY.md` (fecha de la última *entrada documental*, no la de release). `sync_versions.py` no toca REGISTRY: la regla `registry_last_update` fue retirada de `scripts/sync_config.yaml`.
+- **El cierre documental verifica, no re-registra.** `log_phase_completion.py` es aditivo: volver a ejecutarlo sobre una fase ya cerrada apila una entrada duplicada (§4.5 del executor, Paso 4.5.1).
+- **El registro declara, no aprueba.** El escritor no ejecuta tests ni verifica contratos, así que ya no publica esas garantías como cumplidas.
+- **Cinco cortes, utilizables sin commit.** Implementación terminada → verificación terminada → cierre documental → listo para revisión → espera de autorización: **los cinco** terminan en espera de autorización y se declaran y verifican sin commitear. El `git commit` NO es el quinto corte ni condición de ninguno: es una acción posterior y separada, opcional, y requiere autorización explícita.
+- **Conteos que imprime la corrida.** Ni el número de checks de `run_all_validations.py --quick` ni ningún denominador se fija en un documento; lo publican la corrida y `scripts/validate_governance_numbers.py`.
+- **Gate de coherencia de este archivo**: `python scripts/validate_agents_md.py`.
+- **Regla**: NO ejecutar planes de documentación directamente. SIEMPRE el flujo canónico del
+  executor §4.5 / `docs/CONTRIBUTING.md`.
 
 ### Tabla de Cross-References Documentales
 
@@ -113,7 +103,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 
 | Aspecto | Estado |
 |---------|--------|
-| **Tests** | 4,246 funciones (canonico, metodo grep) / corrida completa POST-P6-R: 4,196 passed, 2 fallos ajenos al plan (`test_function_default_flags` flaky, `test_diagnostic_includes_geo_metrics`, registrados en `aba517a`) → 0 regresiones. **D-V.1 cerrada en FASE-P3-B**: `test_barreda_un_solo_emisor_de_la_clave` ya no falla |
+| **Tests** | La cifra la imprime el metodo canonico (`grep -rE "^\s*def test_" tests --include=*.py`); el retrato fechado por modulo, la corrida de referencia y su evidencia viven en `§Cobertura por Modulo` (corrida POST-P6-R en `evidence/FASE-P6/`). Aqui no se re-transcribe: re-copiarla es lo que la dejaba desfasada |
 | **Bloqueante** | Ninguno |
 | **Coherence Score** | ✅ ≥0.8 (varía por ejecución; umbral: 0.8) - PASA el gate |
 | **Publication Ready** | ✅ true |
@@ -399,7 +389,7 @@ URL → Validadores → Canonical Assessment → Contradiction Engine → Gates 
 ## Pruebas
 
 ```bash
-# Todas las pruebas (4,246 funciones canonicas)
+# Todas las pruebas (la cifra canonica la imprime el metodo grep; ver §Cobertura por Modulo)
 python -m pytest tests/ -v
 
 # Suite de regresión (26 tests)
@@ -414,12 +404,27 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,246 funciones totales)
+### Cobertura por Modulo (4,564 funciones totales)
 
-> Medido 2026-09-19 (v4.77.3) con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
-> (no `pytest --collect-only`; la corrida completa de referencia es la POST-P6-R de `evidence/FASE-P6/`:
-> 4,196 passed, 2 fallos ajenos, 41 skipped, 4 xfailed). Las filas suman el total.
-> Cifra anterior: 4,245 (v4.77.2). La diferencia (+1) es el test de regresion del contrato
+> **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
+> re-transcriben. Y es un retrato del **arbol de trabajo**: eso es lo que mide el comando canonico, asi que
+> incluye lo que todavia no esta commiteado. La cifra **commiteada** es otra y se mide sin tocar el arbol:
+> `git grep -c -E "^\s*def test_" HEAD -- tests` → **4,470** al 2026-09-25 (HEAD `5817edd`). La diferencia
+> (+94) no es deuda ni error: es trabajo sin commitear.
+>
+> Medido 2026-09-25 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> (no `pytest --collect-only`; las filas suman el total). Nota de instrumento para no volver a confundirlas:
+> `scripts/validate_agents_md.py::check_2_test_count` **no** usa el metodo grep sino
+> `pytest --collect-only -q` sobre items (4,638 al medir) con tolerancia **±5 %** — con 4,564 publicado la
+> desviacion es 1,6 % y el check pasa; con el 4,246 anterior era 8,5 % y fallaba. No hay que "arreglar"
+> esta cifra hacia el numero de items: son dos instrumentos distintos y el publicado es el del metodo
+> canonico.
+> Cifra anterior: 4,246 (v4.77.3, medido 2026-09-19). La diferencia (+318) se desglosa por fila de la
+> tabla: `quality_gates` +229 (decision_client y su arnes de mutacion del bloque A/B de la orden de calidad,
+> `lesson_relevance` del piloto FASE-C, `phase_briefing` de FASE-D y su cura AC23, y los gates tocados en
+> RELEASE), `root test files` +75 (entre ellas las 7 de
+> `tests/test_sync_writers_lf_y_fecha_readme.py` de la cura S17/S18), `commercial_documents` +12 y
+> `asset_generation` +2. Previa: 4,245 (v4.77.2). La diferencia (+1) es el test de regresion del contrato
 > no-medible (`test_check_mentions_all_providers_fail_is_not_measured`) en
 > `tests/auditors/test_llm_mention_checker.py`. Previa: 4,240 (v4.77.1), +5 por
 > `TestGeminiCostAccounting`. Previa: 4,233 (v4.77.0), +7 por
@@ -431,9 +436,9 @@ python scripts/run_all_validations.py           # Completo
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
-| asset_generation | 470 | `tests/asset_generation/` |
-| quality_gates | 630 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R) |
-| commercial_documents | 351 | `tests/commercial_documents/` |
+| asset_generation | 472 | `tests/asset_generation/` |
+| quality_gates | 859 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad) |
+| commercial_documents | 363 | `tests/commercial_documents/` |
 | auditors | 226 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1, +5 de TestGeminiCostAccounting en v4.77.2, +1 del contrato no-medible en v4.77.3) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
 | data_validation | 133 | `tests/data_validation/` |
@@ -451,7 +456,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 862 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`) |
+| root test files | 937 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza y la cura S17/S18) |
 
 ---
 
@@ -527,7 +532,7 @@ iah-cli/
 │   ├── common/                 # Loaders YAML/fallback compartidos
 │   ├── postprocessors/         # Quality gate + scrubber de contenido
 │   └── quality/                # Validadores semanticos y de coherencia financiera
-├── tests/                      # Suite de pruebas (4,246 funciones canonicas)
+├── tests/                      # Suite de pruebas (su cifra vive en §Cobertura por Modulo)
 │   ├── regression/             # Regresion permanente (26 tests)
 │   ├── data_validation/
 │   ├── financial_engine/

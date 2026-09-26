@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.77.3 (LLMReport honesto cuando ningún provider responde)
-**Última actualización:** 2026-09-19
+**Versión:** v4.78.0 (Gobernanza, costura, pertinencia y carga medida)
+**Última actualización:** 2026-09-25
 
 ---
 

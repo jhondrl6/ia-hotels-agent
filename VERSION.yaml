@@ -1,16 +1,27 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.77.3"
-codename: "LLMReport honesto cuando ningún provider responde"
-release_date: "2026-09-19"
+version: "4.78.0"
+codename: "Gobernanza, costura, pertinencia y carga medida"
+release_date: "2026-09-25"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-09-19"
+date: "2026-09-25"
 plan_maestro_version: "v2.6.0"
 
+# ⟦Decidido el 2026-09-25 al cerrar ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: el trabajo del bloque A
+# PERMANECE bajo «Sin publicar» y NO se acredita a la entrada 4.78.0 del CHANGELOG. Queda vigente lo que
+# dice la nota de abajo (no fue una release, no hay entrada por ese bloque); se retira solo su caracter de
+# pendiente. La fuente unica de version es hoy 4.78.0 -lo que la nota afirmaba sobre 4.77.3 es registro de
+# la sesion del bloque A, no estado vigente-. Registro:
+# evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/.⟧
+# ⟦Vencido en parte el 2026-09-25 por el cierre de VERIFICADOR-CONTEXTO (RELEASE 4.78.0): a esta altura la
+# fuente unica ya no es 4.77.3. La frase de abajo que lo afirmaba se conserva como registro de la sesion del
+# bloque A. Si el trabajo de ese bloque se ACREDITA a la entrada 4.78.0 del CHANGELOG o sigue bajo
+# «Sin publicar» es decision del operador, pendiente: ver
+# evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE/10-borrador-changelog.txt §4.⟧
 # SIN PUBLICAR - Remediacion bloque A / VERIFICADOR-CONTEXTO (2026-09-22, NO es una release)
 # Orden `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.A, autorizado por sesion
 # con alcance acotado (ver registro en la propia orden). Trabajo pendiente de commit: la fuente

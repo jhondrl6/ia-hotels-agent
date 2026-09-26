@@ -1,5 +1,115 @@
 # Changelog
 
+## [4.78.0] - Gobernanza, costura, pertinencia y carga medida — 2026-09-25
+
+### Objetivo
+
+`VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` ataca tres formas en que un plan de este repo se lee caro, se
+juzga mal y se desfasa solo: la **coherencia** de las aserciones sobre conteos en los documentos de
+gobierno, la **pertinencia** de las lecciones que el Paso 0 capitaliza y la **carga de lectura** de una
+sesión de fase. Cuatro fases de implementación, cada una con mandato propio y corte «hasta listo para
+revisión», y su FASE-RELEASE ejecutada offline. El techo declarado del lote es `VERIFICADO OFFLINE`: el
+plan tiene prohibidas la pipeline y la red, así que ningún AC puede llegar a `SUPERADO EN E2E`.
+
+### Cambios Implementados
+
+- **A — `scripts/validate_governance_numbers.py`** (AC1–AC5): aserción contra fuente dinámica con
+  denominador publicado y tres estados; es el guard de las ediciones futuras sobre `.agents/`.
+- **B — `scripts/decision_client.py`** (AC6–AC9): costura neutra con contract test de forma, tri-estado de
+  proveedor y extensión probada a un segundo proveedor falso. AC9 certifica la **costura**, no al
+  proveedor: activar uno real es deuda **D7**, sigue sin hacerse.
+- **C — `scripts/triage_lesson_relevance.py`** (AC10–AC15): capa de pertinencia **aditiva** sobre
+  `lecciones_index.json` — propone y jamás descarta. **AC15 queda `NO-EJERCITADO`**: el emisor fue un
+  proveedor falso, así que la mecánica está verificada y la aceptabilidad semántica, no.
+- **D — `scripts/build_phase_briefing.py`** (AC19–AC23): pack por fase dentro del plan, frescura por
+  `sha256` de las fuentes gobernadas con HEAD como procedencia que **no** vence, negativa a truncar en
+  silencio y **carga total de lectura medida** (tres sumandos por lado y resta entre cargas totales).
+- **`ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`**: bloque A (remediación técnica focalizada), bloque B
+  (proceso común e instrumentos, con su matriz vigente en §13 de su fuente única), bloque C (enmiendas
+  prospectivas a los cuatro planes) y su conciliación final, que fijó cuatro momentos que no se funden —
+  implementación · evidencia en árbol · commit · publicación — y convirtió el prefight de permisos de
+  FASE-RELEASE (**C0**) en contrato: *offline significa sin red, no con permiso de escribir*.
+- **Cierre de esta release (FASE-RELEASE offline)**: sync de cabeceras, regeneración de `DOMAIN_PRIMER.md`
+  con su writer y registro en `REGISTRY.md` por el único escritor admitido. Sin pipeline, sin red, sin
+  subida a QMind y sin archivado: cada uno conserva su permiso.
+
+### Archivos Nuevos
+
+Los que dejó cada fase: `scripts/validate_governance_numbers.py`, `scripts/decision_client.py`,
+`scripts/triage_lesson_relevance.py`, `scripts/build_phase_briefing.py`;
+`tests/quality_gates/{decision_client,governance_numbers,lesson_relevance,phase_briefing}/`,
+`tests/support_observador_escrituras.py`, `tests/test_registry_fecha_documental.py`,
+`tests/test_validate_document_integration.py`; y el directorio generado
+`.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/` (5 packs).
+
+### Frontera de versionado (declarada, no ocultada)
+
+Commit y push **no** forman parte de esta release hasta que el operador los ordene. `7f2e9f9` y `5817edd`
+traen el helper compartido y las 37 rutas propias de FASE-C; el producto de FASE-D
+(`build_phase_briefing.py`, sus casos y los packs), los documentos de cierre de C y D, el par del índice y
+los expedientes de la remediación de B, del bloque C, de su conciliación y de este cierre **existen solo en
+el árbol de trabajo**. Esta entrada documenta el trabajo; no afirma que esté publicado.
+
+### Lo que queda abierto
+
+**D2**, **D3** completa, **D6** (dormida con causa: su disparador es un `acceptance` no ejercitado),
+**D7** + **S10**, **D8/D9** (momento remoto sin autorización ni presupuesto), **S14**, **S15**
+(`[6/7] --check` no reproducible entre checkouts), **S16** (la convención `Lee …` no está en la plantilla),
+**el disparador de regenerar `DOMAIN_PRIMER`**, **declarado y no alineado** — diverge `AGENTS.md` de
+`docs/CONTRIBUTING.md` Paso 5b, y alinearlo exige mandato literal sobre esos dos documentos centrales —, y
+las cinco propuestas de revisión humana del piloto (`L-VCF-10…14`), **pendientes con su dueño: el
+operador** (contrato **E3**). **S17** y **S18** ya no están en esta lista: se declararon con dueño y
+disparador al cerrar la orden de calidad y se curaron el mismo 2026-09-25, en su sesión con mandato de
+código. El archivado del plan conserva su propio permiso.
+
+### Tests
+
+No se corrió suite alguna en las sesiones de cierre y conciliación: sus mandatos excluyen tests y código.
+Las cifras por fase viven en su propio expediente
+(`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-<A..D>/run_tests.txt`) y no se re-transcriben aquí
+(**L-VCF-19**: copiar una métrica de un derivado a su propio corpus la vence). Lo que sí imprimió este
+cierre es su batería de verificadores con exit por comando:
+`evidence/…/FASE-RELEASE/07-cierre-verificacion.txt`, `11-cadena-release.txt` y `12-normalizacion-lf.txt`.
+La sesión que curó **S17**/**S18** (2026-09-25, con mandato de código) sí corrió pruebas: su selección y
+su batería quedan impresas en `evidence/…/CIERRE-ORDEN-2026-09-25/08-seleccion-curacion.txt` y
+`09-quick-post-curacion.txt`; este entry no transcribe sus conteos por **L-VCF-19** y porque el número lo
+mueve cualquier test futuro.
+
+### Dos defectos de instrumento encontrados al cerrar (declarados aquí; curados el 2026-09-25 en su sesión)
+
+1. **`sync_versions.py` y `doctor.py --regenerate-domain-primer` reescriben en CRLF archivos que git
+   almacena en LF**: ambos cierran con `write_text(..., encoding="utf-8")` sin `newline="\n"`
+   (`SyncEngine.sync_rule`, `run_regenerate_domain_primer`), y el detector de finales de línea del bloque
+   B pasó a marcar `[FAIL] Line endings`. La misma objeción ya está resuelta en el escritor de REGISTRY
+   (`scripts/log_phase_completion.py`, que sí pasa `newline="\n"` y lo documenta). Remedio aplicado
+   en esta sesión: normalización byte a byte a LF de los seis archivos tocados, con `git diff -U0`
+   verificando que el delta sigue siendo solo tokens de versión/fecha/codename. **La cura de fondo era
+   añadir el parámetro a los writers**, que era edición de `scripts/` fuera de este mandato: quedó
+   registrada como **S17** y se ejecutó el mismo 2026-09-25 en una sesión con mandato de código. Al curar
+   apareció una **tercera** escritura de la misma familia en el mismo archivo — `run_status` escribe
+   `.agent/SYSTEM_STATUS.md` y lo dejaba en `w/crlf` contra su `i/lf` —, también corregida.
+2. **El sync no gobernaba la fecha legible de `README.md`**: la línea 5 quedó en
+   `**v4.78.0** -- … | Actualizado 11 Septiembre 2026` con `release_date: 2026-09-25`, porque
+   `readme_version_header` no tenía patrón para esa etiqueta (sí lo tiene `guia_tecnica_header`). No se
+   editó a mano en el cierre: un dato con escritor debe arreglarse en el escritor o con un verificador, no
+   con un tercero que lo escriba a mano. Quedó registrado como **S18** y se curó el 2026-09-25: la regla
+   llega ahora hasta la fecha y emite su forma larga (`{date_text}`: «25 Septiembre 2026»), su `--check`
+   pasó de `IN_SYNC` a `FAIL` sobre el README desfasado, y la línea 5 se alineó **corriendo el escritor**
+   (`sync_versions.py --rule readme_version_header`), con `README.md` autorizado como destino aparte.
+
+Las dos curas están en `tests/test_sync_writers_lf_y_fecha_readme.py`: corre los escritores reales sobre
+temporales y compara contra la versión **commiteada** de cada script, de modo que el rojo y el verde se
+atribuyen al parámetro y no al sistema operativo. Su límite declarado: donde el SO no traduzca `\n` a
+`\r\n`, las comprobaciones de bytes se saltan con motivo en lugar de dar un verde vacío.
+
+### Nota sobre la entrada «Sin publicar» del bloque A
+
+La entrada siguiente (`Remediación bloque A`, 2026-09-22) se **conserva sin cambios**: sigue declarando
+que ese bloque no fue una release. **Decisión del operador tomada el 2026-09-25 al cerrar la orden**: su
+contenido **permanece bajo «Sin publicar»** y **no** se acredita a `[4.78.0]`. `VERSION.yaml` lleva la
+misma decisión en su nota datada. La entrada siguiente no se reescribe ni se promotea: lo que cambia es
+que el pendiente ya no está sin responder.
+
 ## [Sin publicar] - Remediación bloque A - contract test de decisiones honesto con sus propios estados — 2026-09-22
 
 > **No es una release.** El incremento provisional a 4.77.4 de la primera sesión se retiró en la
