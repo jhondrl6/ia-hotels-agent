@@ -70,6 +70,22 @@ Prueba de que muerde: **plantando** el residuo a propósito la batería da 5/5, 
 y 5/5. La regla para la casa: si una prueba deriva su directorio temporal del **nombre** del test, tiene
 que despejarlo antes, porque el nombre no es único en el tiempo.
 
+⟦**Rectificado el mismo día, después de correr lo que no había corrido: los tres párrafos de arriba tienen una
+causa falsa y un control inválido.** La suite completa subió de 4 rojos a **5** y el quinto era precisamente
+este test, así que la cura no había curado nada. (1) La causa no es un bloqueo ni el límite de camino largo
+(la ruta relativa más profunda mide 108 caracteres): **`git` marca de solo lectura sus objetos en
+`.git/objects`**, y `shutil.rmtree` en Windows revienta contra ellos con `PermissionError: [WinError 5] Acceso
+denegado` nombrando el objeto. Con `ignore_errors=True` el error se traga, de modo que el `finally` **nunca**
+borró el árbol: el residuo era el comportamiento normal, no la excepción. (2) El control fallido es la lección
+cara: «plantar el residuo» crea un directorio **sin** el atributo de solo lectura, así que daba 5/5 sobre un
+escenario que no era el defecto. Plantar un árbol no reproduce lo que lo hace irreborrable. Un control que no
+reproduce la propiedad defectuosa no es control, y yo lo cité como prueba. (3) La cura real es
+`shutil.rmtree(..., onexc=...)` levantando la protección de escritura y reintentando el nodo; verificado con
+**tres** pasadas consecutivas del archivo: 5/5, 5/5 y 5/5, y `temp/verif-*` vacío al terminar. (4) Y el
+aprendimiento de método, que vale más que el bug: la batería acotada no era suficiente para afirmar aislamiento
+en un test cuyo residuo fabrica la corrida anterior de la propia batería — había que correr la suite entera,
+y la corrí tarde.⟧
+
 ## 4. Nueve celdas del registro, más una deuda nueva con número prestado
 
 `10-analisis-post-implementacion.md`: la fila **FASE-RELEASE** (decía `PENDIENTE` dos días después de

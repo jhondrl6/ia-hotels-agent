@@ -1,0 +1,11 @@
+### cola 2b, tras la rectificacion de la causa de aislamiento, 2026-09-27T02:48:56Z ###
+PACKS=0
+INDICE=0
+[fechas] nombre=328 commit=11 sin_fuente=0
+INDICE_CHECK=0
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK=0

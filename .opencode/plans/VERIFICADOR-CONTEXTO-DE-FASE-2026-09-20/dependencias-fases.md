@@ -589,6 +589,18 @@ el diagnóstico si el residuo persiste), no la aserción. Prueba: plantando el r
 5/5, y dos pasadas seguidas dan 5/5 y 5/5. Queda como deuda de procedimiento **sin número** porque su cura ya
 está en el árbol: otra prueba que derive su destino de un nombre estable bajo `temp/` caerá igual.⟧
 
+⟦**Rectificado el mismo 2026-09-27, dos veces: la causa que di arriba era falsa y el control plantado era
+débil.** (1) No es bloqueo ni camino largo —la ruta relativa más profunda mide **108** caracteres—: `git` deja
+sus objetos de `.git/objects` **en solo lectura**, y `shutil.rmtree` en Windows levanta
+`PermissionError: [WinError 5] Acceso denegado` sobre el objeto nombrado. Con `ignore_errors=True` ese error se
+traga, así que el `finally` **nunca** había limpiado nada: el residuo era lo normal, no la excepción. (2) Mi
+control «plantar el residuo» creaba un directorio **sin** el atributo de solo lectura, por eso daba 5/5 sobre un
+caso que no era el real — plantar un árbol no reproduce la propiedad que lo hace irreborrable, y un control que
+no reproduce el defecto no es un control. La cura verdadera es `shutil.rmtree(..., onexc=...)` quitando la
+protección de escritura y reintentando ese nodo. (3) Lo que lo destapó fue **la suite completa**, no la batería
+acotada: pasó de 4 rojos a **5** y el quinto era este test. Dos pasadas de una batería no prueban aislamiento
+cuando el residuo lo fabrica la corrida anterior de esa misma batería.⟧
+
 ### S21 — el runner imprime dos denominadores distintos dentro del mismo modo (nueva, 2026-09-27)
 
 **No confundir con `S21` de `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`**, que trata de concurrencia entre

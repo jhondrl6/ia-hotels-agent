@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +39,26 @@ def _rev_existe(rev: str) -> bool:
         ["git", "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"],
         cwd=str(ROOT), capture_output=True,
     ).returncode == 0
+
+
+def _rmtree_arbol_git(destino: Path) -> None:
+    """Borra un clon materializado **aunque git lo haya dejado en solo lectura**.
+
+    Causa medida, no supuesta: `git` marca los objetos de `.git/objects` con el atributo de solo lectura, y
+    `shutil.rmtree` en Windows no puede borrarlos — levanta `PermissionError: [WinError 5] Acceso denegado`
+    sobre `.../objects/03/61b1…`. Por eso el `finally` con `ignore_errors=True` dejaba el árbol en pie y la
+    **segunda** corrida moría: el nombre del destino es derivado del nombre del test, que es estable entre
+    corridas. Ni bloqueo ni límite de camino largo: 108 caracteres de ruta relativa y el `WinError 5`
+    nombrando el objeto. Se quita la protección de escritura y se reintenta ese mismo nodo.
+    """
+    def _quitar_solo_lectura(func, ruta, exc):
+        if isinstance(exc, PermissionError):
+            os.chmod(ruta, stat.S_IWRITE)
+            func(ruta)
+            return
+        raise exc
+
+    shutil.rmtree(destino, onexc=_quitar_solo_lectura)
 
 
 def _arbol(destino: Path) -> Path:
@@ -155,12 +176,11 @@ def test_un_destino_relativo_no_escribe_dentro_del_clon(tmp_path):
     # seguida de la bateria, con el arbol anterior todavia en `temp/`. Se limpia antes de clonar; el
     # `finally` sigue intentando la salida, pero ya no es lo único que sostiene la aislacion.
     if destino.exists():
-        shutil.rmtree(destino, ignore_errors=True)
+        _rmtree_arbol_git(destino)
     if destino.exists():
         pytest.fail(
-            f"no se pudo despejar el residuo de la corrida anterior: {destino} sigue en pie "
-            "(bloqueo de Windows sobre los objetos del clon). El rojo es de aislamiento, no del "
-            "verificador: reintentar la bateria o borrar el directorio a mano."
+            f"no se pudo despejar el residuo de la corrida anterior: {destino} sigue en pie aunque se "
+            "quitó la protección de escritura. El rojo es de aislamiento, no del verificador."
         )
     try:
         clon, motivo = clon_fiel(relativa, REV)      # destino RELATIVO a propósito
@@ -170,4 +190,4 @@ def test_un_destino_relativo_no_escribe_dentro_del_clon(tmp_path):
         assert "NO-PRODUCIDO" not in corrida.stdout, corrida.stdout
         assert corrida.returncode == 0, corrida.stdout + corrida.stderr
     finally:
-        shutil.rmtree(destino, ignore_errors=True)
+        _rmtree_arbol_git(destino)
