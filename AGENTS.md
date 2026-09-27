@@ -404,32 +404,54 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,582 funciones totales)
+### Cobertura por Modulo (4,584 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
 > **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`. En el commit
-> que lleva esta nota los dos comandos dan **4,582**: las nueve funciones nuevas (las dos baterias de S20 y
-> de la cura (b) de S19) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese commit**,
-> no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos cifras
-> vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+> que lleva esta nota **los dos comandos dan 4,584**: las dos funciones nuevas (los dos controles de la
+> regresion que D-c dejo ver) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese
+> commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
+> cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+>
+> Como se abrio y como se cerro la brecha de esta ronda, para no repetir el procedimiento: al comitear la
+> orden las dos cifras estaban en 4,582 y cuadraban. Los dos controles nuevos entraron despues, el arbol
+> subio a 4,584 y la cabecera se quedo dos por debajo. No se adivino el numero: se midio, se declaro la
+> desviacion en el crudo `evidence/…/CIERRE-ORDEN-2026-09-25/D-C-D8-D9/06-…txt` **en vez de editar la
+> cabecera a mano**, y se actualizo aqui solo cuando llego la instruccion explicita de hacerlo (AGENTS.md es
+> config central). Y el gate que goberna esta cifra tampoco corto el paso: su tolerancia es del **±5 %**, asi
+> que dos funciones de desviacion quedan muy dentro — ver el parrafo del instrumento, mas abajo. Lo que si la
+> cazó fue la resta de la tabla contra el comando canonico, que es una comprobacion aparte y no un gate.
 >
 > Antecedente, vigente hasta el 2026-09-25: las dos cifras eran distintas (4,470 en HEAD `5817edd` contra
 > 4,564 en el arbol de trabajo) y la diferencia (+94) era trabajo sin commitear, no deuda ni error. Lo que
 > ese episodio deja como regla: una cifra publicada esta casada con las rutas que viajan con ella, y cuando
 > no lo estan se corrige el grupo de rutas, no el numero.
 >
-> Medido 2026-09-26 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
+> Medido 2026-09-27 con el metodo canonico del proyecto: `grep -rE "^\s*def test_" tests --include=*.py`
 > (no `pytest --collect-only`; las filas suman el total). Nota de instrumento para no volver a confundirlas:
 > `scripts/validate_agents_md.py::check_2_test_count` **no** usa el metodo grep sino
-> `pytest --collect-only -q` sobre items (**4,656** al medir el 2026-09-26, +9 con las dos baterias nuevas)
-> con tolerancia **±5 %** — con **4,582** publicado la desviacion es **1,6 %** y el check pasa (exit 0).
+> `pytest --collect-only -q` sobre items (**4,658** al medir el 2026-09-27, +2 con los dos controles nuevos)
+> con tolerancia **±5 %** — con **4,584** publicado la desviacion es **1,6 %** y el check pasa (exit 0). Lo
+> mismo con **4,582** publicado daba 1,7 % y tampoco cortaba: de ahi que la desviacion se declarara en el
+> crudo y no se confiara en el gate para cazarla.
 > Antecedente: el 2026-09-25 medía
 > 4,638 items y daba el mismo 1,6 % con 4,564 publicado; con el 4,246 anterior la desviacion llegaba a 8,5 %
 > y el check fallaba. No hay que "arreglar"
 > esta cifra hacia el numero de items: son dos instrumentos distintos y el publicado es el del metodo
 > canonico.
-> Cifra anterior: **4,573** (medido 2026-09-26, misma orden, dos sesiones antes). La diferencia (+9) vuelve a
+> Cifra anterior: **4,582** (medido 2026-09-26, misma orden). La diferencia (+2) cae otra vez en la fila
+> `root test files` (955 → **957**) y son los dos controles anclados a **revisiones publicadas fijas** que
+> exige `tests/test_verify_packs_in_committed_tree.py` desde la ronda de D-c. Uno es
+> `test_el_plan_archivado_sigue_siendo_evaluable` (anclado a `3c2e6a3`, la revision que archivó el plan) y el
+> otro es `test_ambas_rutas_de_plan_resuelven_en_ambas_revisiones` (anclado a `44f53c2` antes y a `3c2e6a3`
+> despues). Los dos nombres van enteros en una misma línea: partidos, dejan de ser símbolos localizables.
+> Lo que estos dos prueban, ademas del fix: que el verificador de packs montaba la ruta a pelo como
+> `plans/<PLAN>` y al archivarse el plan dejo de verlo — informaba `AUSENTE-EN-VERSIONADO` sobre cinco packs
+> correctos, o sea un rapido rojo causado por el instrumento. La cura es reutilizar `resolver_plan()` del
+> propio escritor. Cada control afirma una forma distinta de la ruta, asi que ninguno pasa por accidente, y
+> se verifico que tienen dientes **quitando la cura**: mutado, caen exactamente esos dos y los otros cinco
+> pasan igual. Previa, del 2026-09-26: **4,573** (dos sesiones antes). La diferencia (+9) vuelve a
 > ser dos baterias y vuelve a caer en la fila `root test files` (946 → **955**): 4 funciones de
 > `tests/test_verify_index_in_committed_tree.py` (la cura de **S20**: el clon del verificador heredaba el
 > `core.autocrlf` del ambito system y su `--check` de packs cortaba rojo falso sobre un commit correcto) y 5
@@ -438,7 +460,7 @@ python scripts/run_all_validations.py           # Completo
 > escritor copia al pack y exige a la vez que este verificador pierda y que `build_phase_briefing --check`
 > siga dando verde). Previa, del mismo dia: **4,564 → 4,573** (+4 de `test_build_lesson_index_s15_fecha_versionada.py`
 > y +5 de la primera bateria de `test_verify_index_in_committed_tree.py`). Suma comprobada al medir: las 22
-> filas de la tabla dan exactamente **4,582**.
+> filas de la tabla dan exactamente **4,584**.
 > Previa: 4,246 (v4.77.3, medido 2026-09-19). La diferencia (+318) se desglosa por fila de la
 > tabla: `quality_gates` +229 (decision_client y su arnes de mutacion del bloque A/B de la orden de calidad,
 > `lesson_relevance` del piloto FASE-C, `phase_briefing` de FASE-D y su cura AC23, y los gates tocados en
@@ -476,7 +498,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 955 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19) |
+| root test files | 957 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor) |
 
 ---
 
