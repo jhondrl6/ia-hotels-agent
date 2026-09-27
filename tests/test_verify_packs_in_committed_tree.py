@@ -29,6 +29,8 @@ sys.path.insert(0, str(SCRIPTS))
 from verify_index_in_committed_tree import clon_fiel  # noqa: E402
 
 REV = "c85dff9"
+REV_PRE_ARCHIVADO = "44f53c2"     # el plan aún bajo `plans/`
+REV_POST_ARCHIVADO = "3c2e6a3"    # D-c: el plan vive bajo `plans/Archives/`
 PLAN = "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
 PAQUETES = ("FASE-A.md", "FASE-B.md", "FASE-C.md", "FASE-D.md", "FASE-RELEASE.md")
 LITERAL_DEL_ESCRITOR = "[8/11]"   # el puntero al denominador del runner, copiado por el writer al pack
@@ -191,3 +193,60 @@ def test_un_destino_relativo_no_escribe_dentro_del_clon(tmp_path):
         assert corrida.returncode == 0, corrida.stdout + corrida.stderr
     finally:
         _rmtree_arbol_git(destino)
+
+
+def test_el_plan_archivado_sigue_siendo_evaluable(tmp_path):
+    """D-c mudó el plan a `plans/Archives/` y el verificador dejó de verlo.
+
+    El defecto es de este instrumento, no del commit: tenía la ruta montada a pelo como
+    `plans/<PLAN>`, así que sobre cinco packs impecables informó `AUSENTE-EN-VERSIONADO` y devolvió
+    `EXIT=1` — con el check recién atado al `--quick`, eso era un rápido rojo por culpa del
+    verificador. Anclado a `3c2e6a3`, una **revisión publicada fija** (la que archivó), nunca a HEAD:
+    la siguiente edición del plan movería HEAD y el control perdería su premisa.
+    """
+    for rev in (REV_POST_ARCHIVADO,):
+        if not _rev_existe(rev):
+            pytest.skip(f"la revisión {rev} no está en este repositorio")
+    clon, motivo = clon_fiel(tmp_path / "clon-archivado", REV_POST_ARCHIVADO)
+    assert clon is not None, motivo
+
+    versionados = clon / ".opencode" / "plans" / "Archives" / PLAN / "briefing"
+    assert versionados.is_dir(), (
+        "premisas del control: en esta revisión el plan debe estar BAJO Archives/ "
+        f"(falta {versionados.as_posix()})"
+    )
+    assert not (clon / ".opencode" / "plans" / PLAN).is_dir(), (
+        "premisas del control: la ruta vieja no debe existir, si existe el control no ejerce nada"
+    )
+
+    corrida = _correr(clon, rev=REV_POST_ARCHIVADO)
+    salida = corrida.stdout + corrida.stderr
+    assert "AUSENTE-EN-VERSIONADO" not in salida, (
+        f"el verificador volvió a la ruta fija vieja:\n{salida[-800:]}"
+    )
+    assert all(nombre in salida for nombre in PAQUETES), salida[-800:]
+    assert corrida.returncode == 0, salida[-800:]
+
+
+def test_ambas_rutas_de_plan_resuelven_en_ambas_revisiones(tmp_path):
+    """El criterio de resolución tiene que ser UNO: el del escritor, no una copia en el verificador.
+
+    Se ejerce por las dos mitades: en `44f53c2` el plan está en `plans/` y en `3c2e6a3` está en
+    `plans/Archives/`; las dos revisiones deben dar verde. Si alguien vuelve a montar la ruta a pelo
+    en el verificador, la mitad archivada cae; si hace lo contrario y solo prueba `Archives/`, cae la
+    otra. Cada revisión afirma una forma distinta, así que ninguna de las dos puede pasar por
+    accidente.
+    """
+    for rev in (REV_PRE_ARCHIVADO, REV_POST_ARCHIVADO):
+        if not _rev_existe(rev):
+            pytest.skip(f"la revisión {rev} no está en este repositorio")
+        clon, motivo = clon_fiel(tmp_path / f"clon-{rev}", rev)
+        assert clon is not None, motivo
+        esperado = (clon / ".opencode" / "plans" / PLAN
+                    if rev == REV_PRE_ARCHIVADO
+                    else clon / ".opencode" / "plans" / "Archives" / PLAN)
+        assert esperado.is_dir(), f"{rev}: se esperaba el plan en {esperado.as_posix()}"
+        corrida = _correr(clon, rev=rev)
+        salida = corrida.stdout + corrida.stderr
+        assert corrida.returncode == 0, f"{rev} no reprodujo sus packs:\n{salida[-700:]}"
+        assert "DIVERGE" not in salida and "NO-EVALUABLE" not in salida, salida[-700:]

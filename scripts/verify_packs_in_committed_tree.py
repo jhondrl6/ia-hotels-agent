@@ -33,6 +33,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from verify_index_in_committed_tree import ENTORNO_UTF8, clon_fiel  # noqa: E402
+from build_phase_briefing import resolver_plan  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 ESCRITOR = "scripts/build_phase_briefing.py"
@@ -120,7 +121,17 @@ def verificar(plans: list[str], rev: str, destino: Path, clon: Path | None = Non
     divergentes = 0
     sin_evaluar = 0
     for plan in plans:
-        raiz_plan = (clon / ".opencode" / "plans" / plan).resolve()
+        # La ruta del plan se resuelve con el MISMO criterio que usa el escritor: `plans/<X>` o
+        # `plans/Archives/<X>`. D-c archivó el plan canónico y este verificador, que tenía la ruta
+        # montada a pelo, pasó a dar `AUSENTE-EN-VERSIONADO` sobre cinco packs perfectos — o sea el
+        # rápido rojo por un defecto del instrumento, medido el 2026-09-27 sobre 3c2e6a3.
+        resuelto = resolver_plan(plan, clon / ".opencode" / "plans")
+        if resuelto is None:
+            print(f"[NO-EVALUABLE] {plan}: el árbol materializado no tiene el plan "
+                  "(ni bajo `plans/` ni bajo `plans/Archives/`)")
+            sin_evaluar += 1
+            continue
+        raiz_plan = resuelto.resolve()
         versionados = raiz_plan / "briefing"
         generado = raiz_plan / SCRATCH
         if generado.exists():

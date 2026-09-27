@@ -1,0 +1,36 @@
+# 06-dc-regresion-del-verificador-y-su-control.txt  2026-09-27T03:23:07Z
+## El movida de D-c rompio al check 13 que esta misma sesion habia atado al rapido.
+## verify_packs_in_committed_tree.py montaba la ruta a pelo como plans/<PLAN>, y sobre
+##   cinco packs impecables informo AUSENTE-EN-VERSIONADO con EXIT=1:
+##     [DIVERGE] .../FASE-C.md (AUSENTE-EN-VERSIONADO)
+##     [DIVERGE] packs en el arbol de HEAD (0/5 reproducidos por el escritor, 5 divergentes, 0 no evaluables)
+## Cura: reutilizar resolver_plan() del ESCRITOR (build_phase_briefing.py:172), que prueba
+##   plans/<X>, plans/Archives/<X> y la ruta tal cual. Un criterio, no una copia.
+## Controles nuevos, anclados a revisiones publicadas fijas (nunca a HEAD):
+##   test_el_plan_archivado_sigue_siendo_evaluable  -> 3c2e6a3 (el commit que archiva)
+##   test_ambas_rutas_de_plan_resuelven_en_ambas_revisiones -> 44f53c2 (antes) y 3c2e6a3 (despues)
+##   Cada uno afirma una forma distinta de la ruta, asi que ninguno pasa por accidente.
+
+== oportunidad de perder: se quite la cura (ruta vieja fija) y se corra la bateria ==
+  MUTADO -> 2 failed, 5 passed  (los dos controles nuevos caen; los otros cinco no se enteran)
+  RESTAURADO -> 7 passed, sha dcf48ad12120a96db6ae2229957d15a97c64f57affa1d0ca37a757443785f435
+
+== verificador sobre HEAD ==
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE.md
+[OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+  PACKS_EXIT=0
+== rapido ==
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+  QUICK=0
+== bateria y funciones test ==
+7 passed in 13.92s
+
+== funciones test, metodo canonico ==
+  arbol: 4584   HEAD: 4582   (+2 = los dos controles nuevos de esta ronda)
+  Consecuencia declarada: AGENTS.md publica 4.582 y quedara 2 por debajo al comitear.
+  No se edita AGENTS.md: es config central y el clasificador pide instruccion explicita.
+  El lector validate_agents_md.py::check_2_test_count usa pytest --collect-only con +-5 %
+  de tolerancia, asi que no corta rojo: la desviacion se declara aqui, no se esconde.
