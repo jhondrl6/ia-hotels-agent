@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `16` análisis de plan + `39` archivos de `.opencode/context/`. `422` `.md` en total como corpus de **citas**.
-- 339 IDs con definición detectada; 52 IDs citados sin definición (ver última sección).
+- 340 IDs con definición detectada; 52 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `328` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `329` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 195 |
+| `L-*` | Lecciones aprendidas | 196 |
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
 | — | Citados sin definición | 52 |
 
-## `L-*` — Lecciones aprendidas (195)
+## `L-*` — Lecciones aprendidas (196)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -209,11 +209,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-VCF-12` | Al re-medir AC6/A1–A4 para escribir este barrido, python scripts/validate_governance_numbers.py --report sobrescribió la evidencia commiteada de FASE-A: la ruta de escritura está hardcodeada como… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 62 en context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
 | `L-VCF-13` | El primer diseño del triaje no podía perder: el pool de candidatos se construía excluyendo por definición las filas ya ancladas en §2, así que removed: [] era cierto sobre un conjunto donde no… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 15 (solo el plan dueño) |
 | `L-VCF-14` | El check de frescura propio de C reventó con AttributeError: 'str' object has no attribute 'get' sobre un JSON de prueba que sí existía y sí se parseaba, pero cuya clave lecciones no era lista. Es… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
-| `L-VCF-15` | Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO.… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 37 en context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
+| `L-VCF-15` | Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO.… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 39 en context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
 | `L-VCF-16` | El primer ancla del mutante de AC23 no atribuyó: apagado GUARD_NO_TRUNCAMIENTO_ACTIVO, el pack de FASE-RELEASE perdía el bloque de declaración pero la aserción nombra_la_fuente_pedida seguía en True… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
 | `L-VCF-17` | Escribir los packs rompió un gate ajeno: docs/CONTRIBUTING.md entraba al pack por una sección declarada, y la regla de la fase era «el pack se escribe dentro del plan». Copiarlo a… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 26 (solo el plan dueño) |
 | `L-VCF-18` | FASE-D publicó en 09 §D un par def test_ 4.360 → 4.404 («medido al abrir la fase»). Al cerrar, el mismo comando canónico no dio 4.360 sobre ningún árbol: disco 4.557, git grep sobre HEAD 4.470, y… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 11 (solo el plan dueño) |
-| `L-VCF-19` | FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 60 (solo el plan dueño) |
+| `L-VCF-19` | FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 68 (solo el plan dueño) |
+| `L-VCF-20` | La tanda de commits de cierre del 2026-09-27 separó el corpus con sus packs (f496914) del workflow (5446cb7) apoyándose en una premisa que se creyó medida: «el workflow entra al pack como lectura… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
 | `L-VERIFY.1` | Los documentos del plan (D-AJUST.4, 01-plan-maestro.md) mencionan GATE_BLOCKING_ENABLED y GATE_ENFORCEMENT_ENABLED como dos llaves del bloqueo. Medido con grep: solo GATE_BLOCKING_ENABLED existe en… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 5 (solo el plan dueño) |
 | `L-VERIFY.2` | La matriz T1 buscaba blocks_publish en el acta JSON y no lo encontró. Existe en TribunalOutcome (outcome.py L153) como atributo DTO, pero acta_writer.py no lo serializa. El acta comunica el bloqueo… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 2 (solo el plan dueño) |
 | `L-VERIFY.3` | El cruce P5×todo (T2) reveló que google_places_client.py:_save_cache persiste caché sin redacción, mientras gbp_auditor.py:_save_cache sí redacta. P5 había certificado AC-S2/AC-S4 pero ninguno cubría… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 5 en context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17 |

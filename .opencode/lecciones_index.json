@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 16,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 422,
-    "ids_con_definicion": 339,
+    "ids_con_definicion": 340,
     "ids_citados_sin_definicion": 52,
     "fechas_por_fuente": {
-      "nombre": 328,
+      "nombre": 329,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -3827,7 +3827,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 37,
+      "total_citas": 39,
       "planes_que_lo_citan": [
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
@@ -3885,7 +3885,21 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 60,
+      "total_citas": 68,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-VCF-20",
+      "familia": "L",
+      "enunciado": "La tanda de commits de cierre del 2026-09-27 separó el corpus con sus packs (f496914) del workflow (5446cb7) apoyándose en una premisa que se creyó medida: «el workflow entra al pack como lectura aparte y no como fuente con sha, así que este orden no vence nada». El [13/13] dio 13/13 antes del primer commit y 12/13 con cinco DIVERGE cayendo los cinco en la misma línea inmediatamente después — La proyección de una ruta depende de su contenido igual que un hash. sources[] no la gobierna — es deliberado, AC21 lo escribió para que el commit del propio generado no lo venca — pero la línea de carga del pack imprime el N bytes (~M tokens) del workflow, y esa cifra la mueve el archivo. Lo que falló no fue el instrumento sino la inferencia: su verde antes mide el par (packs viejos contra fuentes viejas) y no dice nada del árbol resultante; el rojo aparece cuando los derivados nuevos entran sin sus fuentes nuevas",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 13,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
