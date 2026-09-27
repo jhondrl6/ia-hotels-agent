@@ -1,0 +1,9 @@
+archivo: docs/GUIA_TECNICA.md
+  bytes=208155  lineas=2544  (HEAD lineas=2544)
+  CR en disco = no   (HEAD: no)
+  CJK  HEAD=2  disco=2  nuevos=NINGUNO
+  marcadores  abre=1 cier=1 delta=0   (HEAD 0/0)
+  delta ** = 22 (par=True)   delta backtick = 16 (par=True)
+  citas numericas nuevas: NINGUNA
+
+[OK] condicion de corte

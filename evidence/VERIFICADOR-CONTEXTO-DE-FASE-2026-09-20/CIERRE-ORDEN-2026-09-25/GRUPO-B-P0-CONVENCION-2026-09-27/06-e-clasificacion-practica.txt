@@ -1,0 +1,38 @@
+=== clasificacion de los 53 commits que tocaron DOMAIN_PRIMER ===
+total: 53
+con RELEASE o release: 27
+con FASE- (fase de implementacion): 13 menciones
+sin ninguna de las dos: 26
+
+=== mensajes sin 'release' (los que serian cierre de fase u otros) ===
+chore(generados): SYSTEM_STATUS y DOMAIN_PRIMER regenerados con los escritores curados
+feat(REFACTOR-WHATSAPP): cierra FASE-G con verificador de wiring por AST
+fix(v4.77.3): LLMReport honesto cuando ningun provider responde
+feat(v4.77.2): contabilidad de coste del checker LLM (Gemini)
+feat(v4.77.1): modelo de Gemini parametrizado en el provider_registry
+feat(guard): v4.74.1 Blocklist-v2 — +hosroom.com/+istagram.com con tests de contrato
+feat(guard): guard de URL propia en ensure_url con blocklist versionada y --force (FASE-A VALIDADOR-URL-PROPIA)
+FASE-SR-G/H/H2: display tier+jerga, E2E Salento Real + hotfix critical_recall (smoke 7/7)
+feat(sr-pipeline): SR-C self-healing loop CG-CLAIM-VS-EVIDENCE (D-PF2)
+feat(sr-pipeline): SR-A conteo unresolved (L-SR1) + SR-B fuente unica promesa/matriz/gate (D-PF1)
+FASE-R0-E: Recovery FinancialFactors import + v4complete E2E ZiOne (coherence 0.9485, 12P+1W)
+docs: cross-document audit — alinear DOMAIN_PRIMER, AGENTS.md y README
+docs: cross-document alignment post-DT-3 — 4 docs sync v4.64.0
+v4.60.0: CAPEX Breakdown Fix + Generator Cleanup (F1/F6/F7/F8)
+feat: ROI-REFACTOR FASE-0 — decisión comercial Opción E + plan de 6 fases
+v4.52.0 - DIAGNOSTIC-ALIGNMENT (2026-05-25)
+chore: DOMAIN_PRIMER.md v4.50.0 → v4.51.0
+v4.47.0: ADVISORY-WARNINGS — IA-Readiness advisory alerts + delivery_quality_report warnings
+FIX-ENCODING-SISTEMICO: v4.46.1 ENCODING-SAFETY — prevencion memory leak por encoding en Windows
+v4.43.0 - Termales Refactor: 9 FIXes + 64 tests + 5/5 validations
+feat: INTEGRACION-DOCUMENTAL - gate de no-regresion documental (FASE-C completada)
+docs(AMAZILIAHOTEL): completar checklist E1-E8 post-proyecto
+refactor: Documentación post-proyecto v4.29.0 + Workflow Paso 4.5
+feat(assets): FASE-LLMSTXT-FIX + FASE-ASSETS-VALIDACION (fases 3-4 paralelo)
+v4.22.0: Fix ortogonalidad de metricas en diagnostico - elimina duplicacion GEO/Activity
+chore: v0.1.0 initial commit for IA Hotels Agent
+
+=== coberturas: modulos en disco vs mencionados en DOMAIN_PRIMER ===
+modulos en modules/: 23
+mencionados en DOMAIN_PRIMER: 21
+NO mencionados: ['common', 'postprocessors']

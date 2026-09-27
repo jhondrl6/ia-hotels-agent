@@ -1,0 +1,37 @@
+== .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+   marcadores  disco abre=43 cier=43 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 32 (par=True)   delta backtick = 46 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['apertura', 'autorizaciones', 'casillas', 'confirmar', 'consultas', 'contradictorias', 'convivieron', 'corriéndolas']
+== .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+   marcadores  disco abre=36 cier=36 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 60 (par=True)   delta backtick = 54 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['abiertos', 'anotaciones', 'arranca', 'asignaba', 'commitearlos', 'comparando', 'confirmación', 'confirmada']
+== .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+   marcadores  disco abre=77 cier=77 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 62 (par=True)   delta backtick = 58 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['anotaciones', 'anotación', 'arrastra', 'arregló', 'bandera', 'banderas', 'caducidad', 'casada']
+== .agents/workflows/phased_project_executor.md
+   marcadores  disco abre=1 cier=1 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 14 (par=True)   delta backtick = 16 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['cerraba', 'commítalos', 'derivado', 'derivados', 'erivados', 'formulación', 'generador', 'gobierna']
+== .agents/workflows/templates/prompt-fase-template.md
+   marcadores  disco abre=0 cier=0 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 24 (par=True)   delta backtick = 60 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['aparezca', 'archivados', 'bloques', 'briefing', 'calificador', 'canónica', 'casilla', 'cerraba']
+
+[OK] 0 archivo(s) con alguna condicion de corte

@@ -1,0 +1,20 @@
+=== que detecta el escaner del generador vs que renderiza ===
+modules/ dirs   : 23
+data_models dirs: []
+enums dirs      : []
+agent_harness subdirs: []
+hardcodeados en doctor.py:478-483: 19
+MODULOS EN DISCO SIN FILA: ['common', 'orchestration', 'postprocessors', 'quality'] -> 4
+FILAS SIN MODULO EN DISCO (huerfanas): [] -> 0
+modules_count que imprimira el encabezado (sin top_level): 23
+
+=== quien llama al regenerador (todo el arbol versionado, excluyendo docs) ===
+HEAD:scripts/doctor.py:338:def run_regenerate_domain_primer() -> bool:
+HEAD:scripts/doctor.py:658:    if args.regenerate_domain_primer:
+HEAD:scripts/doctor.py:659:        ok = run_regenerate_domain_primer()
+
+=== main.py --doctor pasa el flag? ===
+164:        "--doctor",
+1422:    # Doctor: full ecosystem health check (--doctor)
+1423:    if args.doctor:
+1425:        _sub.run([sys.executable, str(Path(__file__).parent / "scripts" / "doctor.py")])

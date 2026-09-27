@@ -1,0 +1,95 @@
+=== AGENTS.md menciones DOMAIN_PRIMER ===
+66:> **DOMAIN_PRIMER se regenera en FASE-RELEASE** (no manualmente). Ver `.opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md` para el plan de integración documental completo.
+92:| `DOMAIN_PRIMER.md` | (auto-regenerado) | `§Paso-5b` | `§E7` |
+
+=== CONTRIBUTING 165-200 ===
+| .cursorrules | Auto-sync desde VERSION.yaml | Se verifica (paso 2) |
+| docs/CONTRIBUTING.md | Auto-sync header + manual contenido | Header auto (paso 2) |
+| docs/GUIA_TECNICA.md | Auto-sync header + manual notas tecnicas | Se VERIFICA y se ACTUALIZA (paso 4) |
+| CHANGELOG.md | MANUAL | Se VERIFICA y se ACTUALIZA (paso 3) |
+| docs/contributing/REGISTRY.md | Auto: fecha de ultima entrada documental, la escribe `log_phase_completion.py` | NO la toca sync (regla retirada) |
+| .agents/workflows/README.md | MANUAL | Se VERIFICA (paso 5) |
+| `.agent/SYSTEM_STATUS.md` | AUTO via scripts/doctor.py --status | Se REGENERA (paso 6) |
+| ROADMAP.md | MANUAL | NO (solo si el usuario dice especificamente que actualizar Roadmap) |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via scripts/doctor.py --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+| `INDICE_DOCUMENTACION.md` | MANUAL post-release | NO (automatico solo header via sync — contenido fases es manual) |
+
+### Paso 5b: Regenerar DOMAIN_PRIMER.md
+
+Al cerrar cada fase de implementacion regenerar el Domain Primer:
+
+```bash
+python scripts/doctor.py --regenerate-domain-primer
+```
+
+Solo en FASE-RELEASE (cierre final del proyecto), verificacion completa:
+
+```bash
+python scripts/doctor.py --context
+```
+
+| Check | Accion si falla |
+|-------|-----------------|
+| Todo modulo en `modules/` esta documentado en DOMAIN_PRIMER.md | Ejecutar `python scripts/doctor.py --regenerate-domain-primer` |
+| Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco | Corregir referencia o eliminar seccion obsoleta |
+| Version y codename coinciden con VERSION.yaml | Reemplazar header via `python scripts/doctor.py --regenerate-domain-primer` |
+
+NOTA: DOMAIN_PRIMER es regenerable automaticamente. NO editar manualmente.
+
+### Lo que este flujo NO hace
+
+- NO modifica ROADMAP.md (estrategia de monetizacion requiere intencion explicita)
+
+=== CONTRIBUTING 310-330 ===
+- `AGENTS.md` es la **fuente canonica** del contexto global del agente. Si cambias contexto global, edita AGENTS.md primero.
+- Si el ecosistema de agentes pierde funcionalidad, revisa primero la integridad del symlink `.agent/workflows`.
+- Para actualizar **documentacion del repositorio**, sigue los procedimientos de este archivo.
+- El prompt **"Actualizar documentacion oficial del repositorio"** ejecuta el procedimiento documentado en la seccion del mismo nombre. No es una frase decorativa -- es un dispatch a esta seccion.
+
+---
+
+## Regenerable (comandos directos)
+
+- `.agent/SYSTEM_STATUS.md` → `python scripts/doctor.py --status`
+- `.agent/knowledge/DOMAIN_PRIMER.md` → `python scripts/doctor.py --regenerate-domain-primer`
+
+
+---
+
+## Encoding en Scripts Python (Obligatorio para Scripts CLI)
+
+> **Motivación:** Incidente 2026-05-13: `UnicodeEncodeError` en `validate_document_integration.py` causó memory leak de 42.5 GB por caracteres Unicode en stdout configurado como `cp1252` (default Windows). La clase de bug `UnicodeEncodeError` puede congelar el sistema. Esta sección establece el estándar para eliminarla permanentemente.
+
+### Por qué UTF-8
+
+
+=== CONTRIBUTING menciones DOMAIN_PRIMER ===
+31:| Modificar Decision Engine | `docs/contributing/procedures.md` §4 | Regenerar DOMAIN_PRIMER |
+173:| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via scripts/doctor.py --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+176:### Paso 5b: Regenerar DOMAIN_PRIMER.md
+192:| Todo modulo en `modules/` esta documentado en DOMAIN_PRIMER.md | Ejecutar `python scripts/doctor.py --regenerate-domain-primer` |
+193:| Todo archivo referenciado en DOMAIN_PRIMER.md existe en disco | Corregir referencia o eliminar seccion obsoleta |
+196:NOTA: DOMAIN_PRIMER es regenerable automaticamente. NO editar manualmente.
+244:| `.agent/knowledge/` | DOMAIN_PRIMER.md (glosario, reglas negocio) | Agente en runtime |
+303:| `.agent/knowledge/DOMAIN_PRIMER.md` | Agregar/eliminar modulos, cambiar clases o flujo |
+320:- `.agent/knowledge/DOMAIN_PRIMER.md` → `python scripts/doctor.py --regenerate-domain-primer`
+404:| §Paso-5b-DOMAIN-PRIMER | Paso 5b: Regenerar DOMAIN_PRIMER.md |
+416:4. **DOMAIN_PRIMER**: Regenerar al cerrar cada fase de implementacion, no solo verificar
+
+=== executor: automatizacion que lo invoque? ===
+HEAD:.pre-commit-config.yaml:141:        entry: python scripts/doctor.py --agent
+applypatch-msg.sample*
+commit-msg.sample*
+fsmonitor-watchman.sample*
+post-checkout*
+post-commit*
+post-update.sample*
+pre-applypatch.sample*
+pre-commit*
+pre-commit.bak.1788020735*
+pre-commit.bak.1788020879*
+(fin hooks)
+
+=== QUIEN invoca regenerate en codigo (no docs) ===
+HEAD:scripts/doctor.py:338:def run_regenerate_domain_primer() -> bool:
+HEAD:scripts/doctor.py:659:        ok = run_regenerate_domain_primer()

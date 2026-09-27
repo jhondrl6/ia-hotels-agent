@@ -1,0 +1,59 @@
+### iques declara el prompt de RELEASE (fuera de GUIA_TECNICA?)
+FASE-A (05-prompt-inicio-sesion-fase-A.md): 6 items declarados, head 5d80cd7
+  - [archivo] 05-prompt-inicio-sesion-fase-A.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4'] | calificador la tabla A1-A4 con su rectificacion de A3, la medicion A7 y 
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador 
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2', '4'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-B (05-prompt-inicio-sesion-fase-B.md): 6 items declarados, head 5d80cd7
+  - [archivo] 05-prompt-inicio-sesion-fase-B.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['2', '4'] | calificador las filas del proveedor y D7
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador permisos y la regla de cero red
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-C (05-prompt-inicio-sesion-fase-C.md): 6 items declarados, head 5d80cd7
+  - [archivo] 05-prompt-inicio-sesion-fase-C.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4', '2'] | calificador la medicion del grep con cero coincidencias
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador permisos, regla de cero red y la seccion «Enmiendas prospect
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['1', '2', '3', '4'] | calificador 
+  - [archivo] dependencias-fases.md | secciones ['Conciliacion'] | calificador su fila de C y la §Conciliacion
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-D (05-prompt-inicio-sesion-fase-D.md): 6 items declarados, head 5d80cd7
+  - [archivo] 05-prompt-inicio-sesion-fase-D.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4'] | calificador medicion A7 y la nota de divisor de tokens
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador 
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador cadena y la regla de donde vive el pack generado
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-RELEASE (05-prompt-inicio-sesion-fase-RELEASE.md): 13 items declarados, head 5d80cd7
+  - [archivo] 05-prompt-inicio-sesion-fase-RELEASE.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['4', '6'] | calificador 
+  - [archivo] 04-contrato-ejecucion.md | secciones ['Dos momentos del cierre', 'Carga total y frescura del pack', 'Orden del cierre'] | calificador §Dos momentos del cierre, §Carga total y frescura del pack y
+  - [archivo] 00-lecciones-capitalizadas.md | secciones [] | calificador 
+  - [archivo] 06-checklist-implementacion.md | secciones [] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [archivo] 10-analisis-post-implementacion.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-A.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-B.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-C.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-D.md | secciones [] | calificador 
+  - [archivo] docs/CONTRIBUTING.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador FASE-RELEASE
+### GUIA_TECNICA como fuente declarada en los 5 prompts:
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md:1
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md:0
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md:0
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md:0
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md:7
+### checks de frescura
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX_CHECK=0

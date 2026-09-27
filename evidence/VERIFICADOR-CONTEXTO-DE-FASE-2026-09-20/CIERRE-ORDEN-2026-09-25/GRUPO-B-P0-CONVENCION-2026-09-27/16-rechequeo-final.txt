@@ -1,0 +1,50 @@
+### rechequeo final (ninguna fuente .opencode toco desde la cola)
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX_CHECK=0
+
+### arbol
+ M .agents/workflows/phased_project_executor.md
+ M .agents/workflows/templates/prompt-fase-template.md
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/24-cierre-de-la-orden-dosier-y-portones.txt
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/25-p0-quince-celdas-convencion-y-dos-dosieres-sin-decidir.txt
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/GRUPO-A-CELDAS-2026-09-27/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/GRUPO-B-P0-CONVENCION-2026-09-27/
+total: 16
+
+### inventario de instrumentos de esta sesion
+total 178
+drwxr-xr-x 1 Jhond 197609     0 Sep 27 10:05 ./
+drwxr-xr-x 1 Jhond 197609     0 Sep 27 10:05 ../
+-rw-r--r-- 1 Jhond 197609  2702 Sep 27 09:24 01-quick-fase0.txt
+-rw-r--r-- 1 Jhond 197609   480 Sep 27 09:24 02-chequeos-fase0.txt
+-rw-r--r-- 1 Jhond 197609   715 Sep 27 09:24 03-censo-snn.txt
+-rw-r--r-- 1 Jhond 197609  7826 Sep 27 09:27 04-e-domini-primer.txt
+-rw-r--r-- 1 Jhond 197609  5051 Sep 27 09:27 05-e-textos-de-destino.txt
+-rw-r--r-- 1 Jhond 197609  2386 Sep 27 09:28 06-e-clasificacion-practica.txt
+-rw-r--r-- 1 Jhond 197609   923 Sep 27 09:29 07-e-generador-listas-hardcodeadas.txt
+-rw-r--r-- 1 Jhond 197609  2744 Sep 27 09:42 08-control-integridad-sesion.py
+-rw-r--r-- 1 Jhond 197609  2094 Sep 27 09:43 09-doc-integration-post-db.txt
+-rw-r--r-- 1 Jhond 197609  2091 Sep 27 09:44 10-poblacion-s16-dos-criterios.py
+-rw-r--r-- 1 Jhond 197609   728 Sep 27 09:44 11-poblacion-s16-medida.txt
+-rw-r--r-- 1 Jhond 197609  2144 Sep 27 09:51 12-control-integridad-post-p0.txt
+-rw-r--r-- 1 Jhond 197609 91025 Sep 27 09:52 13-cola-obligatoria.txt
+-rw-r--r-- 1 Jhond 197609 12858 Sep 27 09:56 14-anclas-finales-y-arbol.txt
+-rw-r--r-- 1 Jhond 197609   520 Sep 27 10:04 15-revalidacion-s12-en-vivo.txt
+-rw-r--r-- 1 Jhond 197609  1753 Sep 27 10:05 16-rechequeo-final.txt

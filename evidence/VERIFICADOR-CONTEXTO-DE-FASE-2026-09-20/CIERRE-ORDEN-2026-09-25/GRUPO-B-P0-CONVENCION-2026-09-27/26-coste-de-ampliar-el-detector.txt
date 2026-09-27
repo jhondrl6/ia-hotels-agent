@@ -1,0 +1,13 @@
+archivados 28 | con 00- 3 | sin 00- 25
+
+=== poblacion que HOY no se mira: los 3 archivados con 00- ===
+ PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12              violaciones=0 SIN HALLAZGOS
+ TRIBUNAL-ENFORCEMENT-OBS-2026-09-11                      violaciones=0 SIN HALLAZGOS
+ VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20                  violaciones=0 SIN HALLAZGOS
+ total violaciones sobre los 3: 0
+
+=== coste de la salida (a): que pasaria si Archives entrara en alcance ===
+ archivados SIN 00-: 25 | hallazgos C1 que se fabricarian: 25
+
+ ejemplo del primer hallazgo C1:
+  [C1/AUSENTE] Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23: no existe 00-lecciones-capitalizadas.md. Desde executor v2.22.0 el 

@@ -1,0 +1,12 @@
+poblacion del verificador con el cutoff de casa:
+  alcance        3
+  exento_fecha   0
+  sin_fecha      0
+  archivados     28
+
+¿este plan esta en ALCANCE? False
+¿aparece en ARCHIVADOS (excluidos)? True
+
+--- ahora SI, ejercitando C1..C8 sobre el plan archivado, con el codigo versionado ---
+dueños leidos por C8: 7 ['Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03', 'Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12', 'Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22', 'Archives/SR-PIPELINE-FIXES-2026-08-27', 'Archives/TRIBUNAL-OFFLINE-2026-09-09', 'Archives/VALIDADOR-URL-PROPIA-2026-08-30', 'Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20']
+C1..C8: SIN HALLAZGOS sobre las 24 filas de §2

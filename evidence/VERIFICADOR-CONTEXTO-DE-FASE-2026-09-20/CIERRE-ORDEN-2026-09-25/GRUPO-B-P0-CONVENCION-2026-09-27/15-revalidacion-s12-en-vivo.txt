@@ -1,0 +1,11 @@
+### revalidacion en vivo de la cura de S12 (--report sin destino), corrida el 2026-09-27
+$ python scripts/validate_governance_numbers.py --report
+EXIT=0
+lineas a stdout (JSON): 510
+stderr: # no se escribio ningun archivo: pase `--report RUTA` para persistir el informe
+estado de la evidencia de FASE-A despues de la corrida:
+(vacio arriba = no se escribio nada)
+
+### definicion vigente en el codigo
+87:REPORT_SIN_ESCRITURA = None
+915:    ap.add_argument("--report", nargs="?", const=REPORT_SIN_ESCRITURA, default=False,

@@ -1,0 +1,125 @@
+### cola final tras la ultima marca en .opencode
+REGEN=0
+[OK] 339 IDs definidos + 52 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX_CHECK=0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-27 11:18:34
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1356 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2753 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1359 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0
+### control de integridad
+== .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+   marcadores  disco abre=47 cier=47 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 52 (par=True)   delta backtick = 62 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['apertura', 'autorizaciones', 'casillas', 'catorce', 'confirmar', 'congeló', 'consultas', 'contradictorias']
+== .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+   marcadores  disco abre=38 cier=38 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 70 (par=True)   delta backtick = 66 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['abiertos', 'anotaciones', 'arranca', 'asignaba', 'commitearlos', 'comparando', 'confirmación', 'confirmada']
+== .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+   marcadores  disco abre=7 cier=7 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 106 (par=True)   delta backtick = 100 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['acceptance', 'aditivo', 'anclarlo', 'anidadas', 'anteriores', 'apariencia', 'aritméticamente', 'arregló']
+== .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+   marcadores  disco abre=81 cier=81 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 96 (par=True)   delta backtick = 80 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['afirmaban', 'ampliadas', 'anotaciones', 'anotación', 'arrastra', 'arregló', 'bandera', 'banderas']
+== .agents/workflows/phased_project_executor.md
+   marcadores  disco abre=1 cier=1 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 14 (par=True)   delta backtick = 16 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['cerraba', 'commítalos', 'derivado', 'derivados', 'erivados', 'formulación', 'generador', 'gobierna']
+== .agents/workflows/templates/prompt-fase-template.md
+   marcadores  disco abre=0 cier=0 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 24 (par=True)   delta backtick = 60 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['aparezca', 'archivados', 'bloques', 'briefing', 'calificador', 'canónica', 'casilla', 'cerraba']
+
+[OK] 0 archivo(s) con alguna condicion de corte
+CONTROL_EXIT=0
+### arbol
+ M .agents/workflows/phased_project_executor.md
+ M .agents/workflows/templates/prompt-fase-template.md
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/24-cierre-de-la-orden-dosier-y-portones.txt
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/25-p0-quince-celdas-convencion-y-dos-dosieres-sin-decidir.txt
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/GRUPO-A-CELDAS-2026-09-27/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/GRUPO-B-P0-CONVENCION-2026-09-27/
+total: 17
+tests arbol/HEAD: 4584 / 4584

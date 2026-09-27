@@ -1,0 +1,55 @@
+### re-verificacion: los dos checks + quick + control, despues de TODAS las anotaciones
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX_CHECK=0
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  TOTAL: 13/13 validations passed
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0
+DOCINT_EXIT=0
+AGENTS_EXIT=0
+   marcadores  disco abre=48 cier=48 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 60 (par=True)   delta backtick = 70 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['alinear', 'apertura', 'autorizaciones', 'calificador', 'casillas', 'catorce', 'confirmar', 'congeló']
+   marcadores  disco abre=39 cier=39 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 78 (par=True)   delta backtick = 74 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['abiertos', 'anotaciones', 'arranca', 'asignaba', 'calificador', 'commitearlos', 'comparando', 'confirmación']
+   marcadores  disco abre=7 cier=7 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 106 (par=True)   delta backtick = 100 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['acceptance', 'aditivo', 'anclarlo', 'anidadas', 'anteriores', 'apariencia', 'aritméticamente', 'arregló']
+   marcadores  disco abre=84 cier=84 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 122 (par=True)   delta backtick = 110 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['afirmaban', 'alimentaba', 'ampliadas', 'anotaciones', 'anotación', 'arrastra', 'arregló', 'bandera']
+   marcadores  disco abre=1 cier=1 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 18 (par=True)   delta backtick = 18 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['cerraba', 'commítalos', 'derivado', 'derivados', 'erivados', 'formulación', 'generador', 'gobierna']
+   marcadores  disco abre=0 cier=0 delta=0   (HEAD delta=0)
+   CR en disco = no   (HEAD: no)
+   CJK = 0 []
+   delta ** = 24 (par=True)   delta backtick = 60 (par=True)
+   citas numericas nuevas: NINGUNA
+   palabras pegadas nuevas: ['aparezca', 'archivados', 'bloques', 'briefing', 'calificador', 'canónica', 'casilla', 'cerraba']
+[OK] 0 archivo(s) con alguna condicion de corte
+TOTAL_RUTAS=18

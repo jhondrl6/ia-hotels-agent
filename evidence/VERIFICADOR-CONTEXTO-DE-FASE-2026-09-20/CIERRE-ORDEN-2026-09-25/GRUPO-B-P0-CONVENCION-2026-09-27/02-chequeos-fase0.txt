@@ -1,0 +1,17 @@
+=== build_phase_briefing --check ===
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+=== build_lesson_index --check ===
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+IDX_CHECK=0
+=== grep tests arbol ===
+4584
+=== git grep tests HEAD ===
+4584
+=== validate_agents_md (redireccion, no pipe) ===
+EXIT_AGENTS=0

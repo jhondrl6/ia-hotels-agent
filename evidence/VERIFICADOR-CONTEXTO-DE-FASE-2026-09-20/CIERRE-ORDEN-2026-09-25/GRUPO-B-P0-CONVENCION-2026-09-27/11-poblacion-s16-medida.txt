@@ -1,0 +1,11 @@
+prompts de fase bajo Archives/             : 126
+A) linea que arranca `Lee ` (cualquier forma): 6
+B) items parseados por el generador (no vacio): 5
+     6  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md
+     6  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md
+     6  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md
+     6  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md
+    13  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+   de ellos, ajenos a este plan            : 0
+A sin B (linea `Lee ` que el generador no resuelve): 1
+poblacion que NO declara lectura (criterio B): 121

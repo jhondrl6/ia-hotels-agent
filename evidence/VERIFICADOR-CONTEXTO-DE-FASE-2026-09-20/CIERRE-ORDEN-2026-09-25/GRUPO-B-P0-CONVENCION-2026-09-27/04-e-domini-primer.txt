@@ -1,0 +1,105 @@
+=== cabecera DOMAIN_PRIMER ===
+# Domain Primer - IA Hoteles Agent CLI
+
+> **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
+> Consultar para entender conceptos de negocio y su mapeo a codigo.
+>
+> **Version del sistema**: 4.78.0 | **Codename**: Gobernanza, costura, pertinencia y carga medida
+> **Release date**: 2026-09-25 | **Plan Maestro**: v2.6.0
+> **Agent Harness**: v3.2.0
+
+---
+...
+- `AGENTS.md` - Contexto global del agente
+
+---
+
+*Auto-generado: 2026-09-25 | v4.78.0 Gobernanza, costura, pertinencia y carga medida*
+*Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
+*NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
+
+=== VERSION.yaml ===
+3:version: "4.78.0"
+4:codename: "Gobernanza, costura, pertinencia y carga medida"
+5:release_date: "2026-09-25"
+
+=== archivos que lo tocan ===
+-rw-r--r-- 1 Jhond 197609 5823 Sep 25 14:38 .agent/knowledge/DOMAIN_PRIMER.md
+ls: cannot access '.agents/knowledge/': No such file or directory
+
+=== quien escribe DOMAIN_PRIMER (solo writers) ===
+HEAD:.agents/workflows/phased_project_executor.md:1085:./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer
+HEAD:.agents/workflows/phased_project_executor.md:1395:| **DOMAIN_PRIMER** | Regenerar al cerrar cada fase (`--regenerate-domain-primer`) | CONTRIBUTING §Paso-5b-DOMAIN-PRIMER |
+HEAD:.agents/workflows/phased_project_executor.md:1506:./venv/Scripts/python.exe scripts/doctor.py --regenerate-domain-primer
+HEAD:docs/CONTRIBUTING.md:173:| `.agent/knowledge/DOMAIN_PRIMER.md` | SEMI-AUTO via scripts/doctor.py --regenerate-domain-primer | Se VERIFICA (paso 5b) |
+HEAD:docs/CONTRIBUTING.md:181:python scripts/doctor.py --regenerate-domain-primer
+HEAD:docs/CONTRIBUTING.md:192:| Todo modulo en `modules/` esta documentado en DOMAIN_PRIMER.md | Ejecutar `python scripts/doctor.py --regenerate-domain-primer` |
+HEAD:docs/CONTRIBUTING.md:194:| Version y codename coinciden con VERSION.yaml | Reemplazar header via `python scripts/doctor.py --regenerate-domain-primer` |
+HEAD:docs/CONTRIBUTING.md:320:- `.agent/knowledge/DOMAIN_PRIMER.md` → `python scripts/doctor.py --regenerate-domain-primer`
+HEAD:docs/GUIA_TECNICA.md:121:**Problema**: los cuatro revisores existían y pasaban sus tests **sin estar conectados** al pipeline (decisión Q1: el cableado se diferiría explícitamente a E2E, no se improvisaría sobre la marcha). Y `doctor.py` leía `VERSION.yaml` sin encoding explícito, un defecto preexistente desde `082c9e1` que dejaba `--status` y `--regenerate-domain-primer` inservibles.
+HEAD:docs/GUIA_TECNICA.md:2493:**Decisión documental**: la divergencia sobre DOMAIN_PRIMER se resolvió aplicando el executor §E7 y `docs/CONTRIBUTING.md` L400 — regenerar con `doctor.py --regenerate-domain-primer` al cerrar cada fase de implementación y verificar (`--context`) en RELEASE — **sin editar** `AGENTS.md` ni el workflow. A no es fase de implementación, así que no regenera.
+HEAD:docs/contributing/REGISTRY.md:11144:| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado por `doctor.py --regenerate-domain-primer` (sin regenerar desde v4.75.0) |
+HEAD:docs/contributing/procedures.md:47:   `python scripts/doctor.py --regenerate-domain-primer`
+HEAD:docs/contributing/procedures.md:211:| `doctor.py` | Diagnostico del ecosistema + regenerar DOMAIN_PRIMER (`--regenerate-domain-primer`) |
+HEAD:scripts/doctor.py:10:- `python scripts/doctor.py --regenerate-domain-primer` -- regenerate DOMAIN_PRIMER.md
+HEAD:scripts/doctor.py:338:def run_regenerate_domain_primer() -> bool:
+HEAD:scripts/doctor.py:587:*Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
+HEAD:scripts/doctor.py:650:    parser.add_argument("--regenerate-domain-primer", action="store_true", help="Regenerate DOMAIN_PRIMER.md from live module data")
+HEAD:scripts/doctor.py:658:    if args.regenerate_domain_primer:
+HEAD:scripts/doctor.py:659:        ok = run_regenerate_domain_primer()
+HEAD:scripts/log_phase_completion.py:61:    ".agent/knowledge/DOMAIN_PRIMER.md": "Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)",
+
+=== commits que tocaron DOMAIN_PRIMER (todos) ===
+d689a9b|2026-09-25|chore(generados): SYSTEM_STATUS y DOMAIN_PRIMER regenerados con los escritores curados
+66e17bd|2026-09-20|feat(REFACTOR-WHATSAPP): cierra FASE-G con verificador de wiring por AST
+1823fff|2026-09-19|fix(v4.77.3): LLMReport honesto cuando ningun provider responde
+057b583|2026-09-19|feat(v4.77.2): contabilidad de coste del checker LLM (Gemini)
+32b0b76|2026-09-19|feat(v4.77.1): modelo de Gemini parametrizado en el provider_registry
+9c4a001|2026-09-15|chore(RELEASE): v4.77.0 — tribunal con dientes (enforcement O1-cuarentena) + certificacion VERIFY de 25 ACs
+3bdc14e|2026-09-11|chore(RELEASE): v4.76.0 — Tribunal certificador P6+P7 (tramo offline) + archivado del plan
+082c9e1|2026-09-04|release(FASE-RELEASE-4.75.0): publicar v4.75.0 «Estabilización pre-tribunal»
+42ad602|2026-08-31|feat(guard): v4.74.1 Blocklist-v2 — +hosroom.com/+istagram.com con tests de contrato
+f914e0e|2026-08-31|feat(release): v4.74.0 Guard-URL-Propia — RELEASE completada + README reestructurado
+863536b|2026-08-30|feat(guard): guard de URL propia en ensure_url con blocklist versionada y --force (FASE-A VALIDADOR-URL-PROPIA)
+9a193d9|2026-08-28|FASE-RELEASE-4.73.0: pipeline fixes Salento Real (SR-A..SR-G + SR-H2) verificados E2E; 6/6 validaciones, 26/26 regresion, Version Sync Gate PASSED; README/AGENTS/CHANGELOG counts alineados a realidad (3,621 tests, 207 modules, 29 scripts)
+a5a56f9|2026-08-28|FASE-SR-G/H/H2: display tier+jerga, E2E Salento Real + hotfix critical_recall (smoke 7/7)
+157b091|2026-08-28|feat(sr-pipeline): SR-C self-healing loop CG-CLAIM-VS-EVIDENCE (D-PF2)
+b0b31a3|2026-08-28|feat(sr-pipeline): SR-A conteo unresolved (L-SR1) + SR-B fuente unica promesa/matriz/gate (D-PF1)
+ad8ca02|2026-08-24|release: v4.72.2 Limpieza de Skills (LIMPIEZA-DE-SKILLS)
+e2e01fe|2026-08-24|release: v4.72.1 Coherencia Narrativa Dinámica (REFACTOR-COHERENCIA-NARRATIVA)
+99ca6be|2026-08-24|FASE-R0-E: Recovery FinancialFactors import + v4complete E2E ZiOne (coherence 0.9485, 12P+1W)
+612f7b4|2026-08-21|release: v4.72.0 - Credibilidad Numérica y Verdad del Sitio Vivo
+9a276f7|2026-08-05|release: v4.71.0 — Coherencia Propuesta-Diagnóstico, Gates Comerciales y Entrega
+c29bed2|2026-08-04|release: v4.70.0 — Coherencia Módulo-Entrega
+568a9c8|2026-08-01|release: v4.69.0 Delivery ZIP Single-Write Architecture
+07e292f|2026-07-30|docs: cross-document audit — alinear DOMAIN_PRIMER, AGENTS.md y README
+9b51fb0|2026-07-28|release: v4.66.0 — DT-4 Residual Fixes
+5310a73|2026-07-25|docs: cross-document alignment post-DT-3 — 4 docs sync v4.64.0
+
+=== total de commits que lo tocaron ===
+53
+
+=== prompts archivados que lo invocan: en fase RELEASE vs fase letra ===
+     11 RELEASE
+      1 SR-G
+      1 SR-F
+      1 SR-E
+      1 SR-D
+      1 SR-C
+      1 SR-B
+      1 SR-A
+      1 R0-D
+      1 R0-C
+      1 R0-B
+      1 R0-A
+      1 HEAD:.opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/README
+      1 HEAD:.opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion
+      1 HEAD:.opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/09-documentacion-post-proyecto
+      1 HEAD:.opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/06-checklist-implementacion
+      1 HEAD:.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion
+      1 HEAD:.opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto
+      1 HEAD:.opencode/plans/Archives/HOOK-PDF-2026-07-09/07-checklist-implementacion
+      1 HEAD:.opencode/plans/Archives/HOOK-PDF-2026-07-09/01-plan-maestro
+
+=== num de archivos de plan que lo invocan ===
+38

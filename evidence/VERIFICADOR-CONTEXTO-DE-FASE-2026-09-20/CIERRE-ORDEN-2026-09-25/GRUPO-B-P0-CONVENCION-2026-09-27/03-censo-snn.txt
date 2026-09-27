@@ -1,0 +1,21 @@
+=== censo Snn en HEAD (*.md), orden numerico ===
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 30 
+=== ocurrencias por Snn >=20 (HEAD, md) ===
+S19: 88 lineas-archivo
+S20: 47 lineas-archivo
+S21: 35 lineas-archivo
+S22: 42 lineas-archivo
+S23: 16 lineas-archivo
+S24: 8 lineas-archivo
+S25: 9 lineas-archivo
+S26: 35 lineas-archivo
+S27: 5 lineas-archivo
+S28: 1 lineas-archivo
+S29: 0 lineas-archivo
+S30: 1 lineas-archivo
+S31: 0 lineas-archivo
+S32: 0 lineas-archivo
+=== S27 en todo el arbol de trabajo (md) ===
+.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md:4
+evidence/FASE-VERIFY/ESTABILIZACION-PRE-TRIBUNAL/QMIND-WRITE-BACK.md:1
+GREP_EXIT=0
