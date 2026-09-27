@@ -2,12 +2,24 @@
 
 **Estado: CERRADA EN SU ALCANCE APROBADO por decisión escrita del operador el 2026-09-25** — criterio y
 límites en §6 («Criterio de cierre»), y las cuatro firmas que ese cierre pide están en la misma casilla:
-bloque A **bajo «Sin publicar»**, `DOMAIN_PRIMER` **declarado y no alineado**, los dos defectos de writers
+bloque A **bajo «Sin publicar»**, `DOMAIN_PRIMER` **declarado y no alineado** ⟦**alineado el 2026-09-27**
+con la letra **E (c)**: la política vigente es «regenerar al cerrar cada fase de *implementación* y verificar
+con `--context` en FASE-RELEASE», y quedó escrita en `AGENTS.md` §Flujo Documental y en la fila de Estandares
+Compartidos del executor; `docs/CONTRIBUTING.md` no se tocó porque ya la decía⟧, los dos defectos de writers
 **con dueño y disparador como S17/S18** ⟦(curados el mismo 2026-09-25 en una sesión con mandato de código:
 el cierre los declaró sin curar, que era lo pedido; ver §6, casilla 3 de «Firmas del cierre»⟧, y
-`L-VCF-10…14` **pendientes con su dueño**. Cerrar la orden
+`L-VCF-10…14` **pendientes con su dueño** ⟦**decidido el 2026-09-27 por ese dueño**: **aceptadas**, y la
+misma instrucción amplió el lote a `L-VCF-15…19`, que no estaban en el informe porque su pool se congeló
+antes de que existieran. Su estado vigente vive en §2 y §4 del `00-` de CONTEXTO, que es la fuente única —
+esta cabecera no lo re-transcribe⟧. Cerrar la orden
 **no** afirma commit ni push, ni termina los cuatro planes: lo que quedó sin permiso sigue siendo el
 momento remoto (D8/D9), el archivado, el commit y el push.
+⟦**Vencido el 2026-09-27 en tres de sus cuatro miembros.** El momento remoto se corrió (D8 re-corrido y
+D9 subido con casado por descarga + sha256), el archivado se corrió (`git mv` del plan a `Archives/`) y el
+commit se corrió. **Sigue en pie push**, y se declara aparte: la cuenta de commits locales no se fija en
+este encabezado porque cualquier commit posterior la refuta. Lo que esta frase escribió bien y hay que
+conservar es el principio: cerrar una orden no arrastra permisos que esa orden no pidió. Su estado vigente
+vive en §Deuda de `dependencias-fases.md` y en el expediente de cierre de la orden⟧
 
 Historial del alcance que se cierra: bloque A ejecutado y conciliado (§5-bis/§5-ter); B, exclusivamente
 según §13 de su fuente única de resultados; bloque C AUTORIZADO Y EJECUTADO en su parte documental el
@@ -105,7 +117,7 @@ Los alias de esta tabla se usan únicamente en esta orden; las rutas parten de l
 
 | Alias | Directorio | Estado observado y tramo a adaptar |
 |---|---|---|
-| CONTEXTO | `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` | A/B cerradas offline; remediación puntual de B por alcance separado, **conciliada y aceptada por el plan propietario el 2026-09-23** (§5-ter: S11/S12 aceptadas, README rectificado, AC9 precisado); ⟦**antecedente vencido**: «C contractualmente preparada con E1–E5 y **no ejecutada**; D y RELEASE pendientes»⟧ — **C ejecutada y cerrada el 2026-09-24** (piloto, mandato propio; E1–E5 aplicados sin reabrirlos), **D ejecutada y cerrada el 2026-09-24** y **FASE-RELEASE ejecutada y cerrada en su parte offline el 2026-09-25** con la release **4.78.0**. Estado por fase: su `dependencias-fases.md`; métricas por fase: su `09` §D. **Lo que RELEASE dejó explícitamente pendiente**: momento remoto (D8/D9), archivado, `--fix`/`--update-baseline`, commit y push. Ninguna de sus cinco fases está **commiteada en su parte documental** y el producto de D (`scripts/build_phase_briefing.py`) sigue sin rastrear |
+| CONTEXTO | `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/` | A/B cerradas offline; remediación puntual de B por alcance separado, **conciliada y aceptada por el plan propietario el 2026-09-23** (§5-ter: S11/S12 aceptadas, README rectificado, AC9 precisado); ⟦**antecedente vencido**: «C contractualmente preparada con E1–E5 y **no ejecutada**; D y RELEASE pendientes»⟧ — **C ejecutada y cerrada el 2026-09-24** (piloto, mandato propio; E1–E5 aplicados sin reabrirlos), **D ejecutada y cerrada el 2026-09-24** y **FASE-RELEASE ejecutada y cerrada en su parte offline el 2026-09-25** con la release **4.78.0**. Estado por fase: su `dependencias-fases.md`; métricas por fase: su `09` §D. **Lo que RELEASE dejó explícitamente pendiente**: momento remoto (D8/D9), archivado, `--fix`/`--update-baseline`, commit y push. Ninguna de sus cinco fases está **commiteada en su parte documental** y el producto de D (`scripts/build_phase_briefing.py`) sigue sin rastrear ⟦**Cuatro de esos seis cayeron y las dos frases del final están refutadas por medición (barrido P-0, 2026-09-27)**: D8 re-corrido, D9 subido y verificado por descarga y sha, el `git mv` del plan ejecutado y el commit hecho. Medido hoy: `git ls-files` resuelve `scripts/build_phase_briefing.py`, dado de alta en `ae21d09` y alcanzable desde HEAD, y `git ls-tree -r` sobre el directorio del plan cuenta **18** rutas versionadas, así que ni «ninguna fase commiteada en su parte documental» ni «el producto de D sigue sin rastrear» describen el árbol. En pie quedan **push** —que se re-mide con `git rev-list --left-right --count origin/master...HEAD` y no se fija en esta celda— y `--update-baseline`, reservado al archivado. El `--fix` **sí** se corrió, y sus dos defectos están declarados en la fila S17 de §Deuda del plan⟧ |
 | WHATSAPP | `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/` | A/G/0/B cerradas, B con deuda AC5 asignada a C-D; adaptar C, D, E, F, H, E2E, VERIFY y RELEASE. El README y partes de dependencias aún presentan B pendiente, pero su prompt, su fila y el commit `473ed0f` corroboran el cierre. ⟦**Conciliación 2026-09-25**: dos de sus «Seguimientos abiertos» estaban **resueltos y no barridos** — propagación `whatsapp_html_detected` (entregada por su FASE-B, medida con `validate_wiring.py --ignore-known`: 0 omisiones y 0 excepciones aplicadas) y los «dos escritores de REGISTRY» (la regla `registry_last_update` fue **retirada** por el bloque B de esta orden). Rectificados con atribución en su `10-analisis-post-implementacion.md`⟧ |
 | JEV | `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/` | A ejecutada offline con muestra **BORRADOR** y revisión humana pendiente; **B, C y RELEASE pendientes y sin autorización para ejecutarlas**. ⟦**Antecedente vencido el 2026-09-25**: «el bloque de arranque todavía ofrece ejecutar A» describía el **HEAD**; en el árbol de trabajo ese bloque ya no ofrece ninguna fase, porque lo reescribió el bloque C de esta orden⟧. Su **dependencia técnica** del hermano quedó **entregada** el 2026-09-24 (`scripts/triage_lesson_relevance.py`, rastreado en `5817edd`), así que los bloqueantes reales de su FASE-B son ahora **la revisión humana de la muestra, la decisión del *gap* de interfaz y su propia autorización**, no la ausencia del triaje. El trabajo preexistente de 18 líneas en su `dependencias-fases.md` se conserva intacto y sin commit |
 | ESCRITURA-QMIND | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/` | Fase única pendiente; conservar su propiedad del writer y de su integración con validaciones. |
@@ -165,7 +177,7 @@ temporales: también estaban fuera del mandato y no deben repetirse. Matriz y ev
 |---|---|
 | CONTEXTO/C | **⟦RESUELTOS el 2026-09-23 como E1–E5 en el contrato del plan; ninguno implementado⟧** Definida la decisión binaria como `choice` de dos opciones con `confidence` independiente (la recomendación de esta fila es la que se adoptó, confirmada contra `decision_client.py`); las propuestas de un falso no se incorporan sin revisión humana; **E2** eligió lectura del JSON con frescura propia (ruta b) y alineó estados/tests/prompt — `VENCIDO` **no** se elimina: lo produce el check del propio C; AC15 semántico continúa `NO-EJERCITADO` y D6 dormida. ⟦**Cerrado el 2026-09-24**: «Queda por ejecutar la fase» era el estado al redactar la fila — el piloto se ejecutó con mandato propio y **aplicó E1–E5 tal como estaban resueltos**, sin reinterpretarlos; el techo alcanzable con D7 inactiva sigue siendo `acceptance = NO-EJERCITADO`⟧ |
 | CONTEXTO/D | ⟦**EJECUTADO el 2026-09-24** — FASE-D cerró con estos cuatro puntos medidos, no escritos⟧ Medir carga total, incluido workflow obligatorio y coste del pack; no prometer ahorro por concatenación. Aceptar explícitamente el resultado no medido de C. Definir frescura por fuentes relevantes, con HEAD como procedencia, evitando invalidación circular por el commit del propio generado; acordar resolución y regeneración tras archivado. Su medición vive en `evidence/…/FASE-D/carga.json` y `carga-pre-post.md`; **esta fila no la transcribe** |
-| CONTEXTO/RELEASE | **⟦PENDIENTE — es la única fila de §4.C que no se ejecutó⟧** Resolver «verificador verde» frente a D1 sin ejecutar; subida/consulta QMind frente a cero red; y `--check` posterior al traslado sin regeneración prevista. No convertir RELEASE en reparación de código. Mantener resultados parciales sin promoverlos a éxito. Las tres contradicciones de esta fila quedaron **resueltas documentalmente** por el bloque C (contract §Dos momentos del cierre) y siguen siendo **operación pendiente de su fase**: resuelta la letra, no corrida la fase. ⟦**Cuarta resolución añadida el 2026-09-25 en la conciliación final**: «offline» se estaba leyendo como permiso de escritura. Rige **C0** en el prompt de RELEASE y su contrato: antes de escribir hay que autorizar **los destinos reales** de cada writer — lo que `sync_versions.py` sin `--check` reescribe según `scripts/sync_config.yaml`, `VERSION.yaml` (entrada, no salida) y el par `REGISTRY.md` + `.last_doc_phase.json` del escritor de registro. Un mandato de fase **no** incluye editar configuración central, y sync de cabeceras **no** autoriza la alineación de `DOMAIN_PRIMER`. Tampoco se corre `--fix` ni `--update-baseline` para absorber rojos⟧ |
+| CONTEXTO/RELEASE | **⟦PENDIENTE — es la única fila de §4.C que no se ejecutó⟧** Resolver «verificador verde» frente a D1 sin ejecutar; subida/consulta QMind frente a cero red; y `--check` posterior al traslado sin regeneración prevista. No convertir RELEASE en reparación de código. Mantener resultados parciales sin promoverlos a éxito. Las tres contradicciones de esta fila quedaron **resueltas documentalmente** por el bloque C (contract §Dos momentos del cierre) y siguen siendo **operación pendiente de su fase**: resuelta la letra, no corrida la fase. ⟦**Cuarta resolución añadida el 2026-09-25 en la conciliación final**: «offline» se estaba leyendo como permiso de escritura. Rige **C0** en el prompt de RELEASE y su contrato: antes de escribir hay que autorizar **los destinos reales** de cada writer — lo que `sync_versions.py` sin `--check` reescribe según `scripts/sync_config.yaml`, `VERSION.yaml` (entrada, no salida) y el par `REGISTRY.md` + `.last_doc_phase.json` del escritor de registro. Un mandato de fase **no** incluye editar configuración central, y sync de cabeceras **no** autoriza la alineación de `DOMAIN_PRIMER`. Tampoco se corre `--fix` ni `--update-baseline` para absorber rojos⟧ ⟦**Esa última prescripción se incumplió a medias y «resuelta la letra, no corrida la fase» ya no describe a este plan (barrido P-0, 2026-09-27)**: la fase se corrió, cerró con la release 4.78.0 y su parte documental está versionada. De las dos banderas, `--update-baseline` no se corrió y sigue reservado al archivado; el `--fix` **sí** se corrió dentro de D-c y sus dos defectos quedaron declarados en la fila S17 de §Deuda del plan. La regla de esta fila no se retira: es la que habría evitado ese trabajo⟧ |
 | WHATSAPP | Reconciliar el punto de reanudación en C y adaptar sus tramos pendientes al cierre común aprobado. Conservar deuda AC5, contratos aditivos, pruebas de botón seguro, aislamiento interno/cliente, corrida única y lectura directa de VERIFY. Resolver con la gobernanza común la discrepancia ya registrada sobre cuándo regenerar DOMAIN_PRIMER, sin tratar su generación y su validación como la misma operación. ⟦**Conciliación 2026-09-25**: la cuota de «tres observaciones» sigue viva en **dos** rutas de este plan —`10-analisis-post-implementacion.md:72`, barrida en esta conciliación, y `05-prompt-inicio-sesion-fase-G.md:52`, que **no** estaba en el permiso y queda como residuo con dueño⟧ |
 | JEV | Reconciliar arranque y disponibilidad real de la interfaz; integrar contra el contrato corregido, sin duplicar cliente ni acomodar silenciosamente el consumidor. B depende técnicamente de B+C offline de CONTEXTO, no de aceptabilidad semántica real; el orden de cierre/índice es gobernanza separada. Conservar muestra humana, congelación, comparador, reservas, cuotas, aislamiento del SDK y autorizaciones por etapa. ⟦**Conciliación 2026-09-25**: la dependencia técnica **B+C** del hermano quedó **entregada** el 2026-09-24, así que la fila ya no describe un bloqueante de ejecución ajena; **no** por eso está autorizada la FASE-B de JEV, ni congelada su muestra, ni resuelta la decisión de interfaz que ella plantea⟧ |
 | ESCRITURA-QMIND | Resolver consulta/ingesta real frente a prohibición de red y AC6 posterior al cierre de WHATSAPP frente a una sesión que debe precederlo. Separar entrega offline de aceptación remota posterior, con estado parcial explícito y propietario. Conservar verificación por contenido, saneamiento, no-PASS por instrumento ausente y tratamiento autorizado de fuentes vigentes. |
@@ -184,16 +196,23 @@ autorización y presupuesto pendientes.
 FASE-C se ejecutó en una sesión **posterior del mismo 2026-09-24**, con mandato propio (§6); FASE-D cerró
 en una tercera sesión ese día. Lo que la nota sigue afirmando en pie es lo demás: **D7 sin activar, el
 aceptabilidad semántica no ejercitada, el `import` del SDK sin dueño de ruta (S10), las deudas D2/D3/D6
-intactas y toda operación remota sin autorización ni presupuesto**.
+intactas y toda operación remota sin autorización ni presupuesto**. ⟦**De esa lista de vigencia caen D2 y la
+operación remota; siguen D3 y D6 (barrido P-0, 2026-09-27)**: D2 se ejecutó el 2026-09-26 con su disparador
+literal todavía sin cumplir, y eso está declarado en su propia fila; la operación remota se autorizó y corrió
+el 2026-09-27, con D8 re-corrido y D9 subido y verificado por descarga y sha. D3 sigue con su dueño intacto y
+D6 sigue dormida con causa mientras AC15 publique `NO-EJERCITADO`⟧
 
 ## 5. Decisiones para aprobación y coordinación
 
 | Decisión | Recomendación | Estado |
 |---|---|---|
 | Alcance de implementación | Aprobar A, B y C por bloques y archivos concretos; autorizar expresamente los cambios centrales/configuración necesarios | **PARCIAL**: A ejecutado+conciliado; **B autorizado; estado exclusivo en su fuente única** — retirado también el dictamen de la revalidación del 2026-09-23; el veredicto vigente se decide en §13 del resumen (§4.B; árbol sin commitear porque el mandato de B prohíbe commit/push ⟦**vencido el 2026-09-26 por la puerta C**: 22 commits `5817edd..a81da09`, cada uno con 7/7 del hook, L3 sin hallazgos y push verificado con paridad `0 0` medida tras `git fetch`.⟧); **C autorizado y ejecutado el 2026-09-24 en su parte documental** (los archivos concretos que nombraba su mandato; sin código, sin tests, sin `.agents/**`, sin `AGENTS.md`, sin commit ni push). ⟦**Antecedente vencido el 2026-09-24**: «El piloto sigue sin autorizar»⟧ — **el piloto FASE-C y después FASE-D se autorizaron y ejecutaron ese día, cada uno con su mandato propio y su permiso explícito de archivos**; ninguno de los dos trajo consigo FASE-RELEASE, que sigue **sin autorización** |
-| Encaje con deudas | Enlazar A con S11/S12 y B con D1/D3 de CONTEXTO, sin crear propietarios paralelos; mantener D2 y activación D7 fuera. Adelantar D3 respecto a su disparador actual requiere decisión expresa, no interpretación | **PARCIAL**: el enlace A↔S11/S12 está hecho y aceptado (§5-ter). **B↔D1 ejecutado y revalidado** (D1 cerrado desde su fuente, con contraejemplo congelado y el árbol real `SIN-HALLAZGOS`). **S13: reabierto el 2026-09-23 por la remediación** — B movió el destino de escritura pero no observaba las operaciones de escritura; su estado vigente es el de la matriz de cierre. ⟦Rectificado 2026-09-23 (revalidación): ningún estado de D1/D3/S13 queda declarado desde esta fila — todos vuelven a la matriz §13 del resumen, que los re-examina tras el retiro del tercer cierre⟧ **D3 adelantado solo en la parte que B necesitaba**, sin declarar D3 cerrado y **sin mudar su dueño**, que sigue siendo el del maestro §6 («Plan propio, posterior»): la simplificación que B recibió expresamente NO se difiere a D2, al bloque C ni al piloto. D2 y D7 fuera, como pedía la fila. El mandato de B autorizó expresamente adelantar D3 respecto a su disparador. **⟦D2 sigue fuera, como pedía la fila: el bloque C documentó por qué su disparador literal se cumplió en parte y por qué eso no lo abre — ver la fila D2 de `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`⟧** |
+| Encaje con deudas | Enlazar A con S11/S12 y B con D1/D3 de CONTEXTO, sin crear propietarios paralelos; mantener D2 y activación D7 fuera. Adelantar D3 respecto a su disparador actual requiere decisión expresa, no interpretación | **PARCIAL**: el enlace A↔S11/S12 está hecho y aceptado (§5-ter). **B↔D1 ejecutado y revalidado** (D1 cerrado desde su fuente, con contraejemplo congelado y el árbol real `SIN-HALLAZGOS`). **S13: reabierto el 2026-09-23 por la remediación** — B movió el destino de escritura pero no observaba las operaciones de escritura; su estado vigente es el de la matriz de cierre. ⟦Rectificado 2026-09-23 (revalidación): ningún estado de D1/D3/S13 queda declarado desde esta fila — todos vuelven a la matriz §13 del resumen, que los re-examina tras el retiro del tercer cierre⟧ **D3 adelantado solo en la parte que B necesitaba**, sin declarar D3 cerrado y **sin mudar su dueño**, que sigue siendo el del maestro §6 («Plan propio, posterior»): la simplificación que B recibió expresamente NO se difiere a D2, al bloque C ni al piloto. D2 y D7 fuera, como pedía la fila. El mandato de B autorizó expresamente adelantar D3 respecto a su disparador. **⟦D2 sigue fuera, como pedía la fila: el bloque C documentó por qué su disparador literal se cumplió en parte y por qué eso no lo abre — ver la fila D2 de `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`⟧** ⟦**Vencida esa «sigue
+fuera» el 2026-09-26 y barrida por P-0 el 2026-09-27**: D2 se ejecutó esa fecha por mandato del operador
+sobre su propia fila, con la desviación de su disparador literal escrita junto al resultado. Su estado
+vigente vive allí, no en esta celda, y esta nota no lo re-transcribe⟧ |
 | Fecha de REGISTRY | Un único escritor para fecha de última entrada; fecha de release por separado, sin cambiar VERSION para reparar el registro | **PARCIAL al momento del retiro, demostrado en la remediación**: `registry_last_update` está retirada de `sync_config.yaml` y `VERSION.yaml` no se toca —eso sí estaba hecho—, pero el «cubierto por `tests/test_registry_fecha_documental.py`» **sobreafirmaba**: esas pruebas no redirigían las rutas del `SyncEngine` ni `VERSION.yaml` al mismo expediente temporal, corrían la sincronización solo en modo `--check` (que no escribe) y dejaban sin ejercer la interacción registro→sync en modo escritura, su repeticion, las fechas distintas release/entrada y el control negativo. Estado vigente: §13 del resumen en `evidence/…/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md` (revalidación; la demostración previa de la remediación queda como antecedente §1–§11) |
-| Entrega y permisos remotos | Entrega offline verificable, aceptación remota posterior con autorización y presupuesto propios; no fingir que una prohibición de red permite una subida | **ESCRITO, NO EJECUTADO (bloque C, 2026-09-24).** La separación ya es contrato en los tres planes que la necesitaban: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (§Momentos y la división **AC6-entrega / AC6-aceptación**), `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`04-contrato-ejecucion.md` §Dos momentos del cierre) y `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (su FASE-RELEASE, con el momento remoto etiquetado `PENDIENTE-AUTORIZACION`). Ninguna subida ni consulta real se hizo ni se autoriza por esta redacción: sigue faltando permiso literal y presupuesto |
+| Entrega y permisos remotos | Entrega offline verificable, aceptación remota posterior con autorización y presupuesto propios; no fingir que una prohibición de red permite una subida | **ESCRITO, NO EJECUTADO (bloque C, 2026-09-24).** La separación ya es contrato en los tres planes que la necesitaban: `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (§Momentos y la división **AC6-entrega / AC6-aceptación**), `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`04-contrato-ejecucion.md` §Dos momentos del cierre) y `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (su FASE-RELEASE, con el momento remoto etiquetado `PENDIENTE-AUTORIZACION`). Ninguna subida ni consulta real se hizo ni se autoriza por esta redacción: sigue faltando permiso literal y presupuesto ⟦**Vencida el 2026-09-27 por su propia ejecución, que es lo que esta fila pedía (barrido P-0)**: la consulta (D8) y la subida (D9) se hicieron cada una con su permiso literal, y la frescura de la subida se casó por descarga y sha256 y no por título. Lo que esta redacción no previó es la consecuencia que dejó el cierre: las anotaciones locales posteriores a la subida hacen al snapshot del notebook más viejo que el archivo en disco, y el verificador que decide por título no lo ve. Volver a subir es decisión del operador, no de esta fila⟧ |
 | Piloto | FASE-C de CONTEXTO después de remediación y enmiendas, bajo mandato propio; no ejecutarla como parte de redactar o aprobar esta orden | **EJECUTADO Y CERRADO el 2026-09-24**: las enmiendas que la fila pedía estaban resueltas y conciliadas como **E1–E5** (§5-ter) y se aplicaron **tal como estaban resueltas**, sin reinterpretarse dentro de la fase. ⟦Esta celda decía «**No se ejecutó FASE-C** — sigue necesitando su mandato propio»; quedó vencida por el mandato que el propio piloto recibió ese día⟧ Su expediente: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` (lectura por su `baseline-pre-post.md` §Presupuesto y su fila en `10-analisis-post-implementacion.md` de ese plan; **esta fila no transcribe sus cifras**). **Lo que el piloto no cerró**: el `acceptance` semántico sigue `NO-EJERCITADO` (E4), D6 dormida, y su métrica de iteraciones es **auto-reporte con unidad propia**, no comparable con las tres horas de B (§6, motivo 3) |
 
 Orden recomendado: aprobar fronteras y resolver contradicciones; implementar A; adaptar proceso/instrumentos y contratos pendientes de forma coherente; validar; ejecutar el piloto autorizado. Son bloques de trabajo, no nuevas fases automáticas ni promesa de resolver todo en una sesión. Serializar escrituras y cierres sobre archivos compartidos; las lecturas independientes sí pueden hacerse en paralelo.
@@ -302,7 +321,11 @@ CONTEXTO de S11/S12, commit/push del operador y autorizaciones separadas para B,
 > **⟦Rectificada parcialmente el 2026-09-23⟧** de los tres componentes que nombraba ese párrafo, **uno**
 > cambió: el **registro CONTEXTO de S11/S12** se hizo ese día (ver §5-ter). Los otros dos siguen
 > exactamente donde estaban — **commit/push es decisión del operador** y **los bloques B, C y el piloto
-> conservan su autorización pendiente** — y el `fdd397f` que contiene la remediación **sí está commiteado
+> conservan su autorización pendiente** ⟦De los tres nombres de esa frase no queda ninguno en pie
+> (barrido P-0, 2026-09-27): B y C se ejecutaron con mandato propio los días 23 y 24, el piloto el 24 y
+> FASE-RELEASE cerró su parte offline el 25. La corrección de la nota siguiente arregló solo al piloto y
+> dejaba a B y C colgados de esa frase, que es la razón de que esta nota vaya aparte y no dentro de la
+> anterior — reescribir la nota de otra sesión no es barrer una celda⟧ — y el `fdd397f` que contiene la remediación **sí está commiteado
 > y empujado** (medido el 2026-09-23: HEAD local = `fdd397f`, `git rev-list --count origin/master..HEAD`
 > = **0**), de modo que «sin commit» ya no es una descripción vigente de la remediación técnica.
 >
@@ -310,7 +333,12 @@ CONTEXTO de S11/S12, commit/push del operador y autorizaciones separadas para B,
 > está entre ellos** — se autorizó y ejecutó el 2026-09-24 (§5, fila `Piloto`; §6, casilla 6). La nota sigue
 > vigente en lo demás: **commit/push es decisión del operador** y **FASE-RELEASE conservaba su autorización
 > pendiente** ⟦ese último punto se cumplió el 2026-09-25: RELEASE se autorizó y cerró en su parte offline con
-> la release 4.78.0; commit y push siguen donde estaban⟧. Y la paridad que esta cita publicaba (`0`, medida el 2026-09-23) es un **antecedente fechado**,
+> la release 4.78.0; commit y push siguen donde estaban⟧ ⟦De esa pareja, el commit ya no está donde estaba
+> (barrido P-0, 2026-09-27): los once documentos del plan entraron al versionado en `ab664ec` y el
+> 2026-09-26 salieron seis commits más, cada uno con su hook en verde. El push también se ejercitó ese
+> día, con su rango consignado en el expediente 22- del cierre. Lo que hoy vuelve a estar pendiente es el
+> remoto de esos seis, y se lee con `git rev-list --left-right --count origin/master...HEAD` después de
+> `git fetch`: no se fija en esta celda porque cualquier commit lo mueve⟧. Y la paridad que esta cita publicaba (`0`, medida el 2026-09-23) es un **antecedente fechado**,
 > no el estado del remoto de hoy: se re-mide con `git fetch origin --quiet && git rev-list --left-right
 > --count origin/master...HEAD`.
 
@@ -426,6 +454,10 @@ y la orden NO queda cerrada.** Cuatro motivos, cada uno con su fuente:
    con la release 4.78.0. Cerrar esta orden antes de eso habría dejado un criterio de aceptación apoyado en
    un plan a medias; **hoy la parte ejecutable del plan está corrida**, y lo que sigue pendiente de ese plan
    son permisos, no fases: momento remoto (D8/D9), archivado, `--fix`/`--update-baseline`, commit y push.
+   ⟦Cuatro de esos cinco nombres cayeron entre el 26 y el 27, cada uno con su mandato literal y su crudo
+   (barrido P-0): la consulta y la subida del momento remoto, el archivado del plan y el commit. De la lista
+   sigue en pie **push**, y del par de banderas solo `--update-baseline`, que sigue reservado al archivado —
+   el `--fix` sí se corrió en D-c y sus dos defectos están en la fila S17 de §Deuda del plan⟧
 2. **La re-evaluación de las deudoras D1–D10 vive en el RELEASE de ese plan**, no aquí: esta orden
    aprobó enmiendas y un piloto, no el veredicto sobre las deudas del lote. ⟦**Cumplida en su lectura el
    2026-09-25**: FASE-RELEASE re-evaluó D1–D10 **leyendo** sus fuentes —D1 por la matriz §13 de B, D2/D3/D6/D7
@@ -446,7 +478,10 @@ workflow canónico por fase — lo que dejó el bloque B fue un adelanto parcial
 **D6** (el lint de contradicciones semánticas, **dormida con causa**: su disparador es un `acceptance`
 que aquí no se ejercitó), **D7** (activar el proveedor de decisiones) y **S10** (dónde vivirá el
 `import` del SDK cuando D7 se active) siguen **abiertas, con su dueño y su disparador**, exactamente
-como estaban antes del piloto. Ejecutar el piloto tampoco aplicó dentro de la fase ninguna mejora
+como estaban antes del piloto. ⟦Esa enumeración de cinco nombres mezcla vivas y muertas, y el barrido P-0 del
+2026-09-27 las separa sin tachar la frase: **D2** se ejecutó el 2026-09-26 —con su disparador literal aún sin
+cumplir, que es lo que su propia fila declara—, así que de los cinco quedan vivos **D3**, **D6**, **D7** y
+**S10**, y esos cuatro son lo único de esta frase que hoy describe el estado del árbol⟧ Ejecutar el piloto tampoco aplicó dentro de la fase ninguna mejora
 general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, no renumeró checks
 (AC16 delta 0 contra su propio par pre/post) y no tocó el proceso común.
 
@@ -471,12 +506,20 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
   ⟦**S17 y S18 se curaron después, en otra sesión con mandato propio (2026-09-25)**: siguen vivas D2, D3
   completa, D6, D7, S10, S14, S15 y S16⟧ ⟦**tercera pasada sobre esa misma lista, 2026-09-26: de esas ocho
   sigue viva todo menos S15**, que se curó en `scripts/build_lesson_index.py` con mandato de código del
-  operador; la enumeración anterior se conserva como se escribió, no se lima para que parezca conforme⟧;
+  operador; la enumeración anterior se conserva como se escribió, no se lima para que parezca conforme⟧
+  ⟦**cuarta pasada sobre esa misma lista, 2026-09-27 (barrido P-0), y esta vez para enmendar dos de sus
+  palabras**: «de esas ocho sigue viva todo menos S15» se escribió el mismo día en que D2 se ejecutó, así que
+  D2 no estaba viva cuando se lo afirmó; y S16 se curó el 2026-09-27 con el mandato D-b sobre su propio dueño,
+  con su población re-medida en §S16 del plan, que es la fuente única. De las ocho enumeradas quedan vivas
+  **D3**, **D6**, **D7**, **S10** y **S14**. Las pasadas anteriores se conservan textuales: es la regla de la
+  casa, no una cortesía⟧;
   (4) que el trabajo esté **commiteado o publicado** — ver la tabla de cuatro momentos del encabezado.
   ⟦**Precisión del mismo 2026-09-25, causada por la propia ejecución del cierre**: esta casilla decía «a
   CONTEXTO le falta FASE-RELEASE». FASE-RELEASE se ejecutó y cerró **en su parte offline** ese día con la
   release 4.78.0; lo que le falta a ese plan son permisos (momento remoto, archivado, commit, push), no
-  fases. La frase se corrigió por exactitud, no para acercar el lote a un cierre que aún no ocurre⟧.
+  fases. ⟦De esos cuatro permisos, tres se ejercieron entre el 26 y el 27: el momento remoto (D8 y D9), el
+  archivado del plan y el commit. Queda **push**, y su cifra no se transcribe aquí: se lee con
+  `git rev-list --left-right --count origin/master...HEAD` después de `git fetch`⟧ La frase se corrigió por exactitud, no para acercar el lote a un cierre que aún no ocurre⟧.
 - **Condición para ejecutar el cierre**: que FASE-RELEASE de CONTEXTO haya cerrado **offline** y haya
   declarado su momento remoto como `PENDIENTE-AUTORIZACION` si no tuvo permiso. Un resultado parcial de
   RELEASE se reporta como parcial. ⟦**Esa condición quedó cumplida el 2026-09-25**, con la release 4.78.0,
@@ -526,6 +569,14 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
      y alinearlo pide mandato literal sobre esos dos documentos. Regenerar el archivo con su writer (lo que
      hizo RELEASE) y alinear su política **son dos operaciones distintas**: no fundirlas es exactamente lo que
      pedía la fila WHATSAPP de §4.C. Registro en `06-checklist-implementacion.md` de CONTEXTO.
+     ⟦**Cerrado el 2026-09-27 con el mandato literal que este punto pedía** — letra **E (c)**, que es la
+     política que ya regían `docs/CONTRIBUTING.md` Paso 5b, el executor §4.5.5 y §E7 y la decisión registrada
+     en `docs/GUIA_TECNICA.md`: **regenerar al cerrar cada fase de *implementación*** con el comando de
+     `doctor.py`, y **verificar** con `--context` solo en FASE-RELEASE. Se alineó el perdedor: la nota de
+     `AGENTS.md` §Flujo Documental y su fila de la tabla de cross-references, más el calificador que le
+     faltaba a la fila de Estandares Compartidos del executor. `docs/CONTRIBUTING.md` **no** se editó: decía
+     lo correcto. Y quedó deshecha la lectura que alimentaba la divergencia: el regenerador **no** tiene
+     llamador automático, así que el «(no manualmente)» que publicaba `AGENTS.md` describía mal el mecanismo⟧
   3. **Defectos de writers → S17 y S18**, con dueño (`scripts/sync_versions.py` + `scripts/doctor.py`;
      `scripts/sync_config.yaml` + su lector) y disparador (el próximo mandato que autorice editarlos),
      **declarados y no curados** en el acto del cierre. ⟦**Su disparador se cumplió el mismo 2026-09-25**:
@@ -536,7 +587,11 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
      el cierre firmó «declarar con dueño, no curar aquí», y eso fue lo que se hizo⟧.
   4. **`L-VCF-10…14` → pendientes con su dueño: el operador**, por la revisión humana que fija el contrato
      **E3**. Ninguna entró al §2 del `00-` de CONTEXTO (**AC10**: sus catorce filas intactas) y ninguna se
-     rechazó; el registro de los cinco estados está en §4 de ese `00-`.
+     rechazó; el registro de los cinco estados está en §4 de ese `00-`. ⟦**Ese punto 4 se cerró el
+     2026-09-27 con la respuesta que pedía**: el dueño escribió **D-d (a)**, las cinco se **aceptaron**, y la
+     misma instrucción sumó a `L-VCF-15…19` — que nunca estuvieron en el pool del informe, congelado en su
+     propia corrida. §2 del `00-` cierra en **24** filas. Lo que los puntos 1 a 4 afirmaban se conserva
+     literal: era el estado al firmar el cierre, y firmarlo bien consistía en declarar sin aplicar⟧
 
   Qué corrió este cierre y su evidencia: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/`
   — baseline `--quick` **antes** de escribir, las escrituras documentales, y la cola derivada en su orden
@@ -572,6 +627,13 @@ otras autorizaciones.⟧
   (`--fix`/`--update-baseline`), commit y push. Su lectura de estados y su evidencia:
   `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` y
   `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE/`.
+  ⟦**De esos cinco permisos, cuatro se concedieron y se ejercieron entre el 2026-09-26 y el 2026-09-27**:
+  momento remoto (D8 re-corrido, D9 subido y casado por descarga + sha256), archivado (`git mv` a
+  `Archives/`, con `resolver_plan()` del escritor viendo el plan en las dos rutas), `--fix` (dentro de D-c,
+  y ahí quedaron sus dos defectos sin curar en §S17) y commit. **Sigue permiso pendiente push**, y
+  `--update-baseline` no se tocó: su bandera está reservada al archivado y el gate de citas pasó sin ella.
+  Esta bala no se re-escribe: su regla de «cada permiso con su checkpoint» es la que hizo que los cuatro
+  se pudieran correr uno por uno⟧
 - **Dos defectos de instrumento que la release declaró y no curó** (son edición de `scripts/`, fuera de
   todo mandato dado hasta aquí): `scripts/sync_versions.py:161` y `scripts/doctor.py:590` escriben con
   `write_text` sin `newline="\n"` y re-CRLF-ean archivos que git almacena en LF (el detector de finales de
@@ -622,10 +684,17 @@ también FASE-D. **FASE-RELEASE**, que esta nota aún listaba como sin mandato, 
 parte offline el 2026-09-25** (release 4.78.0) y con ello quedó cumplida la condición que el §6 ponía como
 requisito previo del cierre. Siguen exactamente donde los dejó: **D7** inactiva y **toda operación remota**
 sin autorización ni presupuesto; y son pendientes de **permiso**, no de fase, el momento remoto (D8/D9), el
-archivado, el commit y el push. Lo que ya **no** es válido es
+archivado, el commit y el push. ⟦Esta frase es la que la anotación de más abajo ya venció a medias, y el
+barrido P-0 del 2026-09-27 separa sus dos mitades en lugar de tacharla: de lo que enumera siguen vivos **D7**
+inactiva y el **push**; cayeron la operación remota (D8 y D9, con la subida casada por descarga y sha), el
+archivado y el commit, que se hizo en los dos días siguientes a esta redacción. La oración se conserva
+íntegra porque describía el árbol del 2026-09-25⟧ Lo que ya **no** es válido es
 leer la nota como «la orden está a medias de implementación»: la implementación que la orden proponía está
 hecha; lo que falta es **la firma del cierre por el operador, dos decisiones humanas (la alineación de
-DOMAIN_PRIMER y las cinco propuestas del piloto) y un permiso técnico (D7)**.
+DOMAIN_PRIMER y las cinco propuestas del piloto) y un permiso técnico (D7)**. ⟦**De esas dos decisiones
+humanas, una está tomada el 2026-09-27**: la de las cinco propuestas del piloto, **aceptadas** con la
+instrucción **D-d (a)** y ampliadas a `L-VCF-15…19`. Sigue abierta la otra — la alineación de
+`DOMAIN_PRIMER`, que pide mandato literal sobre cuál de las dos políticas gana — y **D7**⟧
 
 ⟦**Esa lista se cerró el 2026-09-25, en la misma fecha y por escrito**: la **firma del cierre** está en
 §6 («Firmas del cierre»). Las **dos decisiones humanas** tomaron la forma «declarar, no aplicar»:
@@ -634,3 +703,26 @@ pidiendo mandato literal sobre `AGENTS.md` y `docs/CONTRIBUTING.md` — y **las 
 (`L-VCF-10…14`) quedan pendientes con su dueño nombrado: el operador**, por la revisión humana del contrato
 **E3**. De los tres componentes que esta nota pedía, **sobrevive uno**: **D7** inactiva. Y siguen en pie,
 como permisos que esta orden nunca reclamó, D8, D9, el archivado, el commit y el push.⟧
+⟦**Cuarta pasada sobre esa misma cola, 2026-09-27, y esta vez porque cuatro de los cinco dejaron de estar
+en pie.** D8, D9, el archivado y el commit se ejecutaron con mandatos literales del operador, cada uno con
+su crudo en los siete archivos del subdirectorio de esa corrida bajo
+`evidence/…/CIERRE-ORDEN-2026-09-25/` y sus marcadores en §Deuda de
+`dependencias-fases.md`. **De esa lista solo sigue en pie push.** La nota anterior era exacta en su
+sentido estricto —*esta orden* nunca reclamó esos permisos— y siguió leyendo como estado del repo, que es
+como la va a encontrar cualquier sesión nueva: ahí está el coste de escribir «siguen en pie» sin fecha de
+caducidad. **D7 sigue inactiva y `DOMAIN_PRIMER` sigue declarado y no alineado**, que eran los dos
+componentes que esta nota no podía vencer con ejecuciones ajenas⟧
+⟦**Quinta pasada, y sobre la otra mitad de la nota de 2026-09-25**: de las «dos decisiones humanas» que esa
+nota dejó declaradas sin aplicar, **una ya se aplicó el 2026-09-27** — las cinco propuestas del piloto se
+**aceptaron** por instrucción escrita del operador (**D-d (a)**, extendida a `L-VCF-15…19`), y su registro
+vive en §2 y §4 del `00-` de CONTEXTO, que es su fuente única. **`DOMAIN_PRIMER` es la única de las dos que
+sigue declarada y no alineada**, y **D7** sigue inactiva: la aceptación de las diez filas no ejercitó al
+proveedor, así que el `acceptance` del triaje sigue `NO-EJERCITADO` y **D6** sigue dormida con causa⟧
+⟦**Sexta pasada, un puñado de líneas más abajo en la misma sesión**: la frase anterior ya no describe el
+árbol, porque mientras se escribía llegó la letra que faltaba. **E se respondió (c)** y `DOMAIN_PRIMER`
+quedó **alineado**: la política escrita es «regenerar al cerrar cada fase de *implementación* y verificar con
+`--context` en FASE-RELEASE», en `AGENTS.md` §Flujo Documental y en la fila de Estandares Compartidos del
+executor; `docs/CONTRIBUTING.md` no se movió porque ya la publicaba. De las «dos decisiones humanas» de la
+nota de 2026-09-25 no queda ninguna sin aplicar, y de los tres componentes que esa nota pedía **sobrevive
+uno solo: D7 inactiva** — que es también lo que mantiene `acceptance = NO-EJERCITADO`, **D6** dormida con
+causa y AC15 sin promocionar⟧
