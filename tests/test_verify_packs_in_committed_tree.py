@@ -149,6 +149,19 @@ def test_un_destino_relativo_no_escribe_dentro_del_clon(tmp_path):
     packs, un rojo que no medía nada."""
     relativa = Path("temp") / f"verif-ruta-{tmp_path.name}"
     destino = Path.cwd() / relativa
+    # `tmp_path.name` es estable entre corridas y el `rmtree(ignore_errors=True)` del finally puede dejar
+    # el arbol por locking de Windows. Sobre ese residuo `git clone` muere con «already exists and is not
+    # an empty directory» y el test falla **sin medir nada**: medido el 2026-09-27 en la segunda pasada
+    # seguida de la bateria, con el arbol anterior todavia en `temp/`. Se limpia antes de clonar; el
+    # `finally` sigue intentando la salida, pero ya no es lo único que sostiene la aislacion.
+    if destino.exists():
+        shutil.rmtree(destino, ignore_errors=True)
+    if destino.exists():
+        pytest.fail(
+            f"no se pudo despejar el residuo de la corrida anterior: {destino} sigue en pie "
+            "(bloqueo de Windows sobre los objetos del clon). El rojo es de aislamiento, no del "
+            "verificador: reintentar la bateria o borrar el directorio a mano."
+        )
     try:
         clon, motivo = clon_fiel(relativa, REV)      # destino RELATIVO a propósito
         assert clon is not None, motivo

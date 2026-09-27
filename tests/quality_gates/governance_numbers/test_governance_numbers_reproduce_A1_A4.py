@@ -60,22 +60,30 @@ def test_cada_hallazgo_trae_su_clave_legible(informe_real: dict):
 
 
 def test_claimed_y_observed_cuadran_con_el_maestro(informe_real: dict):
-    """Re-anclado el 2026-09-26 por D2: el quick pasó de 11 a 12 checks y el completo de 15 a 16.
+    """Re-anclado el 2026-09-27 por D-a: el quick pasó de 12 a 13 checks y el completo de 16 a 17.
+
+    Antecedente del mismo mandato: re-anclado el 2026-09-26 por D2 (11→12 y 15→16). Tercera ronda, y
+    vuelve a caer sobre las mismas cuatro aserciones de abajo.
 
     `observed` se lee del `scripts/run_all_validations.py` vigente, así que estos cuatro valores son
     consecuencia de la renumeración, no del fixture (de ahí el dueño D1/D2 declarado en S8/L-VCF-5: al
     renumerar el quick, el test se re-ancla con su nota datada). `claimed` sigue siendo lo que afirma el
     documento del maestro, y por eso los cuatro hallazgos A1–A4 no desaparecen: el desvío se mantiene,
-    solo que contra otro denominador. Nota de la promotora: A1 y A4 reclaman `[9/12]` y `[10/12]` porque
-    los ordinales 9 y 10 no se movieron, y A3 pasa a `[16/16]` porque los cuatro checks exclusivos del
-    modo completo se desplazaron a 13..16.
+    solo que contra otro denominador. Nota de la promotora: A1 y A4 reclaman `[9/13]` y `[10/13]` porque
+    los ordinales 9 y 10 no se movieron, y A3 pasa a `[17/17]` porque el check promovido entró **al final
+    del rápido**, de modo que los cuatro exclusivos del modo completo se desplazaron a 14..17.
+
+    Lo que esta reescritura no toca: el `[12/12]` que afirma `fixtures/phased_project_executor.md`. Es la
+    **premisa** del hallazgo A3, no su resultado — moverlo borraría el defecto que el test audita. Y el
+    denominador 13 del rápido sí lo gobierno ahora el propio runner con la guarda de `_print_summary`, así
+    que re-etiquetar a medias deja de ser un rojo que se ve tres semanas después.
     """
     por_id = {f["assertion_id"]: f for f in informe_real["findings"]}
-    assert por_id["A1"]["claimed"] == "check 8" and por_id["A1"]["observed"] == "[9/12]"
-    assert por_id["A2"]["claimed"] == "[9/9]" and por_id["A2"]["observed"] == "[10/12]"
-    assert por_id["A3"]["claimed"] == "[12/12]" and por_id["A3"]["observed"] == "[16/16]"
+    assert por_id["A1"]["claimed"] == "check 8" and por_id["A1"]["observed"] == "[9/13]"
+    assert por_id["A2"]["claimed"] == "[9/9]" and por_id["A2"]["observed"] == "[10/13]"
+    assert por_id["A3"]["claimed"] == "[12/12]" and por_id["A3"]["observed"] == "[17/17]"
     # A4 es PARCIAL: su [7/7] del hook si cuadra, y solo el [10/10] del quick no.
-    assert por_id["A4"]["claimed"] == "[10/10]" and por_id["A4"]["observed"] == "[10/12]"
+    assert por_id["A4"]["claimed"] == "[10/10]" and por_id["A4"]["observed"] == "[10/13]"
 
 
 def test_poblacion_de_A8_publicada_y_suma(informe_real: dict):
@@ -117,7 +125,10 @@ def test_marca_de_estado_en_ascii(informe_real: dict):
 
 def test_coverage_basis_legible_sin_abrir_el_codigo(informe_real: dict):
     cb = informe_real["coverage_basis"]
-    assert cb["documents_scanned"] and cb["fuentes"]["quick"]["total"] == 12
+    # 13 desde D-a (2026-09-27): el verificador de packs en el árbol del commit entró al rápido.
+    # Antes 12 (D2, 2026-09-26) y 11 antes de esa. Es el denominador, no un umbral: lo fija la
+    # cantidad de checks que el runner ejecuta en el modo rápido.
+    assert cb["documents_scanned"] and cb["fuentes"]["quick"]["total"] == 13
     assert cb["fuentes"]["hook"]["total"] == 7
     assert [f["familia"] for f in cb["families_not_covered"]] == [
         "prosa-de-conteo-sin-patron",

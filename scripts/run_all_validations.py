@@ -90,6 +90,7 @@ class ValidationRunner:
         self._check_lesson_capitalization()
         self._check_wiring()
         self._check_governance_numbers()
+        self._check_packs_en_arbol_del_commit()
         
         if not self.quick:
             self._check_dependencies()
@@ -114,7 +115,7 @@ class ValidationRunner:
     
     def _check_residual_files(self) -> None:
         """Check for residual/backup files."""
-        print("[1/12] Checking for residual files...")
+        print("[1/13] Checking for residual files...")
         
         residual_extensions = {".bak", ".backup", ".tmp", ".old"}
         residual_files = []
@@ -143,7 +144,7 @@ class ValidationRunner:
     
     def _check_plan_maestro_sync(self) -> None:
         """Check if Plan Maestro data is synchronized."""
-        print("[2/12] Checking Plan Maestro sync...")
+        print("[2/13] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
         md_path = ROOT_DIR / "data" / "benchmarks" / "Plan_maestro_v2_5.md"
@@ -186,7 +187,7 @@ class ValidationRunner:
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""
-        print("[3/12] Checking version synchronization...")
+        print("[3/13] Checking version synchronization...")
         
         version_file = ROOT_DIR / "VERSION.yaml"
         if not version_file.exists():
@@ -275,7 +276,7 @@ class ValidationRunner:
         (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
         NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
         """
-        print("[4/12] Checking for hardcoded secrets (tracked + staged)...")
+        print("[4/13] Checking for hardcoded secrets (tracked + staged)...")
 
         patterns = self._secret_patterns()
 
@@ -366,7 +367,7 @@ class ValidationRunner:
         de la política queda grandfathered en el config, con dueño declarado y
         disposición pendiente de la puerta AC-S4.
         """
-        print("[5/12] Checking client material policy (tracked + staged)...")
+        print("[5/13] Checking client material policy (tracked + staged)...")
 
         policy_path = ROOT_DIR / "config" / "client_material_policy.yaml"
         policy = None
@@ -449,7 +450,7 @@ class ValidationRunner:
     
     def _check_document_integration(self) -> None:
         """Check cross-document integration consistency."""
-        print("[6/12] Checking document integration...")
+        print("[6/13] Checking document integration...")
         
         script_path = ROOT_DIR / "scripts" / "validate_document_integration.py"
         if not script_path.exists():
@@ -485,7 +486,7 @@ class ValidationRunner:
         log_phase_completion.py commands. Excludes Archives, RELEASE plans/prompts,
         and documentation-only references to --release.
         """
-        print("[7/12] Checking prompts for --release flag in intermediate phases...")
+        print("[7/13] Checking prompts for --release flag in intermediate phases...")
         
         import re
         
@@ -548,7 +549,7 @@ class ValidationRunner:
         Catches forgotten reference updates after archiving plans (Archives/)
         or contexts (Historico/). Repair manually with --fix on the script.
         """
-        print("[8/12] Checking .opencode references...")
+        print("[8/13] Checking .opencode references...")
         
         script_path = ROOT_DIR / "scripts" / "validate_opencode_refs.py"
         if not script_path.exists():
@@ -589,7 +590,7 @@ class ValidationRunner:
         numbers, because a rewritten line citation is the same defect dressed up as
         a fix.
         """
-        print("[9/12] Checking plan citations (simbolos, no numeros de linea)...")
+        print("[9/13] Checking plan citations (simbolos, no numeros de linea)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_plan_citations.py"
         if not script_path.exists():
@@ -631,7 +632,7 @@ class ValidationRunner:
         A green here means FORM AND TRACEABILITY, never relevance: the script publishes
         the population it looked at because an [OK] without a denominator is L-R.3.
         """
-        print("[10/12] Checking lesson capitalization (Paso 0 del executor)...")
+        print("[10/13] Checking lesson capitalization (Paso 0 del executor)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_lesson_capitalization.py"
         if not script_path.exists():
@@ -682,7 +683,7 @@ class ValidationRunner:
         poblacion descubierta esta conforme o registrada, NO que no existan callers
         invisibles.
         """
-        print("[11/12] Checking signal wiring by AST (AC7/AC16)...")
+        print("[11/13] Checking signal wiring by AST (AC7/AC16)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_wiring.py"
         if not script_path.exists():
@@ -739,7 +740,7 @@ class ValidationRunner:
         rojos se publican distintos, porque AUSENTE no es «sin hallazgos» (R2.9) y un lector caido no
         puede disfrazarse de verde.
         """
-        print("[12/12] Checking governance numbers (documentos de gobierno vs fuente dinamica)...")
+        print("[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_governance_numbers.py"
         if not script_path.exists():
@@ -771,9 +772,59 @@ class ValidationRunner:
             details=lineas[1:6]
         ))
 
+    def _check_packs_en_arbol_del_commit(self) -> None:
+        """Los packs de briefing se reproducen en el árbol del commit (D-a de CONTEXTO, promovido 2026-09-27).
+
+        Que gobierna: que `build_phase_briefing.py`, tal como está en el árbol versionado, vuelva a producir
+        byte a byte (bajo la normalización de sus cuatro sellos no-gobernantes) los cinco packs commiteados.
+        Ningún otro check ve esto: `--check` casa las **fuentes** del pack y el generador no está entre ellas,
+        así que editar al escritor dejaba los packs vencidos con verde (S19).
+
+        Por qué cuesta lo que cuesta: materializa un clon fiel (`clon_fiel`, con `core.autocrlf=input` y
+        `core.longpaths` escritos **dentro** del clon — S20) y regenera ahí. Medido 2026-09-27: ~2,4 s sobre un
+        rápido de ~24 s, a cambio de cerrar el único hueco de gobernanza que quedaba sin instrumento.
+
+        Códigos del verificador: 0 reproduce, 1 diverge, 2 árbol no evaluable. El 2 se publica como
+        **NO-EVALUABLE y cortando rojo**: un veredicto que no vio su insumo no se disfraza ni de verde ni de
+        divergencia, y un salto silencioso al verde sería justo el defecto que esta promoting pretende curar.
+        """
+        print("[13/13] Checking briefing packs against the committed tree...")
+
+        script_path = ROOT_DIR / "scripts" / "verify_packs_in_committed_tree.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="Briefing Packs in Commit Tree",
+                passed=False,
+                message="verify_packs_in_committed_tree.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        lineas = [l for l in output.splitlines() if l.strip()]
+        resumen = next((l for l in reversed(lineas) if "packs en el árbol" in l), lineas[-1] if lineas else "")
+
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="Briefing Packs in Commit Tree",
+                passed=True,
+                message=resumen or "los packs se reproducen"
+            ))
+            return
+
+        estado = {1: "DIVERGE", 2: "NO-EVALUABLE"}.get(exit_code, f"exit {exit_code}")
+        motivo = ("el árbol versionado no reproduce sus packs (fix: regenerar con la cola canónica y "
+                  "commitear generador y derivados juntos)" if estado == "DIVERGE" else
+                  "el materializado no produjo árbol evaluable: el veredicto no puede afirmar nada")
+        self.results.append(ValidationResult(
+            name="Briefing Packs in Commit Tree",
+            passed=False,
+            message=f"{estado}: {motivo}",
+            details=lineas[:5]
+        ))
+
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[13/16] Checking dependencies...")
+        print("[14/17] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -795,7 +846,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[14/16] Checking core module imports...")
+        print("[15/17] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -831,7 +882,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[15/16] Running tests...")
+        print("[16/17] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -863,7 +914,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[16/16] Checking QMind write-back (planes archivados)...")
+        print("[17/17] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():
@@ -892,6 +943,56 @@ class ValidationRunner:
                         "(fix: python scripts/validate_qmind_writeback.py --upload <PLAN>)",
                 details=issues
             ))
+
+    def _etiquetas_del_modo(self) -> list:
+        """Las etiquetas `(ordinal, total)` que **este archivo** imprime en el modo vigente.
+
+        Lee la fuente propia, no la salida: los ordinales son literales a propósito, porque
+        `validate_governance_numbers.py` construye su registro de emisores casando
+        `print("[N/M] …")` en el código. Volverlos dinámicos dejaría ese registro vacío y ciegaría al
+        verificador que existe para cazar denominadores vencidos — lo que sí quedaba sin gobernar era la
+        contradicción entre esos literales y el `TOTAL`, y eso es lo que cierra `_print_summary`.
+
+        El modo se decide por **orden de llamada en `run_all`**, no por posición en el archivo: la
+        barrera `if not self.quick:` está en el llamador (línea ~95) y las etiquetas en los métodos
+        (línea ~118 en adelante). Filtrar por número de línea devolvía cero etiquetas y un rojo falso,
+        medido el 2026-09-27 en la primera corrida de esta guarda.
+
+        El patrón se arma por partes: si «print(» apareciera contiguo dentro de esta línea, la lectura de
+        `validate_governance_numbers.py` tomaría el propio patrón como un check más del runner.
+        """
+        fuente = Path(__file__).resolve().read_text(encoding="utf-8")
+
+        # 1. Orden de llamada, partido por la barrera de modo dentro de run_all().
+        cuerpo = fuente.split("    def run_all(self) -> bool:", 1)
+        if len(cuerpo) != 2:
+            return []
+        cuerpo = cuerpo[1]
+        antes, sep, despues = cuerpo.partition("        if not self.quick:")
+        if not sep:
+            return []
+        invoc = r"(self\._check_[a-z_0-9]+)\(\)"
+        orden_rapido = re.findall(invoc, antes)
+        orden_completo = orden_rapido + re.findall(invoc, despues)
+        vigentes = orden_rapido if self.quick else orden_completo
+
+        # 2. Método contenedor de cada etiqueta impresa.
+        def contenedor(posicion: int) -> str:
+            principio = fuente.rfind("\n    def ", 0, posicion)
+            if principio < 0:
+                return ""
+            resto = fuente[principio + len("\n    def "):]
+            return "self." + resto.split("(", 1)[0].strip()
+
+        patron = re.compile("print" + r"""\(f?["']\[(\d+)/(\d+)\]""")
+        etiquetas = []
+        for m in patron.finditer(fuente):
+            met = contenedor(m.start())
+            if met in vigentes:
+                etiquetas.append((int(m.group(1)), int(m.group(2))))
+        # 3. En el orden en que el runner los ejecuta, no en el de la fuente.
+        etiquetas.sort(key=lambda par: par[0])
+        return etiquetas
 
     def _print_summary(self) -> bool:
         """Print summary and return overall success."""
@@ -923,6 +1024,27 @@ class ValidationRunner:
             print("  STATUS: ALL VALIDATIONS PASSED")
         else:
             print(f"  STATUS: {total_count - passed_count} VALIDATION(S) FAILED")
+
+        # Guarda de coherencia interna (D-a, 2026-09-27): los ordinales que este archivo
+        # imprime son literales, y su TOTAL es dinamico. Sin esta comprobacion, anadir un
+        # check y olvidar de re-etiquetar dejaba al runner contradiciendose a si mismo con
+        # verde. No consume un ordinal a proposito: si lo consumiera, renumerar podria
+        # apagar la propia guarda.
+        etiquetas = self._etiquetas_del_modo()
+        denominadores = sorted({t for _, t in etiquetas})
+        ordinales = [k for k, _ in etiquetas]
+        coherente = (len(etiquetas) == total_count
+                     and ordinales == list(range(1, total_count + 1))
+                     and etiquetas[-1][1] == total_count
+                     and (not self.quick or denominadores == [total_count]))
+        if coherente:
+            print(f"  [GUARDA] las {total_count} etiquetas impresas casan con el TOTAL dinamico")
+        else:
+            print(f"  [GUARDA] ETIQUETAS Y TOTAL NO CASAN: {len(etiquetas)} etiquetas impresas "
+                  f"{ordinales}, denominadores {denominadores}, contra {total_count} checks ejecutados")
+            print("           fix: re-etiquetar el print de cada check del modo afectado, "
+                  "NO ajustar esta guarda ni el conteo dinamico")
+            all_passed = False
         
         return all_passed
 

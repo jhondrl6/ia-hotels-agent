@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 422,
     "ids_con_definicion": 339,
-    "ids_citados_sin_definicion": 51,
+    "ids_citados_sin_definicion": 52,
     "fechas_por_fuente": {
       "nombre": 328,
       "commit": 11,
@@ -5271,6 +5271,14 @@
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "D-A-QUICK-TRECE",
+      "familia": "D",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ]
     },
     {

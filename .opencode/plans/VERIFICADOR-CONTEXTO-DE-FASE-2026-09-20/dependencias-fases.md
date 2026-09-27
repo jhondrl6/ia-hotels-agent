@@ -410,7 +410,7 @@ de versión pero no para esa etiqueta de fecha; la regla hermana `guia_tecnica_h
 - El espejo de prueba allana **las dos** líneas que goberna la regla: con solo la cabecera allanada, el
   `FAIL` llegaba por la segunda sustitución y no por la fecha. Medido, y por eso está escrito.
 
-### S19 — la frescura de un pack no incluye al generador que lo imprime (nueva, 2026-09-26)
+### S19 — la frescura de un pack no incluye al generador que lo imprime (nueva, 2026-09-26) — **CERRADA el 2026-09-27 en su parte gobernable; sobrevive solo por (c)**
 
 **Medido, no inferido.** Al ejecutar D2 cambié un literal dentro de `scripts/build_phase_briefing.py`
 (`[8/11]` → `[8/12]`, en un comentario y en el mensaje que el propio script copia dentro de los packs).
@@ -455,7 +455,17 @@ packs. Queda como antecedente fechado el 2026-09-26 y su medición en
 `evidence/…/CIERRE-ORDEN-2026-09-25/19-s19-medicion-de-los-dos-riesgos.txt` §8. Su forma es el patrón ya
 probado en `scripts/verify_index_in_committed_tree.py`: materializar la revisión en un clon, regenerar a
 scratch y comparar por sha normalizado, con controles anclados a una revisión publicada fija y nunca a HEAD.
-**Sigue sin implementar: eso es código, y el dueño de esa decisión es el operador.** **(c) se
+**Sigue sin implementar: eso es código, y el dueño de esa decisión es el operador.** ⟦**Vencido el 2026-09-26
+por la cura (b)**, que es código y se hizo con instrucción del operador; y vuelve a vencerse el 2026-09-27 con
+**D-a**, que ata ese verificador al `--quick`. Lo que de esta frase sigue en pie es solo **(c)**: la convención
+de cierre continúa sin escribirse en `.agents/` por falta de instrucción explícita, no por falta de
+acuerdo.⟧ ⟦**S19 — cierre del libro: (a) descartada con medición en contra (`19-` §5); (b) implementada el
+2026-09-26 en `scripts/verify_packs_in_committed_tree.py`; (c) vigente, dueña una instrucción literal sobre
+`.agents/`, y casada con S16 porque son la misma superficie; (d) `generado_por_sha` medida el 2026-09-27 en el
+expediente `22-` §3 y no aplicada — su coste es +1 línea por pack y exige un quinto patrón en `NORMALIZAR`, y
+se probó que (b) **no** la necesita para atribuir el rojo. Con (b) cableada al rápido desde el 2026-09-27, S19
+queda CERRADA en su parte gobernable y sobrevive solo por (c).**⟧
+**(c) se
 mantiene como puente y queda probada su insuficiencia:** el 2026-09-26 `--check` dio `EXIT=0` con los cinco
 packs ya cambiados por una edición del escritor (244 inserciones / 99 supresiones, 6 líneas de pack citando el
 `[8/12]` nuevo). Prueba estructural leída del artefacto: `sources[]` de FASE-A declara 4 rutas y **ninguna es
@@ -499,7 +509,8 @@ del `checkout`, en `revisar()`. Su batería de pruebas necesita un caso que **no
 comparación byte-exacta corrido en el árbol del commit, porque el defecto es invisible para la batería actual
 (que solo ejercita el índice, y el índice es tolerante). Es código, así que **dueño: decisión del operador**.
 **Disparador:** la primera vez que alguien intente re-usar el verificador para un derivado que compare bytes —
-que es exactamente lo que pide la cura (b) de S19, todavía sin implementar. Las dos comparten árbol materializado
+que es exactamente lo que pide la cura (b) de S19, todavía sin implementar ⟦**vencido el 2026-09-26: se
+implementó ese día; y el 2026-09-27 quedó atada al `--quick` por D-a**⟧. Las dos comparten árbol materializado
 y las dos fallan silenciosamente si el árbol no es fiel.
 
 **Nota de instrumento para la próxima numeración.** La fila S19 justifica su número con
@@ -535,3 +546,68 @@ clasificación honesta para lo que quede fuera. El control negativo no simula: m
 que el propio escritor copia al pack y exige **dos** cosas a la vez — que este verificador dé `EXIT=1` con la
 diferencia señalada, y que `build_phase_briefing.py --check` dé `EXIT=0` sobre ese mismo árbol. Ese par es S19
 convertido en máquina. `tests/test_verify_packs_in_committed_tree.py`: 5 funciones.⟧
+
+⟦**D-a ejecutada el 2026-09-27 por instrucción escrita del operador** («Continuamos según tu recomendación»
+sobre el dosier `22-` §5). El verificador de packs en el árbol del commit es el check **`[13/13]`** del rápido:
+**12→13** en el modo rápido y **16→17** en el completo. Lo que costó, medido antes y no de memoria: **26
+literales re-etiquetados en cinco rutas**, no los cinco pines que declaraba el parte — 16 dentro de
+`scripts/run_all_validations.py` (doce del rápido y cuatro del completo, todos impresos como literal), 2 en
+`scripts/build_phase_briefing.py` (uno de ellos un **mensaje que el escritor copia dentro de los cinco packs**,
+que es por lo que esta edicion re-vence los derivados y obliga a la cola), 6 en
+`test_governance_numbers_reproduce_A1_A4.py` (cuatro `observed` + el `total` de la base de cobertura + su nota
+datada), 1 en `test_governance_numbers_mutation_por_asercion.py` y 1 en
+`test_briefing_se_genera_por_fase.py`. **Dos cifras del parte quedan corregidas por medición**: (1) la **premisa**
+del hallazgo A3 —la copia del workflow en el fixture de `governance_numbers`, la fila que afirma el `[12/12]`— **no
+se mueve**: es lo que el test audita, y re-etiquetarla borraría el defecto que caracteriza; (2) las cuatro
+menciones del corpus (la fila A3 de `01-plan-maestro.md`, la casilla A1–A4 de `06-checklist-implementacion.md`, la
+fila A3 de `10-analisis-post-implementacion.md` y la nota del instrumento en este mismo libro) **tampoco**: son
+antecedentes fechados, tres ya marcados VENCIDA o rectificada.
+
+Tiempo añadido al rápido, re-medido hoy sobre la base de hoy: **+2,4 s** (23,99 s → 26,4 s, **+9,9 %**), con
+un clon de 588 rutas. El costo real no fueron los segundos sino la **tercera ronda de re-anclaje** en once días.
+
+Y la parte que el dosier dejaba sin gobernar, cerrada con código: los ordinales del runner son literales
+**porque** `validate_governance_numbers.py` lee su registro de emisores casándolos en la fuente, así que
+volverlos dinámicos cegaría al verificador. En su lugar quedó una **guarda en `_print_summary`**: exige que los
+ordinales impresos sean exactamente `1..N`, que el último lleve denominador `N` y que en el rápido los N
+denominadores coincidan con `len(self.results)`. No consume un ordinal a propósito: si lo consumiera, renumerar
+podría apagar la propia guarda. Sus dos controles, en
+`evidence/…/CIERRE-ORDEN-2026-09-25/D-A-QUICK-TRECE/01-controles-guarda.txt`: dejar el denominador viejo en el
+check nuevo da rojo, y dejar el denominador viejo en **un check cualquiera** del rápido también da rojo; la
+fuente sin mutar da verde. Derivación de la guarda, consignada en su docstring porque fue un rojo mío: la
+primera versión filtraba por número de línea contra la barrera `if not self.quick:` (línea 95, dentro de
+`run_all`), pero las etiquetas viven en los métodos (línea 118 en adelante), así que devolvía **cero etiquetas**
+y cortaba rojo sobre una fuente correcta.
+
+Un rojo que la batería nueva encontró, y que no venía de mis ediciones:
+`test_un_destino_relativo_no_escribe_dentro_del_clon`
+moría en la **segunda pasada seguida** porque su destino es `temp/verif-ruta-<tmp_path.name>` y ese nombre es
+**estable entre corridas**, mientras el `finally` limpia con `ignore_errors=True` — bajo bloqueo de Windows el
+árbol queda y el `git clone` siguiente muere con «already exists and is not an empty directory», un fallo que no
+medía al verificador. Se corrigió el **mecanismo de aislamiento** (limpiar antes de clonar, y `pytest.fail` con
+el diagnóstico si el residuo persiste), no la aserción. Prueba: plantando el residuo a propósito la batería pasa
+5/5, y dos pasadas seguidas dan 5/5 y 5/5. Queda como deuda de procedimiento **sin número** porque su cura ya
+está en el árbol: otra prueba que derive su destino de un nombre estable bajo `temp/` caerá igual.⟧
+
+### S21 — el runner imprime dos denominadores distintos dentro del mismo modo (nueva, 2026-09-27)
+
+**No confundir con `S21` de `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`**, que trata de concurrencia entre
+sesiones y es asunto distinto: este es **S21 de este libro**, como `S19` y `S20` lo son.
+
+En modo **completo** el runner ejecuta 17 checks, pero **trece** de sus líneas de progreso siguen diciendo `/13`
+y solo las cuatro exclusivas del completo dicen `/17`. Leído del código (líneas 117-742 con `/13]` y 776-866 con
+`/17]`) y no de una corrida: el modo completo invoca pytest y **no se corrió** para abrir esta fila. Existe desde
+antes de D-a —era `/12` contra `/16`—, y la renumeración del 2026-09-27 lo **conserva sin agravarlo**: la
+guarda nueva solo exige uniformidad de denominador en el modo rápido, porque gobernar la del completo sin tocar
+los literales sería justo la cura dinámica que cegó al verificador.
+
+- **Dueño:** este plan, o el siguiente que toque `run_all_validations.py`. No es bloqueante: ningún check, test
+  ni documento afirma hoy el denominador del completo con forma `/N`, así que la contradicción es de **lectura
+  humana** de la consola, y por eso se registra en vez de corregirse en silencio.
+- **Disparador:** la próxima vez que alguien lea una corrida completa y crea el denominador que ve, o la próxima
+  renumeración del runner.
+- **Salidas, con su coste:** (a) re-etiquetar los doce del rápido también con `/17` en modo completo, lo que
+  exige que el ordinal se componga al vuelo y **rompe** `PRINT_LABEL_RE` del verificador de gobernanza — la
+  misma trampa que ya descartó la cura dinámica; (b) publicar en la cabecera de la corrida que el denominador
+  impreso es **del modo rápido** y que el completo llega a 17, que es una línea y no toca ningún literal; (c)
+  dejarlo y confiar en esta fila. La lectura recomendada es **(b)**.
