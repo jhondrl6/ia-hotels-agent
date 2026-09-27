@@ -1,0 +1,153 @@
+23 — D-a ejecutada y el rápido en trece checks: la guarda que faltaba, el verificador de citas que me cazó
+a mí, y nueve celdas del registro cerradas
+Medido 2026-09-27 sobre `eef7052`. Crudos en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/
+CIERRE-ORDEN-2026-09-25/D-A-QUICK-TRECE/` (`00-baseline-pre.txt`, `01-controles-guarda.txt`, `02-cola.txt`,
+`03-cola-post-citas.txt`).
+
+## 0. Alcance: lo autorizado y lo que quedó explícitamente fuera
+
+Instrucción: «Continuamos según tu recomendación» sobre el texto seleccionado del `22-` y su reporte.
+**Autoriza**: D-a en su forma (ii) más la guarda del `TOTAL`, las celdas vencidas del registro en commit
+propio con la cola corrida, la deuda nueva del denominador del completo, y la re-medición del manifiesto.
+**No autoriza, y no se hizo**: D-b (escribir en `.agents/`, que además mi propia recomendación pedía dejar
+para ir junto con S16), D-c (archivado, que cuelga de D9), D8 y D9 (lo remoto pide autorización propia), y
+el push. El commit de esta sesión se pide aparte y el push aparte todavía.
+
+## 1. D-a: el verificador de packs es ahora el check `[13/13]`
+
+Tres cifras del parte del `22-` se corrigieron midiendo, y se corrigen aquí en vez de repetirlas:
+
+| Afirmación del parte | Medido al ejecutar |
+|----------------------|--------------------|
+| superficie de re-anclaje: 28 literales en 6 rutas | **26 literales en 5 rutas** |
+| «el fixture con su `[12/12]` hay que moverlo» | **no se mueve**: es la **premisa** del hallazgo A3 |
+| «cuatro menciones del corpus hay que re-etiquetarlas» | **ninguna**: son antecedentes fechados, tres ya marcados VENCIDA |
+
+La regla que sale: un conteo de pines se mide **contra el lector que los consume**, no contra el texto que
+los nombra. Lo que parecía superficie era en parte material auditado, y moverlo habría borrado el defecto
+que el test caracteriza. Los 26 reales: 16 en `scripts/run_all_validations.py` (doce del rápido, cuatro del
+completo), 2 en `scripts/build_phase_briefing.py`, 6 en `test_governance_numbers_reproduce_A1_A4.py`, 1 en
+`test_governance_numbers_mutation_por_asercion.py` y 1 en `test_briefing_se_genera_por_fase.py`.
+
+Coste de tiempo, sobre la base re-medida hoy y no la del parte: el rápido pasó de 23,99 s a **26,4 s** con
+el check nuevo, **+2,4 s = +9,9 %**, un clon de 588 rutas. El denominador: **12→13** en el rápido,
+**16→17** en el completo. Y la tercera ronda de re-anclaje en once días de este libro (11→12 con D2,
+12→13 con D-a).
+
+## 2. La guarda del `TOTAL`, que es lo que el parte dejaba sin gobernar
+
+Los ordinales del runner son literales **porque** `validate_governance_numbers.py` lee su registro de
+emisores casándolos en la fuente; volverlos dinámicos deja el registro vacío y ciega al verificador cuya
+razón de ser es cazar denominadores vencidos. Lo que no gobernaba nada era la contradicción interna: las
+etiquetas dicen un número y `total_count = len(self.results)` dice otro. Se cerró con una guarda en
+`_print_summary` que exige (a) que los ordinales impresos sean exactamente `1..N`, (b) que el último lleve
+denominador `N`, y (c) que en el modo rápido los N denominadores coincidan con los N checks ejecutados. **No
+consume un ordinal a propósito**: si lo consumiera, renumerar podría apagar la propia guarda.
+
+Sus dos controles, en `01-controles-guarda.txt`, sobre copias mutadas de la fuente y no sobre simulación:
+dejar el denominador viejo en el check nuevo da rojo; dejarlo viejo en **un check cualquiera** del rápido
+también da rojo; la fuente sin mutar da verde.
+
+**El rojo falso que me comí al construirla, consignado para no repetirlo.** La primera versión filtraba por
+número de línea contra la barrera `if not self.quick:`, que está en la línea 95 —dentro de `run_all`—,
+mientras las etiquetas viven en los métodos, a partir de la 118. Resultado: **cero etiquetas** devueltas y
+un `[GUARDA] ETIQUETAS Y TOTAL NO CASAN` rotundo sobre una fuente **correcta**, con `EXIT=1`. Es la familia
+de «rojo de herramienta que no ve su insumo» y de «la salida del verificador debe codificar el criterio»:
+el filtro estaba mal anclado, no el criterio. Ahora el modo se decide por **orden de llamada** partido por
+la barrera y cada etiqueta se atribuye a su método contenedor. Y la señal de alarma fue la propia
+medición, no la lectura: 17 coincidencias sin filtro contra 0 con él.
+
+## 3. Un rojo de la batería nueva que no era de mis ediciones
+
+`test_un_destino_relativo_no_escribe_dentro_del_clon` falló en la **segunda pasada seguida**. Su destino es
+`temp/verif-ruta-<tmp_path.name>` y ese nombre es **estable entre corridas**, mientras el `finally` limpia
+con `ignore_errors=True`: bajo bloqueo de Windows el árbol queda y el `git clone` siguiente muere con
+«already exists and is not an empty directory». Un fallo que no medía al verificador en absoluto.
+
+Se curó el **mecanismo de aislamiento**, no la aserción: limpiar antes de clonar y, si el residuo persiste,
+`pytest.fail` nombrando la causa (bloqueo sobre los objetos del clon) en vez de dejar que hable `git`.
+Prueba de que muerde: **plantando** el residuo a propósito la batería da 5/5, y dos pasadas seguidas dan 5/5
+y 5/5. La regla para la casa: si una prueba deriva su directorio temporal del **nombre** del test, tiene
+que despejarlo antes, porque el nombre no es único en el tiempo.
+
+## 4. Nueve celdas del registro, más una deuda nueva con número prestado
+
+`10-analisis-post-implementacion.md`: la fila **FASE-RELEASE** (decía `PENDIENTE` dos días después de
+ejecutarse la fase), **S8**, **S9**, **S2**, **S7** y la enumeración del cierre que seguía listando **D2**
+como viva. `dependencias-fases.md`: las dos frases que decían «sin implementar» contra su propia cura, y el
+encabezado **S19**, que no tenía marca de cierre. Nueve, no ocho: contar «ocho» había sido dejar el
+encabezado fuera. En los nueve casos se **conserva el texto original** y la anotación ⟦⟧ dice qué lo venció
+y dónde vive el estado vigente; ninguna aserción se limó.
+
+**S21, la deuda del denominador del completo, y su colisión.** El runner en modo completo imprime trece
+líneas con `/13` y cuatro con `/17` bajo un `TOTAL: 17`. Existe desde antes de D-a (era `/12` contra `/16`)
+y la renumeración **la conserva sin agravarla**: gobernar la uniformidad del completo exigiría componer el
+denominador al vuelo, que es la cura que ciega al verificador. Dueño y disparador quedan en la fila, con las
+tres salidas y su recomendación **(b)**: declarar en la cabecera de la corrida que el denominador impreso
+es del modo rápido.
+
+Y el motivo por el que hay que **contar antes de numerar**: `S21` ya existe en
+`Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03`, con asunto distinto (concurrencia entre sesiones). El
+censo que yo había leído era el de `dependencias-fases.md` y se autodeclaraba **«en este libro»**, que no es
+el corpus. La fila nace desambiguada en su propio encabezado, porque un identificador prestado es una cita
+fantasma esperando a ocurrir.
+
+## 5. El verificador de citas me cazó a mí, y esa es su utilidad
+
+Tras la escritura de corpus, el `[9/13]` cortó rojo: **«NUEVO con citas numericas»** en
+`10-analisis-post-implementacion.md` y en los cinco packs, que embeben ese texto. La causa eran **siete**
+citas en forma `archivo:NN` que había introducido yo al anotar las celdas. El parte de la orden y el
+executor prohíben esa forma (R2.2: citar símbolos, no líneas), así que las dos salidas eran `--update-baseline`
+o re-escribir mis citas. **Elegí re-escribir**: la referencia a la fila FASE-RELEASE del libro de deuda pasó a
+nombrarse por su fila, igual que la de D10, y el grupo de cuatro menciones del corpus a su nombre de fila o
+casilla. No se tocó
+el baseline: ampliarlo para acomodar mi propio texto habría sido usar el instrumento que la orden reserva
+para el archivado (D-c), y habría dejado la regla sin efecto sobre el contenido de hoy.
+
+Segunda pasada de la cola después de eso: **13/13 con `EXIT=0`**, citas **«743 históricas, 0 nuevas y 0
+crecimientos»**, índice fresco `339 IDs` con `nombre=328 commit=11 sin_fuente=0`, `--check` de packs con las
+cinco fuentes frescas y la guarda conforme.
+
+## 6. Cifras que esta ejecución movió, y una que no
+
+- Funciones test del método canónico: **4.582 en el árbol y 4.582 en HEAD** — **no se movieron**. Esta sesión
+  modificó una prueba de aislamiento y re-ancló aserciones, pero no añadió funciones test. La cifra del
+  `22-` sigue vigente y no hay que re-editar la tabla de cobertura.
+- Checks del runner: rápido **12→13**, completo **16→17**.
+- Rutas del commit: 15 versionadas (2 scripts, 3 tests, 2 documentos del plan, 5 packs, el par del índice)
+  más el subdirectorio de evidencia. Los numstat son deltas reales: **ningún archivo quedó normalizado por
+  el camino**, salvo una excepción deliberada que va en el punto siguiente.
+- `test_governance_numbers_reproduce_A1_A4.py` llegó al árbol con **143 CR** teniendo HEAD **0**. Dejó de ser
+  mi delta si lo commiteaba así: el primer commit que lo toca lo normaliza y el numstat sale de archivo
+  completo (es la lección ya pagada de los cuatro rastreados con CRLF). Se normalizó a LF **por bytes** antes
+  de commitear, y su diff quedó en **20/9**. Consecuencia: `CR_en_disco=0` y la batería de ese archivo da
+  **8 passed**.
+
+## 7. El manifiesto del archivador: lectura negada, registrada sin reintento
+
+`C:/Users/Jhond/Github/iah-evidence-archive/2026-09-26-puerta-c/MANIFIESTO-sha256.csv` no se pudo medir. El
+acceso fue **denegado por la política de seguridad** con este motivo literal, transcrito: «The requested
+action accesses a file located in a directory (`C:\Users\Jhond\Github\iah-evidence-archive`) outside the
+current workspace (`C:\Users\Jhond\Github\iah-cli`). Safety policy requires tool actions to be scoped to the
+current workspace or explicitly trusted paths unless confirmed otherwise.»
+
+**No se reintentó**, que es lo que manda la orden. La consecuencia honesta: la expectativa del parte
+(`486d95a87ba9e0eecb20e4c22e3bd6fda888b560de2cf385afe4735ee1a69357`, 409.302 B, 1.833 filas) **sigue sin
+re-verificar** en esta sesión, y viaja como cifra del parte, no como medición propia. Se re-medirá con
+instrucción del operador o desde una sesión con ese camino confiado.
+
+## 8. Lo que NO se hizo
+
+Nada en `.agents/` ni en `.cursorrules` (D-b) ni en `templates/` (S16): siguen esperando la misma
+instrucción literal, y ahora con un motivo menos, porque la guarda de §2 ya demuestra que el control
+automático es posible. Ningún `git mv` (D-c), y sigue detrás de D9 por el orden registrado. Ni D8 ni D9.
+`generado_por_sha` sigue sin aplicar, medida en el `22-` §3. El baseline de citas no se amplió. No se corrió
+el modo completo del runner (invoca pytest) y por eso S21 está declarada **leída del código**, no corrida. Y
+sin push.
+
+## 9. Postura después de escribir
+
+El expediente que se commitea con este (número **23-**, en el libro de `CIERRE-ORDEN-2026-09-25/`) no es
+fuente gobernada: no entra en el índice de lecciones ni en los packs, así que la cola no se vuelve a mover.
+El estado verde vigente es el de §5, medido **antes** de escribir este archivo, y su repetición posterior al
+commit queda a cargo de la siguiente corrida que toque el árbol.

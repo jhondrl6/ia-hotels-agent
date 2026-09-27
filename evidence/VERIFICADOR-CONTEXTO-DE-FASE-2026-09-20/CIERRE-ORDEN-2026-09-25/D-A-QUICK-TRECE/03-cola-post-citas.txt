@@ -1,0 +1,16 @@
+### cola 2a, tras retirar las citas numericas, 2026-09-27T02:06:44Z ###
+PACKS_EXIT=0
+INDICE_EXIT=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+INDICE_CHECK=0
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+PACKS_CHECK=0
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0

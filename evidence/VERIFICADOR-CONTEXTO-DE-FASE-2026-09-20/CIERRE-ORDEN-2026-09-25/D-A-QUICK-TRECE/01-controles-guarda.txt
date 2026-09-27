@@ -1,0 +1,19 @@
+### controles de la guarda de etiquetas, medidos 2026-09-27T01:42:26Z sobre eef7052+sin-commitear ###
+
+MUT1 (el check nuevo conserva denominador 12):
+  [GUARDA] ETIQUETAS Y TOTAL NO CASAN: 13 etiquetas impresas [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], denominadores [12, 13], contra 13 checks ejecutados
+  EXIT=1 (la guarda corta)
+
+MUT2 (un check viejo del rapido conserva denominador 12):
+  [GUARDA] ETIQUETAS Y TOTAL NO CASAN: 13 etiquetas impresas [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], denominadores [12, 13], contra 13 checks ejecutados
+  EXIT=1 (la guarda corta)
+
+CONTROL POSITIVO (fuente vigente, sin mutar):
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+  EXIT=0
+
+Derivacion del defecto hallado al construirla: la primera version filtraba por numero de linea
+contra la barrera 'if not self.quick:' (linea 95, dentro de run_all), pero las etiquetas viven en
+los metodos (linea 118 en adelante) -> devolvia 0 etiquetas y daba rojo falso sobre fuente correcta.
+Ahora el modo se decide por orden de llamada partido por la barrera, y la etiqueta se atribuye
+al metodo contenedor. Ese rojo falso esta consignado en el docstring de _etiquetas_del_modo.

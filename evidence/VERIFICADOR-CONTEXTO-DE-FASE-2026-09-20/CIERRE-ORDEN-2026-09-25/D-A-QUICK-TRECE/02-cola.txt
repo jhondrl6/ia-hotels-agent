@@ -1,0 +1,63 @@
+### cola canonica tras la escritura de corpus, 2026-09-27T02:03:03Z ###
+
+### 1. packs (con --carga - e --informe -, nunca con ruta real: S12) ###
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+  "status": "EMITIDO",
+  "packs": [
+    "packs_por_estado": {
+    "packs_sin_declaracion_de_lectura": 0,
+P1_EXIT=0
+
+### 2a. indice ###
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=328 commit=11 sin_fuente=0
+P2A_EXIT=0
+
+### 2b. indice --check ###
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+P2B_EXIT=0
+
+### 3. packs --check ###
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+P3_EXIT=0
+### 4. quick ###
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1356 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2737 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [-] Plan Citations: Line-number citations introduced or grown in plans (fix: cite symbols, or --update-baseline if the record legitimately grew)
+      - NUEVO con citas numericas (2): VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+      - NUEVO con citas numericas (3): VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+      - NUEVO con citas numericas (3): VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md || Citar simbolos (`def classify_promised_services`, `BLOCKING_GATE_NAMES`), no lineas (R2.2 del executor).
+      ... and 2 more
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1359 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 12/13 validations passed
+============================================================
+  STATUS: 1 VALIDATION(S) FAILED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+P4_EXIT=1
