@@ -700,3 +700,21 @@ alguna cifra de esta ruta?». Queda registrado como **L-VCF-20**: definición en
 **Estado remoto**: sigue sin push. Al empujarse se publica el rango y los comandos de verificación, no una
 cifra de paridad — que es justo el motivo por el que este bloque, que añade commits por encima del rango
 que él mismo mide, se escribe antes del push y no después.
+
+⟦**Posdata del mismo 2026-09-27, ya con el push hecho.** Las tres líneas de arriba quedan intactas y
+siguen describiendo el minuto en que se escribieron; lo que se retira aquí es su carácter de
+**estado vigente**, que es lo único que este bloque puede hacer sin mentir. El rango quedó publicado:
+**`eef7052..2a778a4`**, con **12** commits medidos por `git rev-list --count eef7052..2a778a4`. Los cinco
+shas que §16 enumera más arriba (`f496914`, `5446cb7`, `d0a51c7`, `4d2480b`, `b5591a0`) no se afirman
+dentro del rango leyendo el listado, sino con `git merge-base --is-ancestor <sha> origin/master`, que
+devolvió `SI` para los cinco. Y el tip del rango es `2a778a4`, que es el commit que escribió este §16: el
+bloque quedó dentro de lo que midió, que es la forma exacta que tenía el aviso de la línea que refuta.
+**Gate L3 ejecutado y pasado, no saltado**: `findings_count: 0` antes de empujar, con el mismo criterio
+con que §4 de `20-publicacion-y-el-rojo-falso-del-clon.txt` consignó el push anterior.
+
+Lo que gobierna la verificación de la publicación son los comandos de la sesión, no una cifra: identidad
+de objeto con `git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`, y alcanzabilidad de
+cada revisión con `git merge-base --is-ancestor`. No se escribe aquí `0 0`, por el mismo motivo por el que
+no se escribió en §4 del 20-: el commit de higiene que trae esta nota es justo el que devuelve la paridad
+a no-cero en local, así que el número quedaría refutado por su propio árbol y lo único que sobrevive al
+push es el comando.⟧
