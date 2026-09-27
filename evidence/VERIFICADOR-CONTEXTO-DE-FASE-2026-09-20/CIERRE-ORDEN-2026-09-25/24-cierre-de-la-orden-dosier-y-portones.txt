@@ -1,0 +1,433 @@
+# 24 · Conclusión de la orden: dieciséis celdas cerradas, dos premisas caídas y el dosier del operador
+
+Sesión: 2026-09-27, de cierre. Objetivo declarado por el operador: **dar por CONCLUIDA** la orden
+`VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`, cerrar lo ejecutable, dejar el dosier de decisiones en sus
+manos y **no abrir nada nuevo**.
+
+Toda cifra del enunciado de la orden era **expectativa** de una sesión anterior. Aquí están re-medidas, y
+lo que no pude re-medir sin un mandato que no tengo aparece dicho como tal.
+
+Estado de partida, medido antes de tocar nada:
+
+```
+git rev-parse --abbrev-ref HEAD                -> master
+git rev-parse --short HEAD                     -> 5d80cd7
+git status --porcelain | wc -l                 -> 0
+git fetch origin && git rev-list --left-right --count origin/master...HEAD
+                                               -> 0  6      (seis commits locales sin empujar)
+```
+
+Conforme con lo esperado. Las siete mediciones de FASE 0 también cuadran:
+
+| # | Instrumento | Esperado | **Medido en esta sesión** |
+|---|---|---|---|
+| 1 | `run_all_validations.py --quick` | TOTAL 13/13, EXIT=0, guarda conforme | **EXIT=0 · TOTAL: 13/13 · `[GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico`** |
+| 2 | `verify_index_in_committed_tree.py` | EXIT=0, 588 rutas, 339 IDs | **EXIT=0 · 588 rutas materializadas · 339 IDs · `[fechas] nombre=328 commit=11 sin_fuente=0`** |
+| 3 | `verify_packs_in_committed_tree.py` | EXIT=0, 5/5, 0 divergentes | **EXIT=0 · 5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables** |
+| 4 | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` | 4584 | **4584** |
+| 5 | `git grep -c -E "^\s*def test_" HEAD -- tests` (suma) | 4584 | **4584** |
+| 6 | `validate_agents_md.py; echo $?` | 0 | **EXIT_AGENTS=0** (medido con redirección, no con pipe: con `| tail` el `$?` sería el de `tail`) |
+| 7 | `validate_qmind_writeback.py` | PASS 12/12 | **PASS 12/12** |
+
+Y la resta que el gate de AGENTS no corta: las **22** filas de `§Cobertura por Modulo` suman
+exactamente **4584** (comprobado con script, no a ojo).
+
+Nada de lo anterior obligó a detenerse.
+
+---
+
+## 1. Dos premisas del enunciado cayeron, y no son cosmética
+
+**(a) `decision_client.py` no vive en `modules/quality_gates/`.** La orden pedía leer la superficie de D7
+en `modules/quality_gates/decision_client.py`. Medido con `git ls-files`: la puerta es
+**`scripts/decision_client.py`**; lo que vive bajo `modules/quality_gates/` son los **tests**
+(`tests/quality_gates/decision_client/`, con sus dos proveedores falsos en `falsos_proveedores/`). No
+existe ningún módulo Jev en el árbol. El cambio de ruta no es un detalle de redacción: cambia qué archivo
+hay que tocar para activar el proveedor real, y por eso va escrito aquí.
+
+**(b) La tabla de lecciones no tiene cinco propuestas pendientes: tiene diecinueve filas y todas dicen
+`INCLUIR`.** Medido sobre `10-analisis-post-implementacion.md`: la tabla arranca en su cabecera y contiene
+`L-VCF-1` … `L-VCF-19`, con `L-VCF-5` fuera de orden (al final de su bloque) y las líneas 87, 91 y 95 en
+blanco dentro de la misma tabla. El conteo de la columna de pertinencia da **19 `INCLUIR` sobre 19 filas**,
+cero filas con otro valor. El dosier que se le pidió al operador cubrió solo `L-VCF-10…14`. Y
+**`L-VCF-15…19` no entraron en ninguna decisión aceptada ni rechazada** — barrido de los dos libros, el
+contrato, el `09-`, la orden de calidad y los 24 expedientes del cierre: solo menciones descriptivas.
+
+Esto no se resuelve aquí (no es mi decisión), pero cambia la forma de la pregunta: no es «acepto o rechazo
+cinco», es «cinco de diecinueve».
+
+Consecuencia medida del punto (b): **el `00-lecciones-capitalizadas.md` no se ha movido.** Su §2 vive en el
+encabezado `## 2. Lecciones capitalizadas`, con cabecera de tabla, filas y un párrafo de dueños, y cierra
+antes de `## 3.`. Contiene **catorce** entradas y **ninguna** es `L-VCF-xx`: son de otros planes
+(L-R.1, L-R.3, L-R.4, L-NC10, L-PF6, L-PF10, L-D3, L-V2.3, L-V2.1, L-V2.2, D-V2.1, L-T4A.5, L-VUP-5, L-HF1).
+El propio archivo declara esa invariancia como AC10, no como olvido, y registra que las cinco publicadas
+por el instrumento (`n_pendientes: 5`, `registros: []`) no se aceptaron ni se rechazaron.
+
+---
+
+## 2. Grupo A · dieciséis celdas cerradas
+
+El enunciado anunciaba **cuatro** celdas vencidas. El barrido completo de los dos libros del plan
+archivado y de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` devolvió **32 afirmaciones vivas** que hoy
+dicen pendiente algo ya ejecutado. Se anotaron **16**; las otras 16 se declaran en §5 con su motivo, que
+no es «no las vi» sino «no me correspondía decidirlas en el corpus».
+
+Regla de la casa aplicada en las 16: se **conserva** el texto original y se apenda `⟦…⟧` fechado diciendo
+qué lo venció y dónde vive el estado vigente. Ninguna aserción se limó, ningún antecedente se borró,
+ningún número se inventó.
+
+### `dependencias-fases.md` — 8
+
+1. **Fila FASE-RELEASE, la lista de seis.** «Sin autorización siguen: Q7/D8, `--upload`/D9, `git mv`,
+   `--fix`/`--update-baseline`, commit, push». Cuatro de seis se ejecutaron; queda **push** (y
+   `--update-baseline`, que sigue reservado al archivado).
+2. **Fila D8.** Sin marcador de ejecución. Lleva ahora `RE-CORRIDO`, **con su mitad no cumplida escrita**
+   (ver §3: es el hallazgo de esta sesión).
+3. **Fila D9.** Sin rastro de la subida. Lleva ahora `EJECUTADO y VERIFICADO POR CONTENIDO`, y el hazard
+   que eso destapó (ver §4).
+4. **§Lo que queda es D8 como re-correr.** Vencido, con nota de que el límite del triaje es otra cosa y no
+   se tocó.
+5. **§D1 «Sin renumerar checks (D2 sigue fuera)».** D2 se ejecutó el 2026-09-26 y D-a el 2026-09-27; la
+   nota remite a §Deuda en vez de copiar el denominador.
+6. **Bala «sin commitear: sigue vigente».** Vencida por `ab664ec` (los once documentos del plan al
+   versionado). Se conserva porque su **regla** sigue siendo la casa; cayó la afirmación de estado.
+7. **Bala «piloto FASE-C: sigue sin autorización y no se ejecutó».** La contradecía el encabezado del
+   **mismo archivo** («Rectificado el 2026-09-24 al cerrar FASE-C»). Dos frases vivían con estados
+   opuestos bajo el mismo techo.
+8. **Fila `CONTEXTO/RELEASE` «Sin writers automáticos: `--fix` y `--update-baseline` salieron de la
+   secuencia».** Se cumplió una mitad y se incumplió la otra: `--update-baseline` no se corrió; `--fix`
+   **sí** se corrió en D-c y ahí quedaron sus dos defectos. La regla **no se retiró ni se rebajó** — es
+   justo la que habría evitado ese trabajo —; la nota declara que el cierre no la siguió.
+
+### `10-analisis-post-implementacion.md` — 5
+
+9. **Encabezado «el piloto FASE-C no lo está».** Única superviviente sin barrer de esa frase en todo el
+   corpus: en `dependencias-fases.md` la misma afirmación está rectificada desde el 2026-09-24.
+10. **Fila FASE-RELEASE del Resumen.** «Lo remoto (D8, D9) y el archivado siguen pendientes» → los tres se
+    ejecutaron, con autorización literal cada uno y en el orden R2.5/R2.10 (subida antes del traslado,
+    índice después).
+11. **Fila S5 (D8).** Marcada con su disparador **cumplido solo a medias** y la mitad medida escrita.
+12. **Nota del bloque C que afirmaba, el mismo día que la escribió, que el piloto seguía sin autorización.**
+13. **«Pendiente con su permiso propio» (la ancla del enunciado).** De cinco miembros, cuatro hechos. Se
+    conservó la lista entera y se añadió por qué la lección sigue valiendo: una lista de pendientes escrita
+    en un cierre vence al primer permiso concedido.
+
+### `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` — 3
+
+14. Encabezado: «lo que quedó sin permiso sigue siendo el momento remoto (D8/D9), el archivado, el commit
+    y el push» → tres de cuatro caídos, **push** en pie, y el principio conservado (cerrar una orden no
+    arrastra permisos que esa orden no pidió).
+15. §7, bala «No hay fase que abrir / cinco permisos por delante» → cuatro concedidos y ejercidos.
+16. **Última línea del documento**, que era la afirmación más viva del corpus entero: «Y siguen en pie,
+    como permisos que esta orden nunca reclamó, D8, D9, el archivado, el commit y el push».
+
+Nota sobre el instrumento que gobierna estas ediciones: el check `[9/13]` de citas sigue en
+**743 citas históricas, 0 nuevas y 0 crecimientos**. Todas las anotaciones citan **símbolos** (§Deuda,
+§S17, filas D8/D9/D10, `resolver_plan()`), nunca `archivo:NN`. No se tocó `--update-baseline`.
+
+---
+
+## 3. D8 re-corrido: la mitad del disparador no se cumplió, y no estaba dicho
+
+La orden daba D8 por «re-corrido». Es verdad que se corrió, y el crudo lo documenta (cuatro consultas, 38
+chunks, ocho fuentes, `QMIND_EXIT=0`). Lo que **no** se había registrado es que el disparador de la fila
+pedía dos cosas: *re-correr* **y** «verificar que las citas de L-V2.1/L-V2.2/D-V2.1 siguen en pie».
+
+Medido sobre el propio crudo de la corrida:
+
+```
+menciones de D-V2.1  ->  24
+menciones de L-V2.1  ->   0
+menciones de L-V2.2  ->   0
+fuentes recuperadas  ->  8 distintas, ninguna es el 00- de este plan
+```
+
+Las dos lecciones que faltan viven en `00-lecciones-capitalizadas.md` §2 de **este** plan, y ese archivo no
+es fuente del notebook: QMind indexa los `10-analisis` de los planes archivados. Es decir, el disparador
+pedía confirmar unas citas **locales** corriéndolas contra un corpus que **no las contiene**. No es un rojo
+de QMind: es un disparador mal montado, y la fila D8 queda ahora como *comprobada en su corrida / no
+re-confirmada en sus citas*. Se añade el límite que el propio crudo ya declaraba: el texto de Q7 nunca
+estuvo registrado verbatim en el repo, así que las cuatro consultas de la re-corrida se reformularon a
+partir de la descripción y no son las de 2026-09-20.
+
+---
+
+## 4. Dos defectos que causó esta misma sesión (y su cura)
+
+**(a) Me comí un marcador con un nombre de directorio.** Escribí tres veces la ruta
+`evidence/…/CIERRE-ORDEN-2026-09-25/D-C-D8-D9/`. El `ID_RE` del generador de índice es
+`\b((?:DA|D|L|S)-[A-Z0-9][A-Za-z0-9._-]*)`, así que **`D-C-D8-D9` es un ID de la familia D** para el
+instrumento. Medido comparando `lecciones_index.json` de HEAD contra el de disco:
+
+```
+ids_citados_sin_definicion   HEAD=52   tras mis anotaciones=53   tras la cura=52
+nuevos citados sin definicion: D-C-D8-D9 (8 citas, propagadas a 4 packs generados)
+```
+
+El verde del `--check` no lo veía: el índice estaba **fresco y equivocado a la vez**. Cura: reescribir mis
+tres menciones a una forma que no tiene forma de ID (el padre `CIERRE-ORDEN-2026-09-25/` más el nombre del
+crudo, que empieza por dígito y no casa), y regenerar par de índice y cinco packs. Verificado: `nuevos:
+NINGUNO`.
+
+**Queda una instancia previa que no es mía y no toqué**: `D-A-QUICK-TRECE`, con 6 citas, ya estaba en el
+índice de HEAD. Mismo mecanismo, mismo tipo de daño (un nombre de directorio de evidencia que el índice
+lee como lección). Se reporta en §5 porque su cura es del generador, no del corpus.
+
+**(b) Dos palabras mías, cazadas por el control y no por la suerte.** Una anotación salió con CJK
+(`编辑an`) y otra con dos palabras pegadas (`cumplidosolo`). Se escribió un control y se versionó con el expediente,
+en `…/CIERRE-ORDEN-2026-09-25/GRUPO-A-CELDAS-2026-09-27/10-control-integridad-anotaciones.py`, que por
+archivo tocado y contra su versión en HEAD mide: paridad de
+`⟦`/`⟧`, CR en disco, presencia de CJK, paridad **del delta** de `**` y de backticks (no del total del
+libro, que ya es impar por antecedentes), y citas numéricas nuevas. Resultado final:
+
+```
+dependencias-fases.md                 abre=34 cier=34 delta=0  CR=no  CJK=0  Δ**=48 Δ`=38  citas nuevas=NINGUNA
+10-analisis-post-implementacion.md    abre=40 cier=40 delta=0  CR=no  CJK=0  Δ**=24 Δ`=28  citas nuevas=NINGUNA
+ORDEN-CAMBIO-…-2026-09-22.md          abre=65 cier=65 delta=0  CR=no  CJK=0  Δ**=14 Δ`=22  citas nuevas=NINGUNA
+[OK] 0 archivo(s) con alguna condición de corte
+```
+
+---
+
+## 5. Lo que mis ediciones dejaron desfasado en el remoto, y el verificador que no lo ve
+
+D9 subió `10-analisis-post-implementacion.md` con sha `fd9829dc…`, 94.984 B, 410 líneas. El grupo A
+**editó ese mismo archivo** después de la subida. Estado de disco al cerrar:
+
+```
+sha256  a0ac449c1a1468865f5ad096709f2969f97c920575f9f004c69a715ee0c6922e
+bytes   98195      lineas  428      (frente a 94984 / 410 subidos)
+```
+
+O sea: **el notebook guarda una versión más vieja del análisis que el árbol de trabajo**, y
+`validate_qmind_writeback.py` lo declara `PASS 12/12` porque `is_ingested` **decide por título** y
+`do_upload` responde `[SKIP]` cuando el título existe. El 12/12 no prueba frescura de contenido. No volví
+a subir: la orden lo prohíbe explícitamente, y una segunda subida por título dejaría la versión anterior
+como verdad publicada sin avisar. Queda como decisión del operador, con su procedimiento: si se sube, se
+verifica por descarga + sha256, nunca por título, y sabiendo que `SKIP` no es un no.
+
+---
+
+## 6. Cola obligatoria, corrida y con su salida
+
+Tras tocar `.opencode`, en el orden mandado y sin dar ninguna por hecha:
+
+| Paso | Salida |
+|---|---|
+| `build_phase_briefing --carga - --informe -` | `REGEN=0` · packs emitidos · `[aviso] no se escribio ningun archivo` (carga e informe a stdout, **nunca** a ruta real: su default pisa evidencia cerrada de FASE-D) |
+| `build_lesson_index.py` | `IDX=0` · 339 IDs con definición · 52 citados sin definición · 16 análisis · 422 `.md` |
+| `build_lesson_index.py --check` | `IDX_CHECK=0` · `[OK] Índice de lecciones fresco (339 IDs)` |
+| `build_phase_briefing.py --check` | `PACKS_CHECK=0` · las cinco fases con sus fuentes frescas (RELEASE: 10) |
+| `run_all_validations.py --quick` | `EXIT=0` · **TOTAL 13/13** · `[GUARDA]` conforme · citas `0 nuevas y 0 crecimientos` |
+
+El árbol quedó con **10** rutas modificadas —las 3 fuentes anotadas, los 5 packs regenerados y el par del
+índice— más **2** rutas nuevas: este expediente y su directorio de instrumentos con los crudos y los
+controles. Nada más. Recuento re-hecho después de escribir estas líneas, porque cuando se escribieron este
+archivo todavía no existía: `git status --porcelain` da **12** rutas.
+
+Y una distinción que hay que saber leer en la cola: el check `[13/13]` del rápido verifica los packs
+**contra el árbol de HEAD**, así que su verde habla del commit anterior, no de lo que esta sesión regeneró.
+Lo que cubre las ediciones de aquí es el `--check` del escritor sobre el árbol de trabajo, que es la fila
+`PACKS_CHECK=0` de arriba.
+
+Y una medición sobre el modo completo, que es el territorio de **S21**:
+
+```
+[1/13]…[13/13]   ->  13 etiquetas con denominador 13
+[14/17]…[17/17]  ->   4 etiquetas con denominador 17
+TOTAL: 16/17 · la roja es [16/17] Tests ·EXIT=1
+```
+
+Es decir: la simetría de denominadores del modo completo **no** es un recuerdo ni una lectura de código,
+está confirmada por corrida en esta sesión. Su roja es la depre Pydantic del paso de tests, que el
+enunciado ya daba por preexistente y atribuida.
+
+---
+
+## 7. Balance de celdas
+
+| Población | Cantidad |
+|---|---|
+| Celdas vencidas afirmadas por el enunciado de la orden | 4 |
+| Afirmaciones vivas devueltas por el barrido de los tres documentos | **32** |
+| **Cerradas en esta sesión** | **16** (8 en `dependencias-fases.md`, 5 en `10-analisis…`, 3 en la `ORDEN…`) |
+| Marcadores `⟦…⟧` del corpus, antes → después | 26→34 · 35→40 · 62→65, todos en par |
+| Anotaciones de esta sesión que el propio control rechazó y hubo que reescribir | 2 (CJK, palabra pegada) |
+| Autodaños causados y curados por esta sesión | 1 (`D-C-D8-D9` como ID fantasma) |
+
+**No se tocaron** —y por eso no cuentan como cerradas— **15 celdas** de las 32: 16 anotaciones cubrieron
+17 (una sola anotación cierra dos, la pareja del piloto en el mismo punto), y las 15 restantes son de tres
+clases, las tres decisión del operador y no edición mía. (i) Las que aparecen dentro de **anotaciones de
+otra sesión**, donde meter un tercer `⟦…⟧` sería reescribir la nota de otro. (ii) Las que son
+**prescripción normativa** de lo que una fase debe pedir, no afirmación de estado: vencen mal, y hay que
+decidir si se cambian. (iii) Las que **ya llevan un `⟦…⟧` correcto** y el barrido marcó por coincidencia
+parcial. Su inventario completo, celda por celda, está en **§11** de este mismo archivo.
+
+---
+
+## 8. Lo que queda EXCLUSIVAMENTE en manos del operador
+
+Nada de esto se ejecutó ni se preparó en el árbol. Cada línea lleva su coste medido o su coste declarado.
+
+0. **P-0 · si se barre también el resto.** Esta sesión cerró 16 anotaciones sobre 17 de las 32 celdas y
+   dejó **15** con el criterio de §7; su inventario está en §11. Tres de ellas son del mismo tipo que sí se cerraron y merecen una mirada: dos afirman que
+   **D2 sigue abierta** cuando D2 se ejecutó el 2026-09-26 (`ORDEN…` §4.C y la nota de tres pasadas sobre
+   esa lista), y una afirma que **el README sigue publicando «11 Septiembre 2026»** después de curarse S18.
+   Coste del barrido completo: 16 anotaciones del mismo patrón, una pasada más de la cola obligatoria y su
+   control de marcadores. Se pide, no se hace: la orden decía cerrar lo ejecutable y no abrir nada nuevo, y
+   escribir sobre otras 16 celdas sin pedirlo es exactamente abrir.
+1. **Push de los seis commits locales** (`a020306 44f53c2 e66994b b04655f 3c2e6a3 5d80cd7`, rango
+   `eef7052..5d80cd7` desde `origin/master`). ⟦Ese «seis» es la cifra al cerrar la sesión y va a quedar
+   vieja con el primer paso: el commit que lleve este expediente la mueve a siete. Al empujar se re-mide
+   con `git rev-list --count origin/master..HEAD` y se publica el **rango** con su comprobación por
+   ancestro, nunca la punta ni la paridad como cifra⟧. Antes de empujar hace falta el **gate L3 con respuesta por
+   escrito**, y su letra: la letra de un formulario no autoriza push ni L3 (medido el 2026-09-26: el
+   intento por formulario fue rechazado y hubo que escribir «está saltado, empuja»). Esta sesión **no**
+   hizo el `git commit` de las 10 rutas del grupo A: commit y push son instrucciones escritas aparte, cada
+   una. Alcance medido: 6 commits, 108 objetos.
+2. **D-b + S16**: la convención «si tocaste un generador, regenera sus derivados y commítalos juntos» en
+   `.agents/workflows/phased_project_executor.md`, y la forma canónica de la lista de lectura en
+   `.agents/workflows/templates/prompt-fase-template.md §8`. Misma superficie, mismo bloqueo: **una sola
+   instrucción literal cierra las dos**. Config central, no se toca sin ella.
+   ⟦**Su residuo medido NO reproduce la cifra que declara el corpus.** La fila dice «0 de 121 prompts
+   archivados la usan» y eso es lo que FASE-D midió el 2026-09-24. Re-medido hoy con
+   `13-poblacion-s16.py` en este mismo directorio: hay **126** prompts de fase bajo `Archives/` (no 121),
+   **6** de ellos tienen una línea que arranca con `Lee ` y **5** son los de este plan (los que el
+   generador ya parsea), con lo que la divergencia con «0 de 121» es de **+5** y no es deuda: son los packs
+   de este plan, que llegaron después. La mitad que sigue viva de S16 es la ajena: **120 de 126** prompts
+   archivados no tienen siquiera una línea que arranque con `Lee `, y con el criterio estricto (los que el
+   generador resuelve) la brecha queda en **121 de 126**. Unidad declarada: la cuenta mide prompts con tal
+   línea, que no es lo mismo que prompts resueltos por el generador⟧
+3. **D-d**: las cinco propuestas `L-VCF-10…14` sin aceptar ni rechazar (dueño: el operador, contrato E3)
+   **más la cuestión de alcance que destapó la lectura (b)**: la tabla tiene **19** filas y las 19 dicen
+   `INCLUIR`, mientras el dosier cubrió 5 y `L-VCF-15…19` no entraron en ninguna decisión. §2 del `00-`
+   sigue en sus catorce filas de otros planes.
+4. **D7** (+ S10, AC15 `NO-EJERCITADO`, D6 dormida con causa). Superficie real, leída y corregida: la
+   puerta es `scripts/decision_client.py`; la selección es por `IAH_DECISION_PROVIDER` y
+   `IAH_DECISION_PROVIDERS_DIR`, **sin default**; el contrato del backend es un módulo que declare
+   `PROVEEDOR` y `evaluar()`; **no existe módulo Jev en el árbol**; `typesafe-sdk` no está en
+   `requirements.txt` ni instalado; y `NOMBRES_PROHIBIDOS` de la propia puerta incluye `jev` y
+   `typesafe`, así que el escáner de AC6 marca el insumo que D7 necesita — eso es literalmente S10.
+   Contradicción AC6 (ningún archivo fuera de la puerta importa el SDK) contra AC9 (añadir proveedor cuesta
+   un archivo): las dos ACs están vigentes y son incompatibles en D7. Coste estimado de la edición, por si
+   se manda: módulo nuevo ~80-150 líneas, decisión S10 (a) o re-anclar AC6 (b) 5-30 líneas **más una
+   edición de plan cerrado**, exclusión del escáner ~10, tests del backend real ~60-120. Riesgo alto en el
+   punto (b), porque re-anclar AC6 es editar un contrato ya cerrado.
+   Sobre la cadena: **«S10 despierta D6» no existe en el registro** — `grep despierta` sobre el directorio
+   del plan devuelve **0**. Y los dos expedientes del cierre **no concuerdan entre sí**: uno afirma «Al
+   activarse: D6 despierta» y otro que S10 está puerta-adentro de D7 y el gate de D6 es el `acceptance` de
+   AC15. Lo que la lectura soporta es D7 → cae S10, y D7 → ejercita AC15 → re-evalúa D6. Conciliar esos dos
+   expedientes cuesta 2-4 líneas y es escritura en evidencia cerrada: se pide, no se hace.
+5. **D3** (rebanado del workflow por fase), con su dueño intacto y sin tocar.
+6. **`generado_por_sha`**: medida y **no** aplicada. Coste declarado por la orden: **+5 líneas**, una clave
+   por pack. Su denominador sí cambió: la orden decía «sobre 9.991» y hoy los cinco packs suman **10.630
+   líneas** (`wc -l` sobre `briefing/*.md`), porque los packs crecieron con las anotaciones del grupo A.
+   Se probó que la cura (b) del verificador **no** la necesita para atribuir el rojo; su valor real es
+   darle a (c) un instrumento. Si se sella y no se normaliza, **fabrica rojos de información nula**: exige
+   un quinto patrón en `NORMALIZAR`.
+7. **E — la divergencia de política `DOMAIN_PRIMER`**: `AGENTS.md` dice «se regenera en FASE-RELEASE» y
+   `docs/CONTRIBUTING.md` paso 5b dice «al cerrar cada fase». Sigue declarada y **no** alineada. Alinearla
+   es config central: solo con mandato literal sobre **cuál de las dos gana**.
+8. **Dos deudas de código con la cura ya medida, que piden mandato literal y no se ejecutaron** (ver §9).
+9. **El manifiesto del archivador**, `C:/Users/Jhond/Github/iah-evidence-archive/2026-09-26-puerta-c/
+   MANIFIESTO-sha256.csv` (esperado `486d95a87ba9…69357` · 409.302 B · 1.833 filas). Vive fuera del
+   workspace y su lectura **volvió a negarse** en esta sesión. Motivo literal de la denegación: «Accede a
+   un archivo fuera del workspace actual (C:/Users/Jhond/Github/iah-evidence-archive/, repo distinto de
+   iah-cli)… se registra el motivo como ordenado en vez de intentar el acceso». **No se reintentó.** Sin
+   re-medirlo, el manifiesto sigue siendo un esperado heredado, no una cifra de esta sesión.
+10. **Lo remoto de QMind ya está hecho y NO se repitió.** Lo que sí quedó abierto es §5: el snapshot del
+    notebook está más viejo que el archivo en disco y el verificador que decide por título no lo ve.
+
+---
+
+## 9. Grupo C · las dos deudas de código: **no ejecutadas**, con el mandato sin recibir
+
+El enunciado las describe como «piden mandato literal». Este cierre **no** lo trae, así que quedaron
+intactas y medidas:
+
+**(i) S21 — confirmada por corrida, no curada.** Reproducida arriba en §6: trece `/13` y cuatro `/17` bajo
+`TOTAL: 16/17`. La cura sigue siendo la recomendada y sigue **sin** hacerse dinámica la ordinal:
+`validate_governance_numbers.py` construye su registro de emisores **leyendo los literales del código**
+(`PRINT_LABEL_RE`, línea 99) y un f-string lo deja vacío y ciega al verificador. Lo que falta es una línea
+en la cabecera de la corrida declarando que el denominador impreso es del modo rápido.
+
+**(ii) `validate_opencode_refs.py --fix` — sus dos defectos, confirmados en el código y sin curar.**
+Medido en el archivo, no en la declaración: `:209` escribe `md.write_text(text, encoding="utf-8")` **sin**
+`newline="\n"`, y `:249` hace lo mismo con el baseline. Sobre la segunda mitad, el enunciado daba «518 sin
+barra contra 66 con barra»; mi recuento simétrico sobre los 509 `.md` de `.opencode` da **466 sin barra y
+224 con barra** (690 ocurrencias de `.opencode/` en total). Las dos poblaciones son del mismo orden y la
+proporción es la que importa (la barra sigue minoritaria), pero **la cifra del enunciado no reproduce**: o
+era de otro corte o se midió con otra unidad. Se declara la divergencia en lugar de alinearlo a mano.
+La cura pedida sigue siendo la misma: `newline` en el writer más una entrada en la batería
+`tests/test_sync_writers_lf_y_fecha_readme.py`. Y el control negativo, anclado a revisiones **publicadas
+fijas** (`44f53c2` con el plan aún bajo `plans/`, `3c2e6a3` con él archivado), nunca a HEAD.
+
+---
+
+## 10. Línea de cierre
+
+La orden queda **concluida en lo ejecutable**: FASE 0 verificada entera, 16 celdas cerradas con su regla
+de conservación, la cola obligatoria en verde, y tres cosas que este cierre **no** puede dar por hechas y
+no disfraza — **push**, **los seis asuntos del operador con mandato pendiente** y **las dos deudas de
+código sin mandato**. Lo que sigue abierto no está abierto por olvido ni por falta de medición: está
+abierto porque cada uno de esos puntos exige una instrucción escrita que esta sesión no tiene, y la
+alternativa —escribirla yo— es precisamente lo que la orden prohibió al decir «no abrir nada nuevo».
+
+---
+
+## 11 · Anexo — inventario de las 15 celdas vivas que no se anotaron (insumo de P-0)
+
+Numeración de líneas medida el 2026-09-27 al cierre de esta sesión; **la sesión que ejecute P-0 debe
+re-verificar cada ancla antes de editar** (las líneas de estos archivos se desfasan con cada anotación que
+se inserta). En las tres marcadas **[PRIORIDAD]** el vencimiento es directo y no comparte la ambigüedad de
+las demás.
+
+### `10-analisis-post-implementacion.md` — 3 celdas
+
+1. `:293` — casilla «[x] ⟦Contrato de C cerrado el 2026-09-23; su EJECUCIÓN sigue pendiente⟧»: la ejecución
+   del bloque C ocurrió el 2026-09-24, y las casillas vecinas (`:299`, `:305`) ya llevan la frase sin el
+   remate. Clase (i): la casilla ya tiene anotación de otra fecha.
+2. `:349-352` — checklist de cierre sin marcar («Orden del cierre con sus cuatro permisos → … →
+   write-back → `git mv` → … → quick»): es prescripción de secuencia y casilla de registro de FASE-RELEASE;
+   tacharla es editar el registro de otra fase. Clase (ii)+(i). Ojo: en su texto convive la regla «refs y
+   citas sin `--fix` ni `--update-baseline`» que D-c no siguió.
+3. **[PRIORIDAD]** `:368` — «`README.md`, que sigue diciendo "11 Septiembre 2026"»: medido hoy, el README
+   dice «Actualizado 25 Septiembre 2026» (vencida por la cura de S18, el 2026-09-25). El `⟦…⟧` de `:372-375`
+   cubre «no curadas» pero no esta frase. Vence por otra ronda, no por las cuatro ejecuciones.
+
+### `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` — 12 celdas
+
+4. `:108` — fila CONTEXTO de §3: «Lo que RELEASE dejó explícitamente pendiente: momento remoto (D8/D9),
+   archivado, `--fix`/`--update-baseline`, commit y push», más «el producto de D sigue sin rastrear»
+   (falso por `:42` y `:30` del propio documento).
+5. `:168` — fila `CONTEXTO/RELEASE` de §4.C: «resuelta la letra, no corrida la fase» y «Tampoco se corre
+   `--fix` ni `--update-baseline`». Sus filas hermanas (`:166`, `:167`) sí llevan marcador.
+6. `:187` — nota de vigencia del bloque C: «las deudas D2/D3/D6 intactas y toda operación remota sin
+   autorización ni presupuesto». D2 se ejecutó el 2026-09-26; lo remoto, el 2026-09-27.
+7. `:194` — final de la fila «Encaje con deudas» §5: «⟦D2 sigue fuera, como pedía la fila…⟧».
+8. `:196` — fila «Entrega y permisos remotos» §5: «Ninguna subida ni consulta real se hizo ni se autoriza
+   por esta redacción: sigue faltando permiso literal y presupuesto».
+9. `:304` — dentro del `⟦Rectificada parcialmente el 2026-09-23⟧`: «commit/push es decisión del operador y
+   **los bloques B, C y el piloto conservan su autorización pendiente**»; la corrección de `:309-312`
+   arregló solo el piloto.
+10. `:313` — «la release 4.78.0; commit y push siguen donde estaban» (la frase vive dentro de una
+    anotación previa, y el cierre de esa anotación no se copia aquí). El commit ya no está donde estaba.
+11. `:428` — motivo 1 del estado tras el piloto: «son permisos, no fases: momento remoto (D8/D9),
+    archivado, `--fix`/`--update-baseline`, commit y push».
+12. **[PRIORIDAD]** `:444-449` — párrafo «Y ni los cuatro planes…»: «**D2** …, **D3 completa** …, **S10** …
+    siguen **abiertas, con su dueño y su disparador**, exactamente como estaban antes del piloto». D2 está
+    ejecutada; D3 y S10 sí siguen abiertas — la celda mezcla vivas y muertas, y por eso pide anotación y no
+    barrido.
+13. **[PRIORIDAD]** `:471-474` — la anotación de 2026-09-26 que re-ancló la lista y no terminó el trabajo:
+    «tercera pasada sobre esa misma lista, 2026-09-26: de esas ocho sigue viva todo menos S15», con D2
+    incluida entre las vivas el mismo día de su ejecución.
+14. `:478` — «lo que le falta a ese plan son permisos (momento remoto, archivado, commit, push), no…».
+15. `:623-625` — «Siguen exactamente donde los dejaron: **D7** inactiva y **toda operación remota** sin
+    autorización ni presupuesto; y son pendientes de **permiso**… el momento remoto (D8/D9), el archivado,
+    el commit y el push». Mitad viva (D7) y mitad muerta (lo remoto): la anotación debe separarlas, no
+    tachar la celda entera.
+
+Regla para quien ejecute P-0: mismo patrón de la casa (texto original íntegro + `⟦…⟧` fechado que diga qué
+lo venció y dónde vive el estado), símbolos en vez de `archivo:NN`, cero números S-nn nuevos sin censo,
+paridad de marcadores por archivo, y la cola obligatoria completa al terminar. En las celdas 12, 13 y 15 la
+anotación separa lo vivo de lo muerto en vez de declarar vencida la celda entera.
