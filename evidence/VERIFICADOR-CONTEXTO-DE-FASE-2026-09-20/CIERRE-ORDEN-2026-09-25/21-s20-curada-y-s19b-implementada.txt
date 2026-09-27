@@ -161,3 +161,16 @@ pines que D2 fijó hoy, así que el costo real no son los segundos sino la terce
 No se ató nada al `--quick`. No se aplicó la opción `generado_por_sha`. No se escribió la convención (c) en
 `.agents/**` (config central, pide instrucción explícita). No se tocó `.cursorrules`. No se empujó nada: este
 commit queda local, y el push pide instrucción aparte con su gate L3 ofrecido.
+
+⟦**Refutado por el push del mismo 2026-09-26, redactado como rango para que no se vuelva a refutar.** Publicado
+en `origin/master`, push **`36f7ece..1f285b7`**, verificado por identidad de objeto
+(`git ls-remote origin refs/heads/master` = `1f285b7951d8fc272bb20871e4ed088ed4fc9867` = `HEAD` local), con
+`d25d44d` y `1f285b7` comprobados alcanzables (`git merge-base --is-ancestor` = `SI` los dos) y paridad
+`0 0` tras `git fetch`. En el remoto solo existe `refs/heads/master`. **Gate L3: no ejecutado, saltado.** La
+frase de arriba lo anunciaba como «ofrecido» y conviene ser exacto con cómo se obtuvo la respuesta, porque es
+la razón por la que el primer intento fue rechazado: lo ofrecí por el formulario de la herramienta y la
+selección llegó como «Saltar el escaneo y continuar» — pero en este repo **la letra de un menú no autoriza ni
+el push ni el L3**; hizo falta la confirmación escrita del operador («está saltado, empuja»). Con eso el push
+salió. No hay resultado que transcribir: `qodersec review --layer=l3` nunca corrió para este conjunto, y el
+contenido empujado es código y tests, no solo markdown de citas. Las tres afirmaciones de este párrafo que
+**no** se vencen siguen vigentes: nada atado al `--quick`, nada en `.agents/**`, `generado_por_sha` sin aplicar.⟧
