@@ -5,7 +5,9 @@ ejecución acordado: **P-0 + D-b/S16 + D-d + E**. Esta sesión **no** commitea n
 D-d ni E: los entrega decision-ready y para.
 
 ⟦**Estado al cerrar la sesión (addendum §11)**: de los dos dosieres, **uno se ejecutó**. D-d quedó aplicada
-el mismo 2026-09-27 con la respuesta escrita del operador; E sigue entregada y sin decidir. El título y el
+el mismo 2026-09-27 con la respuesta escrita del operador; E sigue entregada y sin decidir ⟦**refutado
+dentro del propio archivo: el §13 registra la letra (c) respondida y aplicada, y esa aplicación quedó
+commiteada en `5446cb7` (tanda de cierre, 2026-09-27)**⟧. El título y el
 párrafo de arriba se conservan porque describen el estado con el que esta sesión se detuvo la primera
 vez⟧
 
@@ -459,7 +461,10 @@ tamaño de pack se transcribió** en los documentos tocados (**L-VCF-19**, que e
 después de D-d el árbol está en **17** (13 ` M` + 4 `??`): se sumó `00-lecciones-capitalizadas.md`. Y el §10
 afirmaba «D-d y E se entregan decision-ready y sin decidir»; de esa frase queda en pie **solo E**. Lo que
 no cambió: **esta sesión no commitea ni empuja**, y el commit sigue pidiendo instrucción escrita por rutas
-nombradas.
+nombradas. ⟦**Ya no queda nada en pie de esa frase (tanda H1/H2, 2026-09-27)**: **E** se respondió con la
+letra (c), y el commit llegó con instrucción escrita sobre rutas nombradas — `f496914`, `5446cb7`,
+`d0a51c7`, `4d2480b` y `b5591a0`. El push sigue sin ejecutarse. Detalle en el §Barrido de cierre, al final
+de este archivo⟧
 
 ---
 
@@ -661,3 +666,37 @@ de los dos derivados — y esa es la comprobación que hay que hacer antes de da
 intuición.
 
 **Árbol**: **19** rutas (15 ` M` + 4 `??`) — entra `docs/GUIA_TECNICA.md`. Sin commit y sin push.
+
+---
+
+## 16 · BARRIDO DE CIERRE (2026-09-27, tanda de commits) — qué refuta este expediente de sí mismo
+
+**Mandato recibido**: «Haz H1 y H2», instrucción escrita del operador después de medir el alcance de la
+tanda. Este bloque no reescribe ninguna línea de arriba: las frases congeladas siguen leyendo como lo que
+eran en su timestamp. Lo que se retira es su carácter de **estado vigente**.
+
+**Cinco** commits cierran lo que este archivo dejó abierto, en orden:
+
+- `f496914` — corpus del Paso 0 con sus derivados (11 rutas)
+- `5446cb7` — config central: D-b en el executor y su template, E (c) en `AGENTS.md` y `docs/GUIA_TECNICA.md` (4 rutas)
+- `d0a51c7` — el dosier 24- con su grupo A (10 rutas)
+- `4d2480b` — este dosier 25- con su grupo B (32 rutas)
+- `b5591a0` — L-VCF-20 con su par de índice y sus 5 packs (9 rutas)
+
+**Las cuatro frases «Sin commit y sin push»** caen en §12, §13, §14 y §15, y su variante «esta sesión no
+commitea ni empuja» en el encabezado y en la rectificación del §11. Con ellas quedan cerrados **seis**
+conteos de árbol: **16** (§9), **17** (§11 y §12), **18** (§13 y §14) y **19** (§15). No se publica aquí
+un conteo nuevo que los sustituya: `git status --porcelain` sobre el árbol de `b5591a0` ya no devuelve
+rutas, y lo que queda es el comando, no un número copiado.
+
+**Lo que NO estaba vencido, y se deja escrito para no barrerlo de más**: el §15 acierta al no re-correr
+packs ni índice por `docs/GUIA_TECNICA.md`, que efectivamente no es fuente de ninguno de los dos. Lo que
+aquel criterio no cubría es el workflow: **no entra a la llave de frescura por sha, pero el pack imprime
+sus bytes y sus tokens**, y por eso la primera pareja de commits dejó un árbol que no se reproducía a sí
+mismo hasta el segundo. La comprobación completa no es «¿está en `sources[]`?» sino «¿el generador emite
+alguna cifra de esta ruta?». Queda registrado como **L-VCF-20**: definición en
+`10-analisis-post-implementacion.md`, cita en `00-lecciones-capitalizadas.md` §2, entrada en `b5591a0`.
+
+**Estado remoto**: sigue sin push. Al empujarse se publica el rango y los comandos de verificación, no una
+cifra de paridad — que es justo el motivo por el que este bloque, que añade commits por encima del rango
+que él mismo mide, se escribe antes del push y no después.
