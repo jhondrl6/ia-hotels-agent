@@ -162,11 +162,15 @@ No se ató nada al `--quick`. No se aplicó la opción `generado_por_sha`. No se
 `.agents/**` (config central, pide instrucción explícita). No se tocó `.cursorrules`. No se empujó nada: este
 commit queda local, y el push pide instrucción aparte con su gate L3 ofrecido.
 
-⟦**Refutado por el push del mismo 2026-09-26, redactado como rango para que no se vuelva a refutar.** Publicado
-en `origin/master`, push **`36f7ece..1f285b7`**, verificado por identidad de objeto
-(`git ls-remote origin refs/heads/master` = `1f285b7951d8fc272bb20871e4ed088ed4fc9867` = `HEAD` local), con
-`d25d44d` y `1f285b7` comprobados alcanzables (`git merge-base --is-ancestor` = `SI` los dos) y paridad
-`0 0` tras `git fetch`. En el remoto solo existe `refs/heads/master`. **Gate L3: no ejecutado, saltado.** La
+⟦**Refutado por el push del mismo 2026-09-26.** Publicado en `origin/master`, rango empujado
+**`36f7ece..1f285b7`**. Lo durable de esa afirmación se lee con `git merge-base --is-ancestor <sha>
+origin/master` (`d25d44d` `SI`, `1f285b7` `SI`), y **no** con una igualdad de punta: `ls-remote` = `HEAD`
+y paridad `0 0` eran el estado de ese minuto, y este mismo expediente los volvió a mover — el push de
+`5079c3c` (la primera versión de esta anotación) dejó la punta atrás y la paridad otra vez en `0 1` hasta el
+fetch siguiente. Por eso la casa no
+publica esas dos cifras: se refutan solas con el siguiente push. La corrección que consigna esta línea viaja
+en el commit **hijo** de `5079c3c`, cuyo sha no puede escribirse aquí: ningún commit nombra al propio. En el
+remoto solo existe `refs/heads/master`, y eso sí sigue siendo verdad. **Gate L3: no ejecutado, saltado.** La
 frase de arriba lo anunciaba como «ofrecido» y conviene ser exacto con cómo se obtuvo la respuesta, porque es
 la razón por la que el primer intento fue rechazado: lo ofrecí por el formulario de la herramienta y la
 selección llegó como «Saltar el escaneo y continuar» — pero en este repo **la letra de un menú no autoriza ni
