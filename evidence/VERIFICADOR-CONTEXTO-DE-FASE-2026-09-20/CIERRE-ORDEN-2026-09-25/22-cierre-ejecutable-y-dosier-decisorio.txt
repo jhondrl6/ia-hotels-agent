@@ -262,7 +262,19 @@ corrieron solos en FASE 0 y dieron verde sin que yo tocara nada gobernado. `gene
 Ningún `git mv`. Ni D8 ni D9. **Commit:** este archivo viaja en su propio commit de esta sesión, y su sha no
 puede nombrarse aquí porque ningún commit nombra al propio. **Push:** no ejecutado; su autorización es
 separada y con el gate L3 preguntado y declarado. La punta y la paridad de §1 se leen con los comandos de esa
-sección y no se publican como cifra: se refutan solas con el siguiente commit.
+sección y no se publican como cifra: se refutan solas con el siguiente commit. ⟦**Refutado por el push de la
+misma sesión, el 2026-09-26.** Publicado en `origin/master` el rango **`5079c3c..ad47574`**. Lo durable de esa
+afirmación no es la punta ni la paridad —que `0 0` describía el minuto del push y se refuta sola—, sino el
+ancestro, y se lee con `git merge-base --is-ancestor <sha> origin/master`: `5079c3c` **SI**, `ac4a7e1` **SI**,
+`ad47574` **SI**. **Gate L3: revisión profunda ejecutada, sin problemas de seguridad**, no saltada. **Retiro
+lo que escribí en el borrador de esta misma anotación:** «es la primera vez en esta orden que el L3 se corre»
+no es cierto — la memoria de la orden registra los dos pushes previos del mismo 2026-09-26
+(`6b02532..de336b6` y `de336b6..36f7ece`) con el L3 ejecutado y pasado. `22-` no medía ese histórico y no
+debía afirmarlo. Lo que sí cambia hoy es que el gate se pidió **con** el push y no salteado, y que su
+resultado se declara con la palabra escrita del operador («hacer el push con L3»), que es la forma que este
+repo exige: la letra de un menú no autoriza ni el push ni el L3 (`21-` §7). La corrección que consigna esta
+anotación viaja en el commit **hijo** de `ad47574`,
+cuyo sha no puede escribirse aquí.⟧
 
 ## 7. Postura después de escribir
 
@@ -276,7 +288,11 @@ de packs: nada de lo escrito en esta sesión entra al corpus que ellos recorren.
    saltado**. El commit de este expediente quedó hecho en esta sesión por instrucción escrita literal
    («commitéame el 22- de CIERRE-ORDEN-2026-09-25»); el push sigue sin autorización y es acción separada. En
    este repo la letra de un menú no autoriza ni el push ni el L3: hizo falta confirmación escrita el
-   2026-09-26 (`21-` §7), y el primer intento por formulario fue rechazado.
+   2026-09-26 (`21-` §7), y el primer intento por formulario fue rechazado. ⟦**Cerrado el mismo
+   2026-09-26.** El operador dio instrucción escrita literal para las dos cosas («hacer el push con L3») y
+   ambas se cumplieron: la revisión profunda se **ejecutó** y devolvió **cero problemas de seguridad**, y el
+   push salió en el rango `5079c3c..ad47574`, con su forma durable en §6. Queda por consignar solo lo que
+   ningún commit puede nombrar: el commit de higiene que trae esta anotación es hijo de `ad47574`.⟧
 2. D8 (consulta Q7 a QMind, con el ID `01a04d98-b7bd-778c-8441-26fdc7e35f45`, no el nombre del notebook:
    `--nb iah-cli-lecciones` devuelve `error: Bad request`) y D9 (`--upload` de `10-analisis` a QMind, con
    verificación **por contenido descargado y sha**, no por título). D9 es pre-condición de D-c por orden
