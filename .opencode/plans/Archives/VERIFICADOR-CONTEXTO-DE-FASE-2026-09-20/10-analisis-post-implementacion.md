@@ -126,7 +126,7 @@ Cerradas en FASE-A (2026-09-21). Cada una con su medición, no con su impresión
 
 | S18 | **La regla `readme_version_header` no goberna la fecha legible de `README.md`**: tras el sync de cinco cabeceras, esa línea siguió con «11 Septiembre 2026» con `release_date: 2026-09-25` vigente; `guia_tecnica_header` sí goberna la suya. Corte de cobertura declarado: `[3/11] Version Sync` dio PASS con el README desfasado. Su texto, dueño, disparador, corte de cobertura, alternativa descartada y **cura (2026-09-25: el patrón alcanza la fecha y el template emite `{date_text}`, forma larga, no ISO)** viven en `dependencias-fases.md` §S18 (fuente única; esta fila no la re-transcribe) | `scripts/sync_config.yaml` y el lector de esa regla en `scripts/sync_versions.py` — tampoco es de esta fase | **CUMPLIDO el 2026-09-25**, con la escritura de `README.md` autorizada aparte (destino central): el `--check` pasó de `IN_SYNC` a `FAIL` y la línea 5 quedó alineada por su escritor. Estado vigente: §S18 |
 
-| S29 | **El verificador de capitalización excluye `Archives/` por estructura y este `00-` quedó fuera de su población**: `clasificar_planes()` salta ese directorio **antes** de mirar el cutoff y `verificar()` solo itera `alcance` → con el cutoff de casa la cobertura publica `alcance 3 · archivados 28`, y este plan está entre los 28. Desde el `git mv` de D-c, el `[OK]` del `[10/13]` **no lee** las diez filas que D-d metió en §2. Población de la laguna medida: **3** planes archivados tienen `00-lecciones-capitalizadas.md` de **28**, y **25** no lo tienen — que es justo lo que hace roja la salida obvia. Su texto, dueño, disparador, las tres salidas con coste y la alternativa descartada viven en `dependencias-fases.md` §S29 (fuente única; esta fila no la re-transcribe) | `scripts/validate_lesson_capitalization.py` — **código**, no es de esta sesión: pide instrucción literal del operador o del plan que toque ese verificador | La próxima capitalización posterior a un cierre, o la próxima vez que alguien cite `Lesson Capitalization [OK]` como evidencia sobre un plan **archivado**. Mientras no se cure, la edición post-cierre de un `00-` archivado **cita la corrida explícita** del verificador sobre ese plan (lo que esta sesión hizo, y su techo: vale una vez y a mano) |
+| S29 | **El verificador de capitalización excluye `Archives/` por estructura y este `00-` quedó fuera de su población**: `clasificar_planes()` salta ese directorio **antes** de mirar el cutoff y `verificar()` solo itera `alcance` → con el cutoff de casa la cobertura publica `alcance 3 · archivados 28`, y este plan está entre los 28. Desde el `git mv` de D-c, el `[OK]` del `[10/13]` **no lee** las diez filas que D-d metió en §2. Población de la laguna medida: **3** planes archivados tienen `00-lecciones-capitalizadas.md` de **28**, y **25** no lo tienen — que es justo lo que hace roja la salida obvia. Su texto, dueño, disparador, las tres salidas con coste y la alternativa descartada viven en `dependencias-fases.md` §S29 (fuente única; esta fila no la re-transcribe) | `scripts/validate_lesson_capitalization.py` — **código**, no es de esta sesión: pide instrucción literal del operador o del plan que toque ese verificador | La próxima capitalización posterior a un cierre, o la próxima vez que alguien cite `Lesson Capitalization [OK]` como evidencia sobre un plan **archivado**. Mientras no se cure, la edición post-cierre de un `00-` archivado **cita la corrida explícita** del verificador sobre ese plan (lo que esta sesión hizo, y su techo: vale una vez y a mano) ⟦— **curada el 2026-09-27, salida (a-prima)**: el salto estructural de `Archives/` fuera y el cutoff mandando igual dentro. Su texto, la población nueva con su comando, el mutante con sus cuatro rojos y el POST por población (46 → 45, cae el de capitalización) viven en §S29 de `dependencias-fases.md` (fuente única; esta fila no la re-transcribe). Se declara la única mitad que la cura no tocó: la prosa del workflow y su fixture siguen escribiendo «que no estén en `Archives/`»⟧ |
 
 ### Decisiones de FASE-C (2026-09-24), cada una con su alternativa rechazada
 
@@ -411,6 +411,12 @@ autorización— es exactamente donde quedaron los permisos.
   quedó **no comprobada**» es la que el re-corrido venceu: ya no describe el estado, describe la auditoría del
   2026-09-20. Se conserva el texto porque su lección es justamente que una lista de pendientes escrita en
   un cierre vence al primer permiso concedido⟧
+  ⟦**Vencido del todo el 2026-09-27**: el **push** que quedaba en pie cayó con el rango `2a778a4..1e4cb52`, y
+  `--update-baseline` tenía su turno en el archivado y ese archivado se autorizó en la orden de cierre de este
+  mismo día (paso T3). A la fecha de esta nota no queda ningún miembro de la lista de cinco en pie. Se mantiene el
+  alcance por comando (`git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`, o el
+  `git rev-list --left-right --count origin/master...HEAD` de arriba) porque ninguna de las dos formas se fija aquí
+  como cifra: lo que escribió esta misma fila dos veces es que un pendiente publicado vence al primer permiso⟧
 - **Tres decisiones del operador al cerrar `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-25)**,
   registradas aquí porque afectan el estado de este plan y con su fuente en la propia orden (§6):
   **(1)** el trabajo del **bloque A** de esa orden **permanece bajo «Sin publicar»** en `CHANGELOG.md` y
@@ -462,7 +468,15 @@ autorización— es exactamente donde quedaron los permisos.
   las diez filas de §2 que entraron hoy quedan sin gate. Población medida de la laguna: **3** archivados con
   `00-` de **28**, y ampliar el detector sin gobernar la población fabricaría **25** rojos `C1/AUSENTE`. Su
   fila, sus tres salidas con coste y su disparador viven en §S29 de `dependencias-fases.md` (fuente única).
-  **Vivas hoy: D3, D7, S10 y S14**, más esa **S29** y la **(d)** de S19⟧
+  **Vivas hoy: D3, D7, S10 y S14**, más esa **S29** y la **(d)** de S19⟧ ⟦**Cierre formal de la orden de calidad,
+  2026-09-27, y tres movimientos más en esta lista**: **S29 quedó cerrada** por ejecución con la salida
+  **(a-prima)** —el salto estructural de `Archives/` fuera y el cutoff mandando igual dentro—, y su prueba de que
+  la cura funciona llegó sola: al archivar JEV hoy, el plan siguió en alcance y el gate dio **0 violaciones**;
+  **S31 se abrió y se cerró en la misma sesión** (los arneses de FASE-C y FASE-D pineaban la ruta de raíz; medidos
+  **seis** constantes, no cinco) y su POST por población dejó la suite en **3 rojos**, los tres atribuidos el
+  2026-09-25, con **0 nuevos**; y **S17 sigue abierta** — su **quinta** instancia se midió hoy en el mismo
+  `--fix` del archivado. De la enumeración original quedan vivas **D3, D6, D7, S10 y S14**, más la **(d)** de
+  **S19**; el estado vigente de cada una es su fila en `dependencias-fases.md`, fuente única⟧
 - **Lo que este cierre no afirma**: que los cuatro planes del lote estén terminados, ni que exista medida de
   pertinencia real, ni que el trabajo esté versionado: el producto de D, los cierres documentales y este
   expediente siguen **solo en el árbol de trabajo**.

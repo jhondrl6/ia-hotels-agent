@@ -1,0 +1,95 @@
+# Crudo del paso T2 (S31) — 2026-09-27
+
+Comandos y cifras, en el orden en que se corrieron.
+
+## 1. Estado de partida
+
+Sin re-corrida de suite: el baseline PRE del paso T1 sigue vigente para atribución porque **no se tocó código de
+producto** entre el POST de T1 y esta tanda; lo que cambió son seis constantes de arnés bajo
+`tests/quality_gates/{lesson_relevance,phase_briefing}/`.
+
+| Medición | Valor |
+|---|---|
+| PRE (apertura de la orden, `1e4cb52`) | 46 rojos = 20 failed + 26 errors |
+| POST de T1 (S29 curada) | 45 rojos = 19 failed + 26 errors |
+| POST de T2 (esta tanda) | **3 rojos = 3 failed + 0 errors**, `3 failed, 4613 passed, 41 skipped, 4 xfailed, 230 warnings in 353.07s` |
+
+Comandos idénticos sobre los tres crudos (atribución por población, no por total):
+
+```
+grep -E "^(FAILED|ERROR)" <crudo> | tr -d "\r" | sed "s/ - .*//" | sort
+comm -23 <post-t1> <post-t2>   -> 42 lineas (caen)
+comm -13 <post-t1> <post-t2>   ->  0 lineas (nuevos)
+```
+
+Los 42 que caen: 36 en `lesson_relevance` (6+6+3+8+5+8 por archivo) y 6 en `phase_briefing` (4+2).
+Los 3 restantes son los atribuidos el 2026-09-25 y no pertenecen a esta fila.
+
+## 2. Causa: desglosada, no publicada como un solo nombre
+
+Contado sobre `…/S29-A-PRIMA-2026-09-27/00-suite-pre.txt` (cadenas literales del crudo):
+
+| Firma | Ocurrencias en el PRE |
+|---|---|
+| `FileNotFoundError` | 107 impresiones, correspondientes a **36** tests |
+| `list index out of range` | **1** test |
+| `informe sin packs no responde AC19` | **2** tests |
+| menciones de la ruta de raíz `plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` | 106 |
+
+O sea: la causa única es la ruta vieja, pero **seis de los 42 no lanzan `FileNotFoundError`** — listan el
+directorio y revientan en `IndexError`/`AssertionError`. La orden los describía a los 42 como
+`FileNotFoundError`; se declara la diferencia en vez de buscar una traza que no existe.
+
+## 3. Población real: seis constantes, no cinco
+
+Con las cinco de la orden curadas, `tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py`
+seguía dando 4 rojos. Su constante `PLAN` era la sexta.
+
+Control de residuo:
+
+```
+grep -rn '"plans" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"' tests --include=*.py   -> 0
+grep -rn '"plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"' tests --include=*.py -> 6
+```
+
+Menciones de la ruta vieja que **no** producen rojo y se dejaron estar (declaradas, no limadas): un
+`assert ... not in` dentro del mismo archivo, dos docstrings en
+`tests/test_build_lesson_index_s15_fecha_versionada.py` y `tests/test_sync_writers_lf_y_fecha_readme.py`, y dos
+constantes en `tests/test_verify_index_in_committed_tree.py` que resuelven contra el árbol versionado.
+
+## 4. Control negativo
+
+Revertida la sexta constante (ruta de raíz), el archivo vuelve a **4 failed** con la firma del PRE:
+
+```
+2x AssertionError: informe sin packs no responde AC19
+1x IndexError: list index out of range
+4 failed, 4 passed in 0.64s   EXIT=1
+```
+
+Restaurada: **8 passed**. sha256 del archivo idéntico antes y después del mutante:
+`cbc322332e45d6752b1b0dce3ccbb395bd29059bd9b6e9412e8b64bd725e1408`.
+
+## 5. Dos rojos que produje yo en esta tanda, y cómo se cerraron
+
+**(a) `OpenCode References` 12/13** (durante el paso T1, ya declarado en `…/S29-A-PRIMA-2026-09-27/07-…`).
+
+**(b) `Plan Citations` 12/13 en esta tanda.** Escribí `test_briefing_se_genera_por_fase.py:23` dentro de la fila
+S31; `CITATION_RE` en `scripts/validate_plan_citations.py` caza `<ruta>.<ext>:<digitos>`, el writer del pack copió
+la frase a los cinco packs y el gate publicó **6 violaciones** (5 packs + `dependencias-fases.md`) con
+«inventario actual: 749 citas» contra las 743 del arranque.
+
+No se absorbió con `--update-baseline` (reservado al archivado, y aquí el hallazgo era texto nuevo mío, no un
+registro legítimo que creció). Cura: citada la constante por **símbolo** (`PLAN`) y no por línea, en la fila y en
+la tabla — que además es la forma durable, porque el número de línea caduca con la primera edición del archivo.
+
+Verificación después de regenerar índice y packs:
+
+| Comando | Salida |
+|---|---|
+| `python scripts/build_lesson_index.py` + `--check` | exit 0 / exit 0, 340 IDs, `[fechas] nombre=329 commit=11 sin_fuente=0` |
+| `python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` + `--check` | exit 0 / exit 0 |
+| `python scripts/validate_plan_citations.py` | exit 0, `743 citas historicas, 0 nuevas y 0 crecimientos` |
+| `python scripts/run_all_validations.py --quick` | exit 0, **TOTAL 13/13** con `[GUARDA]` |
+| `python -m pytest tests/quality_gates/lesson_relevance -q` | exit 0, **57 passed** |
+| `python -m pytest tests/quality_gates/phase_briefing -q` | exit 0, **49 passed** |

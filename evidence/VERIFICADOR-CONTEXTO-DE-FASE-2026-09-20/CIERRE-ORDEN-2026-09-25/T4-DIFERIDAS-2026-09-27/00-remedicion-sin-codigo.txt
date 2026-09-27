@@ -1,0 +1,60 @@
+# Paso T4 (D8 y diferidas) — re-medición sin código — 2026-09-27
+
+Ninguna de estas filas cambió de dueño ni de disparador. Se midió el estado real y se anota solo donde la
+realidad se movió (S17). Ningún valor se simuló.
+
+## D8 — re-ejecución de la consulta Q7
+
+**Condición del paso [7]:** re-correr la consulta solo si el operador pegó el texto **verbatim** de Q7 en su
+primer mensaje de esta sesión. **No lo pegó** (el mensaje fue «Ejecuta…» más el adjunto con la orden), así que la
+fila **queda declarada con su bloqueante** y no se simula confirmación.
+
+Aun así se re-midieron las tres citas sobre el crudo que la propia fila invoca
+(`evidence/…/CIERRE-ORDEN-2026-09-25/D-C-D8-D9/`), con `grep -roF` por identificador:
+
+| Identificador | Ocurrencias en el crudo D8 | Coincide con lo publicado en la fila |
+|---|---|---|
+| `L-V2.1` | **0** | sí (la fila declaraba 0) |
+| `L-V2.2` | **0** | sí |
+| `D-V2.1` | **24** | sí |
+
+Estado vigente de la fila: premisa **comprobada en su corrida / no re-confirmada en sus citas**, porque el texto
+de Q7 no está registrado verbatim en el repo y las cuatro consultas del 2026-09-27 se reformularon a partir de su
+descripción. Nada de esto se promueve a verificación.
+
+## Filas diferidas: medición del estado real
+
+| Fila | Qué se midió | Resultado | Estado |
+|---|---|---|---|
+| **D3** | si el workflow canónico fue rebanado por fase | `.agents/workflows/phased_project_executor.md` sigue en un solo archivo; `5446cb7` (D-b) escribió la regla de los derivados, no un rebanado | **sin cambio**: plan propio posterior, parcial |
+| **D6** | existe `scripts/validate_plan_semantics.py` | **no existe** (`ls`: No such file) | **sin cambio**: bloqueada por permiso/plan propio |
+| **D7** | Jev como segundo proveedor detrás de `decision_client.py` | 9 menciones de `jev|typesafe` en el script, todas de **documentación y prohibición**: `NOMBRES_PROHIBIDOS` incluye `typesafe` y `jev`, y `ALIAS_ADAPTER` lista los alias que el cliente rechaza. Ningún proveedor Jev registrado | **sin cambio**: inactiva por decisión del operador |
+| **S10** | `import` del SDK con dueño de ruta | `grep -rn "import typesafe|from typesafe" scripts/*.py` → **0** resultados | **sin cambio**: sigue sin dueño de ruta |
+| **S14** | — | no la tocó esta orden; se conservan dueño y disparador de su fila | **sin cambio** |
+| **S19(d)** | `generado_por_sha` en el generador | `grep -c "generado_por_sha" scripts/build_phase_briefing.py` → **0** | **sin cambio**: opción medida, no aplicada |
+
+## Lo único que si cambio de estado: S17 (otra puerta de la misma familia)
+
+Al ejecutar el archivado de JEV (paso T3), `validate_opencode_refs.py --fix` volvió a escribir sin `newline="\n"`:
+**9** archivos del corpus pasaron a CRLF sobre disco, y volvió a promover la forma minoritaria
+`` `/.opencode/plans/Archives/… `` (4 referencias). Se normalizó por bytes, se devolvieron las 4 a la forma
+dominante a mano, y se regeneraron los cinco packs con su propio escritor (que emite LF: quedaron en CR=0), con
+los dos `--check` y `--quick` **13/13** después.
+
+Detalle y tablas de conteo: `evidence/…/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/` y la
+**quinta instancia** añadida a la fila §S17 de `dependencias-fases.md`.
+
+**Trampa de instrumento medida al hacer esta comprobación:** `git grep -c -F "/.opencode/plans/Archives"` devuelve
+**0** tanto en `HEAD` como en el árbol de trabajo, incluso sobre archivos que el `grep` plano llena de coincidencias.
+La cuarta instancia de S17 había contado con `git grep -c`; el conteo válido aquí es
+`grep -o -F` sobre la ruta (o `grep -rlF` para población de archivos). Queda escrito porque la diferencia de
+instrumentos cambia la conclusión: con `git grep` parecía que la forma con barra no existía en el repo, y con `grep`
+se ve que sí existe (en `.opencode/.qoder/repowiki/…` y en planes archivados ajenos a esta tanda, donde **no** es
+del `--fix` y no se tocó).
+
+## S29 y S31: el efecto sobre la lista de deudas vivas de la orden
+
+La enumeración de la ORDEN («quedan vivas D3, D6, D7, S10 y S14») se escribió antes de esta tanda y no mencionaba
+S29 ni S31 porque S31 todavía no existía. Con lo ejecutado hoy: **S29 cerrada** por la cura (a-prima) y **S31
+cerrada** por las seis constantes, ambas con su POST por población. S17 sigue **abierta** (quinta instancia). Se
+anota en el paso T5, que es donde vive el párrafo de estado de la orden.

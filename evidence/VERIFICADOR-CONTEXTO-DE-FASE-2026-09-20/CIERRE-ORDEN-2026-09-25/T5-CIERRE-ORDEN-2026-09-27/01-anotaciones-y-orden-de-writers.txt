@@ -1,0 +1,35 @@
+# Paso T5 — cierre formal de la orden y orden de los writers — 2026-09-27
+
+## Anotaciones datadas escritas (ninguna reescribe el registro anterior)
+
+| Sitio | Qué se anotó |
+|---|---|
+| `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, párrafo «Estado de la orden tras el piloto» | Cierre formal: motivos **1 y 2 caídos por medición**, motivos **3 y 4** como techo aceptado por el operador al pegar la orden; y lo que el cierre **no** afirma (planes terminados, calidad semántica, muerte de D3/D6/D7/S10/S19(d)) |
+| `ORDEN-…md`, fila **CONTEXTO/RELEASE** de §4.C | Sus tres contradicciones resueltas **por ejecución**: D1 re-leída sin reparar `.agents/`, QMind verificado por **descarga + sha256** y no por título, y el traslado con su `build_lesson_index.py` antes y después más los dos `--check`. `--update-baseline` corrido dentro del archivado, con **0 nuevas y 0 crecimientos**; `--fix` con su **quinta instancia S17** declarada |
+| `…/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md`, lista de vivas | **S29 cerrada** por ejecución (a-prima) con la prueba llegada sola al archivar JEV (siguió en alcance, 0 violaciones), **S31 abierta y cerrada** en la misma tanda (seis constantes, POST 45 → 3), **S17 abierta**; vivas originales **D3, D6, D7, S10, S14** más la **(d)** de S19 |
+| `…/dependencias-fases.md`, nueva sección final | Espejo de una línea del cierre, sin re-transcribir cifras (L-VCF-19) |
+
+## Hallazgo de orden entre los dos writers (motivo por el que un `--check` dio rojo solo)
+
+Se regeneró primero el índice y después los packs. El `--check` del índice devolvió **exit 1** justo después, y
+no por contenido divergente: **los cinco packs son corpus del índice** (están bajo `plans/…/briefing/`), así que
+el writer de packs, al escribirlos, **vence** el índice que acababa de generarse. Con el orden inverso queda:
+
+```
+python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20   -> exit 0
+python scripts/build_lesson_index.py                                                    -> exit 0
+python scripts/build_lesson_index.py --check                                             -> exit 0  (340 IDs)
+python scripts/build_phase_briefing.py --plan … --check                                  -> exit 0
+```
+
+Es la misma familia que **L-VCF-20** (la proyección de una ruta vence al derivado): el denominador del orden
+correcto no es «cualquiera de los dos primero», es **primero lo que es fuente del otro**. No se cambió ningún
+writer para arreglarlo: se corrió en el orden que el instrumento ya goberna, y queda escrito.
+
+## Estado de verificación al cerrar el paso
+
+| Comando | Salida |
+|---|---|
+| `python scripts/run_all_validations.py --quick` | exit 0 · **TOTAL 13/13** con `[GUARDA]` |
+| `python -m pytest tests/test_validate_lesson_capitalization.py tests/quality_gates/lesson_relevance tests/quality_gates/phase_briefing -q` | exit 0 · **137 passed** |
+| CR en disco de los archivos tocados bajo `.opencode/` | **0** en todos |

@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+- **procedencia**: HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -223,7 +223,7 @@ Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-imp
 `06-checklist-implementacion.md`.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `c7f0d96055a2445444a9da2abf23f76c4bb416172ecb124384ab0ca1964fedfc` · 12255 bytes copiados de 12255 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `c7f0d96055a2445444a9da2abf23f76c4bb416172ecb124384ab0ca1964fedfc` · 12255 bytes copiados de 12255 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ## Fuente: `01-plan-maestro.md` §2
 
@@ -245,7 +245,7 @@ Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-imp
 | **¿Una lección propuesta por el proveedor falso entra en §2 del `00-`? (⟦decidido el 2026-09-23⟧)** | **NO, no en automático.** Propuesta ≠ pertinente: exige **revisión humana explícita** y su aceptación o rechazo **registrada** con quién decidió | Lo que prueba el falso es la mecánica del camino, no la pertinencia. Auto-triarse con respuestas sintéticas y escribir el resultado en §2 fabricaría la evidencia que AC15 declara `NO-EJERCITADO`, y rechazar en silencio es la familia del filtro que la matriz ya descartó arriba (`VACUOUS_RECALL`). El rechazo también se publica: una fila no desaparece |
 | **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó su bloque A (conciliado, §5-ter) y su **bloque B, concluido contractualmente por su matriz §13, que es la única fuente de su estado**; el **bloque C** —estas enmiendas prospectivas— quedó autorizado el **2026-09-24** solo sobre los documentos de los cuatro planes, y el **piloto FASE-C sigue sin autorización**. Ejecutar una mejora de proceso dentro de la fase sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 7715 bytes copiados de 54033 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 7715 bytes copiados de 54033 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -506,7 +506,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -833,7 +833,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `449240be22a6856a65c97dbf84e464b9e1a5a898e116dec25ff82947928bf9f2` · 29221 bytes copiados de 29221 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `449240be22a6856a65c97dbf84e464b9e1a5a898e116dec25ff82947928bf9f2` · 29221 bytes copiados de 29221 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -874,7 +874,7 @@ Dueños distintos representados: **7** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
 
 **Cómo entró L-VCF-20 (registro de la decisión, 2026-09-27, tanda H1).** Los dos párrafos de arriba registran el ingreso de **diez** filas por la decisión D-d y no se reescriben: siguen siendo exactos para esas diez. Con esta son **once** las filas de §2 debidas a este propio plan, y su procedencia es otra — instrucción escrita «Haz H1 y H2» sobre una lección que la sesión de commits **midió al commitear**, ya cerrado el dosier que avaló a las otras diez. El dueño no cambia, y el conteo se re-midió contra el lector en vez de copiar el párrafo anterior: `duenos_del_corpus()` sigue publicando **7** dueños distintos, porque una fila más de este plan no suma un octavo — el mismo motivo por el que las tres de la capa tibia no sumaron. Y una forma que hay que respetar para que el índice la reconozca: la **definición** va en `10-analisis-post-implementacion.md` §Lecciones nuevas, porque el corpus de definiciones del generador son los análisis (`09`/`10`), no este `.md`; escribirla solo aquí la habría registrado como ID citado sin definición, que es la familia de cita fantasma que este plan ya pagó.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -918,7 +918,7 @@ habilita la fase siguiente.
 | 2 · [FASE-B](05-prompt-inicio-sesion-fase-B.md) | `decision_client.py`: costura neutra, contract test con proveedor falso y **un solo** proveedor configurable; AC9 certifica que añadir el segundo cuesta un archivo | MEDIA-ALTA: la superficie que cambia de proveedor sin que nadie más se entere | **✅ CERRADA 2026-09-21 — VERIFICADO OFFLINE (AC6–AC9; AC16/AC17/AC18 en su parte)**. **Conciliada el 2026-09-23** con la remediación del bloque A de la orden de calidad: **S11 y S12 aceptadas** (corrección técnica en `fdd397f`, no de esta sesión); AC9 declarado con su alcance local. Ver §Conciliación |
 | 3 · [FASE-C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: capa de pertinencia **aditiva** sobre `lecciones_index.json`, nunca filtro | ALTA: es la mitad que el verificador de capitalización declara fuera de alcance | **✅ CERRADA 2026-09-24 — VERIFICADO OFFLINE su mecánica (AC10–AC14 y AC15 en su parte no semántica; AC16/AC17/AC18 en su parte de C). AC15 queda ⚠️ PARCIAL con `acceptance = NO-EJERCITADO` (contrato E4), que es el techo alcanzable con D7 sin activar.** Cortes: la fase llegó **hasta listo para revisión** y se paró ahí. **Push hecho el 2026-09-24** por instrucción literal del operador: publicó `da382b1..5817edd`. ⟦**La paridad no se publica como cifra (2026-09-25)**: cualquier commit posterior la mueve, así que se lee con `git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD` — es la regla que este plan ya aplica a HEAD en su README⟧. **Commit hecho el 2026-09-24 con autorización explícita del operador y en dos tiempos**: `7f2e9f9` (el helper `tests/support_observador_escrituras.py`, creación de BLOQUE-B, viaja aparte por dependencia técnica: 3 tests de esta fase lo cargan en 8 puntos) y `5817edd` (las **37** rutas propias de FASE-C, +3.774 líneas, con los **7** checks del hook en verde). Quedan **fuera** por decisión del operador: los documentos del plan, el par de índice y `REGISTRY.md` — a nivel de hunk no se separa el cierre de C del trabajo de BLOQUE-B/C sobre esos archivos (164 hunks, **59** nombran FASE-C, 22 otro bloque, 83 sin marca). Consecuencia medida en un árbol extraído de HEAD con `git archive`: la suite de esta fase da **14 failed / 16 passed / 26 errors** (`SueloNoLeible: VENCIDO`, que es el guard de frescura haciendo su trabajo) y pasa a **56 passed** al regenerar el par con `build_lesson_index.py` en ese árbol; el `[6/7] --check` del hook valida contra el árbol de trabajo y **no** afirma coherencia interna del commit. Evidencia: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` (`informe.json`, `ac10_delta.json`, `coverage.json`, `r26.txt`, `mutation/` con su verde y su rojo, `run_tests.txt`, `regression_calidad.txt`, `cero-red.txt`, `no-piso-pasado_ANTES/DESPUES.txt`, par pre/post de AC16). Métricas por fase: `09-documentacion-post-proyecto.md` §D, no este archivo. **D6 sigue dormida con causa medida** (ver su fila en §Deuda): `acceptance` no se ejercitó y no se simuló |
 | 4 · [FASE-D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga de lectura medido** (AC19–AC23) | MEDIA: es determinista, pero gobierna lo que todas las sesiones futuras van a leer | **✅ CERRADA 2026-09-24 — VERIFICADO OFFLINE (AC19–AC23; y AC16/AC17/AC18 en su parte).** Mandato propio del operador, corte **«hasta listo para revisión»**, **sin commit ni push** (instrucción separada como siempre). **Lo que produjo**: `scripts/build_phase_briefing.py` (determinista, cero proveedor, cero red) + **5 packs** en `…/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/`, uno por fase del plan — COMPLETO **4**, SECCION-NO-RESUELTA **1** (RELEASE: el prompt nombra «los cuatro prompts de fase» en prosa y **no se adivina**), FUENTE-AUSENTE **0** — sobre **34** fuentes declaradas y **23** secciones pedidas, todas resueltas. ⟦**Re-medido el 2026-09-25 por la conciliación final de la orden de calidad**: ese `SECCION-NO-RESUELTA` era **conducta correcta del generador** (AC22: nombra la sección, las rutas intentadas y no adivina), y su causa —la prosa del prompt de RELEASE— se corrigió **en el prompt**, no en el generador. La corrida de hoy da **5 COMPLETO / 0 SECCION-NO-RESUELTA / 37 fuentes** (sus bytes y su porcentaje viven en la salida completa de `evidence/…/CONCILIACION-FINAL-ORDEN-2026-09-25/11-carga-corrida-3.txt`, no en esta fila). **`carga.json` NO se re-escribió** (evidencia cerrada de FASE-D, **S12**): lo que esta fila describía sigue siendo el estado que D certificó⟧. **AC20**: carga total medida en los dos lados con el mismo comando (divisor 4 declarado), con los tres sumandos por fase y la resta **entre cargas totales**; los dos totales y el delta **no se copian en este archivo**: viven en `carga.json` y `carga-pre-post.md` porque este `.md` está dentro del pack que ese `stat` mide (**L-VCF-19**); `instrumentos/comprobar_resta_carga.py` verifica cinco identidades y sale `exit 0`; el workflow canónico entra en los dos lados mientras **D3** no lo rebane, y por eso el ahorro real queda **muy por debajo de un tercio** (concatenar no es ahorrar). **AC21**: frescura por **sha256 de `sources[]`** contra el árbol, cuatro causas sin colapsar (`FUENTE-AUSENTE` / `SHA-DISTINTO` / `FUENTE-ILEGIBLE` / `PACK-AUSENTE`), HEAD publicado como procedencia y **con test que prohíbe que venza**; el pack no está en su propio `sources[]`; y el generador resuelve un plan **también bajo `Archives/`** (demostrado sobre archivados reales: es la llamada del RELEASE tras el `git mv`). **AC22**: a los tres estados del contrato se añadió una cuarta salida medida, `SIN-DECLARACION`, con su `--check` imprimiendo `SIN-FUENTES` en lugar de `OK`. **AC23**: `mutation/` con verde (declara) y rojo (no declara, y el pack se achica en silencio conservando el estado) del símbolo real `GUARD_NO_TRUNCAMIENTO_ACTIVO` — los dos tamaños, en `mutation/resumen.txt` y tampoco se copian aquí (**L-VCF-19**) —, destino por argumento obligatorio y expediente de FASE-A protegido por observador de escrituras + `huellas` (S13). **Tests**: 49 casos en `tests/quality_gates/phase_briefing/` (un estado por test, guard de cero red autouse). **AC17**: `.agents/` con **cero bytes aportados** — la casilla literal «`git status .agents/` vacío» **no era verificable** porque el árbol llegó con 3 rutas sucias ajenas del bloque B, y se afirmó como lo que goberna AC17: observador de escrituras + sha256/tamaño de los 4 archivos, iguales antes y después. **AC16**: delta 0 (quick 11/11 `exit 0`, hook 7→7) con los 49 casos declarados aparte. **Herencia de C aceptada sin reabrirla**: el pack exhibe la parte mecánica medida de C y su `acceptance = NO-EJERCITADO` **como lo que es**; E1–E5 no se renegociaron y **D6 sigue dormida** (ver su fila en §Deuda). **Deuda nueva con dueño y disparador: S16** — la convención `Lee …` que parsea el generador no está escrita en `prompt-fase-template.md`: medido, **0 de 121** prompts archivados la usan. ⟦**Cifra y estado vencidos el 2026-09-27 por D-b**: la forma quedó escrita en el dueño que esta deuda le asignaba, y la población re-medida vive en §S16 de este archivo, que es su fuente única —esta fila no la re-transcribe—⟧ Evidencia: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/` (`informe.json`, `carga.json`, `carga-pre-post.md`, par `faseD_carga_pre/post.txt`, par `faseD_baseline/quick_pre/post.txt`, `baseline-pre-post.md`, `r26.txt`, `cero-red.txt`, `mutation/`, `instrumentos/`) |
-| 5 · [FASE-RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Cierre documental, sync, write-back y archivado en orden R2.5/R2.10 | MEDIA | **✅ CERRADA EN SU PARTE OFFLINE el 2026-09-25 — VERIFICADO sin red.** C0 ejercido (mandato con destinos literales, luego writers): release **4.78.0** `Gobernanza, costura, pertinencia y carga medida`, `release_date`/`date` 2026-09-25; cinco cabeceras por `sync_versions.py`; `DOMAIN_PRIMER.md` regenerado con su writer; `CHANGELOG.md` +90/0; `REGISTRY.md` por `log_phase_completion.py` (cabecera 2026-09-25). **Dos defectos de instrumento declarados con su cura pendiente en `scripts/`**: los writers reescriben sin `newline="\n"` (CRLF sobre archivos `i/lf`) y `readme_version_header` no goberna la fecha legible del README. **Sin autorización siguen**: Q7/D8 (premissa no comprobada), `--upload`/D9, `git mv`, `--fix`/`--update-baseline`, commit, push. ⟦**Vencido el 2026-09-27 en cuatro de sus seis miembros, con sus corridas en disco.** D8 fue re-corrido, D9 subido y verificado por descarga + sha256 (no por título), y el `git mv` se ejecutó: el plan vive bajo `.opencode/plans/Archives/` y `resolver_plan()` del escritor lo sigue resolviendo con el nombre pelado. El `--fix` **sí** se corrió dentro de D-c y ahí quedaron sus dos defectos abiertos, en su mitad de la fila S17; `--update-baseline` no se corrió y sigue reservado al archivado. De la lista en pie queda **push** (y el estado de los commits locales no se fija aquí: lo lee cualquiera con `git rev-list --left-right --count origin/master...HEAD` tras `git fetch`). La premisa «no comprobada» ya no está abierta —la consulta se corrió— pero **tampoco quedó verificada en su disparador**: ver la fila D8⟧. Evidencia: `evidence/…/FASE-RELEASE/` (12 archivos), y la de las cuatro corridas en `evidence/…/CIERRE-ORDEN-2026-09-25/` |
+| 5 · [FASE-RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Cierre documental, sync, write-back y archivado en orden R2.5/R2.10 | MEDIA | **✅ CERRADA EN SU PARTE OFFLINE el 2026-09-25 — VERIFICADO sin red.** C0 ejercido (mandato con destinos literales, luego writers): release **4.78.0** `Gobernanza, costura, pertinencia y carga medida`, `release_date`/`date` 2026-09-25; cinco cabeceras por `sync_versions.py`; `DOMAIN_PRIMER.md` regenerado con su writer; `CHANGELOG.md` +90/0; `REGISTRY.md` por `log_phase_completion.py` (cabecera 2026-09-25). **Dos defectos de instrumento declarados con su cura pendiente en `scripts/`**: los writers reescriben sin `newline="\n"` (CRLF sobre archivos `i/lf`) y `readme_version_header` no goberna la fecha legible del README. **Sin autorización siguen**: Q7/D8 (premissa no comprobada), `--upload`/D9, `git mv`, `--fix`/`--update-baseline`, commit, push. ⟦**Vencido el 2026-09-27 en cuatro de sus seis miembros, con sus corridas en disco.** D8 fue re-corrido, D9 subido y verificado por descarga + sha256 (no por título), y el `git mv` se ejecutó: el plan vive bajo `.opencode/plans/Archives/` y `resolver_plan()` del escritor lo sigue resolviendo con el nombre pelado. El `--fix` **sí** se corrió dentro de D-c y ahí quedaron sus dos defectos abiertos, en su mitad de la fila S17; `--update-baseline` no se corrió y sigue reservado al archivado. De la lista en pie queda **push** (y el estado de los commits locales no se fija aquí: lo lee cualquiera con `git rev-list --left-right --count origin/master...HEAD` tras `git fetch`). La premisa «no comprobada» ya no está abierta —la consulta se corrió— pero **tampoco quedó verificada en su disparador**: ver la fila D8⟧. Evidencia: `evidence/…/FASE-RELEASE/` (12 archivos), y la de las cuatro corridas en `evidence/…/CIERRE-ORDEN-2026-09-25/`. ⟦**Y cae el último miembro de esa lista el 2026-09-27**: el push se corrió con el rango `2a778a4..1e4cb52`, con su L3 ejecutado antes y hallazgos en cero. De los seis miembros que esta fila re-midió quedan corridos los cinco de fase más el push; `--update-baseline` era el sexto y su turno era el archivado, que esta orden autorizó el mismo día (paso T3). La paridad sigue sin fijarse aquí como cifra: `git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`⟧ |
 
 ## Qué debe heredar cada fase
 
@@ -1124,7 +1124,7 @@ Alinear la política y regenerar el archivo siguen siendo dos actos, y el segund
 ## Rutas ajenas en el árbol al commitear FASE-B (medido, no supuesto)
 
 Al cerrar FASE-B (2026-09-21) había **tres rutas ajenas** en el árbol. Al abrir su tramo de commit
-quedaba **una**: `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, que el
+quedaba **una**: `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`, que el
 commit de esta fase **deja fuera** y sobre la que no se hace `git checkout` (es trabajo en curso de otra
 sesión, no basura que limpiar; precedente: FASE-A excluyó a propósito sus dos rutas ajenas).
 
@@ -1304,7 +1304,7 @@ los tres escritores de la cura anterior y **no** a este, así que la familia vol
 puerta. La cura pedida es la misma de siempre (`newline="\n"`) más una aserción en esa batería que lo incluya.
 
 Y un defecto segundo del mismo `--fix`, menor pero del mismo estilo de silencio: al reparar, **promueve la
-forma minoritaria** de la ruta. Escribió `` `/.opencode/plans/Archives/… `` en tres referencias de
+forma minoritaria** de la ruta. Escribió `` `.opencode/plans/Archives/… `` en tres referencias de
 `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` que estaban en `` `.opencode/… ``, cuando el corpus marcado
 versionado está en **518 contra 66** a favor de la forma sin barra (medido con `git grep -c` sobre `HEAD`,
 contando el backtick como parte del patrón). El verificador acepta las dos, así que **no corta nada**: se
@@ -1313,6 +1313,21 @@ mano las tres a la forma dominante —no hay pelea con la herramienta, porque `-
 rotas— y quedó declarado aquí en vez de abrir un número nuevo: **S21 a S26 están todos usados en el corpus**
 (el `S22` y `S23` de `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` son otra cosa), así que esta
 observación vive como sub-punto de S17 y no como fila propia.
+
+**⟦Quinta instancia de la misma puerta, medida el 2026-09-27 al ejecutar el archivado de JEV (paso T3 de la orden
+de cierre) — el defecto sigue abierto bajo el dueño de esta fila⟧.** `validate_opencode_refs.py --fix` volvió a
+escribir sin `newline="\n"`: **9** archivos del corpus pasaron a CRLF sobre disco (de 87 a 3.978 CR por archivo;
+detalle y guarda de bytes en `evidence/…/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/`). Se normalizó por
+bytes con las dos aserciones de rigor y los cinco packs se regeneraron con su escritor, que sí emite LF: el daño
+es del `--fix`, no del generador de packs. Y promovió otra vez la forma minoritaria: **4** referencias quedaron
+como `` `/.opencode/plans/Archives/… `` en `ORDEN-…md`, `CONTEXT-JEV-…md` y esta misma fila, y se devolvieron a la
+forma dominante a mano, con el mismo criterio que la cuarta instancia. Dos precisiones medidas esta vez, para no
+repetir el error de instrumeto de la anterior: (i) el recuento de formas **no** se puede hacer con
+`git grep -F "/.opencode/plans/Archives"` —devuelve **0** incluso sobre archivos que el `grep` plano muestra
+llenos de esa cadena—, hay que contar con `grep -o -F` sobre la ruta; y (ii) la promoción no es universal: en
+`Archives/EVALUACION-JEV-…/README.md` y en los cinco packs quedaron ocurrencias con otro carácter delante, que
+no son del `--fix` y **no se tocaron** (son contenido archivado y derivado, y la cura pedida sigue siendo la del
+`newline="\n"` en el escritor, no reescribir corpus ajeno).
 
 ### S18 — `readme_version_header` no goberna la fecha legible de `README.md` (nueva, 2026-09-25)
 
@@ -1618,13 +1633,134 @@ los 28 archivados, **3** tienen `00-lecciones-capitalizadas.md` y ninguno está 
   `analizar_plan()` sobre este plan archivado → **C1…C8 sin hallazgos**, 7 dueños, crudo
   `…/GRUPO-B-P0-CONVENCION-2026-09-27/22-c1-c8-sobre-el-plan-archivado.txt`. Eso prueba la forma **una vez y
   a mano**: no es verificable en el árbol y no protege la siguiente edición.
+
+**⟦DECIDIDA Y EJECUTADA el 2026-09-27 por instrucción escrita del operador (orden de cierre, paso T1). La salida
+es la (a) con el cutoff vigente, no la (a) desnuda que esta fila medía: se llama (a-prima)⟧**
+
+`clasificar_planes()` dejó de saltar `Archives/` como estructura y sus hijos pasan por **la misma regla de cutoff**
+que los de raíz; `grupos["archivados"]` se conserva como marcador de corpus y `verificar()` publica además cuántos
+archivados quedaron en alcance (clave nueva `archivados_en_alcance`). `_linea_de_cobertura()` ya no imprime
+«archivados excluidos»: imprime «N archivados en el corpus, M de ellos en alcance».
+
+- **Por qué prima y no exclusión a secas** (crudo `…/GRUPO-B-P0-CONVENCION-2026-09-27/26-coste-de-ampliar-el-detector.txt`,
+  re-confirmado el 2026-09-27 con las funciones del propio módulo): quitar la exclusión **sin cutoff** fabricaba 25
+  `C1/AUSENTE`; **con** cutoff, 0. De los 28 archivados, 2 son posteriores al corte y entran, 20 quedan exentos **por
+  su fecha** y 6 sin fecha parseable. La fila (a) de arriba describía el coste de la variante sin gobernar; la prima
+  conserva ese cutoff como única regla de entrada.
+- **Población nueva al cutoff de casa**, con su comando exacto — `python scripts/validate_lesson_capitalization.py`:
+  `cobertura: 5 plan(es) en alcance (…) | 28 archivados en el corpus, 2 de ellos en alcance | 20 exentos por fecha
+  anterior a 2026-09-12 | 6 exentos SIN FECHA PARSEABLE (…)` → exit 0, **0 violaciones**. Antes de la cura la misma
+  corrida publicaba `3 plan(es) en alcance · 28 archivados excluidos`.
+- **Dientes** (crudos `…/S29-A-PRIMA-2026-09-27/`): `02-` es el parche de la cura y `03-` el mutante — revertido el
+  script real, caen 4 tests (`test_archives_no_se_excluye_por_estructura_sino_por_su_fecha`, `test_b5_…`, el
+  parametrizado `test_medido_contra_el_predecesor…[2026-09-11-…]` y el nuevo anclado a revisión fija
+  `test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija`, materializado con `git archive`
+  sobre `9c4a001`, donde la raíz de `plans/` no tiene ningún plan con fecha) y los otros 26 pasan igual; bytes
+  restaurados con sha256 igual antes y después (`e2529b32…`). `04-`/`05-` dan el POST por población: **46 → 45 rojos,
+  cae exactamente el de capitalización, cero nuevos**.
+- **Lo que la cura NO toca**: el workflow `phased_project_executor.md` §2.5 sigue escribiendo en su «Alcance hacia
+  delante» que el gate aplica a planes «que no estén en `Archives/`», y su fixture copia en
+  `tests/quality_gates/governance_numbers/fixtures/` repite la frase. Esa prosa es **norma**, y promoverla pide su
+  propia entrada de changelog de workflow: queda declarada vencida por el código y pendiente de la instrucción que
+  la reescriba.
+- **Dueño y disparador de la fila**: se retiran los dos pendientes que la abrían (el mandato de `scripts/` y la
+  cita de un `[OK]` vacío sobre archivados). Lo que queda en pie de su texto es la advertencia: un verde del rápido
+  sobre un plan archivado solo dice algo **desde esta cura**.
 - **Alternativa descartada**: promover un check nuevo al `--quick` que audite el `00-` de los archivados. No
   toca el fondo — el fondo no es la falta de un check, es el **reparto de población** que comparten todos los
   checks de esa familia; un check extra con el mismo reparto hereda la misma ceguera y además cuesta un
   re-numerado (eso es D2 y su familia de pins).
 
+### S31 — los arneses de FASE-C y FASE-D pinean la ruta de raíz del plan y D-c la archivó (nueva, 2026-09-27)
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `52e1f6bef009897bea2f3b68acc70f9b8f2d076af5214530109376906911ad2f` · 93981 bytes copiados de 93981 del documento · HEAD `4d2480b` · generado `2026-09-27T18:26:37Z`
+**No confundir con ningún número vecino**: el censo del 2026-09-27 sobre `HEAD -- '*.md'` con
+`git grep -l -E "\bS31\b" HEAD -- '*.md'` devuelve **0** coincidencias — es libre, y esta fila lo toma. (S29 se
+tomó el mismo día por la orden de calidad; S30 existe en **otro** libro, ver la nota de censo en §S20.)
+
+**Hecho medido, no deducido.** El `git mv` de D-c (`3c2e6a3`, 2026-09-26) sacó este plan de la raíz de
+`.opencode/plans/` y lo puso bajo su hijo `Archives/`. Cinco constantes de
+los arneses de FASE-C y FASE-D resolvían la ruta de raíz a pelo, sin pasar por `resolver_plan()` del escritor,
+así que desde ese commit sueltan `FileNotFoundError` y **42 rojos** entran a la suite por causa del traslado,
+no por un defecto de producto: **36** en `tests/quality_gates/lesson_relevance/` y **6** en
+`tests/quality_gates/phase_briefing/`. Crudo de la población: `…/S29-A-PRIMA-2026-09-27/05-atribucion-post-t1.txt`
+(POST de T1: 46 → 45 rojos; estos 42 son exactamente lo que queda aparte de los 3 atribuidos el 2026-09-25).
+
+**Las constantes** (todas se llaman `PLAN`; la orden las listaba por número de línea, aquí se citan por símbolo
+porque la línea rota en cuanto se edita el archivo):
+
+| Archivo del arnés | Símbolo |
+|---|---|
+| `tests/quality_gates/lesson_relevance/conftest.py` | `PLAN` |
+| `tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py` | `PLAN` |
+| `tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py` | `PLAN` |
+| `tests/quality_gates/phase_briefing/conftest.py` | `PLAN` |
+| `tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py` | `PLAN` |
+| `tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py` | `PLAN` — **sexta, medida al ejecutar: no estaba en la lista de cinco de la orden** |
+
+- **Dueño**: los arneses de **FASE-C** (`lesson_relevance/`) y **FASE-D** (`phase_briefing/`) de **este plan** —
+  es instrumento de este plan, no deuda de un tercero. Se abre aquí porque la produjo su propio cierre R2.5.
+- **Disparador**: ya sonó. Toda lectura de «la suite da N rojos» sobre un árbol donde este plan está archivado
+  incluye estos 42 hasta que la fila se cierre.
+- **Estado al abrir la fila**: **abierta, con la cura autorizada** por la orden de cierre del 2026-09-27 (paso
+  T2). Se re-ancla cada constante a `plans/Archives/<PLAN>` y se ejerce con control negativo: revertida una de
+  ellas, su archivo de arnés vuelve a rojo **por la misma causa** (`FileNotFoundError`), restaurada vuelve a
+  verde. Crudos en `evidence/…/CIERRE-ORDEN-2026-09-25/`.
+- **Lo que NO es esta cura**: no se toca el generador ni `resolver_plan()`. La lección de fondo ya está escrita
+  (la de D-c: el verificador de packs montaba la ruta a pelo y quedó ciego tras el archivado; la cura ahí fue
+  reutilizar `resolver_plan()` del propio escritor). Aquí se re-anclan literales de fixture, así que **la
+  fragilidad estructural sigue**: un próximo `git mv` de este plan volvería a tirar estas seis constantes. Se
+  declara en vez de absorberla, porque gobernarla es un cambio de arnés con su propio alcance.
+
+**⟦CERRADA el 2026-09-27, paso T2 de la orden de cierre, con su POST por población⟧**
+
+- **Seis constantes re-ancladas, no cinco.** La orden listaba cinco; la sexta (el `PLAN` de
+  `tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py`) apareció al ejecutar: con las cinco
+  curadas ese archivo seguía dando **4 rojos**. Control de residuo:
+  `grep -rn '"plans" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"' tests --include=*.py` devuelve **0**, y las seis
+  rutas bajo `Archives/` devuelven **6**. Quedan en el árbol otras menciones de la ruta vieja que **no** producen
+  rojo y no se tocaron: un `assert ... not in` (línea 122 del mismo archivo), dos docstrings
+  (`test_build_lesson_index_s15_fecha_versionada.py`, `test_sync_writers_lf_y_fecha_readme.py`) y dos constantes de
+  `test_verify_index_in_committed_tree.py` que resuelven contra el árbol versionado, no contra el de trabajo. La
+  frase de arriba decía «estas cinco constantes» y se corrigió a seis en la misma sesión, antes de commitear.
+- **Causa por población, medida sobre el PRE (`…/S29-A-PRIMA-2026-09-27/00-suite-pre.txt`)**: 36 de los 42 son
+  `FileNotFoundError` sobre la ruta de raíz; los otros 6 muestran otra cara del mismo hecho —**1 `IndexError` y
+  3 `AssertionError` («informe sin packs no responde AC19») en `se_genera_por_fase`, y 2 en `carga_total`**— porque
+  esos arneses listen el directorio en vez de abrirlo. Publicar «la causa es FileNotFoundError» sin el desglose
+  habría hecho buscar una traza que ahí no está.
+- **Control negativo** (crudo `evidence/…/CIERRE-ORDEN-2026-09-25/S31-RUTA-ARCHIVADAS-2026-09-27/01-…`): revertida
+  la sexta, su archivo vuelve a **4 failed** con la misma firma que el PRE (2× «informe sin packs no responde AC19»,
+  1× «list index out of range»); restaurado, **8 passed**, y el sha256 del archivo es idéntico antes y después
+  (`cbc32233…`).
+- **POST por población**: `python -m pytest -q -ra` → **3 failed, 4613 passed, 41 skipped, 4 xfailed, 0 errors**,
+  exit 1. Contra el POST del paso T1 caen **exactamente 42** (36 `lesson_relevance` + 6 `phase_briefing`) y entran
+  **0 nuevos**. Los 3 que quedan son los atribuidos el 2026-09-25 y no son de esta fila:
+  `test_function_default_flags`, `test_diagnostic_includes_geo_metrics` y
+  `test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion`.
+- **Arneses verdes por separado**: `tests/quality_gates/lesson_relevance` **57 passed** exit 0 y
+  `tests/quality_gates/phase_briefing` **49 passed** exit 0. El `--quick` quedó en **13/13** exit 0 tras regenerar
+  lo que la edición de esta fila vence.
+- **Estado de la fila**: **cerrada por ejecución**, con la fragilidad estructural declarada arriba como límite y
+  no como pendiente de esta tanda.
+
+## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
+
+Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de estado vive en la orden, y la fuente
+única de cada fila es esta sección):
+
+- **La orden queda cerrada en su alcance aprobado** por decisión escrita del operador al pegar su orden de cierre.
+  Cayeron medidos sus motivos 1 y 2 (no queda fase pendiente del plan del piloto; la re-evaluación D1–D10 está
+  leída y fechada en FASE-RELEASE). Los motivos 3 y 4 **no caen**: son el techo aceptado — auto-reporte de una
+  sola muestra (D-V2.1) y piloto con proveedor falso (`acceptance = NO-EJERCITADO`, contrato E4).
+- **Lo que el cierre no afirma**: que los cuatro planes del lote estén terminados, ni calidad semántica real
+  medida, ni que D3/D6/D7/S10/S19(d) hayan muerto — siguen con dueño y disparador, re-medidos sin tocar código en
+  `evidence/…/CIERRE-ORDEN-2026-09-25/T4-DIFERIDAS-2026-09-27/00-remedicion-sin-codigo.txt`.
+- **Libro de este plan al cerrar la orden**: §S29 cerrada por ejecución (a-prima), §S31 abierta y cerrada en la
+  misma tanda (seis constantes), §S17 **abierta** con su quinta instancia, §S19 en su **(d)** como opción medida
+  y no aplicada, y el archivado R2.5 de `EVALUACION-JEV-TYPESAFE-2026-09-21` ejecutado con su write-back verificado
+  por descarga + sha256.
+
+
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `81d0a9663c0c6b2771c667763e115d20aafd2ff4f0f34020508488e0cbd76f67` · 106553 bytes copiados de 106553 del documento · HEAD `1e4cb52` · generado `2026-09-27T22:09:32Z`
 
 ---
 
@@ -1636,8 +1772,8 @@ los 28 archivados, **3** tienen `00-lecciones-capitalizadas.md` y ninguno está 
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "4d2480b",
-    "generated_at": "2026-09-27T18:26:37Z"
+    "head": "1e4cb52",
+    "generated_at": "2026-09-27T22:09:32Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 19852 bytes fuera de lo declarado (2, 4)",
@@ -1675,7 +1811,7 @@ los 28 archivados, **3** tienen `00-lecciones-capitalizadas.md` y ninguno está 
     },
     {
       "ruta": ".opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "52e1f6bef009897bea2f3b68acc70f9b8f2d076af5214530109376906911ad2f",
+      "sha256": "81d0a9663c0c6b2771c667763e115d20aafd2ff4f0f34020508488e0cbd76f67",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

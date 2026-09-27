@@ -390,7 +390,7 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 182,
+      "total_citas": 188,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -641,7 +641,7 @@
       "total_citas": 21,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -1553,7 +1553,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 15,
       "planes_que_lo_citan": [
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -1790,7 +1790,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -2652,7 +2652,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 13,
       "planes_que_lo_citan": [
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -2909,7 +2909,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2930,7 +2930,7 @@
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -2984,7 +2984,7 @@
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -3002,7 +3002,7 @@
       "total_citas": 8,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -3139,8 +3139,8 @@
       "fuente_fecha": "nombre",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3310,7 +3310,7 @@
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -3430,7 +3430,7 @@
       "total_citas": 92,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
@@ -3885,7 +3885,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 68,
+      "total_citas": 73,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },

@@ -98,7 +98,7 @@ de la muestra. Texto para una sesión de **preparación y decisión**, no de eje
 
 ```text
 Trabaja en C:/Users/Jhond/Github/iah-cli sobre el plan
-.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/.
+/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/.
 No ejecutes ninguna fase de este plan: FASE-A ya está ejecutada offline (2026-09-21, muestra en
 BORRADOR) y FASE-B sigue bloqueada.
 Re-mide antes de escribir nada: git status --porcelain, git rev-parse --short HEAD,
@@ -120,7 +120,7 @@ Lo que puedes hacer en esta sesión, cada cosa con su puerta:
 No llames a ninguna API, no actives proveedor, no autentiques credenciales, no instales SDKs, no
 escribas credenciales ni sus valores en documentos, no hagas commit ni push, no toques
 `modules/providers/llm_provider.py`, `requirements.txt` ni `VERSION.yaml`.
-No edites `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`: su sección
+No edites `/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md`: su sección
 «Orden de cierre: hermano primero» es decisión del operador del 2026-09-21 y ese archivo esta protegido.
 Deja checkpoint con lo pendiente y su dueño.
 ```

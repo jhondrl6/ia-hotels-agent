@@ -1,0 +1,134 @@
+...................F...F..FF..                                           [100%]
+================================== FAILURES ===================================
+________ test_archives_no_se_excluye_por_estructura_sino_por_su_fecha _________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-823/test_archives_no_se_excluye_po0')
+
+    def test_archives_no_se_excluye_por_estructura_sino_por_su_fecha(tmp_path: Path):
+        """Cura a-prima de S29 (2026-09-27): `Archives/` es marcador de corpus, no exclusion.
+    
+        Los dos archivados del fixture se parecen en que ninguno tiene `00-` y difieren solo en la
+        fecha del nombre: el anterior al corte queda exento **por fecha** (cero violaciones), el
+        posterior entra y su ausencia tiene que declararse. Con el salto duro de la version anterior
+        los dos eran invisibles, y por eso el rojo de `test_medido_contra_el_predecesor` se le
+        imputaba al cutoff cuando era la carpeta.
+        """
+        plans, context = _corpus(tmp_path, archives=True)
+        posterior = plans / "Archives" / "PLAN-NUEVO-2026-09-20"
+        posterior.mkdir(parents=True, exist_ok=True)
+        viejo = plans / "Archives" / "PLAN-VIEJO-2026-01-01"
+        assert not (viejo / vlc.ARTIFACTO).exists()
+        assert not (posterior / vlc.ARTIFACTO).exists()
+        vs, pobo = vlc.verificar(plans, context, vlc.date.fromisoformat(CUTOFF), verbose=False)
+        ausentes = [v for v in vs if v.check == "C1" and v.estado == "AUSENTE"]
+>       assert len(ausentes) == 1, [str(v) for v in vs]
+E       AssertionError: []
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\test_validate_lesson_capitalization.py:314: AssertionError
+________________ test_b5_la_salida_publica_la_poblacion_mirada ________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-823/test_b5_la_salida_publica_la_p0')
+
+    def test_b5_la_salida_publica_la_poblacion_mirada(tmp_path: Path):
+        """C0: la linea de cobertura dice a cuantos miro y cuantos quedaron fuera, por su motivo.
+    
+        Re-anclada el 2026-09-27 a la salida de la cura a-prima: el archivado viejo del fixture ya
+        no se declara «excluido» por la carpeta donde vive, sino exento **por fecha**, y la linea
+        publica ademas cuantos archivados siguen en alcance (aqui cero). Su proposito no cambia:
+        un verde sin denominador es L-R.3.
+        """
+        plans, context = _corpus(tmp_path, archives=True)
+        r = _correr("--plans-dir", str(plans), "--context-dir", str(context))
+        linea = next(f for f in r.stdout.splitlines() if f.startswith("cobertura:"))
+        for fragmento in (
+            "1 plan(es) en alcance",
+            "1 archivados en el corpus, 0 de ellos en alcance",
+            "1 exentos por fecha",
+        ):
+>           assert fragmento in linea, linea
+E           AssertionError: cobertura: 1 plan(es) en alcance (PLAN-FT-2026-09-12) | 1 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (â€”)
+E           assert '1 archivados en el corpus, 0 de ellos en alcance' in 'cobertura: 1 plan(es) en alcance (PLAN-FT-2026-09-12) | 1 archivados excluidos | 0 exentos por fecha anterior a 2026-09-12 | 0 exentos SIN FECHA PARSEABLE (â€”)'
+
+tests\test_validate_lesson_capitalization.py:367: AssertionError
+_ test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] _
+
+cutoff = '2026-09-11', plan_esperado = 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11'
+
+    @pytest.mark.parametrize(
+        "cutoff,plan_esperado", [("2026-09-11", "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11")]
+    )
+    def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
+        cutoff: str, plan_esperado: str
+    ):
+        """Cobertura real del gate sobre el segundo `00-` del repo (medición, no aspiración).
+    
+        Atrás del corte a 2026-09-11 para que el predecesor deje de estar exento por fecha: si el
+        verde viniera de que nadie lo miró, este test sería decorativo, así que primero exige que
+        esté en la población evaluada. **Historia medida**: desde que existió el verificador hasta el
+        cierre de FASE-V3 (2026-09-13) este plan devolvía exactamente una violación, C6, porque su §4
+        seguía declarando que el verificador no existía. Se corrigió esa declaración en la misma
+        fecha en que se publicó el cierre, y ahora lo verificable es la conformidad de su forma — que
+        su §2 sea pertinente sigue sin verificarlo ningún check (límite del propio §4).
+        """
+        vs, pobo = vlc.verificar(
+            vlc.DEFAULT_PLANS, vlc.DEFAULT_CONTEXT, vlc.date.fromisoformat(cutoff), verbose=False
+        )
+>       assert plan_esperado in pobo["alcance"], pobo["alcance"]
+E       AssertionError: ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in ['EVALUACION-JEV-TYPESAFE-2026-09-21', 'REFACTOR-WHATSAPP-ENTREGA-2026-09-18', 'VERIFICADOR-ESCRITURA-QMIND-2026-09-20']
+
+tests\test_validate_lesson_capitalization.py:418: AssertionError
+_ test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija _
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-823/test_el_plan_archivado_posteri0')
+
+    def test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija(tmp_path: Path):
+        """Dientes de la cura a-prima medidos contra un commit, no contra un fixture propio.
+    
+        Materializa el arbol de `9c4a001` con `git archive` y corre el modulo **curado** sobre el con el
+        cutoff con el que ese plan se cerro (2026-09-11). Quien quite la cura vuelve a ver aqui
+        `alcance = []`: la rama no podria ejercitarse con el arbol de trabajo, que hoy tiene tres planes
+        con fecha en raiz y tendria alcance aunque `Archives/` se saltara.
+        """
+        tree = tmp_path / REV_ARCHIVOS
+        tree.mkdir()
+        archivado = subprocess.run(
+            [
+                "git",
+                "archive",
+                "--format=tar",
+                REV_ARCHIVOS,
+                f".opencode/plans/Archives/{PLAN_TRIBUNAL}",
+                ".opencode/context",
+            ],
+            cwd=str(ROOT),
+            capture_output=True,
+            check=True,
+        )
+        with tarfile.open(fileobj=io.BytesIO(archivado.stdout)) as tar:
+            tar.extractall(path=tree, filter="data")
+        plans = tree / ".opencode" / "plans"
+        assert (plans / "Archives" / PLAN_TRIBUNAL / vlc.ARTIFACTO).exists(), (
+            f"la revision {REV_ARCHIVOS} dejo de traer el 00- que este test usa como testigo"
+        )
+        assert sorted(p.name for p in plans.iterdir() if p.is_dir()) == ["Archives"], (
+            "cambio el layout versionado que da los dientes a este test: con planes con fecha en raiz, "
+            "un alcance no vacio dejaria de probar la cura"
+        )
+        vs, pobo = vlc.verificar(
+            plans, tree / ".opencode" / "context", vlc.date(2026, 9, 11), verbose=False
+        )
+>       assert PLAN_TRIBUNAL in pobo["alcance"], pobo
+E       AssertionError: {'alcance': [], 'archivados': 1, 'exentos_fecha': [], 'exentos_sin_fecha': [], ...}
+E       assert 'TRIBUNAL-ENFORCEMENT-OBS-2026-09-11' in []
+
+tests\test_validate_lesson_capitalization.py:469: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_lesson_capitalization.py::test_archives_no_se_excluye_por_estructura_sino_por_su_fecha
+FAILED tests/test_validate_lesson_capitalization.py::test_b5_la_salida_publica_la_poblacion_mirada
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+FAILED tests/test_validate_lesson_capitalization.py::test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija
+4 failed, 26 passed in 2.23s
+EXIT=1

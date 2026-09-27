@@ -1,0 +1,86 @@
+.F.FF..F                                                                 [100%]
+================================== FAILURES ===================================
+___________ test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte ____________
+
+bpb = <module 'bpb_bajo_prueba_6604' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-829/test_no_incluye_no_es_vacio_y_0')
+
+    def test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte(bpb, tmp_path):
+        paquetes, _ = bpb.generar(PLAN, tmp_path / "briefing", ROOT)
+        for pack in paquetes:
+            assert pack["no_incluye"], (
+                f"FASE-{pack['fase']}: un pack sin `no_incluye[]` afirma cobertura total sin haberla "
+                "medido (L-HF1)")
+            assert RUTA_WORKFLOW in pack["lectura_aparte_obligatoria"], (
+                "el workflow canonic debe seguir siendo lectura aparte obligatoria")
+            assert pack["lectura_aparte_obligatoria"][0] == RUTA_WORKFLOW, (
+                "el workflow debe encabezar la lectura aparte mientras D3 no lo rebane")
+>       texto = (tmp_path / "briefing" / f"FASE-{paquetes[0]['fase']}.md").read_text(encoding="utf-8")
+                                                 ^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:68: IndexError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+____________ test_lo_declado_es_del_prompt_no_de_una_configuracion ____________
+
+bpb = <module 'bpb_bajo_prueba_6604' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-829/test_lo_declado_es_del_prompt_0')
+
+    def test_lo_declado_es_del_prompt_no_de_una_configuracion(bpb, tmp_path):
+        """Mover una lectura del prompt mueve el pack: no hay lista paralela que mantener."""
+        paquetes, _ = bpb.generar(PLAN, tmp_path / "briefing", ROOT)
+>       pack_d = next(p for p in paquetes if p["fase"] == "D")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:102: StopIteration
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+______ test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia _______
+
+bpb = <module 'bpb_bajo_prueba_6604' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-829/test_lo_que_vive_fuera_de_open0')
+
+    def test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia(bpb, tmp_path):
+        """Un derivado no puede ampliar la poblacion que escanea otro gate ([8/13] del quick).
+    
+        Medido: `docs/CONTRIBUTING.md` declara fases de planes archivados por su ruta vieja. Al
+        copiarlo dentro de `.opencode/plans/.../briefing/` esas referencias pasaban a contar como
+        nuevas y el quick se ponfa rojo **por el artefacto derivado**. La regla no es un parche al
+        sintoma: lo que vive fuera de `.opencode/` se lee aparte y se declara con su ruta.
+        """
+        destinos = tmp_path / "briefing"
+        paquetes, _ = bpb.generar(PLAN, destinos, ROOT)
+>       release = next(p for p in paquetes if p["fase"] == "RELEASE")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:120: StopIteration
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+_________ test_el_informe_publica_no_incluye_y_proveniencia_por_pack __________
+
+bpb = <module 'bpb_bajo_prueba_6604' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-829/test_el_informe_publica_no_inc0')
+
+    def test_el_informe_publica_no_incluye_y_proveniencia_por_pack(bpb, tmp_path):
+        """AC19/AC21 legibles en el artefacto: un humano debe encontrarlos ahi, no en el codigo."""
+        destinos = tmp_path / "briefing"
+        paquetes, _ = bpb.generar(PLAN, destinos, ROOT)
+        verificacion, _ = bpb.verificar(PLAN, destinos, ROOT)
+        informe = bpb.construir_informe(paquetes, verificacion, PLAN, destinos, ROOT)
+>       assert informe["packs"], "informe sin packs no responde AC19"
+E       AssertionError: informe sin packs no responde AC19
+E       assert []
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:163: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_declado_es_del_prompt_no_de_una_configuracion
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_el_informe_publica_no_incluye_y_proveniencia_por_pack
+4 failed, 4 passed in 0.64s
+EXIT=1

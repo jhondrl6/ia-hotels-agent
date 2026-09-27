@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "triage_lesson_relevance.py"
 DOOR = ROOT / "scripts" / "decision_client.py"
 FALOS = Path(__file__).resolve().parent / "falsos_proveedores_triage"
-PLAN = ROOT / ".opencode" / "plans" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
 ARCHIVES = ROOT / ".opencode" / "plans" / "Archives"
 NOMBRE_PLAN = PLAN.name
 

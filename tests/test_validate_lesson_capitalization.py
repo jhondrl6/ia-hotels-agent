@@ -12,9 +12,11 @@ que nadie escribió tampoco vale. Por eso este archivo hace tres cosas:
 """
 
 import hashlib
+import io
 import re
 import subprocess
 import sys
+import tarfile
 from pathlib import Path
 
 import pytest
@@ -292,13 +294,29 @@ def test_plan_anterior_al_corte_queda_fuera_y_no_falla_por_faltar_el_artefacto(t
     assert pobo["exentos_fecha"] == ["PLAN-FT-2026-09-11"]
 
 
-def test_archives_queda_fuera_del_alcance_aunque_no_tenga_artefacto(tmp_path: Path):
+def test_archives_no_se_excluye_por_estructura_sino_por_su_fecha(tmp_path: Path):
+    """Cura a-prima de S29 (2026-09-27): `Archives/` es marcador de corpus, no exclusion.
+
+    Los dos archivados del fixture se parecen en que ninguno tiene `00-` y difieren solo en la
+    fecha del nombre: el anterior al corte queda exento **por fecha** (cero violaciones), el
+    posterior entra y su ausencia tiene que declararse. Con el salto duro de la version anterior
+    los dos eran invisibles, y por eso el rojo de `test_medido_contra_el_predecesor` se le
+    imputaba al cutoff cuando era la carpeta.
+    """
     plans, context = _corpus(tmp_path, archives=True)
+    posterior = plans / "Archives" / "PLAN-NUEVO-2026-09-20"
+    posterior.mkdir(parents=True, exist_ok=True)
     viejo = plans / "Archives" / "PLAN-VIEJO-2026-01-01"
     assert not (viejo / vlc.ARTIFACTO).exists()
+    assert not (posterior / vlc.ARTIFACTO).exists()
     vs, pobo = vlc.verificar(plans, context, vlc.date.fromisoformat(CUTOFF), verbose=False)
-    assert vs == []
-    assert pobo["archivados"] == 1
+    ausentes = [v for v in vs if v.check == "C1" and v.estado == "AUSENTE"]
+    assert len(ausentes) == 1, [str(v) for v in vs]
+    assert "Archives/PLAN-NUEVO-2026-09-20" in ausentes[0].mensaje, ausentes[0].mensaje
+    assert pobo["exentos_fecha"] == ["PLAN-VIEJO-2026-01-01"]
+    assert sorted(pobo["alcance"]) == sorted([PLAN, "PLAN-NUEVO-2026-09-20"])
+    assert pobo["archivados"] == 2
+    assert pobo["archivados_en_alcance"] == 1
 
 
 def test_plan_sin_fecha_en_el_nombre_queda_exento_pero_declarado(tmp_path: Path):
@@ -331,10 +349,21 @@ def test_b1_sin_fix_y_sin_reescribir_los_artefactos(tmp_path: Path):
 
 
 def test_b5_la_salida_publica_la_poblacion_mirada(tmp_path: Path):
+    """C0: la linea de cobertura dice a cuantos miro y cuantos quedaron fuera, por su motivo.
+
+    Re-anclada el 2026-09-27 a la salida de la cura a-prima: el archivado viejo del fixture ya
+    no se declara «excluido» por la carpeta donde vive, sino exento **por fecha**, y la linea
+    publica ademas cuantos archivados siguen en alcance (aqui cero). Su proposito no cambia:
+    un verde sin denominador es L-R.3.
+    """
     plans, context = _corpus(tmp_path, archives=True)
     r = _correr("--plans-dir", str(plans), "--context-dir", str(context))
     linea = next(f for f in r.stdout.splitlines() if f.startswith("cobertura:"))
-    for fragmento in ("1 plan(es) en alcance", "1 archivados excluidos", "0 exentos por fecha"):
+    for fragmento in (
+        "1 plan(es) en alcance",
+        "1 archivados en el corpus, 0 de ellos en alcance",
+        "1 exentos por fecha",
+    ):
         assert fragmento in linea, linea
 
 
@@ -391,7 +420,59 @@ def test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme(
     assert del_plan == [], [str(v) for v in del_plan]
 
 
+# ------------------------------------------------------------ R2.6: un arbol versionado fijo
+#
+# REV_ARCHIVOS: revision fija (2026-09-15) donde `plans/` en raiz NO tiene ningun plan con fecha:
+# su inventario es `Archives/` + `plan_citations_baseline.json`, y el `00-` de TRIBUNAL vive dentro
+# de Archives/. Elegida a proposito: es el arbol donde la exclusion estructural se nota, porque sin
+# la cura el alcance de esa revision queda vacio y el predecesor nunca entra.
+REV_ARCHIVOS = "9c4a001"
+PLAN_TRIBUNAL = "TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+
+
+def test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija(tmp_path: Path):
+    """Dientes de la cura a-prima medidos contra un commit, no contra un fixture propio.
+
+    Materializa el arbol de `9c4a001` con `git archive` y corre el modulo **curado** sobre el con el
+    cutoff con el que ese plan se cerro (2026-09-11). Quien quite la cura vuelve a ver aqui
+    `alcance = []`: la rama no podria ejercitarse con el arbol de trabajo, que hoy tiene tres planes
+    con fecha en raiz y tendria alcance aunque `Archives/` se saltara.
+    """
+    tree = tmp_path / REV_ARCHIVOS
+    tree.mkdir()
+    archivado = subprocess.run(
+        [
+            "git",
+            "archive",
+            "--format=tar",
+            REV_ARCHIVOS,
+            f".opencode/plans/Archives/{PLAN_TRIBUNAL}",
+            ".opencode/context",
+        ],
+        cwd=str(ROOT),
+        capture_output=True,
+        check=True,
+    )
+    with tarfile.open(fileobj=io.BytesIO(archivado.stdout)) as tar:
+        tar.extractall(path=tree, filter="data")
+    plans = tree / ".opencode" / "plans"
+    assert (plans / "Archives" / PLAN_TRIBUNAL / vlc.ARTIFACTO).exists(), (
+        f"la revision {REV_ARCHIVOS} dejo de traer el 00- que este test usa como testigo"
+    )
+    assert sorted(p.name for p in plans.iterdir() if p.is_dir()) == ["Archives"], (
+        "cambio el layout versionado que da los dientes a este test: con planes con fecha en raiz, "
+        "un alcance no vacio dejaria de probar la cura"
+    )
+    vs, pobo = vlc.verificar(
+        plans, tree / ".opencode" / "context", vlc.date(2026, 9, 11), verbose=False
+    )
+    assert PLAN_TRIBUNAL in pobo["alcance"], pobo
+    assert pobo["archivados"] == 1 and pobo["archivados_en_alcance"] == 1, pobo
+    assert not [v for v in vs if v.check == "C1"], [str(v) for v in vs]
+
+
 # ---------------------------------------------------------------- cableado (AC-B4)
+
 #
 # Motivo medido en la fase: el hook cambio de denominador (5 a 6 a 7) y su contract test
 # siguio pinando la etiqueta vieja, asi que el rojo vivio dos commits sin que nadie lo

@@ -146,8 +146,25 @@ def _fecha_del_plan(nombre: str) -> date | None:
     return mejor
 
 
+def _encasillar(plan: Path, cutoff: date, grupos: dict[str, list[Path]]) -> None:
+    """La fecha del nombre decide el grupo; la carpeta donde vive el plan, no."""
+    fecha = _fecha_del_plan(plan.name)
+    if fecha is None:
+        grupos["sin_fecha"].append(plan)
+    elif fecha >= cutoff:
+        grupos["alcance"].append(plan)
+    else:
+        grupos["exento_fecha"].append(plan)
+
+
 def clasificar_planes(plans_dir: Path, cutoff: date) -> dict[str, list[Path]]:
-    """Reparto del corpus en los grupos que la salida de C0 publica."""
+    """Reparto del corpus en los grupos que la salida de C0 publica.
+
+    `Archives/` es un marcador de corpus, no una exclusion: sus hijos pasan por la misma regla
+    de cutoff que los de raiz. Sin cutoff, levantar el salto fabricaba 25 `C1/AUSENTE` (medido
+    sobre los 28 archivados); con el cutoff vigente solo los 2 posteriores al corte entran en
+    alcance y los 20 anteriores quedan exentos **por su fecha**, no por la carpeta.
+    """
     grupos: dict[str, list[Path]] = {
         "alcance": [],
         "exento_fecha": [],
@@ -157,14 +174,10 @@ def clasificar_planes(plans_dir: Path, cutoff: date) -> dict[str, list[Path]]:
     for hijo in sorted(p for p in plans_dir.iterdir() if p.is_dir()):
         if hijo.name == "Archives":
             grupos["archivados"] = sorted(p for p in hijo.iterdir() if p.is_dir())
+            for plan in grupos["archivados"]:
+                _encasillar(plan, cutoff, grupos)
             continue
-        fecha = _fecha_del_plan(hijo.name)
-        if fecha is None:
-            grupos["sin_fecha"].append(hijo)
-        elif fecha >= cutoff:
-            grupos["alcance"].append(hijo)
-        else:
-            grupos["exento_fecha"].append(hijo)
+        _encasillar(hijo, cutoff, grupos)
     return grupos
 
 
@@ -529,6 +542,7 @@ def verificar(
         "exentos_fecha": [p.name for p in grupos["exento_fecha"]],
         "exentos_sin_fecha": [p.name for p in grupos["sin_fecha"]],
         "archivados": len(grupos["archivados"]),
+        "archivados_en_alcance": sum(1 for p in grupos["alcance"] if p.parent.name == "Archives"),
         "indice_motivo": indice_motivo,
     }
     return violaciones, poblacion
@@ -538,7 +552,8 @@ def _linea_de_cobertura(poblacion: dict, cutoff: date) -> str:
     return (
         f"cobertura: {len(poblacion['alcance'])} plan(es) en alcance "
         f"({', '.join(poblacion['alcance']) or '—'}) | "
-        f"{poblacion['archivados']} archivados excluidos | "
+        f"{poblacion['archivados']} archivados en el corpus, "
+        f"{poblacion['archivados_en_alcance']} de ellos en alcance | "
         f"{len(poblacion['exentos_fecha'])} exentos por fecha anterior a {cutoff.isoformat()} | "
         f"{len(poblacion['exentos_sin_fecha'])} exentos SIN FECHA PARSEABLE "
         f"({', '.join(poblacion['exentos_sin_fecha']) or '—'})"

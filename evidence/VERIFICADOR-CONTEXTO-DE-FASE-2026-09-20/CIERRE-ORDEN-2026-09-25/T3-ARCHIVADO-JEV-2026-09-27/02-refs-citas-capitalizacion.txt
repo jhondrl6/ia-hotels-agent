@@ -1,0 +1,23 @@
+## 4. validate_opencode_refs.py --fix
+  [FIX] FASE-B.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+  [FIX] FASE-D.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+  [FIX] FASE-RELEASE.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+  [FIX] dependencias-fases.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+  [FIX] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21 -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21 -> /.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21
+[FIX] 9 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+   EXIT=0
+
+## 5. validate_plan_citations.py --update-baseline
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+   EXIT=0
+
+## 6. validate_plan_citations.py (verificacion, sin bandera)
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+   EXIT=0
+
+## 7. validate_lesson_capitalization.py (la fila S29 curada, con JEV ya archivado)
+cobertura: 5 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 29 archivados en el corpus, 3 de ellos en alcance | 20 exentos por fecha anterior a 2026-09-12 | 6 exentos SIN FECHA PARSEABLE (DT4-RESIDUAL-FIXES, REFACTOR-CAPEX-BREAKDOWN-V4.60.0, REFACTOR-PENDIENTE-V4.58.0, ROICRII, ROICRIII, ROICRIIIF)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+   EXIT=0

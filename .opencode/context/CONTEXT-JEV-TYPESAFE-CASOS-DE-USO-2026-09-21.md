@@ -2,7 +2,7 @@
 
 Evaluación de aplicabilidad de Jev/TypeSafe a `iah-cli`, concebida y revisada el 2026-09-21 a partir de https://typesafe.ai/blog/introducing-system-one-models-and-jev y del documento público "thoughts on a typesafe coding agent" (https://docs.google.com/document/d/1G61uUB0FifUnmmrPzFQojZ3KpczYKmXGpgEXDJ2l_Zg/preview).
 
-La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
+La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
 
 **Estado:** evaluación documental y comprobaciones locales, sin inferencias. Acceso Jev habilitado desde 2026-09-20 y credencial existente según información del operador, no autenticación medida por este piloto. Confirmación adicional del operador el 2026-09-21: **DeepSeek es el proveedor habilitado por defecto; Anthropic no tiene API habilitada**. El comparador LLM es DeepSeek; Anthropic no es requisito ni fallback. No se leyeron ni imprimieron credenciales y no se cambia `llm_provider.py`.
 

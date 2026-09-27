@@ -1,0 +1,70 @@
+# Notas del paso T3 (archivado JEV) — formas, S17 y el gate de capitalización — 2026-09-27
+
+## 1. La deuda S17 disparó otra vez, y se curo el arbol sin tocar el escritor
+
+`python scripts/validate_opencode_refs.py --fix` reescribió en **modo texto** los archivos que tocó: pasaron de
+`i/lf w/lf` a `i/lf w/crlf`. Es exactamente la fila **S17** de `dependencias-fases.md` de este plan («los writers
+de texto reescriben en CRLF archivos que git almacena en LF»), declarada y **no curada en `scripts/`**.
+
+Alcance medido (9 archivos bajo `.opencode/`, ninguno con CR huérfano):
+
+| Archivo | CR sustituidos |
+|---|---|
+| `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` | 747 |
+| `.opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md` | 125 |
+| `…/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md` | 126 |
+| `…/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` | 848 |
+| `…/briefing/FASE-A.md` | 2057 |
+| `…/briefing/FASE-B.md` | 1790 |
+| `…/briefing/FASE-D.md` | 1959 |
+| `…/briefing/FASE-RELEASE.md` | 3978 |
+| `.opencode/plans/plan_citations_baseline.json` | 87 |
+
+Cura del árbol (no del escritor, que no está en el alcance de esta orden): un solo proceso Python, `read_bytes` /
+`write_bytes`, con las dos guardas exigidas — `count(LF)` idéntico antes y después, y `len(b) - len(nuevo)` igual
+al número de `CRLF` sustituidos. Verificación posterior: `briefing/FASE-A.md` y `dependencias-fases.md` en **CR=0**,
+los dos `--check` en exit 0 y `--quick` **13/13**.
+
+Prueba de que el CRLF no era del generador de packs: al regenerar los cinco packs después de normalizar, el writer
+los dejó otra vez en **CR=0**. El daño lo produce el `--fix` de referencias.
+
+## 2. Forma en que el `--fix` escribe la ruta nueva
+
+El fixer construye el reemplazo como `"/" + promoted.relative_to(PROJECT_ROOT).as_posix()`, o sea que publica
+`/.opencode/plans/Archives/<PLAN>/…` **con barra inicial**. No es un Regression de esta tanda: es el diseño del
+instrumento, y el propio validador lo acepta (cerró con `[PASS] todas las referencias reparadas` y `[8/13]` verde
+en el rápido). Queda declarado porque el precedente versionado de D-c no tiene esa forma: en `HEAD` el archivo
+`ORDEN-…md` tiene **3** menciones limpias `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-…` y **0** con barra
+inicial, mientras que tras este `--fix` hay **1** con barra. Prosa, no referencia rota: se deja y se anota.
+
+## 3. Gate de capitalización con JEV ya archivado (la prueba de la cura S29)
+
+`python scripts/validate_lesson_capitalization.py` después del `git mv`:
+
+```
+cobertura: 5 plan(es) en alcance (EVALUACION-JEV-TYPESAFE-2026-09-21, PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12,
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-ESCRITURA-QMIND-2026-09-20)
+| 29 archivados en el corpus, 3 de ellos en alcance | 20 exentos por fecha anterior a 2026-09-12
+| 6 exentos SIN FECHA PARSEABLE (DT4-RESIDUAL-FIXES, REFACTOR-CAPEX-BREAKDOWN-V4.60.0, REFACTOR-PENDIENTE-V4.58.0,
+ROICRII, ROICRIII, ROICRIIIF)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (…)   EXIT=0
+```
+
+Es el efecto que la orden previó y que **sin la cura no existiría**: JEV (2026-09-21) se movió a `Archives/` y
+siguió en alcance, y como su `00-` existe el gate da **0 violaciones**. Antes de S29 el traslado lo habría vuelto
+invisible (`archivados excluidos`); hoy el contador de archivados en alcance pasó de **2** a **3** y el de corpus
+de **28** a **29**, con los cinco planes de alcance exactamente iguales. No hubo que completar el Paso 0 a mano.
+
+## 4. Las dos banderas, con su salida
+
+| Comando | Salida |
+|---|---|
+| `python scripts/validate_opencode_refs.py --fix` | `[FIX] 9 referencia(s) reparada(s)` · `[PASS]` · exit 0 |
+| `python scripts/validate_plan_citations.py --update-baseline` | `Baseline fijado: 79 archivos, 743 citas` · exit 0 |
+| `python scripts/validate_plan_citations.py` (verificación) | `[OK] 743 citas historicas, **0 nuevas y 0 crecimientos** (79 archivos)` · exit 0 |
+| `python scripts/build_lesson_index.py` (antes y después del `git mv`) | exit 0 · `340 IDs` · `[fechas] nombre=329 commit=11 sin_fuente=0` |
+| `python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check` | exit 0 (tras regenerar por el cambio de corpus) |
+| `python scripts/run_all_validations.py --quick` | exit 0 · **TOTAL 13/13** con `[GUARDA]` |
+
+El `--update-baseline` se corrió **una sola vez**, dentro del archivado, y sobre su resultado el gate quedó en
+cero nuevas y cero crecimientos. No hubo absorción de rojos con regeneraciones adicionales.

@@ -1,0 +1,55 @@
+# Dos notas del paso T1 (S29, cura a-prima) — 2026-09-27
+
+## Nota de escritura propia (nada se reescribe en silencio)
+
+Terminadas las anotaciones del barrido y abierta la fila S31, `python scripts/run_all_validations.py --quick`
+dio **12/13** con:
+
+```
+[-] OpenCode References: Broken .opencode references (fix: scripts/validate_opencode_refs.py --fix)
+    - …/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\briefing\FASE-A.md:1932 -> .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+    … y 4 mas (FASE-B, FASE-C, FASE-D, FASE-RELEASE)
+```
+
+**Causa, mía y del momento en que se cazó**: la fila S31 escribió la ruta de raíz del plan como literal
+(`.opencode/plans/<PLAN>`) al describir el `git mv` de D-c. El writer del pack copió esa frase a los cinco
+packs y `validate_opencode_refs.py` la leyó como referencia rota. El rojo lo produjo mi texto, no la cura.
+
+**No se usó `--fix`**: está reservado al archivado de JEV (paso T3), y absorber con él un rojo de prosia
+propia habría movido referencias ajenas a este paso.
+
+**Cura aplicada**: reescrita la frase propia para nombrar la raíz sin publicar la ruta vacía
+(«sacó este plan de la raíz de `.opencode/plans/` y lo puso bajo su hijo `Archives/`»), y regenerados los
+cinco packs con `python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`.
+
+**Verificación, en este orden y con su código de salida**:
+
+| Comando | Salida |
+|---|---|
+| `python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` | exit 0, `5 packs · COMPLETO 5 · FUENTE-AUSENTE 0 · fuentes 37` |
+| `python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check` | exit 0 |
+| `python scripts/build_lesson_index.py --check` | exit 0, `Índice de lecciones fresco (340 IDs)` |
+| `python scripts/run_all_validations.py --quick` | exit 0, **TOTAL 13/13** con `[GUARDA]` |
+
+Lección para la fila: un writer de packs propaga literalmente lo que el corpus escribe, así que **una
+prosa que nombre una ruta vacía entra al pack y la entra al gate de referencias**. Es el mismo mecanismo
+que ya cobró la L-VCF-19 (no publicar dentro del corpus la métrica del derivado que lo recorre).
+
+## Cifra de tests con el método canónico de la casa
+
+Comando (el canónico del proyecto, no `pytest --collect-only`):
+
+```
+grep -rE "^\s*def test_" tests --include=*.py
+```
+
+| Población medida | Valor |
+|---|---|
+| Árbol de trabajo al cerrar T1 | **4.585** |
+| Mismo método sobre el árbol de `1e4cb52` | **4.584** |
+| Diferencia | **+1** |
+
+La +1 es la función nueva `test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija`.
+El test re-ancorado de la línea 295 se renombró, no se duplicó: sigue siendo una función. La fila de la
+tabla de `AGENTS.md` que mueve es `root test files` (957 → 958) y la suma de las 22 filas pasa de 4.584 a
+4.585. El paso [9] es el que alinea el documento, con instrucción escrita del operador.

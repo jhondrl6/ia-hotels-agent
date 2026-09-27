@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,584 funciones totales)
+### Cobertura por Modulo (4,585 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -413,6 +413,17 @@ python scripts/run_all_validations.py           # Completo
 > regresion que D-c dejo ver) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+>
+> **Ronda del 2026-09-27 (la cifra subio a 4,585).** Medido con el metodo canonico de la casa
+> (`grep -rE "^\s*def test_" tests --include=*.py`, 4,585) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests`, 4,584 en `1e4cb52`): la diferencia es **+1**, una funcion nueva
+> en `tests/test_validate_lesson_capitalization.py` (`test_el_plan_archivado_posterior_al_corte_entra_en_alcance_sobre_revision_fija`,
+> anclada a la revision fija `9c4a001`). El otro test tocado en la ronda se **renombo**, no se agrego, asi que sigue
+> siendo una funcion. La +1 cae toda en la fila `root test files` (957 → **958**) y la suma de las 22 filas da
+> exactamente 4,585. **Dependencia declarada, no asumida**: para que en el commit que lleva esta nota cuadren los
+> dos comandos hace falta que la funcion nueva viaje **antes** — el orden de la tanda la pone en el commit S29, y
+> esta cabecera se alinea en el ultimo. Antecedente tal como se publico: **4,584** (medido 2026-09-27, publicado en
+> `5d80cd7`), y antes **4,582** (2026-09-26).
 >
 > Como se abrio y como se cerro la brecha de esta ronda, para no repetir el procedimiento: al comitear la
 > orden las dos cifras estaban en 4,582 y cuadraban. Los dos controles nuevos entraron despues, el arbol
@@ -498,7 +509,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 957 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor) |
+| root test files | 958 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, y el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive` — un verde aditivo que sin arbol versionado no tendria oportunidad de perder) |
 
 ---
 

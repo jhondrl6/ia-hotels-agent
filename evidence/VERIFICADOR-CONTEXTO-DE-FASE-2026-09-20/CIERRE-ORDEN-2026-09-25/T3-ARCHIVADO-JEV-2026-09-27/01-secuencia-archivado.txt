@@ -1,0 +1,17 @@
+# Secuencia R2.5/R2.10 del archivado de JEV — 2026-09-27
+
+## 1. build_lesson_index.py ANTES del git mv
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+   EXIT=0
+
+## 2. git mv
+   git mv OK
+   raiz: .opencode/plans/Archives//
+   raiz: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18//
+   raiz: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20//
+
+## 3. build_lesson_index.py DESPUES del git mv
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+   EXIT=0

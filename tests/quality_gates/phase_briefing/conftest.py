@@ -21,7 +21,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "build_phase_briefing.py"
-PLAN = ROOT / ".opencode" / "plans" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
 ARCHIVES = ROOT / ".opencode" / "plans" / "Archives"
 WORKFLOW = ROOT / ".agents" / "workflows"
 NOMBRE_PLAN = PLAN.name

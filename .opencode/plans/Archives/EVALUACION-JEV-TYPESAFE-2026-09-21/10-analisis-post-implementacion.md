@@ -128,3 +128,20 @@ Etiquetas/saneamiento humanos, criterios/umbrales, presupuesto, entorno aislado,
 ## Cierre del plan — PENDIENTE
 
 Sin inferencias, write-back ni archivado. La preparación quedó comiteada y **empujada** el 2026-09-21: base `99a33d8`, rango `2c966f6..99ac860` en `origin/master`, paridad `0/0` verificada con `git ls-remote` y 7/7 checks del hook en cada commit; la instalación del SDK quedó limitada a un entorno aislado. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.
+
+⟦**Cierre documental ejecutado el 2026-09-27, por instrucción escrita del operador (orden de cierre, paso T3), y
+solo en su parte documental.** El orden fue el que manda R2.10: write-back a QMind del `10-analisis` y del `CONTEXT`
+con declaración durable con **título nuevo** —`10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline,
+lecciones finales 2026-09-27)`—, verificado por **descarga + sha256 contra el archivo local** y no por el título,
+porque el servidor no deduplica por título; después `build_lesson_index.py`, `git mv` a `Archives/`, regeneración
+del índice, `validate_opencode_refs.py --fix`, `validate_plan_citations.py --update-baseline` y `--quick`. Se subió
+con el CLI de QMind y no con `validate_qmind_writeback.py --upload` porque ese writer fija el título antiguo y
+`is_ingested()` decide por nombre del plan, así que no puede publicar un cierre actualizado (límite ya registrado
+como deuda en `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`).⟧
+
+**Lo que este cierre NO afirma, y queda donde estaba**: la línea de arriba («Sin inferencias, write-back ni
+archivado») describe la auditoría del 2026-09-21 y no se reescribe; las fases B y C de integración no se
+ejecutaron; `acceptance` del piloto sigue **NO-EJERCITADO** (proveedor habilitado ≠ proveedor instrumentado ≠
+proveedor ejercitado, los tres contratos que separó la revisión); **D7 sigue inactiva** por decisión del operador y
+D6 conserva dueño y disparador. Los bloqueantes que sobreviven a este archivado son humanos y de permiso —revisión
+de artefactos y consentimiento—, no de código.

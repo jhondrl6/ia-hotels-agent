@@ -1,0 +1,56 @@
+# Verificación del write-back de JEV — 2026-09-27 (paso T3)
+
+Notebook: `01a04d98-b7bd-778c-8441-26fdc7e35f45` (por ID, nunca por su título).
+
+## Qué se subió y por qué con el CLI en vez del writer
+
+| Fuente | Título publicado | ID |
+|---|---|---|
+| `10-analisis` del plan | `10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)` | `01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5` |
+| `CONTEXT` con declaración durable | `CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21` | `01a0e4d9-e442-7d1b-bde5-7e9b669a2701` |
+
+Se usó `qmind source upload` directamente, no `python scripts/validate_qmind_writeback.py --upload`, por dos
+limitaciones medidas en el propio writer:
+
+- su `analisis_title` está **fijado en el código** con el patrón antiguo `(lecciones aprendidas y decisiones)` y no
+  expone `--title` ni `--file`;
+- su decisión de subir es `is_ingested(plan_name, titles)` — mira el **nombre del plan**, no el contenido — así que
+  sobre un plan ya publicado responde `SKIP` y deja la versión vieja como verdad publicada (el límite que ya estaba
+  registrado como deuda en `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`).
+
+Patrón del título nuevo: precedente `10-analisis: TRIBUNAL-OFFLINE-2026-09-09 (cierre v4.76.0, lecciones finales
+2026-09-11)`, leído de la lista del notebook (52 fuentes antes de esta tanda, 54 después).
+
+## Comprobación por descarga + sha256 (no por título)
+
+```
+qmind source download --nb 01a04d98-… <source_id> -o <verificacion>/<archivo> --overwrite
+```
+
+| Par | Bytes | sha256 (16 primeros) | Iguales en crudo | Iguales normalizando CRLF→LF |
+|---|---|---|---|---|
+| `10-analisis` local ↔ publicado | 15144 ↔ 15144 | `34e2a95195b2ddb4` ↔ `34e2a95195b2ddb4` | **sí** | sí (no hubo artefacto CRLF) |
+| `CONTEXT` local ↔ publicado | 17263 ↔ 17263 | `04242f497c1bf086` ↔ `04242f497c1bf086` | **sí** | sí |
+
+Ventanas de contenido del `10-analisis` publicado, para que el verde no sea solo un hash:
+
+| Marca | Local | Publicado |
+|---|---|---|
+| `Cierre documental ejecutado el 2026-09-27` | 1 | **1** |
+| `NO-EJERCITADO` | 2 | **2** |
+
+Las dos descargas se borraron después de la comprobación: son copia de un archivo que ya vive versionado en el
+repo, y lo que queda como evidencia son estos dos sha y las ventanas. No se persistió ningún `originUrl` firmado.
+
+## Estado del plan al momento del write-back
+
+- `10-analisis-post-implementacion.md` existe y su §Cierre quedó anotado con la ejecución de hoy sin reescribir la
+  línea del 2026-09-21.
+- `CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md` **sí** declara lección durable, pero el detector del writer no
+  la ve: sus marcadores están anclados al inicio de línea (`^Lección durable:`, `^Lección de forma:`,
+  `^Lecciones capitalizadas`) y el CONTEXT de JEV la escribe como **encabezado** (`## Lección durable: juicio,
+  instrumentación y proveedor efectivo`). Medido con el propio módulo —
+  `python -c "import sys; sys.path.insert(0,'scripts'); import validate_qmind_writeback as w; print(len(w.scan_context_declarations()))"`
+  — devuelve **0** entradas, sobre la población que alcanza su glob (`CONTEXT-*.md` en `.opencode/context/`, **2**
+  archivos; el glob no recorre `Historico/`). Se subió por CLI con el título que el writer habría usado, y la
+  incompatibilidad queda declarada en la fila de deuda.

@@ -21,7 +21,7 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-PLAN = ROOT / ".opencode" / "plans" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
 WORKFLOW = ".agents/workflows/phased_project_executor.md"
 SUMANDOS = ("workflow_obligatorio", "coste_de_generacion", "pack_consumido")
 

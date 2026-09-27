@@ -1,0 +1,2802 @@
+........................................................................ [  1%]
+................................................................s....... [  3%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+..................................................s..................... [ 13%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 21%]
+........................................................................ [ 23%]
+........................................................................ [ 24%]
+........................................................................ [ 26%]
+..........................s............................................. [ 27%]
+........................................................................ [ 29%]
+........................................................................ [ 30%]
+........................................................................ [ 32%]
+...........................................s.sss........................ [ 33%]
+........................................................................ [ 35%]
+.........................................................x.............. [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+...............................................F........................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 46%]
+........................................................................ [ 47%]
+........................................................................ [ 49%]
+........................................................................ [ 50%]
+........................................................................ [ 52%]
+........................................................................ [ 54%]
+...............................................EEEEEE................... [ 55%]
+FFFFF.FEEEE.EEEEEEEEFFFFEEEEEEEEF...F..................................F [ 57%]
+.FF..F.................................................................. [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 66%]
+.........s.............................................................. [ 67%]
+..........................sssssss....................................... [ 69%]
+..................ss.................................................... [ 71%]
+......................................................s.....s........... [ 72%]
+..ss.................................................................... [ 74%]
+........................................................................ [ 75%]
+........s............................................................... [ 77%]
+..............................................x......................... [ 78%]
+........F............................................................... [ 80%]
+.................................sssss..s............................... [ 81%]
+.sss.s........s.................................s....................... [ 83%]
+........................................................................ [ 84%]
+...................................ss................................... [ 86%]
+........................................................................ [ 88%]
+........................................................................ [ 89%]
+.............sss........................................................ [ 91%]
+...........................................................s............ [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+........................................................................ [ 97%]
+..........................................F............................. [ 98%]
+..................................................xx                     [100%]
+=================================== ERRORS ====================================
+_____ ERROR at setup of test_acceptacion_no_ejercitado_con_motivo_literal _____
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+__________ ERROR at setup of test_no_se_simulo_ninguna_aceptabilidad __________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+__________ ERROR at setup of test_el_informe_declara_quien_contesto ___________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_denominador_con_poblacion_terminos_ceros_y_familias __
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_lo_que_no_se_juzga_queda_declarado[familias_no_juzgadas] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_lo_que_no_se_juzga_queda_declarado[familias_excluidas_por_el_generador] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_ninguna_fila_anclada_desaparece_y_el_guard_tuvo_trabajo _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_el_informe_del_seccion_dos_trae_los_tres_campos_del_ac10 _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+______ ERROR at setup of test_anchored_after_conserva_las_filas_litales _______
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+
+    @pytest.fixture
+    def ancladas_reales(trl) -> list[dict]:
+        """Las filas de §2 del plan triado, leidas por el mismo camino que usa el triaje."""
+>       return trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+____ ERROR at setup of test_todas_las_preguntas_son_choice_de_dos_opciones ____
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_______ ERROR at setup of test_probabilidad_si_no_es_el_campo_gobernado _______
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_misma_probabilidad_distinta_confidencia_cambia_el_bucket _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+______ ERROR at setup of test_el_umbral_no_acepta_una_confidence_ausente ______
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[campo] ____________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[value] ____________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[basis] ____________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+________ ERROR at setup of test_forma_pregunta_publicada[action_below] ________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+__ ERROR at setup of test_el_script_no_tiene_camino_de_escribir_seccion_dos ___
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+____ ERROR at setup of test_las_tres_partes_del_ac12_estan_en_el_artefacto ____
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_________ ERROR at setup of test_la_accion_por_debajo_no_es_descartar _________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_todos_los_candidatos_tienen_bucket_y_ninguno_se_pierde _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[campo] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[value] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[basis] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[action_below] _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+______ ERROR at setup of test_el_coste_del_reporte_lleva_tope_publicado _______
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+        indice, estado = trl.leer_suelo()
+>       ancladas = trl.filas_ancladas(PLAN / "00-lecciones-capitalizadas.md")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+================================== FAILURES ===================================
+______ TestCalculatePriceWithShadowFunction.test_function_default_flags _______
+
+self = <financial_engine.test_pricing_resolution_wrapper.TestCalculatePriceWithShadowFunction object at 0x00000267EA871810>
+
+    def test_function_default_flags(self):
+        """Test function works with default flags (SHADOW mode)."""
+        result = calculate_price_with_shadow(
+            rooms=20,
+            expected_loss_cop=50_000_000,
+        )
+    
+        # Default is SHADOW mode, but legacy is returned
+        assert isinstance(result, PricingResolutionResult)
+>       assert result.monthly_price_cop == 2_500_000  # legacy 5% of 50M
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: assert 437500.0 == 2500000
+E        +  where 437500.0 = PricingResolutionResult(monthly_price_cop=437500.0, tier='boutique', pain_ratio=0.0088, is_compliant=False, expected_l...0000.0, 'max_price': 2500000.0, 'value_capture_cap': 0.5, 'operational_floor': 400000.0, 'pain_ratio_gate_max': 0.32}}).monthly_price_cop
+
+tests\financial_engine\test_pricing_resolution_wrapper.py:606: AssertionError
+_______________________ test_verde_con_el_guard_activo ________________________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_verde_con_el_guard_activo(trl, entorno_falso):
+>       v = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_______________________ test_rojo_con_el_guard_apagado ________________________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_rojo_con_el_guard_apagado(trl, entorno_falso):
+>       r = medir(trl, mut=True)
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+____________ test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10 _____________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10(trl, entorno_falso):
+        """La prueba de que el mutante apunta al guard de AC10: la misma asercion del test de AC10."""
+>       r = medir(trl, mut=True)
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+___________________ test_apagar_el_guard_no_altera_nada_mas ___________________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_apagar_el_guard_no_altera_nada_mas(trl, entorno_falso):
+        """Un mutante que apaga el guard no debe cambiar el denominador ni la poblacion miradas."""
+>       v, r = medir(trl, mut=False), medir(trl, mut=True)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+____ test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno ____
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\support_observador_escrituras.py:172: in envuelto
+    return orig(self, mode, *a, **k)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_las_dos_salidas_van_a_des0')
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno(tmp_path, entorno_falso):
+        obs = _observador()
+        protegido_antes = obs.huellas(EVIDENCIA_SOLO_LECTURA)
+        assert protegido_antes, f"no hay expediente que proteger en {EVIDENCIA_SOLO_LECTURA}"
+        destino = tmp_path / "mutation"
+        with obs.observador_de_escrituras() as registro:
+>           correr_a_destino(destino)
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:77: in correr_a_destino
+    verde = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_para_evidencia.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_______________ test_resumen_publica_el_alcance_del_observador ________________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_resumen_publica_el_alcanc0')
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_resumen_publica_el_alcance_del_observador(tmp_path, entorno_falso):
+        obs = _observador()
+>       resumen = Path(correr_a_destino(tmp_path / "m")["destino"]) / "resumen.txt"
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:77: in correr_a_destino
+    verde = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:53: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:47: in _insumos
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_para_evidencia.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_________________ test_corrida_completa_no_toca_el_plan_real __________________
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_corrida_completa_no_toca_0')
+
+    def test_corrida_completa_no_toca_el_plan_real(trl, entorno_falso, tmp_path):
+        """Corre el `main()` entero, con `--report` y destino explicito, contra el plan vigente."""
+>       antes = _sha(LECCIONES)
+                ^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:30: in _sha
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+                          ^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:625: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+____________ test_decision_incompleta_no_se_aplica_y_ruena_fuerte _____________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_decision_incompleta_no_se0')
+capsys = <_pytest.capture.CaptureFixture object at 0x00000267ED9B4D10>
+
+    def test_decision_incompleta_no_se_aplica_y_ruena_fuerte(trl, entorno_falso, tmp_path, capsys):
+        """Sin `decidio` / `fecha` / `motivo` no hay aceptacion que valga: exit 6, no un verde comodo."""
+>       objetivo = informe_propuesta(trl, entorno_falso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:122: in informe_propuesta
+    return correr_informe(trl, entorno_falso, None)["buckets"]["propuesto"][0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:115: in correr_informe
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_______ test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio ________
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio(trl, entorno_falso):
+>       base = correr_informe(trl, entorno_falso, None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:115: in correr_informe
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+_ test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista __
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+>           texto = ruta_lecciones.read_text(encoding="utf-8")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scripts\triage_lesson_relevance.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+trl = <module 'trl_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista(trl, entorno_falso):
+>       base = correr_informe(trl, entorno_falso, None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:115: in correr_informe
+    ancladas = trl.filas_ancladas(LECCIONES)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_lecciones = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md')
+
+    def filas_ancladas(ruta_lecciones: Path) -> list[dict]:
+        """Las filas de §2 del plan: id, enunciado y fila literal. Se leen; nunca se reescriben."""
+        try:
+            texto = ruta_lecciones.read_text(encoding="utf-8")
+        except Exception as exc:
+>           raise SueloNoLeible("AUSENTE", {"ruta_buscada": str(ruta_lecciones),
+                                            "motivo": f"el documento de lecciones no se pudo leer: {_motivo(exc)}"})
+E           trl_bajo_prueba_20612.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\\00-lecciones-capitalizadas.md'
+
+scripts\triage_lesson_relevance.py:245: SueloNoLeible
+______________ test_por_fase_los_tres_sumandos_en_los_dos_lados _______________
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_por_fase_los_tres_sumando0')
+
+    def test_por_fase_los_tres_sumandos_en_los_dos_lados(bpb, tmp_path):
+        carga, _ = _carga(bpb, tmp_path)
+>       assert carga["por_fase"], "sin fases medidas no hay delta que publicar"
+E       AssertionError: sin fases medidas no hay delta que publicar
+E       assert []
+
+tests\quality_gates\phase_briefing\test_briefing_carga_total_tres_sumandos.py:41: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+______________ test_el_andamiaje_del_pack_se_publica_como_coste _______________
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_el_andamiaje_del_pack_se_0')
+
+    def test_el_andamiaje_del_pack_se_publica_como_coste(bpb, tmp_path):
+        """Un pack grande por su procedencia no puede contarse como ahorro de lectura."""
+        carga, _ = _carga(bpb, tmp_path)
+        andamiaje = sum(f["andamiaje_del_pack_bytes"] for f in carga["por_fase"])
+        omitido = sum(f["omitido_declarado_bytes"] for f in carga["por_fase"])
+>       assert andamiaje > 0 and omitido > andamiaje, (
+            f"andamiaje={andamiaje}, omitido={omitido}: el ahorro declarado deberia superar el coste "
+            "propio del pack, y si no lo supera el delta es cero o negativo y se explica igual")
+E       AssertionError: andamiaje=0, omitido=0: el ahorro declarado deberia superar el coste propio del pack, y si no lo supera el delta es cero o negativo y se explica igual
+E       assert (0 > 0)
+
+tests\quality_gates\phase_briefing\test_briefing_carga_total_tres_sumandos.py:110: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+___________ test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte ____________
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_no_incluye_no_es_vacio_y_0')
+
+    def test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte(bpb, tmp_path):
+        paquetes, _ = bpb.generar(PLAN, tmp_path / "briefing", ROOT)
+        for pack in paquetes:
+            assert pack["no_incluye"], (
+                f"FASE-{pack['fase']}: un pack sin `no_incluye[]` afirma cobertura total sin haberla "
+                "medido (L-HF1)")
+            assert RUTA_WORKFLOW in pack["lectura_aparte_obligatoria"], (
+                "el workflow canonic debe seguir siendo lectura aparte obligatoria")
+            assert pack["lectura_aparte_obligatoria"][0] == RUTA_WORKFLOW, (
+                "el workflow debe encabezar la lectura aparte mientras D3 no lo rebane")
+>       texto = (tmp_path / "briefing" / f"FASE-{paquetes[0]['fase']}.md").read_text(encoding="utf-8")
+                                                 ^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:68: IndexError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+____________ test_lo_declado_es_del_prompt_no_de_una_configuracion ____________
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_lo_declado_es_del_prompt_0')
+
+    def test_lo_declado_es_del_prompt_no_de_una_configuracion(bpb, tmp_path):
+        """Mover una lectura del prompt mueve el pack: no hay lista paralela que mantener."""
+        paquetes, _ = bpb.generar(PLAN, tmp_path / "briefing", ROOT)
+>       pack_d = next(p for p in paquetes if p["fase"] == "D")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:102: StopIteration
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+______ test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia _______
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_lo_que_vive_fuera_de_open0')
+
+    def test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia(bpb, tmp_path):
+        """Un derivado no puede ampliar la poblacion que escanea otro gate ([8/13] del quick).
+    
+        Medido: `docs/CONTRIBUTING.md` declara fases de planes archivados por su ruta vieja. Al
+        copiarlo dentro de `.opencode/plans/.../briefing/` esas referencias pasaban a contar como
+        nuevas y el quick se ponfa rojo **por el artefacto derivado**. La regla no es un parche al
+        sintoma: lo que vive fuera de `.opencode/` se lee aparte y se declara con su ruta.
+        """
+        destinos = tmp_path / "briefing"
+        paquetes, _ = bpb.generar(PLAN, destinos, ROOT)
+>       release = next(p for p in paquetes if p["fase"] == "RELEASE")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:120: StopIteration
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+_________ test_el_informe_publica_no_incluye_y_proveniencia_por_pack __________
+
+bpb = <module 'bpb_bajo_prueba_20612' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\build_phase_briefing.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-824/test_el_informe_publica_no_inc0')
+
+    def test_el_informe_publica_no_incluye_y_proveniencia_por_pack(bpb, tmp_path):
+        """AC19/AC21 legibles en el artefacto: un humano debe encontrarlos ahi, no en el codigo."""
+        destinos = tmp_path / "briefing"
+        paquetes, _ = bpb.generar(PLAN, destinos, ROOT)
+        verificacion, _ = bpb.verificar(PLAN, destinos, ROOT)
+        informe = bpb.construir_informe(paquetes, verificacion, PLAN, destinos, ROOT)
+>       assert informe["packs"], "informe sin packs no responde AC19"
+E       AssertionError: informe sin packs no responde AC19
+E       assert []
+
+tests\quality_gates\phase_briefing\test_briefing_se_genera_por_fase.py:163: AssertionError
+---------------------------- Captured stderr call -----------------------------
+[denominador] 0 packs · COMPLETO 0 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 0 · secciones pedidas 0, resueltas 0, declaradas no resueltas 0
+________ TestDiagnosticGEOMetrics.test_diagnostic_includes_geo_metrics ________
+
+self = <test_diagnostic_geo_metrics.TestDiagnosticGEOMetrics object at 0x00000267EB2E4E10>
+
+    def test_diagnostic_includes_geo_metrics(self):
+        """Test que verifica que el diagnóstico incluye métricas GEO."""
+        # Crear generador
+        generator = V4DiagnosticGenerator()
+    
+        # Crear mock audit_result con datos GEO
+        audit_result = Mock()
+        audit_result.ai_crawlers = MockAICrawlerAuditResult()
+        audit_result.citability = MockCitabilityResult()
+        audit_result.ia_readiness = MockIAReadinessReport()
+    
+        # Llamar al método
+        result = generator._build_geo_problems_table(audit_result)
+    
+        # Verificar que contiene las métricas
+>       assert "Métricas de Optimización para IA" in result
+E       AssertionError: assert 'Métricas de Optimización para IA' in '\n|| Métrica | Score | Detalle | Estado ||\n|---------|-------|---------|--------|\n| Accesibilidad IA | 0.65/1.00 | ...Estas métricas evalúan cómo los motores de IA (ChatGPT, Claude, Perplexity) pueden descubrir y citar su contenido.\n\n'
+
+tests\test_diagnostic_geo_metrics.py:68: AssertionError
+________ test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion _________
+
+reporte_repo = {'cobertura': {'archivos_en_alcance': 1359, 'archivos_excluidos_por_rol': 8357, 'exclusiones_por_clase': {'ContentVali..._contrafactual.py', 'motivo': 'scripts de medicion historicos; el contrato del plan prohibe reescribirlos'}, ...}, ...}
+
+    def test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion(reporte_repo):
+        """El hueco declarado tiene que ser cero en produccion: alla es donde una senal se esconde.
+    
+        Un \u2705 del check no prueba ausencia de callers invisibles (limite declarado). Lo que si
+        puede probarse es que ningun caller **productivo** quedo sin resolver.
+        """
+        reporte = reporte_repo
+>       assert reporte["cobertura"]["receptores_no_resueltos_en_produccion"] == 0, [
+            (r["archivo"], r["linea"], r["receptor"]) for r in reporte["poblacion"]
+            if r["clasificacion"] == "RECEPTOR_NO_RESUELTO" and not r["en_tests"]]
+E       AssertionError: [('tmp_test/venv-jev-sdk/Lib/site-packages/pydantic/v1/fields.py', 989, 'field'), ('tmp_test/venv-jev-sdk/Lib/site-pac...ntic/v1/fields.py', 1147, 'sub_field'), ('tmp_test/venv-jev-sdk/Lib/site-packages/pydantic/v1/main.py', 1097, 'field')]
+E       assert 5 == 0
+
+tests\test_validate_wiring.py:381: AssertionError
+============================== warnings summary ===============================
+tests\analytics\test_data_aggregator.py:17
+  C:\Users\Jhond\Github\iah-cli\tests\analytics\test_data_aggregator.py:17: DeprecationWarning: Este módulo está deprecado y no se usa en el pipeline v4complete. Sus funciones son cubiertas por GoogleAnalyticsClient y GoogleSearchConsoleClient. Se eliminará en v5.0.0.
+    from modules.analytics.data_aggregator import (
+
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+..\..\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/commercial_documents/test_fase_b_promesa_whatsapp.py::test_ac19a_narrativa_no_afirma_ausencia_confirmada
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+tests/common/test_service_identity_registry.py::test_mensaje_no_narra_el_tamano_de_un_registro_estatico[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/auditors/test_pagespeed_auditor_v2.py: 10 warnings
+tests/auditors/test_v4_comprehensive_competitors.py: 2 warnings
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+tests/test_hotel_visperas_regression.py: 11 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+tests/commercial_documents/test_fase_b_promesa_whatsapp.py::test_ac1_el_orquestador_propaga_la_senal_a_los_tres_productores
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:111: SyntaxWarning: invalid escape sequence '\)'
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:55: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow().isoformat(),
+
+tests/financial_engine/test_opportunity_scorer.py: 7 warnings
+tests/geo_enrichment/test_band_classification.py: 2 warnings
+tests/geo_enrichment/test_diagnose_hotelvisperas.py: 8 warnings
+tests/geo_enrichment/test_geo_dashboard.py: 13 warnings
+tests/geo_enrichment/test_hotel_schema_enricher.py: 14 warnings
+tests/geo_enrichment/test_llms_txt_generator.py: 9 warnings
+tests/regression/test_whatsapp_conflicts.py: 5 warnings
+tests/test_canonical_assessment.py: 51 warnings
+tests/test_hotel_visperas_regression.py: 13 warnings
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_escribe_redactado
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_no_mutara_el_diccionario_del_caller
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_perfil_limpio_se_guarda_intacto
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_avisa_cuando_redacta
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_sin_el_guard_el_valor_llega_al_disco
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_guard_activo_bloquea_esa_misma_fuga
+  C:\Users\Jhond\Github\iah-cli\modules\scrapers\gbp_auditor.py:155: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_audit_alignment.py::test_roas_calculation
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_roas_calculation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_package_recommendation
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_package_recommendation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_justification_block
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_justification_block returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_thresholds_loading
+  C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_thresholds_loading returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:152: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    before = datetime.utcnow()
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:159: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    after = datetime.utcnow()
+
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_fallback_gap_analysis.py:8: modules.orchestrator no está disponible (archivado)
+SKIPPED [1] tests\asset_generation\test_conditional_new_assets.py:14: DEPRECATED in FASE-PROP-D: geo_playbook generado por GeoPlaybookGenerator standalone, no por ConditionalGenerator
+SKIPPED [1] tests\auditors\test_llm_mention_checker.py:457: Requiere OPENROUTER_API_KEY para integración real
+SKIPPED [1] tests\config\test_config_commercial.py:84: Template no encontrado: C:\Users\Jhond\Github\iah-cli\tests\config\../../templates/comerciales/propuesta_v6_template.md
+SKIPPED [1] tests\e2e\test_onboarding_to_harness_pipeline.py:240: Requiere payload sin onboarding — test complementario
+SKIPPED [1] tests\e2e\test_onboarding_to_harness_pipeline.py:274: No financial_scenarios JSON found — run v4complete first
+SKIPPED [1] tests\e2e\test_onboarding_to_harness_pipeline.py:281: No financial_scenarios JSON found — run v4complete first
+SKIPPED [1] tests\e2e\test_onboarding_to_harness_pipeline.py:287: No financial_scenarios JSON found — run v4complete first
+SKIPPED [1] tests\quality_gates\test_publication_gates.py:1480: No asset_generation_report.json found in output/v4_complete/ — requires a v4complete run first
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:47: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:54: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:64: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:74: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:85: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:91: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_honesty_reviewer_retro_reales.py:100: baseline SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:264: baseline ZIP SalentoReal no disponible
+SKIPPED [1] tests\quality_gates\tribunal\test_p3a_zip_tier_firstfloor.py:284: baseline dir SalentoReal no disponible
+SKIPPED [1] tests\scrapers\test_google_travel_scraper.py:189: Integracion con AutonomousResearcher se implementa en FASE 11B
+SKIPPED [1] tests\scrapers\test_google_travel_scraper.py:323: Requiere Places API externa
+SKIPPED [1] tests\scrapers\test_serpapi_client.py:128: Requires SERPAPI_API_KEY
+SKIPPED [1] tests\scrapers\test_serpapi_client.py:149: Requires SERPAPI_API_KEY
+SKIPPED [1] tests\test_competitor_analyzer.py:26: Requiere Places API/configuracion externa
+SKIPPED [1] tests\test_gbp_factory.py:10: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_gbp_factory.py:18: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_gbp_factory.py:27: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_gbp_factory.py:35: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_gbp_factory.py:45: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_gbp_factory.py:87: Requiere configuracion/Playwright externa
+SKIPPED [1] tests\test_geo_validator.py:152: Requiere Google API key externa
+SKIPPED [1] tests\test_geo_validator.py:124: Requiere Google API key externa
+SKIPPED [1] tests\test_geo_validator.py:224: Requiere Google API key externa
+SKIPPED [1] tests\test_geo_validator.py:185: Requiere Google API key externa
+SKIPPED [1] tests\test_google_analytics_client.py:61: Requiere GA4 credentials configuradas
+SKIPPED [1] tests\test_google_places_error_types.py:10: Requiere Google API key configurada
+SKIPPED [1] tests\test_never_block_architecture\test_never_block_integration.py:414: Hotel Vísperas report not found
+SKIPPED [1] tests\test_never_block_architecture\test_never_block_integration.py:434: Coherence report not found
+SKIPPED [1] tests\test_proposal_alignment.py:17: modules.generators.proposal_gen no longer exists
+SKIPPED [1] tests\test_proposal_alignment.py:36: modules.generators.proposal_gen no longer exists
+SKIPPED [1] tests\test_proposal_alignment.py:54: modules.generators.proposal_gen no longer exists
+SKIPPED [1] tests\test_spark_command.py:222: Requiere test con URL real
+XFAIL tests/financial_engine/test_feature_flags.py::TestFeatureFlags::test_from_env_validated_regions - Test isolation: passes standalone but env pollution from earlier tests
+XFAIL tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_format_cop_does_not_duplicate_cop - Test isolation: passes standalone but module state pollution from earlier tests
+XFAIL tests/utils/test_provider_registry.py::TestProviderRegistryEstimatedCost::test_cost_per_run_returns_non_negative - Test isolation: passes standalone but config state pollution from earlier tests
+XFAIL tests/utils/test_provider_registry.py::TestProviderRegistryEstimatedCost::test_cost_per_run_is_number - Test isolation: passes standalone but config state pollution from earlier tests
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_acceptacion_no_ejercitado_con_motivo_literal
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_no_se_simulo_ninguna_aceptabilidad
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_el_informe_declara_quien_contesto
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_denominador_con_poblacion_terminos_ceros_y_familias
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_no_juzgadas]
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_excluidas_por_el_generador]
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_ninguna_fila_anclada_desaparece_y_el_guard_tuvo_trabajo
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_el_informe_del_seccion_dos_trae_los_tres_campos_del_ac10
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_anchored_after_conserva_las_filas_litales
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_todas_las_preguntas_son_choice_de_dos_opciones
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_probabilidad_si_no_es_el_campo_gobernado
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_misma_probabilidad_distinta_confidencia_cambia_el_bucket
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_el_umbral_no_acepta_una_confidence_ausente
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[campo]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[value]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[basis]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[action_below]
+ERROR tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_el_script_no_tiene_camino_de_escribir_seccion_dos
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_las_tres_partes_del_ac12_estan_en_el_artefacto
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_la_accion_por_debajo_no_es_descartar
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_todos_los_candidatos_tienen_bucket_y_ninguno_se_pierde
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[campo]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[value]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[basis]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[action_below]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_coste_del_reporte_lleva_tope_publicado
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_verde_con_el_guard_activo
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_rojo_con_el_guard_apagado
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_apagar_el_guard_no_altera_nada_mas
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_resumen_publica_el_alcance_del_observador
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_corrida_completa_no_toca_el_plan_real
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_incompleta_no_se_aplica_y_ruena_fuerte
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista
+FAILED tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_por_fase_los_tres_sumandos_en_los_dos_lados
+FAILED tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py::test_el_andamiaje_del_pack_se_publica_como_coste
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_no_incluye_no_es_vacio_y_el_workflow_sigue_aparte
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_declado_es_del_prompt_no_de_una_configuracion
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_lo_que_vive_fuera_de_opencode_se_declara_aparte_no_se_copia
+FAILED tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py::test_el_informe_publica_no_incluye_y_proveniencia_por_pack
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+19 failed, 4571 passed, 41 skipped, 4 xfailed, 230 warnings, 26 errors in 379.00s (0:06:18)
+EXIT=1

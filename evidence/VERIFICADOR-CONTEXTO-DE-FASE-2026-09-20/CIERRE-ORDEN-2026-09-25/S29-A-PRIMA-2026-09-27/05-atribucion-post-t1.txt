@@ -1,0 +1,32 @@
+# Atribucion por poblacion del POST de T1 (S29, cura a-prima) - 2026-09-27
+
+Comando, aplicado a los dos crudos por igual:
+  grep -E "^(FAILED|ERROR)" <crudo> | tr -d "\r" | sed "s/ - .*//" | sort
+
+PRE  (00-suite-pre.txt):                 46 rojos = 20 failed + 26 errors
+POST (04-suite-post-t1-curada-s29.txt): 45 rojos = 19 failed + 26 errors
+  PRE : "20 failed, 4569 passed, 41 skipped, 4 xfailed, 230 warnings, 26 errors in 364.87s (0:06:04)" EXIT=1
+  POST: "19 failed, 4571 passed, 41 skipped, 4 xfailed, 230 warnings, 26 errors in 379.00s (0:06:18)" EXIT=1
+
+CAE (PRE - POST), exactamente una linea:
+FAILED tests/test_validate_lesson_capitalization.py::test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+
+NUEVOS (POST - PRE): 0 lineas
+
+POBLACION RESTANTE EN EL POST, por archivo:
+      8 tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py
+      8 tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py
+      6 tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py
+      6 tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py
+      5 tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py
+      4 tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py
+      3 tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py
+      2 tests/quality_gates/phase_briefing/test_briefing_carga_total_tres_sumandos.py
+      1 tests/test_validate_wiring.py
+      1 tests/test_diagnostic_geo_metrics.py
+      1 tests/financial_engine/test_pricing_resolution_wrapper.py
+
+Cuadre: 45 = 42 de S31 (36 lesson_relevance + 6 phase_briefing) + 3 atribuidos el 2026-09-25:
+  tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+  tests/test_diagnostic_geo_metrics.py::test_diagnostic_includes_geo_metrics
+  tests/financial_engine/test_pricing_resolution_wrapper.py::test_function_default_flags
