@@ -373,6 +373,30 @@ sus tests. Estado de la cura:
   bytes del cierre de RELEASE (`12-normalizacion-lf.txt`) queda como antecedente: el próximo cierre no
   la necesita. No se re-escribió ese expediente cerrado (**S12**).
 
+**⟦Cuarta instancia de la misma familia, medida el 2026-09-27 al ejecutar D-c — NO curada, sigue abierta
+bajo el dueño de esta fila⟧.** `scripts/validate_opencode_refs.py --fix` es un writer de texto sin
+`newline="\n"`, y esta vez el daño lo hizo sobre **gobernado del propio plan**: tras el `git mv`, su corrida
+re-escribió **13 archivos que HEAD almacena en LF** dejándolos en CRLF sobre el disco — `CR_disco`: 87 en
+`plan_citations_baseline.json`, 636 en la orden de calidad, 194 a 383 en los seis prompts, y **1.551 a 3.645
+en los cinco packs**. `git status` no lo distingue (guarda LF de todos modos), así que lo que se pierde no es
+un rojo sino el **numstat**: sin normalizar, el commit del archivado habría aparecido como reescritura
+completa de 13 archivos en vez de los 1–34 líneas por archivo que realmente cambió. Se normalizó por bytes
+antes de commitear y el diff quedó simétrico (`17/17`, `34/34`, `3/3`), que es la firma de una reescritura de
+rutas pura. **El detector no es un humano acordándose**: `tests/test_sync_writers_lf_y_fecha_readme.py` cubre
+los tres escritores de la cura anterior y **no** a este, así que la familia volvió a colarse por la cuarta
+puerta. La cura pedida es la misma de siempre (`newline="\n"`) más una aserción en esa batería que lo incluya.
+
+Y un defecto segundo del mismo `--fix`, menor pero del mismo estilo de silencio: al reparar, **promueve la
+forma minoritaria** de la ruta. Escribió `` `/.opencode/plans/Archives/… `` en tres referencias de
+`ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` que estaban en `` `.opencode/… ``, cuando el corpus marcado
+versionado está en **518 contra 66** a favor de la forma sin barra (medido con `git grep -c` sobre `HEAD`,
+contando el backtick como parte del patrón). El verificador acepta las dos, así que **no corta nada**: se
+convirtió en una incoherencia de estilo dentro de un documento que usaba una sola forma. Se reescribieron a
+mano las tres a la forma dominante —no hay pelea con la herramienta, porque `--fix` solo toca referencias
+rotas— y quedó declarado aquí en vez de abrir un número nuevo: **S21 a S26 están todos usados en el corpus**
+(el `S22` y `S23` de `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` son otra cosa), así que esta
+observación vive como sub-punto de S17 y no como fila propia.
+
 ### S18 — `readme_version_header` no goberna la fecha legible de `README.md` (nueva, 2026-09-25)
 
 **Hecho medido al cerrar FASE-RELEASE**: después del sync de cinco cabeceras, la línea de estado de

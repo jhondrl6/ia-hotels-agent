@@ -228,7 +228,7 @@ en `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D/mutation/`.
 
 ```text
 Ejecuta unicamente FASE-D del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
+C:/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
 Lee 05-prompt-inicio-sesion-fase-D.md, 01-plan-maestro.md §1 (medicion A7 y la nota de divisor de
 tokens), §4 (AC19-AC23, AC16, AC17), 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2,
 dependencias-fases.md (cadena y la regla de donde vive el pack generado) y el workflow canonical.

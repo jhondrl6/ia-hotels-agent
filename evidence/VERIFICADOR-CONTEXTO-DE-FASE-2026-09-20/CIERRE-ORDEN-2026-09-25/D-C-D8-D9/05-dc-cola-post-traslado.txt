@@ -1,0 +1,27 @@
+# 05-dc-cola-post-traslado.txt  2026-09-27T03:15:32Z
+== packs con la ruta ya en Archives ==
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+  PACKS=0
+== indice (2a regeneracion) ==
+[fechas] nombre=328 commit=11 sin_fuente=0
+  INDICE=0
+[OK] Índice de lecciones fresco (339 IDs)
+[fechas] nombre=328 commit=11 sin_fuente=0
+  INDICE_CHECK=0
+== packs --check ==
+[OK] FASE-RELEASE: 10 fuentes frescas
+  PACKS_CHECK=0
+== refs sin --fix (deben casar solas) ==
+[PASS] OpenCode References: todas las referencias existen
+  REFS=0
+== quick ==
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+  QUICK=0
+== check 17 del modo completo: QMind write-back, ahora con este plan en Archives ==
+[PASS] QMind Write-back: 12/12 10-analisis archivados ingested en 'iah-cli-lecciones'
+  QMIND_CHECK=0

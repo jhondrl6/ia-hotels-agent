@@ -282,7 +282,7 @@ autorización propia del archivado.
 ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --upload VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 # ⟦traslado⟧ — el archivado es un tercer momento, con autorización expresa
-git mv .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
+git mv /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
 # Cola final tras todas las escrituras autorizadas: no modificar baselines para absorber errores.
 ./venv/Scripts/python.exe scripts/validate_opencode_refs.py
 ./venv/Scripts/python.exe scripts/validate_plan_citations.py

@@ -294,7 +294,7 @@ ejecución offline.
 
 ```text
 Ejecuta únicamente FASE-C del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
+C:/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
 Antes de la primera edicion: mide git status --porcelain, git rev-parse --short HEAD y la paridad con
 origin/master con los comandos que publica el bloque «Inicio de la siguiente sesion» del README, y
 re-medide el indice con `python scripts/build_lesson_index.py --check`. No copies cifras de este prompt:

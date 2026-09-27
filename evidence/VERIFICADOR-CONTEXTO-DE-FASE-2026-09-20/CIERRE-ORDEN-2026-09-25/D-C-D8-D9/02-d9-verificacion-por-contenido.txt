@@ -1,0 +1,10 @@
+# 02-d9-verificacion-por-contenido.txt
+# Verificacion por descarga + sha, no por titulo (orden R2.10 y la advertencia heredada de D10).
+# sourceId : 01a0e0d3-92db-795b-ad7a-48a7c322e8e9
+# download rc : 0   (log: Downloaded temp/d9_descargado.md (94984 bytes) )
+# sha256 local   : fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80
+# sha256 descargado: fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80
+# bytes local=94984  descargado=94984
+# lineas local=410  descargado=410
+# RESULTADO: IGUALES — la copia publicada en QMind es exactamente la del arbol de hoy,
+#   con las nueve celdas rectificadas dentro.

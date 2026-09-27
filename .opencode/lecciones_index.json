@@ -393,7 +393,7 @@
       "total_citas": 175,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
       "redefiniciones": []
@@ -841,7 +841,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 12,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -1322,7 +1322,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 36,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
       ],
       "redefiniciones": []
@@ -1522,7 +1522,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 64,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -2023,7 +2023,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 15,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ],
       "redefiniciones": []
     },
@@ -2081,7 +2081,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 70,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -2274,7 +2274,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 109,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -2760,7 +2760,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 96,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -2820,7 +2820,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 103,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -2873,7 +2873,7 @@
       "total_citas": 61,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -2907,7 +2907,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 61,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
@@ -2926,7 +2926,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 80,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
@@ -2983,7 +2983,7 @@
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
@@ -3021,8 +3021,8 @@
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -3308,7 +3308,7 @@
       "total_citas": 83,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
@@ -3429,7 +3429,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 85,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "EVALUACION-JEV-TYPESAFE-2026-09-21",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
@@ -3448,7 +3448,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 62,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -3465,7 +3465,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 86,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
@@ -3544,7 +3544,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 18,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ],
       "redefiniciones": []
     },
@@ -3621,7 +3621,7 @@
       "id": "L-VCF-1",
       "familia": "L",
       "enunciado": "El primer mutation check falló nombrando a otra aserción: al apagar el guard de A1 el rojo reportó «se perdió A4» — assertion_id se asigna por orden de aparición (así reproduce la tabla A1–A4 del maestro sin pinearla). Es posicional: en cuanto un hallazgo desaparece, los demás se re-numeran, y el rojo pasa a hablar de un tercero",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3635,7 +3635,7 @@
       "id": "L-VCF-2",
       "familia": "L",
       "enunciado": "Resolver el sujeto de cada mención por «el script más cercano» produjo un hallazgo fantasma: dentro del changelog, un [6/7] que *nombra el token* («las 5 referencias normativas al [6/6] se actualizan a [6/7]») se atribuyó al verificador de capitalización y dio claimed 6 vs observed 7 — Una instancia puede ser mención de sí misma (metarreferencia) en vez de atribución, y la distancia textual no las distingue",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3649,7 +3649,7 @@
       "id": "L-VCF-3",
       "familia": "L",
       "enunciado": "Dos defectos de la salida, encontrados al escribir la prueba de estados y no al leer el codigo: (1) la primera linea de la consola no era ASCII —el guion largo de la cabecera llegaba al lector convertido en caracter de reemplazo—; (2) la marca corta esta contenida en la larga, asi que buscar el veredicto con una prueba de subcadena tambien es verdad cuando el veredicto es el contrario — La salida legible por maquinas es parte del contrato del instrumento, y la consola de este entorno no es UTF-8 (leccion ya capitalizada: «evidencia de consola no es UTF-8»)",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3663,7 +3663,7 @@
       "id": "L-VCF-4",
       "familia": "L",
       "enunciado": "El disparador de D1 estaba redactado en círculo: «verificador verde y decisión escrita» — pero el verificador solo está verde *después* de la corrección que D1 pide, y esta fase, por diseño (AC17), no puede dar ese verde — Una condición de cierre que solo se cumple al ejecutar lo que condiciona no es un disparador: es una traba",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3677,7 +3677,7 @@
       "id": "L-VCF-5",
       "familia": "L",
       "enunciado": "Al medir «quién afirma el 11» (AC5/AC16, barrido de tests/ por L-V2.3) resultó que esta misma fase añadió 4 pins nuevos del denominador 11 en tests/: la aserción observed == 9/11 del contrato AC1 es, literalmente, un pin — Un test que fija el valor observado de una fuente dinámica *es* una de las fuentes estáticas que el plan denuncia; la familia no cubierta (iii) de AC2 no era teoría",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3691,7 +3691,7 @@
       "id": "L-VCF-6",
       "familia": "L",
       "enunciado": "El primer mutation check de AC7 apagaba VERIFICACIONES_DE_FORMA entera, y con la lista vacía la puerta seguía negándose a decidir: la conversión a tipos se negó a rellenar la confidence ausente. El mutante no podía dar verde, así que no probaba nada sobre los seis guards — Un guard que es una lista de verificaciones no es un símbolo mutable atómico: apagarla entera borra seis guards a la vez y, si hay una segunda línea defensiva, el rojo deja de atribuirse a ninguno (L-V2.1 aplicado a una colección, no a un id posicional)",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3705,7 +3705,7 @@
       "id": "L-VCF-7",
       "familia": "L",
       "enunciado": "La primera versión de la regla de aislamiento marcaba cualquier import_module/exec_module como sospechoso: sobre el árbol real eso producía 16 hallazgos ajenos (fixtures de otros planes, cargadores de skills) y AC6 habría quedado rojo por diseño — Una regla pensada para un contrabando concreto, aplicada sin distinguir lo resoluble en estático de lo que no, convierte un candado en ruido; y el ruido invita a apagar el candado",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3719,7 +3719,7 @@
       "id": "L-VCF-8",
       "familia": "L",
       "enunciado": "El «0» de AC6 tiene dos poblaciones y no eran la misma: git grep ve 678 .py rastreados y el escáner AST ve 692 en el árbol de trabajo (los archivos de esta fase, aún sin commitear — rectificado el 2026-09-22: tras el commit git ve 691 y la diferencia no era toda de la fase, ver L-VCF-11). Y el SDK sí está en el disco: bajo tmp_test/venv-jev-sdk, donde lo aisló el plan hermano — Un «cero coincidencias» afirmado sobre una población que nadie definió se lee como «no existe», cuando lo medido es «nadie lo importa»",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3733,7 +3733,7 @@
       "id": "L-VCF-9",
       "familia": "L",
       "enunciado": "Apareció una contradicción entre dos ACs del propio plan, latente hasta que exista un proveedor real: AC6 dice «ningún archivo fuera de decision_client.py importa el SDK» y AC9 dice «añadir un proveedor es un archivo». Con el proveedor en su propio módulo, la primera obliga a que ese módulo no importe nada y la segunda prohíbe tocar la puerta — Los dos enunciados son ciertos hoy (0 imports, 1 archivo) pero no son compatibles en el único escenario para el que se escribió la costura: D7. Decidirlo aquí habría sido reinterpretar una restricción del plan en silencio",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3747,7 +3747,7 @@
       "id": "L-VCF-10",
       "familia": "L",
       "enunciado": "«Cero llamadas de red» escrito como afirmación del informe no era verificable, y el primer intento de probarlo con from conftest import RedProhibida falló en colección: resolvía al tests/conftest.py raíz, no al de esta selección (1 test rojo antes de la corrección) — Un guard que no se ejecuta no existe; y en pytest conftest no es un importable único bajo colecciones anidadas (es la familia de «la cobertura del verificador se mide»: un ✅ no prueba ausencia)",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3763,7 +3763,7 @@
       "id": "L-VCF-11",
       "familia": "L",
       "enunciado": "Al commitear FASE-B, la resta que la propia fase había publicado dejó de cerrar por un archivo: git pasó de 678 a 691 .py (+13, los de la fase) pero el escáner seguía en 692, así que la explicación escrita en baseline-pre-post.md («la diferencia son los archivos de esta fase, que aún no están commiteados») quedó refutada por el commit que debía reconciliarla — El denominador se construye excluyendo por nombre de componente de ruta, y .venv-wsl no está en ARCHIVOS_EXCLUIDOS_DE_LA_POBLACION: su bin/activate_this.py entra al universo. Y las exclusiones se solapan (site-packages está anidada dentro de venv/tmp_test, y el walker incrementa los dos marcadores por la misma ruta), de modo que la suma de las exclusiones no reproduce el universo y no sirve de comprobación aritmética",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3777,7 +3777,7 @@
       "id": "L-VCF-12",
       "familia": "L",
       "enunciado": "Al re-medir AC6/A1–A4 para escribir este barrido, python scripts/validate_governance_numbers.py --report sobrescribió la evidencia commiteada de FASE-A: la ruta de escritura está hardcodeada como default (REPORT_DEFAULT → evidence/…/FASE-A/informe.json) y el comando canónico que el propio plan publica no lleva destino. Cambió tres campos: generated_at, medido_el y funciones_test_en_disk (4.330 → 4.378, que es una medición verdadera escrita sobre el registro de otra fase). Se revirtió con git checkout -- <ese archivo> y se re-midió con destino explícito (--report temp/…), que deja FASE-A limpia y da el mismo HALLAZGOS con exit 1 — Un verificador que además es writer gobierna dos artefactos, y aquí el segundo es un registro fechado de otra sesión: cada corrida re-escribe el pasado. Es la familia de L-VCF-11 (el instrumento afectado por su propio uso) y la de «quién produce el dato publicado», en su variante peligrosa: el verde se publica pisando una evidencia ajena",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3793,7 +3793,7 @@
       "id": "L-VCF-13",
       "familia": "L",
       "enunciado": "El primer diseño del triaje no podía perder: el pool de candidatos se construía excluyendo por definición las filas ya ancladas en §2, así que removed: [] era cierto sobre un conjunto donde no existía nada que borrar, y el mutante de AC14 no tenía rojo que producir. Hubo que re-preguntar también por las ancladas (opción por defecto activa) para que el emisor falso dijera no-pertinente sobre once filas y el guard tuviera trabajo real — Un candado aditivo probado sobre el conjunto vacío es la variante silenciosa de L-HF1: el verde no miente sobre el presente, miente sobre la cobertura de la prueba. El bug al que sobrevive un guard no está en el camino feliz, está en el camino que el fixture nunca instancia",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3807,7 +3807,7 @@
       "id": "L-VCF-14",
       "familia": "L",
       "enunciado": "El check de frescura propio de C reventó con AttributeError: 'str' object has no attribute 'get' sobre un JSON de prueba que sí existía y sí se parseaba, pero cuya clave lecciones no era lista. Es decir: el lector caído se reportaba como excepción del programa, no como estado del artefacto, justo en el instrumento cuya tesis es que un lector roto no se lee como ausencia — R2.9 nombra tres causas (no está / vencido / no se puede parsear) y deja una cuarta implícita: parseable no es conforme. Un except que solo cubre JSONDecodeError traduce un problema de forma a traceback, y un traceback no es un estado publicable",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3821,7 +3821,7 @@
       "id": "L-VCF-15",
       "familia": "L",
       "enunciado": "Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO. Dos controles fallaron antes de dar con la causa: copiar el par de índice del árbol de trabajo no lo arregló, y copiar además los documentos de los cuatro planes tampoco. Pasó a 56 passed únicamente al regenerar el par *dentro* de ese árbol. El hook había dado 7/7 en verde durante el commit — [6/7] build_lesson_index.py --check corre contra el árbol de trabajo, así que su verde describe el árbol que se dejó, no el commit que se escribió. Y el par generado no es reubicable: es función de todo el corpus de .opencode/plans/ —incluidas las fuentes de planes ajenos que tampoco están commiteadas—, por lo que copiarlo de otro árbol produce un artefacto que no corresponde a ningún corpus de ese árbol",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3835,7 +3835,7 @@
       "id": "L-VCF-16",
       "familia": "L",
       "enunciado": "El primer ancla del mutante de AC23 no atribuyó: apagado GUARD_NO_TRUNCAMIENTO_ACTIVO, el pack de FASE-RELEASE perdía el bloque de declaración pero la aserción nombra_la_fuente_pedida seguía en True, porque el texto que miraba —el nombre de la sección pedida— también está en los documentos del corpus que el pack copia. El rojo existía en bytes y era ciego en lectura — Un mutante hay que anclarlo al texto que el generador produce, no al texto que el generador traslada: en un artefacto derivado de un corpus, casi cualquier cadena del artefacto pertenece al corpus, y ahí el ancla no distingue «el programa escribió» de «el programa copió». Es L-V2.1 en un terreno nuevo —no «el id equivocado» ni «la lista entera», sino «la cadena no es del mutado»",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3849,7 +3849,7 @@
       "id": "L-VCF-17",
       "familia": "L",
       "enunciado": "Escribir los packs rompió un gate ajeno: docs/CONTRIBUTING.md entraba al pack por una sección declarada, y la regla de la fase era «el pack se escribe dentro del plan». Copiarlo a .opencode/plans/<PLAN>/briefing/ dejó 2 referencias rotas nuevas y el quick pasó de 11/11 a 10/11 con [8/11] en rojo — un verificador de integridad de rutas del corpus, que FASE-D no tocó ni leyó. Y en el mismo gesto el artefacto generado volvió a envejecer el índice de lecciones: 5 .md nuevos dentro del corpus que build_lesson_index.py recorre — Un artefacto derivado no es neutro respecto al directorio donde cae: pasa a ser corpus para todo verificador que lo recorra por glob, así que hereda las obligaciones de un documento escrito a mano (referencias válidas, presencia en el índice) sin tenerlas. El plan elegía la ruta del pack por conveniencia de cierre, no por el radio de acción de los gates que viven ahí",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3863,7 +3863,7 @@
       "id": "L-VCF-18",
       "familia": "L",
       "enunciado": "FASE-D publicó en 09 §D un par def test_ 4.360 → 4.404 («medido al abrir la fase»). Al cerrar, el mismo comando canónico no dio 4.360 sobre ningún árbol: disco 4.557, git grep sobre HEAD 4.470, y disco − contribución propia 4.508 — que es exacto el POST que publicó FASE-C. El par refutado no tenía crudo en evidence/, así que no había de dónde defenderlo — Es A6 y «quién produce el dato publicado» aplicados a mí mismo: una cifra transcrita de memoria y redactada sin su comando al lado entra al documento con la misma apariencia que una medida, y el plan no tiene cómo distinguirlas. El daño no es el número —la resta propia sí cuadraba con su contribución— sino que se verificaba contra un minuendo que nadie midió",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3877,7 +3877,7 @@
       "id": "L-VCF-19",
       "familia": "L",
       "enunciado": "FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el before y el after subieron los dos (más fuentes crecidas en ambos lados) y el total quedó dos veces desfasado del número publicado. Lo mismo con el par de tamaños de AC23, que cambió cuando la declaración dejó de incluir la ruta absoluta intentada. Las cifras se retiraron de los tres .md y quedaron solo en carga.json / carga-pre-post.md / mutation/resumen.txt — Es A6 con un mecanismo nuevo: no es que el documento envejezca al medir otra cosa — es que el documento medido es parte de lo medido. Un generador que embeddinga sus propias fuentes de gobierno crea un punto fijo inestable: cualquier cifra de tamaño que se publique en un .md que el pack copia cambia la próxima medición del tamaño. El verificador no está mal: lo que está mal es el *canal*",
-      "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+      "plan": "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
@@ -3959,7 +3959,7 @@
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ],
       "redefiniciones": []
     },
@@ -4020,7 +4020,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 69,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
@@ -4233,7 +4233,7 @@
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
@@ -4443,7 +4443,7 @@
       "planes_que_lo_citan": [
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": []
@@ -5278,7 +5278,7 @@
       "familia": "D",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ]
     },
     {

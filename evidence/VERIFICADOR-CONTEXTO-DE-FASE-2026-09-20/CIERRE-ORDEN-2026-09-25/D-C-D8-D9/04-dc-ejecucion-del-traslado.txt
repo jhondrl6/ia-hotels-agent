@@ -1,0 +1,34 @@
+# 04-dc-ejecucion-del-traslado.txt  2026-09-27T03:09:30Z  HEAD antes: 44f53c2
+
+== 1. git mv del plan a Archives/ ==
+  MV_EXIT=0
+  existe_en_destino=SI  existe_en_origen=NO
+  rutas_stageadas=18  (todas Renombrado?)
+     18 R100
+
+== 2. packs regenerados CON la ruta trasladada, antes de verificar (dependencias:53) ==
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+  PACKS_EXIT=0
+
+== 3. indice de lecciones (2a regeneracion, la que exige R2.5) ==
+  -> .opencode/lecciones_index.json
+[fechas] nombre=328 commit=11 sin_fuente=0
+  INDICE_EXIT=0
+
+== 4. refs --fix ==
+  [FIX] FASE-RELEASE.md: .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 -> /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 -> /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md -> /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md -> /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+[FIX] 14 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+  REFS_FIX_EXIT=0
+
+== 5. citas --update-baseline ==
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+  CITAS_UPD_EXIT=0

@@ -1,0 +1,12 @@
+# 01-d9-upload-10-analisis.txt
+# D9 medido 2026-09-27T03:05:54Z. sha256 LOCAL del insumo antes de subir:
+  fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80 *.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+  bytes=94984  lineas=410
+# Se verifica antes que NO este ingestado, para que do_upload no responda SKIP y deje
+#   una version anterior como verdad publicada (el hazard de idempotencia por titulo).
+
+[UP] 10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)
+[OK] Subido: 10-analisis-post-implementacion
+
+[RESUMEN] upload=1 skip=0 fail=0
+  UPLOAD_EXIT=0

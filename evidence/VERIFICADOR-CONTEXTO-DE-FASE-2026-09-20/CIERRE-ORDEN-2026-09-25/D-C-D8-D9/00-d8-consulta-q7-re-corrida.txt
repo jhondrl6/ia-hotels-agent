@@ -1,0 +1,667 @@
+# 00-d8-consulta-q7-re-corrida.txt
+# D8 re-ejecutado 2026-09-27T03:05:09Z, qmind v3.3.0, notebook 01a04d98-b7bd-778c-8441-26fdc7e35f45 (49 fuentes).
+# El texto LITERAL de Q7 NO esta registrado en el repo: 00-lecciones-capitalizadas.md lo publica
+#   con -q elidido y solo describe cuatro temas, y esa fila viaja copiada a los packs. Las cuatro
+#   consultas de abajo se formulan HOY a partir de la descripcion, NO son verbatim de 2026-09-20.
+#   La propia tabla impone la regla «la consulta debe ser copy-pasteable»: Q7 la incumple.
+# Capture anterior: 22 lineas por consulta, que recortaba los 5 chunks que devolvia el retrieve.
+#   Eso era un defecto de mi instrumento, no del dato; esta version guarda la salida entera.
+
+======== CONSULTA: conteos de tests y cifras de gobernanza desfasados entre un documento y su fuente dinamica
+kind: notebookContext
+total: 4
+reranked: true
+---
+type: chunk
+index: 1
+chunkId: 01a06ebb-1433-7beb-be03-bbfb260ef182
+chunkIndex: 54
+sourceId: 01a06ebb-001b-7a1a-a195-2714a9db271e
+sourceTitle: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/fe373de6-73c4-4be6-b4b9-e35e9485ceee/QMIND-WRITE-BACK.md
+score: 0.8490
+tokenCount: 512
+content: |-
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 8. Lecciones Aprendidas
+  
+  .Aquí eso habría dado el rojo en 4 segundos.Refuerza**L-G3**con el caso en que el test espejo vive en otro directorio.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—extiende**L-G3**;keywords:*contrato de clave,tests espejo,grep de la clave,ventanilla de NR,test rojo heredado*.**L-V3—La prosa de un artefacto que llega al cliente es superficie de contrato,no comentario***(FASE-VERIFY)*-**Qué pasó**:en el`asset_generation_report.json`de la corrida,`promised_assets_exist`afirma*«7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET»*cuando la matriz dinámica promete**4**y excluye**3**nombrándolas.En el mismo run,el gate`proposal_asset_alignment`escribe`«4/4 servicios comprometidos cubiertos»`con`details.total_services:1`.Dos números,mismo objeto,mismo día.-**Por qué**:el plan curó las**tablas**de identidad y dejó intactos los**mensajes que citan sus conteos**.Un mensaje con número literal es una copia más del registro—y la causa raíz del dossier(«consumidores derivan de copias parciales»)describe exactamente eso,solo que en prosa.-**Qué lo previene**:derivar los conteos del texto de la misma fuente que los datos(DA13 aplicado a artefactos)o prohibir el número;y un candado de consistencia mensaje↔`details`.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—misma familia que`unificar-conteos-derivados-en-dtos-multi-consumer`;keywords:*mensaje con conteo literal,7 servicios verificados,message vs details,divulgación en artefactos*.**L-V4—Una cita de línea caduca antes de que se certifique el fix:14 de 16 ya estaban desfasadas***(FASE-VERIFY)*-**Qué pasó**:al auditar las citas que los ACs usan(criterio L-A6 de la V1),**solo 2 de 16**seguían en su número(`delivery_quality_report.py:25`,`publication_gates.py:56`);las otras 14 están entre−88 y+104 líneas de desplazamiento(**S-V6**).El plan las heredó del dossier y de sus propios prompts,y cada fase que editó esos archivos movió las siguientes.-**Por qué**:el plan es un documento**multi-fase**que cita posiciones en archivos
+---
+type: chunk
+index: 2
+chunkId: 01a04d9a-a5d3-745b-98f2-44ab4bd88059
+chunkIndex: 4
+sourceId: 01a04d9a-9a44-7ed7-969a-4209c61053be
+sourceTitle: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/c7771525-c319-4387-bdc3-16c25977431e/10-analisis-post-implementacion.md
+score: 0.7544
+tokenCount: 433
+content: |-
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Matriz de Verificación de Causas Raíz (llenar en FASE-F)
+  
+  0`commercial_gates_report*`en ZIP(baseline:3 archivos,incluido 1 BLOCKING)|✅SUPERADO||N21|ZIP con artefactos de runs anteriores|Solo artefactos del run actual|`_get_latest_run_timestamp()`cutoff por mtime v4_audit.E2E(V7):solo timestamps del run 20260805(baseline:5 timestamps distintos,76 archivos)|✅SUPERADO|###RC3—Higiene documental sin enforcement|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||R3.1|Prompts con`--release`en fases intermedias|Sin`--release`en A-F|Eliminados de 4 prompts+nota preventiva+enforcement`_check_prompts_no_release`(6/6 PASS)|✅||R3.2|Conteos desactualizados|Conteos desde fuente viva(L8)|205.py,391 clases,27 dirs,3,227 tests;lista D3 completa(8 valores)|✅||R3.3|Citas driftadas|Referencias verificadas|Nota pre-bump añadida;evidencia N3 preservada(14 JSON en`evidence/N3-diff/`)|✅||R3.4|Evidencia no preservada|`evidence/N3-diff/`completo|14 JSON del run 123637+README(diff 97 líneas no reproducible)|✅|###Seguimientos heredados|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||S5|Occupancy label"regional"residual|Label coherente con fuente real|Fix FASE-D cubrió`harness_handlers.py`y`financial_sources`;E2E(V8)reveló DOS sitios adicionales(`main.py`:bloque FASE-K+input`PrecisionValidator`/GAP-4)→cerrados en recuperación S5b(re-verificación V8 PASS,run acotado 20260805_161042)|✅SUPERADO||S7|Loader onboarding sin fallback|Fallback a`output/clientes`con`--output`alternativo|Verificado en aislamiento ANTES del run(`temp/verify_s7_loader.py`,3/3 PASS)+E2E:log"Onboarding data loaded:4 campos confirmados",sin"Using defaults"|✅SUPERADO|---
+---
+type: chunk
+index: 3
+chunkId: 01a04d9a-a5d3-7453-b239-d72489af90a5
+chunkIndex: 1
+sourceId: 01a04d9a-9a44-7ed7-969a-4209c61053be
+sourceTitle: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/c7771525-c319-4387-bdc3-16c25977431e/10-analisis-post-implementacion.md
+score: 0.6330
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones|delegate_task|Notas||------|--------|--------|-------------|---------------|-------||FASE-A|2026-08-05|✅|1 sesión(~30/60)|No(directo)|Cuarentena 3 archivos patológicos(40 tests).Tests collected:3215→3175.Lista segura:13 archivos PASS.2 archivos con fallos preexistentes(no patológicos).`pytest.ini`con`--ignore`específicos(CR-8).Ver L16-L17.||FASE-B|2026-08-05|✅|1 sesión(~20/60)|No(directo,no delegable—DT-3)|RC1:`_build_dynamic_breach_map`+cableado`opportunity_scores`en main.py.Eliminados`BREACH_BY_ASSET`(N10/N17)y hardcode L1250(N18);org_schema condicional(N19).9 tests nuevos PASS,lista segura 208 passed/0 regresiones,verificación estática vs run 124443 PASS.Ver L18-L20,DEC-B1-B3.||FASE-C|2026-08-05|✅|1 sesión(~15/60)|No(directo)|RC2-a:split oraciones+filtro condicionales CG-CLAIM-VS-EVIDENCE(N11)+cableado frontmatter_tier/text_tier en CG-TIER-CONSISTENCY(N15).20 tests nuevos PASS,quality_gates 322 passed/0 regresiones,preexistentes estables(12 failed).Ver L21-L23,DEC-C1.||FASE-D|2026-08-05|✅|1 sesión(~15/60)|No(directo,3 tracks serie)|RC2-b:`_is_excluded_from_zip`+`_get_latest_run_timestamp`(N16/N21)+fallback loader onboarding(S7)+occupancy label priority(S5).23 tests nuevos PASS,delivery 69 passed,quality_gates 366 passed,preexistentes estables(12 failed).Ver L24-L26.||FASE-E|2026-08-05|✅|1 sesión(~25/60)|Sí(solo docs,sin imports)|RC3:`--release 4.70.0`eliminado de 4 prompts+nota preventiva.`_check_prompts_no_release`en`run_all_validations.py`(6/6 TOTAL PASS).Conteos fuente viva:205.py,391 clases,27 dirs,3,227 tests.Lista D3 completa(8 valores).Evidencia N3 preservada(14 JSON).Ver L27.||FASE-F|2026-08-05|✅|2 sesiones(~25/60+~15/60)|Sí(v4complete vía subagente)|Sesión 1:run E2E único exitoso(exit 0,onboarding real,coherence 0.9238).V1-V10:9/10—V8(S5)FAIL.Sesión 2
+---
+type: chunk
+index: 4
+chunkId: 01a04d9a-b973-784f-ae39-2eef2c58336a
+chunkIndex: 11
+sourceId: 01a04d9a-b307-75ed-9600-8ba2fb0680e2
+sourceTitle: 10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (lecciones aprendidas)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/8973e1fa-494e-47b5-ae79-b4b95c911bbc/10-analisis-post-implementacion.md
+score: 0.6071
+tokenCount: 430
+content: |-
+  # Análisis Post-Implementación — REFACTOR-COHERENCIA-NARRATIVA-2026-08-22
+  ## Lecciones Aprendidas
+  
+  except tipados(NameError nunca debería atraparse).INCLUIR.|FASE-R0-E||L-NC10|Fosilización narrativa como clase de bug:los 7 bugs(B1-B7)compartían una única causa raíz—templates con texto estático que ignoraban la fuente dinámica de verdad(pain_ledger).No eran 7 bugs independientes sino 7 manifestaciones de un mismo defecto arquitectónico./Por qué:cuando la capa de datos evoluciona(pain_ledger agrega VERIFIED_IN_SITE,filtrado por severidad)pero la capa narrativa permanece estática,se produce una divergencia silenciosa que no rompe ningún test pero genera documentos comercialmente contradictorios./Qué lo previene:(1)tests de contrato que vinculan narrativa↔fuente dinámica(no valores fijos);(2)detección proactiva de strings hardcodeados que contradicen la fuente de verdad;(3)al agregar datos dinámicos nuevos,auditar si la capa narrativa los consume.INCLUIR.|FASE-R0-F||L-NC11|Verificación E2E sobre unit tests exclusivamente:los tests unitarios de R0-A a R0-D cubrían cada fix aisladamente,pero solo la verificación E2E del output real(diagnóstico+propuesta renderizados)confirmó la integración coherente de los 7 fixes simultáneamente(p.ej.,título S4=7↔listado=7↔intro=7↔contador S6=7↔pain_ledger=7)./Por qué:tests unitarios validan contratos individuales;la integración de múltiples cambios en un documento renderizado puede producir incoherencias transversales que ningún test individual captura./Qué lo previene:toda refactorización multi-punto debe incluir verificación E2E del output renderizado(no solo passing tests)antes de certificar.INCLUIR.|FASE-R0-F||L-NC12|Diff antes/después como evidencia formal:la comparación byte-a-byte del baseline vs post-fix(7 zonas narrativas)fue la herramienta más efectiva para certificar que los fixes funcionaron correctamente en contexto real—más conclusiva que cualquier test unitario./Por qué:un diff narrativo muestra exactamente qué cambió en lenguaje natural,mientras que un test solo verifica una condición booleana./Qué lo previene:en planes de refactorización narrativa,incluir diff antes/después como deliverable obligatorio de la fase de verificación(no como opcional).El diff debe cubrir todas las zonas afectadas,no solo las obvias.INCLUIR.|FASE-R0-F|---
+---
+type: citation
+index: 1
+sourceId: 01a06ebb-001b-7a1a-a195-2714a9db271e
+sourceTitle: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)
+chunkId: 01a06ebb-1433-7beb-be03-bbfb260ef182
+snippet: |-
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 8. Lecciones Aprendidas
+  
+  .Aquí eso habría dado el rojo en 4 segundos.Refuerza**L-G3**con el caso en que el test espejo vive en otro directorio.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—extiende**L-G3**;keywords:*contrato de clave,tests espejo,grep de la clave,ventanilla de NR,test rojo heredado*.**L-V3—La prosa de un artefacto que llega al cliente es superficie de contrato,no comentario***(FASE-VERIFY)*-**Qué pasó**:en el`asset_generation_report.json`de la corrida,`promised_assets_exist`afirma*«7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET»*cuando la matriz dinámica promete**4**y excluye**3**nombrándolas.En el mismo run,el gate`proposal_asset_alignment`escribe`«4/4 servicios comprometidos cubiertos»`con`details.total_services:1`.Dos números,mismo objeto,mismo día.-**Por qué**:el plan curó las**tablas**de identidad y dejó intactos los**mensajes que citan sus conteos**.Un mensaje con número literal es una copia más del registro—y la causa raíz del dossier(«consumidores derivan de copias parciales»)describe exactamente eso,solo que en prosa.-**Qué lo previene**:derivar los conteos del texto de la misma fuente que los datos(DA13 aplicado a artefactos)o prohibir el número;y un candado de consistencia mensaje↔`details`.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—misma familia que`unificar-conteos-derivados-en-dtos-multi-consumer`;keywords:*mensaje con conteo literal,7 servicios verificados,message vs details,divulgación en artefactos*.**L-V4—Una cita de línea caduca antes de que se certifique el fix:14 de 16 ya estaban desfasadas***(FASE-VERIFY)*-**Qué pasó**:al auditar las citas que los ACs usan(criterio L-A6 de la V1),**solo 2 de 16**seguían en su número(`delivery_quality_report.py:25`,`publication_gates.py:56`);las otras 14 están entre−88 y+104 líneas de desplazamiento(**S-V6**).El plan las heredó del dossier y de sus propios prompts,y cada fase que editó esos archivos movió las siguientes.-**Por qué**:el plan es un documento**multi-fase**que cita posiciones en archivos
+---
+type: citation
+index: 2
+sourceId: 01a04d9a-9a44-7ed7-969a-4209c61053be
+sourceTitle: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)
+chunkId: 01a04d9a-a5d3-745b-98f2-44ab4bd88059
+snippet: |-
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Matriz de Verificación de Causas Raíz (llenar en FASE-F)
+  
+  0`commercial_gates_report*`en ZIP(baseline:3 archivos,incluido 1 BLOCKING)|✅SUPERADO||N21|ZIP con artefactos de runs anteriores|Solo artefactos del run actual|`_get_latest_run_timestamp()`cutoff por mtime v4_audit.E2E(V7):solo timestamps del run 20260805(baseline:5 timestamps distintos,76 archivos)|✅SUPERADO|###RC3—Higiene documental sin enforcement|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||R3.1|Prompts con`--release`en fases intermedias|Sin`--release`en A-F|Eliminados de 4 prompts+nota preventiva+enforcement`_check_prompts_no_release`(6/6 PASS)|✅||R3.2|Conteos desactualizados|Conteos desde fuente viva(L8)|205.py,391 clases,27 dirs,3,227 tests;lista D3 completa(8 valores)|✅||R3.3|Citas driftadas|Referencias verificadas|Nota pre-bump añadida;evidencia N3 preservada(14 JSON en`evidence/N3-diff/`)|✅||R3.4|Evidencia no preservada|`evidence/N3-diff/`completo|14 JSON del run 123637+README(diff 97 líneas no reproducible)|✅|###Seguimientos heredados|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||S5|Occupancy label"regional"residual|Label coherente con fuente real|Fix FASE-D cubrió`harness_handlers.py`y`financial_sources`;E2E(V8)reveló DOS sitios adicionales(`main.py`:bloque FASE-K+input`PrecisionValidator`/GAP-4)→cerrados en recuperación S5b(re-verificación V8 PASS,run acotado 20260805_161042)|✅SUPERADO||S7|Loader onboarding sin fallback|Fallback a`output/clientes`con`--output`alternativo|Verificado en aislamiento ANTES del run(`temp/verify_s7_loader.py`,3/3 PASS)+E2E:log"Onboarding data loaded:4 campos confirmados",sin"Using defaults"|✅SUPERADO|---
+---
+type: citation
+index: 3
+sourceId: 01a04d9a-9a44-7ed7-969a-4209c61053be
+sourceTitle: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)
+chunkId: 01a04d9a-a5d3-7453-b239-d72489af90a5
+snippet: |-
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones|delegate_task|Notas||------|--------|--------|-------------|---------------|-------||FASE-A|2026-08-05|✅|1 sesión(~30/60)|No(directo)|Cuarentena 3 archivos patológicos(40 tests).Tests collected:3215→3175.Lista segura:13 archivos PASS.2 archivos con fallos preexistentes(no patológicos).`pytest.ini`con`--ignore`específicos(CR-8).Ver L16-L17.||FASE-B|2026-08-05|✅|1 sesión(~20/60)|No(directo,no delegable—DT-3)|RC1:`_build_dynamic_breach_map`+cableado`opportunity_scores`en main.py.Eliminados`BREACH_BY_ASSET`(N10/N17)y hardcode L1250(N18);org_schema condicional(N19).9 tests nuevos PASS,lista segura 208 passed/0 regresiones,verificación estática vs run 124443 PASS.Ver L18-L20,DEC-B1-B3.||FASE-C|2026-08-05|✅|1 sesión(~15/60)|No(directo)|RC2-a:split oraciones+filtro condicionales CG-CLAIM-VS-EVIDENCE(N11)+cableado frontmatter_tier/text_tier en CG-TIER-CONSISTENCY(N15).20 tests nuevos PASS,quality_gates 322 passed/0 regresiones,preexistentes estables(12 failed).Ver L21-L23,DEC-C1.||FASE-D|2026-08-05|✅|1 sesión(~15/60)|No(directo,3 tracks serie)|RC2-b:`_is_excluded_from_zip`+`_get_latest_run_timestamp`(N16/N21)+fallback loader onboarding(S7)+occupancy label priority(S5).23 tests nuevos PASS,delivery 69 passed,quality_gates 366 passed,preexistentes estables(12 failed).Ver L24-L26.||FASE-E|2026-08-05|✅|1 sesión(~25/60)|Sí(solo docs,sin imports)|RC3:`--release 4.70.0`eliminado de 4 prompts+nota preventiva.`_check_prompts_no_release`en`run_all_validations.py`(6/6 TOTAL PASS).Conteos fuente viva:205.py,391 clases,27 dirs,3,227 tests.Lista D3 completa(8 valores).Evidencia N3 preservada(14 JSON).Ver L27.||FASE-F|2026-08-05|✅|2 sesiones(~25/60+~15/60)|Sí(v4complete vía subagente)|Sesión 1:run E2E único exitoso(exit 0,onboarding real,coherence 0.9238).V1-V10:9/10—V8(S5)FAIL.Sesión 2
+---
+type: citation
+index: 4
+sourceId: 01a04d9a-b307-75ed-9600-8ba2fb0680e2
+sourceTitle: 10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (lecciones aprendidas)
+chunkId: 01a04d9a-b973-784f-ae39-2eef2c58336a
+snippet: |-
+  # Análisis Post-Implementación — REFACTOR-COHERENCIA-NARRATIVA-2026-08-22
+  ## Lecciones Aprendidas
+  
+  except tipados(NameError nunca debería atraparse).INCLUIR.|FASE-R0-E||L-NC10|Fosilización narrativa como clase de bug:los 7 bugs(B1-B7)compartían una única causa raíz—templates con texto estático que ignoraban la fuente dinámica de verdad(pain_ledger).No eran 7 bugs independientes sino 7 manifestaciones de un mismo defecto arquitectónico./Por qué:cuando la capa de datos evoluciona(pain_ledger agrega VERIFIED_IN_SITE,filtrado por severidad)pero la capa narrativa permanece estática,se produce una divergencia silenciosa que no rompe ningún test pero genera documentos comercialmente contradictorios./Qué lo previene:(1)tests de contrato que vinculan narrativa↔fuente dinámica(no valores fijos);(2)detección proactiva de strings hardcodeados que contradicen la fuente de verdad;(3)al agregar datos dinámicos nuevos,auditar si la capa narrativa los consume.INCLUIR.|FASE-R0-F||L-NC11|Verificación E2E sobre unit tests exclusivamente:los tests unitarios de R0-A a R0-D cubrían cada fix aisladamente,pero solo la verificación E2E del output real(diagnóstico+propuesta renderizados)confirmó la integración coherente de los 7 fixes simultáneamente(p.ej.,título S4=7↔listado=7↔intro=7↔contador S6=7↔pain_ledger=7)./Por qué:tests unitarios validan contratos individuales;la integración de múltiples cambios en un documento renderizado puede producir incoherencias transversales que ningún test individual captura./Qué lo previene:toda refactorización multi-punto debe incluir verificación E2E del output renderizado(no solo passing tests)antes de certificar.INCLUIR.|FASE-R0-F||L-NC12|Diff antes/después como evidencia formal:la comparación byte-a-byte del baseline vs post-fix(7 zonas narrativas)fue la herramienta más efectiva para certificar que los fixes funcionaron correctamente en contexto real—más conclusiva que cualquier test unitario./Por qué:un diff narrativo muestra exactamente qué cambió en lenguaje natural,mientras que un test solo verifica una condición booleana./Qué lo previene:en planes de refactorización narrativa,incluir diff antes/después como deliverable obligatorio de la fase de verificación(no como opcional).El diff debe cubrir todas las zonas afectadas,no solo las obvias.INCLUIR.|FASE-R0-F|---
+promptContext: |-
+  [Source: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones) | Chunk: 54 | SourceID: 01a06ebb-001b-7a1a-a195-2714a9db271e | ChunkID: 01a06ebb-1433-7beb-be03-bbfb260ef182 | Score: 0.849]
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 8. Lecciones Aprendidas
+  
+  .Aquí eso habría dado el rojo en 4 segundos.Refuerza**L-G3**con el caso en que el test espejo vive en otro directorio.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—extiende**L-G3**;keywords:*contrato de clave,tests espejo,grep de la clave,ventanilla de NR,test rojo heredado*.**L-V3—La prosa de un artefacto que llega al cliente es superficie de contrato,no comentario***(FASE-VERIFY)*-**Qué pasó**:en el`asset_generation_report.json`de la corrida,`promised_assets_exist`afirma*«7 servicios verificados via PROPOSAL_SERVICE_TO_ASSET»*cuando la matriz dinámica promete**4**y excluye**3**nombrándolas.En el mismo run,el gate`proposal_asset_alignment`escribe`«4/4 servicios comprometidos cubiertos»`con`details.total_services:1`.Dos números,mismo objeto,mismo día.-**Por qué**:el plan curó las**tablas**de identidad y dejó intactos los**mensajes que citan sus conteos**.Un mensaje con número literal es una copia más del registro—y la causa raíz del dossier(«consumidores derivan de copias parciales»)describe exactamente eso,solo que en prosa.-**Qué lo previene**:derivar los conteos del texto de la misma fuente que los datos(DA13 aplicado a artefactos)o prohibir el número;y un candado de consistencia mensaje↔`details`.-**Pertinencia**:INCLUIR en QMind`iah-cli-lecciones`—misma familia que`unificar-conteos-derivados-en-dtos-multi-consumer`;keywords:*mensaje con conteo literal,7 servicios verificados,message vs details,divulgación en artefactos*.**L-V4—Una cita de línea caduca antes de que se certifique el fix:14 de 16 ya estaban desfasadas***(FASE-VERIFY)*-**Qué pasó**:al auditar las citas que los ACs usan(criterio L-A6 de la V1),**solo 2 de 16**seguían en su número(`delivery_quality_report.py:25`,`publication_gates.py:56`);las otras 14 están entre−88 y+104 líneas de desplazamiento(**S-V6**).El plan las heredó del dossier y de sus propios prompts,y cada fase que editó esos archivos movió las siguientes.-**Por qué**:el plan es un documento**multi-fase**que cita posiciones en archivos
+  
+  ---
+  
+  [Source: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas) | Chunk: 4 | SourceID: 01a04d9a-9a44-7ed7-969a-4209c61053be | ChunkID: 01a04d9a-a5d3-745b-98f2-44ab4bd88059 | Score: 0.754]
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Matriz de Verificación de Causas Raíz (llenar en FASE-F)
+  
+  0`commercial_gates_report*`en ZIP(baseline:3 archivos,incluido 1 BLOCKING)|✅SUPERADO||N21|ZIP con artefactos de runs anteriores|Solo artefactos del run actual|`_get_latest_run_timestamp()`cutoff por mtime v4_audit.E2E(V7):solo timestamps del run 20260805(baseline:5 timestamps distintos,76 archivos)|✅SUPERADO|###RC3—Higiene documental sin enforcement|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||R3.1|Prompts con`--release`en fases intermedias|Sin`--release`en A-F|Eliminados de 4 prompts+nota preventiva+enforcement`_check_prompts_no_release`(6/6 PASS)|✅||R3.2|Conteos desactualizados|Conteos desde fuente viva(L8)|205.py,391 clases,27 dirs,3,227 tests;lista D3 completa(8 valores)|✅||R3.3|Citas driftadas|Referencias verificadas|Nota pre-bump añadida;evidencia N3 preservada(14 JSON en`evidence/N3-diff/`)|✅||R3.4|Evidencia no preservada|`evidence/N3-diff/`completo|14 JSON del run 123637+README(diff 97 líneas no reproducible)|✅|###Seguimientos heredados|#|Hallazgo|Expected|Real|Status||---|----------|----------|------|--------||S5|Occupancy label"regional"residual|Label coherente con fuente real|Fix FASE-D cubrió`harness_handlers.py`y`financial_sources`;E2E(V8)reveló DOS sitios adicionales(`main.py`:bloque FASE-K+input`PrecisionValidator`/GAP-4)→cerrados en recuperación S5b(re-verificación V8 PASS,run acotado 20260805_161042)|✅SUPERADO||S7|Loader onboarding sin fallback|Fallback a`output/clientes`con`--output`alternativo|Verificado en aislamiento ANTES del run(`temp/verify_s7_loader.py`,3/3 PASS)+E2E:log"Onboarding data loaded:4 campos confirmados",sin"Using defaults"|✅SUPERADO|---
+  
+  ---
+  
+  [Source: 10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas) | Chunk: 1 | SourceID: 01a04d9a-9a44-7ed7-969a-4209c61053be | ChunkID: 01a04d9a-a5d3-7453-b239-d72489af90a5 | Score: 0.633]
+  # Análisis Post-Implementación — RC1-RC2-ENTREGA-COHERENTE
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones|delegate_task|Notas||------|--------|--------|-------------|---------------|-------||FASE-A|2026-08-05|✅|1 sesión(~30/60)|No(directo)|Cuarentena 3 archivos patológicos(40 tests).Tests collected:3215→3175.Lista segura:13 archivos PASS.2 archivos con fallos preexistentes(no patológicos).`pytest.ini`con`--ignore`específicos(CR-8).Ver L16-L17.||FASE-B|2026-08-05|✅|1 sesión(~20/60)|No(directo,no delegable—DT-3)|RC1:`_build_dynamic_breach_map`+cableado`opportunity_scores`en main.py.Eliminados`BREACH_BY_ASSET`(N10/N17)y hardcode L1250(N18);org_schema condicional(N19).9 tests nuevos PASS,lista segura 208 passed/0 regresiones,verificación estática vs run 124443 PASS.Ver L18-L20,DEC-B1-B3.||FASE-C|2026-08-05|✅|1 sesión(~15/60)|No(directo)|RC2-a:split oraciones+filtro condicionales CG-CLAIM-VS-EVIDENCE(N11)+cableado frontmatter_tier/text_tier en CG-TIER-CONSISTENCY(N15).20 tests nuevos PASS,quality_gates 322 passed/0 regresiones,preexistentes estables(12 failed).Ver L21-L23,DEC-C1.||FASE-D|2026-08-05|✅|1 sesión(~15/60)|No(directo,3 tracks serie)|RC2-b:`_is_excluded_from_zip`+`_get_latest_run_timestamp`(N16/N21)+fallback loader onboarding(S7)+occupancy label priority(S5).23 tests nuevos PASS,delivery 69 passed,quality_gates 366 passed,preexistentes estables(12 failed).Ver L24-L26.||FASE-E|2026-08-05|✅|1 sesión(~25/60)|Sí(solo docs,sin imports)|RC3:`--release 4.70.0`eliminado de 4 prompts+nota preventiva.`_check_prompts_no_release`en`run_all_validations.py`(6/6 TOTAL PASS).Conteos fuente viva:205.py,391 clases,27 dirs,3,227 tests.Lista D3 completa(8 valores).Evidencia N3 preservada(14 JSON).Ver L27.||FASE-F|2026-08-05|✅|2 sesiones(~25/60+~15/60)|Sí(v4complete vía subagente)|Sesión 1:run E2E único exitoso(exit 0,onboarding real,coherence 0.9238).V1-V10:9/10—V8(S5)FAIL.Sesión 2
+  
+  ---
+  
+  [Source: 10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (lecciones aprendidas) | Chunk: 11 | SourceID: 01a04d9a-b307-75ed-9600-8ba2fb0680e2 | ChunkID: 01a04d9a-b973-784f-ae39-2eef2c58336a | Score: 0.607]
+  # Análisis Post-Implementación — REFACTOR-COHERENCIA-NARRATIVA-2026-08-22
+  ## Lecciones Aprendidas
+  
+  except tipados(NameError nunca debería atraparse).INCLUIR.|FASE-R0-E||L-NC10|Fosilización narrativa como clase de bug:los 7 bugs(B1-B7)compartían una única causa raíz—templates con texto estático que ignoraban la fuente dinámica de verdad(pain_ledger).No eran 7 bugs independientes sino 7 manifestaciones de un mismo defecto arquitectónico./Por qué:cuando la capa de datos evoluciona(pain_ledger agrega VERIFIED_IN_SITE,filtrado por severidad)pero la capa narrativa permanece estática,se produce una divergencia silenciosa que no rompe ningún test pero genera documentos comercialmente contradictorios./Qué lo previene:(1)tests de contrato que vinculan narrativa↔fuente dinámica(no valores fijos);(2)detección proactiva de strings hardcodeados que contradicen la fuente de verdad;(3)al agregar datos dinámicos nuevos,auditar si la capa narrativa los consume.INCLUIR.|FASE-R0-F||L-NC11|Verificación E2E sobre unit tests exclusivamente:los tests unitarios de R0-A a R0-D cubrían cada fix aisladamente,pero solo la verificación E2E del output real(diagnóstico+propuesta renderizados)confirmó la integración coherente de los 7 fixes simultáneamente(p.ej.,título S4=7↔listado=7↔intro=7↔contador S6=7↔pain_ledger=7)./Por qué:tests unitarios validan contratos individuales;la integración de múltiples cambios en un documento renderizado puede producir incoherencias transversales que ningún test individual captura./Qué lo previene:toda refactorización multi-punto debe incluir verificación E2E del output renderizado(no solo passing tests)antes de certificar.INCLUIR.|FASE-R0-F||L-NC12|Diff antes/después como evidencia formal:la comparación byte-a-byte del baseline vs post-fix(7 zonas narrativas)fue la herramienta más efectiva para certificar que los fixes funcionaron correctamente en contexto real—más conclusiva que cualquier test unitario./Por qué:un diff narrativo muestra exactamente qué cambió en lenguaje natural,mientras que un test solo verifica una condición booleana./Qué lo previene:en planes de refactorización narrativa,incluir diff antes/después como deliverable obligatorio de la fase de verificación(no como opcional).El diff debe cubrir todas las zonas afectadas,no solo las obvias.INCLUIR.|FASE-R0-F|---
+  QMIND_EXIT=0
+
+======== CONSULTA: carga de lectura por fase de un agente: workflow canonico y presupuesto de contexto
+kind: notebookContext
+total: 5
+reranked: true
+---
+type: chunk
+index: 1
+chunkId: 01a04d9e-176c-7a7c-819b-0bce824367ee
+chunkIndex: 20
+sourceId: 01a04d9e-10dd-74bd-b081-41cd0a7dcfc0
+sourceTitle: CONTEXT-H: Luxor recalibración financiera
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/d0cd8f40-a7a8-4448-886a-3be3cbf8d4d3/LUXOR-RECALIBRACION-FINANCIERA.md
+score: 0.4931
+tokenCount: 327
+content: |-
+  # 5. Si coherence OK, regenerar documentos comerciales
+  ## 9. REFERENCIAS CRUZADAS
+  
+  ###9.1 Archivos del proyecto consultados -`AGENTS.md`(v4.61.0,líneas 1-294)—contexto global,flujo v4 -`modules/financial_engine/calculator_v2.py`(499 líneas)—fachada del motor -`modules/financial_engine/scenario_calculator.py`(534 líneas,leídas 1-500)—fórmula real -`data/benchmarks/regional_adr_2026.json`(55 líneas,v1.0.0)—benchmark regional -`output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md`(339 líneas,consultadas 95-154)—documento a recalibrar###9.2 Skills cargados -`iah-cli-execution-conventions`(v1.0.0)—convenciones curator iah-cli###9.3 Memory entries relevantes(del profile)- WSL safety guard pitfall(sandbox bloquea destructivos)- iah-cli financial_engine benchmark limitation(entrada consolidada 2026-07-16)- Prompt engineering audit(5 checks)- Post 019 incident(pasado afirmativo requiere evidencia)- User references`.agents/workflows/*.md`→load skill FIRST - Push strategy(merge --no-ff)###9.4 Pitfalls del skill cargados -"Validate against live code"(HARD)—código gana sobre documento -"Phase tracking"—REGISTRY+checklist+plan README en sync -"TIER 1 vs TIER 2 documentation"—log_phase solo para fases A-D,no TIER 2 -"v4_complete output structure"—Tier pipeline(B/C pre-Express,A post-Express)-"WSL venv strategy"—usar`./venv/Scripts/python.exe`para project scripts ---
+---
+type: chunk
+index: 2
+chunkId: 01a09d3d-2753-7d30-bd16-8f311e8bab9a
+chunkIndex: 5
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4dd2872c-4125-4624-8b6a-7db9efda40ec/10-analisis-post-implementacion.md
+score: 0.4857
+tokenCount: 337
+content: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+---
+type: chunk
+index: 3
+chunkId: 01a08916-1f80-7a94-b24b-66e12e39ff20
+chunkIndex: 32
+sourceId: 01a08916-1244-7c5a-8db2-6a09ed024eb3
+sourceTitle: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f58bfe63-cdf8-4320-882e-c8d17a1f0916/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md
+score: 0.4324
+tokenCount: 512
+content: |-
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 14. Adendum (2026-09-05) — estabilización COMPLETADA: precondiciones §12 cerradas, residuos heredados y reglas de concepción
+  
+  `única partición compartida;builders idénticos por test|###14.2 Residuos heredados al tribunal(dueño asignado en`10-analisis`§5;ninguno a fases documentales,DA-V5)|Residuo|Qué es|Por qué toca al tribunal||---|---|---||**S-HF1**(AC10⚠️)|`message«4/4»`vs`details.total_services=1`en el mismo gate|Bot 2/3 leen ese artefacto;decidir qué mide`total_services`es criterio de narración,no serialización||**S-I1**(NR2❌)|`critical_recall=1.0`con`details:{}`pese a 1 crítico registrado|Bot 1 debe distinguir recall fundado de vacuo;decisión tomada:`details`declara siempre`critical_issues_count`+`recall_basis`||**P12 estructura**|`promised_assets_exist`con`score=1.0`hardcode en`coherence_validator.py`(el mensaje stale ya se corrigió en HOTFIX)|P6.3 es la cláusula de Bot 3;el check sigue dando 1.0 incondicional||**S-C4**|tabla de assets técnicos sigue imprimiendo catálogo incondicional|tercera superficie de promesa;decide qué invariante manda(contrato C1 vs tests S-B10)||S-E2·S9·S-I3·S-V7·S-V8·S-H2|NameError latente con`generate_proposal=False`;`INVALID_MAPPINGS`(#14);clave canónica por artefacto;nombres timestamped;kill switch H9;eje de performance caído sin pain|limpieza/precondición del tramo offline T1/T2||**S-V10**(B4)|banda de palancas 0.125-0.714 no re-medible|exige corpus≥3 hoteles—incompatible con«una sola corrida»por diseño|###14.3 Reglas de concepción que la certificación dejó medidas(aplicar al concebir FASE T)1.**Cada AC declara artefacto+clave donde se lee su valor**(L-V1/DA-V3):los 4⚠️ del plan tuvieron la misma forma—régimen correcto en código,invisible o contradictorio en el JSON.Un AC no legible en el artefacto no es certificable.2.**Presupuesto de iteraciones**(DA-V6):las 9 fases medibles excedieron(≥1.219 vs≤440;R2≤60/fase).Recalibrar×3 o retirar la métrica del
+---
+type: chunk
+index: 4
+chunkId: 01a08916-1f80-79f6-9f02-74c0ca163d4a
+chunkIndex: 16
+sourceId: 01a08916-1244-7c5a-8db2-6a09ed024eb3
+sourceTitle: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f58bfe63-cdf8-4320-882e-c8d17a1f0916/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md
+score: 0.4285
+tokenCount: 251
+content: |-
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 8. Estado del proyecto relevante (v4.74.1, 31 Agosto 2026)
+  
+  -**FASE 0 completada**—delivery quality capaz de bloquear entregas incoherentes(8 sub-fases 0A-0H+RELEASE)-**PIPELINE-FIX completada**—assessment dict bridge+delivery_ready formula corregidos - E2E Hotel Castilla Real:coherence**0.8261**,coverage PASS,10/12 assets≥0.65 - Pendiente:G0 requiere todos los assets≥0.8 para cerrar primer piso;algunos dependen de datos reales de onboarding,no de código - 24 módulos,10 configs YAML,1 workflow activo(`phased_project_executor.md`;los 16 restantes archivados el 2026-08-24),~308 archivos Python sin tests(604 con tests)-`IMPLEMENTATION_ORDER.md`vacío en entregas actuales(bug del`AssetResponsibilityContract`cuando no recibe core_assets/geo_assets explícitos)-`modules/deployer/`en MVP v2.5—solo validación de credenciales,sin ejecución real de upload/inject_code(dry_run por defecto)- Roadmap v3.6(2026-06-09):agent-first,human-minimal;principio"el humano define intención y límites;el agente transforma esa intención en ejecución verificable"---
+---
+type: chunk
+index: 5
+chunkId: 01a04d9d-29a4-76e3-b214-07a04c87572b
+chunkIndex: 45
+sourceId: 01a04d9d-1b22-7da9-948a-d8b04725bb53
+sourceTitle: CONTEXT-H: Onboarding injection gap (2026-07-28)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/8e7a034b-5fef-462a-b26a-478625aee3cc/CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md
+score: 0.4154
+tokenCount: 155
+content: |-
+  # Debe sugerir: "python main.py v4complete --url https://zione.co/"
+  
+  ```---*Contexto original generado por validación de ejecución v4complete 2026-07-28.**Actualizado 2026-07-28 v2:validación exhaustiva contra código vivo.Corrección de§11.Adición de bugs N3,N4,N5.Auditoría de brecha de fuzzy matching en Fix 1+2 original.**Actualizado 2026-07-28 v3:rediseño integrado.Fix 1+2+5 originales reemplazados por diseño de 3 cambios atómicos(A:onboard escribe hotel.url,B:output_dir parametrizado,C:matching por URL normalizada).La URL es la clave canónica universal—sin slugs,sin nombres,sin fuzzy matching.**Para reanudar:cargar este contexto+`iah-cli-execution-conventions`+`iah-cli-v4complete-workflows`.*
+---
+type: citation
+index: 1
+sourceId: 01a04d9e-10dd-74bd-b081-41cd0a7dcfc0
+sourceTitle: CONTEXT-H: Luxor recalibración financiera
+chunkId: 01a04d9e-176c-7a7c-819b-0bce824367ee
+snippet: |-
+  # 5. Si coherence OK, regenerar documentos comerciales
+  ## 9. REFERENCIAS CRUZADAS
+  
+  ###9.1 Archivos del proyecto consultados -`AGENTS.md`(v4.61.0,líneas 1-294)—contexto global,flujo v4 -`modules/financial_engine/calculator_v2.py`(499 líneas)—fachada del motor -`modules/financial_engine/scenario_calculator.py`(534 líneas,leídas 1-500)—fórmula real -`data/benchmarks/regional_adr_2026.json`(55 líneas,v1.0.0)—benchmark regional -`output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md`(339 líneas,consultadas 95-154)—documento a recalibrar###9.2 Skills cargados -`iah-cli-execution-conventions`(v1.0.0)—convenciones curator iah-cli###9.3 Memory entries relevantes(del profile)- WSL safety guard pitfall(sandbox bloquea destructivos)- iah-cli financial_engine benchmark limitation(entrada consolidada 2026-07-16)- Prompt engineering audit(5 checks)- Post 019 incident(pasado afirmativo requiere evidencia)- User references`.agents/workflows/*.md`→load skill FIRST - Push strategy(merge --no-ff)###9.4 Pitfalls del skill cargados -"Validate against live code"(HARD)—código gana sobre documento -"Phase tracking"—REGISTRY+checklist+plan README en sync -"TIER 1 vs TIER 2 documentation"—log_phase solo para fases A-D,no TIER 2 -"v4_complete output structure"—Tier pipeline(B/C pre-Express,A post-Express)-"WSL venv strategy"—usar`./venv/Scripts/python.exe`para project scripts ---
+---
+type: citation
+index: 2
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+chunkId: 01a09d3d-2753-7d30-bd16-8f311e8bab9a
+snippet: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+---
+type: citation
+index: 3
+sourceId: 01a08916-1244-7c5a-8db2-6a09ed024eb3
+sourceTitle: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02)
+chunkId: 01a08916-1f80-7a94-b24b-66e12e39ff20
+snippet: |-
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 14. Adendum (2026-09-05) — estabilización COMPLETADA: precondiciones §12 cerradas, residuos heredados y reglas de concepción
+  
+  `única partición compartida;builders idénticos por test|###14.2 Residuos heredados al tribunal(dueño asignado en`10-analisis`§5;ninguno a fases documentales,DA-V5)|Residuo|Qué es|Por qué toca al tribunal||---|---|---||**S-HF1**(AC10⚠️)|`message«4/4»`vs`details.total_services=1`en el mismo gate|Bot 2/3 leen ese artefacto;decidir qué mide`total_services`es criterio de narración,no serialización||**S-I1**(NR2❌)|`critical_recall=1.0`con`details:{}`pese a 1 crítico registrado|Bot 1 debe distinguir recall fundado de vacuo;decisión tomada:`details`declara siempre`critical_issues_count`+`recall_basis`||**P12 estructura**|`promised_assets_exist`con`score=1.0`hardcode en`coherence_validator.py`(el mensaje stale ya se corrigió en HOTFIX)|P6.3 es la cláusula de Bot 3;el check sigue dando 1.0 incondicional||**S-C4**|tabla de assets técnicos sigue imprimiendo catálogo incondicional|tercera superficie de promesa;decide qué invariante manda(contrato C1 vs tests S-B10)||S-E2·S9·S-I3·S-V7·S-V8·S-H2|NameError latente con`generate_proposal=False`;`INVALID_MAPPINGS`(#14);clave canónica por artefacto;nombres timestamped;kill switch H9;eje de performance caído sin pain|limpieza/precondición del tramo offline T1/T2||**S-V10**(B4)|banda de palancas 0.125-0.714 no re-medible|exige corpus≥3 hoteles—incompatible con«una sola corrida»por diseño|###14.3 Reglas de concepción que la certificación dejó medidas(aplicar al concebir FASE T)1.**Cada AC declara artefacto+clave donde se lee su valor**(L-V1/DA-V3):los 4⚠️ del plan tuvieron la misma forma—régimen correcto en código,invisible o contradictorio en el JSON.Un AC no legible en el artefacto no es certificable.2.**Presupuesto de iteraciones**(DA-V6):las 9 fases medibles excedieron(≥1.219 vs≤440;R2≤60/fase).Recalibrar×3 o retirar la métrica del
+---
+type: citation
+index: 4
+sourceId: 01a08916-1244-7c5a-8db2-6a09ed024eb3
+sourceTitle: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02)
+chunkId: 01a08916-1f80-79f6-9f02-74c0ca163d4a
+snippet: |-
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 8. Estado del proyecto relevante (v4.74.1, 31 Agosto 2026)
+  
+  -**FASE 0 completada**—delivery quality capaz de bloquear entregas incoherentes(8 sub-fases 0A-0H+RELEASE)-**PIPELINE-FIX completada**—assessment dict bridge+delivery_ready formula corregidos - E2E Hotel Castilla Real:coherence**0.8261**,coverage PASS,10/12 assets≥0.65 - Pendiente:G0 requiere todos los assets≥0.8 para cerrar primer piso;algunos dependen de datos reales de onboarding,no de código - 24 módulos,10 configs YAML,1 workflow activo(`phased_project_executor.md`;los 16 restantes archivados el 2026-08-24),~308 archivos Python sin tests(604 con tests)-`IMPLEMENTATION_ORDER.md`vacío en entregas actuales(bug del`AssetResponsibilityContract`cuando no recibe core_assets/geo_assets explícitos)-`modules/deployer/`en MVP v2.5—solo validación de credenciales,sin ejecución real de upload/inject_code(dry_run por defecto)- Roadmap v3.6(2026-06-09):agent-first,human-minimal;principio"el humano define intención y límites;el agente transforma esa intención en ejecución verificable"---
+---
+type: citation
+index: 5
+sourceId: 01a04d9d-1b22-7da9-948a-d8b04725bb53
+sourceTitle: CONTEXT-H: Onboarding injection gap (2026-07-28)
+chunkId: 01a04d9d-29a4-76e3-b214-07a04c87572b
+snippet: |-
+  # Debe sugerir: "python main.py v4complete --url https://zione.co/"
+  
+  ```---*Contexto original generado por validación de ejecución v4complete 2026-07-28.**Actualizado 2026-07-28 v2:validación exhaustiva contra código vivo.Corrección de§11.Adición de bugs N3,N4,N5.Auditoría de brecha de fuzzy matching en Fix 1+2 original.**Actualizado 2026-07-28 v3:rediseño integrado.Fix 1+2+5 originales reemplazados por diseño de 3 cambios atómicos(A:onboard escribe hotel.url,B:output_dir parametrizado,C:matching por URL normalizada).La URL es la clave canónica universal—sin slugs,sin nombres,sin fuzzy matching.**Para reanudar:cargar este contexto+`iah-cli-execution-conventions`+`iah-cli-v4complete-workflows`.*
+promptContext: |-
+  [Source: CONTEXT-H: Luxor recalibración financiera | Chunk: 20 | SourceID: 01a04d9e-10dd-74bd-b081-41cd0a7dcfc0 | ChunkID: 01a04d9e-176c-7a7c-819b-0bce824367ee | Score: 0.493]
+  # 5. Si coherence OK, regenerar documentos comerciales
+  ## 9. REFERENCIAS CRUZADAS
+  
+  ###9.1 Archivos del proyecto consultados -`AGENTS.md`(v4.61.0,líneas 1-294)—contexto global,flujo v4 -`modules/financial_engine/calculator_v2.py`(499 líneas)—fachada del motor -`modules/financial_engine/scenario_calculator.py`(534 líneas,leídas 1-500)—fórmula real -`data/benchmarks/regional_adr_2026.json`(55 líneas,v1.0.0)—benchmark regional -`output/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260710_101420.md`(339 líneas,consultadas 95-154)—documento a recalibrar###9.2 Skills cargados -`iah-cli-execution-conventions`(v1.0.0)—convenciones curator iah-cli###9.3 Memory entries relevantes(del profile)- WSL safety guard pitfall(sandbox bloquea destructivos)- iah-cli financial_engine benchmark limitation(entrada consolidada 2026-07-16)- Prompt engineering audit(5 checks)- Post 019 incident(pasado afirmativo requiere evidencia)- User references`.agents/workflows/*.md`→load skill FIRST - Push strategy(merge --no-ff)###9.4 Pitfalls del skill cargados -"Validate against live code"(HARD)—código gana sobre documento -"Phase tracking"—REGISTRY+checklist+plan README en sync -"TIER 1 vs TIER 2 documentation"—log_phase solo para fases A-D,no TIER 2 -"v4_complete output structure"—Tier pipeline(B/C pre-Express,A post-Express)-"WSL venv strategy"—usar`./venv/Scripts/python.exe`para project scripts ---
+  
+  ---
+  
+  [Source: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones) | Chunk: 5 | SourceID: 01a09d3d-245f-74c0-8a54-39c544ffa0d2 | ChunkID: 01a09d3d-2753-7d30-bd16-8f311e8bab9a | Score: 0.486]
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+  
+  ---
+  
+  [Source: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02) | Chunk: 32 | SourceID: 01a08916-1244-7c5a-8db2-6a09ed024eb3 | ChunkID: 01a08916-1f80-7a94-b24b-66e12e39ff20 | Score: 0.432]
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 14. Adendum (2026-09-05) — estabilización COMPLETADA: precondiciones §12 cerradas, residuos heredados y reglas de concepción
+  
+  `única partición compartida;builders idénticos por test|###14.2 Residuos heredados al tribunal(dueño asignado en`10-analisis`§5;ninguno a fases documentales,DA-V5)|Residuo|Qué es|Por qué toca al tribunal||---|---|---||**S-HF1**(AC10⚠️)|`message«4/4»`vs`details.total_services=1`en el mismo gate|Bot 2/3 leen ese artefacto;decidir qué mide`total_services`es criterio de narración,no serialización||**S-I1**(NR2❌)|`critical_recall=1.0`con`details:{}`pese a 1 crítico registrado|Bot 1 debe distinguir recall fundado de vacuo;decisión tomada:`details`declara siempre`critical_issues_count`+`recall_basis`||**P12 estructura**|`promised_assets_exist`con`score=1.0`hardcode en`coherence_validator.py`(el mensaje stale ya se corrigió en HOTFIX)|P6.3 es la cláusula de Bot 3;el check sigue dando 1.0 incondicional||**S-C4**|tabla de assets técnicos sigue imprimiendo catálogo incondicional|tercera superficie de promesa;decide qué invariante manda(contrato C1 vs tests S-B10)||S-E2·S9·S-I3·S-V7·S-V8·S-H2|NameError latente con`generate_proposal=False`;`INVALID_MAPPINGS`(#14);clave canónica por artefacto;nombres timestamped;kill switch H9;eje de performance caído sin pain|limpieza/precondición del tramo offline T1/T2||**S-V10**(B4)|banda de palancas 0.125-0.714 no re-medible|exige corpus≥3 hoteles—incompatible con«una sola corrida»por diseño|###14.3 Reglas de concepción que la certificación dejó medidas(aplicar al concebir FASE T)1.**Cada AC declara artefacto+clave donde se lee su valor**(L-V1/DA-V3):los 4⚠️ del plan tuvieron la misma forma—régimen correcto en código,invisible o contradictorio en el JSON.Un AC no legible en el artefacto no es certificable.2.**Presupuesto de iteraciones**(DA-V6):las 9 fases medibles excedieron(≥1.219 vs≤440;R2≤60/fase).Recalibrar×3 o retirar la métrica del
+  
+  ---
+  
+  [Source: CONTEXT-BOTS: Potencialización iah-cli — lección de forma "revalidar citas de código no revalida premisas" (2026-09-01, auditoría 2026-09-02) | Chunk: 16 | SourceID: 01a08916-1244-7c5a-8db2-6a09ed024eb3 | ChunkID: 01a08916-1f80-79f6-9f02-74c0ca163d4a | Score: 0.428]
+  # Contexto: Potencializar iah-cli con Bots — Diagnóstico como Producto, Entrega como Cuello de Botella
+  ## 8. Estado del proyecto relevante (v4.74.1, 31 Agosto 2026)
+  
+  -**FASE 0 completada**—delivery quality capaz de bloquear entregas incoherentes(8 sub-fases 0A-0H+RELEASE)-**PIPELINE-FIX completada**—assessment dict bridge+delivery_ready formula corregidos - E2E Hotel Castilla Real:coherence**0.8261**,coverage PASS,10/12 assets≥0.65 - Pendiente:G0 requiere todos los assets≥0.8 para cerrar primer piso;algunos dependen de datos reales de onboarding,no de código - 24 módulos,10 configs YAML,1 workflow activo(`phased_project_executor.md`;los 16 restantes archivados el 2026-08-24),~308 archivos Python sin tests(604 con tests)-`IMPLEMENTATION_ORDER.md`vacío en entregas actuales(bug del`AssetResponsibilityContract`cuando no recibe core_assets/geo_assets explícitos)-`modules/deployer/`en MVP v2.5—solo validación de credenciales,sin ejecución real de upload/inject_code(dry_run por defecto)- Roadmap v3.6(2026-06-09):agent-first,human-minimal;principio"el humano define intención y límites;el agente transforma esa intención en ejecución verificable"---
+  
+  ---
+  
+  [Source: CONTEXT-H: Onboarding injection gap (2026-07-28) | Chunk: 45 | SourceID: 01a04d9d-1b22-7da9-948a-d8b04725bb53 | ChunkID: 01a04d9d-29a4-76e3-b214-07a04c87572b | Score: 0.415]
+  # Debe sugerir: "python main.py v4complete --url https://zione.co/"
+  
+  ```---*Contexto original generado por validación de ejecución v4complete 2026-07-28.**Actualizado 2026-07-28 v2:validación exhaustiva contra código vivo.Corrección de§11.Adición de bugs N3,N4,N5.Auditoría de brecha de fuzzy matching en Fix 1+2 original.**Actualizado 2026-07-28 v3:rediseño integrado.Fix 1+2+5 originales reemplazados por diseño de 3 cambios atómicos(A:onboard escribe hotel.url,B:output_dir parametrizado,C:matching por URL normalizada).La URL es la clave canónica universal—sin slugs,sin nombres,sin fuzzy matching.**Para reanudar:cargar este contexto+`iah-cli-execution-conventions`+`iah-cli-v4complete-workflows`.*
+  QMIND_EXIT=0
+
+======== CONSULTA: pertinencia de las lecciones capitalizadas en el Paso 0: cual debia capitalizarse y si el efecto es real
+kind: notebookContext
+total: 5
+reranked: true
+---
+type: chunk
+index: 1
+chunkId: 01a0a766-6353-7376-8adc-ce94cf05f59a
+chunkIndex: 60
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.8947
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  quedan como seguimientos de RELEASE con dueño declarado||FASE-VERIFY|L-P1.2(texto que no cuadra con artefacto—aplicada a docs de plan),NR7(pares verde/rojo por AC),L-V.1(fixture≠régimen),L-V.4(hallazgo con dueño),integración cross-fase(§4.6 del executor)|**L-P1.2 extendida a docs de plan**:CON-1 midió que los documentos afirman`GATE_ENFORCEMENT_ENABLED`cuando solo existe`GATE_BLOCKING_ENABLED`—la misma trampa del docstring que no cuadra con la firma,aplicada a documentos de decisión.**Integración cross-fase**:el cruce P5×todo reveló`_save_cache`sin redacción en`google_places_client.py`que ninguna fase individual había visto(L-VERIFY.3).**Matriz de 25 ACs**:18 RE-V/4 CIT/3 CON,con 3 re-mediciones de CIT(11 tests pasaron).**6 greps residuales**con salida literal.**Triaje Seguimientos**:Cat A=0(RELEASE procede),Cat B=5(límites declarados),Cat C=9(plan sucesor)|**D-V2.1 reproducida**(cuarta fase seguida):auto-reporte con unidad declarada,presupuesto 60.**CON-2**(cláusulas`NOT_EVALUABLE`post-enforcement):limitación de diseño documentada como B3,no bug.**2 hallazgos incoherentes**(cruce P5×todo+Grep 5=mismo gap)→C1 del triaje.**4 lecciones propias**(L-VERIFY.1–4)en la tabla de arriba|Capa fría y consultas literales:§1 de`00-lecciones-capitalizadas.md`.Límite declarado(L-R.4):la**forma**del Paso 0 la verifica`scripts/validate_lesson_capitalization.py`desde`e02a688`;su**pertinencia**sigue disciplinada por lectura humana—este plan no debe dar por verificado lo que ningún check mira.**Estado al cerrar P1**:el§2 del`00-`sigue en 19 filas(ninguna lección nueva de P1:lo producido son**decisiones**,que viven en§1 de este archivo)y sus**4 hallazgos de§3.b quedaron resueltos**(ver§6.1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de
+---
+type: chunk
+index: 2
+chunkId: 01a09d3d-2753-7d27-8fff-8be8a1ab13a9
+chunkIndex: 1
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4dd2872c-4125-4624-8b6a-7db9efda40ec/10-analisis-post-implementacion.md
+score: 0.8098
+tokenCount: 191
+content: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 1. Resumen de Ejecución
+  
+  |Fase|Fecha|Estado|Tests nuevos|Regresiones|Nota||------|-------|--------|--------------|-------------|------||Paso 0|2026-09-12|✅|n/a|n/a|10 consultas,18 lecciones capitalizadas,6 descartes,5 hallazgos sin efecto||FASE-V1|2026-09-12|✅|0|0|Q1–Q5 decididas con medición;contrato C0–C8||FASE-V2|2026-09-12|✅|29|0|script C0–C8 sin auto-fix,13 detecciones con NR7,cableado`[7/7]`+`[9/9]`,conteo canónico 4.079→4.108||FASE-V3|2026-09-12|✅|0|0|template v1.1.0,executor v2.24.0,CHANGELOG sin bump,deuda(i)del predecesor cerrada,write-back+archivado en orden R2.10|
+---
+type: chunk
+index: 3
+chunkId: 01a09d3d-2753-7d30-bd16-8f311e8bab9a
+chunkIndex: 5
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4dd2872c-4125-4624-8b6a-7db9efda40ec/10-analisis-post-implementacion.md
+score: 0.7827
+tokenCount: 337
+content: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+---
+type: chunk
+index: 4
+chunkId: 01a0a766-6353-735b-aa41-9a15dd09c87c
+chunkIndex: 49
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.7570
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Seguimientos Abiertos
+  
+  declararlo**:P6 solo quitó el guard del directorio;el converter seguía fabricando`epistemic_status='verified'`,`rooms=10`,`pct=20.0`y`campos_confirmados`fijos(cláusula 2 de AC-G2 incumplida,I4 de la auditoría).El cierre es real desde**P6-R/R4**(propagación solo de evidencia presente,`no_declarado`si falta el estado epistémico,test migrado con causa).·**F-P4.4**(`ia_readiness_report.json`deja de escribirse,sin dueño asignado)·**F-P4.6**(deriva de provider:DeepSeek en el baseline,Gemini con 403 aquí)·~~**F-P4.7**~~→**CERRADO por FASE-P6(AC-G2)**:el fallback de onboarding ya no depende de que`output/clientes/`tenga un YAML ajeno;la ruta AC-G2 provee datos sin ese requisito·**F-P4.8**(el baseline del delta está excluido de git:solo hashes son durables).-**Cola de 78 adyacentes sin evaluar(Q7 del Paso 0)**→**declarada fuera de alcance en P1**,con razón escrita(§6.1 de`decision-enforcement.md`):ninguno toca los símbolos del plan y la pasada se hace por síntoma,no por volumen.Si una fase de código descubre un candidato que sí nombra uno de sus símbolos,se capitaliza**ahí**y se anota en el`00-`.-**"Verificador de conteos declarados en§4"**(llegó del plan PASO0 con la premisa ya corregida)→**RETIRADO en P1 con medición**:el§4 de`00-lecciones-capitalizadas.md`declara 19 lecciones y el§2 tiene 19 filas.No se hereda el ítem ni se abre AC.-~~**Tensión que hereda P2**~~→**CERRADA por FASE-P2(`df60c24`)**en los dos frentes que el contrato nombraba:`_resolve_delivery_zip`de Bot 3**acepta el ZIP en cualquiera de sus dos estados**(`.zip`o`.zip.tmp`),que es lo que el contrato pedía;y la otra mitad de la tensión resultó ser más grande de lo escrito—**el ZIP también contenía el acta**,así que P2 no solo tuvo que leer la cuarentena sino**sacar el acta del paquete**para que el enunciado de DA-P1.4 dejara de ser un
+---
+type: chunk
+index: 5
+chunkId: 01a0a766-6353-737c-9df4-f977437aaa2e
+chunkIndex: 61
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.7361
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  .1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de esas 19(L-V.1,NR7/L-T4A.5/L-T2C.4/L-VUP-5,NR8/L-PF6/L-PF10,L-V.2,L-SR3,R2.6/R2.7)sobre artefactos reales.Las tres lecciones propias de P3-A(**L-P3A.1**presupuestar por coste de verificación,**L-P3A.2**serialización del enum`"B+"`,**L-P3A.3**baseline R2.7≠ancla pre-plan)son de**este plan**y viven en la tabla de arriba.**L-P3A.1 y L-P3A.2 son candidatas a ascender al índice de capa fría en el archivado de RELEASE**para que el sucesor no vuelva a presupuestar una fase de detección con un número de fase de código.**Estado al cerrar P3-B**:el§2 del`00-`**sigue en 19 filas**—P3-B tampoco capitalizó lección externa nueva;**consumió**cinco(L-T2C.2,NR7/L-T4A.5/L-VUP-5,L-VUP-1,L-SR3,L-V.4)y le añadió una fila de estado propia al`00-`.Sus tres lecciones(**L-P3B.1**presupuestar por coste de verificación como**cambio de regla**,no como nota;**L-P3B.2**un rojo deja sin vigilar lo que está después de su primera causa;**L-P3B.3**"propagar el valor real"hay que medirlo**por fuente**,porque la segunda puede no existir)son de**este plan**y viven en la tabla de arriba.**L-P3B.1 y L-P3B.2 son candidatas a la capa fría en el archivado**:la primera es la tercera ocurrencia de la misma causa raíz y ya no es anecdótica;la segunda nombra un modo de test vacuo que la familia L-T4A.5 no cubría(no un verde que miente,sino**un rojo que oculta**).**Estado al cerrar FASE-P6**:el§2 del`00-`**sigue en 19 filas**—P6 no capitalizó lección externa nueva;**consumió**cuatro(L-V.1,L-T4A.5/L-P2.3,L-P1.2
+---
+type: citation
+index: 1
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-7376-8adc-ce94cf05f59a
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  quedan como seguimientos de RELEASE con dueño declarado||FASE-VERIFY|L-P1.2(texto que no cuadra con artefacto—aplicada a docs de plan),NR7(pares verde/rojo por AC),L-V.1(fixture≠régimen),L-V.4(hallazgo con dueño),integración cross-fase(§4.6 del executor)|**L-P1.2 extendida a docs de plan**:CON-1 midió que los documentos afirman`GATE_ENFORCEMENT_ENABLED`cuando solo existe`GATE_BLOCKING_ENABLED`—la misma trampa del docstring que no cuadra con la firma,aplicada a documentos de decisión.**Integración cross-fase**:el cruce P5×todo reveló`_save_cache`sin redacción en`google_places_client.py`que ninguna fase individual había visto(L-VERIFY.3).**Matriz de 25 ACs**:18 RE-V/4 CIT/3 CON,con 3 re-mediciones de CIT(11 tests pasaron).**6 greps residuales**con salida literal.**Triaje Seguimientos**:Cat A=0(RELEASE procede),Cat B=5(límites declarados),Cat C=9(plan sucesor)|**D-V2.1 reproducida**(cuarta fase seguida):auto-reporte con unidad declarada,presupuesto 60.**CON-2**(cláusulas`NOT_EVALUABLE`post-enforcement):limitación de diseño documentada como B3,no bug.**2 hallazgos incoherentes**(cruce P5×todo+Grep 5=mismo gap)→C1 del triaje.**4 lecciones propias**(L-VERIFY.1–4)en la tabla de arriba|Capa fría y consultas literales:§1 de`00-lecciones-capitalizadas.md`.Límite declarado(L-R.4):la**forma**del Paso 0 la verifica`scripts/validate_lesson_capitalization.py`desde`e02a688`;su**pertinencia**sigue disciplinada por lectura humana—este plan no debe dar por verificado lo que ningún check mira.**Estado al cerrar P1**:el§2 del`00-`sigue en 19 filas(ninguna lección nueva de P1:lo producido son**decisiones**,que viven en§1 de este archivo)y sus**4 hallazgos de§3.b quedaron resueltos**(ver§6.1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de
+---
+type: citation
+index: 2
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+chunkId: 01a09d3d-2753-7d27-8fff-8be8a1ab13a9
+snippet: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 1. Resumen de Ejecución
+  
+  |Fase|Fecha|Estado|Tests nuevos|Regresiones|Nota||------|-------|--------|--------------|-------------|------||Paso 0|2026-09-12|✅|n/a|n/a|10 consultas,18 lecciones capitalizadas,6 descartes,5 hallazgos sin efecto||FASE-V1|2026-09-12|✅|0|0|Q1–Q5 decididas con medición;contrato C0–C8||FASE-V2|2026-09-12|✅|29|0|script C0–C8 sin auto-fix,13 detecciones con NR7,cableado`[7/7]`+`[9/9]`,conteo canónico 4.079→4.108||FASE-V3|2026-09-12|✅|0|0|template v1.1.0,executor v2.24.0,CHANGELOG sin bump,deuda(i)del predecesor cerrada,write-back+archivado en orden R2.10|
+---
+type: citation
+index: 3
+sourceId: 01a09d3d-245f-74c0-8a54-39c544ffa0d2
+sourceTitle: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)
+chunkId: 01a09d3d-2753-7d30-bd16-8f311e8bab9a
+snippet: |-
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+---
+type: citation
+index: 4
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-735b-aa41-9a15dd09c87c
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Seguimientos Abiertos
+  
+  declararlo**:P6 solo quitó el guard del directorio;el converter seguía fabricando`epistemic_status='verified'`,`rooms=10`,`pct=20.0`y`campos_confirmados`fijos(cláusula 2 de AC-G2 incumplida,I4 de la auditoría).El cierre es real desde**P6-R/R4**(propagación solo de evidencia presente,`no_declarado`si falta el estado epistémico,test migrado con causa).·**F-P4.4**(`ia_readiness_report.json`deja de escribirse,sin dueño asignado)·**F-P4.6**(deriva de provider:DeepSeek en el baseline,Gemini con 403 aquí)·~~**F-P4.7**~~→**CERRADO por FASE-P6(AC-G2)**:el fallback de onboarding ya no depende de que`output/clientes/`tenga un YAML ajeno;la ruta AC-G2 provee datos sin ese requisito·**F-P4.8**(el baseline del delta está excluido de git:solo hashes son durables).-**Cola de 78 adyacentes sin evaluar(Q7 del Paso 0)**→**declarada fuera de alcance en P1**,con razón escrita(§6.1 de`decision-enforcement.md`):ninguno toca los símbolos del plan y la pasada se hace por síntoma,no por volumen.Si una fase de código descubre un candidato que sí nombra uno de sus símbolos,se capitaliza**ahí**y se anota en el`00-`.-**"Verificador de conteos declarados en§4"**(llegó del plan PASO0 con la premisa ya corregida)→**RETIRADO en P1 con medición**:el§4 de`00-lecciones-capitalizadas.md`declara 19 lecciones y el§2 tiene 19 filas.No se hereda el ítem ni se abre AC.-~~**Tensión que hereda P2**~~→**CERRADA por FASE-P2(`df60c24`)**en los dos frentes que el contrato nombraba:`_resolve_delivery_zip`de Bot 3**acepta el ZIP en cualquiera de sus dos estados**(`.zip`o`.zip.tmp`),que es lo que el contrato pedía;y la otra mitad de la tensión resultó ser más grande de lo escrito—**el ZIP también contenía el acta**,así que P2 no solo tuvo que leer la cuarentena sino**sacar el acta del paquete**para que el enunciado de DA-P1.4 dejara de ser un
+---
+type: citation
+index: 5
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-737c-9df4-f977437aaa2e
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  .1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de esas 19(L-V.1,NR7/L-T4A.5/L-T2C.4/L-VUP-5,NR8/L-PF6/L-PF10,L-V.2,L-SR3,R2.6/R2.7)sobre artefactos reales.Las tres lecciones propias de P3-A(**L-P3A.1**presupuestar por coste de verificación,**L-P3A.2**serialización del enum`"B+"`,**L-P3A.3**baseline R2.7≠ancla pre-plan)son de**este plan**y viven en la tabla de arriba.**L-P3A.1 y L-P3A.2 son candidatas a ascender al índice de capa fría en el archivado de RELEASE**para que el sucesor no vuelva a presupuestar una fase de detección con un número de fase de código.**Estado al cerrar P3-B**:el§2 del`00-`**sigue en 19 filas**—P3-B tampoco capitalizó lección externa nueva;**consumió**cinco(L-T2C.2,NR7/L-T4A.5/L-VUP-5,L-VUP-1,L-SR3,L-V.4)y le añadió una fila de estado propia al`00-`.Sus tres lecciones(**L-P3B.1**presupuestar por coste de verificación como**cambio de regla**,no como nota;**L-P3B.2**un rojo deja sin vigilar lo que está después de su primera causa;**L-P3B.3**"propagar el valor real"hay que medirlo**por fuente**,porque la segunda puede no existir)son de**este plan**y viven en la tabla de arriba.**L-P3B.1 y L-P3B.2 son candidatas a la capa fría en el archivado**:la primera es la tercera ocurrencia de la misma causa raíz y ya no es anecdótica;la segunda nombra un modo de test vacuo que la familia L-T4A.5 no cubría(no un verde que miente,sino**un rojo que oculta**).**Estado al cerrar FASE-P6**:el§2 del`00-`**sigue en 19 filas**—P6 no capitalizó lección externa nueva;**consumió**cuatro(L-V.1,L-T4A.5/L-P2.3,L-P1.2
+promptContext: |-
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 60 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-7376-8adc-ce94cf05f59a | Score: 0.895]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  quedan como seguimientos de RELEASE con dueño declarado||FASE-VERIFY|L-P1.2(texto que no cuadra con artefacto—aplicada a docs de plan),NR7(pares verde/rojo por AC),L-V.1(fixture≠régimen),L-V.4(hallazgo con dueño),integración cross-fase(§4.6 del executor)|**L-P1.2 extendida a docs de plan**:CON-1 midió que los documentos afirman`GATE_ENFORCEMENT_ENABLED`cuando solo existe`GATE_BLOCKING_ENABLED`—la misma trampa del docstring que no cuadra con la firma,aplicada a documentos de decisión.**Integración cross-fase**:el cruce P5×todo reveló`_save_cache`sin redacción en`google_places_client.py`que ninguna fase individual había visto(L-VERIFY.3).**Matriz de 25 ACs**:18 RE-V/4 CIT/3 CON,con 3 re-mediciones de CIT(11 tests pasaron).**6 greps residuales**con salida literal.**Triaje Seguimientos**:Cat A=0(RELEASE procede),Cat B=5(límites declarados),Cat C=9(plan sucesor)|**D-V2.1 reproducida**(cuarta fase seguida):auto-reporte con unidad declarada,presupuesto 60.**CON-2**(cláusulas`NOT_EVALUABLE`post-enforcement):limitación de diseño documentada como B3,no bug.**2 hallazgos incoherentes**(cruce P5×todo+Grep 5=mismo gap)→C1 del triaje.**4 lecciones propias**(L-VERIFY.1–4)en la tabla de arriba|Capa fría y consultas literales:§1 de`00-lecciones-capitalizadas.md`.Límite declarado(L-R.4):la**forma**del Paso 0 la verifica`scripts/validate_lesson_capitalization.py`desde`e02a688`;su**pertinencia**sigue disciplinada por lectura humana—este plan no debe dar por verificado lo que ningún check mira.**Estado al cerrar P1**:el§2 del`00-`sigue en 19 filas(ninguna lección nueva de P1:lo producido son**decisiones**,que viven en§1 de este archivo)y sus**4 hallazgos de§3.b quedaron resueltos**(ver§6.1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de
+  
+  ---
+  
+  [Source: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones) | Chunk: 1 | SourceID: 01a09d3d-245f-74c0-8a54-39c544ffa0d2 | ChunkID: 01a09d3d-2753-7d27-8fff-8be8a1ab13a9 | Score: 0.810]
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 1. Resumen de Ejecución
+  
+  |Fase|Fecha|Estado|Tests nuevos|Regresiones|Nota||------|-------|--------|--------------|-------------|------||Paso 0|2026-09-12|✅|n/a|n/a|10 consultas,18 lecciones capitalizadas,6 descartes,5 hallazgos sin efecto||FASE-V1|2026-09-12|✅|0|0|Q1–Q5 decididas con medición;contrato C0–C8||FASE-V2|2026-09-12|✅|29|0|script C0–C8 sin auto-fix,13 detecciones con NR7,cableado`[7/7]`+`[9/9]`,conteo canónico 4.079→4.108||FASE-V3|2026-09-12|✅|0|0|template v1.1.0,executor v2.24.0,CHANGELOG sin bump,deuda(i)del predecesor cerrada,write-back+archivado en orden R2.10|
+  
+  ---
+  
+  [Source: 10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones) | Chunk: 5 | SourceID: 01a09d3d-245f-74c0-8a54-39c544ffa0d2 | ChunkID: 01a09d3d-2753-7d30-bd16-8f311e8bab9a | Score: 0.783]
+  # 10 — Análisis Post-Implementación: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  ## 3. Matriz de verificación de ACs
+  
+  |AC|Criterio(resumen)|Artefacto y clave|Estado|Cómo se leyó||----|--------------------|-------------------|--------|--------------||AC-A1…AC-A5|decisiones Q1–Q5|`evidence/FASE-V1/decision-verificador.md`|✅|lectura de las secciones`##Q1`…`##Q5`||AC-B1…AC-B5|script,tests,NR7,cableado,cobertura|`evidence/FASE-V2/`|✅|B1`--help`sin`--fix`+hash del artefacto inalterado tras una corrida con violaciones(`test_b1_sin_fix_y_sin_reescribir_los_artefactos`);B2 29 tests nombrados por su causa,tres estados cubiertos;B3`nr7-<id>-{rojo,verde}.txt`×13;B4`hook-bloquea.txt`con`exit_code_del_hook=1`y la línea`[9/9]Lesson Capitalization`en`--quick`9/9;B5 línea`cobertura:`con los cuatro conteos||AC-C1,AC-C2|docs sin fósiles y deuda cerrada|`git diff`de V3+checklist del predecesor|✅|C1:template v1.1.0 y executor v2.24.0 nombran al verificador,con las**5**referencias normativas al`[6/6]`actualizadas a`[6/7]`y las**4**mediciones históricas conservadas literales(verificable con`grep -n"\[6/6\]".agents/workflows/phased_project_executor.md`).C2:ítem(i)de§Deuda del predecesor pasado a`[x]`con fecha,commit y cobertura medida|
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 49 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-735b-aa41-9a15dd09c87c | Score: 0.757]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Seguimientos Abiertos
+  
+  declararlo**:P6 solo quitó el guard del directorio;el converter seguía fabricando`epistemic_status='verified'`,`rooms=10`,`pct=20.0`y`campos_confirmados`fijos(cláusula 2 de AC-G2 incumplida,I4 de la auditoría).El cierre es real desde**P6-R/R4**(propagación solo de evidencia presente,`no_declarado`si falta el estado epistémico,test migrado con causa).·**F-P4.4**(`ia_readiness_report.json`deja de escribirse,sin dueño asignado)·**F-P4.6**(deriva de provider:DeepSeek en el baseline,Gemini con 403 aquí)·~~**F-P4.7**~~→**CERRADO por FASE-P6(AC-G2)**:el fallback de onboarding ya no depende de que`output/clientes/`tenga un YAML ajeno;la ruta AC-G2 provee datos sin ese requisito·**F-P4.8**(el baseline del delta está excluido de git:solo hashes son durables).-**Cola de 78 adyacentes sin evaluar(Q7 del Paso 0)**→**declarada fuera de alcance en P1**,con razón escrita(§6.1 de`decision-enforcement.md`):ninguno toca los símbolos del plan y la pasada se hace por síntoma,no por volumen.Si una fase de código descubre un candidato que sí nombra uno de sus símbolos,se capitaliza**ahí**y se anota en el`00-`.-**"Verificador de conteos declarados en§4"**(llegó del plan PASO0 con la premisa ya corregida)→**RETIRADO en P1 con medición**:el§4 de`00-lecciones-capitalizadas.md`declara 19 lecciones y el§2 tiene 19 filas.No se hereda el ítem ni se abre AC.-~~**Tensión que hereda P2**~~→**CERRADA por FASE-P2(`df60c24`)**en los dos frentes que el contrato nombraba:`_resolve_delivery_zip`de Bot 3**acepta el ZIP en cualquiera de sus dos estados**(`.zip`o`.zip.tmp`),que es lo que el contrato pedía;y la otra mitad de la tensión resultó ser más grande de lo escrito—**el ZIP también contenía el acta**,así que P2 no solo tuvo que leer la cuarentena sino**sacar el acta del paquete**para que el enunciado de DA-P1.4 dejara de ser un
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 61 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-737c-9df4-f977437aaa2e | Score: 0.736]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  .1 de`decision-enforcement.md`).**Estado al cerrar P3-A**:el§2 del`00-`**sigue en 19 filas**—P3-A no capitalizó ninguna lección externa nueva;**consumió**seis de esas 19(L-V.1,NR7/L-T4A.5/L-T2C.4/L-VUP-5,NR8/L-PF6/L-PF10,L-V.2,L-SR3,R2.6/R2.7)sobre artefactos reales.Las tres lecciones propias de P3-A(**L-P3A.1**presupuestar por coste de verificación,**L-P3A.2**serialización del enum`"B+"`,**L-P3A.3**baseline R2.7≠ancla pre-plan)son de**este plan**y viven en la tabla de arriba.**L-P3A.1 y L-P3A.2 son candidatas a ascender al índice de capa fría en el archivado de RELEASE**para que el sucesor no vuelva a presupuestar una fase de detección con un número de fase de código.**Estado al cerrar P3-B**:el§2 del`00-`**sigue en 19 filas**—P3-B tampoco capitalizó lección externa nueva;**consumió**cinco(L-T2C.2,NR7/L-T4A.5/L-VUP-5,L-VUP-1,L-SR3,L-V.4)y le añadió una fila de estado propia al`00-`.Sus tres lecciones(**L-P3B.1**presupuestar por coste de verificación como**cambio de regla**,no como nota;**L-P3B.2**un rojo deja sin vigilar lo que está después de su primera causa;**L-P3B.3**"propagar el valor real"hay que medirlo**por fuente**,porque la segunda puede no existir)son de**este plan**y viven en la tabla de arriba.**L-P3B.1 y L-P3B.2 son candidatas a la capa fría en el archivado**:la primera es la tercera ocurrencia de la misma causa raíz y ya no es anecdótica;la segunda nombra un modo de test vacuo que la familia L-T4A.5 no cubría(no un verde que miente,sino**un rojo que oculta**).**Estado al cerrar FASE-P6**:el§2 del`00-`**sigue en 19 filas**—P6 no capitalizó lección externa nueva;**consumió**cuatro(L-V.1,L-T4A.5/L-P2.3,L-P1.2
+  QMIND_EXIT=0
+
+======== CONSULTA: presupuesto de iteraciones de una sesion: instrumento canonico frente a auto-reporte con unidad declarada
+kind: notebookContext
+total: 5
+reranked: true
+---
+type: chunk
+index: 1
+chunkId: 01a06ebb-1433-7aad-b6d1-9a2351f6c775
+chunkIndex: 21
+sourceId: 01a06ebb-001b-7a1a-a195-2714a9db271e
+sourceTitle: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/fe373de6-73c4-4be6-b4b9-e35e9485ceee/QMIND-WRITE-BACK.md
+score: 0.9165
+tokenCount: 234
+content: |-
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 6. Decisiones Arquitectónicas
+  
+  indicadores)|«Que lo cierre RELEASE,que toca docs»—rechazado con el dato de las 6 filas re-asignadas y jamás ejecutadas|VERIFY||DA-V6|**El presupuesto por fase se declara no-verificable bajo sandbox y se recalibra×3 o se retira**(recomendación formal al executor)|**S22**:nueve fases,nueve excesos(8.6×,2.4×,3.3×,2.4×,4.0×,3.1×,≥4.4×,≈3×,y VERIFY no pudo medir la suya).El instrumento canónico(`measure_iterations.py`)**no funciona en las sesiones delegadas ni bajo la política de permisos actual**,así que la métrica se auto-reporta con unidad distinta en cada fase⟹no es comparable ni auditable,que era su propósito|Seguir sumando cifras de unidades distintas—rechazado:el total«≥1.219/≤440»mezcla`tool_use`con`ids únicos`(H/I)y un tope auto-reportado(A)|VERIFY|--- ---
+---
+type: chunk
+index: 2
+chunkId: 01a0a766-6353-72e2-9eb5-9104a3299ae6
+chunkIndex: 1
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.9066
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones(ids+tool_use,corte=commit)|delegate_task|Notas||------|--------|--------|----------------------------------------------|---------------|-------||Ajuste de preparación*(orquestación,fuera de presupuesto de fase)*|2026-09-14|✅|auto-reporte(D-V2.1:el instrumento no alcanza el transcript bajo el cliente actual;unidad declarada)|No|Etapa 1 completada:prompts P3-A/P3-B/P4/RELEASE+09/10 creados;P2 diferido a Q1 con declaración;P3 dividida por R3;FASE-VERIFY condicionada;cierre sin P4 fijado;citas`3bdc14e`/origin/tag`v4.76.0`corregidas||FASE-P1|2026-09-14|✅|**≈30`ids`/≈58`tool_use`**(auto-reporte,**unidad declarada**—D-V2.1:`measure_iterations.py`no alcanza el transcript bajo el cliente actual),corte=commit de cierre|No|Q1=sí·Q1b=escalar·Q2=O1-cuarentena·Q2b=2 capas·Q3=P3→P2·Q4=el hotel·Q5=a·Q6=4 estados·Q7=knob heredado·VERIFY no activa·prompt P2 creado.**Presupuesto de 30 superado**→causa y cura en L-P1.4||FASE-P3-A|2026-09-14|✅|**106`ids`/126`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`0d4d072`.**El instrumento SÍ alcanzó el transcript→D-V2.1 NO se reprodujo**(cifra medida,no auto-reportada)|No|AC-F1(dos capas ZIP-aware+stub estructural,4 estados NR8)+AC-F2(tier desde`financial_scenarios`,MANIFEST fallback)+AC-F4(`FIRST_FLOOR_TIERS`+=`"B+"`).R2.7 4.109→4.130(+21 íntegro en`passed`,0 regresiones);4 pares NR7 verde/rojo;`--quick`9/9;sonda real:AC-F1 1 CRITICAL(468 B),AC-F2 acta`"B"`==pipeline`"B"`,AC-F4`B+`→CONDITIONAL.**Presupuesto de 20 superado**→causa y cura en L-P3A.1||FASE-P3-B|2026-09-14|✅|**120`ids`/120`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`bad0a5e`.**
+---
+type: chunk
+index: 3
+chunkId: 01a0a766-6353-72e7-b0fb-3e43c1bb7691
+chunkIndex: 3
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.8710
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  **Presupuesto de 55 superado=cuarta fase seguida**→L-P2.4|No|**O1-cuarentena ejecutada**:`DeliveryPackager`en`write()`/`publish()`/`suppress()`(`package()`queda como envoltorio para`execute`y los 69 tests previos de`tests/delivery/`),`_validate_zip`movido al`.tmp`(DA-P2.3),y en`main.py`el orden FASE-T1→cuarentena→4 Bots→**FASE-T1b**decide el rename.`tribunal/outcome.py`con los DTOs del§2.3;`_compute_verdict`recibe el 4º argumento y evalúa la matriz§2.1**en su orden**.**AC-E0…AC-E5**con**8 pares NR7**(AC-E0 a/b,E1,E2,E3,E4,E5 a/b),todos con rojo real.R2.7**4.153→4.181=+28**(19 tribunal+9 delivery,`passed`+28 exacto,**0 regresiones**,el mismo par de flaky en PRE y POST);el**POST se repitió**porque un cierre de seguimiento añadió un test después del primero.**Verificación obligatoria medida:el ZIP contenía el acta**(`ASSETS/v4_audit/acta_revision.{json,md}`,2/40)y resultó ser un**círculo estricto**→DA-P2.1,el acta ya no viaja con el cliente.Retro estructural sobre`evidence/FASE-E2E/`:mismo artefacto,veredicto`APROBADO-CONDICIONAL…`→**`BLOQUEADO`**,`reviewer_reports`0→4,**las 6 cláusulas idénticas**.Cierra además el seguimiento del``Artefacto fuente:MANIFEST.json``que P1 asignaba a P2||FASE-P4|2026-09-14|✅|**≈52`tool_use`auto-reporte con unidad declarada**—D-V2.1**se reprodujo de nuevo**(segunda sesión seguida,como P2):`measure_iterations.py`exige el transcript`.jsonl`y no existe ningún`.jsonl`dentro del workspace(`find.-name"*.jsonl"`→0);el directorio del cliente quedó fuera del alcance y su acceso fue denegado por el clasificador.**Presupuesto de 40 NO verificable con esta unidad**→no se declara
+---
+type: chunk
+index: 4
+chunkId: 01a0a766-6353-7372-9724-71ec9b685b0a
+chunkIndex: 58
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.8668
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  (`--url/--output/--nombre/--debug`)y se descartó`--force-new`(es de`execute`).**L-VUP-13**:la corrida muestra`✅Onboarding data loaded:4 campos confirmados`y el`breakdown`cierra`adr=user_provided`,`occupancy=onboarding`,`direct_channel=onboarding`→no cayó a defaults,**verificado en el artefacto y no inferido**.**L-VUP-14**:`--selftest`antes de correr(15 artefactos,mutación plantada,colisión de stems)y**la colisión que cazó era del instrumento de esta fase**(L-P4.4).**L-VUP-12**:`corrida/run/`(62 archivos)copiado antes de abrir un solo JSON.**L-B4/AC-O2**:sha256 de los 66 archivos del baseline.**L-V.4**:**cero`.py`tocados**con nueve hallazgos en la mano,incluidos dos que invitan a tocar(`IMPLEMENTATION_ORDER`y`whatsapp_verified`).**R2.4**:los ACs de este plan que P4 certifica son legibles en`acta_revision.json`/`revision_assets.json`,no en prosa|**El modo MIXTO del prompt decía`delegate_task`y este harness no tiene esa herramienta**:la corrida larga corrió en segundo plano desde la sesión principal con su log**fuera del version**(decisión propia,declarada aquí—no hubo delegación real).**R2.1 otra vez insatisfecho**:D-V2.1 se reprodujo(segunda sesión seguida)→auto-reporte con unidad declarada y,novedad incómoda,**el presupuesto de 40 no es ni cumplido ni incumplido**porque la unidad no es comparable(L-P4.4/§7 del informe):se publica la incomparabilidad en vez de un número que parezca verde.**L-PF6/L-PF10 a medias**:los cuatro estados son distinguibles**en el esquema**,pero esta corrida ejerció**uno**(`OK_WITH_FINDINGS`×4),así que el acta real no prueba la distinción—la prueban los tests de P2.**AC-O0 en su mitad de Tier A**:**no certificado**;el informe lo declara límite,no resultado,y con dueño externo(T3b).**R2.3 sin par real**:435 cambios de valor entre dos hoteles distintos no son un delta de pipeline,y el informe lo dice en
+---
+type: chunk
+index: 5
+chunkId: 01a0a766-6353-7317-b555-5ec265357d88
+chunkIndex: 22
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+sourceUri: notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md
+score: 0.8636
+tokenCount: 512
+content: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)
+  
+  tres,el fallo se manifiesta como**ausencia silenciosa**,no como error|No es un defecto de la fase:es el patrón never-block del repo aplicado a código que además**declara valores por defecto**(`"C"`,`[]`,`financial_breakdown=None`)|NR8/Q6 extiende su regla a los gates:ningún camino puede producir"sin hallazgos"desde"no leí".En AC-F5 el test"sin`NameError`con`generate_proposal=False`"es obligatorio por esto mismo|**INCLUIR**—patrón transversal de`main.py`(familia L-T2C.2)||L-P3A.1|**Presupuesto superado otra vez**:20 declaradas,**106`ids`/126`tool_use`medidas**(corte=`0d4d072`).A diferencia de P1,el instrumento**sí alcanzó el transcript**→D-V2.1**no se reprodujo**y la cifra es medida|Causa medida:una fase de detección/fidelidad**paga su verificación,no su código**—el delta R2.7 exige**dos corridas de la suite completa**(4.130 tests,~7-9 min cada una)y NR7 exige**4 pares verde/rojo**que a su vez relanzan subsets;el código editado son 2 archivos.20 era un presupuesto de"tamaño del entregable",y el entregable chico esconde la verificación cara|Presupuestar la fase por**coste de verificación**(`corridas NR1×duración+pares NR7`),no por líneas de código.Corolario:como D-V2.1 no se reprodujo,**no hay excusa para auto-reportar**—la celda de iteraciones se mide con el instrumento.Regla sin verificador mecánico→declarada(L-R.4)|**INCLUIR**—segunda fase seguida que revienta el presupuesto por la misma causa raíz(nº de fase de código aplicado a trabajo de verificación)||L-P3A.2|AC-F4 parecía un fix de una línea(añadir el tier a`FIRST_FLOOR_TIERS`)y la clave correcta es**`"B+"`**,no`"B_PLUS"`:`EvidenceTier.B_PLUS`**serializa como`"B+"`**.Con`"B_PLUS"`el set queda con un miembro fantasma,el primer piso sigue sin aplicarse y**un test que use la forma
+---
+type: citation
+index: 1
+sourceId: 01a06ebb-001b-7a1a-a195-2714a9db271e
+sourceTitle: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)
+chunkId: 01a06ebb-1433-7aad-b6d1-9a2351f6c775
+snippet: |-
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 6. Decisiones Arquitectónicas
+  
+  indicadores)|«Que lo cierre RELEASE,que toca docs»—rechazado con el dato de las 6 filas re-asignadas y jamás ejecutadas|VERIFY||DA-V6|**El presupuesto por fase se declara no-verificable bajo sandbox y se recalibra×3 o se retira**(recomendación formal al executor)|**S22**:nueve fases,nueve excesos(8.6×,2.4×,3.3×,2.4×,4.0×,3.1×,≥4.4×,≈3×,y VERIFY no pudo medir la suya).El instrumento canónico(`measure_iterations.py`)**no funciona en las sesiones delegadas ni bajo la política de permisos actual**,así que la métrica se auto-reporta con unidad distinta en cada fase⟹no es comparable ni auditable,que era su propósito|Seguir sumando cifras de unidades distintas—rechazado:el total«≥1.219/≤440»mezcla`tool_use`con`ids únicos`(H/I)y un tope auto-reportado(A)|VERIFY|--- ---
+---
+type: citation
+index: 2
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-72e2-9eb5-9104a3299ae6
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones(ids+tool_use,corte=commit)|delegate_task|Notas||------|--------|--------|----------------------------------------------|---------------|-------||Ajuste de preparación*(orquestación,fuera de presupuesto de fase)*|2026-09-14|✅|auto-reporte(D-V2.1:el instrumento no alcanza el transcript bajo el cliente actual;unidad declarada)|No|Etapa 1 completada:prompts P3-A/P3-B/P4/RELEASE+09/10 creados;P2 diferido a Q1 con declaración;P3 dividida por R3;FASE-VERIFY condicionada;cierre sin P4 fijado;citas`3bdc14e`/origin/tag`v4.76.0`corregidas||FASE-P1|2026-09-14|✅|**≈30`ids`/≈58`tool_use`**(auto-reporte,**unidad declarada**—D-V2.1:`measure_iterations.py`no alcanza el transcript bajo el cliente actual),corte=commit de cierre|No|Q1=sí·Q1b=escalar·Q2=O1-cuarentena·Q2b=2 capas·Q3=P3→P2·Q4=el hotel·Q5=a·Q6=4 estados·Q7=knob heredado·VERIFY no activa·prompt P2 creado.**Presupuesto de 30 superado**→causa y cura en L-P1.4||FASE-P3-A|2026-09-14|✅|**106`ids`/126`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`0d4d072`.**El instrumento SÍ alcanzó el transcript→D-V2.1 NO se reprodujo**(cifra medida,no auto-reportada)|No|AC-F1(dos capas ZIP-aware+stub estructural,4 estados NR8)+AC-F2(tier desde`financial_scenarios`,MANIFEST fallback)+AC-F4(`FIRST_FLOOR_TIERS`+=`"B+"`).R2.7 4.109→4.130(+21 íntegro en`passed`,0 regresiones);4 pares NR7 verde/rojo;`--quick`9/9;sonda real:AC-F1 1 CRITICAL(468 B),AC-F2 acta`"B"`==pipeline`"B"`,AC-F4`B+`→CONDITIONAL.**Presupuesto de 20 superado**→causa y cura en L-P3A.1||FASE-P3-B|2026-09-14|✅|**120`ids`/120`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`bad0a5e`.**
+---
+type: citation
+index: 3
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-72e7-b0fb-3e43c1bb7691
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  **Presupuesto de 55 superado=cuarta fase seguida**→L-P2.4|No|**O1-cuarentena ejecutada**:`DeliveryPackager`en`write()`/`publish()`/`suppress()`(`package()`queda como envoltorio para`execute`y los 69 tests previos de`tests/delivery/`),`_validate_zip`movido al`.tmp`(DA-P2.3),y en`main.py`el orden FASE-T1→cuarentena→4 Bots→**FASE-T1b**decide el rename.`tribunal/outcome.py`con los DTOs del§2.3;`_compute_verdict`recibe el 4º argumento y evalúa la matriz§2.1**en su orden**.**AC-E0…AC-E5**con**8 pares NR7**(AC-E0 a/b,E1,E2,E3,E4,E5 a/b),todos con rojo real.R2.7**4.153→4.181=+28**(19 tribunal+9 delivery,`passed`+28 exacto,**0 regresiones**,el mismo par de flaky en PRE y POST);el**POST se repitió**porque un cierre de seguimiento añadió un test después del primero.**Verificación obligatoria medida:el ZIP contenía el acta**(`ASSETS/v4_audit/acta_revision.{json,md}`,2/40)y resultó ser un**círculo estricto**→DA-P2.1,el acta ya no viaja con el cliente.Retro estructural sobre`evidence/FASE-E2E/`:mismo artefacto,veredicto`APROBADO-CONDICIONAL…`→**`BLOQUEADO`**,`reviewer_reports`0→4,**las 6 cláusulas idénticas**.Cierra además el seguimiento del``Artefacto fuente:MANIFEST.json``que P1 asignaba a P2||FASE-P4|2026-09-14|✅|**≈52`tool_use`auto-reporte con unidad declarada**—D-V2.1**se reprodujo de nuevo**(segunda sesión seguida,como P2):`measure_iterations.py`exige el transcript`.jsonl`y no existe ningún`.jsonl`dentro del workspace(`find.-name"*.jsonl"`→0);el directorio del cliente quedó fuera del alcance y su acceso fue denegado por el clasificador.**Presupuesto de 40 NO verificable con esta unidad**→no se declara
+---
+type: citation
+index: 4
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-7372-9724-71ec9b685b0a
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  (`--url/--output/--nombre/--debug`)y se descartó`--force-new`(es de`execute`).**L-VUP-13**:la corrida muestra`✅Onboarding data loaded:4 campos confirmados`y el`breakdown`cierra`adr=user_provided`,`occupancy=onboarding`,`direct_channel=onboarding`→no cayó a defaults,**verificado en el artefacto y no inferido**.**L-VUP-14**:`--selftest`antes de correr(15 artefactos,mutación plantada,colisión de stems)y**la colisión que cazó era del instrumento de esta fase**(L-P4.4).**L-VUP-12**:`corrida/run/`(62 archivos)copiado antes de abrir un solo JSON.**L-B4/AC-O2**:sha256 de los 66 archivos del baseline.**L-V.4**:**cero`.py`tocados**con nueve hallazgos en la mano,incluidos dos que invitan a tocar(`IMPLEMENTATION_ORDER`y`whatsapp_verified`).**R2.4**:los ACs de este plan que P4 certifica son legibles en`acta_revision.json`/`revision_assets.json`,no en prosa|**El modo MIXTO del prompt decía`delegate_task`y este harness no tiene esa herramienta**:la corrida larga corrió en segundo plano desde la sesión principal con su log**fuera del version**(decisión propia,declarada aquí—no hubo delegación real).**R2.1 otra vez insatisfecho**:D-V2.1 se reprodujo(segunda sesión seguida)→auto-reporte con unidad declarada y,novedad incómoda,**el presupuesto de 40 no es ni cumplido ni incumplido**porque la unidad no es comparable(L-P4.4/§7 del informe):se publica la incomparabilidad en vez de un número que parezca verde.**L-PF6/L-PF10 a medias**:los cuatro estados son distinguibles**en el esquema**,pero esta corrida ejerció**uno**(`OK_WITH_FINDINGS`×4),así que el acta real no prueba la distinción—la prueban los tests de P2.**AC-O0 en su mitad de Tier A**:**no certificado**;el informe lo declara límite,no resultado,y con dueño externo(T3b).**R2.3 sin par real**:435 cambios de valor entre dos hoteles distintos no son un delta de pipeline,y el informe lo dice en
+---
+type: citation
+index: 5
+sourceId: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df
+sourceTitle: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)
+chunkId: 01a0a766-6353-7317-b555-5ec265357d88
+snippet: |-
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)
+  
+  tres,el fallo se manifiesta como**ausencia silenciosa**,no como error|No es un defecto de la fase:es el patrón never-block del repo aplicado a código que además**declara valores por defecto**(`"C"`,`[]`,`financial_breakdown=None`)|NR8/Q6 extiende su regla a los gates:ningún camino puede producir"sin hallazgos"desde"no leí".En AC-F5 el test"sin`NameError`con`generate_proposal=False`"es obligatorio por esto mismo|**INCLUIR**—patrón transversal de`main.py`(familia L-T2C.2)||L-P3A.1|**Presupuesto superado otra vez**:20 declaradas,**106`ids`/126`tool_use`medidas**(corte=`0d4d072`).A diferencia de P1,el instrumento**sí alcanzó el transcript**→D-V2.1**no se reprodujo**y la cifra es medida|Causa medida:una fase de detección/fidelidad**paga su verificación,no su código**—el delta R2.7 exige**dos corridas de la suite completa**(4.130 tests,~7-9 min cada una)y NR7 exige**4 pares verde/rojo**que a su vez relanzan subsets;el código editado son 2 archivos.20 era un presupuesto de"tamaño del entregable",y el entregable chico esconde la verificación cara|Presupuestar la fase por**coste de verificación**(`corridas NR1×duración+pares NR7`),no por líneas de código.Corolario:como D-V2.1 no se reprodujo,**no hay excusa para auto-reportar**—la celda de iteraciones se mide con el instrumento.Regla sin verificador mecánico→declarada(L-R.4)|**INCLUIR**—segunda fase seguida que revienta el presupuesto por la misma causa raíz(nº de fase de código aplicado a trabajo de verificación)||L-P3A.2|AC-F4 parecía un fix de una línea(añadir el tier a`FIRST_FLOOR_TIERS`)y la clave correcta es**`"B+"`**,no`"B_PLUS"`:`EvidenceTier.B_PLUS`**serializa como`"B+"`**.Con`"B_PLUS"`el set queda con un miembro fantasma,el primer piso sigue sin aplicarse y**un test que use la forma
+promptContext: |-
+  [Source: 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones) | Chunk: 21 | SourceID: 01a06ebb-001b-7a1a-a195-2714a9db271e | ChunkID: 01a06ebb-1433-7aad-b6d1-9a2351f6c775 | Score: 0.916]
+  # 10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 — lecciones aprendidas y decisiones
+  ## 6. Decisiones Arquitectónicas
+  
+  indicadores)|«Que lo cierre RELEASE,que toca docs»—rechazado con el dato de las 6 filas re-asignadas y jamás ejecutadas|VERIFY||DA-V6|**El presupuesto por fase se declara no-verificable bajo sandbox y se recalibra×3 o se retira**(recomendación formal al executor)|**S22**:nueve fases,nueve excesos(8.6×,2.4×,3.3×,2.4×,4.0×,3.1×,≥4.4×,≈3×,y VERIFY no pudo medir la suya).El instrumento canónico(`measure_iterations.py`)**no funciona en las sesiones delegadas ni bajo la política de permisos actual**,así que la métrica se auto-reporta con unidad distinta en cada fase⟹no es comparable ni auditable,que era su propósito|Seguir sumando cifras de unidades distintas—rechazado:el total«≥1.219/≤440»mezcla`tool_use`con`ids únicos`(H/I)y un tope auto-reportado(A)|VERIFY|--- ---
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 1 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-72e2-9eb5-9104a3299ae6 | Score: 0.907]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  |Fase|Sesión|Estado|Iteraciones(ids+tool_use,corte=commit)|delegate_task|Notas||------|--------|--------|----------------------------------------------|---------------|-------||Ajuste de preparación*(orquestación,fuera de presupuesto de fase)*|2026-09-14|✅|auto-reporte(D-V2.1:el instrumento no alcanza el transcript bajo el cliente actual;unidad declarada)|No|Etapa 1 completada:prompts P3-A/P3-B/P4/RELEASE+09/10 creados;P2 diferido a Q1 con declaración;P3 dividida por R3;FASE-VERIFY condicionada;cierre sin P4 fijado;citas`3bdc14e`/origin/tag`v4.76.0`corregidas||FASE-P1|2026-09-14|✅|**≈30`ids`/≈58`tool_use`**(auto-reporte,**unidad declarada**—D-V2.1:`measure_iterations.py`no alcanza el transcript bajo el cliente actual),corte=commit de cierre|No|Q1=sí·Q1b=escalar·Q2=O1-cuarentena·Q2b=2 capas·Q3=P3→P2·Q4=el hotel·Q5=a·Q6=4 estados·Q7=knob heredado·VERIFY no activa·prompt P2 creado.**Presupuesto de 30 superado**→causa y cura en L-P1.4||FASE-P3-A|2026-09-14|✅|**106`ids`/126`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`0d4d072`.**El instrumento SÍ alcanzó el transcript→D-V2.1 NO se reprodujo**(cifra medida,no auto-reportada)|No|AC-F1(dos capas ZIP-aware+stub estructural,4 estados NR8)+AC-F2(tier desde`financial_scenarios`,MANIFEST fallback)+AC-F4(`FIRST_FLOOR_TIERS`+=`"B+"`).R2.7 4.109→4.130(+21 íntegro en`passed`,0 regresiones);4 pares NR7 verde/rojo;`--quick`9/9;sonda real:AC-F1 1 CRITICAL(468 B),AC-F2 acta`"B"`==pipeline`"B"`,AC-F4`B+`→CONDITIONAL.**Presupuesto de 20 superado**→causa y cura en L-P3A.1||FASE-P3-B|2026-09-14|✅|**120`ids`/120`tool_use`**—medido con`measure_iterations.py`,corte=commit de código`bad0a5e`.**
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 3 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-72e7-b0fb-3e43c1bb7691 | Score: 0.871]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Resumen de Ejecución (llenar al cierre de cada fase)
+  
+  **Presupuesto de 55 superado=cuarta fase seguida**→L-P2.4|No|**O1-cuarentena ejecutada**:`DeliveryPackager`en`write()`/`publish()`/`suppress()`(`package()`queda como envoltorio para`execute`y los 69 tests previos de`tests/delivery/`),`_validate_zip`movido al`.tmp`(DA-P2.3),y en`main.py`el orden FASE-T1→cuarentena→4 Bots→**FASE-T1b**decide el rename.`tribunal/outcome.py`con los DTOs del§2.3;`_compute_verdict`recibe el 4º argumento y evalúa la matriz§2.1**en su orden**.**AC-E0…AC-E5**con**8 pares NR7**(AC-E0 a/b,E1,E2,E3,E4,E5 a/b),todos con rojo real.R2.7**4.153→4.181=+28**(19 tribunal+9 delivery,`passed`+28 exacto,**0 regresiones**,el mismo par de flaky en PRE y POST);el**POST se repitió**porque un cierre de seguimiento añadió un test después del primero.**Verificación obligatoria medida:el ZIP contenía el acta**(`ASSETS/v4_audit/acta_revision.{json,md}`,2/40)y resultó ser un**círculo estricto**→DA-P2.1,el acta ya no viaja con el cliente.Retro estructural sobre`evidence/FASE-E2E/`:mismo artefacto,veredicto`APROBADO-CONDICIONAL…`→**`BLOQUEADO`**,`reviewer_reports`0→4,**las 6 cláusulas idénticas**.Cierra además el seguimiento del``Artefacto fuente:MANIFEST.json``que P1 asignaba a P2||FASE-P4|2026-09-14|✅|**≈52`tool_use`auto-reporte con unidad declarada**—D-V2.1**se reprodujo de nuevo**(segunda sesión seguida,como P2):`measure_iterations.py`exige el transcript`.jsonl`y no existe ningún`.jsonl`dentro del workspace(`find.-name"*.jsonl"`→0);el directorio del cliente quedó fuera del alcance y su acceso fue denegado por el clasificador.**Presupuesto de 40 NO verificable con esta unidad**→no se declara
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 58 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-7372-9724-71ec9b685b0a | Score: 0.867]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones capitalizadas de planes anteriores
+  
+  (`--url/--output/--nombre/--debug`)y se descartó`--force-new`(es de`execute`).**L-VUP-13**:la corrida muestra`✅Onboarding data loaded:4 campos confirmados`y el`breakdown`cierra`adr=user_provided`,`occupancy=onboarding`,`direct_channel=onboarding`→no cayó a defaults,**verificado en el artefacto y no inferido**.**L-VUP-14**:`--selftest`antes de correr(15 artefactos,mutación plantada,colisión de stems)y**la colisión que cazó era del instrumento de esta fase**(L-P4.4).**L-VUP-12**:`corrida/run/`(62 archivos)copiado antes de abrir un solo JSON.**L-B4/AC-O2**:sha256 de los 66 archivos del baseline.**L-V.4**:**cero`.py`tocados**con nueve hallazgos en la mano,incluidos dos que invitan a tocar(`IMPLEMENTATION_ORDER`y`whatsapp_verified`).**R2.4**:los ACs de este plan que P4 certifica son legibles en`acta_revision.json`/`revision_assets.json`,no en prosa|**El modo MIXTO del prompt decía`delegate_task`y este harness no tiene esa herramienta**:la corrida larga corrió en segundo plano desde la sesión principal con su log**fuera del version**(decisión propia,declarada aquí—no hubo delegación real).**R2.1 otra vez insatisfecho**:D-V2.1 se reprodujo(segunda sesión seguida)→auto-reporte con unidad declarada y,novedad incómoda,**el presupuesto de 40 no es ni cumplido ni incumplido**porque la unidad no es comparable(L-P4.4/§7 del informe):se publica la incomparabilidad en vez de un número que parezca verde.**L-PF6/L-PF10 a medias**:los cuatro estados son distinguibles**en el esquema**,pero esta corrida ejerció**uno**(`OK_WITH_FINDINGS`×4),así que el acta real no prueba la distinción—la prueban los tests de P2.**AC-O0 en su mitad de Tier A**:**no certificado**;el informe lo declara límite,no resultado,y con dueño externo(T3b).**R2.3 sin par real**:435 cambios de valor entre dos hoteles distintos no son un delta de pipeline,y el informe lo dice en
+  
+  ---
+  
+  [Source: 10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones) | Chunk: 22 | SourceID: 01a0a766-4cf6-7ec4-92fd-8edabbfcc3df | ChunkID: 01a0a766-6353-7317-b555-5ec265357d88 | Score: 0.864]
+  # Análisis Post-Implementación — TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  ## Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)
+  
+  tres,el fallo se manifiesta como**ausencia silenciosa**,no como error|No es un defecto de la fase:es el patrón never-block del repo aplicado a código que además**declara valores por defecto**(`"C"`,`[]`,`financial_breakdown=None`)|NR8/Q6 extiende su regla a los gates:ningún camino puede producir"sin hallazgos"desde"no leí".En AC-F5 el test"sin`NameError`con`generate_proposal=False`"es obligatorio por esto mismo|**INCLUIR**—patrón transversal de`main.py`(familia L-T2C.2)||L-P3A.1|**Presupuesto superado otra vez**:20 declaradas,**106`ids`/126`tool_use`medidas**(corte=`0d4d072`).A diferencia de P1,el instrumento**sí alcanzó el transcript**→D-V2.1**no se reprodujo**y la cifra es medida|Causa medida:una fase de detección/fidelidad**paga su verificación,no su código**—el delta R2.7 exige**dos corridas de la suite completa**(4.130 tests,~7-9 min cada una)y NR7 exige**4 pares verde/rojo**que a su vez relanzan subsets;el código editado son 2 archivos.20 era un presupuesto de"tamaño del entregable",y el entregable chico esconde la verificación cara|Presupuestar la fase por**coste de verificación**(`corridas NR1×duración+pares NR7`),no por líneas de código.Corolario:como D-V2.1 no se reprodujo,**no hay excusa para auto-reportar**—la celda de iteraciones se mide con el instrumento.Regla sin verificador mecánico→declarada(L-R.4)|**INCLUIR**—segunda fase seguida que revienta el presupuesto por la misma causa raíz(nº de fase de código aplicado a trabajo de verificación)||L-P3A.2|AC-F4 parecía un fix de una línea(añadir el tier a`FIRST_FLOOR_TIERS`)y la clave correcta es**`"B+"`**,no`"B_PLUS"`:`EvidenceTier.B_PLUS`**serializa como`"B+"`**.Con`"B_PLUS"`el set queda con un miembro fantasma,el primer piso sigue sin aplicarse y**un test que use la forma
+  QMIND_EXIT=0

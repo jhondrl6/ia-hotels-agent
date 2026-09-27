@@ -194,7 +194,7 @@ cosa que se toca es lo primero que se vence.
 ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --upload VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 # ⟦traslado⟧ — tercer momento, con autorización expresa
-git mv .opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
+git mv /.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 .opencode/plans/Archives/
 # ---- cola fija del cierre: se corre DESPUES de la ultima escritura de documentos ----
 # (1) comprobaciones sin escritura; no absorber errores actualizando baselines
 ./venv/Scripts/python.exe scripts/validate_opencode_refs.py
@@ -322,7 +322,7 @@ RELEASE **no** invoca `log_phase_completion.py` sobre fases ajenas: solo sincron
 
 ```text
 Ejecuta unicamente FASE-RELEASE del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
+C:/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
 Lee 05-prompt-inicio-sesion-fase-RELEASE.md, 01-plan-maestro.md §4 y §6, 04-contrato-ejecucion.md
 (§Dos momentos del cierre, §Carga total y frescura del pack y §Orden del cierre),
 00-lecciones-capitalizadas.md completo, 06-checklist-implementacion.md, dependencias-fases.md,

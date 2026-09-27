@@ -1,0 +1,10 @@
+### pre-flight D-c 2026-09-27T03:09:01Z ###
+HEAD=44f53c2 arbol=1 rutas
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/D-C-D8-D9/
+archivados_antes=27
+refs --check antes:
+[PASS] OpenCode References: todas las referencias existen
+REFS_EXIT=0
+citas antes:
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+CITAS_EXIT=0

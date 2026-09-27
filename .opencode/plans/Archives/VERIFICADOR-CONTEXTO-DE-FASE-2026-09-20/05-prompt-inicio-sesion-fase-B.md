@@ -150,7 +150,7 @@ que medir, y exigirla produciría un `NO-EJERCITADO` que certifica humo. La comp
 
 ```text
 Ejecuta unicamente FASE-B del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
+C:/Users/Jhond/Github/iah-cli//.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/.
 Lee 05-prompt-inicio-sesion-fase-B.md, 01-plan-maestro.md §2 (las filas del proveedor y D7) y §4
 (AC6-AC9, AC16, AC17), 04-contrato-ejecucion.md (permisos y la regla de cero red),
 00-lecciones-capitalizadas.md §2, dependencias-fases.md y el workflow canónico.
