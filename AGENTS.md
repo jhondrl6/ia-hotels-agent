@@ -63,7 +63,7 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 ### Flujo Documental Obligatorio (Principios y referencias canonicas)
 
 > [!IMPORTANT]
-> **DOMAIN_PRIMER se regenera en FASE-RELEASE** (no manualmente). Ver `.opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md` para el plan de integración documental completo.
+> **DOMAIN_PRIMER se regenera al cerrar cada fase de implementación**, con `python scripts/doctor.py --regenerate-domain-primer`, y **se verifica** (no se regenera) en FASE-RELEASE con `python scripts/doctor.py --context`. Es un comando que alguien invoca: no hay automatismo que lo corra, y el archivo **no se edita a mano**. Ver `.opencode/plans/INTEGRACION-DOCUMENTAL-PLAN.md` para el plan de integración documental completo.
 >
 > Los vínculos abaixo son **verificables por script** (ver FASE-C del plan de integración).
 >
@@ -89,7 +89,7 @@ Para actualizar cualquier documento del repositorio (CHANGELOG, VERSION, docs):
 | `AGENTS.md` | (este archivo) | `§Contrato-con-phased_project_executor` | — |
 | `CONTRIBUTING.md` | `§Vinculo-con-la-Documentacion` | — | `§Paso-2` |
 | `phased_project_executor.md` | `§Flujo-Documental-Obligatorio` | `§Flujo-Post-Fase` | — |
-| `DOMAIN_PRIMER.md` | (auto-regenerado) | `§Paso-5b` | `§E7` |
+| `DOMAIN_PRIMER.md` | (arriba: se regenera al cerrar cada fase de implementación, con su comando) | `§Paso-5b` | `§E7` |
 | `prompt-fase-template.md` | — | — | `§2-Crear-Prompts` |
 | `validate_document_integration.py` | (script de validacion) | `validation.md §13` | — |
 

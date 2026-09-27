@@ -1,6 +1,6 @@
 ---
 description: Template para prompts de inicio de fase en proyectos phased_project_executor
-version: v1.6.0
+version: v1.7.0
 ---
 
 # Template: Prompt de Inicio de Fase
@@ -202,6 +202,11 @@ misma cifra a mano: transcribirla en varios cierres es justo lo que los hace div
 ```
 Actúa como [rol].
 
+Ejecuta únicamente [FASE-N] del plan [ruta del directorio del plan].
+Lee 05-prompt-inicio-sesion-fase-N.md, 01-plan-maestro.md §1 (la tabla de ACs) y §4,
+04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md y el
+workflow canónico.
+
 OBJETIVO: [Objetivo de la fase]
 
 CONTEXTO:
@@ -224,6 +229,35 @@ VALIDACIONES:
 ```
 ```
 
+**Forma canónica de la lista de lectura.** La oración `Lee …` del ejemplo no es prosa decorativa: cuando el
+plan consume packs de `scripts/build_phase_briefing.py` es el único canal por el que el generador sabe qué
+leer, y **no adivina** lo que no está escrito así. Las reglas son las del parseador, no una conveniencia de
+redacción; su medición vigente —cuántos prompts archivados la usan y cuántos no— vive en §S16 de
+`dependencias-fases.md` del plan `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`.
+
+- `Lee ` al **inicio de línea**, dentro de un bloque fenced. El generador recorre **todos** los bloques
+  fenced del documento y toma la primera ocurrencia, así que la oración puede ir en el bloque de
+  «Prompt de ejecución» o en otro: si está en otro, igual se lee.
+- Se detiene en el primer punto que esté a profundidad de paréntesis cero y al le siga un espacio o el fin
+  del bloque. **Todo punto fuera de paréntesis dentro de la lista la cierra ahí**, y las lecturas que
+  venían después se pierden sin aviso. Lo que escribas tras ese punto ya no es lectura declarada.
+- Un elemento por superficie, separados por coma, con ` y ` antes del último (la coma dentro del
+  paréntesis no separa). Cada elemento aporta **un solo** documento: se toma la primera ruta terminada en
+  `.md` que aparezca en él, de modo que dos documentos en la misma coma dejan uno sin declarar.
+- El documento se resuelve si el elemento nombra una ruta `.md` relativa al directorio del plan, o si dice
+  `workflow canónico`. Lo demás entra al pack como prosa declarada: un documento citado en prosa sin su
+  ruta sale `SECCION-NO-RESUELTA`, y un prompt sin esta oración sale `SIN-DECLARACION`. Los dos son cortes
+  correctos del generador, no defectos suyos —promoverlos a «pack completo» sería el verde vacío de
+  siempre.
+- Las secciones se nombran con `§`: `§2`, `§2 y §4`, un rango `§1-§4` (que se expande) o el título entero
+  `§Título de la sección`. Lo que va entre paréntesis después del documento es calificador: no corta la
+  oración y es lo que sostiene la profundidad que protege los puntos de su interior.
+
+Regla hermana, mismo instrumento y misma superficie: **si tocaste un generador, regenera sus derivados y
+commítalos juntos** (executor, checklist de §6). El `--check` de un derivado compara las shas de sus
+**fuentes**, no la del writer que lo imprime, así que un generador editado deja los packs vencidos con el
+verificador en verde.
+
 ---
 
 ## Checklist de Calidad del Prompt
@@ -238,6 +272,9 @@ Antes de usar este prompt, verificar:
 - [ ] **Criterios medibles**: Cada criterio es verificable (sí/no)
 - [ ] **Post-ejecución incluida**: Sección 5 no fue omitida
 - [ ] **Checklist completitud presente**: Sección 6 no fue omitida
+- [ ] **Lista de lectura en la forma canónica**: si el plan consume packs, el prompt declara su lectura con la
+  oración `Lee …` de §8 — una ruta `.md` por elemento, secciones con `§`, y el punto de cierre fuera de
+  cualquier paréntesis
 
 ---
 
@@ -271,6 +308,17 @@ Antes de usar este prompt, verificar:
 
 ## Versión
 
+- **v1.7.0** (2026-09-27): Mandato literal del operador sobre la familia **D-b** de la orden
+  `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22`, que cerraba en una sola formulación sus dos mitades. §8 gana la
+  **forma canónica de la lista de lectura** escrita por primera vez en una fuente del proceso: la oración
+  `Lee …` que `scripts/build_phase_briefing.py` parsea, con sus cinco reglas leídas del propio parseador
+  (inicio de línea y todos los bloques fenced, el punto de cierre a profundidad de paréntesis cero, un
+  documento `.md` por elemento, `workflow canónico` como única forma de resolver el workflow, y `§` para
+  secciones, rangos y títulos). El ejemplo de §8 ahora lleva esa oración escrita, y el Checklist de Calidad
+  gana su casilla. Regla hermana en el executor §6 (v2.26.0): tocar un generador obliga a regenerar sus
+  derivados y commitearlos juntos, porque el `--check` de un derivado mira las fuentes y no al writer. Origen medido:
+  §S16 y §S19 de `dependencias-fases.md` del plan `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`, donde vive la
+  población vigente de prompts con y sin la forma. Cambio de template: no toca código ni `VERSION.yaml`.
 - **v1.6.0** (2026-09-23): Bloque B de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` — proceso común sin
   capa extra de burocracia. El checklist de Criterios de Completitud (§6) deja de fijar el conteo
   `4/4` de `--quick` (es dinamico, lo imprime la corrida) y anade cuatro criterios proporcionales al
