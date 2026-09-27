@@ -1,0 +1,287 @@
+22 — Cierre de lo ejecutable de la orden y dosier decisorio: FASE 0 re-medida, la frescura de derivados
+ya no depende del reloj, `generado_por_sha` medido sin aplicar, y cuatro decisiones con su superficie real
+Medido 2026-09-26 sobre el árbol limpio de `ac4a7e1` (hijo de `5079c3c`). Toda cifra de este archivo se
+re-midió en esta sesión; donde el enunciado de la orden esperaba otro número, se anota el esperado y el
+obtenido, y se dice cuál de los dos gobernó la decisión.
+
+## 0. Mandato y límites de esta sesión
+
+Ejecutable de la orden `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` cerrado, y un dosier para que el operador
+elija. **Sin** commit, **sin** push, **sin** regeneradores, **sin** escritura en corpus gobernado: las cuatro
+decisiones de §5 no se ejecutaron, se presentan. Las tres lecturas de FASE 1 se delegaron en subagentes de
+solo lectura (`sibling-plans`, `open-rows`, `anchor-checks`); ninguna delegación tocó `.agents/`, los
+regeneradores ni una batería que clone o mute archivos.
+
+## 1. FASE 0: las ocho mediciones, todas cuadran
+
+| # | Medición | Esperado | Obtenido |
+|---|----------|----------|----------|
+| 1 | rama | `master` | `master` |
+| 2 | HEAD y su padre | hijo de `5079c3c` | `ac4a7e1`, padre `5079c3c` |
+| 3 | paridad `origin/master...HEAD` | `0 1` | `0 1` |
+| 4 | árbol limpio | limpio | `git status --porcelain` sin salida (0 líneas) |
+| 5 | `run_all_validations.py --quick` | 12/12, EXIT=0 | **12/12, EXIT=0** |
+| 6 | `verify_index_in_committed_tree.py` | EXIT=0, ~588 rutas | **EXIT=0**, `339 IDs`, `nombre=328 commit=11 sin_fuente=0`, **588 rutas materializadas** |
+| 7 | `verify_packs_in_committed_tree.py` | EXIT=0, 5/5 | **EXIT=0**, cinco `[OK]`, `5/5 reproducidos, 0 divergentes, 0 no evaluables` |
+| 8 | funciones test en el árbol commiteado | 4582 | **4582** |
+
+La punta y la paridad se leen con `git rev-parse --short HEAD`, `git rev-parse --short HEAD^` y
+`git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD`. No se publican como
+invariante: cualquiera de las dos se refuta sola con el siguiente commit o el siguiente push, que es justo lo
+que le pasó a `21-` §7 dos veces el mismo día. No hubo divergencia que detuviera la sesión.
+
+## 2. FASE 2.1: la frescura de derivados ya no mira al reloj — cerrado, sin hallazgo nuevo
+
+`build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check`, dos corridas sin ningún
+cambio entre ellas, con tres segundos de separación: **salida idéntica y `EXIT=0` en las dos**, cinco líneas
+`[OK] FASE-X: N fuentes frescas (procedencia distinta, no vence)`.
+
+El veredicto no depende del reloj, y se ve por qué en el código: la rama de decisión casa
+`sha_de(ruta)` contra `src["sha256"]` (`scripts/build_phase_briefing.py:718-726`); la fecha sólo decora el
+mensaje (`procedencia_distinta` se calcula en `:727` y se usa en `:738`). El defecto que abrió S15 sigue
+curado y la normalización de S19-(b) sigue en su sitio. **Ninguna de las dos corridas escribió en disco**
+(sólo `--check`; `--carga` e `--informe` no se invocaron, y su default pisa evidencia cerrada de FASE-D).
+
+Límite del verde, declarado en vez de barrido: `--check` sólo es ciego al reloj si el bloque de procedencia
+publica `sha256`. Con `:709-711` una fuente sin sha declarado produce `FUENTE-ILEGIBLE`, que sí sube el
+`salio` a 1 — no es un verde vacío.
+
+## 3. FASE 2.2: `generado_por_sha`, medido y no aplicado
+
+La fila S19 del libro de deuda (`dependencias-fases.md`, bloque de la cura (b)) propone una cuarta opción:
+sellar el sha del escritor como procedencia **no gobernante**, y afirma tres cosas — «coste ~el de la
+normalización», «no re-vence nada» y «(b) lo necesita para atribuir el rojo». Las tres se midieron. **No se
+tocó `scripts/build_phase_briefing.py`.**
+
+**Coste en líneas de los cinco packs.** El meta ya publica `generado_por` con la *ruta* del escritor y sin su
+sha, una sola vez por pack: `grep -c '"generado_por"'` da **1 en cada uno, 5 en total** (la clave sale de
+`json.dumps(..., indent=2)` en `scripts/build_phase_briefing.py:608-620`, así que una clave nueva es una
+línea nueva). Sellado sólo en el meta: **+5 líneas sobre 9.991** (0,05 %). Los cinco packs suman
+**9.991 líneas** — A 1.705, B 1.463, C 1.639, D 1.632, RELEASE 3.552 — cifra re-medida hoy; el denominador
+que citan `19-` y el docstring del verificador (`9.481`) está vencido, y `19-` §3 ya venía registrando la
+deriva 9.481 → 9.621 → 9.636.
+
+El **numerador** de esa medición vieja, en cambio, sigue exacto: **53 líneas con sello UTC** = 48 sellos
+en prosa (`grep -c '· generado \`'` → 8+7+11+7+15) + 5 `"generated_at":` del meta. Y hay una población mayor
+que la anterior no nombra: **58 líneas** llevan alguno de los cuatro tokens que `NORMALIZAR` borra
+(`scripts/verify_packs_in_committed_tree.py:42-47`; por pack 10+9+13+9+17), porque 48 líneas de prosa cargan
+además `HEAD \`sha\`` y cinco más cargan `"head":`. Es decir: el verificador normaliza 58 líneas y
+`19-`/el docstring describen 53. No es un rojo — es un criterio dicho dos veces con poblaciones distintas, y
+conviene saberlo antes de gobernar nada por ahí.
+
+**¿Podría (b) atribuir un rojo de escritor con ese dato?** Sí, pero no *necesita* el dato: el verificador ya
+corre el escritor **de la revisión bajo verificación** (`cwd=clon` con `ESCRITOR` relativo,
+`scripts/verify_packs_in_committed_tree.py:38,133-135`), de modo que un `[DIVERGE]` ya significa «el pack
+commiteado no es lo que este árbol produce». Y `_primera_diferencia` ya imprime la diferencia en su contexto
+(24 + 34 caracteres), que para una edición del escritor muestra el token viejo y el nuevo. La prueba está
+commiteada y es la que manda: `tests/test_verify_packs_in_committed_tree.py:108`
+`test_detecta_la_edicion_del_escritor_que_el_check_no_ve` exige a la vez `--check` con `returncode == 0`
+(`:121`) y verificador de packs con `returncode == 1` y **`"8/99" in stdout`** (`:127-128`). O sea: el rojo ya
+se atribuye leyendo el diff. Lo que el sha sumaría es una **etiqueta de causa** sin lectura humana del diff.
+
+**Dónde la fila se equivoca, y esto es lo que cambia la decisión.** «No re-vence nada» sólo es verdad para
+`--check` (el campo no entraría en la llave de fuentes). Para el verificador de packs, si el sha se sella y
+**no** se normaliza, una edición del escritor que no cambia ni un byte del producto —un comentario, un
+renombre— re-vence los cinco packs de golpe: rojo de información nula, exactamente el defecto por el que
+`19-` §5 **descartó la opción (a)** («gobernar al escritor desde `--check` fabricaría un rojo obligatorio de
+información nula»). Si **sí** se normaliza, deja de servirle al verificador: la normalización borra los dos
+lados, así que la atribución exige un paso aparte que lea el sello y case contra el sha del escritor en
+el clon. Coste honesto, entonces: +1 clave en el meta del escritor, **+1 patrón en `NORMALIZAR`**, y ~10
+líneas de lectura/informe en el verificador. Y si en algún momento se lo gobernara a `--check`, la aserción
+`:121` cae con su mensaje «el control perdió su premisa» — la casa ya dejó cableada la trampa.
+
+**Lectura profesional, sin ejecutarla:** el dato vale poco como gobernanza y algo como diagnóstico. Su valor
+real no es (b), que ya atribuye, sino **la opción (c)**: sin el sello, la regla «si tocaste un generador,
+regenera sus derivados» no tiene dónde comprobarse; con él, un verificador barato (sin clon) podría decir «el
+escritor cambió desde que se selló este pack» y nombrar al culpable. O sea: (d) sirve a (c), no a (b).
+
+## 4. FASE 1: tres lecturas, con dos correcciones al enunciado de la orden
+
+**4.1 Planes hermanos.** Ninguno de los tres se archivó: los tres siguen en `.opencode/plans/` y en
+`Archives/` hay 27 planes. `EVALUACION-JEV-TYPESAFE-2026-09-21`: cuatro prompts (A, B, C, RELEASE), **ninguna
+fase declarada CERRADA**; el estado vivo vive en `README.md:3`; dos contradicciones internas, FASE-A
+(`05-prompt-...-A.md:3` «PENDIENTE» contra `README.md:22` «EJECITADA offline 2026-09-21») y FASE-B (el prompt
+aún abre «BLOQUEADA POR DEPENDENCIA» contra la re-medición del 2026-09-25 en `README.md:23`).
+`REFACTOR-WHATSAPP-ENTREGA-2026-09-18`: doce prompts, cerradas A, G, 0 y B, reanudación en FASE-C
+(`README.md:3`); **desacuerdo con el registro central**: `docs/contributing/REGISTRY.md:11537` consigna FASE-B
+como «INCOMPLETA (A2/A3 pendientes de autorizacion, A4 con dueno)» mientras el plan dice «CERRADA CON DEUDA
+REGISTRADA» (`README.md:30`).
+`VERIFICADOR-ESCRITURA-QMIND-2026-09-20`: confirmado, **cero** `05-prompt-*-fase-*.md`; son cuatro archivos en
+total y la fase se llama FASE-UNICA (`05-prompt-inicio-sesion.md:1`, `:3` «Estado: PENDIENTE»). Su estado
+**no es legible por prompt de fase** y sí por `README.md:3-4` («NO EJECUTADA», reconciliado 2026-09-24),
+`01-plan-maestro.md:3` y `00-lecciones-capitalizadas.md:3`; su fila de seguimiento vive en el plan hermano
+(`REFACTOR-WHATSAPP.../10-analisis-post-implementacion.md:123`). REGISTRY no tiene ninguna de sus fases.
+
+**4.2 Filas abiertas.** En `dependencias-fases.md`: D3, D4, D5 (estas dos con dueño ajeno:
+`TRIBUNAL-ENFORCEMENT-OBS-2026-09-11`), D6 (dormida con causa), D7, D8, D9, S16, más dos deudas sin número:
+la frontera de red «NO DETERMINADO» (`:184-187`) y la divergencia de política `AGENTS.md` ↔
+`docs/CONTRIBUTING.md` sobre `DOMAIN_PRIMER` (`:215-220`). En `10-analisis-post-implementacion.md`: S1, S2,
+S3, S4, S5, S6, S9, S10, S14, S16, AC15, las cinco propuestas de revisión humana y siete casillas `- [ ]`
+abiertas (`:267`, `:292`, `:340-347`).
+**Cinco filas de ese archivo están vencidas** porque `10-analisis` no se escribió después de `c85dff9`: S2
+(media D2 ya ejecutada), S7 (D10 cumplida el 2026-09-25), S8 (los pines ya re-anclados), S9 (D2 ejecutada) y
+la fila `FASE-RELEASE` de la tabla de estados (`:24` «PENDIENTE» contra `:355` «ejecutada en su parte
+offline»). La enumeración `:395` sigue listando **D2** como viva. Y S19/S20 **no aparecen** en ese archivo:
+ninguna mención. El libro `dependencias-fases.md` sí está al día para S20; para S19 no: `:458` sigue diciendo
+«Sigue sin implementar» y `:502` «todavía sin implementar», contradichas por `:526` («Cura (b) de S19
+implementada el 2026-09-26»), y el encabezado S19 nunca recibió marca de cierre. Lo vigente de S19 es:
+(a) descartada con medición en contra, (b) implementada, (c) pendiente de mandato, (d) `generado_por_sha`
+medida en §3 de este archivo y no aplicada.
+
+**4.3 Anclas: las cuatro siguen apuntando, con dos avisos.** `10-analisis:386` y `:390` **no se movieron**, y
+tampoco `dependencias-fases.md:113` (D8) ni `:114` (D9). Pero el enunciado espera en las dos primeras la
+frase «siguen sin aceptar ni rechazar» y esa frase vive **sólo en `:390`**, con `rechazar` cortado a `:391`
+por el sangrado de 86 columnas; `:386` dice otra cosa («se declaran **pendientes con su dueño**»). Segundo
+aviso: el rango `L-VCF-10…14` de `:386`/`:390` es una elipsis, así que `grep -c 'L-VCF-14'` devuelve **1** y
+está en `:89`, la fila de la tabla — no en las dos líneas citadas. Verificar propuesta por propuesta contra
+esas dos líneas es un falso negativo garantizado con o sin negritas. Y la asimetría de marcado es inversa a
+la hipótesis del enunciado: en la tabla de deuda están **en negrita** D6, D7 y D10 (`:111`, `:112`, `:115`) y
+**sin negrita** D8 y D9 (`:113`, `:114`), de modo que `\*\*D8\*\*` da 0 por ausencia real de marcas y no por
+presencia de ellas. La tabla de propuestas llega hasta **L-VCF-19**, no hasta 14: 10…14 son las cinco
+sometidas a revisión humana; 15…19 son lecciones ya redactadas que no forman parte de esa decisión.
+
+**4.4 Corrección a un término del enunciado.** «D7 (+S10 que despierta D6)» no describe el registro. La
+cadena sale de D7 en las dos direcciones: `dependencias-fases.md:290-291`, `10-analisis:107` («Al activarlo
+cae la decisión de S10») y `:201-203`. **S10 no despierta a D6**: S10 está puerta-adentro de D7, y el gate de
+D6 es el `acceptance` de AC15, que sólo se ejerce con proveedor real, o sea con D7. `grep -E
+'despierta|despiert'` sobre los dos archivos: **0 coincidencias**. AC15 sigue `NO-EJERCITADO`
+(`dependencias-fases.md:39`, `10-analisis:245-248`, `:389`) con contrato E4, que es el techo alcanzable sin
+activar D7.
+
+**4.5 Lo que el enunciado daba por cierto sobre S14 y resultó estar ya escrito.** La rectificación del
+2026-09-25 está en `10-analisis:147-158` y confirma la espera: «**ese `git mv` no dispara S14** y no cambia el
+corpus gobernado»; lo que la dispara es «correr el triaje con `--plans-dir` sobre una copia o un árbol
+extraído, con las definiciones de `.opencode/context/` sin trasladar». S14 sigue **ABIERTA**, dueño «este
+plan, FASE-D o RELEASE». El `git mv` sí tiene consecuencia propia, y no es S14:
+`dependencias-fases.md:53` — «el pack se **regenera con la ruta trasladada antes** de verificarlo».
+
+## 5. FASE 3: cuatro decisiones, con costo re-medido
+
+### D-a — atar los verificadores al `--quick`
+
+Tiempos re-medidos hoy, dos corridas cada uno, contra la espera del enunciado:
+
+| Instrumento | Esperado (21- §6) | Medido hoy | Desvío |
+|-------------|-------------------|------------|--------|
+| índice en el árbol del commit | 5.518 ms | **4.373 / 4.361 ms** | −21 % |
+| packs en el árbol del commit | 2.392 ms | **2.362 / 2.370 ms** | −1 % |
+| `--quick` completo | 31.987 ms | **23.975 ms** | −25 % |
+
+Los tres veredictos siguen siendo `EXIT=0`; el desvío es de máquina, no de criterio, y la casa ya dijo que
+estos números son de corrida. Sobre la base de hoy: atar sólo packs **+2,4 s (+9,9 %)**; atar los dos
+**+6,7 s (+28,1 %)**, dos clones de 588 rutas.
+
+**Donde el enunciado se queda corto, y es la razón por la que esto merece tu palabra.** El denominador no
+está pineado en cinco sitios sino en **28 literales de seis rutas**, y la primera de ellas es la propia
+herramienta: `scripts/run_all_validations.py` trae **los doce ordinales hardcodeados** del rápido (`[1/12]` …
+`[12/12]`, líneas 117-742) y **cuatro** del completo (`[13/16]` … `[16/16]`, líneas 776-866), mientras el
+resumen es dinámico (`total_count = len(self.results)`, `:904`, impreso en `:918`). El modo completo corre
+los doce primero y después `if not self.quick:` (`:92-94`), así que **hoy mismo**, en completo, doce líneas
+dicen `/12` y cuatro dicen `/16` bajo un `TOTAL: 16`. Leído del código, no de una corrida: el completo invoca
+pytest y no se corrió en esta sesión. Consecuencia para la decisión: sumar un check obliga a re-escribir 12
+literales del rápido (y 4 del completo, → 17 u 18) **dentro del script**, no sólo los pines:
+
+| Ruta | Literales | Qué |
+|------|-----------|-----|
+| `scripts/run_all_validations.py` | 12 + 4 | ordinales impresos, hardcodeados |
+| `scripts/build_phase_briefing.py` | 2 | `[8/12]` en un comentario (`:450`) y en un **mensaje emitido** (`:565`) → viaja a los cinco packs |
+| `test_governance_numbers_reproduce_A1_A4.py` | 5 | `:74` `[9/12]`, `:75` `[10/12]`, `:76` `[12/12]`→`[16/16]`, `:78` `[10/12]`, `:120` `fuentes["quick"]["total"] == 12` |
+| `test_governance_numbers_mutation_por_asercion.py` | 3 | `:58` `K_A3`, `:105`, `:121` |
+| `tests/.../governance_numbers/fixtures/phased_project_executor.md` | 1 | `:315`, fixture que el test anterior lee: mueve con él |
+| `test_briefing_se_genera_por_fase.py` | 1 | `:111` |
+
+A eso se suman, por arrastre y sin edición manual: los cinco packs derivados (el mensaje de `:565` se
+copia adentro) y cuatro menciones del corpus (`01-plan-maestro.md:38`, `06-checklist:57`, `10-analisis:40`,
+`dependencias-fases.md:475`), tres de ellas ya marcadas VENCIDA o rectificada, o sea congeladas por
+`validate_plan_citations.py`. Lo que **no** hay que tocar: `.agents/workflows/phased_project_executor.md`
+no pinea el denominador del rápido — líneas 79, 325 y 716 delegan el ordinal a la corrida, que es la regla
+de «los conteos los imprime la corrida». Así que D-a **no** abre configuración central ni choca con AC17.
+
+Tercera ronda de re-anclaje, entonces, con 28 literales en vez de 5. Opciones: (i) nada, (ii) sólo packs,
+(iii) los dos. Mi lectura, sin ejecutarla: (ii), porque el de packs es el único que cierra un hueco que
+ningún otro check ve (S19) y el del índice ya está cubierto por `[6/7]` del pre-commit, que sí bloquea el
+commit; y el costo de la ronda de re-anclaje es el mismo con dos que con uno, porque los ordinales del script
+se re-numeran igual.
+
+**Cuarta opción, evaluada después y descartada con mecanismo.** Se ocurrió que en vez de re-anclar 16
+literales podían volverse **dinámicos** los ordinales del script, jubilándolos a ellos y con ello la mitad de
+la superficie. No:
+`scripts/validate_governance_numbers.py:99` define
+`PRINT_LABEL_RE = print\(f?["']\[(\d+)/(\d+)\]` y construye el registro de emisores **«leyendo el código»**
+(`:207`, `:241-242`), no corriendo la corrida; el modo se deriva por pertenencia en `:277`. O sea que los
+ordinales hardcodeados **son la fuente de verdad** contra la que el check 12 contrasta toda afirmación de
+denominador, y pasarlos a f-string hace que el regex deje de casar: el registro queda vacío y se ciega al
+instrumento cuya razón de ser es cazar denominadores vencidos. Descartada por medición del lector, no por
+criterío. Lo que sí queda sin gobernar es la contradicción **interna** del script (etiquetas que dicen 12
+frente a un `TOTAL` dinámico en `:904/:918`): el verificador contrasta documentos contra el registro, no al
+script contra sí mismo, así que olvidar de re-etiquetar no se auto-evidencia. La cura de eso no es quitar los
+literales sino **una guarda de dos líneas** que exija `total_count == int(última etiqueta impresa)`, para que
+la contradicción corte roja en vez de quedar decorativa. Es código, y pide instrucción aparte igual que D-a.
+
+### D-b — convención (c) en el executor
+
+Escribir en `.agents/workflows/phased_project_executor.md` «si tocaste un generador, regenera sus derivados y
+commitealos juntos». **Config central: no la toco sin instrucción explícita** (AC17; el propio libro lo
+reclama: `dependencias-fases.md:465-466` «sigue sin escribirse en el executor por falta de instrucción
+explícita, no por falta de acuerdo»). Dos hechos que pesan y no estaban en el enunciado: (1) **S16 es la
+misma superficie** (`.agents/workflows/templates/prompt-fase-template.md` §8, dueño en
+`dependencias-fases.md:317-319`) con el mismo bloqueo, así que una sola instrucción literal puede cerrar D-b
+y S16 de una vez; (2) su límite ya está probado: sin el sello de §3, la regla no tiene instrumento que la
+verifique — queda como disciplina manual, que es lo que este plan viene intentando jubilar.
+
+### D-c — archivado del plan
+
+Práctica observada, no inferida: `git mv` **nunca va solo**. El executor `:1585` (R2.5 «El cierre archiva») lo
+formula en un solo commit con `validate_opencode_refs.py --fix`, `validate_plan_citations.py
+--update-baseline` y `--quick` en verde; `Archives/` queda fuera del alcance de `validate_plan_closure.py`.
+Y el propio plan lo declara tercer momento con autorización propia (`04-contrato-ejecucion.md:61`, `:285`;
+`05-prompt-...-RELEASE.md:44`). Coste propio: mover vence los cinco packs y el índice (ambos recorren
+`.opencode/plans/` por glob; es la familia de L-VCF-17), y `dependencias-fases.md:53` obliga a regenerar el
+pack **con la ruta trasladada antes** de verificarlo. **Portón que decide el orden**: D9 exige `--upload`
+**antes** del `git mv` y segunda regeneración del índice **después** (`dependencias-fases.md:114`), así que
+elegir (iii) ahora violaría el orden registrado y ataría esta decisión a un portón externo de FASE 4. S14, en
+cambio, **no** la dispara el `git mv` (§4.5). Y ningún hermano está archivado, con deudas vivas los tres.
+
+### D-d — dosier humano
+
+Las cinco propuestas `L-VCF-10…14`, dueño el operador por el contrato **E3**, en `10-analisis` filas
+`:83`, `:84`, `:85`, `:88`, `:89`: **10** «cero llamadas de red» no era verificable y el guard vivía en un
+`conftest` que no resolvía; **11** la resta del denominador `.py` dejó de cerrar por un archivo
+(`.venv-wsl`, excluido por nombre de componente y solapado con otras exclusiones); **12**
+`validate_governance_numbers.py --report` sin destino **sobrescribió evidencia cerrada de FASE-A**; **13** el
+primer triaje **no podía perder** (pool construido excluyendo lo ya anclado, verde sobre conjunto vacío);
+**14** un JSON parseable pero no conforme se reportaba como `AttributeError` en vez de `LECTOR-FALLIDO`.
+Razón por la que ninguna se decidió sola: con proveedor falso cada una prueba la mecánica del camino, no la
+pertinencia. Y D7, con la cadena corregida en §4.4.
+
+## 6. Lo que NO se hizo
+
+Nada atado al `--quick`. Nada escrito en `.agents/` ni en `.cursorrules`. Ninguna escritura en
+`.opencode/plans/` ni `.opencode/context/`, así que la cola de FASE 2.4 no se invocó: sus dos verificadores
+corrieron solos en FASE 0 y dieron verde sin que yo tocara nada gobernado. `generado_por_sha` no aplicada.
+Ningún `git mv`. Ni D8 ni D9. **Commit:** este archivo viaja en su propio commit de esta sesión, y su sha no
+puede nombrarse aquí porque ningún commit nombra al propio. **Push:** no ejecutado; su autorización es
+separada y con el gate L3 preguntado y declarado. La punta y la paridad de §1 se leen con los comandos de esa
+sección y no se publican como cifra: se refutan solas con el siguiente commit.
+
+## 7. Postura después de escribir
+
+`--quick` re-corrido tras la escritura de este archivo: sigue **12/12 con `EXIT=0`** y el inventario de citas
+del plan sin cambios, porque `evidence/` no es fuente gobernada. Sin regeneradores, sin índice, sin `--check`
+de packs: nada de lo escrito en esta sesión entra al corpus que ellos recorren.
+
+## 8. Portones externos (se piden juntos, una sola vez, al cerrar)
+
+1. Push del commit local y de los que esta sesión cree, con el gate **L3 preguntado y declarado pasado o
+   saltado**. El commit de este expediente quedó hecho en esta sesión por instrucción escrita literal
+   («commitéame el 22- de CIERRE-ORDEN-2026-09-25»); el push sigue sin autorización y es acción separada. En
+   este repo la letra de un menú no autoriza ni el push ni el L3: hizo falta confirmación escrita el
+   2026-09-26 (`21-` §7), y el primer intento por formulario fue rechazado.
+2. D8 (consulta Q7 a QMind, con el ID `01a04d98-b7bd-778c-8441-26fdc7e35f45`, no el nombre del notebook:
+   `--nb iah-cli-lecciones` devuelve `error: Bad request`) y D9 (`--upload` de `10-analisis` a QMind, con
+   verificación **por contenido descargado y sha**, no por título). D9 es pre-condición de D-c por orden
+   registrado.
+3. Re-medir el sha del manifiesto de `C:/Users/Jhond/Github/iah-evidence-archive/2026-09-26-puerta-c/`
+   (esperado `486d95a87ba9e0eecb20e4c22e3bd6fda888b560de2cf385afe4735ee1a69357`, 409.302 B, 1.833 filas).
+   Vive fuera del workspace: si la lectura se niega, **se registra la negativa y no se reintenta**.
+   Sin medir en esta sesión: no pedí ese acceso porque su salida no gobierna ninguna de las cuatro decisiones.
