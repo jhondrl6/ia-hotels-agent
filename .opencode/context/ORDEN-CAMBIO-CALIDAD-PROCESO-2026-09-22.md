@@ -347,7 +347,14 @@ CONTEXTO de S11/S12, commit/push del operador y autorizaciones separadas para B,
 > 2026-09-26 salieron seis commits más, cada uno con su hook en verde. El push también se ejercitó ese
 > día, con su rango consignado en el expediente 22- del cierre. Lo que hoy vuelve a estar pendiente es el
 > remoto de esos seis, y se lee con `git rev-list --left-right --count origin/master...HEAD` después de
-> `git fetch`: no se fija en esta celda porque cualquier commit lo mueve⟧. Y la paridad que esta cita publicaba (`0`, medida el 2026-09-23) es un **antecedente fechado**,
+> `git fetch`: no se fija en esta celda porque cualquier commit lo mueve⟧ ⟦**Ese «pendiente» quedó barrido el
+> 2026-09-27 por los propios empujes del día**: los seis commits salieron con el rango `eef7052..2a778a4`, después
+> `2a778a4..1e4cb52`, y la tanda de cierre (S29 + S31 + archivado de JeV + cierre formal + cifra de `AGENTS.md`,
+> un commit único por no ser reproducibles los árboles intermedios) salió con `1e4cb52..84282c1`. Cada empuje
+> verificado por **identidad de objeto** (`git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`) y
+> por alcanzabilidad del ancestro (`git merge-base --is-ancestor`), que es la forma que sobrevive: la paridad no se
+> fija aquí. Se conserva la frase vencida porque su curso es la lección —un «hoy está pendiente» escrito sobre un
+> remoto que otro permiso va a mover⟧. Y la paridad que esta cita publicaba (`0`, medida el 2026-09-23) es un **antecedente fechado**,
 > no el estado del remoto de hoy: se re-mide con `git fetch origin --quiet && git rev-list --left-right
 > --count origin/master...HEAD`.
 
