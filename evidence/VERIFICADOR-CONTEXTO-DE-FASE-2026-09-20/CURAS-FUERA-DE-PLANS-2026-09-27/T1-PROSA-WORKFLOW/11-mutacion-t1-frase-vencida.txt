@@ -1,0 +1,27 @@
+### MUTANTE T1 (R2.8) — parrafo §2.5 del workflow revertido a la frase vencida de HEAD
+### El fixture del contraejemplo NO se revierte: mide si algo corta la divergencia workflow<->copia y si algo corta la prosa vencida.
+### Ejecutado 2026-09-27 sobre el arbol de trabajo con HEAD=505cd44
+
+$ sed -n '728,732p' .agents/workflows/phased_project_executor.md
+- **Alcance hacia delante** (misma política que `validate_plan_citations.py`, decisión DA-HF3): solo
+  planes cuyo nombre lleva fecha `≥ 2026-09-12` (esta versión del executor es la que creó el
+  artefacto) y que no estén en `Archives/`. Los 25 archivados no pudieron tenerlo nunca y un check
+  que los hiciera fallar sería ruido permanente (L-HF1). La corrida imprime a cuántos planes miró y
+  quiénes quedaron exentos.
+
+$ python scripts/validate_governance_numbers.py
+[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 11 | historica-congelada 8 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 4 (total 17) | hook 7 pasos || familias no cubiertas: 4
+  medido 2026-09-27 con: python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA  S12)
+EXIT=0
+
+$ python -m pytest -q tests/quality_gates/governance_numbers tests/test_validate_lesson_capitalization.py
+........................................................................ [ 91%]
+.......                                                                  [100%]
+79 passed in 24.01s
+
+$ python scripts/run_all_validations.py --quick
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0

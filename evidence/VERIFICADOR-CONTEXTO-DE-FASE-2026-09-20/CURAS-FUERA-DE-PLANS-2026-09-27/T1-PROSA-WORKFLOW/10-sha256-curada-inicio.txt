@@ -1,0 +1,2 @@
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 *.agents/workflows/phased_project_executor.md
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 */tmp/wf-cura.bin

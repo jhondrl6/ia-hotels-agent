@@ -682,11 +682,18 @@ señal que midió este tramo). El script aplica a sí mismo la regla **R2.9**: d
 de `AUSENTE` (dice la ruta buscada) y de `LECTOR-FALLIDO` (dice el motivo), y **ningún verde sale del
 tercero**. Reporta, no reescribe: capitalizar es decisión de quien diseña el plan.
 
-- **Alcance hacia delante** (misma política que `validate_plan_citations.py`, decisión DA-HF3): solo
-  planes cuyo nombre lleva fecha `≥ 2026-09-12` (esta versión del executor es la que creó el
-  artefacto) y que no estén en `Archives/`. Los 25 archivados no pudieron tenerlo nunca y un check
-  que los hiciera fallar sería ruido permanente (L-HF1). La corrida imprime a cuántos planes miró y
-  quiénes quedaron exentos.
+- **Alcance hacia delante** (misma política que `validate_plan_citations.py`, decisión DA-HF3): manda el
+  **cutoff de fecha, no la carpeta**. Están en alcance los planes cuyo nombre lleva fecha
+  `≥ 2026-09-12` (esta versión del executor es la que creó el artefacto), **estén o no bajo
+  `Archives/`**; los anteriores al corte quedan exentos por su fecha, no por su ubicación. Desde el
+  commit `84282c1` la carpeta `Archives/` es un marcador de corpus y **no** una exclusión: saltarla por
+  estructura dejaba fuera el `00-` de un plan justo después de archivarlo, o sea un verde vacío sobre el
+  artefacto que se quería auditar (fila §S29 de `dependencias-fases.md` del plan
+  `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`). Lo que acota la población sin fabricar hallazgos de planes
+  anteriores a la regla del Paso 0 es el cutoff (L-HF1), no la ruta. La línea de cobertura de `C0`
+  imprime la población mirada con su forma `N archivados en el corpus, M de ellos en alcance`, más los
+  exentos por fecha y los del nombre sin fecha parseable. Ninguna de esas cifras se fija aquí: las
+  publica la corrida y se re-miden con `python scripts/validate_lesson_capitalization.py`.
 - **Lo que NO verifica**: la **pertinencia**. No puede saber si la lección que debía capitalizarse era
   otra, ni si el efecto alegado en «qué cambia» es real y no un AC cosmético escrito para satisfacer
   `C4`. Un `[OK]` significa «la forma exigida está». El límite está escrito en el propio script, en su

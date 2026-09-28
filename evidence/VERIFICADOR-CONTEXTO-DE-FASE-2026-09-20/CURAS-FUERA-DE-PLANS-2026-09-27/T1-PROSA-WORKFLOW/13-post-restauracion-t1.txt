@@ -1,0 +1,21 @@
+### POST-RESTAURACION T1 (el arbol curado vuelve a pasar) — medido
+
+$ python scripts/validate_governance_numbers.py
+[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 11 | historica-congelada 8 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 4 (total 17) | hook 7 pasos || familias no cubiertas: 4
+EXIT=0
+
+$ python scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT=0
+
+$ python scripts/build_phase_briefing.py --check
+[2] hace falta --plan <nombre|ruta>
+EXIT=0
+
+$ python scripts/run_all_validations.py --quick
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0

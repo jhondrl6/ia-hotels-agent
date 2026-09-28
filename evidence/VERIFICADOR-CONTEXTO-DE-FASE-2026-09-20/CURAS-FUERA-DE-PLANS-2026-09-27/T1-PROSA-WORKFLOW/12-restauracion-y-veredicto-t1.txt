@@ -1,0 +1,26 @@
+### RESTAURACION del mutante T1 (bytes exactos desde la instantanea previa)
+
+$ sha256sum antes (10-sha256-curada-inicio.txt)
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 *.agents/workflows/phased_project_executor.md
+
+$ sha256sum despues
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 *.agents/workflows/phased_project_executor.md
+
+CR_disco tras restaurar: 0
+
+### VEREDICTO DEL MUTANTE (R2.8) — medido, no inferido
+La prosa vencida NO produce rojo: validate_governance_numbers=EXIT 0 (19 instancias, 0 hallazgos),
+baterias governance_numbers+validate_lesson_capitalization=79 passed, quick=13/13.
+Consecuencia: la cura T1 es de texto y no tiene guard mecanico; el parrafo y su copia del
+fixture pueden volver a separarse del codigo sin que nadie lo corte. Declarado en la entrada
+v2.27.0 como limite, y aqui con la corrida. Lo que SI tiene dientes es el comportamiento
+(test_archives_no_se_excluye_por_estructura_sino_por_su_fecha y su hermano anclado a revision fija).
+
+### Nota de instrumento (para no repetir el error de esta tanda)
+La primera version del mutador buscaba el parrafo curado en 13 lineas y abortaba por ese
+desfase: el parrafo nuevo tiene 12 (medido con awk sobre el archivo curado). Ese abortno dejo el
+arbol mutado -la escritura iba despues del assert-, pero SI dejo una corrida anterior mia sobre el
+arbol CURADO etiquetada como mutante. La corrida de arriba (11-...) es la del mutante real, tras
+corregir el tamano del parrafo; la etiqueta de 11 se verifico reimprimiendo el parrafo mutado.
+Y el mutador quedo guardado aqui (mutador_t1.py) porque lee la frase vencida de HEAD con git show,
+no de un temporal: es re-ejecutable y auto-excluyente por sus dos asserts.
