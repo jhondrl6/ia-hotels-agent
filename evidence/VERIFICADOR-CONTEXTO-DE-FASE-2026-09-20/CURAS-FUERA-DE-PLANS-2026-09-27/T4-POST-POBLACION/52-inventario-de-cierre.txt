@@ -84,7 +84,17 @@ Rama `master`. Baseline de partida re-medida (los cinco checks de [1] casaron to
    publica el delta para que nadie lea «31 citas» como 31 planes que citan.
 
 
-## Cuenta final de la tanda y dos declaraciones
+> **Esta sección se refutó a sí misma al escribirse y así queda, no limada.** Anunciaba «cuenta final:
+> ocho commits» y ya eran **diez** al commitearse: los dos commits que faltaban por enumerar son,
+> exactamente, los que anotaban la cuenta y los que adjuntaron el POST definitivo. Es el mismo defecto de
+> fijar en el documento una cifra que el propio documento mueve — lo que esta casa ya cobró con la
+> «paridad» y con el `head` de los generados. **La cuenta no se publica aquí: se lee con
+> `git log --oneline origin/master..HEAD` (y su conteo con `git rev-list --count origin/master..HEAD`),
+> que es el comando que sigue siendo cierto después de este commit.** Lo que sí vale de esta sección es el
+> *motivo* de cada commit extra sobre los cuatro que preveía [10]: un derivado no se separa de la fuente
+> cuya métrica proyecta (§S32) y un hallazgo no se deja fuera del registro (criterio [11]).
+
+## Cuenta de la tanda y dos declaraciones
 
 **Ocho commits, no los cuatro de [10]:** `e2e44cd` (prosa §2.5 + fixture + evidencia T1) ·
 `6068f40` (los cinco packs derivados del §2.5) · `d86f610` (S17) · `ed732be` (S31) · `e7c722b` (registros
