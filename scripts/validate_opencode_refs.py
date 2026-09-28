@@ -206,7 +206,10 @@ def fix_broken(broken: List[Tuple[Path, int, str]]) -> Tuple[int, List[str]]:
                     f"{'ambiguo' if candidates else 'sin coincidencias'})"
                 )
         if changed:
-            md.write_text(text, encoding="utf-8")
+            # newline="\n": sin esto Windows traduce \n a \r\n y deja en disco CRLF sobre
+            # archivos que git almacena en LF (deuda S17; cuarta y quinta instancias medidas
+            # con --fix sobre 13 y 9 archivos respectivamente).
+            md.write_text(text, encoding="utf-8", newline="\n")
     return fixed, unfixable
 
 
@@ -246,7 +249,7 @@ def main(argv=None) -> int:
         lines = ["# Referencias históricas rotas congeladas (validate_opencode_refs.py)",
                  "# Formato: archivo|referencia — una por línea."]
         lines += [f"{key}|{ref}" for key, ref in entries]
-        BASELINE_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        BASELINE_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         print(f"[BASELINE] {len(entries)} referencia(s) congelada(s) en {BASELINE_FILE}")
         return 0
 

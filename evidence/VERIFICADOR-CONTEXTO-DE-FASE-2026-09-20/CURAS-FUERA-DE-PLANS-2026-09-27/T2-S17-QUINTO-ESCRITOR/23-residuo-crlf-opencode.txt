@@ -1,0 +1,25 @@
+### RESIDUO CRLF BAJO .opencode/ — medido al cerrar T2, preexistente y ajeno a esta sesion
+
+$ git ls-files --eol .opencode | awk '$1=="i/lf" && $2=="w/crlf"' | wc -l
+213
+$ git status --porcelain | wc -l
+5
+
+Desglose por extension: 176 md, 34 json, 2 md", 1 txt (mismo comando, columna 4).
+Reparto por directorio (top): 17 SR-PIPELINE-FIXES-2026-08-27, 17 CREDIBILIDAD-NUMERICA-2026-08-20,
+17 context/Historico, 14 DT4-RESIDUAL-FIXES/evidence/FASE-6, 13 RC1-RC2-ENTREGA-COHERENTE-2026-08-04,
+13 ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, 13 COHERENCIA-MODULO-ENTREGA-2026-08-03, 11 DELIVERY-ZIP-SINGLE-WRITE-2026-08-01,
+10 REFACTOR-PENDIENTE-V4.58.0, 8 DT-4-ROOT-CAUSE-2026-07-25/evidence, 8 DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24,
+6 EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione.
+
+Atribucion: ninguno es archivo tocado por esta sesion (se toco scripts/, tests/ y .agents/), y el
+porcelain esta limpio en ellos porque core.autocrlf=input normaliza al commitear: el arbol de trabajo
+y el arbol versionado no coinciden en finales de linea y git no lo avisa. La cura T2 cierra el
+defecto en el escritor; normalizar estos 213 es una reescritura masiva de planes ajenos y no entra
+en el alcance de la orden (queda declarado como pendiente con dueno S17).
+
+### Lo que SI se toco en esta sesion, medido por separado:
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md CR=0
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md CR=0
+.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md CR=0
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md CR=0

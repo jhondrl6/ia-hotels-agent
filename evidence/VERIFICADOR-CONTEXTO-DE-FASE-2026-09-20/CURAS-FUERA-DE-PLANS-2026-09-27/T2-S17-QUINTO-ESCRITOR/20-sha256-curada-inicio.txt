@@ -1,0 +1,2 @@
+f68dcfe1cc52f72773cd0e4b9af753a354f6fca56f7fbdf2104bcd01158260d7 *scripts/validate_opencode_refs.py
+b8b7b9e5eeb75253c9751bfbeee7e1397ddd6df0f6eee601a98d92508ee8adbd *tests/test_sync_writers_lf_y_fecha_readme.py

@@ -1,0 +1,22 @@
+### MUTANTE T2 (R2.8) — quitado el parametro `newline` de las dos escrituras del guion
+### Corrido por `mutador_t2.py`, que restaura los bytes en la misma ejecucion.
+
+$ python -m pytest -q tests/test_sync_writers_lf_y_fecha_readme.py        # con el guion MUTADO
+  exit=1 | 2 failed, 8 passed in 0.98s
+  FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf
+  FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf
+
+### Restauracion y post:
+  sha256 curada antes   : f68dcfe1cc52f72773cd0e4b9af753a354f6fca56f7fbdf2104bcd01158260d7
+  sha256 tras restaurar : f68dcfe1cc52f72773cd0e4b9af753a354f6fca56f7fbdf2104bcd01158260d7   IDENTICO
+$ python -m pytest -q tests/test_sync_writers_lf_y_fecha_readme.py        # tras restaurar
+  exit=0 | 10 passed in 0.78s
+
+### Los dos rojos son exactamente las dos escrituras curadas; las otras ocho pruebas
+(sync, doctor, S18 y el guard de destino) siguen verdes: el rojo es atribuible al
+parametro y no al entorno ni a otra puerta de la familia S17.
+
+### Nota de instrumento: la primera version de este mutador se escribio por heredoc de bash
+### y el escape `\n` salio comido — el patron llevaba un salto de linea real, el conteo daba 0
+### y el assert abortaba. Esa es la razon por la que el mutador vive en un archivo y no en la
+### linea de comandos. Medido 2026-09-27 con HEAD=6068f40

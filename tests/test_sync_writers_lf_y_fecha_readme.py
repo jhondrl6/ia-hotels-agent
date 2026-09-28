@@ -9,6 +9,12 @@ dependencias-fases.md` §S17 y §S18 (fuente única); este archivo es la cura, n
   `newline="\n"`. En un SO que traduce `\n` a `\r\n` eso re-escribe en CRLF archivos que git almacena
   en `i/lf` — medido en el cierre de FASE-RELEASE: 6 archivos `[FAIL] Line endings` y una
   normalización manual por bytes.
+- **S17, quinta puerta** — `scripts/validate_opencode_refs.py` escribe por dos caminos (`--fix` sobre
+  cada Markdown reparado y `--write-baseline` sobre `refs_baseline.txt`) y ninguno llevaba el
+  parámetro. Las tres pruebas de arriba no lo cubrían, y por eso la familia volvió a colarse: cuarta y
+  quinta instancia medidas el 2026-09-27, **13** y **9** archivos pasados a CRLF sobre disco por un
+  `--fix` de archivado. `git status` no lo ve —guarda LF de todos modos—, así que lo que se pierde es
+  el numstat del commit siguiente.
 - **S18** — la regla `readme_version_header` llegaba hasta la palabra `Actualizado` y dejaba la fecha
   detrás: el sync no la goberna, y su `--check` daba `IN_SYNC` con `README.md` diciendo
   «11 Septiembre 2026» mientras `VERSION.yaml` marcaba `release_date: 2026-09-25`.
@@ -41,6 +47,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 SYNC_SCRIPT = ROOT / "scripts" / "sync_versions.py"
 DOCTOR_SCRIPT = ROOT / "scripts" / "doctor.py"
+REFS_SCRIPT = ROOT / "scripts" / "validate_opencode_refs.py"
 SYNC_CONFIG = ROOT / "scripts" / "sync_config.yaml"
 OBSERVADOR = ROOT / "tests" / "support_observador_escrituras.py"
 README_REL = "README.md"
@@ -215,6 +222,32 @@ def _proyecto_doctor(tmp_path: Path, *, script_src: Path) -> tuple[Path, object]
                          raiz / "scripts" / "doctor.py")
 
 
+def _proyecto_refs(tmp_path: Path, *, script_src: Path, roto: bool = False) -> Path:
+    """Espejo minimo de `validate_opencode_refs.py`: su PROJECT_ROOT sale del `__file__` del script.
+
+    Copia el guion a `<raiz>/scripts/` para que el modulo resuelva `.opencode/` sobre el temporal y
+    nunca sobre el arbol del proyecto. El Markdown de espejo se escribe por **bytes**: abrirlo con
+    `write_text` aqui lo pasarfa a CRLF por la misma traduccion que se mide, y el experimento naceria
+    falseado (el mismo motivo por el que el README entra por `copyfile` en `_repo_sync`).
+
+    * `roto=False`: la referencia apunta a `anexos.md`, que existe **un solo** sitio bajo `.opencode/`
+      (en `context/`), asi que `--fix` la resuelve y re-escribe el Markdown.
+    * `roto=True`: se anade ademas `.opencode/plans/hueso.md`, sin candidato alguno: no es reparable,
+      queda rota y por eso `--write-baseline` congela una entrada en vez de un archivo vacio.
+    """
+    raiz = tmp_path
+    (raiz / "scripts").mkdir(parents=True, exist_ok=True)
+    (raiz / ".opencode" / "plans").mkdir(parents=True)
+    (raiz / ".opencode" / "context").mkdir(parents=True)
+    shutil.copyfile(script_src, raiz / "scripts" / "validate_opencode_refs.py")
+    (raiz / ".opencode" / "context" / "anexos.md").write_bytes(b"# anexos del espejo\n")
+    nota = "# Nota del espejo\n\nLeer `.opencode/plans/anexos.md` antes de cerrar.\n"
+    if roto:
+        nota += "Y el anexo suelto `.opencode/plans/hueso.md`.\n"
+    (raiz / ".opencode" / "plans" / "nota.md").write_bytes(nota.encode("utf-8"))
+    return raiz
+
+
 # ------------------------------------------------------------------------- S17: bytes LF
 
 @SIN_TRADUCCION
@@ -298,7 +331,99 @@ def test_los_escritores_no_tocan_el_arbol_del_proyecto(tmp_path):
         "rutas del motor no estaban redirigidas y la prueba escribio arbol ajeno")
 
 
+# --------------------------------------------------------- S17: quinto escritor (refs)
+
+@SIN_TRADUCCION
+def test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf(tmp_path):
+    """Quinto escritor de la familia S17: `validate_opencode_refs.py --fix` reescribe Markdown.
+
+    Cuarta y quinta instancias de la deuda (2026-09-27) salieron exactamente de aquí: el `--fix` del
+    archivado pasó **13** y luego **9** archivos de `i/lf` a CRLF sobre disco, y `git status` no lo
+    distingue porque git guarda LF de todos modos. La batería de arriba cubría a los otros tres
+    escritores y no a este, que es la puerta por la que la familia volvió a colarse.
+
+    El control va anclado a `REV_CONTROL_DEFECTUOSO`, no a `HEAD`: esta misma cura entra en el commit,
+    y desde ese árbol el control ya no tendría rojo con el que compararse (la lección fijada arriba,
+    medida en `bdd1c4c`). Verificado con `git show 5817edd:scripts/validate_opencode_refs.py`: sus dos
+    escrituras siguen sin `newline`.
+    """
+    raiz_v = _proyecto_refs(tmp_path / "r-vigente", script_src=REFS_SCRIPT)
+    main_v = _cargar(f"refs_v_{raiz_v.name}", raiz_v / "scripts" / "validate_opencode_refs.py")
+    assert main_v.main(["--fix"]) == 0
+    doc_v = next(p for p in (raiz_v / ".opencode" / "plans").rglob("nota.md"))
+    bytes_v = doc_v.read_bytes()
+    assert "anexos.md" in bytes_v.decode("utf-8"), (
+        "el --fix no reescribió la referencia: no se ejercitó la escritura que se quiere medir")
+
+    control = _fuente_commiteada("scripts/validate_opencode_refs.py", tmp_path / "c-ref")
+    raiz_c = _proyecto_refs(tmp_path / "r-control", script_src=control)
+    main_c = _cargar(f"refs_c_{raiz_c.name}", raiz_c / "scripts" / "validate_opencode_refs.py")
+    assert main_c.main(["--fix"]) == 0
+    doc_c = next(p for p in (raiz_c / ".opencode" / "plans").rglob("nota.md"))
+    bytes_c = doc_c.read_bytes()
+
+    assert b"\r" not in bytes_v, (
+        f"`--fix` sigue re-CRLF-eando el Markdown que reescribe "
+        f"({bytes_v.count(bytes([13]))} CR en {len(bytes_v)} bytes): S17, quinta instancia")
+    assert bytes_c.count(b"\r\n") > 0, (
+        "el control negativo no ejercitó el defecto: la versión commiteada del escritor tampoco "
+        "escribió CRLF, así que el verde de arriba no habría observado diferencia real")
+    assert bytes_v.replace(b"\n", b"\r\n") == bytes_c, (
+        "los dos escritores difieren en algo distinto de los finales de línea: el verde dejaría de ser "
+        "atribuible al parámetro `newline`")
+
+
+@SIN_TRADUCCION
+def test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf(tmp_path):
+    """Segunda escritura del mismo guion: `--write-baseline` deja `refs_baseline.txt` en LF.
+
+    Es la que dejó los 87 CR del baseline en la cuarta instancia medida (§S17). Un arreglo que cure solo
+    el `--fix` deja la otra puerta abierta, así que cada escritura se afirma por separado.
+    """
+    raiz_v = _proyecto_refs(tmp_path / "b-vigente", script_src=REFS_SCRIPT, roto=True)
+    mod_v = _cargar(f"refs_base_v_{raiz_v.name}", raiz_v / "scripts" / "validate_opencode_refs.py")
+    assert mod_v.main(["--write-baseline"]) == 0
+    base_v = (raiz_v / ".opencode" / "refs_baseline.txt").read_bytes()
+
+    control = _fuente_commiteada("scripts/validate_opencode_refs.py", tmp_path / "c-base")
+    raiz_c = _proyecto_refs(tmp_path / "b-control", script_src=control, roto=True)
+    mod_c = _cargar(f"refs_base_c_{raiz_c.name}", raiz_c / "scripts" / "validate_opencode_refs.py")
+    assert mod_c.main(["--write-baseline"]) == 0
+    base_c = (raiz_c / ".opencode" / "refs_baseline.txt").read_bytes()
+
+    assert base_v, "el escritor no publicó el baseline: la prueba quedaría verde vacía"
+    assert b"\r" not in base_v, (
+        f"`--write-baseline` escribe CRLF sobre un archivo `i/lf` "
+        f"({base_v.count(bytes([13]))} CR): S17")
+    assert base_c.count(b"\r\n") > 0, (
+        "el control de la baseline no ejercitó el defecto")
+    assert base_v.replace(b"\n", b"\r\n") == base_c, (
+        "los dos baseline difieren en algo distinto de los finales de línea")
+
+
+def test_el_guion_de_refs_no_toca_el_arbol_del_proyecto(tmp_path):
+    """Guard de destino: el escritor corre sobre el espejo y no abre ni un archivo del repo real.
+
+    No se afirma por estado final sino por **operaciones observadas** (S13): un `huellas` igual antes
+    y despues no distingue «nadie escribio» de «alguien escribio y devolvio los mismos bytes». Aqui
+    ademas hay ancla positiva: el escritor SI escribe en el espejo, y eso se ve.
+    """
+    obs = _cargar("observador_refs_guard", OBSERVADOR)
+    raiz = _proyecto_refs(tmp_path / "guard-refs", script_src=REFS_SCRIPT, roto=True)
+    mod = _cargar(f"refs_guard_{raiz.name}", raiz / "scripts" / "validate_opencode_refs.py")
+    with obs.observador_de_escrituras() as registro:
+        mod.main(["--fix"])
+        mod.main(["--write-baseline"])
+    dentro_del_arbol = registro.dentro_de(ROOT)
+    assert registro.dentro_de(raiz), (
+        "el escritor no escribio en el espejo: la ausencia de arriba seria un verde vacio")
+    assert dentro_del_arbol == [], (
+        f"el escritor abrio archivos del proyecto real: {registro.rutas()} — sus rutas no estaban "
+        "redirigidas al espejo")
+
+
 # ---------------------------------------------------------------------- S18: fecha README
+
 
 def test_check_detecta_la_fecha_desfasada_y_el_commiteado_no(tmp_path):
     """El corte de cobertura declarado en S18: `[3/11] Version Sync` dio PASS con la fecha vieja."""
