@@ -84,9 +84,38 @@ Rama `master`. Baseline de partida re-medida (los cinco checks de [1] casaron to
    publica el delta para que nadie lea «31 citas» como 31 planes que citan.
 
 
+## Cuenta final de la tanda y dos declaraciones
+
+**Ocho commits, no los cuatro de [10]:** `e2e44cd` (prosa §2.5 + fixture + evidencia T1) ·
+`6068f40` (los cinco packs derivados del §2.5) · `d86f610` (S17) · `ed732be` (S31) · `e7c722b` (registros
+datados + cifra de AGENTS.md + sus derivados) · `03c69ad` (fila §S32 + precisión de la pasada quinta) ·
+`3be1c7d` (crudos de cierre: suite POST, prueba por commit y su tabla inválida) · HEAD (antecedente
+`L-VCF-20` en §S32 + packs e índice re-emitidos). Los cuatro extra sobre el plan salen de dos cosas que
+obligó la medición, no de una decisión de estilo: un derivado no puede separarse de su fuente proyectada
+(§S32) y un hallazgo no puede quedar fuera del registro (criterio [11]).
+
+**Errata declarada, no enmendada** (regla de la casa: sin `--amend`): el mensaje de `3aeb89b` dice
+«no puede leerse como hallazgo**原创**» donde quería decir «hallazgo **original**». Son dos caracteres CJK
+que se colaron al redactar; el resto del mensaje es lo que se quiso decir. Se consigna aquí en vez de
+reescribir el commit, y es la segunda vez que esta familia de defecto aparece en el repo (la anterior,
+`docs/GUIA_TECNICA.md` con dos CJK ya en HEAD, quedó anotada como ajena).
+
+**Verificación de la cuenta, por árbol** (comando y salida, sin tubería intermedia):
+`python scripts/verify_packs_in_committed_tree.py --rev <sha>` → `EXIT=0` en `e7c722b`, `03c69ad`,
+`3be1c7d` y HEAD. El único árbol de la tanda que NO se reproduce es `e2e44cd`, y por eso existe `6068f40`.
+`--quick` en **13/13** con `[GUARDA]` sobre el árbol final.
+
+
 ## Empuje
 
-`git rev-list --count origin/master..HEAD` = **7** y `git rev-list --left-right --count
-origin/master...HEAD` = `0 7` al cerrar. **No se empujó**: requiere instrucción literal del operador, y el
-L3 deep del repo entero se ofrece junto con el empuje. La paridad no se fija como cifra en ningún documento
-seguir leyéndose con los dos comandos de arriba.
+**No se empujó.** El push y su gate L3 (revisión profunda del repo entero) se ofrecieron y quedan a la
+espera de la instrucción literal del operador, que es como esta casa los autoriza: ni el formulario ni la
+letra de un menú valen. La cuenta de commits pendientes **no se fija aquí como cifra** —este mismo archivo,
+al commitearse, la desmentiría— y se lee con:
+
+    git fetch origin && git rev-list --count origin/master..HEAD
+    git rev-list --left-right --count origin/master...HEAD
+
+y la verificación, cuando se empuje, es por identidad de objeto (`git ls-remote origin refs/heads/master`
+contra `git rev-parse HEAD`) y por alcanzabilidad de las revisiones del rango
+(`git merge-base --is-ancestor <sha> origin/master`), no por paridad publicada.
