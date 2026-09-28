@@ -119,3 +119,10 @@ al commitearse, la desmentiría— y se lee con:
 y la verificación, cuando se empuje, es por identidad de objeto (`git ls-remote origin refs/heads/master`
 contra `git rev-parse HEAD`) y por alcanzabilidad de las revisiones del rango
 (`git merge-base --is-ancestor <sha> origin/master`), no por paridad publicada.
+
+### POST definitivo, medido sobre el arbol final (HEAD al momento de esta corrida):
+4a94e3a
+### 3 failed / 4619 passed / 41 skipped / 4 xfailed / 0 errors, EXIT=1
+### Los tres nombres son los atribuidos el 2026-09-25 y ninguno es de esta sesion:
+###   test_function_default_flags · test_diagnostic_includes_geo_metrics · test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+### Rojos nuevos: 0. Crudo completo: 53-suite-definitiva-post-docs.txt
