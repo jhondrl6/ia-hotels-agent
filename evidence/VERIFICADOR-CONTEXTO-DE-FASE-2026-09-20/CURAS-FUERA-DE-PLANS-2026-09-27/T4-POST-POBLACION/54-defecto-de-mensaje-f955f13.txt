@@ -1,0 +1,40 @@
+### Defecto de instrumento al commitear: `f955f13` quedó con el mensaje `--file=-`
+
+**Qué pasó.** El comando fue:
+
+    git commit -am --file=-          # con el cuerpo del mensaje por stdin
+
+`-m` tomó el literal `--file=-` como mensaje, y el texto escrito por stdin se desperdició. El diff del
+commit es correcto — 11 líneas en `52-inventario-de-cierre.txt`, la anotación de autofutación de la cuenta
+de la tanda — y esa edición estaba autorizada; el daño es solo el mensaje.
+
+**Cómo se comprueba antes de afirmarlo.**
+
+    git log -1 --format=%s f955f13                  # -> --file=-
+    git show --stat --format=oneline f955f13        # -> 1 archivo, 11/1
+
+**Qué NO se hace.** No se enmienda. La regla [2] de esta orden dice `sin --amend`, y el precedente de la
+casa es declarar la errata y seguir: dos mensajes de la séptima sesión salieron con erratas (`cortro`,
+`caz6`) y se consignaron sin reescribir; el único `--amend` ejecutado en toda la orden fue uno que el
+operador autorizó expresamente porque ninguna nota citaba ese sha. Aquí además el sha ya es citado por este
+propio crudo, así que enmendarlo rompería la referencia que lo nombra.
+
+**Texto que debía llevar ese commit** (se conserva aquí para que no se pierda con el título):
+
+    docs(EXPEDIENTE): la cuenta final del inventario se refuta a si misma, y asi queda anotada
+
+    El epigrafe «Cuenta final de la tanda: ocho commits» era falso en el momento de commitearse: los dos
+    commits que faltaban enumerar son los que escribían esa anotación y el del POST definitivo, o sea diez.
+    Mismo defecto que la casa ya cobró por fijar en el documento una cifra que el documento mueve (la
+    paridad después del push, el sello `head` de los generados). No se lima: se anota encima en qué momento
+    se rompió y se retira la pretensión de publicar la cuenta, que desde aquí se lee con
+    `git log --oneline origin/master..HEAD`.
+
+    Lo que sobrevive de la sección es lo que no depende de contar: el motivo de cada commit extra sobre los
+    cuatro que preveía [10] — un derivado no se separa de la fuente cuya métrica proyecta (§S32), y un
+    hallazgo no se deja fuera del registro (criterio [11]).
+
+**Lección para la próxima tanda de commits.** El mensaje por stdin pide `-F -`, no `-m` con el flag delante:
+`git commit -a -F -` lee el cuerpo de stdin y no deja ninguna cadena para que `-m` la confunda. La regla de
+la casa (heredoc entrecomillado con `-m "$(cat <<'EOF' … EOF)"`) sigue siendo la segura; este fue un intento
+de escribirla por python-subprocess con el orden de argumentos equivocado.
