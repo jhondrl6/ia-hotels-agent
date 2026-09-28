@@ -830,6 +830,28 @@ archivados quedaron en alcance (clave nueva `archivados_en_alcance`). `_linea_de
   checks de esa familia; un check extra con el mismo reparto hereda la misma ceguera y además cuesta un
   re-numerado (eso es D2 y su familia de pins).
 
+**⟦Sexta cosa que esta fila gobierna, medida el 2026-09-27 en la sesión de curas fuera de plans⟧.** La cura
+a-prima cambió el comportamiento y dejó **la prosa del executor describiendo la regla vieja**: el §2.5
+«Alcance hacia delante» publicaba todavía «y que no estén en `Archives/`» y un conteo de archivados, y su
+copia del contraejemplo congelado repetía la frase. Se curo el texto (executor **v2.27.0**, con su entrada
+de changelog y su copia alineada a mano porque **no hay writer** que sincronice ese fixture — medido con
+`git grep -ln "governance_numbers/fixtures" HEAD -- scripts tests`, 0 resultados).
+
+- **Lo que quedó medido y sigue abierto**: revertir el párrafo a la frase vencida **no produce rojo** —
+  `validate_governance_numbers.py` sale `SIN-HALLAZGOS` (19 instancias), las dos baterías de gobernanza y
+  capitalización dan 79 passed y el `--quick` 13/13. Crudos:
+  `evidence/…/CURAS-FUERA-DE-PLANS-2026-09-27/T1-PROSA-WORKFLOW/11-…` y `12-…`.
+  Es decir: gobernar el **comportamiento** no gobierna la **descripción** del comportamiento, y nadie avisa
+  cuando la descripción se desfasa. Dueño propuesto: el mismo de esta fila
+  (`scripts/validate_lesson_capitalization.py`, que es quien conoce el reparto real), con un check de
+  consistencia texto↔código; **disparador**: el próximo mandato de código sobre ese script, porque abrir un
+  check nuevo es re-numerar y eso es D2.
+- **Por qué no se absorbe aquí**: curarlo pide editar `scripts/` y esta sesión tenía mandato literal sobre
+  tres cosas concretas (`validate_opencode_refs.py`, los seis arneses y la prosa), no sobre el verificador de
+  capitalización. Queda como sub-punto con dueño en vez de fila nueva: **S33 está libre**
+  (`git grep -l -E "\bS33\b" HEAD -- '*.md'` = 0) y se deja sin tomar, porque el asunto no es un defecto
+  distinto sino la sexta cara del mismo reparto de población que gobierna esta fila.
+
 ### S31 — los arneses de FASE-C y FASE-D pinean la ruta de raíz del plan y D-c la archivó (nueva, 2026-09-27)
 
 **No confundir con ningún número vecino**: el censo del 2026-09-27 sobre `HEAD -- '*.md'` con
