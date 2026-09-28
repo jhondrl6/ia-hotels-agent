@@ -1,0 +1,22 @@
+### Tercera emision de derivados: tras abrir §S32 y precisar la pasada quinta de la ORDEN
+### (la fila S32 se abrio DENTRO del registro para que el inventario de pendientes no
+### deje nada fuera de .opencode/plans, criterion [11] de la orden).
+
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+--- checks ---
+[OK] FASE-RELEASE: 10 fuentes frescas
+CP=0
+[fechas] nombre=329 commit=11 sin_fuente=0
+CI=0
+--- refs ---
+[PASS] OpenCode References: todas las referencias existen
+REFS=0
+--- quick ---
+  TOTAL: 13/13 validations passed
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+--- CR de lo tocado ---
+dependencias-fases.md CR=0
+ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md CR=0

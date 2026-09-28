@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+- **procedencia**: HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -298,7 +298,7 @@ Deja checkpoint si falta autorizacion.
 ```
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `e44ef715699c6b05bdd02b71614a80283d170c2cd0607b32e5bbe36125ee08f7` · 19713 bytes copiados de 19713 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `e44ef715699c6b05bdd02b71614a80283d170c2cd0607b32e5bbe36125ee08f7` · 19713 bytes copiados de 19713 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ## Fuente: `01-plan-maestro.md` §1
 
@@ -414,7 +414,7 @@ sesión cada una y cada fase re-mide once validaciones; eso este plan **no lo to
 mitad medible aquí y AC20 publica qué parte del delta consiguió realmente, incluida la posibilidad
 de que sea cero.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 9218 bytes copiados de 54033 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 9218 bytes copiados de 54033 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -675,7 +675,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `d8af7426b0b31fd2d83dea0cc02e91078296dd11a8048c232cd196dad782a35a` · 26466 bytes copiados de 54033 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -1002,7 +1002,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `449240be22a6856a65c97dbf84e464b9e1a5a898e116dec25ff82947928bf9f2` · 29221 bytes copiados de 29221 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `449240be22a6856a65c97dbf84e464b9e1a5a898e116dec25ff82947928bf9f2` · 29221 bytes copiados de 29221 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -1043,7 +1043,7 @@ Dueños distintos representados: **7** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
 
 **Cómo entró L-VCF-20 (registro de la decisión, 2026-09-27, tanda H1).** Los dos párrafos de arriba registran el ingreso de **diez** filas por la decisión D-d y no se reescriben: siguen siendo exactos para esas diez. Con esta son **once** las filas de §2 debidas a este propio plan, y su procedencia es otra — instrucción escrita «Haz H1 y H2» sobre una lección que la sesión de commits **midió al commitear**, ya cerrado el dosier que avaló a las otras diez. El dueño no cambia, y el conteo se re-midió contra el lector en vez de copiar el párrafo anterior: `duenos_del_corpus()` sigue publicando **7** dueños distintos, porque una fila más de este plan no suma un octavo — el mismo motivo por el que las tres de la capa tibia no sumaron. Y una forma que hay que respetar para que el índice la reconozca: la **definición** va en `10-analisis-post-implementacion.md` §Lecciones nuevas, porque el corpus de definiciones del generador son los análisis (`09`/`10`), no este `.md`; escribirla solo aquí la habría registrado como ID citado sin definición, que es la familia de cita fantasma que este plan ya pagó.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -1998,6 +1998,46 @@ armar la ruta y preguntan al escritor.
 **Estado de la fila: cerrada por ejecución también en su fragilidad estructural**, con el sub-punto anterior
 gobernado por control y no por disciplina.
 
+### S32 — el pack publica los bytes del workflow sin que el workflow sea fuente gobernable (nueva, 2026-09-27)
+
+**Número libre, medido antes de tomarlo**: `git grep -l -E "\bS32\b" HEAD -- '*.md'` devuelve **0**
+coincidencias (y 0 también bajo `scripts` y `tests`). Se toma aquí, no como sub-punto de otra fila, porque
+su dueño es otro archivo y su disparador no coincide con el de §S19, que es el vecino más cercano por tema
+(frescura de un derivado).
+
+**Hecho medido al commitear la prosa del §2.5** (tanda `e2e44cd` → `6068f40`, la misma sesión). El pack de
+cada fase publica en su bloque de lectura aparte el tamaño y los tokens estimados de
+`.agents/workflows/phased_project_executor.md`, pero ese archivo **no** está en `sources[]` del pack — y no
+está por contrato: `test_briefing_se_genera_por_fase` afirma que copiar el workflow al pack sería
+«rebanar `.agents/` por la puerta de atrás (AC17/D3)». Con el workflow editado y ya commiteado, el
+`--check` del escritor dio **verde** (mira las shas de `sources[]`, y ahí el workflow no figura) mientras
+`--quick` cortó en su verificador del árbol commiteado con la firma `DIVERGE` en la línea del tamaño
+(`109998 bytes → 112986`). Crudo con las dos corridas:
+`evidence/…/CURAS-FUERA-DE-PLANS-2026-09-27/T4-POST-POBLACION/47-hallazgo-pack-publica-bytes-del-workflow.txt`.
+
+- **Dueño**: `scripts/build_phase_briefing.py`, en su par de funciones de lectura aparte y de verificación
+  de frescura. Es edición de `scripts/`, **no** de este plan: la misma restricción de mandato de código que
+  ya gobierna §S17 y §S18.
+- **Disparador**: el próximo mandato que autorice literalmente editar el generador de packs. Mientras no
+  suene, el único corte real es `[13/13]` del quick — que sí lo ve, pero **después** del commit que mueve
+  el workflow, no en el `--check` de quien lo edita.
+- **Dos salidas medidas, ninguna aplicada**: (a) que el `--check` del escritor gobierne también la lectura
+  aparte (sha o al menos tamaño del workflow por fase), para que el rojo salga en el instrumento de quien
+  edita y no solo en el del árbol commiteado; (b) dejar de publicar el tamaño en el pack y moverlo a la
+  salida del verificador. (b) es más chica pero toca lo que AC17/D3 decidió a propósito, así que no se hace
+  por omisión.
+- **Alternativa descartada**: re-generar los packs en el árbol de trabajo cada vez que se mueva el
+  workflow. Eso es exactamente lo que mezcló la tanda: las anotaciones datadas de §S17 y §S31, todavía sin
+  commitear, habrían viajado dentro del pack. La cura del árbol se hizo clonando HEAD con la config ya
+  documentada (`--no-checkout`, `core.longpaths`, `core.autocrlf=input` **dentro** del clon) y generando
+  ahí — que es un procedimiento, no un instrumento, y por eso queda esta fila.
+- **Lo que NO verifica nadie hoy**: que un derivado publique datos de un archivo que no declaró como
+  fuente. La regla de §S19 («la frescura mira las shas de sus fuentes») no alcanza este caso porque la
+  fuente no está en la lista.
+
+**Estado de la fila: abierta, con dueño y disparador.** Se abre aquí y no en otro libro porque la población
+del defecto es el escritor de packs de **este** plan y su evidencia está en el subdirectorio de esta orden.
+
 ## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
 
 Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de estado vive en la orden, y la fuente
@@ -2021,11 +2061,14 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   mutante R2.8—, y **§S31 quedó cerrada también en su fragilidad estructural**, que es justo lo que el libro de
   arriba dejaba declarado como límite: los seis arneses resuelven ahora por `resolver_plan()` del escritor.
   Siguen como estaban **§S19 (d)** con dueño y las vivas **D3, D6, D7, S10 y S14**. Queda **abierto** bajo el dueño
-  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. El estado vigente de
+  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. Y **se abrió una fila
+  nueva, §S32**, por el hallazgo medido al commitear la prosa del §2.5: el pack publica los bytes del workflow sin
+  que el workflow esté entre sus `sources[]`, así que el `--check` del escritor da verde y solo el verificador del
+  árbol commiteado corta el desfase — con dueño, disparador y dos salidas medidas, ninguna aplicada. El estado vigente de
   cada una es su fila en esta sección, fuente única⟧.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `cad8e4b6f87262acdc837daccaeb02432c51799d1b129450bed6d61f1b090094` · 115622 bytes copiados de 115622 del documento · HEAD `ed732be` · generado `2026-09-28T01:16:51Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `abce194b3a3be8b3f613f63d5414be5a157b10b59887d4a674aa6d40d9f1badd` · 119272 bytes copiados de 119272 del documento · HEAD `e7c722b` · generado `2026-09-28T01:22:18Z`
 
 ---
 
@@ -2037,8 +2080,8 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "ed732be",
-    "generated_at": "2026-09-28T01:16:51Z"
+    "head": "e7c722b",
+    "generated_at": "2026-09-28T01:22:18Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 18349 bytes fuera de lo declarado (1, 4)",
@@ -2076,7 +2119,7 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
     },
     {
       "ruta": ".opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "cad8e4b6f87262acdc837daccaeb02432c51799d1b129450bed6d61f1b090094",
+      "sha256": "abce194b3a3be8b3f613f63d5414be5a157b10b59887d4a674aa6d40d9f1badd",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

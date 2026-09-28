@@ -558,12 +558,20 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
   con su población re-medida en §S16 del plan, que es la fuente única. De las ocho enumeradas quedan vivas
   **D3**, **D6**, **D7**, **S10** y **S14**. Las pasadas anteriores se conservan textuales: es la regla de la
   casa, no una cortesía⟧ ⟦**quinta pasada sobre esa misma lista, 2026-09-27, sesión de curas fuera de plans**:
-  **S17 ya no está viva** — no por decisión, sino por ejecución: las dos escrituras de
-  `scripts/validate_opencode_refs.py` llevan `newline="\n"` desde la cura de su quinta puerta, con la batería
-  `tests/test_sync_writers_lf_y_fecha_readme.py` ampliada para correr ese guion real y su mutante R2.8 medido
-  (`2 failed, 8 passed` al quitar el parámetro; restaurado, `sha256` idéntico y verde). La enumeración de arriba
-  queda vigente en sus cinco miembros y se le suma el sexto que esa lista no traía: siguen con dueño **D3**,
-  **D6**, **D7**, **S10**, **S14** y la **(d)** de **S19**. Estado vigente de cada uno: su fila en
+  **S17 ya no está viva en el defecto que la mantenía abierta** — no por decisión, sino por ejecución: las dos
+  escrituras de `scripts/validate_opencode_refs.py` llevan `newline="\n"` desde la cura de su quinta puerta, con
+  la batería `tests/test_sync_writers_lf_y_fecha_readme.py` ampliada para correr ese guion real y su mutante R2.8
+  medido (`2 failed, 8 passed` al quitar el parámetro; restaurado, `sha256` idéntico y verde). Pero **la fila no
+  está enteramente cerrada**: su sub-punto menor sigue **abierto** bajo el mismo dueño —el `--fix` del archivado
+  sigue promoviendo la forma minoritaria de la ruta (66 contra 518), que no es un asunto de finales de línea y
+  no se curó aquí—. Leer «S17 ya no está viva» como «no queda nada en S17» es falso; el estado vigente, con la
+  raya exacta entre lo cerrado y lo que sigue, es §S17 de `dependencias-fases.md` de CONTEXTO.
+  La enumeración de arriba queda vigente en sus cinco miembros y se le suma el sexto que esa lista no traía: siguen con dueño **D3**,
+  **D6**, **D7**, **S10**, **S14** y la **(d)** de **S19**. Y **abrió fila nueva esta sesión §S32**, que no estaba
+  en ninguna de las cinco pasadas: el pack de cada fase publica los bytes del workflow canónico sin que ese
+  workflow figure entre sus `sources[]`, así que el `--check` del escritor da verde y solo el verificador del
+  árbol commiteado corta el desfase — dueña `scripts/build_phase_briefing.py`, disparador el próximo mandato de
+  código sobre ese guion, y sus dos salidas quedan medidas sin aplicar. Estado vigente de cada uno: su fila en
   `dependencias-fases.md` de CONTEXTO, fuente única —esta orden no lo re-transcribe—⟧;
   (4) que el trabajo esté **commiteado o publicado** — ver la tabla de cuatro momentos del encabezado.
   ⟦**Precisión del mismo 2026-09-25, causada por la propia ejecución del cierre**: esta casilla decía «a

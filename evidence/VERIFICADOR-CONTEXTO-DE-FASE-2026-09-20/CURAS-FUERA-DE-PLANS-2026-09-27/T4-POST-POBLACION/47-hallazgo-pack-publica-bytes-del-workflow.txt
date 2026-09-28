@@ -1,0 +1,46 @@
+### Hallazgo de instrumento, declarado y NO curado: el pack publica los bytes del workflow sin que el workflow sea fuente
+
+Medido el 2026-09-27 al commitear la prosa del §2.5 (tanda `e2e44cd` → `6068f40`).
+
+**El hecho.** `.agents/workflows/phased_project_executor.md` no está en `sources[]` de ningún pack — y
+no está por contrato: `test_briefing_se_genera_por_fase` afirma que copiar el workflow al pack sería
+«rebanar `.agents/` por la puerta de atrás (AC17/D3)». Pero el cuerpo del pack **sí** publica una línea
+del workflow: su tamaño y sus tokens estimados, en el bloque de lectura aparte.
+
+**Consecuencia medida.** Con el workflow editado y commiteado, `python scripts/build_phase_briefing.py
+--plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check` dio **verde** (compara las shas de `sources[]`,
+y el workflow no está ahí), mientras `python scripts/run_all_validations.py --quick` cortó en
+`[13/13] Briefing Packs in Commit Tree` con `DIVERGE` y esta firma:
+
+    - [DIVERGE] …/briefing/FASE-A.md (1 líneas, la del bloque de lectura aparte) …'project_executor.md` — 109998 bytes (~27499 tokens)…
+      -> …'project_executor.md` — 112986 bytes (~28246 tokens)…
+
+O sea: el único que ve el desfase es el verificador del árbol commiteado, y lo ve tres pasos más tarde
+de la edición. Es la otra cara de la regla que el propio executor publicó en v2.26.0 («la frescura de un
+derivado mira las shas de sus fuentes, no al writer que lo imprime»): aquí la fuente **no** está en la
+lista de fuentes, así que ni siquiera esa regla la gobierna.
+
+**Cómo se curo el árbol, no el instrumento.** Los cinco packs se regeneraron **en un clon de HEAD**
+(`--no-checkout`, y dentro del clon `core.longpaths` + `core.autocrlf=input`, la config ya documentada
+para no heredar el `autocrlf` del ámbito system) y no en el árbol de trabajo: en el árbol de trabajo las
+anotaciones datadas de S17/S31 todavía sin commitear habrían viajado metidas dentro del pack, mezclando
+la tanda. Delta commiteado en `6068f40`: 11/10/14/10/18 líneas por pack, todas de procedencia (HEAD y
+sello) más la línea de bytes; los `sha256` de las fuentes quedan idénticos.
+
+**Lo que quedaría por curar, y NO entra en esta orden** (se declara con dueño propuesto, no se
+absorbe en silencio):
+1. Que `--check` del escritor considere **también** la lectura aparte (una sha o al menos el tamaño del
+   workflow por fase), para que el rojo salga en el `--check` y no solo en `[13/13]`. Dueño:
+   `scripts/build_phase_briefing.py` — edición de `scripts/`, que esta orden no autoriza.
+2. O, en el otro extremo, dejar de publicar el tamaño en el pack y moverlo a la salida del verificador.
+   Dueño: el mismo, con su AC de detección y su mutante R2.8.
+3. Número de fila: **sin asignar a propósito**. El censo de la casa (nota de §S20 y la de §S29) exige
+   medir las menciones antes de tomar un identificador, y abrir fila nueva con su verificador es un
+   mandato propio, no un residuo de este.
+
+**Comandos de la comprobación, re-ejecutables:**
+
+    git add -- <los cinco packs> && git commit          # hook 7/7
+    python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check   # verde
+    python scripts/run_all_validations.py --quick       # cortaba en [13/13] antes de 6068f40
+    git ls-tree --name-only HEAD -- .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing

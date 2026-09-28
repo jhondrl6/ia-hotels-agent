@@ -949,6 +949,46 @@ armar la ruta y preguntan al escritor.
 **Estado de la fila: cerrada por ejecución también en su fragilidad estructural**, con el sub-punto anterior
 gobernado por control y no por disciplina.
 
+### S32 — el pack publica los bytes del workflow sin que el workflow sea fuente gobernable (nueva, 2026-09-27)
+
+**Número libre, medido antes de tomarlo**: `git grep -l -E "\bS32\b" HEAD -- '*.md'` devuelve **0**
+coincidencias (y 0 también bajo `scripts` y `tests`). Se toma aquí, no como sub-punto de otra fila, porque
+su dueño es otro archivo y su disparador no coincide con el de §S19, que es el vecino más cercano por tema
+(frescura de un derivado).
+
+**Hecho medido al commitear la prosa del §2.5** (tanda `e2e44cd` → `6068f40`, la misma sesión). El pack de
+cada fase publica en su bloque de lectura aparte el tamaño y los tokens estimados de
+`.agents/workflows/phased_project_executor.md`, pero ese archivo **no** está en `sources[]` del pack — y no
+está por contrato: `test_briefing_se_genera_por_fase` afirma que copiar el workflow al pack sería
+«rebanar `.agents/` por la puerta de atrás (AC17/D3)». Con el workflow editado y ya commiteado, el
+`--check` del escritor dio **verde** (mira las shas de `sources[]`, y ahí el workflow no figura) mientras
+`--quick` cortó en su verificador del árbol commiteado con la firma `DIVERGE` en la línea del tamaño
+(`109998 bytes → 112986`). Crudo con las dos corridas:
+`evidence/…/CURAS-FUERA-DE-PLANS-2026-09-27/T4-POST-POBLACION/47-hallazgo-pack-publica-bytes-del-workflow.txt`.
+
+- **Dueño**: `scripts/build_phase_briefing.py`, en su par de funciones de lectura aparte y de verificación
+  de frescura. Es edición de `scripts/`, **no** de este plan: la misma restricción de mandato de código que
+  ya gobierna §S17 y §S18.
+- **Disparador**: el próximo mandato que autorice literalmente editar el generador de packs. Mientras no
+  suene, el único corte real es `[13/13]` del quick — que sí lo ve, pero **después** del commit que mueve
+  el workflow, no en el `--check` de quien lo edita.
+- **Dos salidas medidas, ninguna aplicada**: (a) que el `--check` del escritor gobierne también la lectura
+  aparte (sha o al menos tamaño del workflow por fase), para que el rojo salga en el instrumento de quien
+  edita y no solo en el del árbol commiteado; (b) dejar de publicar el tamaño en el pack y moverlo a la
+  salida del verificador. (b) es más chica pero toca lo que AC17/D3 decidió a propósito, así que no se hace
+  por omisión.
+- **Alternativa descartada**: re-generar los packs en el árbol de trabajo cada vez que se mueva el
+  workflow. Eso es exactamente lo que mezcló la tanda: las anotaciones datadas de §S17 y §S31, todavía sin
+  commitear, habrían viajado dentro del pack. La cura del árbol se hizo clonando HEAD con la config ya
+  documentada (`--no-checkout`, `core.longpaths`, `core.autocrlf=input` **dentro** del clon) y generando
+  ahí — que es un procedimiento, no un instrumento, y por eso queda esta fila.
+- **Lo que NO verifica nadie hoy**: que un derivado publique datos de un archivo que no declaró como
+  fuente. La regla de §S19 («la frescura mira las shas de sus fuentes») no alcanza este caso porque la
+  fuente no está en la lista.
+
+**Estado de la fila: abierta, con dueño y disparador.** Se abre aquí y no en otro libro porque la población
+del defecto es el escritor de packs de **este** plan y su evidencia está en el subdirectorio de esta orden.
+
 ## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
 
 Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de estado vive en la orden, y la fuente
@@ -972,5 +1012,8 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   mutante R2.8—, y **§S31 quedó cerrada también en su fragilidad estructural**, que es justo lo que el libro de
   arriba dejaba declarado como límite: los seis arneses resuelven ahora por `resolver_plan()` del escritor.
   Siguen como estaban **§S19 (d)** con dueño y las vivas **D3, D6, D7, S10 y S14**. Queda **abierto** bajo el dueño
-  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. El estado vigente de
+  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. Y **se abrió una fila
+  nueva, §S32**, por el hallazgo medido al commitear la prosa del §2.5: el pack publica los bytes del workflow sin
+  que el workflow esté entre sus `sources[]`, así que el `--check` del escritor da verde y solo el verificador del
+  árbol commiteado corta el desfase — con dueño, disparador y dos salidas medidas, ninguna aplicada. El estado vigente de
   cada una es su fila en esta sección, fuente única⟧.
