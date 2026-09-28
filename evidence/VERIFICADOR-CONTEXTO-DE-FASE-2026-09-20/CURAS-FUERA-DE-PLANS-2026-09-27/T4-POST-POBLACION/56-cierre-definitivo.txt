@@ -1,0 +1,49 @@
+### Cierre de la sesión de curas fuera de plans — 2026-09-27
+
+**Suite completa sobre el árbol final** (`python -m pytest -q -ra`, crudo en el `55-suite-cierre-definitivo.txt` de este mismo directorio,
+con su `EXIT=1` escrito **dentro** del archivo):
+
+    3 failed, 4619 passed, 41 skipped, 4 xfailed, 230 warnings in 330.07s
+    FAILED …::test_function_default_flags
+    FAILED …::test_diagnostic_includes_geo_metrics
+    FAILED …::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+
+Los tres nombres son los atribuidos el 2026-09-25 y ningún rojo nuevo entró en toda la sesión. El baseline
+con el que se compara es `…/S31-RUTA-ARCHIVADAS-2026-09-27/02-suite-post-t2-curada-s31.txt`
+(3 failed / 4613 passed / 41 skipped / 4 xfailed): **+6 items**, de los cuales **+5 son funciones nuevas de
+esta sesión** (+3 en `tests/test_sync_writers_lf_y_fecha_readme.py`, +2 en
+`tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py`) y **+1 es un caso
+parametrizado ajeno** (`test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21]`), metido
+por el archivado de JEV del commit `84282c1`, posterior a la corrida de baseline. La atribución completa está
+en `41-atribucion-post-poblacion.txt`.
+
+**Cifra canónica, con su comando** — `grep -rE "^\s*def test_" tests --include=*.py | wc -l` = **4590**; el
+árbol versionado da el mismo número (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por archivo), así
+que la cabecera de cobertura de `AGENTS.md` (4.585 → 4.590) y el árbol cuadran desde el commit que lleva las
+funciones. La suma de las 22 filas de la tabla también da 4590.
+
+**Prueba por árbol de los últimos commits** — `python scripts/verify_packs_in_committed_tree.py --rev <sha>`,
+código de salida leído **sin** tubería intermedia:
+
+| rev | EXIT | resultado |
+|---|---|---|
+| `f955f13` | 0 | 5/5 reproducidos |
+| `1e4b666` | 0 | 5/5 reproducidos |
+| `ea81b92` | 0 | 5/5 reproducidos |
+
+El único árbol de toda la tanda que **no** se reproduce es `e2e44cd` (5/5 `DIVERGE`), y su reparación es
+`6068f40`; eso es §S32 y su antecedente `L-VCF-20`.
+
+**`--quick`** sobre el árbol final: **13/13** exit 0 con `[GUARDA]` (las trece etiquetas impresas casan con el
+TOTAL dinámico). Gobernanza de números: `SIN-HALLAZGOS`. Citas de plan: 743 históricas, **0 nuevas y 0
+crecimientos**. Índice: 340 IDs, `[fechas] nombre=329 commit=11 sin_fuente=0`. Referencias `.opencode/`:
+`[PASS]`.
+
+**Barrido final de caracteres extraños**, por el defecto que esta tanda produjo dos veces: barrido de CJK
+sobre todos los mensajes `505cd44..HEAD` devuelve **exactamente una** coincidencia — `3aeb89b`, dos
+caracteres (`U+539F U+5275`) donde iba «original», ya declarada en `54-defecto-de-mensaje-f955f13.txt` y no
+enmendada por la regla `sin --amend`. Sobre los archivos del árbol, **cero**.
+
+**Lo que queda sin empujar y cómo se lee.** No se empujó: el push y su gate L3 se ofrecen y esperan la
+instrucción literal del operador. La cuenta no se fija aquí (la movería el propio commit que la escribe) y se
+lee con `git rev-list --count origin/master..HEAD`.
