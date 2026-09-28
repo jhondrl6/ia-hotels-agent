@@ -449,6 +449,45 @@ llenos de esa cadena—, hay que contar con `grep -o -F` sobre la ruta; y (ii) l
 no son del `--fix` y **no se tocaron** (son contenido archivado y derivado, y la cura pedida sigue siendo la del
 `newline="\n"` en el escritor, no reescribir corpus ajeno).
 
+**⟦SEXTA INSTANCIA Y CIERRE POR EJECUCIÓN — medida y curada el 2026-09-27 en la sesión de curas fuera de
+plans, con mandato literal del operador sobre `scripts/validate_opencode_refs.py`⟧.** Las dos escrituras del
+guion llevan ahora `newline="\n"`: la del `--fix` sobre cada Markdown que repara y la de `--write-baseline`
+sobre `.opencode/refs_baseline.txt`. La fila pedía «la misma cura de siempre más una aserción en esa
+batería que lo incluya», y esa batería es `tests/test_sync_writers_lf_y_fecha_readme.py`, que pasó de **7**
+a **10** pruebas corriendo el guion **real** sobre un espejo temporal (el `PROJECT_ROOT` del escritor sale de
+su propio `__file__`, así que el espejo se arma copiando el guion a `espejo/scripts/` y el Markdown se planta
+por bytes, porque re-escribirlo con `write_text` lo pasaría a CRLF por la misma traducción que se mide):
+
+- **Tres controles nuevos, cada uno por su puerta**: `test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf`
+  (el Markdown reparado), `test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf` (el baseline — es la
+  escritura que dejó los 87 CR de la cuarta instancia) y `test_el_guion_de_refs_no_toca_el_arbol_del_proyecto`
+  (guard de destino **por operaciones observadas**, no por estado final: S13, y con ancla positiva de que el
+  escritor sí escribe en el espejo).
+- **Control negativo contra la versión commiteada**, leída con `git show` y ejecutada en scratch, sin
+  `checkout` ni `stash`. Va anclada a `REV_CONTROL_DEFECTUOSO` (`5817edd`), **no** a `HEAD`: esta misma cura
+  entra en el commit y desde ese árbol el control se quedaría sin rojo con el que compararse — la lección ya
+  está escrita arriba, medida en `bdd1c4c`. Verificado con `git show 5817edd:scripts/validate_opencode_refs.py`:
+  sus dos escrituras siguen sin el parámetro.
+- **Dientes medidos por mutación (R2.8)**: quitado el parámetro en las dos escrituras, caen **exactamente**
+  las dos pruebas nuevas del guion (`2 failed, 8 passed` — las de sync/doctor/S18 siguen verdes, así que el rojo
+  es atribuible al parámetro y no al entorno), y restaurado el archivo el `sha256` sale idéntico
+  (`f68dcfe1…`) con la batería en **10 passed**. Crudos: `evidence/…/CURAS-FUERA-DE-PLANS-2026-09-27/T2-S17-QUINTO-ESCRITOR/`.
+- **Un defecto del instrumento propio, declarado**: el conteo de las escrituras no se podía hacer con
+  `grep -c ', newline="\n")'` sobre el archivo mutado —el escape del patrón devuelve **0** y el mutante abortaba
+  por ese falso cero—; hay que contar con `grep -o -F 'newline="\n"'`, que da **3** (dos escrituras y el
+  comentario que las documenta).
+- **Lo que NO cierra esta cura**: el segundo defecto del mismo `--fix` (promueve la forma minoritaria de la
+  ruta) sigue sin cura, bajo el dueño de esta fila, con su medida de formas en la cuarta y quinta instancia.
+  Y el residuo que el guion ya dejó en disco **no se normaliza aquí**: medido con
+  `git ls-files --eol .opencode | awk '$1=="i/lf" && $2=="w/crlf"' | wc -l` salen **213** archivos (176 `md`,
+  34 `json`, 1 `txt`), todos de planes archivados ajenos a esta sesión y todos invisibles a `git status` porque
+  `core.autocrlf=input` normaliza al commitear. Normalizarlos es una reescritura masiva de corpus ajeno; queda
+  declarado con su reparto en `…/T2-S17-QUINTO-ESCRITOR/23-residuo-crlf-opencode.txt`.
+
+**Estado de la fila: CERRADA por ejecución el 2026-09-27** en su defecto de finales de línea (cinco puertas:
+`sync_rule`, `run_regenerate_domain_primer`, `run_status`, y las dos de `validate_opencode_refs.py`), con el
+sub-punto de la forma minoritaria de la ruta **abierto** bajo este mismo dueño.
+
 ### S18 — `readme_version_header` no goberna la fecha legible de `README.md` (nueva, 2026-09-25)
 
 **Hecho medido al cerrar FASE-RELEASE**: después del sync de cinco cabeceras, la línea de estado de
@@ -862,6 +901,54 @@ porque la línea rota en cuanto se edita el archivo):
 - **Estado de la fila**: **cerrada por ejecución**, con la fragilidad estructural declarada arriba como límite y
   no como pendiente de esta tanda.
 
+**⟦Fragilidad estructural CERRADA el 2026-09-27, segunda tanda de la misma fila, con mandato literal de la orden
+de curas fuera de plans⟧.** La cura que arriba se declaraba fuera de alcance («la forma durable sería reutilizar
+`resolver_plan()` del propio escritor, y eso no entra aquí») entra ahora por su puerta: los seis arneses dejan de
+armar la ruta y preguntan al escritor.
+
+- **Cómo**: un puente, `tests/support_resolucion_plan.py`, que carga `scripts/build_phase_briefing.py` por ruta
+  (el mismo oficio de los dos `conftest.py`) y expone `ruta_plan()`, delegando en `resolver_plan()` del escritor.
+  Las seis constantes `PLAN` pasan por él. No se reimplementó la resolución: una sola copia de la regla, en el
+  escritor — y no se tocó `resolver_plan()` ni el generador, que era el límite de la tanda anterior.
+- **Semántica de error conservada**: el arnés pineado fallaba con `FileNotFoundError` al leer la ruta que ya no
+  estaba; `ruta_plan()` levanta **ese mismo error** nombrando las rutas intentadas (por `rutas_intentadas()` del
+  propio escritor), en vez de un `None` que revienta tres líneas más tarde con un `AttributeError` que no nombra
+  el plan (R2.9).
+- **Dientes anclados a revisión FIJA**, con el precedente de la cura de D-c para el verificador de packs: la
+  revisión testigo es `44f53c2`, el **padre** del `git mv` de D-c, verificado con
+  `git ls-tree --name-only 44f53c2:.opencode/plans | grep -c VERIFICADOR-CONTEXTO` = **1** en raíz y **0** bajo
+  `Archives/`. Sobre un `git archive` de esa revisión el escritor resuelve el plan **en raíz**, y sobre el árbol
+  de trabajo **bajo `Archives/`** — las dos aserciones en **un solo test**
+  (`test_el_escritor_resuelve_el_plan_en_raiz_y_bajo_archives_en_la_misma_prueba`), porque separarlas permitiría
+  apagar una mitad sin que el verde se note. El árbol versionado se afirma primero (`05-prompt-…` presente en
+  raíz y ausente bajo `Archives/` en esa revisión): si la revisión dejara de ser testigo, el test lo dice.
+- **Control anti-literal**, con su defecto declarado: la primera versión del predicado buscaba solo la cadena
+  `"Archives" / "<PLAN>"` y **dejo pasar** `PLAN = ARCHIVES / NOMBRE_PLAN` — un verde vacío contra la forma más
+  probable de reintroducirse, medido con el mutante T3-b. Fortalecido a dos cortes (exigir el paso por
+  `ruta_plan(` y prohibir la aritmética de rutas sobre `ROOT`/`ARCHIVES`/`PLANS`), el mutante cae **rojo** y
+  restaurado vuelve a verde.
+- **Control negativo (R2.8)**: mutado el puente para resolver la raíz a pelo —la ruta vieja, donde el plan ya no
+  vive— las dos selecciones dan **17 failed + 26 errors** con `FileNotFoundError` sobre
+  `plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` (la ruta del error va escrita
+  sin el prefijo `.opencode/` a propósito: publicada con él, `validate_opencode_refs.py` la lee como referencia
+  del árbol y da rojo — es la prosa del corpus viajando a los cinco packs, que fue como se cobró esta misma
+  tanda—); restaurado,
+  `sha256` idéntico (`6fd87384…`) y **109 passed**. Precisión de fidelidad: revertir al literal **actual**
+  (`plans/Archives/<PLAN>`) **no** da rojo hoy, porque el plan sí está ahí; la fragilidad no es del día que se
+  escribe el literal, es del próximo traslado. Crudos en
+  `evidence/…/CURAS-FUERA-DE-PLANS-2026-09-27/T3-S31-RESOLVER-PLAN/`.
+- **POST por población de la tanda**: `lesson_relevance` + `phase_briefing` = **109** recogidas (eran 106: **+2**
+  del archivo nuevo de esta fila y **+1** que **no** es de esta sesión — el archivado de JEV metió un caso en el
+  parametrizado `test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21]`). Suite completa:
+  **3 failed, 4619 passed, 41 skipped, 4 xfailed**, exit 1, con los mismos tres rojos atribuidos el 2026-09-25 y
+  **0 nuevos**; `--quick` en **13/13** con `[GUARDA]`.
+- **Lo que NO cubre la cura**: el control anti-literal gobierna los **seis** archivos nombrados de estas dos
+  selecciones, no un arnés futuro de un tercero; y `scripts/triage_lesson_relevance.py` conserva su propio
+  `resolver_plan()` (el puente usa el del generador de packs, que es el que la orden nombraba).
+
+**Estado de la fila: cerrada por ejecución también en su fragilidad estructural**, con el sub-punto anterior
+gobernado por control y no por disciplina.
+
 ## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
 
 Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de estado vive en la orden, y la fuente
@@ -878,3 +965,12 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   misma tanda (seis constantes), §S17 **abierta** con su quinta instancia, §S19 en su **(d)** como opción medida
   y no aplicada, y el archivado R2.5 de `EVALUACION-JEV-TYPESAFE-2026-09-21` ejecutado con su write-back verificado
   por descarga + sha256.
+  ⟦**Pasada datada del mismo 2026-09-27, en la sesión de curas fuera de plans, sobre este mismo libro**: dos de sus
+  miembros cambiaron de estado después de escribirse esa línea y la nota anterior ya no describe el registro.
+  **§S17 quedó cerrada por ejecución** en su defecto de finales de línea —curadas las dos escrituras de
+  `scripts/validate_opencode_refs.py`, quinta puerta de la familia, con su batería ampliada de 7 a 10 pruebas y su
+  mutante R2.8—, y **§S31 quedó cerrada también en su fragilidad estructural**, que es justo lo que el libro de
+  arriba dejaba declarado como límite: los seis arneses resuelven ahora por `resolver_plan()` del escritor.
+  Siguen como estaban **§S19 (d)** con dueño y las vivas **D3, D6, D7, S10 y S14**. Queda **abierto** bajo el dueño
+  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. El estado vigente de
+  cada una es su fila en esta sección, fuente única⟧.

@@ -1,0 +1,31 @@
+### POST POR POBLACION de la orden de curas fuera de plans (T1+T2+T3) — 2026-09-27
+### Crudo de la corrida: 40-suite-post-t1-t3.txt (EXIT=1 al final del archivo)
+
+baseline (crudo previo, S31-RUTA-ARCHIVADAS-2026-09-27/02-suite-post-t2-curada-s31.txt, corrido 16:44):
+  3 failed, 4613 passed, 41 skipped, 4 xfailed, 0 errors
+esta corrida (arbol de trabajo con HEAD=505cd44 + las tres curas):
+  3 failed, 4619 passed, 41 skipped, 4 xfailed
+
+### Delta +6 passed, atribuido enteramente:
+  +5 funciones nuevas de esta sesion:
+    +3 en tests/test_sync_writers_lf_y_fecha_readme.py (T2: --fix, --write-baseline, guard de destino)
+    +2 en tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py (T3)
+  +1 caso parametrizado que NO es de esta sesion:
+    test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21]
+    Medido con: python -m pytest -q --collect-only tests/quality_gates/phase_briefing tests/quality_gates/lesson_relevance
+    Saliro del baseline porque el archivado de JEV (commit 84282c1, 17:30) es POSTERIOR a la corrida de
+    baseline (16:44): el corpus de Archives/ gano un plan con prompts y el parametrizado gano un caso.
+    TambiEN explicado por la cifra canonica: grep -rE '^\s*def test_' tests --include=*.py da 4.590, o sea
+    +5 sobre los 4.585 del baseline — un caso parametrizado no es una funcion.
+
+### Rojos: los MISMOS tres nombres, con su firma identica al baseline:
+FAILED tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+FAILED tests/test_diagnostic_geo_metrics.py::TestDiagnosticGEOMetrics::test_diagnostic_includes_geo_metrics
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+  rojos nuevos: 0
+
+### Bateria de las dos selecciones curadas en T3, por separado:
+  lesson_relevance + phase_briefing = 109 collected (era 106 en el baseline: +2 de T3, +1 de JEV)
+### tests/test_sync_writers_lf_y_fecha_readme.py (T2): 10 passed (era 7)
+### tests/quality_gates/governance_numbers (T1): 49 passed, y validate_governance_numbers SIN-HALLAZGOS
+### quick: 13/13 con [GUARDA] (ver 13-post-restauracion-t1.txt y las corridas de cada tanda)

@@ -1,0 +1,26 @@
+### Derivados del arbol de trabajo, segunda emision: tras recuperar las anotaciones T4 (guarda de sha)
+### Orden de la casa: packs -> indice -> los dos --check -> quick. Los packs de la primera emision
+### quedaron commiteados aparte en 6068f40 (ver su mensaje: el pack publica los bytes del workflow
+### sin que el workflow sea sources[] del pack).
+
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+--- checks ---
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+CP=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+CI=0
+--- refs ---
+[PASS] OpenCode References: todas las referencias existen
+REFS=0
+--- quick ---
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK=0

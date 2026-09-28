@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,585 funciones totales)
+### Cobertura por Modulo (4,590 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -413,6 +413,33 @@ python scripts/run_all_validations.py           # Completo
 > regresion que D-c dejo ver) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+>
+> **Segunda ronda del 2026-09-27 (la cifra subio a 4,590).** Medido con el metodo canonico de la casa
+> (`grep -rE "^\s*def test_" tests --include=*.py`, 4,590) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests`, 4,585 en `505cd44`): la diferencia es **+5**, cinco funciones
+> nuevas de la sesion de curas fuera de plans. Dos paquetes, en dos filas de la tabla: **+3** en
+> `tests/test_sync_writers_lf_y_fecha_readme.py` (la cura de S17 sobre el quinto escritor: su `--fix`, su
+> `--write-baseline` y el guard de destino por operaciones observadas) y **+2** en
+> `tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py` (la cura de S31: los dientes
+> anclados a la revision fija `44f53c2` y el control anti-literal). O sea `root test files` 958 → **961** y
+> `quality_gates` 859 → **861**; la suma de las 22 filas de la tabla da exactamente **4,590** (verificado sumando
+> la tercera columna con `awk -F'|'`).
+>
+> Desvio declarado contra la instruccion que pidio esta edicion: esa nota preveia que la bateria LF cayera en
+> `root test files` y que **nada** cayera en `quality_gates`. Cayeron dos, porque el control de S31 vive en una
+> seleccion debajo de `tests/quality_gates/`. Se alinea su fila por la misma regla que la cabecera: la tabla es un
+> retrato del arbol, no una prediccion del mandato.
+>
+> **Dependencia declarada, no asumida**: para que los dos comandos cuadren en el commit que lleva esta nota hace
+> falta que las cinco funciones viajen **antes** — la tanda las pone en los commits de S17 y de S31, y esta
+> cabecera se alinea en el ultimo. Antecedente tal como se publico: **4,585** (primera ronda del 2026-09-27,
+> publicado en la tanda de `84282c1`/`505cd44`), y antes **4,584** (medido 2026-09-27, publicado en `5d80cd7`).
+>
+> Nota para no volver a confundir instrumentos: `scripts/validate_agents_md.py::check_2_test_count` **no** usa el
+> metodo grep sino `pytest --collect-only -q` sobre items, con tolerancia **±5 %**. Los items y las funciones no
+> son la misma poblacion — la suite de esta ronda recolecto **+6** items con **+5** funciones, y el item extra es
+> un caso parametrizado (`test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21]`) que metio el
+> archivado de JEV, no esta sesion. La cifra publicada es la del metodo canonico.
 >
 > **Ronda del 2026-09-27 (la cifra subio a 4,585).** Medido con el metodo canonico de la casa
 > (`grep -rE "^\s*def test_" tests --include=*.py`, 4,585) y contrastado con el arbol versionado
@@ -490,7 +517,7 @@ python scripts/run_all_validations.py           # Completo
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
 | asset_generation | 472 | `tests/asset_generation/` |
-| quality_gates | 859 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad) |
+| quality_gates | 861 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses) |
 | commercial_documents | 363 | `tests/commercial_documents/` |
 | auditors | 226 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1, +5 de TestGeminiCostAccounting en v4.77.2, +1 del contrato no-medible en v4.77.3) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
@@ -509,7 +536,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 958 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, y el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive` — un verde aditivo que sin arbol versionado no tendria oportunidad de perder) |
+| root test files | 961 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder) |
 
 ---
 

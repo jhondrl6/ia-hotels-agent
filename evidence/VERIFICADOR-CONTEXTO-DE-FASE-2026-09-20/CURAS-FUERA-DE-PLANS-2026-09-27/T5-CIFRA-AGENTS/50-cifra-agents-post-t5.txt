@@ -1,0 +1,19 @@
+### T5 — cifra de AGENTS.md (instruccion escrita del operador, paso [8] de la orden)
+
+$ grep -rE "^\s*def test_" tests --include=*.py | wc -l          -> 4590
+$ git grep -c -E "^\s*def test_" HEAD -- tests | awk ...     -> 4585 (en 505cd44; las 5 funciones nuevas viajan con los commits 2 y 3 de la tanda)
+$ suma de las 22 filas de la tabla de cobertura (awk -F'|' sobre el bloque 407..541) -> 4590  CUADRA
+$ python scripts/validate_agents_md.py
+  "test_count": {
+    "status": "PASS",
+    "agents_md_count": 4590,
+    "pytest_count": 4666,
+    "pct_diff": 1.6,
+    "tolerance": "±5%"
+VALIDATORS_EXIT=0
+
+$ python scripts/run_all_validations.py --quick
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0

@@ -1,0 +1,38 @@
+### CADENA DE WRITERS tras las anotaciones datadas de T4 (orden medido de la casa: packs -> indice -> los dos --check -> quick)
+
+$ python scripts/build_phase_briefing.py --plan VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 --check   # ANTES
+  5 packs VENCIDOS por SHA-DISTINTO de dependencias-fases.md (4) y de 10-analisis (FASE-RELEASE)
+
+$ python scripts/build_lesson_index.py --check   # ANTES
+  [FAIL] indice vencido (340 IDs) — el corpus que edité es fuente del indice
+
+=== 1) GENERAR PACKS ===
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_PACKS=0
+
+=== 2) GENERAR INDICE ===
+[OK] 340 IDs definidos + 52 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_INDICE=0
+
+=== 3) --check de packs ===
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_CHECK_PACKS=0
+
+=== 4) --check del indice ===
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_CHECK_INDICE=0

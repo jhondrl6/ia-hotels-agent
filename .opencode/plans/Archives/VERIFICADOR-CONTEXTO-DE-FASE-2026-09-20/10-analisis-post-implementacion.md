@@ -476,7 +476,14 @@ autorización— es exactamente donde quedaron los permisos.
   **seis** constantes, no cinco) y su POST por población dejó la suite en **3 rojos**, los tres atribuidos el
   2026-09-25, con **0 nuevos**; y **S17 sigue abierta** — su **quinta** instancia se midió hoy en el mismo
   `--fix` del archivado. De la enumeración original quedan vivas **D3, D6, D7, S10 y S14**, más la **(d)** de
-  **S19**; el estado vigente de cada una es su fila en `dependencias-fases.md`, fuente única⟧
+  **S19**; el estado vigente de cada una es su fila en `dependencias-fases.md`, fuente única⟧ ⟦**Pasada datada del
+  mismo 2026-09-27, sesión de curas fuera de plans (una línea, sin re-transcribir cifras: L-VCF-19)**: de los dos
+  miembros que esa nota dejaba abiertos, **§S17 quedó cerrada por ejecución** en su defecto de finales de línea —
+  curadas las dos escrituras de `scripts/validate_opencode_refs.py` y su batería ampliada— y **§S31 quedó cerrada
+  también en su fragilidad estructural**, goberada ahora por control y no por disciplina. Sigue **abierto** bajo el
+  dueño de §S17 su sub-punto menor (el `--fix` promueve la forma minoritaria de la ruta), y siguen con dueño **D3**,
+  **D6**, **D7**, **S10**, **S14** y la **(d)** de **S19**. Estado vigente: §S17 y §S31 de
+  `dependencias-fases.md`⟧
 - **Lo que este cierre no afirma**: que los cuatro planes del lote estén terminados, ni que exista medida de
   pertinencia real, ni que el trabajo esté versionado: el producto de D, los cierres documentales y este
   expediente siguen **solo en el árbol de trabajo**.

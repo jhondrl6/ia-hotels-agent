@@ -557,7 +557,14 @@ general de esta orden (contrato **E5**): C leyó el workflow canónico vigente, 
   D2 no estaba viva cuando se lo afirmó; y S16 se curó el 2026-09-27 con el mandato D-b sobre su propio dueño,
   con su población re-medida en §S16 del plan, que es la fuente única. De las ocho enumeradas quedan vivas
   **D3**, **D6**, **D7**, **S10** y **S14**. Las pasadas anteriores se conservan textuales: es la regla de la
-  casa, no una cortesía⟧;
+  casa, no una cortesía⟧ ⟦**quinta pasada sobre esa misma lista, 2026-09-27, sesión de curas fuera de plans**:
+  **S17 ya no está viva** — no por decisión, sino por ejecución: las dos escrituras de
+  `scripts/validate_opencode_refs.py` llevan `newline="\n"` desde la cura de su quinta puerta, con la batería
+  `tests/test_sync_writers_lf_y_fecha_readme.py` ampliada para correr ese guion real y su mutante R2.8 medido
+  (`2 failed, 8 passed` al quitar el parámetro; restaurado, `sha256` idéntico y verde). La enumeración de arriba
+  queda vigente en sus cinco miembros y se le suma el sexto que esa lista no traía: siguen con dueño **D3**,
+  **D6**, **D7**, **S10**, **S14** y la **(d)** de **S19**. Estado vigente de cada uno: su fila en
+  `dependencias-fases.md` de CONTEXTO, fuente única —esta orden no lo re-transcribe—⟧;
   (4) que el trabajo esté **commiteado o publicado** — ver la tabla de cuatro momentos del encabezado.
   ⟦**Precisión del mismo 2026-09-25, causada por la propia ejecución del cierre**: esta casilla decía «a
   CONTEXTO le falta FASE-RELEASE». FASE-RELEASE se ejecutó y cerró **en su parte offline** ese día con la
