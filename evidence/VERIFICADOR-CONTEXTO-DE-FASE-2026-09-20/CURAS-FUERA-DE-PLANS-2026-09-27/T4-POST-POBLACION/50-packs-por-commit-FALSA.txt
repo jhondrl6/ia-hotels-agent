@@ -1,0 +1,11 @@
+### !! TABLA INVALIDA: el EXIT se leia detras de una tuberia a `tr` y salia 0 para todos los commits, incluso el que diverge. Ver 51-packs-por-commit-exit-real.txt.
+### PRUEBA POR COMMIT: el arbol de CADA commit reproduce sus packs?
+### Comando: python scripts/verify_packs_in_committed_tree.py --rev <sha>
+
+505cd44  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+e2e44cd  EXIT=0 | [DIVERGE] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md (1 líneas
+6068f40  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+d86f610  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+ed732be  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+e7c722b  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+03c69ad  EXIT=0 | [OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md

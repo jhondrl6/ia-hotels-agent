@@ -1,0 +1,39 @@
+### PRUEBA POR COMMIT: el árbol de CADA commit reproduce sus packs (código de salida real, sin tubería)
+
+Comando, por commit:
+
+    python scripts/verify_packs_in_committed_tree.py --rev <sha> > /tmp/vp.txt 2>&1
+    echo "EXIT=$?"
+
+Medido 2026-09-27 sobre `master`:
+
+| commit | EXIT | salida del verificador |
+|---|---|---|
+| `505cd44` (baseline) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+| `e2e44cd` (prosa del §2.5) | **1** | `[DIVERGE]` 0/5 reproducidos, **5 divergentes** |
+| `6068f40` (packs derivados) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+| `d86f610` (cura S17) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+| `ed732be` (cura S31) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+| `e7c722b` (registros + cifra AGENTS) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+| `03c69ad` (fila S32 + precisión) | 0 | `[OK]` 5/5 reproducidos, 0 divergentes |
+
+Lectura: la regla de la casa («por cada commit, quick 13/13 reproducible en su propio árbol») se cumple en
+los seis commits a partir de `6068f40`, y **se viola en `e2e44cd`**. La violación es medida, no deducida, y
+su causa está en §S32 de `dependencias-fases.md`: el pack publica los bytes del workflow sin que el
+workflow sea `sources[]`, así que el rojo de ese árbol no lo daba el `--check` del escritor (verde) sino el
+verificador del árbol commiteado. El árbol se reparó en el commit siguiente, con los packs generados en un
+clon de HEAD y no en el árbol de trabajo; se declara también aquí porque [10] pedía «un commit por trabajo»
+y esta tanda terminó en siete, cinco de ellos de la tanda más `6068f40` (derivados) más `03c69ad` (la fila
+que este mismo hallazgo exigía registrar).
+
+### Nota de instrumento (falso verde propio, cazado al releer esta tabla)
+
+La primera versión del bucle hacía la corrida dentro de una sustitución de comando con tubería:
+
+    out=$(python scripts/verify_packs_in_committed_tree.py --rev "$c" 2>&1 | tr -d '\r'); code=$?
+
+y el código que recogía era el de `tr`, no el del verificador. Resultado: **siete `EXIT=0`**, incluso el de
+`e2e44cd`, que imprime `[DIVERGE]` en los cinco packs. Un verde vacío de los que la casa cobra con nombre
+propio (§S20: el clon heredaba `autocrlf` y su `--check` daba rojo falso; aquí es el espejo —un verde falso
+por donde se lee la salida—). La versión corregida redirecta a archivo y lee `$?` sin tubería intermedia.
+La tabla errónea se conservó, no se borró: `50-packs-por-commit-FALSA.txt`, con su cabecera de invalidez.

@@ -1,0 +1,72 @@
+### INVENTARIO DE CIERRE — sesión de curas fuera de plans, 2026-09-27
+
+Rama `master`. Baseline de partida re-medida (los cinco checks de [1] casaron todos): paridad `0 0` tras
+`git fetch`, HEAD `505cd44`, `git status --porcelain` vacío, `--quick` 13/13 con `[GUARDA]`, y
+`grep -rE "^\s*def test_" tests --include=*.py` = 4585.
+
+## Lo que se cerró
+
+| Tramo | Qué | Verificación |
+|---|---|---|
+| T1 | Prosa del §2.5 del executor + entrada v2.27.0 + copia del fixture de `governance_numbers` | `validate_governance_numbers.py` `SIN-HALLAZGOS`; batería `governance_numbers` 49 passed; mutante R2.8: revertir la frase vencida **no** produce rojo (declarado en la propia entrada) |
+| T2 | Quinta puerta de S17: las dos escrituras de `scripts/validate_opencode_refs.py` con `newline="\n"` | batería de 7 a 10 pruebas con el guion real y control en `5817edd`; mutante `2 failed, 8 passed`; restaurado con `sha256` idéntico |
+| T3 | S31: los seis arneses `PLAN` resuelven por `resolver_plan()` del escritor (puente nuevo `tests/support_resolucion_plan.py`) | dientes anclados a la revisión fija `44f53c2` con `git archive` (raíz) y al árbol de trabajo (`Archives/`); mutante: 17 failed + 26 errors con `FileNotFoundError` sobre la ruta vieja, restaurado 109 passed; control anti-literal con dos cortes |
+| T4 | Filas datadas de §S17 y §S31, espejo en `10-analisis`, quinta pasada de la lista de vivas de la ORDEN | cadena `packs → índice → --check ×2 → quick`; suite 3 failed / 4619 passed / 41 skipped / 4 xfailed, exit 1, **0 rojos nuevos** |
+| T5 | Cifra de AGENTS.md (instrucción escrita): cabecera 4585 → **4590**, `root test files` 958 → 961, `quality_gates` 859 → 861 | los dos comandos del árbol dan 4590 (paridad); suma de las 22 filas = 4590; `validate_agents_md.py` PASS (4666 items, 1,6 % contra tolerancia ±5 %) |
+
+## Devoluciones de la tanda, medidas y declaradas (no absorbidas)
+
+1. **Siete commits, no cuatro.** [10] pedía uno por trabajo. Salieron cinco de trabajo más **dos** que la
+   medición obligó: `6068f40` (los packs derivados del §2.5, que no pudieron viajar con su generador
+   porque el generador ya estaba commiteado) y `03c69ad` (la fila §S32, exigida por el criterio [11]).
+   Prueba por árbol en `51-packs-por-commit-exit-real.txt`: los siete árboles reproducen sus packs, salvo
+   `e2e44cd`, que da `[DIVERGE]` 5/5 y por eso existe `6068f40`.
+2. **Falso verde propio cazado al releer.** La primera tabla por commit leía `$?` detrás de una tubería a
+   `tr`, así que los siete commits salían `EXIT=0` — incluso el divergente. Crudo inválido conservado como
+   `50-packs-por-commit-FALSA.txt` y su versión corregida en `51-…`.
+3. **Dos rojos de instrumento, atribuidos y corregidos por escrito:** el mutador T2 redactado por heredoc
+   perdía el escape `\n` (abortaba con `count() == 0`, sin mutar nada), y la primera pasada del crudo T1
+   medía el árbol curado creyendo medir el mutante (el párrafo curado tiene 12 líneas, no 13). Ambos
+   quedaron anotados en sus crudos.
+4. **Desvío contra la instrucción T5:** preveía que nada cayera en `quality_gates` y cayeron dos funciones,
+   porque el control de S31 vive en una selección debajo de esa carpeta. Alineada su fila, con la nota.
+5. **Rojo propio de T4:** publicar la ruta del error con prefijo `.opencode/` dentro del corpus convirtió la
+   anotación en seis referencias rotas (una en la fila y cinco propagadas a los packs). No se absorbió con
+   `--fix`; se corrigió el texto. Crudo `44-…`.
+
+## Lo que queda pendiente (inventario [9] + lo nuevo)
+
+**Ya declarado por la orden, sin cambio de estado:**
+
+- **JeV fases B/C/RELEASE** — permisos humanos y de proveedor; el plan vive en `.opencode/plans/Archives/`.
+- **D3** (plan propio), **D6** (disparador = `acceptance` NO-EJERCITADO), **D7** (activación por el
+  operador), **S19(d)** (opción medida, no aplicada), **S10** (ligado a D7; su libro es la ORDEN),
+  **S14** (ajeno a esta orden).
+- **D8** — no se pegó en esta sesión el texto VERBATIM de Q7 en el primer mensaje, así que la consulta no se
+  re-corrió y la fila queda declarada con ese bloqueante.
+- **El gemelo vencido de QMind** `01a0e0d3-92db-795b-ad7a-48a7c322e8e9` — lo borra el operador desde la
+  consola (no se toca desde aquí).
+
+**NUEVO, generado por esta sesión:**
+
+- **§S32** (abierta, con dueño y disparador): cada pack publica los bytes y tokens del workflow canónico
+  sin que ese workflow esté en `sources[]` del pack. Consecuencia medida: con el workflow editado y
+  commiteado, el `--check` del escritor da **verde** y solo `[13/13]` del quick corta el desfase. Dos
+  salidas medidas y ninguna aplicada. Es el hallazgo que obligó a `6068f40`.
+- **Sub-punto de §S17 que sigue abierto** (preexistente, no curado aquí): el `--fix` de
+  `validate_opencode_refs.py` sigue promoviendo la forma minoritaria de la ruta (66 contra 518). La cura de
+  esta sesión goberna los finales de línea, no eso.
+- **Residuo CRLF en el árbol de trabajo, declarado sin limar:** 213 archivos bajo `.opencode/` están
+  `i/lf w/crlf` (`git ls-files --eol .opencode | awk '$1=="i/lf" && $2=="w/crlf"' | wc -l`), ninguno tocado
+  por esta sesión e invisible a `git status` porque `core.autocrlf=input` normaliza al commitear.
+  Normalizarlos es reescritura masiva de planes ajenos y no está en el alcance. Reparto en `23-…`.
+- **Límite de T1 sin instrumento:** la divergencia entre la prosa del §2.5 y el comportamiento de
+  `clasificar_planes()` no la goberna nadie; queda escrito en la entrada v2.27.0. Los dientes sí existen
+  sobre el comportamiento, no sobre el texto.
+
+## Empuje
+
+`git rev-list --count origin/master..HEAD` = **7** y `git rev-list --left-right --count
+origin/master...HEAD` = `0 7` al cerrar. **No se empujó**: requiere instrucción literal del operador, y el
+L3 deep del repo entero se ofrece junto con el empuje. La paridad no se fija como cifra en ningún documento
+seguir leyéndose con los dos comandos de arriba.
