@@ -19,12 +19,15 @@ from pathlib import Path
 
 import pytest
 
+from tests.support_resolucion_plan import ruta_plan
+
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "build_phase_briefing.py"
-PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+# S31: la ruta la resuelve el escritor (`resolver_plan()`), no un literal de este arnes.
+NOMBRE_PLAN = "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ruta_plan(NOMBRE_PLAN)
 ARCHIVES = ROOT / ".opencode" / "plans" / "Archives"
 WORKFLOW = ROOT / ".agents" / "workflows"
-NOMBRE_PLAN = PLAN.name
 
 
 class RedProhibida(RuntimeError):

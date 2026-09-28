@@ -1,0 +1,2 @@
+6fd87384ca391aae8937c05bcccc18c7fc6b6237a98f1ca43b753890d6e57e1c *tests/support_resolucion_plan.py
+4fae9beca478f0c2e108301649615d77c2e9955cb7311eaef914920c4ad390b4 *tests/quality_gates/lesson_relevance/conftest.py

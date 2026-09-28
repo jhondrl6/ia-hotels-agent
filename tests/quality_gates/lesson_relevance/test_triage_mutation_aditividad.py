@@ -24,8 +24,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.support_resolucion_plan import ruta_plan
+
 ROOT = Path(__file__).resolve().parents[3]
-PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+# S31: la ruta del plan la resuelve el escritor, no este arnes (ver `tests/support_resolucion_plan.py`).
+PLAN = ruta_plan("VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20")
 LECCIONES = PLAN / "00-lecciones-capitalizadas.md"
 NOMBRE = PLAN.name
 SUPPORT_OBSERVADOR = ROOT / "tests" / "support_observador_escrituras.py"

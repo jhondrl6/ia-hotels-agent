@@ -1,0 +1,33 @@
+### MUTANTE T3-b (dientes del control anti-literal, ya con el predicado de dos cortes)
+### Una linea del arnes vuelve a la forma pineada: PLAN = ARCHIVES / NOMBRE_PLAN
+# S31: la ruta la resuelve el escritor (`resolver_plan()`), no un literal de este arnes. Con el
+# literal, el `git mv` de D-c (`3c2e6a3`) dejo seis constantes ciegas y metio 42 rojos en la suite.
+NOMBRE_PLAN = "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ARCHIVES / NOMBRE_PLAN
+ARCHIVES = ROOT / ".opencode" / "plans" / "Archives"
+
+
+
+$ python -m pytest -q tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py
+                    pineados.append(f"{py.as_posix()} -> {l}")
+>       assert sin_puente == [], (
+            f"estos arneses no preguntan al escritor: {sin_puente} — un proximo traslado los vuelve a "
+            "cegar (S31)")
+E       AssertionError: estos arneses no preguntan al escritor: ["C:/Users/Jhond/Github/iah-cli/tests/quality_gates/lesson_relevance/conftest.py -> ['PLAN = ARCHIVES / NOMBRE_PLAN']"] — un proximo traslado los vuelve a cegar (S31)
+E       assert ["C:/Users/Jh...OMBRE_PLAN']"] == []
+E         
+E         Left contains one more item: "C:/Users/Jhond/Github/iah-cli/tests/quality_gates/lesson_relevance/conftest.py -> ['PLAN = ARCHIVES / NOMBRE_PLAN']"
+E         Use -v to get more diff
+
+tests\quality_gates\phase_briefing\test_arneses_resuelven_plan_por_el_escritor.py:109: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py::test_los_arneses_no_vuelven_a_pinear_la_ruta
+1 failed, 1 passed in 0.39s
+
+### RESTAURACION del mutante T3-b
+  sha256 curada antes    : 4fae9beca478f0c2e108301649615d77c2e9955cb7311eaef914920c4ad390b4
+  sha256 tras restaurar : 4fae9beca478f0c2e108301649615d77c2e9955cb7311eaef914920c4ad390b4
+
+$ python -m pytest -q tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py
+..                                                                       [100%]
+2 passed in 0.23s

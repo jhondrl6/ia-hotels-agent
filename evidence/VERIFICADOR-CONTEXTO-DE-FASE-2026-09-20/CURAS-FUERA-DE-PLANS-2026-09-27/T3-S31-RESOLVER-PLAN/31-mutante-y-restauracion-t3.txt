@@ -1,0 +1,28 @@
+### MUTANTE T3 (R2.8) — el puente de resolucion deja de preguntar al escritor
+### Mutacion: `ruta_plan()` resuelve `plans_dir / nombre` a pelo, o sea la ruta de RAIZ que los
+### seis arneses pineaban antes del `git mv` de D-c (`3c2e6a3`, 2026-09-26). No es una
+### simulacion del defecto: es el defecto, con el nombre de la ruta vieja.
+### Corrido por `crudo_t3.py` (este mismo directorio), que restaura los bytes en la misma corrida.
+
+$ python -m pytest -q tests/quality_gates/lesson_relevance tests/quality_gates/phase_briefing          # con el puente MUTADO
+  exit=1 | 17 failed, 66 passed, 26 errors in 22.23s
+  FAILED=17  ERROR=26
+
+### Firma del rojo (FileNotFoundError, deduplicada):
+  ..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+  E           trl_bajo_prueba_27728.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICAD
+  E           trl_para_evidencia.SueloNoLeible: AUSENTE: el documento de lecciones no se pudo leer: FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\Github\\iah-cli\\.opencode\\plans\\VERIFICADOR-
+
+### Nota de fidelidad: revertir los arneses al literal ACTUAL (`plans/Archives/<PLAN>`) NO da
+### rojo, porque hoy el plan si esta ahi. El rojo sale contra la ruta donde el plan ya no vive,
+### y ahi esta la leccion: el literal no es fragil el dia que se escribe, es fragil contra el
+### proximo traslado. Por eso el control se corre sobre la ruta de raiz.
+
+### RESTAURACION
+  sha256 curada antes   : 6fd87384ca391aae8937c05bcccc18c7fc6b6237a98f1ca43b753890d6e57e1c
+  sha256 del mutante    : 4b6578d96c67ec227d07752e8fa17fd70f30ccbda4ae256ec3cc945a894bd2c9
+  sha256 tras restaurar : 6fd87384ca391aae8937c05bcccc18c7fc6b6237a98f1ca43b753890d6e57e1c   IDENTICO
+$ python -m pytest -q tests/quality_gates/lesson_relevance tests/quality_gates/phase_briefing          # tras restaurar
+  exit=0 | 109 passed in 25.72s
+
+### Medido 2026-09-27 sobre el arbol de trabajo con HEAD=505cd44

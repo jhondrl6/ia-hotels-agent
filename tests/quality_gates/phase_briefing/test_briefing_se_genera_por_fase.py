@@ -19,8 +19,11 @@ import json
 import importlib.util
 from pathlib import Path
 
+from tests.support_resolucion_plan import ruta_plan
+
 ROOT = Path(__file__).resolve().parents[3]
-PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+# S31: la ruta del plan la resuelve el escritor, no este arnes (ver `tests/support_resolucion_plan.py`).
+PLAN = ruta_plan("VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20")
 AGENTS = ROOT / ".agents"
 WORKFLOW = AGENTS / "workflows" / "phased_project_executor.md"
 SUPPORT_OBSERVADOR = ROOT / "tests" / "support_observador_escrituras.py"

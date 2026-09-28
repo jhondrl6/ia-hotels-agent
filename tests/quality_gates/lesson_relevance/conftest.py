@@ -21,13 +21,17 @@ from pathlib import Path
 
 import pytest
 
+from tests.support_resolucion_plan import ruta_plan
+
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "scripts" / "triage_lesson_relevance.py"
 DOOR = ROOT / "scripts" / "decision_client.py"
 FALOS = Path(__file__).resolve().parent / "falsos_proveedores_triage"
-PLAN = ROOT / ".opencode" / "plans" / "Archives" / "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+# S31: la ruta la resuelve el escritor (`resolver_plan()`), no un literal de este arnes. Con el
+# literal, el `git mv` de D-c (`3c2e6a3`) dejo seis constantes ciegas y metio 42 rojos en la suite.
+NOMBRE_PLAN = "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+PLAN = ruta_plan(NOMBRE_PLAN)
 ARCHIVES = ROOT / ".opencode" / "plans" / "Archives"
-NOMBRE_PLAN = PLAN.name
 
 
 class RedProhibida(RuntimeError):
