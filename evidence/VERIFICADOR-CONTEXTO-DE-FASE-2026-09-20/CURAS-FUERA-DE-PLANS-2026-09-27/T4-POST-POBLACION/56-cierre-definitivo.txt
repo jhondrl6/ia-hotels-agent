@@ -47,3 +47,9 @@ enmendada por la regla `sin --amend`. Sobre los archivos del árbol, **cero**.
 **Lo que queda sin empujar y cómo se lee.** No se empujó: el push y su gate L3 se ofrecen y esperan la
 instrucción literal del operador. La cuenta no se fija aquí (la movería el propio commit que la escribe) y se
 lee con `git rev-list --count origin/master..HEAD`.
+
+> **⟦Esta nota la venció el propio cierre⟧.** Decía «no se empujó». Se empujó bajo la letra «empuja sin
+> L3»: rango `505cd44..762fc97`, paridad `0 0` leída tras `git fetch`, y el L3 sin ejecutar con su
+> procedimiento declarado en el `52-` de este mismo directorio. Lo que sí sigue siendo cierto de esa nota:
+> la cuenta de commits **no** se fija aquí, porque el commit de higiene que escribe esta línea la mueve otra
+> vez — se lee con `git rev-list --count origin/master..HEAD`.

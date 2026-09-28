@@ -136,3 +136,17 @@ contra `git rev-parse HEAD`) y por alcanzabilidad de las revisiones del rango
 ### Los tres nombres son los atribuidos el 2026-09-25 y ninguno es de esta sesion:
 ###   test_function_default_flags · test_diagnostic_includes_geo_metrics · test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
 ### Rojos nuevos: 0. Crudo completo: 53-suite-definitiva-post-docs.txt
+
+> **⟦Vencida esta sección el 2026-09-27, minutos después de escribirse⟧.** El operador emitió la letra
+> **«empuja sin L3»** y el rango se publicó: `git push origin master` devolvió `505cd44..762fc97  master -> master`
+> (exit 0). Verificación, no memoria: `git ls-remote origin refs/heads/master` =
+> `762fc9707bb173680cc0e91e423a7db587e2a381` = `git rev-parse HEAD` (objetos idénticos); las catorce
+> revisiones comprobadas una a una con `git merge-base --is-ancestor <sha> origin/master` = SI; en el remoto
+> solo existe `refs/heads/master`. Pre-flight del alcance: 14 commits, 201 objetos, 55 rutas, cero rutas
+> sensibles y `Secrets Check: SIN_HALLAZGOS` sobre 1358 rutas rastreadas+staged ya sobre `762fc97`.
+> **El gate L3 NO corrió**, y no por omisión nuestra: se intentó dos veces, las dos denegadas por el
+> clasificador del modo de permisos —la primera por no haber presentado el gate, la segunda aun después de
+> presentarlo y de que la respuesta registrada fuera «Correr la revisión L3 deep»—; ante la segunda
+> denegación se dejó de reintentar y el operador autorizó empujar sin él. Queda declarado así, como en
+> `84282c1`/`505cd44`, que son los otros dos pushes de la orden sin L3. El texto de arriba se conserva
+> íntegro: describía el árbol en el momento en que se escribió.
