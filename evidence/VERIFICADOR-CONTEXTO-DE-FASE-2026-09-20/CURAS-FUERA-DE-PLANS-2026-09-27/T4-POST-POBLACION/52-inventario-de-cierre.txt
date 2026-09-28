@@ -64,6 +64,26 @@ Rama `master`. Baseline de partida re-medida (los cinco checks de [1] casaron to
   `clasificar_planes()` no la goberna nadie; queda escrito en la entrada v2.27.0. Los dientes sí existen
   sobre el comportamiento, no sobre el texto.
 
+## Dos cosas que esta sesión midió sobre sí misma y no se guardó para ella
+
+1. **La lección ya estaba capitalizada y no se leyó.** `L-VCF-20` (§Decisiones de FASE-D de
+   `10-analisis-post-implementacion.md`, y fila suya en `.opencode/LECCIONES-INDEX.md`) gobierna exactamente
+   el error que esta tanda cometió dos veces: separar en commits un archivo cuya *proyección* (bytes y tokens
+   del workflow, impresos en la línea de carga de cada pack) vive en otro commit. Su instrucción era «si una
+   fuente de proyección queda en otro commit, nombrar en el mensaje cuál deja el árbol reproducible» — eso se
+   hizo a posteriori en `6068f40`, no a priori en `e2e44cd`. Causa procesal: el mandato de esta sesión arranca
+   en [1] estado de partida y **no pide Paso 0**, y el Paso 0 del executor está escrito para *crear planes*,
+   no para *sesiones de curas*. Queda anotado como hallazgo de proceso; no se abre fila: su remedio es el
+   mandato mismo (pedir la consulta al índice), y eso lo decide el operador.
+2. **Citar el ID dentro del corpus lo infló por la vía del derivado.** Tras escribir `L-VCF-20` dos veces en
+   §S32 de `dependencias-fases.md`, el conteo de citas del índice para esa lección pasó de **13 a 31**
+   (`git diff -- .opencode/lecciones_index.json`: `- "total_citas": 13` / `+ "total_citas": 31`), porque los
+   cinco packs re-embedian la fila y el índice cuenta sobre el corpus que incluye `briefing/`. Es la familia de
+   «la métrica de un derivado viaja por su propio corpus». No se revierte: la trazabilidad del antecedente
+   pesa más que el conteo, y el número que importa para C7/C8 (`dueños`, sigue siendo **1**) no se movió. Se
+   publica el delta para que nadie lea «31 citas» como 31 planes que citan.
+
+
 ## Empuje
 
 `git rev-list --count origin/master..HEAD` = **7** y `git rev-list --left-right --count
