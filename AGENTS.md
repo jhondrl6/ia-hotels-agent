@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,590 funciones totales)
+### Cobertura por Modulo (4,611 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -413,6 +413,26 @@ python scripts/run_all_validations.py           # Completo
 > regresion que D-c dejo ver) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+>
+> **Ronda del 2026-09-28 (la cifra subio a 4,611).** Medido con el metodo canonico de la casa
+> (`grep -rE "^\s*def test_" tests --include=*.py`, **4,611**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests`, **4,611** en `0e9cdd5`): **las dos cifras cuadran**, y por
+> primera vez sin mover el arbol para medirlas — la dependencia de la tanda ya estaba cumplida, porque las
+> veintiuna funciones viajaron **antes** que esta nota, en `c8b7198`. El delta contra la ronda anterior
+> (4,590, publicada en `e7c722b`) es **+21**, todo de la segunda sesion de codigo sobre `scripts/` (orden
+> post-re-verificacion VCF+JEV), y se atribuye archivo por archivo: **+7** en
+> `tests/test_sync_writers_lf_y_fecha_readme.py` (10 → 17: los cuatro controles de la forma que promueve
+> `--fix`, el delta EOL contrastado contra la forma citada, la cuenta de escritores LF y el ancla del control
+> C7 a su revision fija), **+5** en el nuevo `tests/test_run_all_validations_denominador_por_modo.py` (S21:
+> un denominador por modo y la [GUARDA] cortando fuera del rapido), **+6** en el nuevo
+> `tests/quality_gates/phase_briefing/test_briefing_proyeccion_workflow_gobernada.py` (S32: la proyeccion del
+> workflow gobernada por `--check`, con su control de verde falso) y **+3** en el nuevo
+> `tests/quality_gates/governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py` (D-A: los estados
+> que dejaron de delegarse en D1). O sea `root test files` 961 → **973** y `quality_gates` 861 → **870**; la
+> suma de las 22 filas de la tabla da exactamente **4,611** (verificado sumando la tercera columna). Queda
+> advertido el lector de la nota de arriba: su «En el commit que lleva esta nota los dos comandos dan 4,584»
+> describia al commit que la escribio, no a este, y desde entonces dos rondas la han dejado como antecedente
+> en vez de reescribirla.
 >
 > **Segunda ronda del 2026-09-27 (la cifra subio a 4,590).** Medido con el metodo canonico de la casa
 > (`grep -rE "^\s*def test_" tests --include=*.py`, 4,590) y contrastado con el arbol versionado
@@ -517,7 +537,7 @@ python scripts/run_all_validations.py           # Completo
 |--------|---------------|------------|
 | financial_engine | 549 | `tests/financial_engine/` |
 | asset_generation | 472 | `tests/asset_generation/` |
-| quality_gates | 861 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses) |
+| quality_gates | 870 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses; **+9 en la ronda del 2026-09-28**: 6 en `phase_briefing/test_briefing_proyeccion_workflow_gobernada.py` — la cura de S32, que gobierna por `--check` la proyeccion del workflow y pierde su verde cuando se la apaga — y 3 en `governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py` — la cura de D-A sobre los estados que se delegaban en D1) |
 | commercial_documents | 363 | `tests/commercial_documents/` |
 | auditors | 226 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1, +5 de TestGeminiCostAccounting en v4.77.2, +1 del contrato no-medible en v4.77.3) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
@@ -536,7 +556,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 961 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder) |
+| root test files | 973 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido) |
 
 ---
 
