@@ -10,6 +10,17 @@ IDs y 588 rutas, ambos exit 0) y **empujado con el rango `84c1aca..c8b7198`**. E
 no encontró problemas de seguridad**. La paridad no se fija aquí como cifra: la lee cualquiera con
 `git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`.⟧
 
+⟦**Segundo empuje de la misma tanda (2026-09-29)**: la línea anterior describe al rango `84c1aca..c8b7198`, que
+fue el primero. Después viajaron **dos** commits más y quedaron publicados con el rango `0e9cdd5..04cb348`:
+`03d9ef5` (cabecera de AGENTS 4.590 → 4.611) y `04cb348` (D-E ejecutada sobre la lección §11, con el snapshot
+vencido medido y sin tocar). **El L3 no corrió para ninguno de los dos**, ni tampoco para `0e9cdd5`: el operador
+eligió saltarlo («Saltar y empujar»). El único commit de esta tanda con revisión L3 corrida es `c8b7198`, con
+hallazgos en cero. Verificado **sobre el árbol de `04cb348`** con los dos verificadores de clon autogestionado:
+packs **5/5** reproducidos por el escritor (exit 0), índice fresco con **588 rutas** materializadas (exit 0), y
+el instrumento de paridad de la cabecera cerrando `TODO_CASA` (22 filas, suma 4.611 = cabecera = disco = árbol
+versionado). El `--quick` de **13/13** con `[GUARDA]` se corrió **antes** de estos commits, sobre el árbol de
+trabajo que los contenía; no se reimprime aquí como medida del commit ⟧
+
 - **REV_INICIO:** `84c1aca`, que al medir coincide con `origin/master` (`git log origin/master..HEAD` vacío).
   Todos los controles de escritor se anclan a esta revisión o a una publicada anterior, nunca a HEAD.
 - **Árbol de partida:** `git status --porcelain -uno` = **12**, exactamente la lista de la orden (6 anotaciones
