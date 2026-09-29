@@ -115,13 +115,34 @@ comentario de C4. **El criterio es el conteo (3), no la posición.**
   offline (`_print_summary` con resultados sintéticos), declarado en el crudo `15-`.
 - **AGENTS.md y `.cursorrules`: NO editados. DOMAIN_PRIMER: NO regenerado.**
   `scripts/log_phase_completion.py`: **NO tocado** (D-F5 es deuda con dueño, no acción de esta orden).
+  ⟦**Vencido en su primer miembro el 2026-09-29**: el operador dio la instrucción explícita de alinear la
+  cabecera de cifras, y `AGENTS.md` pasó de **4,590** a **4,611** con su ronda fechada, la atribución
+  archivo por archivo y las dos filas de la tabla (`root test files` 961 → **973**, `quality_gates` 861 →
+  **870**). Medido con el instrumento de la tanda (`m-cierre-cifra-agentes.py`): 22 filas, suma **4,611**, y
+  cabecera = disco = árbol versionado (`EXIT=0`, `TODO_CASA`). Quedó en `03d9ef5`. `.cursorrules` y
+  `DOMAIN_PRIMER` siguen sin tocar ⟧
 - **Decisiones D-B, D-D, D-E y el dueño de S14: NO tomadas.** Se reimprimen al cierre con su base medida.
-- **Subida de la lección §11 a QMind: NO hecha.** Y se declara un hecho **ajeno a esta sesión**: durante el
+  ⟦**D-E tomada en 2026-09-29, en su miembro de la lección** (la subida de la lección §11, abajo). El otro
+  miembro de la fila —la re-ingesta de los **2 snapshots vencidos**— sigue sin instrucción y ya tiene su
+  crudeza medida en el crudo `40-`. **D-B, D-D y el dueño de S14 siguen sin tomar** ⟧
+- **Subida de la lección §11 a QMind: NO hecha.** ⟦**Vencido el 2026-09-29 por instrucción explícita del
+  operador**: se subió con **título nuevo** por CLI (el `--upload` del escritor responde `[SKIP]` por título y
+  habría dejado la versión vieja como verdad publicada). Fuente `01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07` en el
+  notebook `01a04d98-…`, que pasó de **54** a **55** fuentes, y **verificada por descarga + sha256** y no por
+  título: `d968d497…e12b1` idéntico en disco y en lo descargado, 2.677 bytes en ambos lados.
+  `validate_qmind_writeback.py --strict` sigue en `[PASS] 13/13` — el título nuevo no lleva el stem
+  `10-analisis`, así que no se confunde con las fuentes que ese verificador cuenta. Crudos `39-` y `40-`.⟧
+  Y se declara un hecho **ajeno a esta sesión**: durante el
   trabajo llegó a este agente una notificación de tarea en segundo plano diciendo que un
   `qmind source upload … --file …/43-leccion-paso-0-2026-09-28.md` había terminado con exit 0. **Este agente no
   emitió ese comando** (la orden prohíbe la subida y la deja como decisión D-E del operador). No se repitió, no
   se deshizo y no se verificó el estado publicado del notebook: sería una escritura compartida fuera del
   alcance. Queda señalado para que el operador decida.
+  ⟦**Resuelto con medición el 2026-09-29, sin deshacer nada**: antes de subir se leyó el estado del notebook —
+  `Total: 54` y **0** títulos que contuvieran `lecc` (buscado también con la `cc` porque el acento rompe el
+  grep). O sea que esa notificación **no publicó la lección**: no había nada que retirar, y el conteo quedó en
+  55 con la fuente de hoy. Lo que la notificación hizo sigue siendo ajeno a esta sesión y no se reabre — no se
+  emitió ni se repitió ningún comando por ella ⟧
 - **Baterías pytest de los verificadores de gobernanza de planes: NO corridas** (82 funciones en 6 archivos
   raíz: verify_packs 7, verify_index 9, lesson_index_s15 4, lesson_capitalization 30, validate_wiring 18,
   registry_fecha 14). Los verificadores mismos SÍ corrieron (quick `[8/13]`–`[13/13]` + directos); lo no

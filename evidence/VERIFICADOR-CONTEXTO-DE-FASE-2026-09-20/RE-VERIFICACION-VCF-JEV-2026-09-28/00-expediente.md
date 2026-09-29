@@ -116,7 +116,7 @@ y los mandatos de B/C/RELEASE — ninguno de ellos técnico (crudo `10-verdictos
 | **D-B** | Decisión del operador, **no resuelta aquí** | AC3 de JEV: **(a)** versionar un fichero de candidatos con `original_sha256` **verificable**, o **(b)** enmendar la cláusula | Coste de (a): produce el insumo y re-ancla la muestra; su diente es que hoy **0 de 4** shas casan con nada versionado, así que la trazabilidad que AC3 afirma no existe. Coste de (b): toca una cláusula de acceptance ajena a esta sesión y necesita instrucción literal |
 | **D-C** | Diferido, sin cambios | CRLF **213** — dueño §S17 | Esta sesión **no** normalizó nada: se midió el estado y se dejó |
 | **D-D** | Espera instrucción escrita | Revisión humana de la muestra BORRADOR (4 pares: `human_reviewed = false`, `reviewer = null`, `reviewed_at = null`) y mandato JeV-B | **Condición cumplida** (la dependencia del hermano está entregada y versionada); lo que falta es firma humana y mandato, no capacidad |
-| **D-E** | Decisión | Re-ingesta a QMind de los **2 snapshots vencidos** | Aviso de la casa: el `--upload` responde `[SKIP]` por título, así que la re-ingesta con el mismo título deja la versión vieja como verdad publicada y crear gemelo exige título nuevo y no hay `delete` en el MCP |
+| **D-E** | Decisión | Re-ingesta a QMind de los **2 snapshots vencidos** | Aviso de la casa: el `--upload` responde `[SKIP]` por título, así que la re-ingesta con el mismo título deja la versión vieja como verdad publicada y crear gemelo exige título nuevo y no hay `delete` en el MCP. ⟦**2026-09-29, ejecutada a medias por instrucción literal**: el miembro de la **lección §11** quedó **subido** con título nuevo y verificado por descarga + sha256 (notebook de **54** a **55**, `01a0ef0e-…`); el aviso de esta fila resultó cierto solo **para el MCP**, porque el CLI **sí** expone `qmind source delete` — medido el 2026-09-28 y **no ejecutado**, que es una escritura compartida irreversible. Resta el otro miembro, la re-ingesta de los **2 snapshots vencidos**, con su diferencia ya medida: **+4.607 bytes** entre la fuente publicada `01a0e464-…` y el `10-analisis` en disco, **sin** artefacto CRLF. Texto larga en §6 y crudos `SESION-SCRIPTS-CURAS-2026-09-28/39-` y `40-` ⟧ |
 | **D-F5** | Deuda nueva, registrada en este expediente | **Dueño**: escritor de REGISTRY (`scripts/log_phase_completion.py`). **Disparador**: próximo mandato que toque ese escritor. **Contenido**: FASE-A de `EVALUACION-JEV-TYPESAFE-2026-09-21` quedó cerrada sin entrada | Nace de medir, no de opinar: el escritor estampa `datetime.now()` (línea 152) en la cabecera `## {fase_id} - {fecha}` (línea 172) y no tiene bandera de fecha ni de nota; usarlo hoy escribiría una fecha falsa. **Ninguna rama toca el archivo a mano**, y esta sesión tampoco |
 
 ---
@@ -141,6 +141,17 @@ Tres consecuencias operativas, cada una con su evidencia de hoy:
 **Cómo subirla a QMind:** con **TÍTULO NUEVO** (el `--upload` responde `[SKIP]` por nombre y dejaría la
 versión vieja como verdad publicada) y **verificada por descarga + sha256**, nunca por título. La subida
 en sí es la decisión **D-E** y no se ejecuta en esta sesión.
+
+⟦**Nota datada 2026-09-29 — ejecutada por instrucción literal del operador, y exactamente como esta sección la
+describía**: título nuevo por CLI y verificación por descarga + sha256. Fuente `01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07`,
+notebook `01a04d98-b7bd-778c-8441-26fdc7e35f45` de **54** a **55** fuentes, sha `d968d497…e12b1` idéntico en disco y
+en la descarga (2.677 bytes en ambos lados). El pre-estado se leyó antes de escribir: **0** títulos con `lecc`, así
+que la notificación de subida en segundo plano que la sesión 2 recibió sin haberla emitido **no había publicado
+nada** — no hubo que retirar nada. `validate_qmind_writeback.py --strict` sigue `[PASS] 13/13`. De la fila **D-E**
+queda en pie su otro miembro, la re-ingesta de los **2 snapshots vencidos**: medido hoy, la fuente publicada
+`01a0e464-…` trae **106.284** bytes contra **110.891** del `10-analisis` en disco, shas distintos y **sin** artefacto
+CRLF (normalizado el retorno de carro, las dos medidas no cambian). Su ejecución, y el borrado del gemelo
+`01a0e0d3-92db-…`, piden instrucción literal propia. Crudos: `SESION-SCRIPTS-CURAS-2026-09-28/39-` y `40-`⟧
 
 ---
 

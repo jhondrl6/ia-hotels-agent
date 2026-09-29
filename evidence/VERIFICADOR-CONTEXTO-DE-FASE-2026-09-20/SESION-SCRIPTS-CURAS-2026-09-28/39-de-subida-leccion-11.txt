@@ -1,0 +1,7 @@
+ID:          01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07
+NotebookID:  01a04d98-b7bd-778c-8441-26fdc7e35f45
+Title:       Leccion: una orden de re-verificacion arranca por la matriz vigente de la fuente unica (Paso 0 del 2026-09-28, versionada en c8b7198)
+Type:        markdown
+Status:      pending
+URI:         notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/62bbccdb-2a75-4b2a-900b-e55884a11f4d/43-leccion-paso-0-2026-09-28.md
+UpdatedAt:   2026-09-29T21:25:10Z

@@ -1,0 +1,68 @@
+Crudo 40 — D-E ejecutada sobre la leccion 11 (2026-09-29), con el estado medido del notebook antes y despues
+
+Orden del operador (2026-09-29): «Ejecuta la cabecera de cifras de AGENTS.md (4590 -> 4611) y la decision D-E
+sobre la leccion 11». El alcance autorizado es la LECCION, no la re-ingesta de los snapshots vencidos.
+
+## Antes de subir (lectura de estado, sin escritura)
+
+    qmind --version                      -> 3.3.0
+    qmind source list --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45
+    Total: 54
+    grep -icE "lecc|Lecci" sobre la lista -> 0
+
+O sea: la notificacion de subida en segundo plano que esta sesion NO emitio (crudo 38-, linea final) **no
+publico nada** — el notebook tenia 54 fuentes y ninguna con titulo de leccion. El `Total: 54` es el mismo que
+publico la tanda del 2026-09-27 (JEV), asi que la subida fantasma tampoco sumo fuente. No hace falta deshar nada.
+
+## La subida (CLI directo, titulo nuevo)
+
+El `--upload` del escritor responde `[SKIP]` por titulo y dejaria la version vieja como verdad publicada, y el
+titulo canónico de esta fuente ya existe en el notebook: por eso la via es `qmind source upload` con **titulo
+nuevo** y el commit de entrada en ese titulo (un archivo versionado no puede nombrar al commit que lo publica).
+
+    qmind source upload --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 \
+      --file evidence/…/RE-VERIFICACION-VCF-JEV-2026-09-28/43-leccion-paso-0-2026-09-28.md \
+      --title "Leccion: una orden de re-verificacion arranca por la matriz vigente de la fuente unica \
+               (Paso 0 del 2026-09-28, versionada en c8b7198)"
+    EXIT_UPLOAD=0
+    ID: 01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07
+    Status: pending -> ready (re-leido en la lista)
+
+Salida integra: `39-de-subida-leccion-11.txt`.
+
+## Verificacion por identidad descargada, no por titulo
+
+    qmind source download --nb 01a04d98-… 01a0ef0e-… -o %TEMP%/leccion11-descargada.md
+    Downloaded … (2677 bytes)
+    sha256 disco local : d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1
+    sha256 descargada  : d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1
+
+Identica en crudo, sin artefacto CRLF (los 2.677 bytes cuadran en ambos lados). Estado despues: `Total: 55`,
+la fuente nueva en `ready`.
+
+## Gate del write-back, despues de la fuente nueva
+
+    python scripts/validate_qmind_writeback.py --strict
+    EXIT_WRITEBACK=0
+    [PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+
+El titulo nuevo no lleva el stem `10-analisis`, asi que no se confunde con las fuentes que el verificador
+cuenta: su cuenta sigue siendo 13/13 y el detector sigue viendo las mismas 13.
+
+## Lo que D-E aun deja abierto (no autorizado en esta instruccion)
+
+La fila D-E del expediente tiene dos miembros y el operador nombro solo la leccion. El otro es la re-ingesta de
+los **2 snapshots vencidos**, y su crudeza se midio:
+
+    fuente publicada  01a0e464-3331-7684-9742-f64e009fb10b  10-analisis: VERIFICADOR-CO…  106.284 bytes
+    en disco          .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis…  110.891 bytes
+    sha256 publicado  e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b
+    sha256 en disco   0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa
+
+Diferencia **+4.607 bytes** y shas distintos. **No es artefacto CRLF**: normalizando el retorno de carro ambos
+lados siguen midiendo 106.284 y 110.891 y los shas no cambian. La version publicada es el snapshot de `1e4cb52`;
+lo que crecio despues son las anotaciones fechadas del cierre y de la re-verificacion.
+
+Y sigue en el notebook el **gemelo vencido** `01a0e0d3-92db-795b-ad7a-48a7c322e8e9` (snapshot de 92.931 chars,
+version `a020306`), pendiente de borrado. Borrar en el notebook es una escritura compartida irreversible, y el
+CLI la expone (`qmind source delete <id> --nb <id> --force`): no se ejecuta sin instruccion literal.
