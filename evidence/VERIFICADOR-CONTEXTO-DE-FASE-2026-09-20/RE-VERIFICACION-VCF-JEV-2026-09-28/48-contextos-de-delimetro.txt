@@ -1,0 +1,8 @@
+== Cada apertura/cierre de ⟦⟧ en el expediente, con su contexto (los hay literales citados como ejemplo)
+
+'\u27e6' @3579 :: (no \xabPARCIAL\xbb) | `evidence/\u2026/FASE-C/criterios-de-completitud.md` fila \u27e6E1\u27e7 \u2192 `**CUMPLIDO**`; crudo `15-veredicto-ac12.txt` | | VCF | AC14 | 
+'\u27e7' @3582 ::  \xabPARCIAL\xbb) | `evidence/\u2026/FASE-C/criterios-de-completitud.md` fila \u27e6E1\u27e7 \u2192 `**CUMPLIDO**`; crudo `15-veredicto-ac12.txt` | | VCF | AC14 | PAR
+'\u27e6' @9650 :: ) y **9 CON nota** con el criterio d\xe9bil; con el criterio fuerte (el `\u27e6` cae despu\xe9s de la negaci\xf3n) **5**. La orden publicaba 8 CON nota: *
+'\u27e6' @16845 ::  `10` sali\xf3 con 22 CR y una corrida intermedia   revent\xf3 imprimiendo `\u27e6` por la consola. Los crudos `11`-`15` se escriben por archivo con   
+'\u27e6' @22086 :: `HEAD` (colapsando espacios) en los seis archivos, y cada nota tiene `\u27e6` y `\u27e7` pareados (1 y 1). Las lineas que el `git diff` marca como bor
+'\u27e7' @22092 ::  (colapsando espacios) en los seis archivos, y cada nota tiene `\u27e6` y `\u27e7` pareados (1 y 1). Las lineas que el `git diff` marca como borradas 

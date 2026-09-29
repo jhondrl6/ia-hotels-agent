@@ -1,0 +1,41 @@
+=== C2.1 baseline: --check del plan VCF con la proyeccion gobernada (arbol de trabajo) ===
+NOTA de instrumento: un heredoc vacio dentro de este bloque abrio el REPL de python contra la consola y revento con WinError 6; la salida anterior de este archivo se descarta y se vuelve a correr sin heredoc.
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+EXIT_CHECK_VCF_BASELINE=0
+=== bytes reales del workflow ===
+workflow_bytes_disco= 112986 tokens= 28246
+=== proyeccion publicada en cada pack VCF ===
+=== las lineas de lectura aparte de los cinco packs VCF (la proyeccion que se gobierna) ===
+17:- `.agents/workflows/phased_project_executor.md` — 112986 bytes (~28246 tokens). se lee aparte mientras la deuda **D3** no rebane el workflow por fase; copiarlo aqui seria rebanar `.agents/` por la puerta de atras (AC17).
+72:- Objetos auditados (solo lectura): `.agents/workflows/phased_project_executor.md` y
+283:| A1 | `phased_project_executor.md`, párrafo «Verificador mecánico» de R2.2 | `validate_plan_citations.py` es «check **8** de `run_all_validations.py --quick»` | lo invoca `def _check_plan_citations`, que imprime `[9/11]` | **VENCIDA** |
+-- conteo de la forma 'N bytes (~M tokens)' por pack --
+FASE-A.md: 1 lineas de proyeccion
+FASE-B.md: 1 lineas de proyeccion
+FASE-C.md: 1 lineas de proyeccion
+FASE-D.md: 1 lineas de proyeccion
+FASE-RELEASE.md: 2 lineas de proyeccion
+-- las proyecciones del workflow, idénticas en los cinco? --
+-- y las de CONTRIBUTING (fuera del gobierno por bytes, criterio 5) --
+=== C2.1 MUTANTE sobre un archivo real: +43 bytes al workflow SIN regenerar packs ===
+-- el rojo debe salir en el instrumento de quien edita (--check), no solo en [13/13] --
+bytes_ahora= 113049
+[VENCIDO] FASE-A: 1 incidencia(s) — 0 fuente(s) movida(s), 1 proyeccion(es) vencida(s)
+    - PROYECCION-VENCIDA: .agents/workflows/phased_project_executor.md (publicados 112986 bytes / 28246 tokens; en arbol 113049 / 28262)
+[VENCIDO] FASE-B: 1 incidencia(s) — 0 fuente(s) movida(s), 1 proyeccion(es) vencida(s)
+    - PROYECCION-VENCIDA: .agents/workflows/phased_project_executor.md (publicados 112986 bytes / 28246 tokens; en arbol 113049 / 28262)
+[VENCIDO] FASE-C: 1 incidencia(s) — 0 fuente(s) movida(s), 1 proyeccion(es) vencida(s)
+    - PROYECCION-VENCIDA: .agents/workflows/phased_project_executor.md (publicados 112986 bytes / 28246 tokens; en arbol 113049 / 28262)
+[VENCIDO] FASE-D: 1 incidencia(s) — 0 fuente(s) movida(s), 1 proyeccion(es) vencida(s)
+    - PROYECCION-VENCIDA: .agents/workflows/phased_project_executor.md (publicados 112986 bytes / 28246 tokens; en arbol 113049 / 28262)
+[VENCIDO] FASE-RELEASE: 1 incidencia(s) — 0 fuente(s) movida(s), 1 proyeccion(es) vencida(s)
+    - PROYECCION-VENCIDA: .agents/workflows/phased_project_executor.md (publicados 112986 bytes / 28246 tokens; en arbol 113049 / 28262)
+EXIT_CHECK_CON_MUTANTE=1
+-- restauracion verificada por sha256 --
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 *.agents/workflows/phased_project_executor.md
+6c4232bc14c4a750fe9b7525d1d91f06a5b4fa6feb1ae9224e804be6ac04cc12 *.agents/workflows/phased_project_executor.md
+EXIT_CHECK_TRAS_RESTAURAR=0

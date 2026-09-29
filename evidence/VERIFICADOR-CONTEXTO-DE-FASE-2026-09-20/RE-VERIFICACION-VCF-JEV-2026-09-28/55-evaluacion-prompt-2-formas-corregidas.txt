@@ -1,0 +1,18 @@
+=== forma corregida del barrido (pathspec despues de --) ===
+scripts/validate_governance_numbers.py:819:            "estado": "trabajo D1 (lint de prosa) — limite declarado de FASE-A",
+scripts/validate_governance_numbers.py:830:            "estado": "fuera del alcance de este plan (maestro §3); D1 decide",
+--- fin de coincidencias (el grep real termina exit 0 con matches)
+EXIT_GREP=0
+
+=== el tercero del barrido, corregido ===
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:68:            "el workflow canonic debe seguir siendo lectura aparte obligatoria")
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:70:            "el workflow debe encabezar la lectura aparte mientras D3 no lo rebane")
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:99:            "el workflow no puede gobernar la frescura del pack: es lectura aparte, no fuente")
+
+=== linea final del sub-punto S17 HOY (:489) y del bloque (d) de S19 HOY ===
+**Estado de la fila: CERRADA por ejecución el 2026-09-27** en su defecto de finales de línea (cinco puertas:
+siendo una cuarta opción medida y no aplicada, con su coste y su dueño en el operador — cerrar (c) no la
+absorbe ni la descarta⟧
+
+### S20 — el clon del verificador hereda `autocrlf` de sistema y su `--check` de packs da rojo falso (nueva, 2026-09-2
+

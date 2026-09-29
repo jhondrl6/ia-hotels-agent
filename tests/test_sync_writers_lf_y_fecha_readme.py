@@ -33,6 +33,7 @@ Cómo se prueba (y por qué no basta con mirar los bytes):
   no define su propia función de huellas.
 """
 
+import hashlib
 import importlib.util
 import re
 import shutil
@@ -368,9 +369,12 @@ def test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf(tmp_path):
     assert bytes_c.count(b"\r\n") > 0, (
         "el control negativo no ejercitó el defecto: la versión commiteada del escritor tampoco "
         "escribió CRLF, así que el verde de arriba no habría observado diferencia real")
-    assert bytes_v.replace(b"\n", b"\r\n") == bytes_c, (
-        "los dos escritores difieren en algo distinto de los finales de línea: el verde dejaría de ser "
-        "atribuible al parámetro `newline`")
+    # C4 (§S17, sub-punto de la forma) añade una segunda diferencia conocida entre los dos escritores:
+    # el commiteado anteponía "/" a la ruta promovida y el vigente no. Se colapsa solo esa diferencia,
+    # nunca los finales de línea, para que la atribución al parámetro `newline` siga teniendo dientes.
+    assert bytes_v.replace(b"\n", b"\r\n") == bytes_c.replace(b"`/.opencode/", b"`.opencode/"), (
+        "los dos escritores difieren en algo distinto de los finales de línea y de la forma promovida: "
+        "el verde dejaría de ser atribuible al parámetro `newline`")
 
 
 @SIN_TRADUCCION
@@ -420,6 +424,176 @@ def test_el_guion_de_refs_no_toca_el_arbol_del_proyecto(tmp_path):
     assert dentro_del_arbol == [], (
         f"el escritor abrio archivos del proyecto real: {registro.rutas()} — sus rutas no estaban "
         "redirigidas al espejo")
+
+
+# ------------------------------------------------ S17, sub-punto de forma (cura C4 / D-G)
+
+# La ruta que la nota cita (minoritaria: no existe) y su destino real, ya archivado.
+RUTA_CITADA = ".opencode/plans/HUESO/nota.md"
+RUTA_DESTINO = ".opencode/plans/Archives/HUESO/nota.md"
+
+
+def _proyecto_forma(tmp_path: Path, *, script_src: Path) -> Path:
+    """Espejo con una referencia promovible: el destino esta bajo `Archives/` y la cita no.
+
+    Es el caso de `archived_promotion`, la puerta por la que el `--fix` escribio las formas
+    minoritarias de la cuarta y quinta instancia medidas en la fila. El Markdown entra por bytes, por
+    el mismo motivo que en `_proyecto_refs`.
+    """
+    raiz = tmp_path
+    (raiz / "scripts").mkdir(parents=True, exist_ok=True)
+    destino = raiz / ".opencode" / "plans" / "Archives" / "HUESO"
+    destino.mkdir(parents=True)
+    shutil.copyfile(script_src, raiz / "scripts" / "validate_opencode_refs.py")
+    (destino / "nota.md").write_bytes(b"# destino del espejo\n")
+    nota = f"# Nota del espejo\n\nLeer `{RUTA_CITADA}` antes de cerrar.\n"
+    (raiz / ".opencode" / "plans" / "registro.md").write_bytes(nota.encode("utf-8"))
+    return raiz
+
+
+def test_el_fix_promueve_la_forma_mayoritaria_sin_barra(tmp_path, capsys):
+    """C4: la ruta promovida se reescribe sin barra inicial, que es la forma del corpus."""
+    raiz = _proyecto_forma(tmp_path / "f-vigente", script_src=REFS_SCRIPT)
+    mod = _cargar(f"refs_forma_v_{raiz.name}", raiz / "scripts" / "validate_opencode_refs.py")
+    assert mod.main(["--fix"]) == 0
+    texto = (raiz / ".opencode" / "plans" / "registro.md").read_text(encoding="utf-8")
+
+    assert f"`{RUTA_DESTINO}`" in texto, f"el --fix no promovio la ruta: {texto!r}"
+    assert "/" + RUTA_DESTINO not in texto, (
+        f"el --fix volvio a anteponer la barra minoritaria: {texto!r} (sub-punto de §S17, deuda D-G)")
+
+
+def test_la_segunda_corrida_del_fix_no_escribe(tmp_path, capsys):
+    """Idempotencia: la forma promovida resuelve, asi que la segunda corrida no escribe nada."""
+    raiz = _proyecto_forma(tmp_path / "f-idem", script_src=REFS_SCRIPT)
+    mod = _cargar(f"refs_forma_i_{raiz.name}", raiz / "scripts" / "validate_opencode_refs.py")
+    assert mod.main(["--fix"]) == 0
+    primero = (raiz / ".opencode" / "plans" / "registro.md").read_bytes()
+    capsys.readouterr()
+    assert mod.main(["--fix"]) == 0
+    salida = capsys.readouterr().out
+
+    assert "[FIX]" not in salida, f"la segunda corrida volvio a reparar: {salida!r}"
+    assert "todas las referencias existen" in salida, (
+        f"la forma promovida no resuelve en el lector: {salida!r}")
+    assert (raiz / ".opencode" / "plans" / "registro.md").read_bytes() == primero
+
+
+def test_el_commiteado_promovia_la_forma_minoritaria(tmp_path, capsys):
+    """Dientes del control: `5817edd` (forma con barra) sobre el mismo espejo, sin `checkout`."""
+    control = _fuente_commiteada("scripts/validate_opencode_refs.py", tmp_path / "c-forma")
+    raiz = _proyecto_forma(tmp_path / "f-control", script_src=control)
+    mod = _cargar(f"refs_forma_c_{raiz.name}", raiz / "scripts" / "validate_opencode_refs.py")
+    assert mod.main(["--fix"]) == 0
+    texto = (raiz / ".opencode" / "plans" / "registro.md").read_text(encoding="utf-8")
+
+    assert "/" + RUTA_DESTINO in texto, (
+        f"el control no ejercio el defecto de forma ({texto!r}): el verde de la prueba de arriba no "
+        "habria observado diferencia real")
+
+
+def test_ref_target_sigue_aceptando_las_dos_formas(tmp_path):
+    """C4 cambia lo que se escribe, no lo que se resuelve: `lstrip("/")` sigue cubriendo ambas."""
+    raiz = _proyecto_forma(tmp_path / "f-target", script_src=REFS_SCRIPT)
+    mod = _cargar(f"refs_forma_t_{raiz.name}", raiz / "scripts" / "validate_opencode_refs.py")
+
+    assert mod.ref_target(RUTA_DESTINO) == mod.ref_target("/" + RUTA_DESTINO)
+    assert mod.ref_target(RUTA_DESTINO).exists()
+    assert not mod.ref_target(RUTA_CITADA).exists(), (
+        "el espejo perdio su condicion de partida: la ruta citada debe estar rota para que haya "
+        "promocion que gobernar")
+
+
+# ------------------------------------------- S17, sexta puerta: el baseline de citas (C7 / D-H)
+
+CITAS_SCRIPT = ROOT / "scripts" / "validate_plan_citations.py"
+BASELINE_REAL = ROOT / ".opencode" / "plans" / "plan_citations_baseline.json"
+# REV_INICIO de la orden de curas del 2026-09-28: la revision publica donde el escritor del baseline
+# sigue sin `newline`. Anclada, no HEAD: esta cura entra en el commit y desde ese arbol el control
+# quedaria sin rojo con el que compararse (la leccion de `bdd1c4c`, arriba).
+REV_CONTROL_C7 = "84c1aca"
+TS_RE = re.compile(rb'"created_at": "[^"]+"')
+
+
+def _plantar_planes(tmp: Path) -> Path:
+    """Un plan minimo con una cita `archivo.py:NNN`, para que el escritor tenga algo que inventariar.
+
+    Un baseline vacio daria un verde sin observacion: la prueba mide bytes de un archivo que el
+    escritor lleno de verdad.
+    """
+    plans = tmp / "plans" / "PLAN-A"
+    plans.mkdir(parents=True, exist_ok=True)
+    # Por bytes, como el resto de los plantados de esta bateria: `write_text` traduciria el insumo
+    # antes de la medida y el experimento naceria falseado.
+    (plans / "01-doc.md").write_bytes(
+        b"# Doc\n\nver `scripts/alpha.py:12` y `scripts/beta.py:34`\n")
+    return tmp / "plans"
+
+
+def _correr_escritor_citas(script: Path, tmp: Path, tag: str) -> bytes:
+    raiz = tmp / tag
+    plans = _plantar_planes(raiz)
+    destino = raiz / "salida" / "baseline.json"
+    r = subprocess.run([sys.executable, str(script), "--plans-dir", str(plans),
+                        "--baseline", str(destino), "--update-baseline"],
+                       capture_output=True, text=True)
+    assert r.returncode == 0, f"{r.returncode}: {r.stdout}{r.stderr}"
+    assert destino.is_file(), f"el escritor no publico su baseline: {r.stdout}"
+    return destino.read_bytes()
+
+
+@SIN_TRADUCCION
+def test_el_baseline_de_citas_emite_lf_y_el_de_la_revision_fija_escribe_crlf(tmp_path):
+    """C7 / D-H: sexta puerta de la familia. El escritor del baseline se prueba sobre ruta externa.
+
+    La orden prohibe probar el escritor contra el baseline real, y el guard de destino de abajo lo
+    sostiene por huella, no por intencion: aqui solo se escriben temporales.
+    """
+    nuevo = _correr_escritor_citas(CITAS_SCRIPT, tmp_path, "v")
+    viejo = _correr_escritor_citas(
+        _fuente_commiteada("scripts/validate_plan_citations.py", tmp_path / "c7", REV_CONTROL_C7),
+        tmp_path, "c")
+
+    assert b"\r" not in nuevo, (
+        f"el escritor del baseline sigue emitiendo CRLF ({nuevo.count(bytes([13]))} CR): D-H, "
+        "sexta puerta de S17")
+    assert viejo.count(b"\r\n") > 0, (
+        "el control no ejercito el defecto: la revision fija tampoco escribio CRLF, y el verde de "
+        "arriba no habria observado diferencia real")
+    sin_ts = lambda b: TS_RE.sub(b'"created_at": "N"', b)
+    assert sin_ts(nuevo).replace(b"\n", b"\r\n") == sin_ts(viejo), (
+        "los dos escritores difieren en algo distinto de los finales de linea y de la marca de tiempo: "
+        "el verde dejaria de ser atribuible al parametro `newline`")
+
+
+def test_el_control_c7_sigue_estando_defectuoso_en_su_revision():
+    """El ancla del control se verifica contra la revision, no contra la memoria del autor del test."""
+    proc = subprocess.run(["git", "show", f"{REV_CONTROL_C7}:scripts/validate_plan_citations.py"],
+                          capture_output=True, text=True, cwd=str(ROOT))
+    assert proc.returncode == 0, proc.stderr[:200]
+    # En la fuente commiteada el defecto es la AUSENCIA del argumento: buscar `newline=` y exigir
+    # cero ocurrencias es la forma legible, sin jugar con escapes del patron.
+    assert proc.stdout.count("newline=") == 0, (
+        f"la revision fija {REV_CONTROL_C7} ya trae la cura: el control negativo perdio su rojo")
+    assert proc.stdout.count("write_text(") >= 1, (
+        f"la revision fija no tiene la escritura que se controla: {REV_CONTROL_C7} no es el ancla")
+
+
+def _sha_baseline() -> str:
+    return hashlib.sha256(BASELINE_REAL.read_bytes()).hexdigest()
+
+
+def test_probar_el_escritor_no_toca_el_baseline_real(tmp_path):
+    """Guard de destino por huella: la prueba escribe temporales y ni un byte del baseline versionado.
+
+    La orden prohibe probar el escritor contra el baseline real; este guard es la version medida de
+    esa prohibicion, no la nota al lado (S13: la ausencia se afirma por operaciones observadas).
+    """
+    antes = _sha_baseline()
+    assert BASELINE_REAL.is_file(), "el baseline versionado no esta en disco: guard sin poblacion"
+    _correr_escritor_citas(CITAS_SCRIPT, tmp_path, "guard")
+    assert _sha_baseline() == antes, (
+        "la prueba del escritor movio el baseline real: el destino no estaba redirigido")
 
 
 # ---------------------------------------------------------------------- S18: fecha README

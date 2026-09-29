@@ -1,0 +1,24 @@
+=== A. git grep soporta --include? ===
+fatal: option '--include=*.py' must come before non-option arguments
+EXIT_A=0
+
+=== B. git grep con pathspec tests/ antes de -- ===
+fatal: unable to resolve revision: tests/
+EXIT_B=0
+
+=== C. forma correcta (rev -- pathspec) ===
+EXIT_C=0
+
+=== D. --report existe en validate_governance_numbers? ===
+usage: validate_governance_numbers.py [-h] [--governance-doc GOVERNANCE_DOC]
+                                      [--source SOURCE] [--hook HOOK]
+                                      [--report [REPORT]] [--json] [--quiet]
+
+Verificador de aserciones sobre conteos en los documentos de gobierno (FASE-A
+del plan
+
+options:
+  -h, --help            show this help message and exit
+  --governance-doc GOVERNANCE_DOC
+                        documento de gobierno a auditar (repetible); default:
+                        los dos del maestro

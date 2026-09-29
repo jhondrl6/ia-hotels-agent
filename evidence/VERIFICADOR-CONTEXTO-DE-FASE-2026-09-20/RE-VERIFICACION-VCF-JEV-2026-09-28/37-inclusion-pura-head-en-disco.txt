@@ -1,0 +1,19 @@
+== CONTROL 'REPORTA, NO REESCRIBE'
+== Patron de nota (tolerante a la negrita de apertura): ⟦[*s]*Nota datada 2026-09-28 ... ⟧
+== Se quitan de disco las notas de hoy y el texto resultante debe ser IDENTICO al de HEAD,
+== colapsando espacios. Si lo es, la edicion fue insercion pura.
+
+   EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                                       notas=1  HEAD=17847  disco-sin-nota=17847  identico=SI
+        nota: 1195 chars, ⟦=1 ⟧=1, termina en: ...n, y las APIs de inferencia sin llamar ⟧
+   EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md                        notas=1  HEAD= 8811  disco-sin-nota= 8811  identico=SI
+        nota: 1032 chars, ⟦=1 ⟧=1, termina en: ...; lo que cayó es el estado de estas dos⟧
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md                         notas=1  HEAD=52468  disco-sin-nota=52468  identico=SI
+        nota: 1101 chars, ⟦=1 ⟧=1, termina en: ...orden de calidad sí fue solo documental⟧
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md                   notas=1  HEAD=28627  disco-sin-nota=28627  identico=SI
+        nota: 962 chars, ⟦=1 ⟧=1, termina en: ...rmiso para otra fase debe pedir el suyo⟧
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md         notas=1  HEAD=106056  disco-sin-nota=106056  identico=SI
+        nota: 1720 chars, ⟦=1 ⟧=1, termina en: ...TA = 11 / SIN-NOTA = 0** en las fuentes⟧
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md                      notas=1  HEAD=119306  disco-sin-nota=119306  identico=SI
+        nota: 2176 chars, ⟦=1 ⟧=1, termina en: ...pencode/plans/Archives` = **0** líneas)⟧
+
+== TOTAL: INSERCION PURA en las 6 fuentes: no se borro ni reescribio texto del plan

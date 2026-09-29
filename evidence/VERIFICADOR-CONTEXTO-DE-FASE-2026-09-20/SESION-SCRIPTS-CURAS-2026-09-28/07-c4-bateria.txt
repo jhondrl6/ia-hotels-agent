@@ -1,0 +1,6 @@
+=== C4.0 py_compile del escritor ===
+EXIT_PYCOMPILE=0
+=== C4.1-2-3: la bateria S17 (antes 10 pruebas, ahora con las 4 de forma) ===
+EXIT_BATERIA=0
+..............                                                           [100%]
+14 passed in 0.96s

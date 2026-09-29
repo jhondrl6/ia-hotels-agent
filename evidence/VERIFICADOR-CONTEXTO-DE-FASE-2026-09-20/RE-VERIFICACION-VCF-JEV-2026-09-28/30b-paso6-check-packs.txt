@@ -1,0 +1,31 @@
+=== PASO 6a: --check sobre el plan VCF (archivado) ===
+[VENCIDO] FASE-A: 3 fuente(s) movidas
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-B: 3 fuente(s) movidas
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-C: 3 fuente(s) movidas
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-D: 3 fuente(s) movidas
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-RELEASE: 4 fuente(s) movidas
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+EXIT_VCF_CHECK=0
+
+=== PASO 6b: existe el plan JEV y tiene packs? ===
+00-lecciones-capitalizadas.md 01-plan-maestro.md 04-contrato-ejecucion.md 05-prompt-inicio-sesion-fase-A.md 05-prompt-inicio-sesion-fase-B.md 05-prompt-inicio-sesion-fase-C.md 05-prompt-inicio-sesion-fase-RELEASE.md 06-checklist-implementacion.md 09-documentacion-post-proyecto.md 10-analisis-post-implementacion.md README.md dependencias-fases.md 
+[VENCIDO] FASE-A: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-A.md
+[VENCIDO] FASE-B: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-B.md
+[VENCIDO] FASE-C: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-C.md
+[VENCIDO] FASE-RELEASE: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-RELEASE.md
+EXIT_JEV_CHECK=0

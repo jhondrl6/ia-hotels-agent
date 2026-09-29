@@ -1,0 +1,33 @@
+=== PASO 6e: verificacion con el exit PROPIO del constructor (sin tuberia que se coma el $?) ===
+EXIT_CHECK_VCF_REAL=0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+
+-- y el plan JEV, con su exit propio (sigue PACK-AUSENTE, preexistente):
+EXIT_CHECK_JEV_REAL=1
+[VENCIDO] FASE-A: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-A.md
+[VENCIDO] FASE-B: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-B.md
+[VENCIDO] FASE-C: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-C.md
+[VENCIDO] FASE-RELEASE: PACK-AUSENTE -> C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing/FASE-RELEASE.md
+
+=== PASO 6f: el orden de la casa es packs -> indice -> --check; el indice va DESPUES de los packs regenerados ===
+   sha ANTES LECCIONES-INDEX.md 0161857e61c98643
+   sha ANTES lecciones_index.json 1d254462e4755346
+EXIT_IDX=0
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_IDX_CHECK=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+   sha DESPUES LECCIONES-INDEX.md 0161857e61c98643
+   sha DESPUES lecciones_index.json 1d254462e4755346
+
+=== PASO 6g: refs y citas, cada uno con su exit ===
+EXIT_REFS=0
+[PASS] OpenCode References: todas las referencias existen
+EXIT_CITAS=0
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)

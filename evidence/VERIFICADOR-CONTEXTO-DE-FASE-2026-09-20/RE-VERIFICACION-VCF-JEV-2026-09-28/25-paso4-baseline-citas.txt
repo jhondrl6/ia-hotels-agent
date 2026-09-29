@@ -1,0 +1,28 @@
+=== PASO 4: validate_plan_citations.py --update-baseline ===
+-- ANTES: sha del baseline
+de3d6be781a850c7
+-- CHECK antes del update (debe marcar CRECIO por mis citas nuevas)
+usage: validate_plan_citations.py [-h] [--plans-dir PLANS_DIR]
+                                  [--baseline BASELINE] [--update-baseline]
+                                  [--quiet]
+validate_plan_citations.py: error: unrecognized arguments: --check
+EXIT_CHECK_ANTES=0
+
+-- UPDATE
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT_UPDATE=0
+-- CHECK despues
+usage: validate_plan_citations.py [-h] [--plans-dir PLANS_DIR]
+                                  [--baseline BASELINE] [--update-baseline]
+                                  [--quiet]
+validate_plan_citations.py: error: unrecognized arguments: --check
+EXIT_CHECK_DESPUES=0
+
+-- DESPUES: sha del baseline
+91f01a95d9d96fda
+
+-- diff numstat del baseline
+warning: in the working copy of '.opencode/plans/plan_citations_baseline.json', CRLF will be replaced by LF the next time Git touches it
+1	1	.opencode/plans/plan_citations_baseline.json
+-- lineas CR del baseline
+87

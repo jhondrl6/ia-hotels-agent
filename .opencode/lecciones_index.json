@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 422,
     "ids_con_definicion": 340,
-    "ids_citados_sin_definicion": 52,
+    "ids_citados_sin_definicion": 54,
     "fechas_por_fuente": {
       "nombre": 329,
       "commit": 11,
@@ -3899,7 +3899,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 31,
+      "total_citas": 37,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -5246,6 +5246,22 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
+      ]
+    },
+    {
+      "id": "D-C",
+      "familia": "D",
+      "total_citas": 12,
+      "planes_que_lo_citan": [
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
+      ]
+    },
+    {
+      "id": "D-H",
+      "familia": "D",
+      "total_citas": 12,
+      "planes_que_lo_citan": [
+        "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
       ]
     },
     {

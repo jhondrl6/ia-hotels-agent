@@ -1,0 +1,100 @@
+=== PASO 9 (frescura final tras la ultima escritura de evidencia) ===
+EXIT_QUICK_FINAL=0
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+EXIT_PACKS_FINAL=0
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_IDX_FINAL=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+
+=== estado final del arbol ===
+EXIT_DIFF_CHECK=0
+12
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M .opencode/plans/plan_citations_baseline.json
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/
+
+=== expediente: delimitadores y tamano ===
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+    print('\u27e6=%d \u27e7=%d backticks=%d' % (s.count('\u27e6'), s.count('\u27e7'), s.count(chr(96))))
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u27e6' in position 0: character maps to <undefined>
+bytes=24298 lineas=200 CR=0
+
+=== inventario del expediente ===
+54
+00-expediente.md
+01-f1-archivado-jev.txt
+02-f2-piloto-fase-c-vcf.txt
+03-f3-barrido-parrafo-fuentes.txt
+04-f3-barrido-parrafo-corpus-completo.txt
+05-f4-par-de-formas-s17.txt
+06-f4-par-de-formas.txt
+07-f4-divergencia-gitgrep-head-vs-disco.txt
+08-f5-registry-jev.txt
+09-censo-deudas-y-decisiones.txt
+10-verdictos-por-ac.txt
+11-ac-en-evidencia-fase-c.txt
+12-jev-ac3-muestra.txt
+13-jev-ac3-verificabilidad-sha.txt
+14-veredictos-textuales-fase-c.txt
+15-veredicto-ac12.txt
+16-eol-en-bytes-de-los-planes.txt
+17-f4-tres-alcances.txt
+18-paridad-de-delimitadores.txt
+19-paridad-en-delta-contra-head.txt
+20-nota-f3-actual.txt
+21-paso3-refs-fix.txt
+22-dano-del-fix-sobre-la-nota.txt
+23-frase-copiada-para-el-edit.txt
+24-paso3-refs-recheck.txt
+25-paso4-baseline-citas.txt
+26-paso4b-escritor-baseline-crlf.txt
+27-paso4c-de-citas-y-residuo.txt
+28-paso4f-normalizacion-bytes.txt
+29-paso5-indice.txt
+30-paso6-check-inicial.txt
+30-paso6-check-packs.txt
+31-paso6-jev-packs-ausentes.txt
+32-paso6-regenerar-y-check.txt
+33-paso6-verificacion-real.txt
+34-paso7-quick.txt
+35-paso8-diff-y-poblacion.txt
+36-cr-y-no-reescritura.txt
+37-inclusion-pura-head-en-disco.txt
+38-paso9-frescura-final.txt
+alcances_f4.py
+barrido_parrafo.py
+conteo_formas.py
+diff_grep_head_vs_disco.py
+jev_ac3.py
+jev_ac3_sha.py
+m-censo.sh*
+m-f1.sh*
+m-f2.sh*
+m-f4.sh*
+m-f5.sh*
+m-verdictos.sh*
+paridad.py
+paridad_delta.py

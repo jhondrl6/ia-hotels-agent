@@ -1,0 +1,40 @@
+=== I2. families_not_covered hoy (JSON a ruta del repo) ===
+EXIT=0
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 348, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 510 column 2 (char 21683)
+
+=== L. default de --report en validate_governance_numbers.py ===
+915:    ap.add_argument("--report", nargs="?", const=REPORT_SIN_ESCRITURA, default=False,
+
+=== M. identidad real del residuo: bytes normalizados == blob? (muestra de 3) ===
+.opencode/context/Historico/AUDIT-BUG-1-FORENSIC-2026-07-22.md           CR= 456  norm==blob: True
+/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md   CR= 470  norm==blob: True
+code/context/Historico/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md   CR=  98  norm==blob: True
+
+=== N. verificar() del escritor de packs: donde cae C2 ===
+15:    al pie. Declara `no_incluye[]` y `lectura_aparte_obligatoria[]` — el workflow
+20:    el **sha256 de cada fuente de `sources[]` contra el arbol vigente**. `head` es
+65:WORKFLOW_CANONICO = ".agents/workflows/phased_project_executor.md"
+100:    return hashlib.sha256(ruta.read_bytes()).hexdigest()
+274:    Un item que no nombra archivo ni workflow es prosa («los cuatro prompts de fase»):
+301:        if re.search(r"workflow\s+(can[oó]nic|canonical)", cuerpo, re.I):
+302:            doc, clase = WORKFLOW_CANONICO, "workflow"
+402:        if clase == "workflow":
+406:                "declarado": item["declarado"], "documento": doc, "clase": "workflow",
+408:                "gobernada": False, "en_pack": False, "sha256": None,
+421:                "sha256": None, "bytes_documento": 0, "bytes_copiados": 0,
+437:                "sha256": None, "bytes_documento": 0, "bytes_copiados": 0,
+463:                "sha256": None, "bytes_documento": n_doc, "bytes_copiados": 0,
+501:            "sha256": sha_de(ruta), "bytes_documento": n_documento,
+544:        "> La frescura la gobierna el sha256 de `sources[]` contra el arbol vigente:",
+561:            motivo = ("se lee aparte mientras la deuda **D3** no rebane el workflow por fase; "
+579:        if not fuente["en_pack"] or fuente["ruta"] is None or fuente["clase"] == "workflow":
+598:                f"> **Procedencia**: `{fuente['ruta']}` · sha256 `{fuente['sha256']}` · "
+615:        "sources": [{"ruta": f["ruta"], "sha256": f["sha256"], "documento": f["documento"],
+687:def verificar(plan_dir: Path, briefing_dir: Path, raiz: Path) -> tuple[list[dict], int]:

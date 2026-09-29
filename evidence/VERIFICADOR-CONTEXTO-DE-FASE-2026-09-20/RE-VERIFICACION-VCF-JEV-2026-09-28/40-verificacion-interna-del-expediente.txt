@@ -1,0 +1,11 @@
+== Control interno del expediente: CJK, referencias a crudos y existencia de instrumentos
+
+CJK restantes en el expediente: 0 []
+referencias a crudos: 12  rotas: 0 []
+instrumentos citados que existen:
+   barrido_parrafo.py -> True
+   conteo_formas.py -> True
+   alcances_f4.py -> True
+   jev_ac3_sha.py -> True
+   paridad.py -> True
+   paridad_delta.py -> True

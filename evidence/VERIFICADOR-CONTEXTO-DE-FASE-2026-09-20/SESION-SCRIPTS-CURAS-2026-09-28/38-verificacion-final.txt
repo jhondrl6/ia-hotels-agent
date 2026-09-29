@@ -1,0 +1,25 @@
+############ VERIFICACION FINAL (tras normalizar los crudos propios a LF) ############
+........................................................................ [ 67%]
+...................................                                      [100%]
+107 passed in 24.74s
+EXIT_BATERIAS=0
+EXIT_QUICK_FINAL=0
+-- lineas clave del quick --
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 17 y solo sus 4 exclusivas se etiquetan con ese numero
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+-- gobernanza --
+EXIT_GOB=0
+-- packs --check --
+EXIT_PACKS=0
+-- indice --check --
+EXIT_INDICE=0
+-- refs y citas --
+EXIT_REFS=0
+EXIT_CITAS=0
+-- diff --check y poblacion --
+EXIT_DIFFCHECK=0
+20
+0
+0

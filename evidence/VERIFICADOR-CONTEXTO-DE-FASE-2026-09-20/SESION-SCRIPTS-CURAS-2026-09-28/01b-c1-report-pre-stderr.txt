@@ -1,0 +1,1 @@
+# no se escribio ningun archivo: pase `--report RUTA` para persistir el informe

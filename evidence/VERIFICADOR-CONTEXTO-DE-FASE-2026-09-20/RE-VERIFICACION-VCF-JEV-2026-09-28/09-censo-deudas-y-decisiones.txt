@@ -1,0 +1,72 @@
+### A. Filas D1..D10 de la §Deuda registrada del plan VCF (dependencias-fases.md:106-119)
+-- cada fila empieza por '| D' o '| **D' en la tabla de deuda
+D1
+D2
+D3
+D4
+D5
+**D6
+**D7
+D8
+D9
+**D10
+
+### B. Que dice el Cierre formal (dependencias-fases.md:1042-1057) sobre el libro del plan
+- **Libro de este plan al cerrar la orden**: §S29 cerrada por ejecución (a-prima), §S31 abierta y cerrada en la
+  misma tanda (seis constantes), §S17 **abierta** con su quinta instancia, §S19 en su **(d)** como opción medida
+  y no aplicada, y el archivado R2.5 de `EVALUACION-JEV-TYPESAFE-2026-09-21` ejecutado con su write-back verificado
+  por descarga + sha256.
+  ⟦**Pasada datada del mismo 2026-09-27, en la sesión de curas fuera de plans, sobre este mismo libro**: dos de sus
+  miembros cambiaron de estado después de escribirse esa línea y la nota anterior ya no describe el registro.
+  **§S17 quedó cerrada por ejecución** en su defecto de finales de línea —curadas las dos escrituras de
+  `scripts/validate_opencode_refs.py`, quinta puerta de la familia, con su batería ampliada de 7 a 10 pruebas y su
+  mutante R2.8—, y **§S31 quedó cerrada también en su fragilidad estructural**, que es justo lo que el libro de
+  arriba dejaba declarado como límite: los seis arneses resuelven ahora por `resolver_plan()` del escritor.
+  Siguen como estaban **§S19 (d)** con dueño y las vivas **D3, D6, D7, S10 y S14**. Queda **abierto** bajo el dueño
+  de §S17 su sub-punto menor: el `--fix` sigue promoviendo la forma minoritaria de la ruta. Y **se abrió una fila
+  nueva, §S32**, por el hallazgo medido al commitear la prosa del §2.5: el pack publica los bytes del workflow sin
+  que el workflow esté entre sus `sources[]`, así que el `--check` del escritor da verde y solo el verificador del
+  árbol commiteado corta el desfase — con dueño, disparador y dos salidas medidas, ninguna aplicada. El estado vigente de
+  cada una es su fila en esta sección, fuente única⟧.
+
+### C. Estado explicito de D1 en la matriz §13 (fuente unica, 00-resumen-cierre-B.md:126-130)
+retirados como aceptación. **D1 CERRADA** en su alcance: fuente viva sin aserciones vencidas,
+contraejemplo congelado con sus seis mutaciones, y destinos de evidencia de la plantilla separados
+por plan/fase. **S13 CERRADA** en el alcance explícito de su observador, con escritor real y negativos
+por operaciones de archivo. **D3 PARCIAL**, dueño **«Plan propio, posterior»**: B cumple la
+simplificación encargada, no ejecuta el rebanado completo ni lo hace pasar por implementado.
+
+
+### D. Las dos filas RECHAZADO de §11 (hallazgos 16 y 17)
+476:| 16 | `[7/7]`, `[6/7]` fijos en el executor | `--report`: 11 aserciones vivas conformes, 8 históricas autorizadas, 0 no resueltas | nada que tocar: son la forma que el verificador aprueba | RECHAZADO con medición |
+477:| 17 | «4,246» debería actualizarse a la cifra de hoy | 4,453 hoy, 4,424 en HEAD | copiar 4,453 en `AGENTS.md` sería publicar la cifra que el próximo commit invalida; se aplicó la regla de una sola fuente | RECHAZADO con motivo (§8) |
+
+### E. Denominadores VIVOS del verificador hoy (prueba de que la cifra publicada caduca)
+-- etiquetas [N/M] que imprime run_all_validations.py
+[1/13] [2/13] [3/13] [4/13] [5/13] [6/13] [7/13] [8/13] [9/13] [10/13] [11/13] [12/13] [13/13] [14/17] [15/17] [16/17] [17/17] 
+-- cuantas lineas de quick usan el denominador 13
+13
+-- cuantas lineas del modo completo usan el denominador 17
+4
+
+### F. Nota congelada de AC16 (maestro:182), citada textual
+| AC16 | El quick sigue en 11 checks y el hook en 7, en **todo** el plan | los cuatro `baseline-pre-post.md`, delta 0 ⟦**Vencido como cifra, cumplido como delta (2026-09-26).** D2 se ejecutó por instrucción expresa y el quick son **12** checks; el modo completo, **16**. Las cuatro aserciones de este plan siguen siendo verdades sobre **sus** fases: ninguna alteró un conteo, y el delta 0 que miden A, B, C y D se midió contra 11 y contra 7, que era el árbol de aquel día. Lo que ya no vale es leer «11» como estado vigente: eso lo publica la corrida con `run_all_validations.py --quick` y lo audita `validate_governance_numbers.py`, que desde esa fecha corre dentro del propio quick. Evidencia: `evidence/…/CIERRE-ORDEN-2026-09-25/18-d2-quick-doce.txt`.⟧ |
+
+### G. Las tres lineas de validate_governance_numbers.py que apuntan a D1 (deuda D-A)
+819:            "estado": "trabajo D1 (lint de prosa) — limite declarado de FASE-A",
+830:            "estado": "fuera del alcance de este plan (maestro §3); D1 decide",
+839:                     "cubrirlo con el verificador es D1",
+
+### H. S10 y S14 en el plan VCF (las vivas que nombra el cierre formal)
+38:| L-R.4 | Una regla de proceso sin verificador es publicable solo si la regla lo declara | `Archives/TRIBUNAL-OFFLINE-2026-09-09` | Las tres reglas que este plan no cierra (promoción al quick, rebanado del workflow, arreglo de `.agents/
+91:  **S10** (la geometría del `import` del SDK cuando D7 se active), **S11** (la exclusión no declarada del
+167:- [x] **Actualizado al cierre de FASE-B (2026-09-21)** con el balance de §6, la consulta Q10 re-ejecutable, las cinco lecciones nuevas de B (L-VCF-6 a L-VCF-10) y la deuda **S10**. Ocho de las diez lecciones filtradas por su prompt se 
+259:| L-R.4 | **aplicada** | La comparación de proveedores declarada fuera de alcance con su porqué (D7), y S10 registrada con dueño y disparador en vez de decideda en silencio |
+---
+
+### I. Filas de decisiones del plan JEV (dependencias-fases.md del plan archivado)
+72:| Documentos de planes hermanos | Solo lectura. Excepción futura exclusivamente para D7/D6, con instrucción literal que nombre archivos y alcance |
+77:| Decisión | Dueño | Momento / condición | Si falta |
+
+### J. AC3 del plan JEV y su clausula, para la decision D-B
+36:| AC3 | Muestra objetivo de 60–100 pares, humana, saneada, con originales rastreables por sha y partición por plan. Inputs, etiquetas y manifiesto quedan versionados antes de la primera inferencia, incluida conectividad | A/B; `muestra.json`, `etiquetas.

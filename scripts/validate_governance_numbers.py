@@ -816,7 +816,9 @@ def cobertura_de_familias(root: Path, poblacion: dict) -> list:
                          "ejemplos": prose[:4]},
             "comando": "grep -roE '[0-9]+ (checks|validaciones|pasos)' .agents/workflows/"
                        "phased_project_executor.md",
-            "estado": "trabajo D1 (lint de prosa) — limite declarado de FASE-A",
+            "estado": "limite permanente de este verificador (no hay lint de prosa); la fila D1 "
+                      "quedo CERRADA por §13 de BLOQUE-B-REMEDIACION-2026-09-23/"
+                      "00-resumen-cierre-B.md en un alcance que no incluye el lint de prosa",
         },
         {
             "familia": FAMILIES_NOT_COVERED[1],
@@ -827,7 +829,9 @@ def cobertura_de_familias(root: Path, poblacion: dict) -> list:
                          "por_archivo": fuera_hits},
             "comando": "grep -rcE '\\[[0-9]+/[0-9]+\\]|check [0-9]+' AGENTS.md "
                        "docs/GUIA_TECNICA.md docs/contributing/REGISTRY.md",
-            "estado": "fuera del alcance de este plan (maestro §3); D1 decide",
+            "estado": "fuera del alcance de este plan (maestro §3); §13 de "
+                      "BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 en "
+                      "un alcance que no cubre los conteos fuera de los dos documentos de gobierno",
         },
         {
             "familia": FAMILIES_NOT_COVERED[2],
@@ -835,8 +839,9 @@ def cobertura_de_familias(root: Path, poblacion: dict) -> list:
                       "del quick se rompe al renumerar, y hoy no lo mira ningun verificador)",
             "medicion": {"archivos_con_pines": len(pins), "poblacion": pins},
             "comando": "grep -rnE '\\[[0-9]+/[0-9]+\\]' tests/ --include=*.py",
-            "estado": "barrido por AC5/AC16 de esta fase (quien afirma el 11 y el 7); "
-                     "cubrirlo con el verificador es D1",
+            "estado": "barrido por AC5/AC16 de esta fase (quien afirma el 11 y el 7); §13 de "
+                      "BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 "
+                      "en un alcance que no cubre los pins de conteo en tests/",
         },
         {
             "familia": FAMILIES_NOT_COVERED[3],

@@ -1,0 +1,1714 @@
+{
+  "poblacion_calculada": 213,
+  "normalizados": [
+    {
+      "ruta": ".opencode/context/Historico/AUDIT-BUG-1-FORENSIC-2026-07-22.md",
+      "bytes_antes": 27380,
+      "bytes_despues": 26924,
+      "cr_antes": 456,
+      "cr_despues": 0,
+      "sha_blob": "bcdd6f6c7e7ccd44"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md",
+      "bytes_antes": 55573,
+      "bytes_despues": 55103,
+      "cr_antes": 470,
+      "cr_despues": 0,
+      "sha_blob": "3e685aa1ff12ddf7"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md",
+      "bytes_antes": 6298,
+      "bytes_despues": 6200,
+      "cr_antes": 98,
+      "cr_despues": 0,
+      "sha_blob": "1a9b8c079f277614"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md",
+      "bytes_antes": 29782,
+      "bytes_despues": 29255,
+      "cr_antes": 527,
+      "cr_despues": 0,
+      "sha_blob": "92476c0e39e2d995"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md",
+      "bytes_antes": 41468,
+      "bytes_despues": 41094,
+      "cr_antes": 374,
+      "cr_despues": 0,
+      "sha_blob": "cf13610723ed98ee"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md",
+      "bytes_antes": 20661,
+      "bytes_despues": 20330,
+      "cr_antes": 331,
+      "cr_despues": 0,
+      "sha_blob": "ae004636699a8bc0"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md",
+      "bytes_antes": 27733,
+      "bytes_despues": 27260,
+      "cr_antes": 473,
+      "cr_despues": 0,
+      "sha_blob": "289f16b13a38e101"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-DT4-RESIDUAL-FIXES.md",
+      "bytes_antes": 27747,
+      "bytes_despues": 26882,
+      "cr_antes": 865,
+      "cr_despues": 0,
+      "sha_blob": "1cbd6201eaa8d903"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md",
+      "bytes_antes": 23332,
+      "bytes_despues": 23154,
+      "cr_antes": 178,
+      "cr_despues": 0,
+      "sha_blob": "8e4acd9e50bb61e5"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md",
+      "bytes_antes": 32825,
+      "bytes_despues": 32323,
+      "cr_antes": 502,
+      "cr_despues": 0,
+      "sha_blob": "07fb9795daa1da99"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md",
+      "bytes_antes": 45267,
+      "bytes_despues": 44938,
+      "cr_antes": 329,
+      "cr_despues": 0,
+      "sha_blob": "e8ae31b91407fe64"
+    },
+    {
+      "ruta": ".opencode/context/Historico/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md",
+      "bytes_antes": 37575,
+      "bytes_despues": 37283,
+      "cr_antes": 292,
+      "cr_despues": 0,
+      "sha_blob": "258e26184e733213"
+    },
+    {
+      "ruta": ".opencode/context/Historico/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md",
+      "bytes_antes": 36935,
+      "bytes_despues": 35761,
+      "cr_antes": 1174,
+      "cr_despues": 0,
+      "sha_blob": "4dfdf9eb775357a4"
+    },
+    {
+      "ruta": ".opencode/context/Historico/LUXOR-RECALIBRACION-FINANCIERA.md",
+      "bytes_antes": 24485,
+      "bytes_despues": 23916,
+      "cr_antes": 569,
+      "cr_despues": 0,
+      "sha_blob": "5e4f6cae897cd539"
+    },
+    {
+      "ruta": ".opencode/context/Historico/MODULO-HOOK-PDF.md",
+      "bytes_antes": 22906,
+      "bytes_despues": 22489,
+      "cr_antes": 417,
+      "cr_despues": 0,
+      "sha_blob": "7fe87710d15f593f"
+    },
+    {
+      "ruta": ".opencode/context/Historico/Pendiente.md",
+      "bytes_antes": 9951,
+      "bytes_despues": 9719,
+      "cr_antes": 232,
+      "cr_despues": 0,
+      "sha_blob": "3efb02a8b9ac9022"
+    },
+    {
+      "ruta": ".opencode/context/Historico/ROICRIII.md",
+      "bytes_antes": 41516,
+      "bytes_despues": 40694,
+      "cr_antes": 822,
+      "cr_despues": 0,
+      "sha_blob": "f362be4a843498ed"
+    },
+    {
+      "ruta": ".opencode/context/Historico/RegrasiónII.md",
+      "bytes_antes": 13272,
+      "bytes_despues": 12993,
+      "cr_antes": 279,
+      "cr_despues": 0,
+      "sha_blob": "2829aa4c8c73865e"
+    },
+    {
+      "ruta": ".opencode/context/Historico/Regresión.md",
+      "bytes_antes": 10036,
+      "bytes_despues": 9777,
+      "cr_antes": 259,
+      "cr_despues": 0,
+      "sha_blob": "568a34086c069d4a"
+    },
+    {
+      "ruta": ".opencode/context/Refuerzo.md",
+      "bytes_antes": 28432,
+      "bytes_despues": 28164,
+      "cr_antes": 268,
+      "cr_despues": 0,
+      "sha_blob": "483f181e8a2c21cd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md",
+      "bytes_antes": 16114,
+      "bytes_despues": 15888,
+      "cr_antes": 226,
+      "cr_despues": 0,
+      "sha_blob": "9f77821fa7df0263"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/06-prompt-fase-5.md",
+      "bytes_antes": 12499,
+      "bytes_despues": 12224,
+      "cr_antes": 275,
+      "cr_despues": 0,
+      "sha_blob": "7dc9de39affc41cb"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/README.md",
+      "bytes_antes": 3409,
+      "bytes_despues": 3347,
+      "cr_antes": 62,
+      "cr_despues": 0,
+      "sha_blob": "d76cae482c855725"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/01-plan-maestro.md",
+      "bytes_antes": 8239,
+      "bytes_despues": 8093,
+      "cr_antes": 146,
+      "cr_despues": 0,
+      "sha_blob": "74ae4f4350de46b0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-1.md",
+      "bytes_antes": 10099,
+      "bytes_despues": 9849,
+      "cr_antes": 250,
+      "cr_despues": 0,
+      "sha_blob": "61ddb9527af8c5e0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-2.md",
+      "bytes_antes": 8185,
+      "bytes_despues": 7977,
+      "cr_antes": 208,
+      "cr_despues": 0,
+      "sha_blob": "7327f9c4a4841b28"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-3.md",
+      "bytes_antes": 8449,
+      "bytes_despues": 8232,
+      "cr_antes": 217,
+      "cr_despues": 0,
+      "sha_blob": "01ef7601a45e3f25"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-4.md",
+      "bytes_antes": 12843,
+      "bytes_despues": 12538,
+      "cr_antes": 305,
+      "cr_despues": 0,
+      "sha_blob": "d4851a866d01b632"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-5.md",
+      "bytes_antes": 10039,
+      "bytes_despues": 9764,
+      "cr_antes": 275,
+      "cr_despues": 0,
+      "sha_blob": "b7cb9d294bfb3053"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/01-plan-maestro.md",
+      "bytes_antes": 8171,
+      "bytes_despues": 8044,
+      "cr_antes": 127,
+      "cr_despues": 0,
+      "sha_blob": "3dc876de059db729"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/01-plan-maestro.md",
+      "bytes_antes": 9088,
+      "bytes_despues": 8976,
+      "cr_antes": 112,
+      "cr_despues": 0,
+      "sha_blob": "2585c7fcdbbbb7b6"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/02-prompt-fase-A.md",
+      "bytes_antes": 10981,
+      "bytes_despues": 10846,
+      "cr_antes": 135,
+      "cr_despues": 0,
+      "sha_blob": "f505477ac39b1e6c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/03-prompt-fase-B.md",
+      "bytes_antes": 13546,
+      "bytes_despues": 13370,
+      "cr_antes": 176,
+      "cr_despues": 0,
+      "sha_blob": "44a6f5b9fa96e46e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/04-prompt-fase-C-A.md",
+      "bytes_antes": 5484,
+      "bytes_despues": 5382,
+      "cr_antes": 102,
+      "cr_despues": 0,
+      "sha_blob": "1d6eb4aec9897afd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md",
+      "bytes_antes": 5701,
+      "bytes_despues": 5603,
+      "cr_antes": 98,
+      "cr_despues": 0,
+      "sha_blob": "d3cd36a7ce933825"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/06-prompt-fase-D.md",
+      "bytes_antes": 8257,
+      "bytes_despues": 8141,
+      "cr_antes": 116,
+      "cr_despues": 0,
+      "sha_blob": "d171b56ee3834460"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/07-prompt-fase-E.md",
+      "bytes_antes": 7744,
+      "bytes_despues": 7624,
+      "cr_antes": 120,
+      "cr_despues": 0,
+      "sha_blob": "974da682d4bd0682"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/08-prompt-fase-RELEASE.md",
+      "bytes_antes": 6523,
+      "bytes_despues": 6385,
+      "cr_antes": 138,
+      "cr_despues": 0,
+      "sha_blob": "9b894fa5f9577e51"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/09-checklist-implementacion.md",
+      "bytes_antes": 2421,
+      "bytes_despues": 2372,
+      "cr_antes": 49,
+      "cr_despues": 0,
+      "sha_blob": "060c9d285a474669"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/10-analisis-post-implementacion.md",
+      "bytes_antes": 26150,
+      "bytes_despues": 25981,
+      "cr_antes": 169,
+      "cr_despues": 0,
+      "sha_blob": "3f46c8953c9f5e30"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md",
+      "bytes_antes": 10186,
+      "bytes_despues": 10088,
+      "cr_antes": 98,
+      "cr_despues": 0,
+      "sha_blob": "1c49e147ec8d0997"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/README.md",
+      "bytes_antes": 2798,
+      "bytes_despues": 2749,
+      "cr_antes": 49,
+      "cr_despues": 0,
+      "sha_blob": "618868b20d5e19c8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/dependencias-fases.md",
+      "bytes_antes": 6571,
+      "bytes_despues": 6477,
+      "cr_antes": 94,
+      "cr_despues": 0,
+      "sha_blob": "65051d6cdbd23b78"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/01-plan-maestro.md",
+      "bytes_antes": 14897,
+      "bytes_despues": 14738,
+      "cr_antes": 159,
+      "cr_despues": 0,
+      "sha_blob": "29b9cea321c78d7e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-E2E-ZIONE.md",
+      "bytes_antes": 9553,
+      "bytes_despues": 9396,
+      "cr_antes": 157,
+      "cr_despues": 0,
+      "sha_blob": "3a629e898a6a7741"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-A.md",
+      "bytes_antes": 7376,
+      "bytes_despues": 7265,
+      "cr_antes": 111,
+      "cr_despues": 0,
+      "sha_blob": "e7004bfc3cc555a0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-B.md",
+      "bytes_antes": 8031,
+      "bytes_despues": 7899,
+      "cr_antes": 132,
+      "cr_despues": 0,
+      "sha_blob": "8e6271de82bfbeb7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-C.md",
+      "bytes_antes": 5624,
+      "bytes_despues": 5503,
+      "cr_antes": 121,
+      "cr_despues": 0,
+      "sha_blob": "3a8580712986c740"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-A.md",
+      "bytes_antes": 10793,
+      "bytes_despues": 10630,
+      "cr_antes": 163,
+      "cr_despues": 0,
+      "sha_blob": "321edd1551a532b2"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-B.md",
+      "bytes_antes": 10233,
+      "bytes_despues": 10051,
+      "cr_antes": 182,
+      "cr_despues": 0,
+      "sha_blob": "a5dbebad4634ee52"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-C.md",
+      "bytes_antes": 8969,
+      "bytes_despues": 8815,
+      "cr_antes": 154,
+      "cr_despues": 0,
+      "sha_blob": "0ad07a4daeb4b954"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-D.md",
+      "bytes_antes": 10336,
+      "bytes_despues": 10164,
+      "cr_antes": 172,
+      "cr_despues": 0,
+      "sha_blob": "b3888620119259e4"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-A.md",
+      "bytes_antes": 6189,
+      "bytes_despues": 6078,
+      "cr_antes": 111,
+      "cr_despues": 0,
+      "sha_blob": "d3724ef2a7533777"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-B.md",
+      "bytes_antes": 6142,
+      "bytes_despues": 6025,
+      "cr_antes": 117,
+      "cr_despues": 0,
+      "sha_blob": "d3f729a1e8e5e6ee"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "bytes_antes": 7129,
+      "bytes_despues": 6979,
+      "cr_antes": 150,
+      "cr_despues": 0,
+      "sha_blob": "42d66a301270335c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/06-checklist-implementacion.md",
+      "bytes_antes": 4503,
+      "bytes_despues": 4453,
+      "cr_antes": 50,
+      "cr_despues": 0,
+      "sha_blob": "a8ae8add958f0ae2"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/09-documentacion-post-proyecto.md",
+      "bytes_antes": 17465,
+      "bytes_despues": 17360,
+      "cr_antes": 105,
+      "cr_despues": 0,
+      "sha_blob": "3d4fcdfc21040b64"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/10-analisis-post-implementacion.md",
+      "bytes_antes": 32224,
+      "bytes_despues": 32006,
+      "cr_antes": 218,
+      "cr_despues": 0,
+      "sha_blob": "c688ea3aff6c3eb3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/README.md",
+      "bytes_antes": 9422,
+      "bytes_despues": 9296,
+      "cr_antes": 126,
+      "cr_despues": 0,
+      "sha_blob": "e2a2b82888c5a4a3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/dependencias-fases.md",
+      "bytes_antes": 4672,
+      "bytes_despues": 4614,
+      "cr_antes": 58,
+      "cr_despues": 0,
+      "sha_blob": "8f7ca842bcf6e8c8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/01-plan-maestro.md",
+      "bytes_antes": 7351,
+      "bytes_despues": 7209,
+      "cr_antes": 142,
+      "cr_despues": 0,
+      "sha_blob": "905ea840211437dd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/02-prompt-fase-A.md",
+      "bytes_antes": 7422,
+      "bytes_despues": 7227,
+      "cr_antes": 195,
+      "cr_despues": 0,
+      "sha_blob": "bdd7a40e3f804688"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/03-prompt-fase-B.md",
+      "bytes_antes": 10292,
+      "bytes_despues": 10040,
+      "cr_antes": 252,
+      "cr_despues": 0,
+      "sha_blob": "de5e6fede7e4fe34"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/04-prompt-fase-C.md",
+      "bytes_antes": 7599,
+      "bytes_despues": 7382,
+      "cr_antes": 217,
+      "cr_despues": 0,
+      "sha_blob": "193080fbd3a7555e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/05-prompt-fase-D.md",
+      "bytes_antes": 7900,
+      "bytes_despues": 7698,
+      "cr_antes": 202,
+      "cr_despues": 0,
+      "sha_blob": "a76fd91a95bcb421"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/06-prompt-fase-RELEASE.md",
+      "bytes_antes": 5794,
+      "bytes_despues": 5619,
+      "cr_antes": 175,
+      "cr_despues": 0,
+      "sha_blob": "79b1c195c30725c3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/07-checklist-implementacion.md",
+      "bytes_antes": 3153,
+      "bytes_despues": 3077,
+      "cr_antes": 76,
+      "cr_despues": 0,
+      "sha_blob": "2f1a1de3e83f11be"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/08-analisis-post-implementacion.md",
+      "bytes_antes": 9322,
+      "bytes_despues": 9183,
+      "cr_antes": 139,
+      "cr_despues": 0,
+      "sha_blob": "7de3238e0a8da0bc"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/09-documentacion-post-proyecto.md",
+      "bytes_antes": 6022,
+      "bytes_despues": 5909,
+      "cr_antes": 113,
+      "cr_despues": 0,
+      "sha_blob": "38297a9c6b3ee682"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/README.md",
+      "bytes_antes": 2773,
+      "bytes_despues": 2694,
+      "cr_antes": 79,
+      "cr_despues": 0,
+      "sha_blob": "c1e2a8ede6d3293f"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/dependencias-fases.md",
+      "bytes_antes": 5902,
+      "bytes_despues": 5796,
+      "cr_antes": 106,
+      "cr_despues": 0,
+      "sha_blob": "97e254022d474c27"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/01-plan-maestro.md",
+      "bytes_antes": 10507,
+      "bytes_despues": 10336,
+      "cr_antes": 171,
+      "cr_despues": 0,
+      "sha_blob": "8df6b8deefc5d16e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/06-prompt-fase-E.md",
+      "bytes_antes": 15316,
+      "bytes_despues": 14969,
+      "cr_antes": 347,
+      "cr_despues": 0,
+      "sha_blob": "64a7fadb770a98b7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/README.md",
+      "bytes_antes": 3312,
+      "bytes_despues": 3245,
+      "cr_antes": 67,
+      "cr_despues": 0,
+      "sha_blob": "5efa673b3463b157"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/01-plan-maestro.md",
+      "bytes_antes": 13646,
+      "bytes_despues": 13394,
+      "cr_antes": 252,
+      "cr_despues": 0,
+      "sha_blob": "272a1c619d3977e1"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/02-prompt-fase-A.md",
+      "bytes_antes": 7231,
+      "bytes_despues": 7068,
+      "cr_antes": 163,
+      "cr_despues": 0,
+      "sha_blob": "33d602c947384631"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/03-prompt-fase-B.md",
+      "bytes_antes": 7537,
+      "bytes_despues": 7348,
+      "cr_antes": 189,
+      "cr_despues": 0,
+      "sha_blob": "3ebc54333c89bc8a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/04-prompt-fase-C.md",
+      "bytes_antes": 7952,
+      "bytes_despues": 7751,
+      "cr_antes": 201,
+      "cr_despues": 0,
+      "sha_blob": "c7f840c946769f1d"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/05-prompt-fase-D.md",
+      "bytes_antes": 5497,
+      "bytes_despues": 5369,
+      "cr_antes": 128,
+      "cr_despues": 0,
+      "sha_blob": "7b38146002990982"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/06-prompt-fase-E.md",
+      "bytes_antes": 6262,
+      "bytes_despues": 6110,
+      "cr_antes": 152,
+      "cr_despues": 0,
+      "sha_blob": "f026e495c06cd876"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/07-prompt-fase-F.md",
+      "bytes_antes": 6148,
+      "bytes_despues": 5995,
+      "cr_antes": 153,
+      "cr_despues": 0,
+      "sha_blob": "87d77c09d04173f1"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/README.md",
+      "bytes_antes": 2768,
+      "bytes_despues": 2691,
+      "cr_antes": 77,
+      "cr_despues": 0,
+      "sha_blob": "801a4718d5402714"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/01-plan-maestro.md",
+      "bytes_antes": 9155,
+      "bytes_despues": 8995,
+      "cr_antes": 160,
+      "cr_despues": 0,
+      "sha_blob": "c0ee398252280e8d"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/05-prompt-fase-3.md",
+      "bytes_antes": 6261,
+      "bytes_despues": 6108,
+      "cr_antes": 153,
+      "cr_despues": 0,
+      "sha_blob": "0d71d0bf90a523cb"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/coherence_validation.json",
+      "bytes_antes": 1530,
+      "bytes_despues": 1476,
+      "cr_antes": 54,
+      "cr_despues": 0,
+      "sha_blob": "b66d536692d2a34a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/delivery_quality_report.json",
+      "bytes_antes": 1025,
+      "bytes_despues": 975,
+      "cr_antes": 50,
+      "cr_despues": 0,
+      "sha_blob": "ffc45789466f49e2"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/pain_ledger.json",
+      "bytes_antes": 2726,
+      "bytes_despues": 2632,
+      "cr_antes": 94,
+      "cr_despues": 0,
+      "sha_blob": "e6dcea5a1fcb1acc"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/evidence/proposal_asset_matrix.json",
+      "bytes_antes": 2234,
+      "bytes_despues": 2143,
+      "cr_antes": 91,
+      "cr_despues": 0,
+      "sha_blob": "3dfdff93abe62c18"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/01-plan-maestro.md",
+      "bytes_antes": 10750,
+      "bytes_despues": 10573,
+      "cr_antes": 177,
+      "cr_despues": 0,
+      "sha_blob": "5d26e6b6b73b96e0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/07-prompt-fase-release.md",
+      "bytes_antes": 7731,
+      "bytes_despues": 7558,
+      "cr_antes": 173,
+      "cr_despues": 0,
+      "sha_blob": "01296a45d0dcf4f8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/BLOCKED_BY_GATES.md",
+      "bytes_antes": 1517,
+      "bytes_despues": 1486,
+      "cr_antes": 31,
+      "cr_despues": 0,
+      "sha_blob": "2dabd96231afe010"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/coherence_validation.json",
+      "bytes_antes": 1530,
+      "bytes_despues": 1476,
+      "cr_antes": 54,
+      "cr_despues": 0,
+      "sha_blob": "068e079743805278"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/commercial_gates_report.json",
+      "bytes_antes": 1604,
+      "bytes_despues": 1574,
+      "cr_antes": 30,
+      "cr_despues": 0,
+      "sha_blob": "1657c019fe3b0546"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/delivery_quality_report.json",
+      "bytes_antes": 1033,
+      "bytes_despues": 983,
+      "cr_antes": 50,
+      "cr_despues": 0,
+      "sha_blob": "f33013e37b65a74a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/gate_report_20260727_140459.json",
+      "bytes_antes": 5707,
+      "bytes_despues": 5509,
+      "cr_antes": 198,
+      "cr_despues": 0,
+      "sha_blob": "c1370377da3d8fda"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/pain_ledger_resolved.json",
+      "bytes_antes": 2944,
+      "bytes_despues": 2843,
+      "cr_antes": 101,
+      "cr_despues": 0,
+      "sha_blob": "a8a388fd577bb8f8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/proposal_asset_matrix.json",
+      "bytes_antes": 2000,
+      "bytes_despues": 1918,
+      "cr_antes": 82,
+      "cr_despues": 0,
+      "sha_blob": "ba27f1116c1642b7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/v4complete_report_post_fix.json",
+      "bytes_antes": 14205,
+      "bytes_despues": 13816,
+      "cr_antes": 389,
+      "cr_despues": 0,
+      "sha_blob": "c99af3014ea99ad8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-6.md",
+      "bytes_antes": 11840,
+      "bytes_despues": 11607,
+      "cr_antes": 233,
+      "cr_despues": 0,
+      "sha_blob": "31155a435eddef5e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md",
+      "bytes_antes": 6771,
+      "bytes_despues": 6693,
+      "cr_antes": 78,
+      "cr_despues": 0,
+      "sha_blob": "69335e620a7f044e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/README.md",
+      "bytes_antes": 8062,
+      "bytes_despues": 7927,
+      "cr_antes": 135,
+      "cr_despues": 0,
+      "sha_blob": "124f9370a479b5a4"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/BLOCKED_BY_GATES.md",
+      "bytes_antes": 1517,
+      "bytes_despues": 1486,
+      "cr_antes": 31,
+      "cr_despues": 0,
+      "sha_blob": "142b0075d2fea3e8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/asset_generation_report.json",
+      "bytes_antes": 9551,
+      "bytes_despues": 9284,
+      "cr_antes": 267,
+      "cr_despues": 0,
+      "sha_blob": "aa26981ca63f5f1e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/audit_report_20260728_091940.json",
+      "bytes_antes": 10705,
+      "bytes_despues": 10354,
+      "cr_antes": 351,
+      "cr_despues": 0,
+      "sha_blob": "3b85b8641b0a3a11"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/coherence_validation.json",
+      "bytes_antes": 1416,
+      "bytes_despues": 1363,
+      "cr_antes": 53,
+      "cr_despues": 0,
+      "sha_blob": "415103e8a6d98762"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/coherence_validation_post_gen.json",
+      "bytes_antes": 1416,
+      "bytes_despues": 1363,
+      "cr_antes": 53,
+      "cr_despues": 0,
+      "sha_blob": "415103e8a6d98762"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/commercial_gates_report.json",
+      "bytes_antes": 1604,
+      "bytes_despues": 1574,
+      "cr_antes": 30,
+      "cr_despues": 0,
+      "sha_blob": "1657c019fe3b0546"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/delivery_quality_report.json",
+      "bytes_antes": 1390,
+      "bytes_despues": 1329,
+      "cr_antes": 61,
+      "cr_despues": 0,
+      "sha_blob": "f00c745b8227ecaf"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/financial_scenarios_20260728_091940.json",
+      "bytes_antes": 1852,
+      "bytes_despues": 1800,
+      "cr_antes": 52,
+      "cr_despues": 0,
+      "sha_blob": "2358d3b75bdd841c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/gate_report_20260728_091951.json",
+      "bytes_antes": 6181,
+      "bytes_despues": 5969,
+      "cr_antes": 212,
+      "cr_despues": 0,
+      "sha_blob": "211ac285d0865aa0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/geo_flow_result.json",
+      "bytes_antes": 4614,
+      "bytes_despues": 4501,
+      "cr_antes": 113,
+      "cr_despues": 0,
+      "sha_blob": "2fb97aa3a185f47e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/ia_readiness_report.json",
+      "bytes_antes": 623,
+      "bytes_despues": 606,
+      "cr_antes": 17,
+      "cr_despues": 0,
+      "sha_blob": "f3fefe9299f340bd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/pain_ledger.json",
+      "bytes_antes": 2726,
+      "bytes_despues": 2632,
+      "cr_antes": 94,
+      "cr_despues": 0,
+      "sha_blob": "e6dcea5a1fcb1acc"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/pain_ledger_resolved.json",
+      "bytes_antes": 2944,
+      "bytes_despues": 2843,
+      "cr_antes": 101,
+      "cr_despues": 0,
+      "sha_blob": "a8a388fd577bb8f8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/proposal_asset_matrix.json",
+      "bytes_antes": 2000,
+      "bytes_despues": 1918,
+      "cr_antes": 82,
+      "cr_despues": 0,
+      "sha_blob": "ba27f1116c1642b7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/01-plan-maestro.md",
+      "bytes_antes": 32871,
+      "bytes_despues": 32527,
+      "cr_antes": 344,
+      "cr_despues": 0,
+      "sha_blob": "f78ea7c77c9ffd71"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-A.md",
+      "bytes_antes": 19804,
+      "bytes_despues": 19477,
+      "cr_antes": 327,
+      "cr_despues": 0,
+      "sha_blob": "2d4ef49ceeb669cd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-B.md",
+      "bytes_antes": 29126,
+      "bytes_despues": 28678,
+      "cr_antes": 448,
+      "cr_despues": 0,
+      "sha_blob": "b63c87d327270f67"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-C.md",
+      "bytes_antes": 24777,
+      "bytes_despues": 24377,
+      "cr_antes": 400,
+      "cr_despues": 0,
+      "sha_blob": "ab6f27ace913eab0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-D.md",
+      "bytes_antes": 22373,
+      "bytes_despues": 22014,
+      "cr_antes": 359,
+      "cr_despues": 0,
+      "sha_blob": "dd08eb21e0509743"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-E.md",
+      "bytes_antes": 17654,
+      "bytes_despues": 17341,
+      "cr_antes": 313,
+      "cr_despues": 0,
+      "sha_blob": "0f687fbcb3476be8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-F.md",
+      "bytes_antes": 22425,
+      "bytes_despues": 22070,
+      "cr_antes": 355,
+      "cr_despues": 0,
+      "sha_blob": "fd1cbc8891d065f7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-G.md",
+      "bytes_antes": 19704,
+      "bytes_despues": 19376,
+      "cr_antes": 328,
+      "cr_despues": 0,
+      "sha_blob": "96addeed73fa40ee"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-H.md",
+      "bytes_antes": 24005,
+      "bytes_despues": 23615,
+      "cr_antes": 390,
+      "cr_despues": 0,
+      "sha_blob": "16ba4d298b0e5358"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md",
+      "bytes_antes": 27921,
+      "bytes_despues": 27541,
+      "cr_antes": 380,
+      "cr_despues": 0,
+      "sha_blob": "d41af363b4df66d5"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-I.md",
+      "bytes_antes": 24733,
+      "bytes_despues": 24327,
+      "cr_antes": 406,
+      "cr_despues": 0,
+      "sha_blob": "394b92510125b3f6"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md",
+      "bytes_antes": 353599,
+      "bytes_despues": 351915,
+      "cr_antes": 1684,
+      "cr_despues": 0,
+      "sha_blob": "db39fda337c56685"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/README.md",
+      "bytes_antes": 57032,
+      "bytes_despues": 56643,
+      "cr_antes": 389,
+      "cr_despues": 0,
+      "sha_blob": "8aa3aa61047a498a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/09-analisis-post-implementacion.md",
+      "bytes_antes": 11721,
+      "bytes_despues": 11578,
+      "cr_antes": 143,
+      "cr_despues": 0,
+      "sha_blob": "fd654ee85859dc6a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/BLOCKED_BY_GATES.md",
+      "bytes_antes": 1717,
+      "bytes_despues": 1681,
+      "cr_antes": 36,
+      "cr_despues": 0,
+      "sha_blob": "ed1ce842fcaaf593"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/financial_scenarios_20260731_164917.json",
+      "bytes_antes": 1875,
+      "bytes_despues": 1823,
+      "cr_antes": 52,
+      "cr_despues": 0,
+      "sha_blob": "8742f4146642d266"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/gate_report_20260731_164922.json",
+      "bytes_antes": 6596,
+      "bytes_despues": 6383,
+      "cr_antes": 213,
+      "cr_despues": 0,
+      "sha_blob": "e054ff5b3ebd5dd3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/v4_complete_report.json",
+      "bytes_antes": 16642,
+      "bytes_despues": 16210,
+      "cr_antes": 432,
+      "cr_despues": 0,
+      "sha_blob": "b6037327806f67b8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260731_164842.md",
+      "bytes_antes": 14219,
+      "bytes_despues": 13918,
+      "cr_antes": 301,
+      "cr_despues": 0,
+      "sha_blob": "56feadd0deac0ecb"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/02_PROPUESTA_COMERCIAL_20260731_164842.md",
+      "bytes_antes": 14302,
+      "bytes_despues": 13961,
+      "cr_antes": 341,
+      "cr_despues": 0,
+      "sha_blob": "d4a08a144a31e4be"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/financial_scenarios_20260731_164830.json",
+      "bytes_antes": 2027,
+      "bytes_despues": 1975,
+      "cr_antes": 52,
+      "cr_despues": 0,
+      "sha_blob": "b897eb99034efae4"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/gate_report_20260731_164842.json",
+      "bytes_antes": 5328,
+      "bytes_despues": 5135,
+      "cr_antes": 193,
+      "cr_despues": 0,
+      "sha_blob": "4ca222c9b53b1410"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/v4_complete_report.json",
+      "bytes_antes": 13888,
+      "bytes_despues": 13499,
+      "cr_antes": 389,
+      "cr_despues": 0,
+      "sha_blob": "1dff1472e3e46639"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/zione_20260731_MANIFEST.json",
+      "bytes_antes": 24983,
+      "bytes_despues": 24120,
+      "cr_antes": 863,
+      "cr_despues": 0,
+      "sha_blob": "f40a0580c29bb0b0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/HOOK-PDF-2026-07-09/01-plan-maestro.md",
+      "bytes_antes": 6243,
+      "bytes_despues": 6130,
+      "cr_antes": 113,
+      "cr_despues": 0,
+      "sha_blob": "86dcc587961ae284"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/HOOK-PDF-2026-07-09/02-prompt-fase-1.md",
+      "bytes_antes": 5264,
+      "bytes_despues": 5209,
+      "cr_antes": 55,
+      "cr_despues": 0,
+      "sha_blob": "0c48fed37eb25255"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/HOOK-PDF-2026-07-09/03-prompt-fase-2.md",
+      "bytes_antes": 6419,
+      "bytes_despues": 6336,
+      "cr_antes": 83,
+      "cr_despues": 0,
+      "sha_blob": "db869bb4f273e755"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/HOOK-PDF-2026-07-09/04-prompt-fase-3.md",
+      "bytes_antes": 3930,
+      "bytes_despues": 3868,
+      "cr_antes": 62,
+      "cr_despues": 0,
+      "sha_blob": "8d73f05d07b36d5a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/01-plan-maestro.md",
+      "bytes_antes": 10076,
+      "bytes_despues": 9904,
+      "cr_antes": 172,
+      "cr_despues": 0,
+      "sha_blob": "0b3c8601c29e50c3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/evidence/FASE-RELEASE-A/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260730_143715.md",
+      "bytes_antes": 13907,
+      "bytes_despues": 13607,
+      "cr_antes": 300,
+      "cr_despues": 0,
+      "sha_blob": "b92e07c913d6c716"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/evidence/FASE-RELEASE-A/financial_scenarios_20260730_143703.json",
+      "bytes_antes": 1825,
+      "bytes_despues": 1773,
+      "cr_antes": 52,
+      "cr_despues": 0,
+      "sha_blob": "fdcfbdd5f7e6dedd"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/evidence/FASE-RELEASE-A/gate_report_20260730_143715.json",
+      "bytes_antes": 5326,
+      "bytes_despues": 5133,
+      "cr_antes": 193,
+      "cr_despues": 0,
+      "sha_blob": "faf814b6088f3931"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/01-plan-maestro.md",
+      "bytes_antes": 13262,
+      "bytes_despues": 13078,
+      "cr_antes": 184,
+      "cr_despues": 0,
+      "sha_blob": "7eaba1263df99153"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-A.md",
+      "bytes_antes": 6387,
+      "bytes_despues": 6256,
+      "cr_antes": 131,
+      "cr_despues": 0,
+      "sha_blob": "b1546190b8a41cf8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-B.md",
+      "bytes_antes": 9698,
+      "bytes_despues": 9526,
+      "cr_antes": 172,
+      "cr_despues": 0,
+      "sha_blob": "a3fb9856971e69d4"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-C.md",
+      "bytes_antes": 7431,
+      "bytes_despues": 7301,
+      "cr_antes": 130,
+      "cr_despues": 0,
+      "sha_blob": "2e6b3f69f5afd50e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-D.md",
+      "bytes_antes": 7544,
+      "bytes_despues": 7395,
+      "cr_antes": 149,
+      "cr_despues": 0,
+      "sha_blob": "159ab424e63abfa7"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-E.md",
+      "bytes_antes": 8098,
+      "bytes_despues": 7965,
+      "cr_antes": 133,
+      "cr_despues": 0,
+      "sha_blob": "5e1ee44b938007e3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-F.md",
+      "bytes_antes": 8515,
+      "bytes_despues": 8361,
+      "cr_antes": 154,
+      "cr_despues": 0,
+      "sha_blob": "173fa5031c5d5994"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "bytes_antes": 5267,
+      "bytes_despues": 5152,
+      "cr_antes": 115,
+      "cr_despues": 0,
+      "sha_blob": "44a071e4dbd67f39"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/06-checklist-implementacion.md",
+      "bytes_antes": 4854,
+      "bytes_despues": 4793,
+      "cr_antes": 61,
+      "cr_despues": 0,
+      "sha_blob": "7a7b9f1912c8f472"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md",
+      "bytes_antes": 11571,
+      "bytes_despues": 11440,
+      "cr_antes": 131,
+      "cr_despues": 0,
+      "sha_blob": "c9d38095eb11647c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md",
+      "bytes_antes": 42592,
+      "bytes_despues": 42236,
+      "cr_antes": 356,
+      "cr_despues": 0,
+      "sha_blob": "1e50e5706af4581c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/README.md",
+      "bytes_antes": 8016,
+      "bytes_despues": 7899,
+      "cr_antes": 117,
+      "cr_despues": 0,
+      "sha_blob": "e98457311983d3a9"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md",
+      "bytes_antes": 14606,
+      "bytes_despues": 14381,
+      "cr_antes": 225,
+      "cr_despues": 0,
+      "sha_blob": "3fa05b02d27f2205"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/06-checklist-implementacion.md",
+      "bytes_antes": 5257,
+      "bytes_despues": 5195,
+      "cr_antes": 62,
+      "cr_despues": 0,
+      "sha_blob": "e943049e78697bd1"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md",
+      "bytes_antes": 27278,
+      "bytes_despues": 27124,
+      "cr_antes": 154,
+      "cr_despues": 0,
+      "sha_blob": "e97a1f0944d9adf2"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/dependencias-fases.md",
+      "bytes_antes": 11927,
+      "bytes_despues": 11823,
+      "cr_antes": 104,
+      "cr_despues": 0,
+      "sha_blob": "b562c81e08df8fda"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-0.md",
+      "bytes_antes": 4660,
+      "bytes_despues": 4543,
+      "cr_antes": 117,
+      "cr_despues": 0,
+      "sha_blob": "83f276c0df8b3a1a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1A.md",
+      "bytes_antes": 4076,
+      "bytes_despues": 3979,
+      "cr_antes": 97,
+      "cr_despues": 0,
+      "sha_blob": "aa79bbe304e56348"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1B.md",
+      "bytes_antes": 4766,
+      "bytes_despues": 4638,
+      "cr_antes": 128,
+      "cr_despues": 0,
+      "sha_blob": "21ff6f62e017f4d0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-2.md",
+      "bytes_antes": 6661,
+      "bytes_despues": 6463,
+      "cr_antes": 198,
+      "cr_despues": 0,
+      "sha_blob": "dfcf25c30aad39b6"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-3.md",
+      "bytes_antes": 5264,
+      "bytes_despues": 5122,
+      "cr_antes": 142,
+      "cr_despues": 0,
+      "sha_blob": "5294afec3282794c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-4.md",
+      "bytes_antes": 5126,
+      "bytes_despues": 4979,
+      "cr_antes": 147,
+      "cr_despues": 0,
+      "sha_blob": "8646edf2a8295e8c"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-5.md",
+      "bytes_antes": 4125,
+      "bytes_despues": 4017,
+      "cr_antes": 108,
+      "cr_despues": 0,
+      "sha_blob": "fcf9697c470c555e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-6.md",
+      "bytes_antes": 6624,
+      "bytes_despues": 6448,
+      "cr_antes": 176,
+      "cr_despues": 0,
+      "sha_blob": "06471cd2e1d4a51f"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-7.md",
+      "bytes_antes": 5524,
+      "bytes_despues": 5376,
+      "cr_antes": 148,
+      "cr_despues": 0,
+      "sha_blob": "7a0682e8e39b5aec"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/README.md",
+      "bytes_antes": 2556,
+      "bytes_despues": 2490,
+      "cr_antes": 66,
+      "cr_despues": 0,
+      "sha_blob": "9069357eacd94ecf"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-2.md",
+      "bytes_antes": 8038,
+      "bytes_despues": 7828,
+      "cr_antes": 210,
+      "cr_despues": 0,
+      "sha_blob": "5875480dfd4797b8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-3.md",
+      "bytes_antes": 10764,
+      "bytes_despues": 10493,
+      "cr_antes": 271,
+      "cr_despues": 0,
+      "sha_blob": "a4186aaa7c5f99c2"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-6.md",
+      "bytes_antes": 6108,
+      "bytes_despues": 5915,
+      "cr_antes": 193,
+      "cr_despues": 0,
+      "sha_blob": "44435e88851bc800"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRIII/09-documentacion-post-proyecto.md",
+      "bytes_antes": 3178,
+      "bytes_despues": 3129,
+      "cr_antes": 49,
+      "cr_despues": 0,
+      "sha_blob": "ba0581070a3294e3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRIII/dependencias-fases.md",
+      "bytes_antes": 4130,
+      "bytes_despues": 4056,
+      "cr_antes": 74,
+      "cr_despues": 0,
+      "sha_blob": "7b41762f2f3fa005"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRIIIF/06-checklist-implementacion.md",
+      "bytes_antes": 3500,
+      "bytes_despues": 3422,
+      "cr_antes": 78,
+      "cr_despues": 0,
+      "sha_blob": "89eb634d9a86323e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRIIIF/09-documentacion-post-proyecto.md",
+      "bytes_antes": 5987,
+      "bytes_despues": 5872,
+      "cr_antes": 115,
+      "cr_despues": 0,
+      "sha_blob": "101ba1a2d05586f3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/ROICRIIIF/dependencias-fases.md",
+      "bytes_antes": 5746,
+      "bytes_despues": 5632,
+      "cr_antes": 114,
+      "cr_despues": 0,
+      "sha_blob": "da23d5dbfe03ff84"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md",
+      "bytes_antes": 21326,
+      "bytes_despues": 21174,
+      "cr_antes": 152,
+      "cr_despues": 0,
+      "sha_blob": "31424a2ca4ab6887"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "bytes_antes": 5153,
+      "bytes_despues": 5067,
+      "cr_antes": 86,
+      "cr_despues": 0,
+      "sha_blob": "1ab4e54899def55e"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-A.md",
+      "bytes_antes": 7324,
+      "bytes_despues": 7217,
+      "cr_antes": 107,
+      "cr_despues": 0,
+      "sha_blob": "8bfae68dc150dc79"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md",
+      "bytes_antes": 7968,
+      "bytes_despues": 7870,
+      "cr_antes": 98,
+      "cr_despues": 0,
+      "sha_blob": "89f1834edd0de956"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-C.md",
+      "bytes_antes": 6081,
+      "bytes_despues": 5986,
+      "cr_antes": 95,
+      "cr_despues": 0,
+      "sha_blob": "a10a4c2861516400"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md",
+      "bytes_antes": 7376,
+      "bytes_despues": 7279,
+      "cr_antes": 97,
+      "cr_despues": 0,
+      "sha_blob": "af1a6a2124993e21"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md",
+      "bytes_antes": 11362,
+      "bytes_despues": 11251,
+      "cr_antes": 111,
+      "cr_despues": 0,
+      "sha_blob": "01e2ddd2af4fc4e8"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-F.md",
+      "bytes_antes": 6665,
+      "bytes_despues": 6573,
+      "cr_antes": 92,
+      "cr_despues": 0,
+      "sha_blob": "62518b767beb10e3"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-G.md",
+      "bytes_antes": 6067,
+      "bytes_despues": 5974,
+      "cr_antes": 93,
+      "cr_despues": 0,
+      "sha_blob": "46bc8857a430ac16"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md",
+      "bytes_antes": 6493,
+      "bytes_despues": 6405,
+      "cr_antes": 88,
+      "cr_despues": 0,
+      "sha_blob": "6a0d4f4c7ffc7ad1"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H2.md",
+      "bytes_antes": 9328,
+      "bytes_despues": 9230,
+      "cr_antes": 98,
+      "cr_despues": 0,
+      "sha_blob": "3d784de775e986e0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md",
+      "bytes_antes": 5527,
+      "bytes_despues": 5443,
+      "cr_antes": 84,
+      "cr_despues": 0,
+      "sha_blob": "63c35b336f738268"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md",
+      "bytes_antes": 11067,
+      "bytes_despues": 10963,
+      "cr_antes": 104,
+      "cr_despues": 0,
+      "sha_blob": "cab7ca1c636bdaee"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md",
+      "bytes_antes": 34281,
+      "bytes_despues": 34115,
+      "cr_antes": 166,
+      "cr_despues": 0,
+      "sha_blob": "95f14666dc34a032"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md",
+      "bytes_antes": 41913,
+      "bytes_despues": 41721,
+      "cr_antes": 192,
+      "cr_despues": 0,
+      "sha_blob": "4b29a35ee3a37f43"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/README.md",
+      "bytes_antes": 5849,
+      "bytes_despues": 5792,
+      "cr_antes": 57,
+      "cr_despues": 0,
+      "sha_blob": "63cef9359a2eac55"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md",
+      "bytes_antes": 15302,
+      "bytes_despues": 15199,
+      "cr_antes": 103,
+      "cr_despues": 0,
+      "sha_blob": "91437f17c3670feb"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/00-lecciones-capitalizadas.md",
+      "bytes_antes": 32373,
+      "bytes_despues": 32088,
+      "cr_antes": 285,
+      "cr_despues": 0,
+      "sha_blob": "667cbf2276be0377"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/09-documentacion-post-proyecto.md",
+      "bytes_antes": 56836,
+      "bytes_despues": 56526,
+      "cr_antes": 310,
+      "cr_despues": 0,
+      "sha_blob": "686913527bc8461b"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md",
+      "bytes_antes": 109574,
+      "bytes_despues": 109210,
+      "cr_antes": 364,
+      "cr_despues": 0,
+      "sha_blob": "14d27a0fe9d54040"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/README.md",
+      "bytes_antes": 21170,
+      "bytes_despues": 21087,
+      "cr_antes": 83,
+      "cr_despues": 0,
+      "sha_blob": "fcb773a384decada"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/dependencias-fases.md",
+      "bytes_antes": 36535,
+      "bytes_despues": 36311,
+      "cr_antes": 224,
+      "cr_despues": 0,
+      "sha_blob": "ca99aaa4276591b0"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "bytes_antes": 9933,
+      "bytes_despues": 9720,
+      "cr_antes": 213,
+      "cr_despues": 0,
+      "sha_blob": "25b15bfcce027fa5"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/01-plan-maestro.md",
+      "bytes_antes": 8990,
+      "bytes_despues": 8905,
+      "cr_antes": 85,
+      "cr_despues": 0,
+      "sha_blob": "5f2652bc3e911b04"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-A.md",
+      "bytes_antes": 12039,
+      "bytes_despues": 11899,
+      "cr_antes": 140,
+      "cr_despues": 0,
+      "sha_blob": "f24e590fe2f819ef"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-RELEASE.md",
+      "bytes_antes": 5118,
+      "bytes_despues": 5046,
+      "cr_antes": 72,
+      "cr_despues": 0,
+      "sha_blob": "6d7596a07668b83d"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/README.md",
+      "bytes_antes": 15585,
+      "bytes_despues": 15479,
+      "cr_antes": 106,
+      "cr_despues": 0,
+      "sha_blob": "9f192dd7125e9c4a"
+    },
+    {
+      "ruta": ".opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md",
+      "bytes_antes": 10351,
+      "bytes_despues": 10276,
+      "cr_antes": 75,
+      "cr_despues": 0,
+      "sha_blob": "042a48e471e8ce29"
+    },
+    {
+      "ruta": ".opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md",
+      "bytes_antes": 64706,
+      "bytes_despues": 64511,
+      "cr_antes": 195,
+      "cr_despues": 0,
+      "sha_blob": "18a85eb7d3e6c5de"
+    },
+    {
+      "ruta": ".opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md",
+      "bytes_antes": 9232,
+      "bytes_despues": 9183,
+      "cr_antes": 49,
+      "cr_despues": 0,
+      "sha_blob": "d498c48cc1eb9c8d"
+    },
+    {
+      "ruta": ".opencode/refs_baseline.txt",
+      "bytes_antes": 267,
+      "bytes_despues": 264,
+      "cr_antes": 3,
+      "cr_despues": 0,
+      "sha_blob": "8a50e8aebbe88eb9"
+    },
+    {
+      "ruta": ".opencode/wiring_report.json",
+      "bytes_antes": 116609,
+      "bytes_despues": 113187,
+      "cr_antes": 3422,
+      "cr_despues": 0,
+      "sha_blob": "64695e21112b4cec"
+    }
+  ],
+  "rechazados_identidad": [],
+  "ya_lf": [],
+  "dry_run": false,
+  "comando_canonico": "git ls-files --eol .opencode | awk '$1==\"i/lf\" && $2==\"w/crlf\"' | wc -l",
+  "conteo_canonico_antes": 213
+}

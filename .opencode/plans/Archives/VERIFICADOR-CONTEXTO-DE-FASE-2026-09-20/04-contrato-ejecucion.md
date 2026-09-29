@@ -7,7 +7,9 @@ pertinentes de `00-lecciones-capitalizadas.md`. Este archivo **no reemplaza**
 **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido
 contractualmente por su propia matriz. **El bloque C de esa orden quedó autorizado el 2026-09-24
 solo como enmiendas prospectivas sobre los documentos de los cuatro planes; el piloto FASE-C de este
-plan sigue sin autorizar y no se ejecutó al redactarlas.** Los permisos de este plan no amplían ese
+plan sigue sin autorizar y no se ejecutó al redactarlas.**
+⟦Nota datada 2026-09-28 — estado presente vencido, sin nota en el párrafo. La rectificación existe y vive en `dependencias-fases.md` bajo **Estado de B** («Rectificado el 2026-09-24 al cerrar FASE-C»: el piloto quedó **autorizado con mandato propio y corte «hasta listo para revisión»**, cerrado sin commit ni push). Medido hoy: `git ls-files evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` = **23 rutas** de evidencia de esa fase, y `git merge-base --is-ancestor 5817edd HEAD` = **sí** (el commit que trae las 37 rutas del piloto, `scripts/triage_lesson_relevance.py` incluido, también versionado). Crudo: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/02-f2-piloto-fase-c-vcf.txt`. La cláusula que esta fila gobierna sigue vigente y no cambia con la nota: **los permisos de este plan no amplían ese mandato** — el piloto lo tuvo propio, y quien lea esta fila para pedir permiso para otra fase debe pedir el suyo⟧
+Los permisos de este plan no amplían ese
 mandato.
 Fuente única de resultados y estados D1/S13:
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`

@@ -1,0 +1,12 @@
+| `mutation/` tiene rojo y verde del guard de no-filtrado (AC14). Sin rojo, ⚠️ | **CUMPLIDO — con rojo** | `mutation/verde_baseline.json` (guard activo: 14→14, `removed: []`), `mutation/mutante_M-AC10-guard-aditividad.json` (guard apagado: 14→**3**, `removed` = los 11 IDs cuestionados), `mutation/resumen.txt` (símbolo mutado, alcance declarado del observador, destino declarado por el cierre), `mutation/corrida.txt` (`exit 0`). En pytest: `test_rojo_con_el_guard_apagado` + `test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10` |
+
+| `coverage.json` tiene población, términos con sus conteos (**ceros incluidos**), familias no juzgadas y `acceptance` (AC15) | **PARCIAL por diseño — ⚠️ y no ✅** | La parte **no semántica** está: población leída de la corrida, `35 de 334`, 10 términos con **5 ceros** (incluido `verificador mec = 0`, A5 reproducido), `familias_no_juzgadas: ["S"]`, `ids_numericos` con su método y el `pool_no_sometido_a_juicio` declarado. La parte **semántica**: `acceptance = NO-EJERCITADO`, `valor: null`, motivo literal, y **sin ratio simulada** (E4). Es el techo que el plan previó con D7 sin activar, así que AC15 **no** se certifica verde |
+
+| Con proveedor falso, AC15 en ⚠️, `acceptance = NO-EJERCITADO` con motivo **y sin cifra simulada** (⟦E4⟧); **D6 declarada dormida** en `dependencias-fases.md` | **CUMPLIDO** | `coverage.json` → `aceptacion` (con `prohibido` explícito) y el test que busca la ratio mecánica y falla si aparece publicada; `dependencias-fases.md` fila D6 con la nota datada «DORMIDA con causa medida» y su re-evaluación atada a D7 |
+
+- **AC15 en su tramo semántico** (`acceptance`) y, con él, **D6** (dormida) — disparador atado a **D7**.
+
+=== columna de veredicto (lo que va entre el par de pipes del estado) ===
+   veredicto: **CUMPLIDO — con rojo**
+   veredicto: **PARCIAL por diseño — ⚠️ y no ✅**
+   veredicto: **CUMPLIDO**

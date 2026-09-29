@@ -1,0 +1,37 @@
+=== F2. el archivo test_briefing_se_genera_por_fase.py existe? ===
+__init__.py
+__pycache__/
+conftest.py
+test_arneses_resuelven_plan_por_el_escritor.py
+test_briefing_carga_total_tres_sumandos.py
+test_briefing_cero_red.py
+test_briefing_check_vence_con_arbol.py
+test_briefing_corpus_real.py
+test_briefing_fuente_ausente.py
+test_briefing_head_no_es_la_llave_de_caducidad.py
+test_briefing_mutation_no_truncar.py
+test_briefing_resuelve_plan_archivado.py
+test_briefing_se_genera_por_fase.py
+test_briefing_seccion_no_resuelta.py
+
+=== G. el pack FASE-RELEASE proyecta CONTRIBUTING? ===
+18:- `docs/CONTRIBUTING.md` — 19763 bytes (~4940 tokens). el prompt la declara pero vive fuera de `.opencode/`: copiarla dentro ampliaria la poblacion que escanea `validate_opencode_refs.py` ([8/13]).
+24:- docs/CONTRIBUTING.md — declarada por el prompt pero vive fuera de `.opencode/`: se lee aparte para no ampliar la poblacion que escanea validate_opencode_refs.py
+86:  raíz, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md`, según las reglas
+97:  Presentar la propuesta para `AGENTS.md` y `docs/CONTRIBUTING.md`; si no se autoriza literalmente,
+362:`05-prompt-inicio-sesion-fase-C.md` y `05-prompt-inicio-sesion-fase-D.md` —, docs/CONTRIBUTING.md y el
+-- y el maestro declara FASE-RELEASE con docs?
+33:| **Escribir configuración central en el cierre** — lo que `sync_versions.py` (sin `--check`) reescribe según `scripts/sync_config.yaml`: `README.md` de raíz, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`; `VERSION.yaml` (entrada, no salida); y `docs/contributing/REGISTRY.md` con su tracker `.last_doc_phase.json` cuando se pasa `--archivos-mod` | **No implícito.** Requiere autorización literal **por destino**, comprobada antes de escribir | **Rectificación 2026-09-25:** «cierre offline» y el mandato de RELEASE **no** otorgan este permiso. `--check` y `--help` leen, no escriben. Rige **C0** del `05-prompt-inicio-sesion-fase-RELEASE.md`. Alinear la política de `DOMAIN_PRIMER` es decisión aparte; tampoco la cubre un sync de cabeceras |
+
+=== H. anclas desfasadas de dependencias-fases.md (la nota F4 anadio +2 lineas desde 84c1aca) ===
+368:### S17 — los writers de texto reescriben en CRLF archivos que git almacena en LF (nueva, 2026-09-25)
+530:### S19 — la frescura de un pack no incluye al generador que lo imprime (nueva, 2026-09-26) — **CERRADA el 2026-09-27 en su parte gobernable; sobrevive solo por (c)** ⟦la (c) se cumplió el mismo 2026-09-27 con la instrucción literal de la familia D-b: la convención quedó escrita en `.agents/`; la fila baja declara lo que de (c) sigue siendo verdad estructural y qué queda aparte, en la (d)⟧
+735:### S21 — el runner imprime dos denominadores distintos dentro del mismo modo (nueva, 2026-09-27)
+976:### S32 — el pack publica los bytes del workflow sin que el workflow sea fuente gobernable (nueva, 2026-09-27)
+1032:## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
+
+=== I. families_not_covered hoy ===
+EXIT_REPORT=0
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/gov.json'

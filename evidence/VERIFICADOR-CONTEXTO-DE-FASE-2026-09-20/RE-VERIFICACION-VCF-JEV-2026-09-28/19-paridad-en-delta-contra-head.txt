@@ -1,0 +1,19 @@
+== La paridad absoluta de backticks NO es el criterio: este corpus usa codigo inline anidado
+   (`` `x` `` suma 5 backticks, impar por diseño). Lo que importa es el DELTA que introduce la
+   anotacion de hoy. Se compara HEAD contra disco, archivo por archivo.
+
+archivo                                                          | HEAD -> disco (delta)
+EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                     | backticks +20  ⟦ +1  ⟧ +1  « +1  » +1   delta equilibrado
+EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md      | backticks +18  ⟦ +1  ⟧ +1  « +1  » +1   delta equilibrado
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md       | backticks +22  ⟦ +1  ⟧ +1  « +3  » +3   delta equilibrado
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md | backticks +10  ⟦ +1  ⟧ +1  « +2  » +2   delta equilibrado
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md | backticks +16  ⟦ +1  ⟧ +1  « +3  » +3   delta equilibrado
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md    | backticks +46  ⟦ +1  ⟧ +1  « +1  » +1   delta equilibrado
+
+== Y el estado absoluto en HEAD (para no achacar a esta nota lo que ya venia):
+   EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                   backticks=210(PAR) ⟦=8 ⟧=8 «=13 »=13
+   EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md    backticks=76(PAR) ⟦=0 ⟧=0 «=1 »=1
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md     backticks=852(PAR) ⟦=24 ⟧=24 «=46 »=46
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md backticks=400(PAR) ⟦=6 ⟧=6 «=18 »=18
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md backticks=1692(PAR) ⟦=53 ⟧=53 «=102 »=102
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md  backticks=2053(IMPAR) ⟦=48 ⟧=48 «=78 »=78

@@ -1,0 +1,98 @@
+############ PIPELINE PASO 7 — run_all_validations.py --quick ############
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-09-28 20:00:39
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 17 y solo sus 4 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1358 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 2852 rutas contra 4 marcadores (1 grandfathered con dueño)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] CapitalizaciÃ³n del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (quÃ© lecciÃ³n debÃ­a capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 183 llamadas descubiertas en 1364 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | receptores no resueltos 30
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el Ã¡rbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+EXIT_QUICK=0
+
+############ PIPELINE PASO 8 — git diff --check y la poblacion declarada ############
+warning: in the working copy of 'scripts/validate_governance_numbers.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'scripts/validate_plan_citations.py', CRLF will be replaced by LF the next time Git touches it
+EXIT_DIFF_CHECK=0
+20
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M .opencode/plans/plan_citations_baseline.json
+ M scripts/build_phase_briefing.py
+ M scripts/run_all_validations.py
+ M scripts/validate_governance_numbers.py
+ M scripts/validate_opencode_refs.py
+ M scripts/validate_plan_citations.py
+ M tests/test_sync_writers_lf_y_fecha_readme.py
+-- numstat total de la tanda --
+warning: in the working copy of 'scripts/validate_governance_numbers.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'scripts/validate_plan_citations.py', CRLF will be replaced by LF the next time Git touches it
+inserciones=1305 supresiones=138 archivos=20
+-- CR por archivo modificado (los doce de la sesion 1 mas los de esta) --
+warning: in the working copy of 'scripts/validate_governance_numbers.py', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'scripts/validate_plan_citations.py', CRLF will be replaced by LF the next time Git touches it
+CR=0 .opencode/LECCIONES-INDEX.md
+CR=0 .opencode/lecciones_index.json
+CR=0 .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+CR=0 .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+CR=0 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+CR=0 .opencode/plans/plan_citations_baseline.json
+CR=0 scripts/build_phase_briefing.py
+CR=0 scripts/run_all_validations.py
+CR=1013 scripts/validate_governance_numbers.py
+CR=0 scripts/validate_opencode_refs.py
+CR=190 scripts/validate_plan_citations.py
+CR=0 tests/test_sync_writers_lf_y_fecha_readme.py

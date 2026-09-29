@@ -1,0 +1,31 @@
+############ RE-TANDA del paso 4 al 8 tras el ultimo sello ############
+-- paso 4a: --check (vencidos por la nota de procedencia) --
+5
+EXIT_GENERAR=0
+-- paso 5: indice (siempre despues de los packs) --
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+-- paso 6: --check final --
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+EXIT_CHECK_FINAL=0
+-- paso 7: quick --
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+EXIT_QUICK_FINAL=0
+EXIT_QUICK_SIN_TUBERIA=0
+-- paso 8: diff --check y poblacion --
+EXIT_DIFF_CHECK=0
+20
+-- D-C con el comando canonico --
+0
+>> Rectificacion medida del mismo crudo: la linea EXIT_QUICK_FINAL de arriba se tomo dentro de una
+>> tuberia y su 0 es de grep, no del runner (la trampa que la casa ya cobro dos veces). La lectura
+>> que vale es EXIT_QUICK_SIN_TUBERIA=0, corrida sin tuberia.
+>> Rectificacion (mismo crudo 37): la linea EXIT_QUICK_FINAL de ese archivo se tomo dentro de una
+>> tuberia y su 0 es de grep, no del runner. La lectura que vale es la de este crudo 38:
+>> EXIT_QUICK_FINAL=0, corrido con redireccion a archivo y exit leido sin tuberia.

@@ -1,0 +1,25 @@
+=== 1. LF en los artefactos propios de la sesion ===
+archivos_mirados=57
+ya_estaban_en_LF=57
+normalizados_por_este_cierre=0
+CR_sueltos_conservados=(ninguno)
+
+=== 2. las cifras de test, con los dos instrumentos ===
+metodo_canonico_arbol_de_trabajo=4611 (rc=0)
+arbol_versionado_HEAD=4590 (rc=0)
+deriva_de_la_tanda=21
+cifra publicada en AGENTS.md (seccion Cobertura por Modulo): 4.590
+la cabecera de AGENTS.md NO se toco en esta sesion (prohibido; es instruccion aparte)
+
+-- las cuatro baterias que explican la deriva --
+  test_sync_writers_lf_y_fecha_readme.py                     disco= 17  HEAD= 10
+  test_run_all_validations_denominador_por_modo.py           disco=  5  HEAD=  0
+  test_governance_numbers_estados_sin_puntero_d1.py          disco=  3  HEAD=  0
+  test_briefing_proyeccion_workflow_gobernada.py             disco=  6  HEAD=  0
+  suma de la columna disco debe casar con la deriva + 4590
+
+=== 3. inventario del cierre ===
+entradas_del_directorio_de_evidencia=58
+lineas_git_status_uno=20
+archivos_sin_versionar_en_el_repo=131
+HEAD_sigue_en=84c1aca

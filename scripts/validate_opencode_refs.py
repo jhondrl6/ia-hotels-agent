@@ -186,7 +186,8 @@ def fix_broken(broken: List[Tuple[Path, int, str]]) -> Tuple[int, List[str]]:
         for ref in refs:
             promoted = archived_promotion(ref)
             if promoted is not None:
-                new_rel = "/" + promoted.relative_to(PROJECT_ROOT).as_posix()
+                # Sin barra inicial: es la forma mayoritaria del corpus (§S17) y `ref_target` la acepta.
+                new_rel = promoted.relative_to(PROJECT_ROOT).as_posix()
                 text = text.replace(ref, new_rel)
                 fixed += 1
                 changed = True
@@ -195,7 +196,7 @@ def fix_broken(broken: List[Tuple[Path, int, str]]) -> Tuple[int, List[str]]:
             basename = normalize(ref).rstrip("/").rsplit("/", 1)[-1]
             candidates = find_candidates(basename)
             if len(candidates) == 1:
-                new_rel = "/" + candidates[0].relative_to(PROJECT_ROOT).as_posix()
+                new_rel = candidates[0].relative_to(PROJECT_ROOT).as_posix()
                 text = text.replace(ref, new_rel)
                 fixed += 1
                 changed = True

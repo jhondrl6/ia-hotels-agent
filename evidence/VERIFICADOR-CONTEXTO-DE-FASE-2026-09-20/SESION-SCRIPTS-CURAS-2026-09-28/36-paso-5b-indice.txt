@@ -1,0 +1,24 @@
+############ PASO 5b — que movio en el indice y su --check ############
+-- 340 IDs con definición detectada; 52 IDs citados sin definición (ver última sección).
++- 340 IDs con definición detectada; 54 IDs citados sin definición (ver última sección).
+-| — | Citados sin definición | 52 |
++| — | Citados sin definición | 54 |
+-| `L-VCF-20` | La tanda de commits de cierre del 2026-09-27 separó el corpus con sus packs (f496914) del workflow (5446cb7) apoyándose en una premisa que se creyó medida: «el workflow entra al pack como lectura… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 31 (solo el plan dueño) |
++| `L-VCF-20` | La tanda de commits de cierre del 2026-09-27 separó el corpus con sus packs (f496914) del workflow (5446cb7) apoyándose en una premisa que se creyó medida: «el workflow entra al pack como lectura… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 37 (solo el plan dueño) |
+-## Citados sin definición (52)
++## Citados sin definición (54)
++| `D-C` | 6 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
++| `D-H` | 6 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
+-- check del indice --
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_INDICE_CHECK=0
+############ cifras de test de esta tanda (los dos instrumentos de la casa) ############
+canonico (arbol de trabajo): 4611
+versionado (git grep HEAD):  4590
+-- functions nuevas por archivo de esta sesion --
+test_sync_writers_lf_y_fecha_readme.py                                 17
+test_run_all_validations_denominador_por_modo.py                       5
+test_governance_numbers_estados_sin_puntero_d1.py                      3
+test_briefing_proyeccion_workflow_gobernada.py                         6
+HEAD tenia en test_sync_writers: 10

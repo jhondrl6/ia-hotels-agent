@@ -1,0 +1,20 @@
+=== C5.1 PRE con el comando canonico de la casa (crudos 27- y 28- de la sesion 1) ===
+comando: git ls-files --eol .opencode | awk '$1=="i/lf" && $2=="w/crlf"' | wc -l
+residuo_hoy=213
+residuo_leido_con_quotePath_false_y_z=213   (mismo conteo: True)
+desglose_por_extension={'md': 178, 'json': 34, 'txt': 1}
+cifra de la orden: 213 (34 json + 176 md + 2 `md"` + 1 txt), medida 2026-09-28 en el crudo 28-
+deriva_contra_213=0
+
+=== C5.2 cruce con las doce rutas declaradas de la sesion 1 ===
+lineas_git_status_uno=18
+de_la_poblacion_que_tambien_esta_sucia=0
+
+=== C5.3 identidad contra el blob de HEAD, archivo por archivo (criterio 2) ===
+total_poblacion=213
+identicos_al_blob_salvo_EOL=213
+distintos_por_contenido=0
+
+El escritor de C5 solo normaliza los identicos al blob salvo EOL: para esos, la
+normalizacion deja el POST byte a byte igual al blob, que es el criterio 2. Los
+distintos por contenido quedan declarados y fuera (son trabajo de otra sesion).

@@ -1,0 +1,21 @@
+=== PASO 5: build_lesson_index.py ===
+-- sha ANTES del par derivado:
+   .opencode/LECCIONES-INDEX.md             0161857e61c98643
+   .opencode/lecciones_index.json           1d254462e4755346
+-- corrida
+[OK] 340 IDs definidos + 52 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_IDX=0
+-- sha DESPUES:
+   .opencode/LECCIONES-INDEX.md             0161857e61c98643
+   .opencode/lecciones_index.json           1d254462e4755346
+-- CR de los dos derivados:
+   .opencode/LECCIONES-INDEX.md             CR=0
+   .opencode/lecciones_index.json           CR=0
+
+=== PASO 5b: build_lesson_index.py --check ===
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_IDX_CHECK=0

@@ -1,0 +1,57 @@
+== F4: reproduccion del par 518/66 que afirma la fila S17 (.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:429)
+== Corpus: archivos .md versionados (git ls-files). Poblacion leida del arbol de trabajo,
+   que esta limpio (git status --porcelain = 0 lineas, medido en el crudo 05) y con
+   core.autocrlf=input, asi que disco == HEAD en contenido salvo finales de linea.
+== Patron: el backtick forma parte del literal, como pide la fila. Se cuentan OCURRENCIAS
+   (str.count), no lineas, porque git grep -c cuenta lineas y esa es una de las razones por
+   las que el par no reproduce.
+== Instrumento alternativo (rechazado por la casa, ver S17 quinta instancia): git grep -F con
+   patron que empieza por '/' devuelve 0 falso. Aqui se contrasta igual y se imprime.
+
+== num archivos .md versionados: 700
+
+-- ancla-del-mandato / forma sin barra
+   patron literal: '`.opencode/plans/Archives'
+   TOTAL ocurrencias: 167   (archivos con >=1 ocurrencia: 41)
+         26  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+         19  .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/00-lecciones-capitalizadas.md
+         15  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+         13  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+         11  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+         11  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+
+-- ancla-del-mandato / forma con barra
+   patron literal: '`/.opencode/plans/Archives'
+   TOTAL ocurrencias: 29   (archivos con >=1 ocurrencia: 22)
+          4  .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md
+          3  .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md
+          2  .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md
+          2  .opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md
+          1  .opencode/context/Historico/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md
+          1  .opencode/context/Historico/CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md
+
+-- ancla-ancha / forma sin barra
+   patron literal: '`.opencode'
+   TOTAL ocurrencias: 604   (archivos con >=1 ocurrencia: 123)
+         63  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+         53  docs/contributing/REGISTRY.md
+         31  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+         30  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+         29  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+         27  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+
+-- ancla-ancha / forma con barra
+   patron literal: '`/.opencode'
+   TOTAL ocurrencias: 73   (archivos con >=1 ocurrencia: 59)
+          4  .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md
+          3  .opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md
+          3  .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md
+          3  .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md
+          2  .opencode/context/Historico/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md
+          2  .opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md
+
+== PARES RE-MEDIDOS HOY
+ancla del mandato (`.opencode/plans/Archives): 167 contra 29
+ancla ancha       (`.opencode):                604 contra 73
+par declarado en la fila S17:                  518 contra 66
+REPRODUCIBLE con alguna de las dos anclas: NO

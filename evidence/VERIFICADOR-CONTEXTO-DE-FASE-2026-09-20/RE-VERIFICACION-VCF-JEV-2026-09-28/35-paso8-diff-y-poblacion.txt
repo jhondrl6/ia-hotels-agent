@@ -1,0 +1,56 @@
+=== PASO 8: git diff --check ===
+EXIT_DIFF_CHECK=0
+
+=== git status --short (poblacion) ===
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M .opencode/plans/plan_citations_baseline.json
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/
+
+=== numstat por archivo (que cambió de verdad) ===
+1	1	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+1	1	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+3	1	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+3	1	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+1	0	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+22	16	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+20	16	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+25	19	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+21	15	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+29	26	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+3	1	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+1	1	.opencode/plans/plan_citations_baseline.json
+
+=== total de lineas agregadas/quidadas ===
+ 12 files changed, 130 insertions(+), 98 deletions(-)
+
+=== CR por archivo tocado (debe ser 0 en todos) ===
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+IndexError: list index out of range
+
+=== el unico cambio del baseline de citas ===
+diff --git a/.opencode/plans/plan_citations_baseline.json b/.opencode/plans/plan_citations_baseline.json
+index 2e52d16..ddc71a9 100644
+--- a/.opencode/plans/plan_citations_baseline.json
++++ b/.opencode/plans/plan_citations_baseline.json
+@@ -1,6 +1,6 @@
+ {
+   "comando_de_medicion": "grep -rEoh \"[A-Za-z0-9_/]+\\\\.py:[0-9]+\" .opencode/plans --include=*.md | wc -l",
+-  "created_at": "2026-09-27T16:53:48",
++  "created_at": "2026-09-28T16:57:37",
+   "files": {
+     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md": 11,
+     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md": 3,
+
+=== residuo CRLF bajo .opencode (la cifra que governa D-C) ===
+213

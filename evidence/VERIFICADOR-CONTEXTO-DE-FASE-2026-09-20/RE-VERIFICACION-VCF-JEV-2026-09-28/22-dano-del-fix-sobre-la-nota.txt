@@ -1,0 +1,19 @@
+== CR por archivo DESPUES del --fix (la firma de la familia S17)
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md                           CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md                     CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md           CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md                        CR=0
+   EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                                         CR=0
+   EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md                          CR=0
+
+== Que escribio el --fix en la linea 3 del README de JEV
+    verificado por descarga + sha256 y no por título. Medido hoy contra disco con `git ls-files .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/ | grep -c '/'` = **12** rutas archivadas; el mismo listado sobre `/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/` (sin `Archives`) da **0**, y `ls -d` de esa ruta da `No such file or directory`; `git show --name-status -M 84282c1` sobre el p
+
+== Formas presentes en esa linea: con barra (/) vs sin barra
+   `/.opencode/plans/Archives               1
+   `.opencode/plans/Archives                1
+
+== El guion del escritor sigue con newline='
+'? (lineas 212 y 252)
+   :212  md.write_text(text, encoding="utf-8", newline="\n")
+   :252  BASELINE_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")

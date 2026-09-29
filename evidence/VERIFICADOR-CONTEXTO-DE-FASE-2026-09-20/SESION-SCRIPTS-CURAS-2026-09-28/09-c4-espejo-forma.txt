@@ -1,0 +1,14 @@
+=== VIGENTE (cura C4) ===
+exit_primera_corrida=0  exit_segunda_corrida=0
+ANTES  : ['Leer `.opencode/plans/HUESO/nota.md` antes de cerrar.']
+DESPUES: ['Leer `.opencode/plans/Archives/HUESO/nota.md` antes de cerrar.']
+forma_minoritaria_con_barra=False
+idempotente_en_bytes=True
+
+=== CONTROL 5817edd (antes de la cura) ===
+exit_primera_corrida=0  exit_segunda_corrida=0
+ANTES  : ['Leer `.opencode/plans/HUESO/nota.md` antes de cerrar.']
+DESPUES: ['Leer `/.opencode/plans/Archives/HUESO/nota.md` antes de cerrar.']
+forma_minoritaria_con_barra=False
+idempotente_en_bytes=True
+

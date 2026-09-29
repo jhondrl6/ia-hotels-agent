@@ -1,0 +1,7 @@
+== Control final del expediente tras su ultima edicion
+
+expediente: lineas=274 bytes=29710 CR=0 CJK=0
+paridad ⟦/⟧ en el expediente: 4/2
+secciones: 11
+referencias a crudos: 13, rotas: 0 []
+menciones de 'mas ' sueltas: 0

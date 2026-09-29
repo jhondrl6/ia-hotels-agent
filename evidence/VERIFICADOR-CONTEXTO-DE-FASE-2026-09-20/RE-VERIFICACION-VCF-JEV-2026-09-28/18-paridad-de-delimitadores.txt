@@ -1,0 +1,21 @@
+== Control de delimitadores y EOL despues de las anotaciones del 2026-09-28
+== Porque una comilla o un backtick impares convierten un filtro por contexto en un
+   anotador huerfano (y un CR de mas es la familia S17).
+
+EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                             CR=0 backticks=230(PAR) ⟦=9 ⟧=9 «=14 »=14 notas_hoy=1 -> OK
+EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md              CR=0 backticks=94(PAR) ⟦=1 ⟧=1 «=2 »=2 notas_hoy=1 -> OK
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md               CR=0 backticks=874(PAR) ⟦=25 ⟧=25 «=49 »=49 notas_hoy=1 -> OK
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md         CR=0 backticks=410(PAR) ⟦=7 ⟧=7 «=20 »=20 notas_hoy=1 -> OK
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md CR=0 backticks=1708(PAR) ⟦=54 ⟧=54 «=105 »=105 notas_hoy=1 -> OK
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md            CR=0 backticks=2099(IMPAR) ⟦=49 ⟧=49 «=79 »=79 notas_hoy=1 -> REVISION
+
+== TOTAL: HAY ARCHIVOS A REVISAR
+== Cada nota datada debe quedar dentro del par ⟦…⟧ y no partir una ruta: se comprueba
+   ademas que ninguna ruta de evidencia quede cortada por un salto de linea.
+
+EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                             rutas partidas al final de linea: 3 [(3, '.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/'), (3, '.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/'), (101, '.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/')]
+EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md              rutas partidas al final de linea: 2 [(21, '.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/'), (58, 'evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-X/')]
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md               rutas partidas al final de linea: 8 [(22, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/'), (172, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/mutation/'), (182, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/')]
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md         rutas partidas al final de linea: 12 [(11, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/'), (18, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/'), (119, 'evidence/…/FASE-A/mutation/')]
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md rutas partidas al final de linea: 23 [(25, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A/'), (26, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B/'), (27, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/')]
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md            rutas partidas al final de linea: 23 [(10, 'evidence/…/FASE-C/'), (17, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/'), (39, 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/')]

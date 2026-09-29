@@ -1,0 +1,13 @@
+=== C4.4 linea de refs sobre el arbol real (solo lectura, sin --fix) ===
+[PASS] OpenCode References: todas las referencias existen
+EXIT_REFS_REAL=0
+=== entradas del baseline de refs congelado (lineas no comentario) ===
+1
+=== hay entradas con forma de barra inicial en el baseline? (debe ser 0: REF_RE arranca en .opencode) ===
+0
+=== lineas de forma minoritaria en el corpus versionado (referencia, no se tocan) ===
+.opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/06-prompt-fase-5.md:1
+.opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/08-analisis-post-implementacion.md:1
+.opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-6.md:1
+.opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md:4
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md:1

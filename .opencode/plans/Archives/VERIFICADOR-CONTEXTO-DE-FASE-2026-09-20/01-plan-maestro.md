@@ -18,7 +18,9 @@ aquel no pudo cerrar.
 **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido
 contractualmente por su propia matriz. El **bloque C** de esa orden quedó autorizado el 2026-09-24
 solo como enmiendas prospectivas sobre los documentos de los cuatro planes — **el piloto FASE-C de
-este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+este plan no lo está y no se ejecutó**.
+⟦Nota datada 2026-09-28 — esta frase seguía en presente sin nota en el párrafo, mientras su rectificación vive en otra fila del mismo plan: ver `dependencias-fases.md` bajo **Estado de B**, que abre con «Rectificado el 2026-09-24 al cerrar FASE-C» y declara el piloto **autorizado y ejecutado con mandato propio y corte «hasta listo para revisión»**. Medido hoy contra disco: `git ls-files evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` devuelve **23 rutas** (18 en la raíz, 1 en `instrumentos/` y 4 en `mutation/`; `find -type f` sobre el mismo directorio da el mismo **23**), y `git merge-base --is-ancestor 7f2e9f9 HEAD` y `git merge-base --is-ancestor 5817edd HEAD` dan **sí** los dos — `5817edd` es precisamente «feat(triage): FASE-C del verificador de contexto — capa de pertinencia aditiva» y `scripts/triage_lesson_relevance.py` está versionado (`git ls-files`). Crudo: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/02-f2-piloto-fase-c-vcf.txt`. Lo que de esta frase queda en pie: el **bloque C** de la orden de calidad sí fue solo documental⟧
+Fuente única de resultados y estados D1/S13:
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`
 **§13, única matriz vigente**; §1–§12 son antecedentes rectificados, no aceptación actual.
 Las mediciones A1–A8 y el contrato original de FASE-A se conservan como históricos; no certifican

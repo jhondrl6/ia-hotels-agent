@@ -1,0 +1,17 @@
+=== PASO 4b: el escritor de baseline emite CRLF? (medido sobre copia FUERA del arbol versionado) ===
+-- linea del escritor que persiste el baseline:
+135:    path.write_text(
+
+-- corrida con --baseline apuntando a .scratch-rv28/prueba.json
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT=0
+
+SCRATCH  CR=87 LF=87 CRLF=87 -> CRLF puro
+REAL     CR=87 LF=87 CRLF=87
+
+-- estado EOL declarado por git para el baseline real:
+i/lf    w/crlf  attr/                 	.opencode/plans/plan_citations_baseline.json
+
+-- numstat (cuanto cambio de verdad el contenido):
+warning: in the working copy of '.opencode/plans/plan_citations_baseline.json', CRLF will be replaced by LF the next time Git touches it
+1	1	.opencode/plans/plan_citations_baseline.json

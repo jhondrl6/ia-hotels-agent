@@ -1,0 +1,15 @@
+== Control de FORMA: cada nota de hoy en una sola linea, sin rutas partidas, y proyectada a los packs
+   %-82s chars  lineas  rutas-partidas  simbolos-partidos
+   EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                                         1195       1               0               0
+   EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md                          1032       1               0               0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md                           1101       1               0               0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md                      962       1               0               0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md           1720       1               0               0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md                        2176       1               0               0
+
+== Proyeccion a los packs derivados
+   briefing/FASE-A.md  menciones de 'Nota datada 2026-09-28' = 3
+   briefing/FASE-B.md  menciones de 'Nota datada 2026-09-28' = 2
+   briefing/FASE-C.md  menciones de 'Nota datada 2026-09-28' = 3
+   briefing/FASE-D.md  menciones de 'Nota datada 2026-09-28' = 3
+   briefing/FASE-RELEASE.md  menciones de 'Nota datada 2026-09-28' = 2

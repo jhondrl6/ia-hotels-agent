@@ -684,8 +684,53 @@ def leer_meta(ruta_pack: Path) -> dict | None:
         return None
 
 
+PROYECCION_APARTE_RE = re.compile(
+    r"^-\s+`(?P<ruta>[^`]+)`\s+—\s+(?P<bytes>\d+)\s+bytes\s+\(~(?P<tokens>\d+)\s+tokens\)",
+    re.M)
+
+
+def proyecciones_de_lectura_aparte(ruta_pack: Path, meta: dict, raiz: Path) -> list[dict]:
+    """§S32 (a): la proyeccion de tamano del workflow tambien se goberna, sin meterlo en `sources[]`.
+
+    El pack imprime `N bytes (~M tokens)` del workflow canonico. Hasta aqui la frescura la gobernaba
+    el sha de `sources[]` y el workflow no esta ahi por contrato (AC17/D3, y
+    `test_briefing_se_genera_por_fase` lo afirma), asi que un `--check` daba verde con la proyeccion
+    vencida y el rojo lo cortaba `[13/13]`, despues del commit de quien edito el workflow.
+
+    Se goberna por bytes y por tokens derivados, no por sha: copiar el sha del workflow al pack seria
+    introducirlo como fuente. Y `docs/CONTRIBUTING.md` queda fuera: su cifra en el pack es un reclamo
+    de tamano publicado como texto, no una proyeccion de este generador (criterio 5 de la orden).
+    """
+    texto = ruta_pack.read_text(encoding="utf-8", errors="replace")
+    proyectadas = {m.group("ruta"): m for m in PROYECCION_APARTE_RE.finditer(texto)
+                   if m.group("ruta") == WORKFLOW_CANONICO}
+    if WORKFLOW_CANONICO not in (meta or {}).get("lectura_aparte_obligatoria", []):
+        return []
+    if WORKFLOW_CANONICO not in proyectadas:
+        # Silent drop: el pack declara la lectura aparte pero ya no proyecta su tamano.
+        return [{"fuente": WORKFLOW_CANONICO, "causa": "PROYECCION-AUSENTE",
+                  "motivo": "la lectura aparte se declara pero su tamano ya no se imprime"}]
+    m = proyectadas[WORKFLOW_CANONICO]
+    ruta = raiz / WORKFLOW_CANONICO
+    if not ruta.is_file():
+        return [{"fuente": WORKFLOW_CANONICO, "causa": "PROYECCION-FUENTE-AUSENTE",
+                  "bytes_publicados": int(m.group("bytes"))}]
+    reales = len(ruta.read_bytes())
+    tokens_publicados = int(m.group("tokens"))
+    tokens_reales = tokens_estimados(reales)
+    if reales == int(m.group("bytes")) and tokens_reales == tokens_publicados:
+        return []
+    return [{"fuente": WORKFLOW_CANONICO, "causa": "PROYECCION-VENCIDA",
+             "bytes_publicados": int(m.group("bytes")), "bytes_arbol": reales,
+             "tokens_publicados": tokens_publicados, "tokens_arbol": tokens_reales}]
+
+
 def verificar(plan_dir: Path, briefing_dir: Path, raiz: Path) -> tuple[list[dict], int]:
-    """Frescura por sha de las fuentes gobernadas. HEAD solo informa procedencia (AC21)."""
+    """Frescura por sha de las fuentes gobernadas y por bytes de la proyeccion del workflow.
+
+    HEAD solo informa procedencia (AC21); el tamano proyectado del workflow se goberna aparte porque
+    el workflow no puede entrar en `sources[]` (§S32, salida (a)).
+    """
     head, _ = head_actual(raiz)
     resultados: list[dict] = []
     salio = 0
@@ -724,21 +769,35 @@ def verificar(plan_dir: Path, briefing_dir: Path, raiz: Path) -> tuple[list[dict
             if actual != src["sha256"]:
                 incidencias.append({"fuente": src["ruta"], "causa": "SHA-DISTINTO",
                                     "sha_publicado": src["sha256"], "sha_arbol": actual})
+        proyecciones = proyecciones_de_lectura_aparte(ruta_pack, meta, raiz)
+        incidencias += proyecciones
+        # Cuantas proyecciones se contrastaron de verdad: un verde sin denominador no informa
+        # (L-PF10), y aqui el denominador es el workflow declarado en lectura aparte.
+        contrastadas = 1 if WORKFLOW_CANONICO in (meta or {}).get(
+            "lectura_aparte_obligatoria", []) else 0
         procedencia_distinta = meta["provenance"]["head"] != head
         if incidencias:
             salio = 1
-            log(f"[VENCIDO] FASE-{fase}: {len(incidencias)} fuente(s) movidas")
+            log(f"[VENCIDO] FASE-{fase}: {len(incidencias)} incidencia(s) — "
+                f"{len(incidencias) - len(proyecciones)} fuente(s) movida(s), "
+                f"{len(proyecciones)} proyeccion(es) vencida(s)")
             for i in incidencias:
-                log(f"    - {i['causa']}: {i['fuente']}")
+                log(f"    - {i['causa']}: {i['fuente']}"
+                    + (f" (publicados {i['bytes_publicados']} bytes / {i['tokens_publicados']} "
+                       f"tokens; en arbol {i['bytes_arbol']} / {i['tokens_arbol']})"
+                       if i["causa"] == "PROYECCION-VENCIDA" else ""))
         elif not meta["sources"]:
             # Cero fuentes no es un verde: es un check sin nada que verificar (L-PF10).
             log(f"[SIN-FUENTES] FASE-{fase}: 0 fuentes gobernadas — nada que vencer "
                 "(el prompt no declaro lectura)")
         else:
             extra = " (procedencia distinta, no vence)" if procedencia_distinta else ""
-            log(f"[OK] FASE-{fase}: {len(meta['sources'])} fuentes frescas{extra}")
+            goberna = " y proyeccion del workflow conforme" if contrastadas else ""
+            log(f"[OK] FASE-{fase}: {len(meta['sources'])} fuentes frescas{goberna}{extra}")
         resultados.append({"fase": fase, "causa": None if not incidencias else "VENCIDO",
                            "incidencias": incidencias,
+                           "proyeccion_gobernada": bool(contrastadas),
+                           "incidencias_de_proyeccion": len(proyecciones),
                            "estado": meta["estado"],
                            "declaracion": meta.get("declaracion", "DECLARADA"),
                            "fuentes": len(meta["sources"]),

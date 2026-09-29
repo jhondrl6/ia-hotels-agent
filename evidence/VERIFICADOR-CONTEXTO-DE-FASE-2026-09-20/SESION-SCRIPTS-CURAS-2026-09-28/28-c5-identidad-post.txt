@@ -1,0 +1,10 @@
+rutas_normalizadas=213
+POST_igual_al_blob_HEAD=213
+POST_distinto_al_blob=0
+sin_blob_en_HEAD=0
+criterio_2_cumplido_en_toda_la_poblacion=True
+
+=== muestra de tres citada por la orden, medida aparte ===
+  .opencode/context/Historico/Pendiente.md: disco_igual_a_blob=True  CR_disco=0  tamano_disco=9719  tamano_blob=9719
+  .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/README.md: disco_igual_a_blob=True  CR_disco=0  tamano_disco=15479  tamano_blob=15479
+  .opencode/refs_baseline.txt: disco_igual_a_blob=True  CR_disco=0  tamano_disco=264  tamano_blob=264

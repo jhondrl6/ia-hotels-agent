@@ -1,0 +1,14 @@
+############ prueba de que los cinco packs estaban vencidos (fuente comun) ############
+FASE-A usa dependencias-fases.md: SI
+FASE-B usa dependencias-fases.md: SI
+FASE-C usa dependencias-fases.md: SI
+FASE-D usa dependencias-fases.md: SI
+FASE-RELEASE usa dependencias-fases.md: SI
+
+############ PIPELINE PASO 6 — build_phase_briefing.py --check (debe dar EXIT 0) ############
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+EXIT_CHECK_PASO_6=0

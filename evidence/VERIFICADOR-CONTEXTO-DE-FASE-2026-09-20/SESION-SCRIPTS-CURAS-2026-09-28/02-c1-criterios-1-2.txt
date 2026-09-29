@@ -1,0 +1,15 @@
+=== C1.1 grep ampliado sobre scripts/ (debe dar 0) ===
+EXIT_GREP=1
+=== C1.1b las tres cadenas nuevas tal como quedaron ===
+819:            "estado": "limite permanente de este verificador (no hay lint de prosa); la fila D1 "
+832:            "estado": "fuera del alcance de este plan (maestro §3); §13 de "
+842:            "estado": "barrido por AC5/AC16 de esta fase (quien afirma el 11 y el 7); §13 de "
+854:            "estado": "limite permanente de este verificador (solo contrasta conteos de checks)",
+=== C1.2 compila ===
+EXIT_PYCOMPILE=0
+=== C1.3 EOL del archivo ===
+i/lf    w/crlf  attr/                 	scripts/validate_governance_numbers.py
+CR_bytes=1013  lineas=1013
+=== C1.4 --report con su propio exit ===
+EXIT_C1_POST=0
+EXIT_C1_POST=0

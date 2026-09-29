@@ -1,0 +1,33 @@
+== F4: el par 518/66 de la fila S17 medido bajo los TRES alcances posibles
+== Patron: backtick + ruta, como pide la fila. Se cuentan OCURRENCIAS (str.count).
+== Poblacion: ficheros versionados por `git ls-files` (los dos primeros) y ademas los no
+   versionados por `git ls-files --others --exclude-standard` (el tercero).
+== Un archivo que no decodifica UTF-8 se omite y se declara en la columna leidos.
+
+-- ALCANCE: .md versionados (el 'corpus marcado versionado' de la fila)
+   poblacion=700  leidos=700
+   forma sin barra             167
+   forma con barra              29
+   ancla ANCHA sin barra       604
+   ancla ANCHA con barra        73
+   PAR: 167 contra 29    |    ANCHO: 604 contra 73
+
+-- ALCANCE: todos los ficheros versionados (cualquier extension)
+   poblacion=2852  leidos=2750
+   forma sin barra             174
+   forma con barra              32
+   ancla ANCHA sin barra       786
+   ancla ANCHA con barra        77
+   PAR: 174 contra 32    |    ANCHO: 786 contra 77
+
+-- ALCANCE: versionados + no versionados (arbol de trabajo completo visible a git)
+   poblacion=2871  leidos=2769
+   forma sin barra             180
+   forma con barra              36
+   ancla ANCHA sin barra       799
+   ancla ANCHA con barra        85
+   PAR: 180 contra 36    |    ANCHO: 799 contra 85
+
+== Par declarado en la fila S17 (dependencias-fases.md:429): 518 contra 66
+== Par citado por la orden de esta sesion: 174 contra 32 (ancla del mandato) y
+   793 contra 77 (ancla ancha)

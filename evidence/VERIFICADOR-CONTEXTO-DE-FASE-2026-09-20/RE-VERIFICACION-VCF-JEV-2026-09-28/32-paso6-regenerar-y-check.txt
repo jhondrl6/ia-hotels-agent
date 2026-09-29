@@ -1,0 +1,44 @@
+=== PASO 6c: regenerar SOLO los 5 packs VENCIDOS por SHA-DISTINTO (plan VCF) ===
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_REGEN=0
+
+-- que archivos cambiaron en disco (solo los 5 packs + derivadas):
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+ M .opencode/plans/plan_citations_baseline.json
+?? .scratch-rv28/
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/
+
+-- CR de los 5 packs regenerados (la firma S17):
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing\FASE-A.md                     CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing\FASE-B.md                     CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing\FASE-C.md                     CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing\FASE-D.md                     CR=0
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing\FASE-RELEASE.md               CR=0
+
+=== PASO 6d: --check del plan VCF tras regenerar ===
+[OK] FASE-A: 4 fuentes frescas
+[OK] FASE-B: 4 fuentes frescas
+[OK] FASE-C: 4 fuentes frescas
+[OK] FASE-D: 4 fuentes frescas
+[OK] FASE-RELEASE: 10 fuentes frescas
+EXIT_CHECK_VCF=0

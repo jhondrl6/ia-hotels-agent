@@ -1,0 +1,15 @@
+=== PASO 6a2: los packs de JEV son preexistentemente ausentes? ===
+-- rutas versionadas bajo el briefing de JEV (HEAD):
+0
+-- historial de esa ruta (todas las revisiones, siguiendo renombres):
+-- esa ruta existio en el plan antes de archivarlo? (revision previa al archivado):
+0
+-- busqueda global de briefing de JEV en todo el historial:
+0
+-- el plan VCF si tiene packs versionados:
+5
+-- estado en disco del directorio de JEV:
+ls: cannot access '.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/briefing': No such file or directory
+-- AC19 (que obliga packs) es del plan VCF, no del JEV:
+0
+3

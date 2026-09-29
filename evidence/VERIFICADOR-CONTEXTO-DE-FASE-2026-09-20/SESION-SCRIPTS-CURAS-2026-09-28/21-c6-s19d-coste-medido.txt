@@ -1,0 +1,37 @@
+=== 1. patrones de NORMALIZAR del verificador versionado, hoy ===
+archivo: scripts/verify_packs_in_committed_tree.py
+patrones=4
+  [1] (re.compile(r"· generado `[0-9TZ:.+-]+`"), ""),
+  [2] (re.compile(r'"generated_at": "[0-9TZ:.+-]+"'), '"generated_at": "N"'),
+  [3] (re.compile(r"HEAD `[0-9a-f]{7,40}`"), "HEAD `H`"),
+  [4] (re.compile(r'"head": "[0-9a-f]{7,}"'), '"head": "H"'),
+ningun patron cubre un futuro `generado_por_sha`: anadirlo al pack sin anadir patron es el rojo del verificador del arbol commiteado
+
+=== 2. que publica hoy el escritor sobre su propia identidad ===
+-- la clave se lee dentro del bloque BRIEFING-META, no por substring del pack: la prosa de §S19 que los packs copian de `dependencias-fases.md` menciona `generado_por_sha` como texto y eso no es publicarla (primer barrido dio el falso SI) --
+  FASE-A.md: generado_por=scripts/build_phase_briefing.py generado_por_sha=NO clave_en_prosa_ajena=SI
+  FASE-B.md: generado_por=scripts/build_phase_briefing.py generado_por_sha=NO clave_en_prosa_ajena=SI
+  FASE-C.md: generado_por=scripts/build_phase_briefing.py generado_por_sha=NO clave_en_prosa_ajena=SI
+  FASE-D.md: generado_por=scripts/build_phase_briefing.py generado_por_sha=NO clave_en_prosa_ajena=SI
+  FASE-RELEASE.md: generado_por=scripts/build_phase_briefing.py generado_por_sha=NO clave_en_prosa_ajena=SI
+ocurrencias_de_generado_por_sha_en_el_escritor=0
+
+=== 3. el valor sellado se mueve entre commits (premisa del quinto patron) ===
+comando: git show <rev>:scripts/build_phase_briefing.py | sha256sum
+  ae21d09: dd1a20502bbf861a
+  941530e: e6fc607338807312
+  a020306: b54a90e5f791487a
+  84c1aca: b54a90e5f791487a
+  arbol de trabajo (con la cura C2): 67b53e0dcf43cc9c
+distintos=4 sobre 5 mediciones
+el sha del escritor no es constante entre commits ni entre commit y arbol: publicado en el pack, el `--check` del arbol commiteado tendria que normalizarlo (quinto patron) o daria DIVERGE entre revisiones correctas, que es el defecto de instrumento ya documentado en §S20.
+
+=== 4. si C2 alcanza a (d) ===
+C2 goberna la proyeccion de BYTES del workflow canonico contra disco (funcion `proyecciones_de_lectura_aparte`).
+`generado_por_sha` en el escritor tras C2=0 (C2 no toca la identidad del generador)
+la fila afirma ademas que la cura (b) no necesita (d) para atribuir el rojo, y C2 es otra puerta: (d) sigue siendo una superficie distinta.
+
+=== 5. superficie que exige (d), contra la poblacion autorizada de esta orden ===
+la linea nueva vive en el meta de `build_phase_briefing.py` (autorizado), pero su contrapartida obligatoria vive en `NORMALIZAR` de scripts/verify_packs_in_committed_tree.py (NO autorizado: la orden nombra cinco guiones y sus tests, y este no es uno de ellos)
+coste medido en packs del plan: 5 lineas nuevas (+1 por pack) y 1 patron nuevo
+salida elegida: (c) requiere otra superficie -> queda abierta con justificacion escrita en la fila

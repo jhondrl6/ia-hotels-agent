@@ -1,0 +1,54 @@
+== 1. CR por archivo tocado (debe ser 0 en todos)
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md   CR=0
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                  CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md    CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md    CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md    CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md    CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md    CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md CR=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md CR=0
+   .opencode/plans/plan_citations_baseline.json                                           CR=0
+   TOTAL CR=0
+
+== 2. Ninguna linea de HEAD desaparecio: cada linea eliminada sigue estando en disco
+   (aunque este reenvuelta); si algo no aparece, es reescritura y va contra REPORTA-NO-REESCRIBE
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md   lineas_HEAD=45  no_estan_en_disco=1
+        FALTA: | Commit, push, write-back y archivado | Cada acción requiere autorización separada. El 2026-09-21 se autorizaron y ejecutaron el commit y el push de 
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                  lineas_HEAD=99  no_estan_en_disco=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md    lineas_HEAD=413  no_estan_en_disco=1
+        FALTA: este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md lineas_HEAD=274  no_estan_en_disco=1
+        FALTA: plan sigue sin autorizar y no se ejecutó al redactarlas.** Los permisos de este plan no amplían ese
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md lineas_HEAD=452  no_estan_en_disco=0
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md    lineas_HEAD=2004  no_estan_en_disco=16
+        FALTA: - **procedencia**: HEAD `1e4b666` · generado `2026-09-28T01:58:02Z`
+        FALTA: > **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `672b39751b1ccb1a20fb
+        FALTA: este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md    lineas_HEAD=1757  no_estan_en_disco=16
+        FALTA: - **procedencia**: HEAD `1e4b666` · generado `2026-09-28T01:58:02Z`
+        FALTA: - 01-plan-maestro.md — 19852 bytes fuera de lo declarado (2, 4)
+        FALTA: > **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `c7f0d96055a2445444a9
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md    lineas_HEAD=1902  no_estan_en_disco=19
+        FALTA: - **procedencia**: HEAD `1e4b666` · generado `2026-09-28T01:58:02Z`
+        FALTA: > **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md` · sha256 `dc323ec36ea30927d473
+        FALTA: este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md    lineas_HEAD=1912  no_estan_en_disco=15
+        FALTA: - **procedencia**: HEAD `1e4b666` · generado `2026-09-28T01:58:02Z`
+        FALTA: > **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md` · sha256 `e44ef715699c6b05bdd0
+        FALTA: este plan no lo está y no se ejecutó**. Fuente única de resultados y estados D1/S13:
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md lineas_HEAD=3708  no_estan_en_disco=26
+        FALTA: - **procedencia**: HEAD `1e4b666` · generado `2026-09-28T01:58:02Z`
+        FALTA: - 01-plan-maestro.md — 20372 bytes fuera de lo declarado (4, 6)
+        FALTA: - 04-contrato-ejecucion.md — 23169 bytes fuera de lo declarado (Dos momentos del cierre, Carga total y frescura del pack, Orden del cierre)
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md lineas_HEAD=950  no_estan_en_disco=1
+        FALTA: contando el backtick como parte del patrón). El verificador acepta las dos, así que **no corta nada**: se
+   .opencode/plans/plan_citations_baseline.json                                           lineas_HEAD=87  no_estan_en_disco=1
+        FALTA:   "created_at": "2026-09-27T16:53:48",
+
+== 3. Nota: el baseline de citas solo movio created_at
+   lineas del diff: 4
+   -  "created_at": "2026-09-27T16:53:48",
+   +  "created_at": "2026-09-28T16:57:37",

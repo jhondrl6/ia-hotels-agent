@@ -1,0 +1,37 @@
+=== REV_INICIO ===
+84c1aca
+=== git status --porcelain -uno | wc -l ===
+12
+=== rutas del directorio de sesion 1 en HEAD (estado b) ===
+0
+=== P1 scripts D1 (ampliado) ===
+scripts/validate_governance_numbers.py:819:            "estado": "trabajo D1 (lint de prosa) — limite declarado de FASE-A",
+scripts/validate_governance_numbers.py:830:            "estado": "fuera del alcance de este plan (maestro §3); D1 decide",
+scripts/validate_governance_numbers.py:839:                     "cubrirlo con el verificador es D1",
+EXIT_P1=0
+=== P2 tests D1 ===
+EXIT_P2=1
+=== P3 comando literal de la orden ===
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:58:K_A3 = "validate_qmind_writeback.py|[12/12]|" + N_WF
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:59:K_A4 = "validate_lesson_capitalization.py|[10/10]|" + N_TPL
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:105:        "objetivo": K_A4 + " (su unico motivo es el denominador: [10/10] vs [10/13])",
+tests/quality_gates/governance_numbers/test_governance_numbers_mutation_por_asercion.py:121:        "objetivo": K_A3 + " — sin marcador de modo completo su [12/12] no resuelve fuente",
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:72:    solo que contra otro denominador. Nota de la promotora: A1 y A4 reclaman `[9/13]` y `[10/13]` porque
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:73:    los ordinales 9 y 10 no se movieron, y A3 pasa a `[17/17]` porque el check promovido entró **al final
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:76:    Lo que esta reescritura no toca: el `[12/12]` que afirma `fixtures/phased_project_executor.md`. Es la
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:82:    assert por_id["A1"]["claimed"] == "check 8" and por_id["A1"]["observed"] == "[9/13]"
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:83:    assert por_id["A2"]["claimed"] == "[9/9]" and por_id["A2"]["observed"] == "[10/13]"
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:84:    assert por_id["A3"]["claimed"] == "[12/12]" and por_id["A3"]["observed"] == "[17/17]"
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:85:    # A4 es PARCIAL: su [7/7] del hook si cuadra, y solo el [10/10] del quick no.
+tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py:86:    assert por_id["A4"]["claimed"] == "[10/10]" and por_id["A4"]["observed"] == "[10/13]"
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:114:    """Un derivado no puede ampliar la poblacion que escanea otro gate ([8/13] del quick).
+EXIT_P3=0
+--- P3 lineas (literal) ---
+13
+=== P3 variante grep sobre disco con --include ===
+17
+=== P4 lectura aparte ===
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:68:            "el workflow canonic debe seguir siendo lectura aparte obligatoria")
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:70:            "el workflow debe encabezar la lectura aparte mientras D3 no lo rebane")
+tests/quality_gates/phase_briefing/test_briefing_se_genera_por_fase.py:99:            "el workflow no puede gobernar la frescura del pack: es lectura aparte, no fuente")
+EXIT_P4=0

@@ -944,6 +944,25 @@ class ValidationRunner:
                 details=issues
             ))
 
+    def _orden_del_modo(self) -> tuple:
+        """`(orden del rapido, orden del completo)` leido del llamador, no de una corrida.
+
+        La barrera `if not self.quick:` esta en `run_all`, no en los metodos: filtrar por numero de
+        linea devolvia cero etiquetas y un rojo falso (medido 2026-09-27 en la primera corrida de la
+        guarda). Es la misma particion que usa `_etiquetas_del_modo`, asi que el denominador que se
+        publica y el que se gobierna salen del mismo lectura.
+        """
+        fuente = Path(__file__).resolve().read_text(encoding="utf-8")
+        cuerpo = fuente.split("    def run_all(self) -> bool:", 1)
+        if len(cuerpo) != 2:
+            return [], []
+        antes, sep, despues = cuerpo[1].partition("        if not self.quick:")
+        if not sep:
+            return [], []
+        invoc = r"(self\._check_[a-z_0-9]+)\(\)"
+        orden_rapido = re.findall(invoc, antes)
+        return orden_rapido, orden_rapido + re.findall(invoc, despues)
+
     def _etiquetas_del_modo(self) -> list:
         """Las etiquetas `(ordinal, total)` que **este archivo** imprime en el modo vigente.
 
@@ -953,27 +972,14 @@ class ValidationRunner:
         verificador que existe para cazar denominadores vencidos — lo que sí quedaba sin gobernar era la
         contradicción entre esos literales y el `TOTAL`, y eso es lo que cierra `_print_summary`.
 
-        El modo se decide por **orden de llamada en `run_all`**, no por posición en el archivo: la
-        barrera `if not self.quick:` está en el llamador (línea ~95) y las etiquetas en los métodos
-        (línea ~118 en adelante). Filtrar por número de línea devolvía cero etiquetas y un rojo falso,
-        medido el 2026-09-27 en la primera corrida de esta guarda.
+        El modo se decide por **orden de llamada en `run_all`**, no por posición en el archivo: ver
+        `_orden_del_modo`.
 
         El patrón se arma por partes: si «print(» apareciera contiguo dentro de esta línea, la lectura de
         `validate_governance_numbers.py` tomaría el propio patrón como un check más del runner.
         """
         fuente = Path(__file__).resolve().read_text(encoding="utf-8")
-
-        # 1. Orden de llamada, partido por la barrera de modo dentro de run_all().
-        cuerpo = fuente.split("    def run_all(self) -> bool:", 1)
-        if len(cuerpo) != 2:
-            return []
-        cuerpo = cuerpo[1]
-        antes, sep, despues = cuerpo.partition("        if not self.quick:")
-        if not sep:
-            return []
-        invoc = r"(self\._check_[a-z_0-9]+)\(\)"
-        orden_rapido = re.findall(invoc, antes)
-        orden_completo = orden_rapido + re.findall(invoc, despues)
+        orden_rapido, orden_completo = self._orden_del_modo()
         vigentes = orden_rapido if self.quick else orden_completo
 
         # 2. Método contenedor de cada etiqueta impresa.
@@ -1000,6 +1006,16 @@ class ValidationRunner:
         print("=" * 60)
         print("VALIDATION SUMMARY")
         print("=" * 60)
+
+        # S21, salida (b) decidida por la propia fila: la cabecera publica a que modo pertenece cada
+        # denominador. Los literales de las etiquetas no se tocan porque de ellos vive el registro de
+        # emisores que lee `validate_governance_numbers.py` (la salida (a) los rompia). Texto en ASCII
+        # como el resto de las lineas impresas de este archivo: la consola bajo cp1252 no traduce.
+        orden_rapido, orden_completo = self._orden_del_modo()
+        rapido, completo = len(orden_rapido), len(orden_completo)
+        print(f"  MODO: {'rapido' if self.quick else 'completo'} - el denominador de las etiquetas "
+              f"impresas es el del modo rapido ({rapido}); el modo completo llega a {completo} y "
+              f"solo sus {completo - rapido} exclusivas se etiquetan con ese numero")
         
         passed_count = sum(1 for r in self.results if r.passed)
         total_count = len(self.results)
@@ -1025,18 +1041,25 @@ class ValidationRunner:
         else:
             print(f"  STATUS: {total_count - passed_count} VALIDATION(S) FAILED")
 
-        # Guarda de coherencia interna (D-a, 2026-09-27): los ordinales que este archivo
-        # imprime son literales, y su TOTAL es dinamico. Sin esta comprobacion, anadir un
-        # check y olvidar de re-etiquetar dejaba al runner contradiciendose a si mismo con
-        # verde. No consume un ordinal a proposito: si lo consumiera, renumerar podria
+        # Guarda de coherencia interna (D-a, 2026-09-27; S21 y su salida (b), 2026-09-28): los
+        # ordinales que este archivo imprime son literales, y su TOTAL es dinamico. Sin esta
+        # comprobacion, anadir un check y olvidar de re-etiquetar dejaba al runner contradiciendose
+        # a si mismo con verde. No consume un ordinal a proposito: si lo consumiera, renumerar podria
         # apagar la propia guarda.
+        #
+        # S21: en el modo completo conviven dos denominadores por diseño (los compartidos del rapido
+        # y los de las exclusivas), asi que la guarda no los iguala: gobierna que no aparezca un
+        # tercero. Antes cortaba solo en rapido (`not self.quick or ...`), que es el hueco que la
+        # fila dejo declarado.
         etiquetas = self._etiquetas_del_modo()
         denominadores = sorted({t for _, t in etiquetas})
         ordinales = [k for k, _ in etiquetas]
+        n_rapido = len(orden_rapido)
+        permitidos = {total_count} if self.quick else {total_count, n_rapido}
         coherente = (len(etiquetas) == total_count
                      and ordinales == list(range(1, total_count + 1))
                      and etiquetas[-1][1] == total_count
-                     and (not self.quick or denominadores == [total_count]))
+                     and set(denominadores) <= permitidos)
         if coherente:
             print(f"  [GUARDA] las {total_count} etiquetas impresas casan con el TOTAL dinamico")
         else:

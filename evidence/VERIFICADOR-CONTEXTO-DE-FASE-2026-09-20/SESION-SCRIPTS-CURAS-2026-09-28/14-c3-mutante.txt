@@ -1,0 +1,30 @@
+=== C3.4 MUTANTE: quitar la cura (volver a la guarda que solo cortaba en rapido) ===
+-- el mutante corre sobre scripts/run_all_validations.py y se restaura por sha256 --
+..F..                                                                    [100%]
+================================== FAILURES ===================================
+________ test_la_guarda_corta_un_denominador_ajeno_en_el_modo_completo ________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-883/test_la_guarda_corta_un_denomi0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000018EB1423390>
+ordenes = (13, 17)
+
+    def test_la_guarda_corta_un_denominador_ajeno_en_el_modo_completo(tmp_path, capsys, ordenes):
+        """El mutante de C3: un [9/12] suelto era verde fuera del rápido antes de esta cura."""
+        _, n_completo = ordenes
+        mod = _runner_copia(tmp_path, "ajeno-completo", mutar=(D9, D9_MUTADO))
+        ok, salida = _summary(mod, False, n_completo, capsys)
+>       assert ok is False, (
+            "la guarda dejó pasar un denominador foráneo en el modo completo: §S21 sigue sin gobernar")
+E       AssertionError: la guarda dejó pasar un denominador foráneo en el modo completo: §S21 sigue sin gobernar
+E       assert True is False
+
+tests\test_run_all_validations_denominador_por_modo.py:123: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_run_all_validations_denominador_por_modo.py::test_la_guarda_corta_un_denominador_ajeno_en_el_modo_completo
+1 failed, 4 passed in 0.65s
+EXIT_MUTANTE=1
+-- restauracion --
+333fcccb1ff39e44a53614610da300d73f7db96e33c278b0ac2fb7fe174614af *scripts/run_all_validations.py
+333fcccb1ff39e44a53614610da300d73f7db96e33c278b0ac2fb7fe174614af *scripts/run_all_validations.py
+.....                                                                    [100%]
+5 passed in 0.49s

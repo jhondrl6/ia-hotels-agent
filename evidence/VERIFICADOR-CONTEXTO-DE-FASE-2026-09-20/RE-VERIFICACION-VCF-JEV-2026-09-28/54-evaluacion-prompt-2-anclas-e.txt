@@ -1,0 +1,25 @@
+=== REPORT_SIN_ESCRITURA: valor (¿ruta o centinela?) ===
+87:REPORT_SIN_ESCRITURA = None
+915:    ap.add_argument("--report", nargs="?", const=REPORT_SIN_ESCRITURA, default=False,
+
+=== extremos reales HOY de las secciones que cita el Paso 0.3 ===
+489:**Estado de la fila: CERRADA por ejecución el 2026-09-27** en su defecto de finales de línea (cinco puertas:
+7:**⟦Rectificado el 2026-09-24 al cerrar FASE-C⟧**: esa frase sigue siendo cierta sobre el **bloque C**
+393:**⟦CURADA el 2026-09-25 en una sesión aparte, con mandato de código del operador⟧.** El disparador de
+413:**⟦Cuarta instancia de la misma familia, medida el 2026-09-27 al ejecutar D-c — NO curada, sigue abierta
+439:**⟦Quinta instancia de la misma puerta, medida el 2026-09-27 al ejecutar el archivado de JEV (paso T3 de la orden
+454:**⟦SEXTA INSTANCIA Y CIERRE POR EJECUCIÓN — medida y curada el 2026-09-27 en la sesión de curas fuera de
+511:**⟦CURADA el 2026-09-25, en la misma sesión que S17 y con el mismo mandato de código⟧.**
+-- S32 termina:
+
+**Qué agrega esta fila a `L-VCF-20` y por qué no es duplicado**: la lección goberna **l
+agrupa commits**; esta fila goberna **el hueco del instrumento** (que el `--check` del esc
+proyecciones, o que el pack deje de publicarlas), que la lección explícitamente no cierr
+tratar toda métrica publicada como fuente, y eso en el guion hoy no lo hace nadie.
+
+
+=== delta exacto de mi nota F4 en dependencias (numstat) ===
+3	1	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+
+=== donde empieza el sub-punto de S17 (la forma minoritaria) ===
+426:Y un defecto segundo del mismo `--fix`, menor pero del mismo estilo de silencio: al reparar, **promueve la

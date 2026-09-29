@@ -1,0 +1,36 @@
+### 0. Estado del arbol al medir
+-- git rev-parse --short HEAD
+84c1aca
+-- git status --porcelain -uno | wc -l   (0 = el arbol versionado esta intacto; ignora no versionados)
+0
+-- git status --porcelain | wc -l   (incluye no versionados: esta propia carpeta de evidencia aparece como 1 linea colapsada)
+1
+-- git status --porcelain (sin -uno, para ver que esa unica linea es la evidencia de esta sesion)
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/
+-- git config --get core.autocrlf
+input
+
+### 1. Instrumento que nombra la fila: git grep -c sobre una revision, patron con backtick (LINEAS, no ocurrencias)
+-- revision HEAD
+   git grep -c  `.opencode/plans/Archives      -> 166 lineas
+   git grep -c  `/.opencode/plans/Archives     -> 29 lineas
+   git grep -c  `.opencode                     -> 564 lineas
+   git grep -c  `/.opencode                    -> 73 lineas
+-- revision 3c2e6a3
+   git grep -c  `.opencode/plans/Archives      -> 147 lineas
+   git grep -c  `/.opencode/plans/Archives     -> 28 lineas
+   git grep -c  `.opencode                     -> 524 lineas
+   git grep -c  `/.opencode                    -> 72 lineas
+
+### 2. Contraste: el 0 falso documentado (patron que empieza por '/' sin el backtick)
+-- git grep -c -F '/.opencode/plans/Archives' HEAD -> 0 lineas
+
+### 3. Ocurrencias por str.count sobre el arbol de trabajo (poblacion: .md versionados)
+MANDATO=167/29 ANCHA=604/73 DECLARADO=518/66 MD=700
+
+### 4. Revision que introdujo la cifra y su par en su propio momento
+3c2e6a3 docs(GOBERNANZA): D-c archiva el plan en Archives/, con D8 re-corrida y D9 verificada por contenido
+-- la linea hoy:
+429:versionado está en **518 contra 66** a favor de la forma sin barra (medido con `git grep -c` sobre `HEAD`,
+-- .md versionados en HEAD: 700
+-- .md en el arbol de 3c2e6a3: 696

@@ -1,0 +1,20 @@
+=== A2. --include ANTES de los no-opciones ===
+fatal: unable to resolve revision: --include=*.py
+
+=== A3. sin --include, con pathspec glob ===
+scripts/validate_governance_numbers.py:819:            "estado": "trabajo D1 (lint de prosa) — limite declarado de FASE-A",
+
+=== E. anclas de C4: validate_opencode_refs.py :189/:198 y ref_target :100-102 ===
+:100  def ref_target(ref: str) -> Path:
+:101      """Resolve a normalized reference against the project root."""
+:102      return PROJECT_ROOT / normalize(ref).lstrip("/")
+:188              if promoted is not None:
+:189                  new_rel = "/" + promoted.relative_to(PROJECT_ROOT).as_posix()
+:190                  text = text.replace(ref, new_rel)
+:197              if len(candidates) == 1:
+:198                  new_rel = "/" + candidates[0].relative_to(PROJECT_ROOT).as_posix()
+:199                  text = text.replace(ref, new_rel)
+
+=== F. existe test_briefing_se_genera_por_fase? ===
+(vacío = no existe con ese nombre exacto)
+HEAD:tests/quality_gates/phase_briefing/test_arneses_resuelven_plan_por_el_escritor.py:95:         "test_briefing_se_genera_por_fase.py")]

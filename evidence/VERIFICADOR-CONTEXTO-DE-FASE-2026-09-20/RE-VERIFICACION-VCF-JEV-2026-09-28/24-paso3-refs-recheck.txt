@@ -1,0 +1,16 @@
+=== 3b. validate_opencode_refs.py SIN --fix (comprobacion de idempotencia tras reparar la nota) ===
+[PASS] OpenCode References: todas las referencias existen
+EXIT_CHECK=0
+
+=== 3c. vuelve el --fix? (debe ser no-op ahora) ===
+[PASS] OpenCode References: todas las referencias existen
+EXIT_FIX2=0
+
+=== 3d. git status --porcelain tras 3b/3c ===
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/

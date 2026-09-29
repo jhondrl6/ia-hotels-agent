@@ -1,0 +1,3 @@
+=== PASO 6: build_phase_briefing.py --check (LISTAR vencidos, sin escribir) ===
+[2] hace falta --plan <nombre|ruta>
+EXIT_CHECK_6=0

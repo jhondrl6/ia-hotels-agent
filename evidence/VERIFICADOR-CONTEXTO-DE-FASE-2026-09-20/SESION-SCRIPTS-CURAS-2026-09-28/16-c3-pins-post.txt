@@ -1,0 +1,22 @@
+=== C3: re-medicion de los pins del Paso 0 tras C1/C4/C3 ===
+-- P1 scripts D1 (criterio C1.1: 3 -> 0) --
+EXIT_P1=1
+-- P2 tests D1 --
+EXIT_P2=1
+-- P3 con el comando literal de la orden (versionado) : 13 al PRE --
+13
+-- P3 sobre el arbol de trabajo completo (incluye los tests nuevos, sin versionar) : 17 al PRE --
+18
+-- P4 lectura aparte : 3 al PRE --
+3
+=== nota: los tests nuevos evitan el literal [N/M] ('[' + '9/13]') para no crear pins
+-- P3 re-medido tras quitar el literal del docstring (17 al PRE sobre arbol de trabajo) --
+17
+-- P3 con el comando literal de la orden (versionado) --
+13
+>> Rectificacion de la causa de la diferencia 13 vs 17 en este crudo: no es trabajo sin versionar.
+>> El pathspec 'tests/**/*.py' de git grep no baja por debajo de tests/<dir>/, asi que deja fuera
+>> los cuatro literales que viven en tests/*.py a nivel de raiz (test_sync_writers_lf_y_fecha_readme.py,
+>> test_validate_lesson_capitalization.py x2, test_verify_packs_in_committed_tree.py). 13 + 4 = 17.
+>> Los dos instrumentos miden la misma cantidad de funciones; lo que cambia es la poblacion del pathspec.
+4

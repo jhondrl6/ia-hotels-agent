@@ -1,0 +1,78 @@
+### A. Filas AC12/AC13/AC14/AC15 del checklist del plan VCF (texto integro)
+LINEA 41: | AC12 | C | umbral con valor, base y acción por debajo, **sobre `confidence` de un `choice` de dos opciones** ⟦E1⟧ | ídem → `threshold` | **VERIFICADO OFFLINE 2026-09-24** (`umbral.campo = confidence`, `value = 0.80`, `basis` nombra el campo y niega `probabilidad_si`, `action_below` = «va a `a-revisar-humano`, no se descarta»). Prueba de que gobierna `confidence` y no la probabilidad: con un emisor de **dos ejes independientes** existen a la vez un candidato con `por_si` 0.90 y `confidence` 0.41 (cae en `a-revisar-humano`) y candidatos con el **mismo** `por_si` en buckets distintos. Conservación: ningún candidato se pierde |
+
+LINEA 42: | AC13 | C | ≥1 test contra corpus real, skip declarado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt` | **VERIFICADO OFFLINE 2026-09-24 — el test CORRIÓ, cero saltos** (`-v -rs`: 4 casos sobre los **2** planes archivados que tienen `00-`, de 27). **Desviación registrada**: el prompt decía `Archives/` y el `archives/` de raíz no contiene planes; el corpus efectivo es `.opencode/plans/Archives/` (skipif sobre el corpus real, no sobre la ruta del prompt — un skip sobre ruta inexistente sería verde vacío, L-HF1) |
+
+LINEA 43: | AC14 | C | mutation check del guard de no-filtrado | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/` | **VERIFICADO OFFLINE 2026-09-24** — símbolo real `triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO`, leido por `guardar_filas_ancladas()` en el momento del filtrado. **VERDE**: 14→14, `removed: []`. **ROJO**: 14→**3**, `removed` = los 11 IDs cuestionados, y el rojo **nombra** al guard mutado (L-V2.1). Disciplina S13: destino por argumento obligatorio (probado por `inspect.signature`), ancla positiva con el **observador de escrituras compartido** y `huellas` (sha256+mtime+tamaño) del expediente de FASE-A intactas; su `resumen.txt` publica el **alcance declarado** del observador |
+
+LINEA 44: | AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6); con proveedor falso el tramo semántico es **`NO-EJERCITADO`, sin simular** ⟦E4⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json` | **⚠️ PARCIAL por diseño del plan, no por ejecucion**: la parte no semantica esta **VERIFICADO OFFLINE** (poblacion leida del JSON en la propia corrida, no pineada —hay test que lo prohíbe—; `35 de 334` IDs juzgados; 10 terminos de la capa fria **con sus 5 ceros**, incluido `verificador mec = 0` que reproduce A5; familias del índice juzgadas `D, DA, L` y **`S` no juzgada**; IDs numéricos = 0 con su método; y el pool **no** sometido a juicio declarado). El tramo semantico: `acceptance = NO-EJERCITADO`, `valor: null`, con el motivo literal y **sin ratio simulada** (hay test que la busca y la niega). **D6 queda dormida** en `dependencias-fases.md` |
+
+### B. coverage.json de FASE-C: aceptabilidad y su motivo
+aceptacion = {"estado": "NO-EJERCITADO", "valor": null, "muestra": null, "metodo": null, "motivo": "no hay proveedor de decisiones activo en este plan (deuda D7): el emisor del juicio es un proveedor FALSO determinista, asi que `propuesto / a-revisar-humano` mide la mecanica del camino y no la pertinencia. Publicar aqui una aceptabilidad seria fabricar el disparador de la deuda D6 (contrato E4)", "deuda_afectada": {"D6": "dormida — se re-evalua al existir proveedor real, no antes", "D7": "activar el proveedor; no bloquea una FASE-C offline"}, "prohibido": "simular la aceptabilidad con el proveedor falso para cerrar AC15 en verde (E4)"}
+umbral     = null
+claves     = ['aceptacion', 'coverage_basis', 'denominador_juicio', 'generated_at', 'head', 'index_status', 'plan', 'tool']
+### C. mutation/ de FASE-C: verde y rojos del guard (AC14)
+corrida.txt
+mutante_M-AC10-guard-aditividad.json
+resumen.txt
+verde_baseline.json
+-- resumen.txt
+AC14 — mutation check del guard de no-filtrado (FASE-C)
+simbolo mutado: triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO (leido por guardar_filas_ancladas)
+alcance del observador de escrituras: proceso actual (pytest): pathlib + builtins.open + os + shutil, incluidas rutas indirectas; NO cubre procesos hijos
+destino declarado por el cierre: evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation
+VERDE  (guard activo): anchored 14->14 removed=[] intentos=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1']
+ROJO   (guard apagado): anchored 14->3 removed=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1'] intentos=['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1']
+lectura: con el guard apagado una fila anclada desaparece de §2; el test de AC10
+  (test_triage_no_elimina_fila_anclada) se pone rojo con el mismo insumo. Eso es lo que
+  prueba que el verde no es un verde por ausencia de oportunidad de borrar.
+emisor de los juicios: proveedor FALSO (falso=True)
+
+
+### D. AC3 del plan JEV: su clausula y su estado declarado
+36:| AC3 | Muestra objetivo de 60–100 pares, humana, saneada, con originales rastreables por sha y partición por plan. Inputs, etiquetas y manifiesto quedan versionados antes de la primera inferencia, incluida conectividad | A/B; `muestra.json`, `etiquetas.json`, `protocolo.json`; productor y checker `scripts/evaluate_jev_pilot.py` previstos |
+-- estado en el README del plan (fila FASE-A)
+3:**Estado: FASE-A EJECUTADA offline el 2026-09-21 (instrumento `scripts/evaluate_jev_pilot.py` + suite auto-verificada en verde; muestra en **BORRADOR**). Sin inferencias ejecutadas. Los artefactos de A quedaron **publicados en `origin/master`** (push `9665c57..51b0793`; 7/7 checks del hook).** Autorizado y hecho: ajustar el plan, commitear/empujar la preparación, instalar el SDK en entorno aislado para una sonda sin red, y ejecutar/commitear/empujar FASE-A offline. Sigue sin autorización: ejecutar FASE-B o posteriores, llamar a APIs de inferencia, write-back a QMind y archivado.
+22:| FASE-A | Muestra humana/saneada, protocolo y checker offline | **EJECITADA offline 2026-09-21**: checker+métricas en verde (AC10); muestra **BORRADOR** con etiquetas y umbrales pendientes de humano (AC3 parcial) |
+53:| P1 | FASE-A: muestra humana/saneada, protocolo y checker **offline** | **Parcialmente hecho**: checker+métricas en verde; muestra **BORRADOR** (4 pares), etiquetas `sin_revisar` y umbrales nulos; **publicado en `origin/master`** (push `9665c57..51b0793`) | Falta: designar revisor humano que etiquete y acordar umbrales del protocolo para congelar. No bloquea B/C para preparar, pero sí para congelar | Ejecución (offline) |
+103:BORRADOR) y FASE-B sigue bloqueada.
+-- AC3 en el checklist de JEV
+11:| AC3 | A/B | `muestra.json`, `etiquetas.json`, `protocolo.json`: sha, revisión humana, splits y commit anterior a inferencias | **PARCIAL (FASE-A 2026-09-21)**: artefactos creados; muestra **BORRADOR** (4 pares, 2 dev/2 eval, 1 excluido), sha+splits verificados por checker; revisión humana `sin_revisar`, umbrales nulos y commit pendientes |
+
+### E. rastro de original_sha256 en la muestra de JEV (lo que AC3 exige)
+-- busqueda del token en todo el plan JEV
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md:135:lecciones finales 2026-09-27)`—, verificado por **descarga + sha256 contra el archivo local** y no 
+-- busqueda en la evidencia de FASE-A de JEV
+BASELINE-TESTS-auditors-v4.71.0.txt
+BASELINE-TESTS-v4.71.0.txt
+EVALUACION-JEV-TYPESAFE-2026-09-21
+evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json
+evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-A/muestra_check.json
+evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-A/selftest.txt
+evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json
+evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/13-revision-post-jev.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-C-ENMIENDAS-2026-09-24/14-quick-post-jev.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/00-verificacion-write-back.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/01-secuencia-archivado.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/02-refs-citas-capitalizacion.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/03-quick-post-archivado.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/04-nota-s17-formas-y-gate.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/05-quick-post-normalizacion-formas.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CIERRE-ORDEN-2026-09-25/T3-ARCHIVADO-JEV-2026-09-27/06-quick-post-s17.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/01-f1-archivado-jev.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/02-f2-piloto-fase-c-vcf.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/03-f3-barrido-parrafo-fuentes.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/04-f3-barrido-parrafo-corpus-completo.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/05-f4-par-de-formas-s17.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/06-f4-par-de-formas.txt
+
+### F. estados B/C/RELEASE del plan JEV (para el corolario PENDIENTE-POR-DISENO)
+3:**Estado: FASE-A EJECUTADA offline el 2026-09-21 (instrumento `scripts/evaluate_jev_pilot.py` + suite auto-verificada en verde; muestra en **BORRADOR**). Sin inferencias ejecutadas. Los artefactos de A quedaron **publi
+23:| FASE-B | Jev/DeepSeek detrás de la costura, SDK y controles probados sin red | **SIN AUTORIZACIÓN PARA EJECUTARLA y sin sus dos bloqueantes humanos resueltos.** ⟦Re-medido el 2026-09-25 por la conciliación fina
+24:| FASE-C | Comparación autorizada y decisión, sin cambios de código | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN (necesita el congelado de B, el preflight de autenticación/cuota y presupuesto escrito) |
+25:| FASE-RELEASE | Revisión de evidencia y cierre documental | PENDIENTE |
+32:| `scripts/triage_lesson_relevance.py` | **existe y está versionada** — es el producto del piloto **FASE-C del hermano**, ejecutado y cerrado el **2026-09-24** con mandato propio; sus 37 rutas propias entraron en `
+55:| P3 | FASE-B: Jev/DeepSeek tras la costura, SDK y controles probados **sin red** | BLOQUEADA (por **P1 humano**, por la **decisión del gap de contrato** de §Dependencia y por **falta de mandato**: esta conciliació
+57:| P5 | FASE-C: comparación autorizada fría/DeepSeek/Jev y decisión, sin cambios de código | BLOQUEADA (por P3, P4 y autorización) | Runner offline verificado; muestra/protocolo versionados; hashes y límites fini
+103:BORRADOR) y FASE-B sigue bloqueada.

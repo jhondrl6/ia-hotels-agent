@@ -1,0 +1,5 @@
+FILA E1/AC12 -> celdas=5
+   [1] ⟦E1⟧ El umbral está aplicado a `confidence` de una pregunta `choice` de dos opciones, su `basis` nombra el campo, y hay prueba de que `probabilidad_si` no gobierna
+   [2] **CUMPLIDO**
+   [3] `informe.json` → `umbral.campo: confidence`, `umbral.basis` (nombra el campo y niega `por_si`), `forma_pregunta.opciones` = 2; `test_triage_pregunta_es_choice_y_no_noul.py` (6 casos) con el caso invertido (`por_si` 0.90 / `confidence` 0.41 → `a-revisar-humano`) y la prueba de que dos candidatos con el **mismo** `por_si` caen en buckets distintos
+

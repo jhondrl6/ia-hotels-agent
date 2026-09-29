@@ -132,9 +132,12 @@ def escribir_baseline(path: Path, plans_dir: Path) -> dict:
         "files": contar_citas(plans_dir.rglob("*.md"), plans_dir),
     }
     path.parent.mkdir(parents=True, exist_ok=True)
+    # S6 de la familia S17 (deuda D-H): sin `newline` Windows traduce los saltos y deja en disco un
+    # CRLF puro sobre un archivo que git almacena en LF, moviendo la poblacion que goberna D-C.
     path.write_text(
         json.dumps(datos, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
         encoding="utf-8",
+        newline="\n",
     )
     return datos
 

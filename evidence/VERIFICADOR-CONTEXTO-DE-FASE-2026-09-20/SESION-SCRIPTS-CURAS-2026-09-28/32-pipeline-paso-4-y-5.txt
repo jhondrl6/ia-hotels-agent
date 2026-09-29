@@ -1,0 +1,45 @@
+############ PIPELINE PASO 4 — build_phase_briefing.py --check (listar vencidos) ############
+[VENCIDO] FASE-A: 1 incidencia(s) — 1 fuente(s) movida(s), 0 proyeccion(es) vencida(s)
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-B: 1 incidencia(s) — 1 fuente(s) movida(s), 0 proyeccion(es) vencida(s)
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-C: 1 incidencia(s) — 1 fuente(s) movida(s), 0 proyeccion(es) vencida(s)
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-D: 1 incidencia(s) — 1 fuente(s) movida(s), 0 proyeccion(es) vencida(s)
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+[VENCIDO] FASE-RELEASE: 1 incidencia(s) — 1 fuente(s) movida(s), 0 proyeccion(es) vencida(s)
+    - SHA-DISTINTO: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+EXIT_CHECK_ANTES_DE_REGEN=1
+
+############ regenerar SOLO los vencidos ############
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+EXIT_GENERAR=0
+-- numstat de los packs (solo los que debian cambiar) --
+164	16	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+162	16	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+167	19	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+163	15	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+171	26	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+-- CR de los cinco packs regenerados (debe ser 0) --
+CR=0 FASE-A.md
+CR=0 FASE-B.md
+CR=0 FASE-C.md
+CR=0 FASE-D.md
+CR=0 FASE-RELEASE.md
+
+############ PIPELINE PASO 5 — build_lesson_index.py (SIEMPRE despues de los packs) ############
+[OK] 340 IDs definidos + 54 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_INDICE=0

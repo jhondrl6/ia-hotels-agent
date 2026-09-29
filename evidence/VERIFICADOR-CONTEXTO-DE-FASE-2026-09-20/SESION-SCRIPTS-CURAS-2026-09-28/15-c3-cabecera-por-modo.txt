@@ -1,0 +1,27 @@
+=== C3.1 el comando de la fila §S21, sobre el archivo vigente (post-cura) ===
+comando: grep -oE 'print\("\[[0-9]+/[0-9]+\]' scripts/run_all_validations.py
+etiquetas=17 orden=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] denominadores=[13, 17] unicos_por_denominador={13: 13, 17: 4}
+contraste_en_proceso=etiquetas=17 orden=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] denominadores=[13, 17] unicos_por_denominador={13: 13, 17: 4}
+los_dos_instrumentos_cuadran=True
+
+=== mismo comando sobre REV_INICIO 84c1aca (pre-cura) ===
+etiquetas=17 orden=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] denominadores=[13, 17] unicos_por_denominador={13: 13, 17: 4}
+contraste_en_proceso=etiquetas=17 orden=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17] denominadores=[13, 17] unicos_por_denominador={13: 13, 17: 4}
+los_dos_instrumentos_cuadran=True
+delta_etiquetas_post_minus_pre=0
+
+La cura no anade ni quita etiquetas: la cabecera nueva no es un literal [N/M] y el registro de emisores que lee `validate_governance_numbers.py` queda intacto.
+
+=== modo rapido (n=13) por la via offline, sin correr ningun check ===
+guarda_coherente=True
+MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 17 y solo sus 4 exclusivas se etiquetan con ese numero
+TOTAL: 13/13 validations passed
+[GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+=== modo completo (n=17) por la via offline, sin correr ningun check ===
+guarda_coherente=True
+MODO: completo - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 17 y solo sus 4 exclusivas se etiquetan con ese numero
+TOTAL: 17/17 validations passed
+[GUARDA] las 17 etiquetas impresas casan con el TOTAL dinamico
+
+Declaracion: el modo completo NO se corrio como corrida real porque invoca la suite de pytest, prohibida en esta orden. Su cabecera y su guarda se imprimen por `_print_summary` con resultados sinteticos, que es el mismo codigo de la corrida verdadera.

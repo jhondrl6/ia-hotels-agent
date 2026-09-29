@@ -427,7 +427,9 @@ Y un defecto segundo del mismo `--fix`, menor pero del mismo estilo de silencio:
 forma minoritaria** de la ruta. Escribió `` `.opencode/plans/Archives/… `` en tres referencias de
 `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` que estaban en `` `.opencode/… ``, cuando el corpus marcado
 versionado está en **518 contra 66** a favor de la forma sin barra (medido con `git grep -c` sobre `HEAD`,
-contando el backtick como parte del patrón). El verificador acepta las dos, así que **no corta nada**: se
+contando el backtick como parte del patrón).
+⟦Nota datada 2026-09-28 — **el par 518/66 no es reproducible con ninguna ancla, con ningún instrumento y ni siquiera en la revisión que lo escribió**, así que se declara aquí con las medidas que sí lo son, cada una con su población y su instrumento. Todo medido sobre el árbol limpio de `84c1aca` (`git status --porcelain -uno` = **0** líneas). **(i) Con el ancla de esta fila**, el literal `` `.opencode/plans/Archives `` sobre el corpus marcado versionado (**700** `.md` de `git ls-files`): **167 contra 29** ocurrencias, o **166 contra 29** líneas con el instrumento que esta fila nombra (`git grep -c -F` sobre `HEAD`). **(ii) Con ancla ancha**, el literal `` `.opencode `` sobre el mismo corpus: **604 contra 73** ocurrencias, **564 contra 73** líneas. **(iii) Con la población ampliada** a todos los ficheros versionados (**2.852**, no solo Markdown): **174 contra 32** con el ancla de la fila y **786 contra 77** con la ancha; sumando los ficheros **sin versionar** del árbol, **180 contra 36** y **799 contra 85**. Ninguna de esas combinaciones da 518/66, y la revisión que firmó esta cifra tampoco: `git log -S '518 contra 66' --oneline -- .opencode/plans` la pone en `3c2e6a3`, y medida **allí** con el instrumento de la fila da **147 contra 28** (ancla de la fila) y **524 contra 72** (ancha). **518 contra 66 queda como antecedente refutado.** Lo que la medición no tumba es la conclusión de la fila: la forma sin barra gana **5,8 a 1** con el ancla de esta fila y **8,3 a 1** con la ancha, así que «el `--fix` promueve la minoritaria» sigue en pie con su dueño. Crudos: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/05-f4-par-de-formas-s17.txt`, su gemelo por ocurrencias `06-f4-par-de-formas.txt`, el contraste de instrumentos `07-f4-divergencia-gitgrep-head-vs-disco.txt` y la tabla de los tres alcances `17-f4-tres-alcances.txt`. **Nota de instrumento**, para no volver a pagar el error de la quinta instancia: `git grep -c` cuenta **líneas**, no ocurrencias, y `git grep -F` con patrón que empieza por `/` sigue dando **0 falso** (medido hoy: `git grep -c -F` sobre el patrón `/.opencode/plans/Archives` = **0** líneas)⟧
+El verificador acepta las dos, así que **no corta nada**: se
 convirtió en una incoherencia de estilo dentro de un documento que usaba una sola forma. Se reescribieron a
 mano las tres a la forma dominante —no hay pelea con la herramienta, porque `--fix` solo toca referencias
 rotas— y quedó declarado aquí en vez de abrir un número nuevo: **S21 a S26 están todos usados en el corpus**
@@ -487,6 +489,79 @@ por bytes, porque re-escribirlo con `write_text` lo pasaría a CRLF por la misma
 **Estado de la fila: CERRADA por ejecución el 2026-09-27** en su defecto de finales de línea (cinco puertas:
 `sync_rule`, `run_regenerate_domain_primer`, `run_status`, y las dos de `validate_opencode_refs.py`), con el
 sub-punto de la forma minoritaria de la ruta **abierto** bajo este mismo dueño.
+
+⟦**Sello 2026-09-28 — C4 de la orden de curas en `scripts/` (sesión 2): el sub-punto de la forma minoritaria
+queda CURADO, y con él la fila queda sin partes abiertas.** Las dos promociones de `fix_broken` en
+`scripts/validate_opencode_refs.py` dejan de anteposer «/» a la ruta promovida: la del `archived_promotion` y
+la del candidato único. `ref_target` no se toca y sigue aceptando las dos formas (`lstrip("/")`), así que la
+cura cambia **lo que se escribe**, no **lo que se resuelve** — medida en el mismo espejo: `ref_target` de la
+ruta con y sin barra dan el mismo `Path` que existe, y la ruta citada sigue estando rota antes del `--fix`,
+que es lo que da oportunidad de promocionar.
+
+Dientes medidos con el escritor **viejo** anclado a una revisión publicada fija, no a HEAD: la batería
+`tests/test_sync_writers_lf_y_fecha_readme.py` corrió el guion vigente y el de `5817edd` sobre el mismo
+plantado, y el control sigue promocionando la forma con barra mientras el vigente escribe la del corpus. La
+batería pasó de **10** a **14** pruebas con las cuatro de este sub-punto (forma mayoritaria, idempotencia de
+la segunda corrida, el control anclado y la aceptación de las dos formas), y el mutante **R2.8** —quitar
+`newline="\n"` de las dos escrituras del guion— sigue tirando **exactamente** las dos pruebas de finales de
+línea de ese guion (`2 failed, 12 passed`), no las cuatro nuevas: el rojo sigue siendo atribuible al parámetro
+y no a la forma. Crudos: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/07-c4-bateria.txt`,
+`08-c4-mutante-r28.txt`, `09-c4-espejo-forma.txt`.
+
+Sobre el baseline: `validate_opencode_refs.py` deja **1** entrada congelada en `.opencode/refs_baseline.txt`
+y **0** con forma de barra inicial — el conteo se lee con `grep -c -v '^#' .opencode/refs_baseline.txt` y el
+de formas con `grep -o -F '|/' .opencode/refs_baseline.txt`, medidos en `10-c4-baseline-refs.txt`. El cambio de
+forma **no mueve entradas**, porque `validate` guarda la referencia extraída (`REF_RE` arranca en `.opencode`,
+la barra nunca entró en la clave). Y sobre el árbol real el guion en modo lectura sigue dando `[PASS]` con
+**exit 0**: no hay referencias que re-promover.
+
+Lo que el sub-punto **no** toca, declarado en la fila y re-confirmado hoy: las ocurrencias con barra que
+quedan en corpus archivado (`Archives/DT4-RESIDUAL-FIXES`, `ASSET-ALIGNMENT-ZIONE-2026-07-23`,
+`DELIVERY-ZIP-SINGLE-WRITE-2026-08-01` y el `README.md` de JEV) son contenido archivado y derivado, no obra del
+`--fix`; reescribirlas sería la reescritura masiva de corpus ajeno que la sexta instancia rechazó. La medida de
+formas de la cuarta instancia sigue valiendo tal como quedó rectificada el 2026-09-28: 518/66 **refutado**, y
+la forma sin barra gana **5,8 a 1** con el ancla de la fila. **Estado de la fila: CERRADA por ejecución en sus
+dos defectos (finales de línea y forma promovida), sin partes abiertas.**⟧
+
+⟦**Sello 2026-09-28 — C7 y C5 de la misma orden (sesión 2): la séptima puerta de la familia y el residuo que
+esta fila heredó.** Nota de procedencia para quien lea el índice: **D-H** y **D-C** son deudas definidas en el
+expediente `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md`
+(§5 y §9), fuera del corpus que recorre `build_lesson_index.py`; al nombrarlas aquí desde una fuente gobernada,
+el índice las proyecta a los cinco packs y las publica como «citadas sin definición» (**52 → 54**, seis
+menciones cada una). Eso es disclosure del instrumento, no un rojo: no se borra la referencia para achicar la
+lista, se deja con su procedencia escrita. **C7 / D-H**: la escritura de `escribir_baseline` en `scripts/validate_plan_citations.py`
+lleva ahora `newline="\n"`. Medido con el propio guion sobre una **ruta externa** (la orden prohíbe probar el
+escritor contra el baseline real, y el guard `test_probar_el_escritor_no_toca_el_baseline_real` lo sostiene por
+huella del archivo versionado): el escritor vigente emite **CR=0, LF=87** y el de `REV_INICIO` (`84c1aca`,
+anclada y no HEAD, verificada con `git show` y ejecutada en scratch) emite **CR=87, LF=87, CRLF=87** sobre la
+misma copia; idénticos salvo CR y la marca `created_at`. Es el **sexto** miembro de la serie (`sync_rule`,
+`run_regenerate_domain_primer`, `run_status`, las dos de `validate_opencode_refs.py`, esta). Crudos:
+`22-c7-pytest.txt`, `23-c7-escritor-baseline.txt`.
+
+**C5 / D-C**: el residuo que la sexta instancia dejó declarado —**213** archivos bajo `.opencode` en `i/lf`
+contra `w/crlf`— quedó normalizado por **escritor**, no por mano. La población se calculó con el comando
+canónico de la casa y se re-midió hoy: **213**, sin deriva contra la cifra de la orden, reparto **178 `md` + 34
+`json` + 1 `txt`** leído con `-z` y `core.quotePath=false` (las dos rutas `md"` del crudo 28- son los nombres
+con escapes octales, que con esa lectura dejan de estar entrecomillados y el mismo conteo sale **213** por las
+dos vías). El escritor **no normaliza nada que no case con su blob**: identidad `POST == git cat-file blob
+HEAD:<ruta>` exigida antes de escribir y re-verificada después sobre las **213** rutas (**213 iguales, 0
+distintos, 0 sin blob**), no sobre la muestra de tres que citaba la orden. POST con el mismo comando del PRE:
+**0**. Mutante del criterio 5: una ruta fuera de la población se rechaza con exit propio (**4**) y el fixture
+quedó intacto en CRLF.
+
+Lo que la normalización reveló y se declara, no se esconde: al escribir las 213 rutas, `git status
+--porcelain -uno` saltó de **18** a **231** líneas mientras `git diff --name-only` seguía dando **18** y el
+`numstat` de esas rutas estaba **vacío**. Es cache de stat del índice, no contenido: con `core.autocrlf` del
+ámbito de sistema en `true` y del repositorio en `input`, la vía «segura» de `git update-index --refresh`
+rechaza el round-trip y avisa `needs update`; `--really-refresh` sobre las **213 rutas del informe del
+escritor** (no sobre el resto del árbol) las sacó de `git status` y devolvió la población a **18** líneas.
+`git diff --cached` sigue en **0**: el refresco tocó stat, no stapeó contenido. Crudos: `24-c5-pre-poblacion.txt`,
+`26-c5-fix-y-post.txt`, `27-c5-post-y-refresco.txt`, `28-c5-identidad-post.txt`, `29-c5-cierre.txt`. Instrumentos
+cazados mientras se medía, por la misma familia de siempre: `git ls-files --eol -z` parte la cabecera
+`i/lf  w/crlf  attr/` como **un** campo separado por espacios (comparar `cols[0] == "i/lf"` sobre la cabecera
+entera devolvía **0** rutas), y una ruta con escapes octales no resuelve en disco tal como la imprime el
+`ls-files` con quoting por defecto (**OSError 22**). Ninguna de las dos es un rojo del árbol: son dos rojos del
+instrumento.⟧
 
 ### S18 — `readme_version_header` no goberna la fecha legible de `README.md` (nueva, 2026-09-25)
 
@@ -598,6 +673,24 @@ verdeaba con los packs vencidos; eso sigue siendo cierto y por lo que existe la 
 por D-a. Lo que cambia es el estado del libro: **(c) deja de ser deuda**. La **(d)**, `generado_por_sha`, sigue
 siendo una cuarta opción medida y no aplicada, con su coste y su dueño en el operador — cerrar (c) no la
 absorbe ni la descarta⟧
+
+⟦**Sello 2026-09-28 — cambio C6 de la orden de curas en `scripts/` (sesión 2).** Se re-mide (d) y
+queda **ABIERTA por la salida (c)**: requiere una superficie que esta orden no autoriza, y aquí queda
+la justificación. Medido sobre `84c1aca` más la cura C2, con crudo en
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/21-c6-s19d-coste-medido.txt`:
+el verificador del árbol commiteado normaliza **cuatro** tokens inestables y **ninguno** cubre un
+futuro `generado_por_sha`; el sha del propio escritor **sí** se mueve entre commits — cuatro
+revisiones que lo tocaron más el árbol de trabajo dan **4 valores distintos sobre 5 mediciones** —,
+así que publicarlo en el pack sin añadir el quinto patrón produciría `DIVERGE` entre revisiones
+correctas: el mismo defecto de instrumento que **S20** documentó para el clon. El coste de la línea
+nueva es **+1 por pack** (cinco packs en este plan) **más** ese patrón en
+`scripts/verify_packs_in_committed_tree.py`, guion que la orden no nombra entre los cinco autorizados.
+No la cubre tampoco la cura **C2** de esta misma tanda: gobernar la proyección de bytes del workflow
+canónico no casa la identidad del generador, y la fila ya había medido que la cura (b) no necesita
+(d) para atribuir el rojo. Dueño y disparador no cambian. Una nota de instrumento de esta medición:
+el primer barrido de «¿está la clave?» se hizo por substring sobre el pack y dio **SI falso** en los
+cinco — la prosa de esta misma fila viaja al pack y menciona `generado_por_sha` como texto. La clave
+se lee en el bloque `BRIEFING-META`, no en el cuerpo; releída así, la clave no está publicada.⟧
 
 ### S20 — el clon del verificador hereda `autocrlf` de sistema y su `--check` de packs da rojo falso (nueva, 2026-09-26)
 
@@ -752,6 +845,35 @@ los literales sería justo la cura dinámica que cegó al verificador.
   misma trampa que ya descartó la cura dinámica; (b) publicar en la cabecera de la corrida que el denominador
   impreso es **del modo rápido** y que el completo llega a 17, que es una línea y no toca ningún literal; (c)
   dejarlo y confiar en esta fila. La lectura recomendada es **(b)**.
+
+⟦**Sello 2026-09-28 — C3 de la orden de curas en `scripts/` (sesión 2): CURADA con la salida (b), que es la
+que esta misma fila recomendaba.** La cabecera de `_print_summary` publica ahora el modo de la corrida y a
+qué modo pertenece el denominador impreso: «MODO: rapido — el denominador de las etiquetas impresas es el del
+modo rápido (13); el modo completo llega a 17 y solo sus 4 exclusivas se etiquetan con ese numero». Los
+literales de las etiquetas no se tocaron: de ellos vive el registro de emisores que lee
+`validate_governance_numbers.py`, y la salida (a) lo cegaba (es la trampa que ya descartó la cura dinámica).
+La lectura de la cabecera sale en ASCII, como el resto de las líneas impresas del runner, por la consola
+cp1252.
+
+Además, la **[GUARDA] corta también fuera del rápido**, que era el hueco que la fila dejó declarado: antes su
+uniformidad dependía de `not self.quick`, así que en el modo completo un tercer denominador pasaba verde. Ahora
+la guarda exige que los denominadores impresos estén dentro del par declarado por el modo (el del rápido y el
+del total), con `len(orden_rapido)` leído del propio llamador por `_orden_del_modo()`, la misma lectura que
+usa las etiquetas — así el denominador publicado y el gobernado salen de una sola lectura y no de dos cuentas
+que puedan separarse.
+
+Dientes y cifras medidas: con un denominador foráneo reintroducido en una etiqueta del rápido, la guarda cortó
+en **ambos** modos (rojo documentado en la batería nueva); y apagando la comparación —volviendo la condición
+a su forma anterior— el mismo escenario del modo completo **volvió a verde**, que es exactamente el rojo falso
+que esta fila registró. La batería `tests/test_run_all_validations_denominador_por_modo.py` (cinco pruebas, con
+los denominadores leídos del runner y no pineados) quedó en verde, el quick en **13/13** con `[GUARDA]` verde,
+y `validate_governance_numbers.py --report` en **EXIT=0** después del cambio: el lector sigue resolviendo 13
+del rápido y 17 del completo, y el número de etiquetas del archivo no cambió (**17**, igual que en `REV_INICIO`)
+porque la cabecera nueva no es una etiqueta. El modo completo **no se corrió como corrida real**: invoca la
+suite de pytest, prohibida en esta orden; su cabecera y su guarda se imprimieron por la vía offline. Crudos:
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/11-c3-quick-post.txt`,
+`15-c3-cabecera-por-modo.txt`, `14-c3-mutante.txt`. **Estado de la fila: CERRADA por ejecución en su salida (b),
+con el hueco de la guarda del completo cerrado en la misma tanda.**⟧
 
 ### S29 — el verificador de capitalización excluye `Archives/` por estructura, y este `00-` se quedó sin gate (nueva, 2026-09-27)
 
@@ -1026,6 +1148,33 @@ commits sobre derivados. La diferencia entre aquella vez y esta es solo el instr
 agrupa commits**; esta fila goberna **el hueco del instrumento** (que el `--check` del escritor no mire las
 proyecciones, o que el pack deje de publicarlas), que la lección explícitamente no cierra —su «INCLUIR» pide
 tratar toda métrica publicada como fuente, y eso en el guion hoy no lo hace nadie.
+
+⟦**Sello 2026-09-28 — C2 de la orden de curas en `scripts/` (sesión 2): CURADA con la salida (a), la que
+la fila dejaba medida y no aplicada.** El `--check` de `scripts/build_phase_briefing.py` contrasta ahora la
+proyección publicada de bytes **y** de tokens derivados del workflow canónico contra el archivo real en
+disco; la puerta es `proyecciones_de_lectura_aparte`, llamada desde `verificar` en el mismo recorrido que ya
+miraba las shas. El workflow **no** entra en `sources[]` (AC17/D3 intacto: `test_briefing_se_genera_por_fase`
+pasa sin cambios y sigue afirmando que el workflow es lectura aparte, no fuente) y el tamaño **no** deja de
+publicarse: la salida (b) quedó rechazada porque toca lo que AC17/D3 decidió a propósito.
+
+Dientes medidos. Con el workflow aumentado en **43** bytes y los packs **sin** regenerar, el `--check` de
+los cinco packs del plan salió `EXIT=1` nombrando la proyección vencida y sus dos números
+(`publicados 112986 bytes / 28246 tokens; en árbol 113049 / 28262`) — el rojo salió en el instrumento de
+quien edita, que es lo que la fila pedía; al restaurar el archivo por `sha256` (idéntico) el mismo comando
+volvió a `EXIT=0`. Crudo: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/17-c2-check-y-mutante.txt`.
+Aparte, la batería `tests/quality_gates/phase_briefing/test_briefing_proyeccion_workflow_gobernada.py`
+(seis pruebas sobre el escritor real con un plan plantado en temporal) afirma el verde, el rojo, el
+`silent drop`, que `docs/CONTRIBUTING.md` **no** entra en el contraste por bytes, y —mutante del control—
+que apagando la comparación el mismo escenario vuelve a verde falso: `EXIT=1` con la cura, `EXIT=0` sin
+ella, `EXIT=1` de nuevo al encenderla. La selección completa de `phase_briefing` quedó en **57 passed**
+(51 preexistentes + 6) con el quick en **13/13**.
+
+Lo que esta cura **no** cierra: la fila sigue publicando el tamaño de un archivo que no está entre sus
+fuentes, y ahora se corta; pero el hueco general —«un derivado publica datos de un archivo que no declaró
+como fuente», la otra mitad de `L-VCF-20`— sigue sin gobernar a los demás documentos proyectados, y por eso
+el criterio 5 de la orden dejó fuera `docs/CONTRIBUTING.md`: su cifra es un reclamo de tamaño publicado como
+texto, no una proyección casable contra disco desde este guion. **Estado de la fila: CERRADA por ejecución
+en el hueco del instrumento (salida a), con el límite de alcance declarado arriba.**⟧
 
 ## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)
 

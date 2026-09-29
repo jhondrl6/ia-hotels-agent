@@ -1,0 +1,18 @@
+############ PIPELINE PASO 3 — validate_plan_citations.py --update-baseline ############
+-- estado EOL del baseline ANTES --
+i/lf    w/lf    attr/                 	.opencode/plans/plan_citations_baseline.json
+CR_antes=0  tam=6522
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT_UPDATE_BASELINE=0
+-- estado EOL DESPUES (la cura C7 debe dejar CR=0) --
+i/lf    w/lf    attr/                 	.opencode/plans/plan_citations_baseline.json
+CR_despues=0  tam=6522
+-- numstat del baseline y lineas cambiadas (debe ser solo created_at) --
+1	1	.opencode/plans/plan_citations_baseline.json
+-  "created_at": "2026-09-27T16:53:48",
++  "created_at": "2026-09-28T19:59:13",
+-- check del citador con su propio exit --
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+EXIT_CHECK_CITAS=0
+-- re-contar la poblacion D-C con el comando del PRE (debe seguir en 0) --
+0

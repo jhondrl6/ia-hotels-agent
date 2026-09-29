@@ -1,0 +1,42 @@
+=== EOL del test nuevo ===
+CR=0  lineas=76
+=== test nuevo verde (criterio 4) ===
+EXIT_PYTEST_VERDE=0
+.....                                                                    [100%]
+5 passed in 0.43s
+=== C1.3 MUTANTE: reintroducir Â«D1 decideÂ» en la cadena de la familia (ii) ===
+-- el grep de la orden sobre el mutante (debe volver a 3) --
+scripts/validate_governance_numbers.py:832:            "estado": "fuera del alcance de este plan (maestro Â§3); D1 decide; Â§13 de "
+EXIT_GREP_MUTANTE=0
+-- pytest sobre el mutante --
+F....                                                                    [100%]
+================================== FAILURES ===================================
+___________________ test_ningun_estado_delega_en_la_fila_d1 ___________________
+
+estados = {'conteos-fuera-de-los-documentos-de-gobierno': 'fuera del alcance de este plan (maestro §3); D1 decide; §13 de BLOQUE...RRADA por §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md en un alcance que no incluye el lint de prosa'}
+
+    def test_ningun_estado_delega_en_la_fila_d1(estados):
+        """El mutante de C1 cae aqui: «D1 decide» vuelve a ser un puntero vencido, no un dueno."""
+        for familia, estado in estados.items():
+>           assert not PUNTERO_D1_RE.search(estado), f"{familia} delega su estado en D1: {estado}"
+E           AssertionError: conteos-fuera-de-los-documentos-de-gobierno delega su estado en D1: fuera del alcance de este plan (maestro §3); D1 decide; §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 en un alcance que no cubre los conteos fuera de los dos documentos de gobierno
+E           assert not <re.Match object; span=(45, 54), match='D1 decide'>
+E            +  where <re.Match object; span=(45, 54), match='D1 decide'> = <built-in method search of re.Pattern object at 0x000001DA5F3EB100>('fuera del alcance de este plan (maestro §3); D1 decide; §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 en un alcance que no cubre los conteos fuera de los dos documentos de gobierno')
+E            +    where <built-in method search of re.Pattern object at 0x000001DA5F3EB100> = re.compile('D1 (decide|es)|es D1|trabajo D1').search
+
+tests\quality_gates\governance_numbers\test_governance_numbers_estados_sin_puntero_d1.py:51: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py::test_ningun_estado_delega_en_la_fila_d1
+1 failed, 4 passed in 0.62s
+EXIT_PYTEST_MUTANTE=1
+FAILED tests/quality_gates/governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py::test_ningun_estado_delega_en_la_fila_d1
+1 failed, 4 passed in 0.59s
+-- restauracion --
+=== restauracion verificada por sha256 ===
+antes: 13772abbedf62c2a741be5fff707c1b5b6eaac6ccc968da4671f470972c3a642 *scripts/validate_governance_numbers.py
+13772abbedf62c2a741be5fff707c1b5b6eaac6ccc968da4671f470972c3a642 *scripts/validate_governance_numbers.py
+=== verde tras restaurar ===
+EXIT_GREP_POST_RESTORE=1
+EXIT_BATERIA=0
+............................                                             [100%]
+28 passed in 18.15s

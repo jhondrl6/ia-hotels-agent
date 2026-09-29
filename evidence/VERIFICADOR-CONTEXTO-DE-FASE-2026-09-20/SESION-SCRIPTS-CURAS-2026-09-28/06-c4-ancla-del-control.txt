@@ -1,0 +1,15 @@
+=== 5817edd: las dos lineas new_rel (control de forma) ===
+189:                new_rel = "/" + promoted.relative_to(PROJECT_ROOT).as_posix()
+198:                new_rel = "/" + candidates[0].relative_to(PROJECT_ROOT).as_posix()
+=== 5817edd es ancestro de HEAD? ===
+SI-ANCESTRO
+=== 5817edd esta en origin/master? ===
+  origin/HEAD -> origin/master
+  origin/master
+=== HEAD vs origin ===
+84c1aca
+84c1aca
+=== commits locales sin empujar ===
+=== REV_INICIO (84c1aca) tiene la forma con barra? ===
+189:                new_rel = "/" + promoted.relative_to(PROJECT_ROOT).as_posix()
+198:                new_rel = "/" + candidates[0].relative_to(PROJECT_ROOT).as_posix()

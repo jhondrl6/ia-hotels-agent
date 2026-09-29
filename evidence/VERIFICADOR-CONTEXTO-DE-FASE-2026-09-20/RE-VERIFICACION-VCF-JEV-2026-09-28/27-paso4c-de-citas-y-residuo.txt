@@ -1,0 +1,30 @@
+=== PASO 4c: la poblacion de residuo CRLF antes y despues de mi corrida del escritor ===
+-- comando canonico de la fila S17:
+   git ls-files --eol .opencode | awk "\$1==\"i/lf\" && \$2==\"w/crlf\"" | wc -l
+214
+-- desglose por extension:
+     35 json
+    176 md
+      2 md"
+      1 txt
+-- esta el baseline de citas dentro?
+1
+
+=== PASO 4d: check del citador con su PROPIO exit (sin tuberia que se coma el $?) ===
+EXIT_CHECK_REAL=0
+[OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+
+=== PASO 4e: que cambio de verdad en el baseline (diff) ===
+warning: in the working copy of '.opencode/plans/plan_citations_baseline.json', CRLF will be replaced by LF the next time Git touches it
+diff --git a/.opencode/plans/plan_citations_baseline.json b/.opencode/plans/plan_citations_baseline.json
+index 2e52d16..ddc71a9 100644
+--- a/.opencode/plans/plan_citations_baseline.json
++++ b/.opencode/plans/plan_citations_baseline.json
+@@ -1,6 +1,6 @@
+ {
+   "comando_de_medicion": "grep -rEoh \"[A-Za-z0-9_/]+\\\\.py:[0-9]+\" .opencode/plans --include=*.md | wc -l",
+-  "created_at": "2026-09-27T16:53:48",
++  "created_at": "2026-09-28T16:57:37",
+   "files": {
+     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md": 11,
+     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md": 3,

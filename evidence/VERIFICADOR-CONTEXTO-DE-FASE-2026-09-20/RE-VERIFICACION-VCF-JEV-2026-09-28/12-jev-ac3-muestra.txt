@@ -1,0 +1,52 @@
+### JEV AC3: rastro de sha en la muestra versionada
+
+-- evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json
+   versionado en HEAD: SI
+   claves: ['corpus_source', 'counts', 'exclusions', 'pairs', 'review', 'schema', 'status', 'temporal_cut']
+   menciones de 'sha' en el JSON: 8
+   menciones de 'sha256' en el JSON: 8
+   menciones de 'original_sha256' en el JSON: 4
+   menciones de 'fuente' en el JSON: 0
+   menciones de 'ruta_original' en el JSON: 0
+   elementos de primer nivel: 8
+
+-- evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json
+   versionado en HEAD: SI
+   claves: ['labels', 'review_status', 'schema']
+   menciones de 'sha' en el JSON: 0
+   menciones de 'sha256' en el JSON: 0
+   menciones de 'original_sha256' en el JSON: 0
+   menciones de 'fuente' en el JSON: 0
+   menciones de 'ruta_original' en el JSON: 0
+   elementos de primer nivel: 3
+
+-- evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json
+   versionado en HEAD: SI
+   claves: ['criterios_adopcion', 'limites_gasto', 'modelos', 'nota', 'parametros', 'politica_cache', 'reglas_recuperacion', 'rubrica', 'schema', 'splits', 'status']
+   menciones de 'sha' en el JSON: 0
+   menciones de 'sha256' en el JSON: 0
+   menciones de 'original_sha256' en el JSON: 0
+   menciones de 'fuente' en el JSON: 0
+   menciones de 'ruta_original' en el JSON: 0
+   elementos de primer nivel: 11
+
+-- evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-A/muestra_check.json
+   versionado en HEAD: SI
+   claves: ['check_status', 'counts', 'findings', 'muestra_status']
+   menciones de 'sha' en el JSON: 1
+   menciones de 'sha256' en el JSON: 0
+   menciones de 'original_sha256' en el JSON: 0
+   menciones de 'fuente' en el JSON: 0
+   menciones de 'ruta_original' en el JSON: 0
+   elementos de primer nivel: 4
+
+### Busqueda del token original_sha256 en todo el repo versionado
+   archivos con >=1 linea que lo contienen: 2
+   HEAD:evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json:4
+   HEAD:scripts/evaluate_jev_pilot.py:1
+
+### Que exige AC3 (texto integro de la clausula)
+   | AC3 | Muestra objetivo de 60–100 pares, humana, saneada, con originales rastreables por sha y partición por plan. Inputs, etiquetas y manifiesto quedan versionados antes de la primera inferencia, incluida conectividad | A/B; `muestra.json`, `etiquetas.json`, `protocolo.json`; productor y checker `scripts/evaluate_jev_pilot.py` previstos |
+
+### Estado declarado de la muestra (BORRADOR) en el manifiesto/etiquetas
+   evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json -> {"schema": "jev-pilot-etiquetas/v1", "review_status": "sin_revisar", "labels": [{"pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1", "label": null, "importance": null, "reviewer": null, "reviewed_at": null}, {"pair_id": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2", "label": null, "importance": null, "reviewer": null, "reviewed_at": null}, {"pair_id": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2", "label": null, "importance": null, "reviewer": null, "reviewed_at": null}, {"pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4", "label": null, "importance": null, "reviewer": null, "reviewed_at": null}]}

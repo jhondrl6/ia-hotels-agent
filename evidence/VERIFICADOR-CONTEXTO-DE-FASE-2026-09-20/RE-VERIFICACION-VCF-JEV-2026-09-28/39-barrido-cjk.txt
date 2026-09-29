@@ -1,0 +1,3 @@
+== Barrido de caracteres CJK (los que este teclado/edicion puede injertar por error)
+expediente tras la correccion: 0
+fuentes de los planes: 0

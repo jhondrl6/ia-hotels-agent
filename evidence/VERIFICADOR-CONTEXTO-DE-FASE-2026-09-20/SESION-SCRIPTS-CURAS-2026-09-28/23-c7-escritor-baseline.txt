@@ -1,0 +1,22 @@
+=== C7.1 escritor VIGENTE (con la cura) sobre ruta externa ===
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+bytes=6522  CR=0  LF=87  CRLF=0  sha=b1e67d972cdce41e
+comando de la casa para el conteo de CR: tr -cd '\r' | wc -c
+
+=== C7.2 control ANCLADO a 84c1aca: escritor viejo sobre la MISMA copia ===
+Baseline fijado: 79 archivos, 743 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+bytes=6609  CR=87  LF=87  CRLF=87  sha=e35463d09a5a8b7f
+
+=== C7.3 identidades ===
+created_at_vigente=2026-09-28T19:42:09  created_at_control=2026-09-28T19:42:09
+identico_salvo_CR_y_marca_por_bytes: True
+identico_bruto_crudo: False   (False esperado: uno emite LF puro y el otro CRLF puro, y sus marcas de tiempo pueden no coincidir)
+identico_por_dict_sin_created_at: True
+crlf_puro_en_el_control: True
+lf_puro_en_la_cura: True
+
+Lectura: la unica diferencia entre los dos escritores es el parametro `newline`; la marca
+`created_at` si cambia entre corridas (segundos de diferencia), por eso la identidad se
+afirma normalizandola por bytes. Con `lf_puro_en_la_cura` y `crlf_puro_en_el_control` en
+True, el rojo del control y el verde de la cura son atribuibles al cambio de C7 y no a la
+maquina.

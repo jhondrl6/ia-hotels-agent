@@ -1,0 +1,12 @@
+=== C5: el refresco de stat no stapeo contenido (diff --cached debe seguir vacio) ===
+0
+=== HEAD sigue en REV_INICIO y nada commiteado ===
+84c1aca
+=== residuo .opencode con el comando canonico ===
+0
+=== estado eol de los cinco scripts tocados (i/lf manda, w/* es cache) ===
+i/lf    w/lf    attr/                 	scripts/build_phase_briefing.py
+i/lf    w/lf    attr/                 	scripts/run_all_validations.py
+i/lf    w/crlf  attr/                 	scripts/validate_governance_numbers.py
+i/lf    w/lf    attr/                 	scripts/validate_opencode_refs.py
+i/lf    w/crlf  attr/                 	scripts/validate_plan_citations.py

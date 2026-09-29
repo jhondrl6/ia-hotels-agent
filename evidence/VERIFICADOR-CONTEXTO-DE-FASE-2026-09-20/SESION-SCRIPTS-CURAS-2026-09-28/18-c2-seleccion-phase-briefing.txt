@@ -1,0 +1,4 @@
+=== C2.3 la seleccion phase_briefing (incluye test_briefing_se_genera_por_fase, sin cambios) ===
+...................................................                      [100%]
+51 passed in 3.51s
+EXIT_SELECCION=0

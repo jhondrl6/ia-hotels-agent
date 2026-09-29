@@ -1,0 +1,17 @@
+############ PIPELINE PASO 1 — sellos fechados en las filas curadas (SOLO esas filas) ############
+145	1	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+5
+
+############ PIPELINE PASO 2 — validate_opencode_refs.py --fix ############
+[PASS] OpenCode References: todas las referencias existen
+EXIT_REFS_FIX=0
+-- re-check en modo lectura --
+[PASS] OpenCode References: todas las referencias existen
+EXIT_REFS_RECHECK=0
+-- escritores LF del guion: criterio 3 coincidencias --
+210:            # newline="\n": sin esto Windows traduce \n a \r\n y deja en disco CRLF sobre
+213:            md.write_text(text, encoding="utf-8", newline="\n")
+253:        BASELINE_FILE.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+3
+-- git status tras el paso 2 --
+18

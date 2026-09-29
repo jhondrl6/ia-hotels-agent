@@ -1,0 +1,42 @@
+rutas_normalizadas_por_el_escritor=213
+git_status_uno_ANTES_del_refresco=18
+git_diff_name_only_ANTES=18
+update-index_really-refresh_EXIT=1
+stdout=.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md: needs update
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md: needs update
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md: needs update
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md: needs update
+.opencode/plans
+stderr=(vacio)
+git_status_uno_DESPUES_del_refresco=18
+git_diff_name_only_DESPUES=18
+
+=== la poblacion que queda en git status, con su explicacion ===
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+  ANOTACION O PACK DE LA SESION 1        .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+  FILLA SELLADA (C6)                     .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+  BASELINE DE CITAS (paso 3 del pipeline) .opencode/plans/plan_citations_baseline.json
+  SCRIPT (C1, C2, C3, C4, C7)            scripts/build_phase_briefing.py
+  SCRIPT (C1, C2, C3, C4, C7)            scripts/run_all_validations.py
+  SCRIPT (C1, C2, C3, C4, C7)            scripts/validate_governance_numbers.py
+  SCRIPT (C1, C2, C3, C4, C7)            scripts/validate_opencode_refs.py
+  SCRIPT (C1, C2, C3, C4, C7)            scripts/validate_plan_citations.py
+  TEST (baterias de la orden)            tests/test_sync_writers_lf_y_fecha_readme.py
+
+=== C5.3 POST del residuo con el MISMO comando del PRE ===
+comando: git ls-files --eol .opencode | awk '$1=="i/lf" && $2=="w/crlf"' | wc -l
+rc=0 stderr=(vacio)
+residuo_DESPUES=0
+criterio_3_cumplido=True
+
+=== C5.4 identidad: ningun contenido de la poblacion difiere de HEAD ===
+rutas_de_la_poblacion_que_aparecen_en_git_status=0
+(cero es el resultado esperado: normalizar EOL no cambia el blob; si alguna aparece, esa ruta tiene contenido nuevo y habria que declararla aparte)

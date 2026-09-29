@@ -1,0 +1,14 @@
+PRE: status=SIN-HALLAZGOS families=4 poblacion={"aserciones_de_hallazgo": 0, "clase_fallo_de_lectura": 0, "clase_historica_congelada": 8, "clase_no_resuelta": 0, "clase_viva_con_hallazgo": 0, "clase_viva_correcta": 11, "instancias_totales": 19} quick_total=13 hook_total=7 instancias=19
+  familias=['prosa-de-conteo-sin-patron', 'conteos-fuera-de-los-documentos-de-gobierno', 'pins-de-conteo-en-tests', 'fuentes-dinamicas-que-no-sean-etiqueta-impresa']
+POST: status=SIN-HALLAZGOS families=4 poblacion={"aserciones_de_hallazgo": 0, "clase_fallo_de_lectura": 0, "clase_historica_congelada": 8, "clase_no_resuelta": 0, "clase_viva_con_hallazgo": 0, "clase_viva_correcta": 11, "instancias_totales": 19} quick_total=13 hook_total=7 instancias=19
+  familias=['prosa-de-conteo-sin-patron', 'conteos-fuera-de-los-documentos-de-gobierno', 'pins-de-conteo-en-tests', 'fuentes-dinamicas-que-no-sean-etiqueta-impresa']
+POBLACION_Y_FAMILIAS_IDENTICAS: True
+estado[1] PRE =trabajo D1 (lint de prosa) — limite declarado de FASE-A
+estado[1] POST=limite permanente de este verificador (no hay lint de prosa); la fila D1 quedo CERRADA por §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md en un alcance que no incluye el lint de prosa
+estado[2] PRE =fuera del alcance de este plan (maestro §3); D1 decide
+estado[2] POST=fuera del alcance de este plan (maestro §3); §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 en un alcance que no cubre los conteos fuera de los dos documentos de gobierno
+estado[3] PRE =barrido por AC5/AC16 de esta fase (quien afirma el 11 y el 7); cubrirlo con el verificador es D1
+estado[3] POST=barrido por AC5/AC16 de esta fase (quien afirma el 11 y el 7); §13 de BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md cerro la fila D1 en un alcance que no cubre los pins de conteo en tests/
+estado[4] PRE =limite permanente de este verificador (solo contrasta conteos de checks)
+estado[4] POST=limite permanente de este verificador (solo contrasta conteos de checks)
+estados que cambiaron: 3

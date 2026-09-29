@@ -1,0 +1,14 @@
+=== C5.4 dry-run del escritor (no escribe nada) ===
+[DRY-RUN] poblacion=213 · normalizados=213 · rechazados_identidad=0 · ya_lf=0 · rechazados_fuera_de_poblacion=0
+[informe] evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/25b-c5-informe-dry-run.json
+EXIT_DRY_RUN=0
+-- git status --porcelain -uno tras el dry-run (18 antes y despues) --
+18
+-- CR total de la poblacion tras el dry-run (debe seguir siendo residuo) --
+rutas_con_residuo= 213
+archivos_con_CR= 213
+=== C5.5 MUTANTE: ruta fuera de la poblacion ===
+[RECHAZADO-FUERA-DE-POBLACION] 1 ruta(s) no estan en la poblacion residuo; el escritor no normaliza archivo fuera de ella:
+    - evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/fixture-fuera-de-poblacion.md
+EXIT_MUTANTE=4
+CR_del_fixture_tras_mutante= 2

@@ -1,0 +1,101 @@
+=== C4.3 MUTANTE R2.8 (retirar newline= de las dos escrituras del guion de refs) ===
+-- nota de instrumento: el intento por heredoc no caso el patron ('\n' se comio el backslash) y no mutateo el archivo; se verifico sha identico y se mut6 con Edit. La cura de la casa es contar con grep -o -F.
+-- coincidencias newline en el mutante --
+1
+...FF.........                                                           [100%]
+================================== FAILURES ===================================
+__________ test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-879/test_el_fix_de_refs_emite_lf_y0')
+
+    @SIN_TRADUCCION
+    def test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf(tmp_path):
+        """Quinto escritor de la familia S17: `validate_opencode_refs.py --fix` reescribe Markdown.
+    
+        Cuarta y quinta instancias de la deuda (2026-09-27) salieron exactamente de aquí: el `--fix` del
+        archivado pasó **13** y luego **9** archivos de `i/lf` a CRLF sobre disco, y `git status` no lo
+        distingue porque git guarda LF de todos modos. La batería de arriba cubría a los otros tres
+        escritores y no a este, que es la puerta por la que la familia volvió a colarse.
+    
+        El control va anclado a `REV_CONTROL_DEFECTUOSO`, no a `HEAD`: esta misma cura entra en el commit,
+        y desde ese árbol el control ya no tendría rojo con el que compararse (la lección fijada arriba,
+        medida en `bdd1c4c`). Verificado con `git show 5817edd:scripts/validate_opencode_refs.py`: sus dos
+        escrituras siguen sin `newline`.
+        """
+        raiz_v = _proyecto_refs(tmp_path / "r-vigente", script_src=REFS_SCRIPT)
+        main_v = _cargar(f"refs_v_{raiz_v.name}", raiz_v / "scripts" / "validate_opencode_refs.py")
+        assert main_v.main(["--fix"]) == 0
+        doc_v = next(p for p in (raiz_v / ".opencode" / "plans").rglob("nota.md"))
+        bytes_v = doc_v.read_bytes()
+        assert "anexos.md" in bytes_v.decode("utf-8"), (
+            "el --fix no reescribió la referencia: no se ejercitó la escritura que se quiere medir")
+    
+        control = _fuente_commiteada("scripts/validate_opencode_refs.py", tmp_path / "c-ref")
+        raiz_c = _proyecto_refs(tmp_path / "r-control", script_src=control)
+        main_c = _cargar(f"refs_c_{raiz_c.name}", raiz_c / "scripts" / "validate_opencode_refs.py")
+        assert main_c.main(["--fix"]) == 0
+        doc_c = next(p for p in (raiz_c / ".opencode" / "plans").rglob("nota.md"))
+        bytes_c = doc_c.read_bytes()
+    
+>       assert b"\r" not in bytes_v, (
+            f"`--fix` sigue re-CRLF-eando el Markdown que reescribe "
+            f"({bytes_v.count(bytes([13]))} CR en {len(bytes_v)} bytes): S17, quinta instancia")
+E       AssertionError: `--fix` sigue re-CRLF-eando el Markdown que reescribe (3 CR en 74 bytes): S17, quinta instancia
+E       assert b'\r' not in b'# Nota del espejo\r\n\r\nLeer `.opencode/context/anexos.md` antes de cerrar.\r\n'
+
+tests\test_sync_writers_lf_y_fecha_readme.py:365: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[!] 1 referencia(s) rota(s):
+  .opencode\plans\nota.md:3 -> .opencode/plans/anexos.md
+  [FIX] nota.md: .opencode/plans/anexos.md -> .opencode/context/anexos.md
+[FIX] 1 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+[!] 1 referencia(s) rota(s):
+  .opencode\plans\nota.md:3 -> .opencode/plans/anexos.md
+  [FIX] nota.md: .opencode/plans/anexos.md -> /.opencode/context/anexos.md
+[FIX] 1 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+_______ test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf ________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-879/test_la_baseline_de_refs_emite0')
+
+    @SIN_TRADUCCION
+    def test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf(tmp_path):
+        """Segunda escritura del mismo guion: `--write-baseline` deja `refs_baseline.txt` en LF.
+    
+        Es la que dejó los 87 CR del baseline en la cuarta instancia medida (§S17). Un arreglo que cure solo
+        el `--fix` deja la otra puerta abierta, así que cada escritura se afirma por separado.
+        """
+        raiz_v = _proyecto_refs(tmp_path / "b-vigente", script_src=REFS_SCRIPT, roto=True)
+        mod_v = _cargar(f"refs_base_v_{raiz_v.name}", raiz_v / "scripts" / "validate_opencode_refs.py")
+        assert mod_v.main(["--write-baseline"]) == 0
+        base_v = (raiz_v / ".opencode" / "refs_baseline.txt").read_bytes()
+    
+        control = _fuente_commiteada("scripts/validate_opencode_refs.py", tmp_path / "c-base")
+        raiz_c = _proyecto_refs(tmp_path / "b-control", script_src=control, roto=True)
+        mod_c = _cargar(f"refs_base_c_{raiz_c.name}", raiz_c / "scripts" / "validate_opencode_refs.py")
+        assert mod_c.main(["--write-baseline"]) == 0
+        base_c = (raiz_c / ".opencode" / "refs_baseline.txt").read_bytes()
+    
+        assert base_v, "el escritor no publicó el baseline: la prueba quedaría verde vacía"
+>       assert b"\r" not in base_v, (
+            f"`--write-baseline` escribe CRLF sobre un archivo `i/lf` "
+            f"({base_v.count(bytes([13]))} CR): S17")
+E       AssertionError: `--write-baseline` escribe CRLF sobre un archivo `i/lf` (4 CR): S17
+E       assert b'\r' not in b'# Referencias hist\xc3\xb3ricas rotas congeladas (validate_opencode_refs.py)\r\n# Formato: archivo|referencia \xe2\x...3\xadnea.\r\n.opencode/plans/nota.md|.opencode/plans/anexos.md\r\n.opencode/plans/nota.md|.opencode/plans/hueso.md\r\n'
+
+tests\test_sync_writers_lf_y_fecha_readme.py:398: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[BASELINE] 2 referencia(s) congelada(s) en C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-879\test_la_baseline_de_refs_emite0\b-vigente\.opencode\refs_baseline.txt
+[BASELINE] 2 referencia(s) congelada(s) en C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-879\test_la_baseline_de_refs_emite0\b-control\.opencode\refs_baseline.txt
+=========================== short test summary info ===========================
+FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf
+FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf
+2 failed, 12 passed in 1.07s
+EXIT_PYTEST_MUTANTE=1
+FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_el_fix_de_refs_emite_lf_y_el_commiteado_escribe_crlf
+FAILED tests/test_sync_writers_lf_y_fecha_readme.py::test_la_baseline_de_refs_emite_lf_y_la_commiteada_escribe_crlf
+2 failed, 12 passed in 1.01s
+=== restauracion por backup y verificacion sha ===
+59e78627d35c0e0637010e5c7b84d201d19ada664dcbb31c2aac87121da27bed *scripts/validate_opencode_refs.py
+59e78627d35c0e0637010e5c7b84d201d19ada664dcbb31c2aac87121da27bed *scripts/validate_opencode_refs.py

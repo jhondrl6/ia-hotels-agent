@@ -1,0 +1,66 @@
+=== 44b: qmind source upload --help y qmind source delete --help (solo lectura de interfaz) ===
+Usage: qmind source upload [options]
+
+Upload a local file
+
+Options:
+  --token <token>    Bearer access token
+  --env <name>       product environment: prod (default), test, or daily where
+                     supported
+  --sash <url>       custom debug Sash origin (requires --dashboard; excludes
+                     --env)
+  --dashboard <url>  custom debug Dashboard origin (requires --sash; excludes
+                     --env)
+  --org <id>         organization ID (deprecated and ignored)
+  --client <name>    originating client identifier
+  --non-interactive  never open a browser when credentials are missing
+  --format <format>  output format: table | json | agent | ndjson (default:
+                     "table")
+  --nb <id>          notebook ID (required)
+  --file <path>      local file path (required)
+  --title <title>    source title (default: "")
+  --type <type>      source type (default: "")
+  --parent <id>      parent source ID (default: "")
+  --path <path>      source path (default: "")
+  -h, --help         display help for command
+--- delete:
+Usage: qmind source delete [options] <source_id>
+
+Delete a source
+
+Options:
+  --token <token>    Bearer access token
+  --env <name>       product environment: prod (default), test, or daily where
+                     supported
+  --sash <url>       custom debug Sash origin (requires --dashboard; excludes
+                     --env)
+  --dashboard <url>  custom debug Dashboard origin (requires --sash; excludes
+                     --env)
+  --org <id>         organization ID (deprecated and ignored)
+  --client <name>    originating client identifier
+  --non-interactive  never open a browser when credentials are missing
+  --nb <id>          notebook ID (required)
+  --force            skip directory cascade confirmation
+  -h, --help         display help for command
+--- download:
+Usage: qmind source download [options] <source_id>
+
+Download the original source file
+
+Options:
+  --token <token>      Bearer access token
+  --env <name>         product environment: prod (default), test, or daily where
+                       supported
+  --sash <url>         custom debug Sash origin (requires --dashboard; excludes
+                       --env)
+  --dashboard <url>    custom debug Dashboard origin (requires --sash; excludes
+                       --env)
+  --org <id>           organization ID (deprecated and ignored)
+  --client <name>      originating client identifier
+  --non-interactive    never open a browser when credentials are missing
+  --nb <id>            notebook ID (required)
+  -o, --output <path>  output file path
+  --overwrite          replace an existing target
+  -h, --help           display help for command
+
+=== nota: el MCP no tiene delete; el CLI si (esto cambia el riesgo de D-E) ===

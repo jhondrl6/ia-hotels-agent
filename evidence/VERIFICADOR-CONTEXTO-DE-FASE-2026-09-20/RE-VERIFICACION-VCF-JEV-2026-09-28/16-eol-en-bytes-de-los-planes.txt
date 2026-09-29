@@ -1,0 +1,14 @@
+== EOL en BITS crudos (b.count) de los seis archivos que esta sesion puede anotar
+== Contraste con el instrumento erroneo: grep -c $'' dentro de un printf entrecomillado
+   contaba TODAS las lineas como si tuvieran CR (falsa lectura de CRLF).
+
+EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                                                             CR=    0 LF=  126 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md                                              CR=    0 LF=   68 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md                                               CR=    0 LF=  460 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md                                         CR=    0 LF=  321 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md                               CR=    0 LF=  494 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md                                            CR=    0 LF= 1057 CRLF=    0 -> LF     | i/lf    w/lf    attr/                 	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+
+== git config core.autocrlf = input
+== demo del falso positivo: git ls-files --eol dice i/lf w/lf y aun asi un grep mal delimitado
+==   puede imprimir CR==lineas. Decide la lectura por bytes.

@@ -1,0 +1,13 @@
+[!] 1 referencia(s) rota(s):
+  .opencode\plans\registro.md:3 -> .opencode/plans/HUESO/nota.md
+  [FIX] registro.md: .opencode/plans/HUESO/nota.md -> .opencode/plans/Archives/HUESO/nota.md
+[FIX] 1 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+[PASS] OpenCode References: todas las referencias existen
+[!] 1 referencia(s) rota(s):
+  .opencode\plans\registro.md:3 -> .opencode/plans/HUESO/nota.md
+  [FIX] registro.md: .opencode/plans/HUESO/nota.md -> /.opencode/plans/Archives/HUESO/nota.md
+[FIX] 1 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+[PASS] OpenCode References: todas las referencias existen
+# crudo en evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/09-c4-espejo-forma.txt

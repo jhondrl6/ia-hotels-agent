@@ -1,0 +1,41 @@
+=== 42: interfaz REAL del write-back (lectura local, sin red) ===
+-- validate_qmind_writeback.py --help
+usage: validate_qmind_writeback.py [-h] [--nb NB] [--strict]
+                                   [--upload PLAN_DIR]
+
+Valida el write-back QMind de los 10-analisis de planes archivados
+
+options:
+  -h, --help         show this help message and exit
+  --nb NB            ID del notebook (default: buscar 'iah-cli-lecciones')
+  --strict           Falla también cuando qmind no está disponible (en vez de
+                     WARN + fallback :468)
+  --upload PLAN_DIR  Write-back: sube el 10-analisis y CONTEXT con declaración
+                     durable del plan indicado
+EXIT_HELP_VQW=0
+
+-- flags de upload que usa el guion (leidos del fuente):
+23:    python scripts/validate_qmind_writeback.py --nb <ID>   # fuerza notebook
+25:    python scripts/validate_qmind_writeback.py --upload TRIBUNAL-OFFLINE-2026-09-09
+27:    python scripts/validate_qmind_writeback.py --upload C:/ruta/al/plan
+86:    matches = [nb for nb in notebooks if norm(nb.get("title", "")) == NOTEBOOK_TITLE]
+120:def fetch_source_titles(notebook_id: str) -> list:
+122:        ["source", "list", "--nb", notebook_id, "--all", "--format", "json"]
+128:    return [norm(s.get("title", "")) for s in items]
+131:def is_ingested(plan_dir_name: str, titles: list) -> bool:
+141:    for title in titles:
+142:        if "10-analisis" not in title:
+144:        if plan_dir_name in title or stem in title:
+153:def upload_source(notebook_id: str, file_path: Path, title: str) -> tuple:
+154:    """Ejecuta `qmind source upload`. Retorna (exit_code, output)."""
+156:        "source", "upload",
+157:        "--nb", notebook_id,
+159:        "--title", title,
+173:            title = f"CONTEXT: {ctx_file.stem}"
+174:            results.append((ctx_file, title))
+178:def do_upload(plan_dir: Path, notebook_id: str, strict: bool) -> int:
+190:        titles = fetch_source_titles(notebook_id)
+
+-- qmind en PATH (shutil.which, sin invocar):
+C:\Users\Jhond\AppData\Roaming\npm\qmind.CMD
+-- subcomandos del CLI leidos del historial del repo (no ejecutados):
