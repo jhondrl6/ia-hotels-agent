@@ -3,12 +3,23 @@
 Sesión **escritora**, alcance cerrado a C1–C7 de la orden. **Nada commiteado**: los cinco cortes terminan en
 **espera de autorización**.
 
+⟦**Vencido el 2026-09-28 por la propia tanda**: el operador autorizó el commit y el push. Commit `c8b7198`
+(«fix(scripts): curas C1-C7 de la sesion 2 sobre la re-verificacion VCF+JEV»), verificado en su propio árbol con
+los dos verificadores de clon autogestionado (packs **5/5** reproducidos por el escritor, índice fresco con 340
+IDs y 588 rutas, ambos exit 0) y **empujado con el rango `84c1aca..c8b7198`**. El **L3 se corrió antes del push y
+no encontró problemas de seguridad**. La paridad no se fija aquí como cifra: la lee cualquiera con
+`git ls-remote origin refs/heads/master` contra `git rev-parse HEAD`.⟧
+
 - **REV_INICIO:** `84c1aca`, que al medir coincide con `origin/master` (`git log origin/master..HEAD` vacío).
   Todos los controles de escritor se anclan a esta revisión o a una publicada anterior, nunca a HEAD.
 - **Árbol de partida:** `git status --porcelain -uno` = **12**, exactamente la lista de la orden (6 anotaciones
   de la sesión 1 + 5 packs + `plan_citations_baseline.json`). Crudo `00-`.
 - **Artefactos de la sesión 1:** los tres pedidos existen en disco y **0** rutas de ese directorio están en
   `HEAD` → estado **(b)** de la precondición 2 (sin commit, no rastreado).
+  ⟦**Vencido el 2026-09-28 por la propia tanda**: ese directorio viaja **entero** en `c8b7198` — las **70** rutas
+  de `RE-VERIFICACION-VCF-JEV-2026-09-28/`— porque los sellos de la sesión 1, y después los packs regenerados,
+  citan sus crudos; sin ellas el árbol versionado habría quedado con referencias rotas. La medida de apertura no
+  se mueve: sobre el `HEAD` de entonces (`84c1aca`) eran **0** rutas rastreadas.⟧
 - **Filas dueñas leídas por encabezado** (`### S17`, `### S19`, `### S21`, `### S32`, `## Cierre formal`): las
   cinco anclas de línea que daba la orden (368 / 530 / 735 / 976 / 1032) **casaron tal cual**.
 
