@@ -339,8 +339,22 @@ Cumplido en su parte offline, con la evidencia en `evidence/…/FASE-RELEASE/` (
       que sí se hizo en RELEASE fue regenerar el archivo **con su writer**, que es otra operación.
 - [ ] **Q7 (D8)** y **`--upload` (D9)**: `PENDIENTE-AUTORIZACION`. La premisa de D8 («el notebook cambió
       desde la auditoría del 2026-09-20») quedó **no comprobada**, que no es lo mismo que verificada.
+      ⟦**Sello 2026-09-30 — los dos miembros de esta casilla se corrieron el 2026-09-27, y la casilla se
+      deja sin marcar a propósito.** La fuente única del estado vigente es la fila 5 de §Cadena de
+      `dependencias-fases.md`, que lleva sus dos sellos de aquella tanda: D8 fue re-corrido y D9 subido y
+      verificado **por descarga + sha256, no por título**. Lo que la fila añade y esta casilla no puede
+      afirmar desde aquí: la premisa de D8 quedó **consultada pero no verificada en su disparador**, que es
+      distinto de «no comprobada» por olvido. Marcar la casilla sería re-registrar con el instrumento de
+      otra sesión; el registro de la fase queda como lo certificó la fase⟧.
 - [ ] **Archivado** (`git mv`), **commit** y **push**: pendientes, cada uno con su autorización propia. El
       plan sigue en `.opencode/plans/` y su producto, en el árbol de trabajo.
+      ⟦**Sello 2026-09-30 — esta frase está vencida en sus tres miembros y en su ruta.** Medido hoy con
+      `git ls-files` sobre la raíz de `plans/` **sin** el segmento `Archives/` devuelve **0** rutas, y sobre la
+      carpeta ya archivada devuelve **18**. El `git mv` se ejecutó el 2026-09-27 dentro de D-c, y el escritor
+      (`resolver_plan()`) sigue resolviendo el plan con el nombre pelado — es la cura de §S31, no una
+      suposición. Commit y push de esa tanda quedaron sellados en la fila 5 de §Cadena con su rango y su L3.
+      El texto original se conserva porque describe el estado que checklist certificó el 2026-09-25; lo que
+      no puede seguir leyéndose es «el plan sigue en `plans/`», y por eso va el sello en vez de la borra⟧.
 - [x] D1 leída por referencia a la **matriz §13** de la fuente única de B; D2/D3/D6/D7 con estado explícito
       (ver `03-tarea3-deuda.txt`); **ninguna** reparada ni promocionada aquí.
 - [x] **D10 re-leída con su fecha**: la firma del writer no cambió (`--nb`, `--strict`, `--upload`; sin

@@ -68,8 +68,9 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+import tempfile
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -179,6 +180,103 @@ def clasificar_planes(plans_dir: Path, cutoff: date) -> dict[str, list[Path]]:
             continue
         _encasillar(hijo, cutoff, grupos)
     return grupos
+
+
+# ------------------------------------------------- descripcion del alcance (sub-punto de §S29, fila 10)
+
+GOBERNADOS_POR_DEFECTO = (
+    ROOT / ".agents" / "workflows" / "phased_project_executor.md",
+    ROOT / "tests" / "quality_gates" / "governance_numbers" / "fixtures" / "phased_project_executor.md",
+)
+ROTULO_ALCANCE = "- **Alcance hacia delante**"
+
+# Las dos polaridades que ese parrafo puede afirmar. `carpeta` es la regla que la cura a-prima de §S29
+# levanto (excluir `Archives/` por estructura); `cutoff` es la vigente. Se leen por forma de clausula,
+# no por palabra suelta: la frase `Archives/` aparece en el parrafo curado seis veces y ninguna de ellas
+# excluye.
+AFIRMACIONES = {
+    "cutoff": (r"manda el[^.\n]{0,24}cutoff", r"est[ée]n o no (?:bajo|en)", r"no la carpeta",
+               r"no por su ubicaci"),
+    "carpeta": (r"no est[ée]n (?:en|bajo)", r"archivados excluidos",
+                r"excluye[^.\n]{0,40}Archives"),
+}
+
+
+def regla_vigente_del_alcance(cutoff: date = CUTOFF_DATE) -> str:
+    """Que ejerce el codigo HOY, medido ejecutando `clasificar_planes` y no leyendo su prosa.
+
+    Dos planes archivados que solo difieren en la fecha de su nombre: si el posterior al corte entra en
+    `alcance`, la regla que manda es el cutoff; si ninguno entra, manda la carpeta. La polaridad del
+    parrafo se compara contra este resultado, asi que el check se cae cuando alguien revierte la cura
+    y deja el texto conforme (la otra mitad del sub-punto).
+    """
+    with tempfile.TemporaryDirectory(prefix="alcance-") as td:
+        raiz = Path(td)
+        archives = raiz / "Archives"
+        posterior = archives / f"PLAN-DESPUES-{(cutoff + timedelta(days=1)).isoformat()}"
+        anterior = archives / f"PLAN-ANTES-{(cutoff - timedelta(days=1)).isoformat()}"
+        posterior.mkdir(parents=True)
+        anterior.mkdir()
+        grupos = clasificar_planes(raiz, cutoff)
+    nombres = {p.name for p in grupos["alcance"]}
+    if posterior.name in nombres:
+        return "cutoff"
+    if not nombres:
+        return "carpeta"
+    return f"inesperado({sorted(nombres)})"
+
+
+def _parrafo_alcance(texto: str) -> str | None:
+    """El parrafo que describe el alcance: desde su rotulo hasta el siguiente rotulo de la lista."""
+    lineas = texto.splitlines()
+    inicio = next((n for n, l in enumerate(lineas)
+                   if l.strip().startswith(ROTULO_ALCANCE)), None)
+    if inicio is None:
+        return None
+    bloque = [lineas[inicio]]
+    for linea in lineas[inicio + 1:]:
+        if linea.startswith("- **") or linea.startswith("## ") or linea.startswith("# "):
+            break
+        bloque.append(linea)
+    return "\n".join(bloque)
+
+
+def c9_descripcion_del_alcance(gobernados: list[Path], cutoff: date) -> list[Violacion]:
+    """El parrafo tiene que describir la regla que el codigo ejerce, en la misma polaridad.
+
+    Tri-estado conforme a R2.9: `LECTOR-FALLIDO` si el texto no se puede leer, `AUSENTE` si no hay
+    parrafo que gobernar, `DESCRIPCION-VENCIDA` si lo que describe es otra regla. Ningun verde sale del
+    segundo: un corpus sin parrafo no goberna nada y tiene que decirlo.
+    """
+    if not gobernados:
+        return [Violacion("C9", "AUSENTE",
+                          "gobernanza de la descripcion: no hay ningun texto que gobernar "
+                          "(poblacion vacia, verde vacio)")]
+    regla = regla_vigente_del_alcance(cutoff)
+    violaciones: list[Violacion] = []
+    for ruta in gobernados:
+        texto, error = _leer(ruta)
+        if texto is None:
+            violaciones.append(Violacion("C9", "LECTOR-FALLIDO",
+                                         f"{ruta}: no se pudo leer el texto gobernado: {error}"))
+            continue
+        parrafo = _parrafo_alcance(texto)
+        if parrafo is None:
+            violaciones.append(Violacion(
+                "C9", "AUSENTE",
+                f"{ruta}: no hay parrafo que empiece por {ROTULO_ALCANCE!r}; la descripcion del "
+                "alcance no esta escrita y por lo tanto no se puede contrastar con el codigo"))
+            continue
+        afirmadas = {polar for polar, patrones in AFIRMACIONES.items()
+                     if any(re.search(patron, parrafo, re.IGNORECASE) for patron in patrones)}
+        contrarias = afirmadas - {regla}
+        if contrarias or regla not in afirmadas:
+            violaciones.append(Violacion(
+                "C9", "DESCRIPCION-VENCIDA",
+                f"{ruta}: el parrafo afirma {sorted(afirmadas) or 'ninguna polaridad'} y el codigo "
+                f"ejerce {regla!r} (medido ejecutando clasificar_planes). La cura y su descripcion "
+                "vivieron separadas nueve dias: ver §S29, sexta cosa que la fila gobierna"))
+    return violaciones
 
 
 # ------------------------------------------------------------------ lectura de archivos
@@ -524,7 +622,8 @@ def analizar_plan(
 
 
 def verificar(
-    plans_dir: Path, context_dir: Path, cutoff: date, verbose: bool = True
+    plans_dir: Path, context_dir: Path, cutoff: date, verbose: bool = True,
+    gobernados: tuple[Path, ...] | None = None,
 ) -> tuple[list[Violacion], dict]:
     """Corrida completa sobre el corpus. Devuelve violaciones y población mirada (C0)."""
     grupos = clasificar_planes(plans_dir, cutoff)
@@ -537,6 +636,8 @@ def verificar(
         violaciones += v
         if verbose and duenos:
             print(f"  {plan.name}: {len(duenos)} fuentes capitalizadas -> {', '.join(duenos)}")
+    texto_gobernados = tuple(gobernados) if gobernados is not None else GOBERNADOS_POR_DEFECTO
+    violaciones += c9_descripcion_del_alcance(list(texto_gobernados), cutoff)
     poblacion = {
         "alcance": [p.name for p in grupos["alcance"]],
         "exentos_fecha": [p.name for p in grupos["exento_fecha"]],
@@ -544,6 +645,8 @@ def verificar(
         "archivados": len(grupos["archivados"]),
         "archivados_en_alcance": sum(1 for p in grupos["alcance"] if p.parent.name == "Archives"),
         "indice_motivo": indice_motivo,
+        "gobernados": [str(p) for p in texto_gobernados],
+        "regla_del_alcance": regla_vigente_del_alcance(cutoff),
     }
     return violaciones, poblacion
 
@@ -556,7 +659,9 @@ def _linea_de_cobertura(poblacion: dict, cutoff: date) -> str:
         f"{poblacion['archivados_en_alcance']} de ellos en alcance | "
         f"{len(poblacion['exentos_fecha'])} exentos por fecha anterior a {cutoff.isoformat()} | "
         f"{len(poblacion['exentos_sin_fecha'])} exentos SIN FECHA PARSEABLE "
-        f"({', '.join(poblacion['exentos_sin_fecha']) or '—'})"
+        f"({', '.join(poblacion['exentos_sin_fecha']) or '—'}) | "
+        f"descripcion del alcance: regla={poblacion.get('regla_del_alcance')} en "
+        f"{len(poblacion.get('gobernados', []))} texto(s) gobernado(s)"
     )
 
 
@@ -574,6 +679,11 @@ def main(argv=None) -> int:
     ap.add_argument(
         "--quiet", action="store_true", help="no listar violaciones ni fuentes por plan"
     )
+    ap.add_argument(
+        "--goberna", action="append", default=None, type=Path, metavar="RUTA",
+        help="texto cuya DESCRIPCION del alcance se contrasta con el codigo (repetible); por defecto "
+             "el workflow y su copia congelada en los fixtures de gobernanza"
+    )
     args = ap.parse_args(argv)
 
     try:
@@ -586,7 +696,8 @@ def main(argv=None) -> int:
         return 2
 
     violaciones, poblacion = verificar(
-        args.plans_dir, args.context_dir, cutoff, verbose=not args.quiet
+        args.plans_dir, args.context_dir, cutoff, verbose=not args.quiet,
+        gobernados=args.goberna,
     )
     if not args.quiet:
         for v in violaciones:

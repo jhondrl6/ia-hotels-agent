@@ -493,3 +493,19 @@ autorización— es exactamente donde quedaron los permisos.
   listas cubría, incluido este documento. El árbol quedó en `git status --porcelain` = **0** rutas y la
   paridad en `0 3`. De la enumeración de arriba solo seguía en el árbol la nota que escribe esta línea, que
   viaja en el commit siguiente por la razón de siempre: un commit no puede nombrarse a sí mismo.⟧
+
+### Espejo de la fila nueva del libro de deuda — §S34, verificador de frescura de `CONTEXT` (2026-09-30)
+
+Una linea, sin re-transcribir cifras (L-VCF-19: el parrafo de estado vive en su fuente unica). La tanda de
+curas en `scripts/` del 2026-09-30 abrio **§S34** en `dependencias-fases.md` — ese es su dueño y su fuente —,
+con su guion propio `scripts/verify_qmind_context_freshness.py`, su bateria y su cableado al **modo completo**
+del runner (el rapido sigue sin red). El censo con el que se le asigno ID esta en esa misma fila, no aqui.
+
+Lo que esta fila anade al libro de este plan, en su propio termino: **la familia «un derivado publica datos de
+una fuente que no declaro» gana su segunda cara medida**. §S32 goberno la proyeccion de los bytes del workflow
+dentro del pack; §S34 gobierna la otra direccion — un artefacto del repo (`CONTEXT`) cuya copia publicada en el
+notebook envejece sin que ningun mandato de cierre la mire, porque el verificador de esa familia decide por
+titulo y su poblacion son los `10-analisis`. Las dos comparten mecanismo (identidad por sha contra el arbol
+gobernado) y no comparten instrumento, que es la razon por la que la segunda nace como guion propio.
+
+Evidencia de la tanda: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CURAS-SCRIPTS-Y-CONTEXT-2026-09-30/`.

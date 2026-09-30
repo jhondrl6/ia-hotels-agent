@@ -535,6 +535,18 @@ def _declarar_recorte(fuente: dict) -> str:
     ])
 
 
+def _sha_del_escritor() -> str:
+    """sha256 del propio archivo del escritor, en crudo.
+
+    S19(d), salida (c): el pack ya nombra a su productor (`generado_por`), pero ese nombre no casa con
+    su contenido, asi que un pack vencido por edicion del escritor era indetectable leyendo el artefacto
+    (parte 19- §4 y §6). La identidad publicada es **procedencia no gobernante**: entra en el meta, no en
+    `sources[]`, y `verify_packs_in_committed_tree.py` la estabiliza con su propio patron porque el valor
+    se mueve entre commits (medido: 4 valores sobre 5 revisiones).
+    """
+    return hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+
+
 def render_pack(paquete: dict, raiz: Path) -> str:
     lineas = [
         f"# Briefing pack — FASE-{paquete['fase']}",
@@ -607,6 +619,7 @@ def render_pack(paquete: dict, raiz: Path) -> str:
 
     meta = {
         "generado_por": "scripts/build_phase_briefing.py",
+        "generado_por_sha": _sha_del_escritor(),
         "plan": paquete["plan"], "fase": paquete["fase"], "estado": paquete["estado"],
         "declaracion": paquete.get("declaracion", "DECLARADA"),
         "provenance": {"head": paquete["head"], "generated_at": paquete["generated_at"]},

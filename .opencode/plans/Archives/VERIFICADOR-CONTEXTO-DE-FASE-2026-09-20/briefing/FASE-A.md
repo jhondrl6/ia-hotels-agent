@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+- **procedencia**: HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -254,7 +254,7 @@ que puedan probar: VERIFICADO OFFLINE con rojo y verde, o ⚠️.
 ```
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `672b39751b1ccb1a20fb4b2e0666aa015fb4e4fe187234501c2bc01bde1437e1` · 15562 bytes copiados de 15562 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md` · sha256 `672b39751b1ccb1a20fb4b2e0666aa015fb4e4fe187234501c2bc01bde1437e1` · 15562 bytes copiados de 15562 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `01-plan-maestro.md` §1
 
@@ -372,7 +372,7 @@ sesión cada una y cada fase re-mide once validaciones; eso este plan **no lo to
 mitad medible aquí y AC20 publica qué parte del delta consiguió realmente, incluida la posibilidad
 de que sea cero.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 10344 bytes copiados de 55159 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 10344 bytes copiados de 55159 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -633,7 +633,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 26466 bytes copiados de 55159 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 26466 bytes copiados de 55159 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -962,7 +962,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `39c8b094489b3703ddd707d37fcf24bc5e907eb1db7c742fcee788bad8fe974d` · 30204 bytes copiados de 30204 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `39c8b094489b3703ddd707d37fcf24bc5e907eb1db7c742fcee788bad8fe974d` · 30204 bytes copiados de 30204 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -1003,7 +1003,7 @@ Dueños distintos representados: **7** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
 
 **Cómo entró L-VCF-20 (registro de la decisión, 2026-09-27, tanda H1).** Los dos párrafos de arriba registran el ingreso de **diez** filas por la decisión D-d y no se reescriben: siguen siendo exactos para esas diez. Con esta son **once** las filas de §2 debidas a este propio plan, y su procedencia es otra — instrucción escrita «Haz H1 y H2» sobre una lección que la sesión de commits **midió al commitear**, ya cerrado el dosier que avaló a las otras diez. El dueño no cambia, y el conteo se re-midió contra el lector en vez de copiar el párrafo anterior: `duenos_del_corpus()` sigue publicando **7** dueños distintos, porque una fila más de este plan no suma un octavo — el mismo motivo por el que las tres de la capa tibia no sumaron. Y una forma que hay que respetar para que el índice la reconozca: la **definición** va en `10-analisis-post-implementacion.md` §Lecciones nuevas, porque el corpus de definiciones del generador son los análisis (`09`/`10`), no este `.md`; escribirla solo aquí la habría registrado como ID citado sin definición, que es la familia de cita fantasma que este plan ya pagó.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §4
 
@@ -1144,7 +1144,7 @@ Dueños distintos representados: **7** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
   mirar el default de escritura de un verificador antes de correrlo (**L-VCF-12**) y arreglar un dato
   en su escritor, no con un tercero que lo reescriba a mano⟧.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 16070 bytes copiados de 65400 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 16070 bytes copiados de 65400 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -2355,21 +2355,82 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   árbol commiteado corta el desfase — con dueño, disparador y dos salidas medidas, ninguna aplicada. El estado vigente de
   cada una es su fila en esta sección, fuente única⟧.
 
+### S34 — los `CONTEXT` publicados no los goberna ningun verificador (nueva, 2026-09-30)
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `8e6c3a29cb13eae8d1db90ca8df4a28ae625fb687cb6ee1109bbd0a49a6ddae6` · 138540 bytes copiados de 138540 del documento · HEAD `84c1aca` · generado `2026-09-29T01:05:22Z`
+**No confundir con ningun numero vecino, y esta vez la cabecera lleva la desambiguacion porque convive con
+su predecesor.** El censo de la casa, `git grep -c -E "\bSnn\b" HEAD -- '*.md'`, medido el 2026-09-30 sobre
+`7737347`: **S33 = 6 archivos (YA USADO)**, **S34 = 0 (exit 1)**, **S35 = 0**, **S36 = 0**. S33 quedo ocupado
+por su propia nota reproducida dentro de los packs generados (asi lo registro el censo del 33-), y el
+siguiente libre era S34: lo toma esta fila. El enunciado de la orden del 2026-09-29 dejaba esta deuda **sin ID
+porque prohibia inventarlo sin censo previo**; el censo esta hecho arriba, con su comando y su fecha.
+
+**Hecho medido, no deducido.** Un archivado vence tambien los `CONTEXT` ya publicados, no solo los
+`10-analisis`: el `git mv` de D-c movio el segmento `Archives/` dentro de una ruta que citaba el `CONTEXT` de
+JEV, y eso dejo vencida una fuente publicada que **ningun mandato de cierre miraba** (fuente del hallazgo:
+§6 y §13 del expediente de la re-ingesta del 2026-09-29). El verificador de la casa,
+`validate_qmind_writeback.py`, audita los `10-analisis` archivados y decide **por titulo**: su `analisis`
+`13/13` convivio nueve dias con un `CONTEXT` vencido sin decir nada. Medido el 2026-09-29 con
+`git grep -E 'source download|fileSha256' HEAD -- scripts` = exit **1**: ningun guion bajaba una fuente ni leia
+ese campo.
+
+- **Dueño**: el guion nuevo `scripts/verify_qmind_context_freshness.py`, cableado a
+  `scripts/run_all_validations.py` como check exclusivo del **modo completo** (el rapido sigue corriendo
+  offline: decision tomada en la orden, no inferida).
+- **Disparador de la fila**: ya ocurrio — es la corrida del modo completo.
+- **Criterio, escrito antes de codear (decision de la orden)**: **descarga + sha256 contra el archivo
+  gobernado, nunca por titulo**; `metadata.fileSha256` del servidor es **corroboracion** y su desacuerdo se
+  publica. La forma «original + cierre» del notebook (dos fuentes del mismo `CONTEXT`, titulos distintos) es
+  **legal**: el control es «existe una fuente publicada que casa», no «una sola fuente por stem».
+- **Poblacion, re-medida al correr (no la del parte)**: dos ficheros `CONTEXT-*.md` bajo la raiz de
+  `.opencode/context/`; **uno** autodeclara leccion durable (el de JEV, en forma de **encabezado** — que es la
+  grafia que el detector del hermano pierde, medido el 2026-09-27), el otro no declara y queda **excluido con su
+  razon**. Los `CONTEXT-*` que citan los planes archivados resuelven **fuera de la raiz** (todos bajo
+  `Historico/`, 18 ficheros), y `Historico/` esta excluido por politica propia: el contenido archivado queda
+  congelado (R2.5 y la nota «QMind y archivado» del workflow). **Si la poblacion quedara vacia habiendo
+  `CONTEXT-*` en la raiz, el guion devuelve NO-EVALUABLE (2) y no un verde**: es la variante de verde vacio que
+  ya mordo aqui dos veces.
+- **Dientes medidos** (crudos en `evidence/…/CURAS-SCRIPTS-Y-CONTEXT-2026-09-30/`, bateria
+  `tests/test_verify_qmind_context_freshness.py`, **17 pruebas**): fresco con titulo que **no** nombra el
+  archivo pero bytes identicos (prueba de que el criterio no es el titulo); vencido tras **barrido completo** de
+  las 56 fuentes (el rojo exige haberlas bajado todas); `metadata` que casa y descarga que no casa → **VENCIDO**
+  (el metadata no es el criterio); desacuerdo de metadata declarado; gobernado que desaparece → 2; `--strict` sin
+  CLI → 1 y sin `--strict` → WARN 0 (el mismo fallback :468 del hermano). Y el **control negativo con el hermano
+  versionado**: `validate_qmind_writeback.py` leido con `git show` de una revision publicada fija devuelve **0**
+  declaraciones sobre el mismo arbol donde el guion nuevo ve el encabezado — la ceguera queda reproducida por el
+  instrumento, no afirmada.
+- **Coste medido en la corrida real**: 2 descargas (~3 s cada una) sobre un notebook de **56 fuentes**; el
+  barrido completo solo corre cuando un candidato falla.
+- **Lo que la cura NO goberna**: `Historico/`, los `CONTEXT` sin autodeclaracion, las otras 54 fuentes del
+  notebook que no son `CONTEXT`, la ingesta de `10-analisis` (sigue en el hermano) y, como siempre, la
+  **pertinencia** de lo publicado.
+
+**Consecuencia de renumeracion (D2 en miniatura, ejecutada con mandato)**: el modo completo pasa de **17 a
+18** checks. Se re-etiquetaron los cuatro literales exclusivos (`[14/18]`…`[17/18]`) y el nuevo cierra en
+`[18/18]`; el rapido sigue en **13** y su guarda de denominador (§S21) goberna la convivencia. Pines
+re-anclados con su nota datada en `tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py`
+(A3 pasa de `[17/17]` a `[17/18]`: su sujeto es el write-back, que sigue siendo el check 17). Un efecto que no
+estaba previsto y se declara: **la etiqueta impresa del check nuevo no puede decir «QMind»** — el lector de
+gobernanza resuelve el sujeto por alias, `qmind` no esta en sus `ALIAS_STOPWORDS`, y dos registros de la misma
+fuente reivindicando la misma asercion cortan `LECTOR-FALLIDO` con exit 3 (medido en la primera corrida). Se
+resolvio por el lado del sujeto (la etiqueta dice `CONTEXT freshness (notebook de lecciones)`), no aflojando la
+guarda de ambiguedad.
+
+
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `e3300ab51712e96098063da4e594c3229c8c9dfecdb0c3f76f6646edd26d5021` · 143865 bytes copiados de 143865 del documento · HEAD `7737347` · generado `2026-09-30T18:13:56Z`
 
 ---
 
 <!-- BEGIN BRIEFING-META
 {
   "generado_por": "scripts/build_phase_briefing.py",
+  "generado_por_sha": "38340ebd08f97c9f42e47de8e8753d8fb967f38a4846636caa890685b8f4149c",
   "plan": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
   "fase": "A",
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "84c1aca",
-    "generated_at": "2026-09-29T01:05:22Z"
+    "head": "7737347",
+    "generated_at": "2026-09-30T18:13:56Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 18349 bytes fuera de lo declarado (1, 4)",
@@ -2408,7 +2469,7 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
     },
     {
       "ruta": ".opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "8e6c3a29cb13eae8d1db90ca8df4a28ae625fb687cb6ee1109bbd0a49a6ddae6",
+      "sha256": "e3300ab51712e96098063da4e594c3229c8c9dfecdb0c3f76f6646edd26d5021",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

@@ -145,3 +145,28 @@ ejecutaron; `acceptance` del piloto sigue **NO-EJERCITADO** (proveedor habilitad
 proveedor ejercitado, los tres contratos que separó la revisión); **D7 sigue inactiva** por decisión del operador y
 D6 conserva dueño y disparador. Los bloqueantes que sobreviven a este archivado son humanos y de permiso —revisión
 de artefactos y consentimiento—, no de código.
+
+## Sello 2026-09-30 — las dos filas de §Hitos y evidencia de entrada de `dependencias-fases.md`, que esta sesión no pudo editar
+
+`dependencias-fases.md` de este plan está **protegido** por la orden del 2026-09-21 (su sección «Orden de
+cierre: hermano primero» es decisión del operador) y por la orden de esta tanda, que prohíbe editarlo. El
+texto protegido no se tocó; lo que sigue es el sello con la medición, y su destino es este análisis por
+mandato expreso.
+
+Leídas las dos filas de la tabla de §Hitos y evidencia de entrada contra el árbol de trabajo de hoy, con
+`ls` y sin inferir:
+
+| Fila del archivo protegido | Lo que publica | Lo medido el 2026-09-30 |
+|---|---|---|
+| **Interfaz de decisiones** | `PENDIENTE; archivo ausente` | **el archivo existe**: `scripts/decision_client.py`, 69.503 bytes, con su selección `tests/quality_gates/decision_client/` en **87 passed** y su `--provider-status` respondiendo `NO-CONFIGURADO` (el estado propio de «resuelto sin credencial», no un fallo) |
+| **Consumidor de pertinencia** | `PENDIENTE; archivo ausente` | **el archivo existe**: `scripts/triage_lesson_relevance.py`, 42.378 bytes, entregado por FASE-C del hermano `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`, cerrada en su parte offline el 2026-09-24 |
+
+Y la frase con la que la orden de esta tanda señalaba este mismo archivo («no se toca la costura
+inexistente») **no está en `dependencias-fases.md`**: está en `01-plan-maestro.md`, al final de §Permisos, y
+ahí se selló. Se declara la deriva de la ancla en vez de reubicar la cita a mano sobre el archivo protegido.
+
+**Lo que el sello NO afirma**: que los dos hitos estén cerrados. «Archivo existe» no es «hito verificado»: la
+evidencia que esas dos filas piden sigue siendo `AC6–AC9` con scanner/contract/costura y tests reales en disco
+para la primera, y `AC10–AC14` más la mecánica de `AC15` con su par verde/rojo para la segunda. Lo que cayó es
+el literal «archivo ausente», que es la mitad más inestable de una fila de estado y la que engaña a quien
+llega después. La corrección del archivo protegido queda pendiente de su dueño, con esta medición como insumo.

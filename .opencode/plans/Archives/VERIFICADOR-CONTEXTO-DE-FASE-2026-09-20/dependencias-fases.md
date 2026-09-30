@@ -1204,3 +1204,63 @@ Espejo de una sola línea, sin re-transcribir cifras (L-VCF-19: el párrafo de e
   que el workflow esté entre sus `sources[]`, así que el `--check` del escritor da verde y solo el verificador del
   árbol commiteado corta el desfase — con dueño, disparador y dos salidas medidas, ninguna aplicada. El estado vigente de
   cada una es su fila en esta sección, fuente única⟧.
+
+### S34 — los `CONTEXT` publicados no los goberna ningun verificador (nueva, 2026-09-30)
+
+**No confundir con ningun numero vecino, y esta vez la cabecera lleva la desambiguacion porque convive con
+su predecesor.** El censo de la casa, `git grep -c -E "\bSnn\b" HEAD -- '*.md'`, medido el 2026-09-30 sobre
+`7737347`: **S33 = 6 archivos (YA USADO)**, **S34 = 0 (exit 1)**, **S35 = 0**, **S36 = 0**. S33 quedo ocupado
+por su propia nota reproducida dentro de los packs generados (asi lo registro el censo del 33-), y el
+siguiente libre era S34: lo toma esta fila. El enunciado de la orden del 2026-09-29 dejaba esta deuda **sin ID
+porque prohibia inventarlo sin censo previo**; el censo esta hecho arriba, con su comando y su fecha.
+
+**Hecho medido, no deducido.** Un archivado vence tambien los `CONTEXT` ya publicados, no solo los
+`10-analisis`: el `git mv` de D-c movio el segmento `Archives/` dentro de una ruta que citaba el `CONTEXT` de
+JEV, y eso dejo vencida una fuente publicada que **ningun mandato de cierre miraba** (fuente del hallazgo:
+§6 y §13 del expediente de la re-ingesta del 2026-09-29). El verificador de la casa,
+`validate_qmind_writeback.py`, audita los `10-analisis` archivados y decide **por titulo**: su `analisis`
+`13/13` convivio nueve dias con un `CONTEXT` vencido sin decir nada. Medido el 2026-09-29 con
+`git grep -E 'source download|fileSha256' HEAD -- scripts` = exit **1**: ningun guion bajaba una fuente ni leia
+ese campo.
+
+- **Dueño**: el guion nuevo `scripts/verify_qmind_context_freshness.py`, cableado a
+  `scripts/run_all_validations.py` como check exclusivo del **modo completo** (el rapido sigue corriendo
+  offline: decision tomada en la orden, no inferida).
+- **Disparador de la fila**: ya ocurrio — es la corrida del modo completo.
+- **Criterio, escrito antes de codear (decision de la orden)**: **descarga + sha256 contra el archivo
+  gobernado, nunca por titulo**; `metadata.fileSha256` del servidor es **corroboracion** y su desacuerdo se
+  publica. La forma «original + cierre» del notebook (dos fuentes del mismo `CONTEXT`, titulos distintos) es
+  **legal**: el control es «existe una fuente publicada que casa», no «una sola fuente por stem».
+- **Poblacion, re-medida al correr (no la del parte)**: dos ficheros `CONTEXT-*.md` bajo la raiz de
+  `.opencode/context/`; **uno** autodeclara leccion durable (el de JEV, en forma de **encabezado** — que es la
+  grafia que el detector del hermano pierde, medido el 2026-09-27), el otro no declara y queda **excluido con su
+  razon**. Los `CONTEXT-*` que citan los planes archivados resuelven **fuera de la raiz** (todos bajo
+  `Historico/`, 18 ficheros), y `Historico/` esta excluido por politica propia: el contenido archivado queda
+  congelado (R2.5 y la nota «QMind y archivado» del workflow). **Si la poblacion quedara vacia habiendo
+  `CONTEXT-*` en la raiz, el guion devuelve NO-EVALUABLE (2) y no un verde**: es la variante de verde vacio que
+  ya mordo aqui dos veces.
+- **Dientes medidos** (crudos en `evidence/…/CURAS-SCRIPTS-Y-CONTEXT-2026-09-30/`, bateria
+  `tests/test_verify_qmind_context_freshness.py`, **17 pruebas**): fresco con titulo que **no** nombra el
+  archivo pero bytes identicos (prueba de que el criterio no es el titulo); vencido tras **barrido completo** de
+  las 56 fuentes (el rojo exige haberlas bajado todas); `metadata` que casa y descarga que no casa → **VENCIDO**
+  (el metadata no es el criterio); desacuerdo de metadata declarado; gobernado que desaparece → 2; `--strict` sin
+  CLI → 1 y sin `--strict` → WARN 0 (el mismo fallback :468 del hermano). Y el **control negativo con el hermano
+  versionado**: `validate_qmind_writeback.py` leido con `git show` de una revision publicada fija devuelve **0**
+  declaraciones sobre el mismo arbol donde el guion nuevo ve el encabezado — la ceguera queda reproducida por el
+  instrumento, no afirmada.
+- **Coste medido en la corrida real**: 2 descargas (~3 s cada una) sobre un notebook de **56 fuentes**; el
+  barrido completo solo corre cuando un candidato falla.
+- **Lo que la cura NO goberna**: `Historico/`, los `CONTEXT` sin autodeclaracion, las otras 54 fuentes del
+  notebook que no son `CONTEXT`, la ingesta de `10-analisis` (sigue en el hermano) y, como siempre, la
+  **pertinencia** de lo publicado.
+
+**Consecuencia de renumeracion (D2 en miniatura, ejecutada con mandato)**: el modo completo pasa de **17 a
+18** checks. Se re-etiquetaron los cuatro literales exclusivos (`[14/18]`…`[17/18]`) y el nuevo cierra en
+`[18/18]`; el rapido sigue en **13** y su guarda de denominador (§S21) goberna la convivencia. Pines
+re-anclados con su nota datada en `tests/quality_gates/governance_numbers/test_governance_numbers_reproduce_A1_A4.py`
+(A3 pasa de `[17/17]` a `[17/18]`: su sujeto es el write-back, que sigue siendo el check 17). Un efecto que no
+estaba previsto y se declara: **la etiqueta impresa del check nuevo no puede decir «QMind»** — el lector de
+gobernanza resuelve el sujeto por alias, `qmind` no esta en sus `ALIAS_STOPWORDS`, y dos registros de la misma
+fuente reivindicando la misma asercion cortan `LECTOR-FALLIDO` con exit 3 (medido en la primera corrida). Se
+resolvio por el lado del sujeto (la etiqueta dice `CONTEXT freshness (notebook de lecciones)`), no aflojando la
+guarda de ambiguedad.

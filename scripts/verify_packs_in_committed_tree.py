@@ -45,6 +45,11 @@ NORMALIZAR = (
     (re.compile(r'"generated_at": "[0-9TZ:.+-]+"'), '"generated_at": "N"'),
     (re.compile(r"HEAD `[0-9a-f]{7,40}`"), "HEAD `H`"),
     (re.compile(r'"head": "[0-9a-f]{7,}"'), '"head": "H"'),
+    # S19(d), salida (c): el escritor sella su propia identidad y ese sha **si** se mueve entre commits
+    # (medido: 4 valores sobre 5 revisiones). Sin este patron, dos arboles correctos del mismo plan
+    # daban `DIVERGE` por la identidad del generador — el mismo defecto de instrumento que §S20
+    # documento para el clon. Es procedencia no gobernante, igual que `head` (AC21).
+    (re.compile(r'"generado_por_sha": "[0-9a-f]{7,}"'), '"generado_por_sha": "S"'),
 )
 
 

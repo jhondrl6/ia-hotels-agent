@@ -97,6 +97,7 @@ class ValidationRunner:
             self._check_imports()
             self._check_tests_pass()
             self._check_qmind_writeback()
+            self._check_context_freshness()
         
         return self._print_summary()
     
@@ -776,9 +777,10 @@ class ValidationRunner:
         """Los packs de briefing se reproducen en el árbol del commit (D-a de CONTEXTO, promovido 2026-09-27).
 
         Que gobierna: que `build_phase_briefing.py`, tal como está en el árbol versionado, vuelva a producir
-        byte a byte (bajo la normalización de sus cuatro sellos no-gobernantes) los cinco packs commiteados.
-        Ningún otro check ve esto: `--check` casa las **fuentes** del pack y el generador no está entre ellas,
-        así que editar al escritor dejaba los packs vencidos con verde (S19).
+        byte a byte (bajo la normalización de sus **cinco** sellos no-gobernantes: reloj en prosa y en JSON,
+        `head` en prosa y en JSON, y desde S19(d) la identidad del generador `generado_por_sha`) los cinco
+        packs commiteados. Ningún otro check ve esto: `--check` casa las **fuentes** del pack y el generador
+        no está entre ellas, así que editar al escritor dejaba los packs vencidos con verde (S19).
 
         Por qué cuesta lo que cuesta: materializa un clon fiel (`clon_fiel`, con `core.autocrlf=input` y
         `core.longpaths` escritos **dentro** del clon — S20) y regenera ahí. Medido 2026-09-27: ~2,4 s sobre un
@@ -824,7 +826,7 @@ class ValidationRunner:
 
     def _check_dependencies(self) -> None:
         """Check if all dependencies are installed."""
-        print("[14/17] Checking dependencies...")
+        print("[14/18] Checking dependencies...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pip", "check"
@@ -846,7 +848,7 @@ class ValidationRunner:
     
     def _check_imports(self) -> None:
         """Check if core modules can be imported."""
-        print("[15/17] Checking core module imports...")
+        print("[15/18] Checking core module imports...")
         
         core_modules = [
             "src.config",
@@ -882,7 +884,7 @@ class ValidationRunner:
     
     def _check_tests_pass(self) -> None:
         """Run tests and check if they pass."""
-        print("[16/17] Running tests...")
+        print("[16/18] Running tests...")
         
         exit_code, output = self._run_command([
             sys.executable, "-m", "pytest", "-q", "--tb=no"
@@ -914,7 +916,7 @@ class ValidationRunner:
         `qmind` CLI. If the CLI is unavailable the validator itself degrades to
         WARN + exit 0 (fallback :468); only a real missing ingestion fails.
         """
-        print("[17/17] Checking QMind write-back (planes archivados)...")
+        print("[17/18] Checking QMind write-back (planes archivados)...")
 
         script_path = ROOT_DIR / "scripts" / "validate_qmind_writeback.py"
         if not script_path.exists():
@@ -943,6 +945,58 @@ class ValidationRunner:
                         "(fix: python scripts/validate_qmind_writeback.py --upload <PLAN>)",
                 details=issues
             ))
+
+    def _check_context_freshness(self) -> None:
+        """Los `CONTEXT` gobernados tienen una fuente publicada que casa por descarga + sha256 (S34).
+
+        Que gobierna: la deuda que dejo la tanda del 2026-09-29 (RI §6). Un archivado vence tambien los
+        `CONTEXT` ya publicados, y `validate_qmind_writeback.py` no los mira: su poblacion son los
+        `10-analisis` archivados y decide por **titulo**. Su `[PASS] 13/13` convivio nueve dias con un
+        `CONTEXT` vencido. Este check es un guion propio (decision tomada en la orden del 2026-09-30) y su
+        criterio es byte a byte; `metadata.fileSha256` entra solo como corroboracion declarada.
+
+        Por que va al **modo completo** y no al rapido: necesita red. El rapido tiene que seguir corriendo
+        offline, asi que la degradacion sin CLI vive dentro del guion (WARN + 0, el mismo fallback :468 del
+        hermano) y `--strict` es lo que la convierte en rojo.
+
+        Codigos: 0 todos frescos, 1 al menos un VENCIDO, 2 NO-EVALUABLE. El 2 corta rojo y se nombra: un
+        veredicto que no vio su insumo no se disfraza de verde (misma regla con la que se promovio [13/18]).
+        """
+        print("[18/18] Checking CONTEXT freshness (notebook de lecciones)...")
+
+        script_path = ROOT_DIR / "scripts" / "verify_qmind_context_freshness.py"
+        if not script_path.exists():
+            self.results.append(ValidationResult(
+                name="QMind CONTEXT Freshness",
+                passed=False,
+                message="verify_qmind_context_freshness.py not found"
+            ))
+            return
+
+        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        lineas = [l for l in output.splitlines() if l.strip()]
+        resumen = next((l for l in reversed(lineas) if "frescura de CONTEXT" in l),
+                       lineas[-1] if lineas else "")
+
+        if exit_code == 0:
+            self.results.append(ValidationResult(
+                name="QMind CONTEXT Freshness",
+                passed=True,
+                message=resumen or "los CONTEXT gobernados casan con su fuente publicada"
+            ))
+            return
+
+        estado = {1: "VENCIDO", 2: "NO-EVALUABLE"}.get(exit_code, f"exit {exit_code}")
+        motivo = ("un CONTEXT gobernado no tiene fuente publicada que case: re-ingestar por CLI con "
+                  "titulo nuevo que conserve el stem y verificar por descarga + sha256, no por titulo"
+                  if estado == "VENCIDO" else
+                  "la poblacion o el archivo gobernado no fue evaluable: el veredicto no puede afirmar nada")
+        self.results.append(ValidationResult(
+            name="QMind CONTEXT Freshness",
+            passed=False,
+            message=f"{estado}: {motivo}",
+            details=lineas[:6]
+        ))
 
     def _orden_del_modo(self) -> tuple:
         """`(orden del rapido, orden del completo)` leido del llamador, no de una corrida.

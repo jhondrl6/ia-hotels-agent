@@ -7,9 +7,17 @@ que acciones tomar cuando se completa una fase.
 
 Uso:
     python scripts/log_phase_completion.py --fase FASE-12 \
+        --fecha 2026-09-12 \
         --desc "Google Travel Scraper integration" \
         --archivos-nuevos "modules/scrapers/google_travel.py,tests/scrapers/test_google_travel.py" \
         --archivos-mod "modules/providers/benchmark_resolver.py"
+
+    # Entrada tardia (la fase se cerro otro dia): se declara ESA fecha y, si hace falta, su motivo.
+    python scripts/log_phase_completion.py --fase FASE-A --fecha 2026-09-21 \
+        --desc "..." --nota "registrada en tardanza el 2026-09-30"
+
+`--fecha` es obligatoria desde D-F5: el script ya no saca la fecha de `datetime.now()`, asi que una
+entrada tardia no puede estampar la fecha del dia. Sin la bandera el script se niega y no escribe.
 
 El script:
 1. Lee CONTRIBUTING.md para extraer reglas de documentacion
@@ -33,7 +41,7 @@ Version Sync Gate (--release):
 import argparse
 import sys
 import re
-from datetime import datetime
+from datetime import date
 from pathlib import Path
 
 # Fix encoding for Windows (cp1252 doesn't support Unicode symbols like (R, (X), (T)
@@ -72,6 +80,24 @@ REQUIRE_ArchitectURAL_CHANGE = [
 ]
 
 
+def fecha_iso_estricta(valor: str) -> str:
+    """`YYYY-MM-DD` calendario real, sin admitir las formas vecinas del ISO de Python.
+
+    Es la guarda de D-F5: el escritor estampaba `datetime.now()`, asi que una entrada tardia publicaba
+    la fecha del dia. `date.fromisoformat` (3.11+) tambien acepta la forma basica `20260923` y otras
+    variantes, por eso el patron ancla primero la forma exacta y despues el calendario.
+    """
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", valor or ""):
+        raise argparse.ArgumentTypeError(
+            f"--fecha requiere YYYY-MM-DD (dos digitos de mes y de dia) y se recibo {valor!r}")
+    try:
+        date.fromisoformat(valor)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            f"--fecha no es una fecha de calendario valida ({valor!r}): {exc}") from exc
+    return valor
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Registra fase completada en REGISTRY.md segun CONTRIBUTING.md"
@@ -80,6 +106,20 @@ def parse_args():
         "--fase",
         required=True,
         help="Numero o identificador de fase (ej: FASE-12, FASE-CAUSAL-01)"
+    )
+    parser.add_argument(
+        "--fecha",
+        required=True,
+        type=fecha_iso_estricta,
+        help="Fecha que estampa la entrada y el encabezado 'Ultima actualizacion' (YYYY-MM-DD). "
+             "Obligatoria a proposito (D-F5): una entrada tardia no puede llevar la fecha del reloj, "
+             "y sin bandera el script se niega en vez de escribir una fecha falsa."
+    )
+    parser.add_argument(
+        "--nota",
+        default=None,
+        help="Nota opcional que viaja dentro de la entrada (el motivo de una registro tardio, "
+             "por ejemplo). Sin esta bandera la entrada no imprime linea de nota."
     )
     parser.add_argument(
         "--desc",
@@ -148,10 +188,12 @@ def parse_args():
 
 def generar_entrada_registry(args):
     """Genera la entrada para REGISTRY.md"""
-    
-    fecha = datetime.now().strftime("%Y-%m-%d")
+
+    # D-F5: la fecha la declara quien registra. Antes este punto sacaba la fecha de `datetime.now()`,
+    # asi que registrar en tardanza una fase cerrada dias atras publicaba la fecha del dia.
+    fecha = args.fecha
     fase_id = args.fase.upper()
-    
+
     # Procesar archivos
     nuevos = []
     if args.archivos_nuevos:
@@ -171,8 +213,11 @@ def generar_entrada_registry(args):
     lines = [
         f"## {fase_id} - {fecha}\n",
         f"**Descripcion:** {args.desc}\n",
-        "\n### Archivos Nuevos\n",
     ]
+    nota = (getattr(args, "nota", None) or "").strip()
+    if nota:
+        lines.append(f"**Nota:** {nota}\n")
+    lines.append("\n### Archivos Nuevos\n")
     
     if nuevos:
         lines.append("| Archivo | Tipo | Descripcion |\n")
@@ -225,7 +270,7 @@ def generar_entrada_registry(args):
     return "".join(lines)
 
 
-def actualizar_registry(entrada):
+def actualizar_registry(entrada, fecha):
     """Agrega entrada al final de REGISTRY.md (antes del ultimo ---)"""
     
     if not REGISTRY_FILE.exists():
@@ -234,15 +279,17 @@ def actualizar_registry(entrada):
     
     content = REGISTRY_FILE.read_text(encoding="utf-8")
     
-    # Actualizar header con la fecha de la ULTIMA ENTRADA DOCUMENTAL (hoy, al registrar la fase).
+    # Actualizar header con la fecha de la ULTIMA ENTRADA DOCUMENTAL (la que declara `--fecha`).
     # Semantica: NO es la fecha de release (esa vive en VERSION.yaml/CHANGELOG y la propaga
     # sync_versions a otros encabezados). Este es el UNICO escritor de "> **Ultima actualizacion:**"
     # en REGISTRY.md; sync_config.yaml ya no tiene regla sobre REGISTRY para no pisar esta fecha
     # con la de release (conflicto repetido resuelto en el bloque B de ORDEN-CAMBIO-CALIDAD 2026-09-22).
+    # D-F5: el valor es el declarado, no el reloj. Una entrada tardia lleva el encabezado atras, y eso
+    # es lo que se acordo: la fecha de la entrada manda sobre cualquier lectura del dia.
     lines = content.splitlines()
     for i, line in enumerate(lines):
         if line.startswith("> **Ultima actualizacion:**"):
-            lines[i] = f"> **Ultima actualizacion:** {datetime.now().strftime('%Y-%m-%d')}"
+            lines[i] = f"> **Ultima actualizacion:** {fecha}"
             break
     
     # Contar fases
@@ -538,7 +585,7 @@ def mostrar_por_hacer(args):
 
 
 def verificar_docs_manuales(fase_id, args):
-    """Verifica y强制( enforce) documentacion manual.
+    """Verifica y fuerza (enforce) documentacion manual.
     
     Si --check-manual-docs y hay gaps:
     - Si --force-skip-docs: muestra skip pero continua
@@ -744,7 +791,7 @@ def main():
     
     # Actualizar REGISTRY.md
     print("\n[1/2] Actualizando REGISTRY.md...")
-    nuevo_content = actualizar_registry(entrada)
+    nuevo_content = actualizar_registry(entrada, args.fecha)
     # newline="\n": el lado almacenado de REGISTRY.md es LF; sin este parametro write_text
     # re-escribia el archivo entero con CRLF en disco en Windows (el editor del registro no debe
     # cambiar los finales de linea del expediente que solo declara).

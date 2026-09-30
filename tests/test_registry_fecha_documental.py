@@ -21,6 +21,7 @@ Las aserciones de ausencias de escritura comparan contenido, metadatos y **opera
 prueban que nadie abrio el archivo.
 """
 
+import contextlib
 import importlib.util
 import json
 import re
@@ -42,6 +43,11 @@ REGISTRY_REL = "docs/contributing/REGISTRY.md"
 OBSERVADOR = ROOT / "tests" / "support_observador_escrituras.py"
 # Commiteado ANTES de todo el bloque B: es el escritor permisivo real, no una parodia dentro del test.
 REV_ESCRITOR_DEFECTUOSO = "da382b1"
+# Revision publicada FIJA anterior a D-F5 (la de anclaje del Paso 0 de la orden del 2026-09-30): el
+# escritor todavia estampaba `datetime.now()`. Nunca HEAD: la cura que se escribe hoy moveria HEAD y el
+# control perderia su premisa.
+REV_ESCRITOR_SIN_BANDERAS = "7737347"
+HOY = datetime.now().strftime("%Y-%m-%d")   # el reloj real, para probar que la entrada NO lo usa
 
 # Los consumidores reales que la configuracion vigente si toca. Se copian al repositorio temporal
 # para que «sincronizar en modo escritura» sea un camino real, no un vacio.
@@ -98,6 +104,13 @@ def _fuente_versionada(tmp_path: Path, rev: str, rel: str) -> Path:
 
 def _observador():
     return _cargar("observador_escrituras_registry", OBSERVADOR)
+
+
+def _rev_existe(rev: str) -> bool:
+    return subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"],
+        cwd=str(ROOT), capture_output=True,
+    ).returncode == 0
 
 
 def _huella(path: Path):
@@ -163,15 +176,24 @@ class Expediente:
         self.config = self.rai / "scripts" / "sync_config.yaml"
 
     def registrar(self, fase: str, dia: str, *, tests: str = "", coherence=None,
-                  escritor: Path = None):
+                  escritor: Path = None, nota: str = None, pasar_fecha: bool = True,
+                  reloj: str = None, pasar_fecha_textual: str = None,
+                  capturar_salida: bool = False):
         """Corre el ESCRITOR REAL (`main()` de log_phase_completion) sobre este expediente.
 
         Con `escritor=` se le pasa otra versi&oacute;n del archivo (p. ej. la commiteada antes de B)
         para que un control negativo ejercite al instrumento defectuoso real, no una parodia escrita
         dentro de la prueba. Las aperturas de escritura del propio registro quedan observadas en
         `self.escrituras`.
+
+        `pasar_fecha=False` deja la invocacion sin `--fecha`: es lo que necesita un escritor versionado
+        anterior a D-F5, que no conoce la bandera; `pasar_fecha_textual` manda cualquier otra forma del
+        literal (una fecha mal escrita), y `capturar_salida` convierte el `SystemExit` del rechazo en el
+        codigo que el control tiene que observar. `reloj` ancla `datetime.now()` del modulo a un dia
+        DISTINTO del declarado, que es la unica forma de probar que la fecha de la entrada no sale del
+        reloj (D-F5).
         """
-        lpc = _cargar(f"lpc_reg_{dia}_{fase}_{escritor or 'vigente'}", escritor or LPC)
+        lpc = _cargar(f"lpc_reg_{dia}_{fase}_{escritor or 'vigente'}_{reloj}", escritor or LPC)
         lpc.ROOT_DIR = self.rai
         lpc.CONTRIBUTING_FILE = self.rai / "docs" / "CONTRIBUTING.md"
         lpc.DOCS_CONTRIBUTING_DIR = self.rai / "docs" / "contributing"
@@ -181,9 +203,15 @@ class Expediente:
             lpc.ROOT_DIR, lpc.CONTRIBUTING_FILE, lpc.DOCS_CONTRIBUTING_DIR,
             lpc.REGISTRY_FILE, lpc.LAST_DOC_TRACKER,
         ])
-        lpc.datetime = _dia_fijo(dia)
+        lpc.datetime = _dia_fijo(reloj or dia)
         argv = ["log_phase_completion.py", "--fase", fase, "--desc", "registro de prueba",
                 "--archivos-mod", "modules/ejemplo.py"]
+        if pasar_fecha_textual is not None:
+            argv += ["--fecha", pasar_fecha_textual]
+        elif pasar_fecha:
+            argv += ["--fecha", dia]
+        if nota is not None:
+            argv += ["--nota", nota]
         if tests:
             argv += ["--tests", tests]
         if coherence is not None:
@@ -192,7 +220,12 @@ class Expediente:
         obs = _observador()
         try:
             with obs.observador_de_escrituras() as registro:
-                rc = lpc.main()
+                try:
+                    rc = lpc.main()
+                except SystemExit as exc:
+                    if not capturar_salida:
+                        raise
+                    rc = f"SystemExit({exc.code})"
             self.escrituras = [(op, r) for op, r, _ in registro.operaciones]
             _exigir_rutas_en_temporal(self.rai, [r for _, r in self.escrituras])
         finally:
@@ -646,8 +679,14 @@ def test_control_negativo_el_escritor_permisivo_vuelve_a_afirmar_de_mas(tmp_path
     defectuoso = Expediente(tmp_path / "defectuoso")
     escritor_anterior = _fuente_versionada(tmp_path / "defectuoso", REV_ESCRITOR_DEFECTUOSO,
                                            "scripts/log_phase_completion.py")
+    # Premisa del control: esa revision NO conoce `--fecha` (D-F5 nace justo de eso). Si algun dia el
+    # anclaje se moviera a una revision que si la tiene, `pasar_fecha=False` dejaria de probar nada.
+    fuente_anterior = escritor_anterior.read_text(encoding="utf-8")
+    assert '"--fecha"' not in fuente_anterior and '"--nota"' not in fuente_anterior, (
+        f"el escritor de {REV_ESCRITOR_DEFECTUOSO} ya trae las banderas de D-F5: el control negativo "
+        "dejo de ser anterior a la cura")
     rc, _ = defectuoso.registrar("FASE-OK", DIA_1, tests="7", coherence=0.5,
-                                 escritor=escritor_anterior)
+                                 escritor=escritor_anterior, pasar_fecha=False)
     assert rc == 0, "el escritor versionado debe correr bien: el rojo lo causa su contenido"
     aprobadas = _aprobaciones_no_ejecutadas(defectuoso.texto(), "FASE-OK")
     assert aprobadas, (
@@ -662,7 +701,7 @@ def test_sin_datos_no_se_afirma_una_ausencia(tmp_path):
     arbol, asi que lo suyo es «sin dato declarado». Es la misma familia que `- [x] Tests passing`."""
     lpc = _cargar("lpc_sin_datos", LPC)
     args = SimpleNamespace(fase="FASE-VACIA", desc="d", archivos_nuevos=None, archivos_mod=None,
-                           tests=None, coherence=None)
+                           tests=None, coherence=None, fecha=DIA_1, nota=None)
     entrada = lpc.generar_entrada_registry(args)
     assert "_Ninguno_" not in entrada, (
         "el escritor vuelve a publicar una ausencia como si la hubiera comprobado:\n" + entrada)
@@ -675,10 +714,11 @@ def test_generar_entrada_registry_conserva_los_datos_declarados(tmp_path):
     lpc = _cargar("lpc_entrada", LPC)
     args = SimpleNamespace(fase="FASE-DATOS", desc="descripcion larga del tramo",
                            archivos_nuevos="modules/nuevo.py,tests/test_nuevo.py",
-                           archivos_mod="modules/viejo.py", tests="13", coherence=0.91)
+                           archivos_mod="modules/viejo.py", tests="13", coherence=0.91,
+                           fecha=DIA_1, nota=None)
     entrada = lpc.generar_entrada_registry(args)
     for esperado in ("## FASE-DATOS", "descripcion larga del tramo", "modules/nuevo.py",
-                     "tests/test_nuevo.py", "modules/viejo.py", "13", "0.91", "PASO"):
+                     "tests/test_nuevo.py", "modules/viejo.py", "13", "0.91", "PASO", DIA_1):
         assert esperado in entrada, f"falta {esperado!r} en:\n{entrada}"
 
 
@@ -729,3 +769,163 @@ def test_sync_check_repetido_no_reescribe_la_fecha_del_registry_real():
         assert huellas_configuradas() == antes, "check altero contenido o metadatos protegidos"
         assert set(engine.results) == {regla["id"] for regla in config["rules"]}
         assert ok is True, engine.results
+
+
+# ------------------------------------------- (6) D-F5: la fecha la declara quien registra, no el reloj
+
+def _con_captura(fn, *a, **k):
+    """`fn(*a, **k)` con stdout/stderr desviados a archivos temporales.
+
+    No se usa `capsys` ni `StringIO`: el modulo reconfigura su `sys.stdout` al importar (rama win32),
+    y un StringIO no expone ni `reconfigure` ni `buffer` — la captura mataba al instrumento antes de
+    que este leyera un arg (medido en la primera corrida de D-F5). Un `TemporaryFile` en modo texto si
+    es un TextIOWrapper, asi que el reconfigure del modulo funciona sobre el sin que nadie lo note.
+    """
+    import tempfile
+    handles = [tempfile.TemporaryFile(mode="w+", encoding="utf-8") for _ in range(2)]
+    try:
+        with contextlib.redirect_stdout(handles[0]), contextlib.redirect_stderr(handles[1]):
+            resultado = fn(*a, **k)
+        textos = []
+        for h in handles:
+            h.seek(0)
+            textos.append(h.read())
+        return resultado, textos[0] + textos[1]
+    finally:
+        for h in handles:
+            h.close()
+
+
+def _rechazo(espejo: Expediente, fase: str, **kw):
+    """`espejo.registrar(...)` con las salidas capturadas: devuelve (rc, texto_impreso).
+
+    `registrar` devuelve el par (rc, modulo), asi que el unwrap va aqui y no en cada prueba: lo que un
+    rechazo tiene que mostrar es el codigo, no el modulo.
+    """
+    resultado, salida = _con_captura(espejo.registrar, fase, DIA_1,
+                                     capturar_salida=True, **kw)
+    return resultado[0], salida
+
+
+@contextlib.contextmanager
+def _expediente_inalterable(espejo: Expediente):
+    """Cede el control y exige que el expediente salga byte a byte igual que como ingreso, sin aperturas."""
+    bytes_antes = espejo.registry.read_bytes()
+    tracker_antes = (espejo.tracker.read_bytes() if espejo.tracker.exists() else None)
+    yield
+    assert espejo.registry.read_bytes() == bytes_antes, (
+        "el registro real del expediente cambio pese al rechazo: se escribio una entrada que "
+        "no debio escribirse")
+    assert (espejo.tracker.read_bytes() if espejo.tracker.exists() else None) == tracker_antes, (
+        "el rechazo dejo escrito el tracker auxiliar")
+    assert espejo.escrituras == [], f"el rechazo abrio archivos en modo escritura: {espejo.escrituras}"
+
+
+def test_una_entrada_tardia_sin_fecha_se_niega_y_no_escribe(tmp_path):
+    """D-F5: sin `--fecha` el escritor ya no puede estampar una fecha de reloj.
+
+    Es el caso que nace de medir: FASE-A de JEV se cerro el 2026-09-21 y hoy alguien la registraria con
+    la fecha de hoy. Antes de la cura esa corrida escribia; ahora se niega y no toca el expediente.
+    """
+    assert HOY != DIA_1, "el control necesita que el reloj no coincida con la fecha declarada"
+    espejo = Expediente(tmp_path)
+    rc, salida = _rechazo(espejo, "FASE-TARDIA", pasar_fecha=False)
+    assert isinstance(rc, str) and rc.startswith("SystemExit("), (
+        f"sin --fecha el escritor no rechazo con un codigo de salida propio: rc={rc!r}")
+    assert rc != "SystemExit(0)", "un rechazo no puede salir con codigo 0"
+    assert espejo.entradas("FASE-TARDIA") == 0, espejo.texto()
+    assert espejo.fecha_cabecera() == "2020-01-01", (
+        "la cabecera de fecha se movio pese al rechazo")
+    assert "--fecha" in salida, (
+        f"el mensaje de rechazo no nombra la bandera que falta: {salida[:400]!r}")
+
+
+def test_el_rechazo_sin_fecha_no_abre_ningun_archivo_del_expediente(tmp_path):
+    """«Se niega con error y no escribe», medido por OPERACIONES observadas, no por el resultado final.
+
+    Bytes identicos no prueban que nadie abrio el archivo (`tests/support_observador_escrituras.py`).
+    """
+    espejo = Expediente(tmp_path)
+    with _expediente_inalterable(espejo):
+        rc, _ = _rechazo(espejo, "FASE-SINF", pasar_fecha=False)
+    assert rc != 0 and isinstance(rc, str), rc
+
+
+@pytest.mark.parametrize("forma_mala", [
+    "2026-9-23",            # meses/dias sin cero inicial
+    "2026-09-31",           # dia inexistente
+    "2026-13-01",           # mes inexistente
+    "20260923",             # forma basica
+    "23-09-2026",           # dia primero
+    "2026-09-23T00:00:00",  # timestamp, no fecha
+    "ayer",                 # texto libre
+])
+def test_fecha_que_no_es_iso_estricta_se_niega(tmp_path, forma_mala):
+    """`--fecha` no acepta ninguna de las formas vecinas: la cabecera se casa con la fecha de la entrada."""
+    # El directorio se nombra con un slug, no con la forma probada: `2026-09-23T00:00:00` lleva dos
+    # puntos y Windows rechaza el mkdir antes de que el instrumento vea un arg (WinError 123).
+    espejo = Expediente(tmp_path / re.sub(r"[^A-Za-z0-9_-]", "_", forma_mala))
+    rc, salida = _rechazo(espejo, "FASE-MALA", pasar_fecha_textual=forma_mala)
+    assert isinstance(rc, str) and rc.startswith("SystemExit("), (
+        f"la forma {forma_mala!r} no fue rechazada: rc={rc!r}")
+    assert espejo.entradas("FASE-MALA") == 0, espejo.texto()
+    assert espejo.fecha_cabecera() == "2020-01-01"
+    assert "fecha" in salida.lower(), f"el rechazo no explica por que {forma_mala!r} no vale: {salida[:300]!r}"
+
+
+def test_la_fecha_declarada_manda_sobre_el_reloj_en_los_dos_sitios(tmp_path):
+    """Cabecera de la entrada (`:172`) y `> **Ultima actualizacion:**` (`:245`): ambas toman `--fecha`.
+
+    El reloj del modulo esta anclado en HOY y la fecha declarada en DIA_1. Si cualquiera de los dos
+    sitios volviera a `datetime.now()`, HOY apareceria en el expediente y esta prueba lo corta.
+    """
+    espejo = Expediente(tmp_path)
+    rc, _ = espejo.registrar("FASE-DECLARADA", DIA_1, reloj=HOY)
+    assert rc == 0
+    texto = espejo.texto()
+    assert f"## FASE-DECLARADA - {DIA_1}" in texto, texto[:600]
+    assert espejo.fecha_cabecera() == DIA_1
+    assert HOY not in texto, (
+        f"la fecha del reloj ({HOY}) se metio en el expediente pese a declararse {DIA_1}")
+
+
+def test_el_control_negativo_del_escritor_versionado_estampa_el_reloj(tmp_path):
+    """Rojo por causa con el instrumento VERSIONADO: `7737347` escribe la fecha del reloj.
+
+    No es una parodia escrita dentro del test: es el archivo leido con `git show` y ejecutado con su
+    propio `main()`. Sobre la MISMA invocacion de entrada tardia que hoy se niega, esa revision publicaba
+    escribia `## FASE-TARDIA - <hoy>`, que es exactamente el defecto que D-F5 registra.
+    """
+    assert _rev_existe(REV_ESCRITOR_SIN_BANDERAS), (
+        f"la revision de anclaje {REV_ESCRITOR_SIN_BANDERAS} no esta en el repositorio")
+    anterior = _fuente_versionada(tmp_path / "v1", REV_ESCRITOR_SIN_BANDERAS,
+                                  "scripts/log_phase_completion.py")
+    fuente = anterior.read_text(encoding="utf-8")
+    assert '"--fecha"' not in fuente, (
+        f"{REV_ESCRITOR_SIN_BANDERAS} ya conoce --fecha: el control no ejercita la causa nombrada")
+    assert "datetime.now()" in fuente, (
+        f"{REV_ESCRITOR_SIN_BANDERAS} ya no estampa el reloj: el defecto que se invoca aqui no existe")
+
+    espejo = Expediente(tmp_path / "v2")
+    rc, _ = espejo.registrar("FASE-TARDIA", DIA_1, escritor=anterior, pasar_fecha=False, reloj=HOY)
+    assert rc == 0, "el escritor versionado debe correr: el hallazgo es su contenido, no un fallo"
+    assert espejo.entradas("FASE-TARDIA") == 1, espejo.texto()
+    assert f"## FASE-TARDIA - {HOY}" in espejo.texto(), (
+        "la revision anterior no publico la fecha del reloj: el control no reproduce el defecto")
+    assert espejo.fecha_cabecera() == HOY
+
+
+def test_la_nota_viaja_a_la_entrada_y_su_ausencia_no_inventa_una_linea(tmp_path):
+    """`--nota` es el campo que permite registrar en tardanza con su explicacion; sin nota no se imprime."""
+    espejo = Expediente(tmp_path)
+    rc, _ = espejo.registrar("FASE-CONNOTA", DIA_1,
+                             nota="FASE-A cerrada el 2026-09-21, registrada en tardanza")
+    assert rc == 0
+    texto = espejo.texto()
+    assert "FASE-A cerrada el 2026-09-21, registrada en tardanza" in texto, texto[-800:]
+
+    limpio = Expediente(tmp_path / "sin")
+    rc, _ = limpio.registrar("FASE-SINNOTA", DIA_1)
+    assert rc == 0
+    assert "**Nota:**" not in limpio.texto(), (
+        "sin --nota el escritor publico una linea de nota vacia o un placeholder")

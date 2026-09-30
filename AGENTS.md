@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,611 funciones totales)
+### Cobertura por Modulo (4,651 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -414,6 +414,22 @@ python scripts/run_all_validations.py           # Completo
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
 >
+> **Ronda del 2026-09-30 (la cifra subio a 4,651).** Medido con el metodo canonico de la casa
+(`grep -rE "^\s*def test_" tests --include=*.py` = **4,651**) y contrastado con el arbol versionado
+(`git grep -c -E "^\s*def test_" HEAD -- tests` = **4,611** en `7737347`): la diferencia es **+40**, y son
+cuatro funciones-test que todavia no estan commiteadas, no deuda. El delta se atribuye archivo por archivo:
+**+6** en `tests/test_registry_fecha_documental.py` (14 → **20**: los dos rechazos de D-F5, las siete formas
+ISO mal escritas que caen en una funcion parametrizada, la fecha declarada contra el reloj, el control
+negativo con el escritor de `7737347` y la nota), **+5** en el nuevo
+`tests/test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), **+17** en el nuevo
+`tests/test_verify_qmind_context_freshness.py` (S34) y **+12** en el nuevo
+`tests/test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29). Todo cae en la
+fila `root test files` (**973 → 1.013**); `quality_gates` y las otras 20 filas no se movieron, y la suma de
+las 22 filas vuelve a dar exactamente **4,651** (verificado sumando la tercera columna). Las cuatro pruebas
+**viajan con su cifra**: la dependencia declarada es que los cuatro archivos esten commiteados antes o con
+esta cabecera, no despues, para que los dos comandos cuadren en el commit que lleva la nota. Antecedente tal
+como se publico: **4,611** (ronda del 2026-09-28, publicado en la tanda de `0e9cdd5`).
+
 > **Ronda del 2026-09-28 (la cifra subio a 4,611).** Medido con el metodo canonico de la casa
 > (`grep -rE "^\s*def test_" tests --include=*.py`, **4,611**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests`, **4,611** en `0e9cdd5`): **las dos cifras cuadran**, y por
@@ -556,7 +572,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 973 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido) |
+| root test files | 1013 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido; **+40 en la ronda del 2026-09-30**: 6 en `test_registry_fecha_documental.py` (14 → 20, la cura de D-F5 con sus rechazos y su forma ISO), 5 en el nuevo `test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), 17 en el nuevo `test_verify_qmind_context_freshness.py` (S34, con su control negativo contra el hermano versionado) y 12 en el nuevo `test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29: gobernar la descripcion del alcance, no solo el alcance) |
 
 ---
 
