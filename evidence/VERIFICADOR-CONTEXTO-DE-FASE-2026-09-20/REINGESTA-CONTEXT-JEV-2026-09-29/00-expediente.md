@@ -15,6 +15,10 @@ entro en este alcance**: ninguna fuente se borro.
   editar `AGENTS.md`/`.cursorrules`/`VERSION.yaml`/`DOMAIN_PRIMER`, tocar `scripts/log_phase_completion.py`,
   tomar D-B/D-D ni asignar dueño de S14, inventar IDs de deuda, `git stash`, commitear ni empujar, ni delegar
   el Paso 0, la escritura, la verificacion, los sellos o los commits (**no** hubo subagentes).
+  ⟦**Vencido en parte el 2026-09-29, dentro de la misma sesion**: la letra «Commit sin L3» y despues «Empujalo
+  sin L3» autorizaron las dos cosas que este renglon negaba, y se ejecutaron —ver §13. Lo demas del renglon sigue
+  siendo cierto: no se borro fuente alguna, no se toco config central ni `log_phase_completion.py`, no se tomaron
+  D-B/D-D ni el dueño de S14, no se inventaron IDs, no hubo `stash` y no hubo subagentes.⟧
 - Crudos: todos los archivos de esta carpeta. Ningun crudo acaba en `.log` (ver §5, trampa medida).
 
 ---
@@ -221,6 +225,9 @@ Dos cosas que el verde **no** avala, declaradas:
 
 - El quick mide el arbol de `HEAD`, asi que su `13/13` no certifica lo que esta sesion escribio sin commitear. Lo
   que si certifica es que **no rompio nada de lo versionado**, y eso tambien es resultado.
+  ⟦Vencido en parte el 2026-09-29: tras el commit se re-corrieron el quick y el `--strict` sobre el arbol ya
+  commiteado y dieron **13/13** y **13/13** los dos (crudos `29-` antes del stageo; la re-pasada post-commit va
+  registrada en §13). La cautela de esta linea sigue siendo cierta para cualquier lectura anterior al commit.⟧
 - **Ninguna bateria pytest se corrio en esta tanda**: el pipeline que fija la orden nombra seis comandos y pytest
   no esta entre ellos, asi que no estaba autorizado. La regresion de `tests/` queda **no ejecutada**. Su
   antecedente vigente es el de la decimocuarta sesion, en otro expediente: `3 failed, 4642 passed, 41 skipped,
@@ -239,6 +246,11 @@ Los cinco cortes terminan en **espera de autorizacion**: implementacion terminad
 terminada (§1 a §5 y §8), cierre documental (§4, los sellos apuntando a este expediente), listo para revision
 (arbol con **3** lineas y pipeline en verde) y **espera de autorizacion**. El `git commit` no es condicion de
 ninguno de los cinco: es una accion posterior, separada y con autorizacion explicita. El push se pregunta aparte.
+
+⟦**2026-09-29, el quinto corte tambien se cerro por letra explicita.** El commit salio con «Commit sin L3» y el
+empuje con «Empujalo sin L3»; los dos se ejecutaron y se verificaron, y su registro esta en §13. Nada de lo de
+arriba se reescribe: el commit sigue sin ser condicion de ningun corte, y la autorizacion explicita que aqui se
+exigia es exactamente la que llego.⟧
 
 El `Plan Citations` del quick cerro con **`743 citas historicas, 0 nuevas y 0 crecimientos`**, que es el instrumento
 de la casa para la cuarta letra del control de sellos («0 citas nuevas») y coincide con la resta propia de `10-`:
@@ -283,6 +295,9 @@ stderr van en su propio tallo porque el `EXIT` se captura sin tuberia y la salid
 | `20-`, `22-`, `22a-`, `22b-`, `22c-` | re-pasadas de los controles de sellos y del cierre (numstat, `diff --check`, porcelain, `rev-parse HEAD`) |
 | `23-`, `24-`, `25-`, `26-` | las pasadas del verificador de citas del propio expediente: `23-`/`24-` son el **predicado equivocado** (§11), `25-` es la version corregida con **0 citas rotas**, y `26-` re-mide el indice despues de escribirlo |
 | `27-`, `27a-`…`27f-` | la pasada final de los cuatro controles juntos (barrido, citas, sellos y arbol), cada uno en su archivo para no mezclar stdout con stderr |
+| `28a-`…`28e-`, `29-`, `29a-`…`29f-` | la misma triada de controles re-corrida ya con el expediente terminado (`28-`) y la **bateria antes de stagear** (`29-`: `--strict`, packs, indice, quick, `diff --check` y el conteo de `.log`) |
+| `30-` | la normalizacion EOL de los 43 crudos, con el sha re-medido de las tres descargas despues del barrido |
+| `31-`, `32-` | self-control y citas del expediente **despues** del sello de publicacion (§13): CJK **0**, marcadores **4/4**, `citados_sin_archivo=NINGUNO`, `citas_rotas=0` |
 
 **Regla para lo que venga despues de esta fila**: cualquier tallo nuevo es una **re-pasada de un control ya
 nombrado arriba**, no un control nuevo. El verificador de citas (`m-17`) lo mide y siempre queda un residuo de uno:
@@ -333,3 +348,44 @@ Y el instrumento que lo hizo fallo la primera vez por una razon propia: calculab
 del repo y hacia `cd` a la carpeta **antes** de abrir el redirect, asi que el bloque ni se ejecuto
 (`No such file or directory`, exit 1). Se corrigio a ruta relativa y se re-corrio; el conteo «antes» de `30-`
 (43/62) es el de la pasada que si corrio, no una memoria de la que fallo.
+
+---
+
+## 13. Sello de publicacion (medido, no citado de memoria)
+
+El commit y el empuje los autorizo el operador con dos letras separadas y explicitas: «Commit sin L3» y
+«Empujalo sin L3». El **L3 no se corrio en ninguno de los dos** porque la propia letra lo excluye; no se simulo ni
+se declaro como hallazgo: **la revision nunca ocurrio**.
+
+| Momento | Comando | Medido |
+|---|---|---|
+| Revision | `git rev-parse HEAD` | `ec697baa2f4e4204c6f588d51f59ab28a35c42a5` (107 rutas: 2 `M` con `numstat` 12/0 y 1/1 + 105 `A`) |
+| Arbol tras el commit | `git status --porcelain` | **0** lineas |
+| Paridad antes del push | `git fetch` + `git rev-list --left-right --count origin/master...HEAD` | **0 1** (un commit por delante, cero por detras) |
+| Huella del rango | `git rev-list --objects origin/master..HEAD` | **90 objetos**: 83 blobs + 6 trees + 1 commit, **404.339 B** |
+| Rutas del rango | `git diff --name-only origin/master..HEAD` | **107**, de las cuales **92** traen blob nuevo y **15** reutilizan uno ya publicado (11 vacios que comparten el blob nulo, 2 salidas identicas de `--strict`, y 2 descargas que comparten el blob de la fuente gobernada) |
+| Exclusiones verificadas | `grep -c permisos-pre` / `grep -c '\.log$'` sobre el rango | **0** y **0** |
+| Credenciales en el arbol commiteado | `git grep -E 'https?://…x-oss-(signature|credential|date|expires)' HEAD` | **0** en mi carpeta. La unica coincidencia en TODO el arbol es un **literal de regex** en `RE-VEREDICTO-…/m-15-cierre-notebook.py:10`, ajeno a este rango y ya publicado en `f624e02`. Cero `LTAI…`, cero `Authorization: bearer` |
+| Post-commit | `run_all_validations.py --quick` y `validate_qmind_writeback.py --strict` | **13/13** y **13/13**, ambos sobre el arbol ya commiteado |
+| Push | `git push origin master` | rango publicado **`f624e02..ec697ba`** |
+| Verificacion en el remoto | `git ls-remote origin refs/heads/master` | `ec697baa…a35c42a5`, **identico a HEAD** |
+| Alcance | `git merge-base --is-ancestor ec697ba origin/master` | **exit 0** |
+| Paridad despues | `git rev-list --left-right --count origin/master...HEAD` | **0 0** |
+| Ramas | `git ls-remote --heads origin` | **1** referencia: solo `master` |
+
+**Que la reutilizacion de blob confirma algo, no solo ahorra objetos**: `descarga-01a0efcc-…md`,
+`17b-reconfirmacion-…md` y `.opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md` son el **mismo blob**
+`7de97731…`. O sea, tres caminos independientes —la fuente publicada en QMind, la reconfirmacion de cierre y el
+archivo gobernado del repo— coinciden byte a byte. Eso es la divergence cerrada, medida por identidad de objeto.
+
+**Un defecto de esta seccion, declarado**: el texto original de la tercera nota datada salio con **dos caracteres
+CJK** (U+6388 U+6743 en lugar de la palabra `autorizacion`), la misma familia que ya mordio al mensaje de `3aeb89b`.
+Se corrigio antes de commitear y el barrido lo confirmo. Y **la propia correccion volvio a caer en lo mismo**: al
+escribir esta seccion se colaron otra vez esos dos caracteres, en un sitio y en otro — por eso el control de CJK va
+**despues** de redactar y no antes, y por eso aqui se citan por codepoint en vez de reproducirlos (reproducirlos
+haria rojo el propio control que los mide). No se enmienda `ec697ba`: no cita esta seccion y ya esta empujado, asi
+que la correccion viaja como nota datada en el commit de higiene.
+
+El quick y el `--strict` re-corridos **despues** del commit se escribieron fuera de la carpeta (un temporal del
+sistema), porque persistirlos aqui habria abierto un segundo commit sin autorizar. Su resultado esta en la tabla de
+arriba y no en un crudo: es el unico dato de esta tanda que se publica sin su archivo, y se declara.
