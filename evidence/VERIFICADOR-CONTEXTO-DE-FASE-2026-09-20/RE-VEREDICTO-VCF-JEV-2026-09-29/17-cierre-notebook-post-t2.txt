@@ -1,0 +1,30 @@
+== T2 - cierre del notebook despues del borrado del gemelo ==
+comando : qmind source delete 01a0e0d3-92db-795b-ad7a-48a7c322e8e9 --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 --force
+salida y exit: en 14-t2-delete.txt; pre-estado de la fuente: 13-pre-borrado-get.txt
+
+== Poblacion del notebook ==
+PRE  (01)            : 55 fuentes
+POST T1 (09)         : 56 fuentes
+POST T2 (16)         : 55 fuentes
+delta T1 = +1 ; delta T2 = -1 ; neto contra el PRE = +0
+
+== Ausencia del id borrado ==
+id presente en el POST-T2 (json)      : False
+id presente en el POST-T2 (tabla)     : False
+Total impreso por la tabla            : ['Total: 55']
+menciones del id en TODO el dir menos sus propios crudos de T2: 4
+
+== Fuentes del plan VCF que quedan en el notebook ==
+    id=01a0ef39-b514-7b10-ae86-5ff435fee0a3 status=ready bytes=110891 sha=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa
+      title='10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (cierre formal 2026-09-27, lecciones finales 2026-09-29)'
+    id=01a0e464-3331-7684-9742-f64e009fb10b status=ready bytes=106284 sha=e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b
+      title='10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+
+== Titulos duplicados en el notebook (control de que no queda un segundo gemelo) ==
+    0 titulos repetidos
+
+== Redaccion de URLs firmadas en los crudos de esta tanda ==
+    13-pre-borrado-get.txt : 0 URLs firmadas sustituidas
+    14-t2-delete.txt : 0 URLs firmadas sustituidas
+    15-post-borrado-tabla.txt : 0 URLs firmadas sustituidas
+    supervivientes del barrido (excluidos instrumentos y el propio informe): 0

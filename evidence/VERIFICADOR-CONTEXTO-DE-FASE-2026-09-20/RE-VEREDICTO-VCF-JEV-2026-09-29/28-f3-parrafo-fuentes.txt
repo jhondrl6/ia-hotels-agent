@@ -1,0 +1,40 @@
+== F3 barrido por parrafo. Alcance: fuentes (13 archivos .md)
+== Lista de archivos del alcance:
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+== Predicado: un parrafo (separado por linea en blanco) contiene la cadena literal
+   'piloto FASE-C' Y alguna de estas negaciones normalizadas (minusculas, sin acentos):
+   no lo esta, sigue sin autorizar, sin autorizacion, no se ejecuto, no esta autorizada, no estan autorizados, pendientes de su autorizacion, no esta autorizado, sigue pendiente de su autorizacion
+== Clasificacion A (criterio debil): el caracter '⟦' aparece en el MISMO parrafo => CON-NOTA
+== Clasificacion B (criterio fuerte): ademas, el '⟦' cae DESPUES de la ultima negacion del
+   parrafo, o sea que la nota sigue a la frase en lugar de referir a otra cosa del bloque
+== Limites: las tablas markdown sin linea en blanco forman UN parrafo (una fila anotada
+   anota el bloque entero bajo el criterio debil); y '⟦' es la marca de nota datada de la casa.
+
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:18-27 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido contractualmente por ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132-146 [CON-NOTA] [SIN-NOTA-DETAS] | Decisión | Resuelto | Base | |---|---|---| | **¿Se toca `run_all_validations.py` o el hook para añadir check...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md:7-18 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md:3-26 [CON-NOTA] [SIN-NOTA-DETAS] > **Estado de este prompt al 2026-09-24: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue > siendo la ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md:12-25 [CON-NOTA] [SIN-NOTA-DETAS] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:8-24 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está autorizado; el bloque C y e...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:7-19 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:270-354 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] - [x] El pack se genera dentro del plan y **no** sustituye ninguna lectura canónica (alternativa descartada: r...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:33-55 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está autorizado; el bloque C y e...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:3-17 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:137-210 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+
+TOTAL parrafos que afirman la clausula: 11
+CON-NOTA (criterio debil): 11
+SIN-NOTA (criterio debil): 0
+CON NOTA-DETAS-DE-LA-FRASE (criterio fuerte): 7

@@ -1,0 +1,19 @@
+### 2. Packs: primero --check (sin escribir). Solo se regeneran si corta rojo.
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+EXIT_PACKS_CHECK=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_INDICE_CHECK=0
+a1391935611ebae476a9ad0c19a8ca91412eeaa5d0a148dfa00ce8b200fec8a7 *.opencode/LECCIONES-INDEX.md
+81fd7439b91c663a7f7de70fdcf986712daa4d4d2dbdcacf9fc6d6ef9e398d08 *.opencode/lecciones_index.json
+  ^ par del indice, para probar si esta intacto contra lo versionado
+2596745958aa78630218332e4383761b612759ac218dc1a24d762f5ca6cf7838 *.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+e29d64b4b4ab9ff24f10e2ba565cfe2f210a31a048e79f005a80c4b00c6252d1 *.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+8db80f7b2b136c02db810f21f427dd516eac4fcf7895a1b50cc9039a585115bf *.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+4f8bf61351541d01c92ac7e97cf73bbf1507eb56054356175541f05928d6c6ec *.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+fd158ea36896f5e468b0f63bbb1ac8642419c275d9bd3279a1ec311896981af0 *.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+  ^ los cinco packs

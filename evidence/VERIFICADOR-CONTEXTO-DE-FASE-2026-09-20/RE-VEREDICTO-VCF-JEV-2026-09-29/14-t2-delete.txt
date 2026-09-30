@@ -1,0 +1,2 @@
+deleted
+EXIT_DELETE=0

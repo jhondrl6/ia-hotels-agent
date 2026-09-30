@@ -1,0 +1,19 @@
+### numstat y diff --check del estado final
+EXIT_DIFF_CHECK=0
+9	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+15	0	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md
+EXIT_NUMSTAT=0
+### porcelain
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/
+### conteos
+3
+2
+### inventario de este expediente
+109
+25
+6
+### cifras canonicas de tests (disco y arbol versionado)
+4611
+4611

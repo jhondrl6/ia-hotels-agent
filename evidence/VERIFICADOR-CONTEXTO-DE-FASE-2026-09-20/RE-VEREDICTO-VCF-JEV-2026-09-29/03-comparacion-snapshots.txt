@@ -1,0 +1,70 @@
+== Paso 0 - medicion de snapshots del notebook por DESCARGA + sha256 ==
+notebook: 01a04d98-b7bd-778c-8441-26fdc7e35f45
+poblacion del listado JSON: 55 fuentes (Total impreso por la tabla: ver 00-source-list.txt)
+comando: qmind source list --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 --all --format json
+comando: qmind source download <source_id> --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 -o <destino> --overwrite
+
+--- VCF 10-analisis
+    source_id        : 01a0e464-3331-7684-9742-f64e009fb10b
+    titulo publicado : '10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+    status/updatedAt : ready / {'nanos': 968000000, 'seconds': 1790538175}
+    ruta en disco    : .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+    DESCARGA : bytes=106284 sha_crudo=e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b sha_norm=e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b CR=0 LF=473 CRLF=0 chars=103927
+    DISCO    : bytes=110891 sha_crudo=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa sha_norm=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa CR=0 LF=495 CRLF=0 chars=108410
+    DELTA    : bytes descarga - disco = -4607 ; chars = -4483
+    VEREDICTO: VENCIDA
+
+--- JEV 10-analisis
+    source_id        : 01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5
+    titulo publicado : '10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)'
+    status/updatedAt : ready / {'nanos': 540000000, 'seconds': 1790545868}
+    ruta en disco    : .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+    DESCARGA : bytes=15144 sha_crudo=34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9 sha_norm=34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9 CR=0 LF=147 CRLF=0 chars=14904
+    DISCO    : bytes=15144 sha_crudo=34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9 sha_norm=34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9 CR=0 LF=147 CRLF=0 chars=14904
+    DELTA    : bytes descarga - disco = +0 ; chars = +0
+    VEREDICTO: FRESCA
+
+--- JEV CONTEXT
+    source_id        : 01a0e4d9-e442-7d1b-bde5-7e9b669a2701
+    titulo publicado : 'CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21'
+    status/updatedAt : ready / {'nanos': 638000000, 'seconds': 1790545883}
+    ruta en disco    : .opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+    DESCARGA : bytes=17263 sha_crudo=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16 sha_norm=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16 CR=0 LF=125 CRLF=0 chars=17005
+    DISCO    : bytes=17272 sha_crudo=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914 sha_norm=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914 CR=0 LF=125 CRLF=0 chars=17014
+    DELTA    : bytes descarga - disco = -9 ; chars = -9
+    VEREDICTO: VENCIDA
+
+--- Leccion 43 Paso 0
+    source_id        : 01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07
+    titulo publicado : 'Leccion: una orden de re-verificacion arranca por la matriz vigente de la fuente unica (Paso 0 del 2026-09-28, versionada en c8b7198)'
+    status/updatedAt : ready / {'nanos': 237000000, 'seconds': 1790717111}
+    ruta en disco    : evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/43-leccion-paso-0-2026-09-28.md
+    DESCARGA : bytes=2677 sha_crudo=d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1 sha_norm=d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1 CR=0 LF=39 CRLF=0 chars=2608
+    DISCO    : bytes=2677 sha_crudo=d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1 sha_norm=d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1 CR=0 LF=39 CRLF=0 chars=2608
+    DELTA    : bytes descarga - disco = +0 ; chars = +0
+    VEREDICTO: FRESCA
+
+--- VCF 10-analisis GEMELO (pendiente de borrado; no tiene counterpart propio en disco)
+    source_id        : 01a0e0d3-92db-795b-ad7a-48a7c322e8e9
+    titulo publicado : '10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+    DESCARGA : bytes=94984 sha_crudo=fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80 chars=92931
+    contra el 10-analisis EN DISCO (bytes=110891 sha=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa): identico_crudo=False identico_norm=False
+    delta bytes vs disco = -15907 ; delta chars vs la otra fuente VCF publicada se lee arriba
+
+== Titles de las fuentes 10-analisis en el notebook (stem completo, para la re-ingesta) ==
+    01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5  '10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)'
+    01a0e464-3331-7684-9742-f64e009fb10b  '10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+    01a0e0d3-92db-795b-ad7a-48a7c322e8e9  '10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+    01a0bfc9-5f5a-783e-9492-16367bbff596  '10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)'
+    01a0a766-4cf6-7ec4-92fd-8edabbfcc3df  '10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)'
+    01a09d3d-245f-74c0-8a54-39c544ffa0d2  '10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)'
+    01a09347-e9c4-78ac-a954-0769f8d4da57  '10-analisis: TRIBUNAL-OFFLINE-2026-09-09 (cierre v4.76.0, lecciones finales 2026-09-11)'
+    01a08bd9-c22a-7b30-9c14-512fbeea2cf6  '10-analisis: TRIBUNAL-OFFLINE-2026-09-09 (lecciones aprendidas y decisiones)'
+    01a06ebb-001b-7a1a-a195-2714a9db271e  '10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)'
+    01a0590c-6979-70ce-94dc-c6987f36f188  'VALIDADOR-URL-PROPIA 10-analisis-post-implementacion (FASE-RELEASE 4.74.0 cerrada)'
+    01a04d9a-b307-75ed-9600-8ba2fb0680e2  '10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (lecciones aprendidas)'
+    01a04d9a-9a44-7ed7-969a-4209c61053be  '10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)'
+    01a04d9a-827b-78df-b696-2226c88b58f3  '10-analisis: DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 (lecciones aprendidas)'
+    01a04d9a-6b03-7d5a-808f-810113e05b9b  '10-analisis: CREDIBILIDAD-NUMERICA-2026-08-20 (lecciones aprendidas)'
+    01a04d9a-4eae-7ac5-97b1-4b01ae81a1f2  '10-analisis: COHERENCIA-MODULO-ENTREGA-2026-08-03 (lecciones aprendidas)'
+    01a04d99-e68b-778a-a86b-40ff5f41ec8a  '10-analisis: SR-PIPELINE-FIXES-2026-08-27 (lecciones aprendidas y decisiones)'

@@ -1,0 +1,5 @@
+5c5
+< La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
+---
+> La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
+DIFF_EXIT=1

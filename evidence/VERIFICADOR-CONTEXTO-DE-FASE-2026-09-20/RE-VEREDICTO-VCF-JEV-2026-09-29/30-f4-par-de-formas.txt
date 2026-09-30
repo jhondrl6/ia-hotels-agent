@@ -1,0 +1,3 @@
+### F4 par de formas (re-uso de conteo_formas.py, destino en ESTE expediente)
+MANDATO=179/36 ANCHA=645/81 DECLARADO=518/66 MD=704
+EXIT_F4_OCURRENCIAS=0

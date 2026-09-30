@@ -1,0 +1,19 @@
+### clon de control en /tmp/clon-control-wiring-400
+EXIT_CLONE=0
+EXIT_CHECKOUT=0
+### HEAD del clon vs HEAD del arbol de trabajo
+e5a654bec1185eae2d11ad14718148e626a62d59
+e5a654bec1185eae2d11ad14718148e626a62d59
+### tmp_test existe en el clon?
+  ^ (no such file = el arbol commiteado no lo lleva)
+### el mismo test, corrido dentro del clon
+.                                                                        [100%]
+1 passed in 10.89s
+EXIT_CLON_TEST=0
+### y la poblacion del verificador en el clon
+archivos_en_alcance 680
+archivos_excluidos_por_rol 101
+receptores_no_resueltos_en_produccion 0
+EXIT_CLON_POBLACION=0
+### clon retirado (borro solo el directorio que esta instruccion creo)
+HECHO

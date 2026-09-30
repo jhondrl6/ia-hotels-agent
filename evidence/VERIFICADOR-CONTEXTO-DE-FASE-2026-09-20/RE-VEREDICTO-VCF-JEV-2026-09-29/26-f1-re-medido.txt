@@ -1,0 +1,159 @@
+### F1 (re-uso del instrumento versionado m-f1.sh, stdout a este crudo)
+== git rev-parse --short HEAD
+e5a654b
+== git log --find-renames --stat -1 84282c1 -- .opencode/plans
+commit 84282c12393a1ef64ae394c967e05db34a7c7d8e
+Author: Hermes CLI <hermes@iah-cli.local>
+Date:   Sun Sep 27 17:30:35 2026 -0500
+
+    fix(GOBERNANZA): S29 quita la exclusion de Archives/ y S31 re-ancla los arneses
+    
+    ¿Por qué? El verificador de capitalización saltaba el directorio Archives/ antes de mirar su
+    cutoff, así que desde el traslado de D-c su [OK] no leía el 00- del plan: un verde vacío sobre
+    justo el artefacto que se quería auditar. La cura (a-prima) retira la exclusión por estructura y
+    deja que mande el cutoff, que es lo que acota la población sin fabricar hallazgos de planes
+    anteriores a la regla del Paso 0. La comprobación vino del propio paso: al archivar JeV en su
+    tanda R2.5 el plan quedó en alcance y el gate dio cero violaciones.
+    
+    Los arneses de FASE-C y FASE-D pineaban la ruta de raíz del plan y quedaron ciegos con el
+    traslado. Se re-anclan sus constantes a la ruta archivada y se declara en la fila la fragilidad
+    estructural: la forma durable sería reutilizar resolver_plan() del escritor, y eso no entra aquí.
+    
+    JeV pasó a Archives/ con su write-back verificado por descarga y sha256, no por título: el
+    servidor no deduplica por título y el writer responde SKIP sobre la versión vieja. La orden de
+    calidad cierra en su alcance aprobado —motivos 1 y 2 caídos por medición, motivos 3 y 4 como el
+    techo que el operador acepta— y el cierre no declara muertas a D3, D6, D7, S10 ni S19(d).
+    
+    Quedan declaradas en la evidencia, no arregladas de paso: la quinta instancia de S17 (el --fix del
+    archivado vuelve a escribir CRLF y a promover la forma minoritaria de la ruta) y la prosa del
+    workflow, que todavía describe la exclusión que este commit levanta. No se divide en cinco
+    commits: los mismos archivos de corpus y sus packs regenerados llevan mezclados texto de los
+    cuatro pasos, y cualquier separación deja árboles intermedios que no pasan su propio [13/13].
+
+ .../00-lecciones-capitalizadas.md                  |   0
+ .../01-plan-maestro.md                             |   0
+ .../04-contrato-ejecucion.md                       |   0
+ .../05-prompt-inicio-sesion-fase-A.md              |   0
+ .../05-prompt-inicio-sesion-fase-B.md              |   0
+ .../05-prompt-inicio-sesion-fase-C.md              |   0
+ .../05-prompt-inicio-sesion-fase-RELEASE.md        |   0
+ .../06-checklist-implementacion.md                 |   0
+ .../09-documentacion-post-proyecto.md              |   0
+ .../10-analisis-post-implementacion.md             |  17 ++
+ .../EVALUACION-JEV-TYPESAFE-2026-09-21/README.md   |   4 +-
+ .../dependencias-fases.md                          |   0
+ .../10-analisis-post-implementacion.md             |  18 +-
+ .../briefing/FASE-A.md                             | 164 +++++++++++++++--
+ .../briefing/FASE-B.md                             | 162 +++++++++++++++--
+ .../briefing/FASE-C.md                             | 153 ++++++++++++++--
+ .../briefing/FASE-D.md                             | 164 +++++++++++++++--
+ .../briefing/FASE-RELEASE.md                       | 198 ++++++++++++++++++---
+ .../dependencias-fases.md                          | 142 ++++++++++++++-
+ .../06-checklist-implementacion.md                 |   2 +-
+ .../09-documentacion-post-proyecto.md              |   2 +-
+ .../10-analisis-post-implementacion.md             |   2 +-
+ .../dependencias-fases.md                          |   2 +-
+ .opencode/plans/plan_citations_baseline.json       |   2 +-
+ 24 files changed, 938 insertions(+), 94 deletions(-)
+== git ls-files .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/ (rutas)
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+== conteo git ls-files bajo Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/
+12
+== conteo git ls-files bajo .opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/ (sin Archives)
+0
+EXIT_GREP=1
+== conteo en disco bajo Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/ (find -type f)
+12
+== existencia del directorio no-archivado en el arbol de trabajo
+ls: cannot access '.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/': No such file or directory
+EXIT_LS=2
+== planes vivos hoy en .opencode/plans/ (solo primeros niveles)
+Archives
+REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+plan_citations_baseline.json
+== scores de renombre (raw) en 84282c1 bajo .opencode/plans
+commit 84282c12393a1ef64ae394c967e05db34a7c7d8e
+Author: Hermes CLI <hermes@iah-cli.local>
+Date:   Sun Sep 27 17:30:35 2026 -0500
+
+    fix(GOBERNANZA): S29 quita la exclusion de Archives/ y S31 re-ancla los arneses
+    
+    ¿Por qué? El verificador de capitalización saltaba el directorio Archives/ antes de mirar su
+    cutoff, así que desde el traslado de D-c su [OK] no leía el 00- del plan: un verde vacío sobre
+    justo el artefacto que se quería auditar. La cura (a-prima) retira la exclusión por estructura y
+    deja que mande el cutoff, que es lo que acota la población sin fabricar hallazgos de planes
+    anteriores a la regla del Paso 0. La comprobación vino del propio paso: al archivar JeV en su
+    tanda R2.5 el plan quedó en alcance y el gate dio cero violaciones.
+    
+    Los arneses de FASE-C y FASE-D pineaban la ruta de raíz del plan y quedaron ciegos con el
+    traslado. Se re-anclan sus constantes a la ruta archivada y se declara en la fila la fragilidad
+    estructural: la forma durable sería reutilizar resolver_plan() del escritor, y eso no entra aquí.
+    
+    JeV pasó a Archives/ con su write-back verificado por descarga y sha256, no por título: el
+    servidor no deduplica por título y el writer responde SKIP sobre la versión vieja. La orden de
+    calidad cierra en su alcance aprobado —motivos 1 y 2 caídos por medición, motivos 3 y 4 como el
+    techo que el operador acepta— y el cierre no declara muertas a D3, D6, D7, S10 ni S19(d).
+    
+    Quedan declaradas en la evidencia, no arregladas de paso: la quinta instancia de S17 (el --fix del
+    archivado vuelve a escribir CRLF y a promover la forma minoritaria de la ruta) y la prosa del
+    workflow, que todavía describe la exclusión que este commit levanta. No se divide en cinco
+    commits: los mismos archivos de corpus y sus packs regenerados llevan mezclados texto de los
+    cuatro pasos, y cualquier separación deja árboles intermedios que no pasan su propio [13/13].
+
+:100644 100644 33a90d6 33a90d6 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+:100644 100644 e39b4bb e39b4bb R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+:100644 100644 8f7217c 8f7217c R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+:100644 100644 464d2e4 464d2e4 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md
+:100644 100644 089c661 089c661 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+:100644 100644 b041c33 b041c33 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md
+:100644 100644 03b525c 03b525c R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md
+:100644 100644 810dcea 810dcea R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+:100644 100644 9fed300 9fed300 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+:100644 100644 72554cb 33fe07d R089	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+:100644 100644 43cca10 157507c R099	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+:100644 100644 374b397 374b397 R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+:100644 100644 e161dfb daf4e0d M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+:100644 100644 5d0ab06 e92873b M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+:100644 100644 78efb07 1ea2676 M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+:100644 100644 00d797d 7db73b1 M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+:100644 100644 d5c4813 7de91ec M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+:100644 100644 c690fe5 59e0d79 M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+:100644 100644 135e7bd 37a0957 M	.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+:100644 100644 73a4630 c21e406 M	.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/06-checklist-implementacion.md
+:100644 100644 5c1fc24 7187bdc M	.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/09-documentacion-post-proyecto.md
+:100644 100644 34abee7 2335b6e M	.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+:100644 100644 f32bd26 aa706de M	.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md
+:100644 100644 c807f02 2e52d16 M	.opencode/plans/plan_citations_baseline.json
+== renombres R### de 84282c1 sobre el plan JEV (git show --name-status -M)
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+R089	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+R099	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+R100	.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+== conteo de renombres R100 / R089 / R099 sobre el plan JEV
+R100=10
+R089=1
+R099=1
+== commit que archiva el plan: git log --diff-filter=R --oneline -- .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/
+== 84282c1 es ancestro de HEAD?
+SI-ANCESTRO
+EXIT_F1=0

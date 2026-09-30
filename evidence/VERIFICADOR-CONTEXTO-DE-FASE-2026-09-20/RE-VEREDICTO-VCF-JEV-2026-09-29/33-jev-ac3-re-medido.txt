@@ -1,0 +1,35 @@
+### AC3 del plan JEV: ¿son los originales rastreables por sha?
+
+-- muestra.json: status=BORRADOR  corpus_source=own:lecciones_index  pares=4
+-- review.human_reviewed=False reviewer=None reviewed_at=None
+
+   par REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1: original_sha256=3be902d85bb1c4266638ac71690f38b1e653a7d3c1e96ec6c2e738f26a41035d sanitized_sha256=727e55303731c7df78964eea1bd3ab4b21cad7294eb4ee1569d0f3908a204337
+      input_fragment (80 chars): Al cerrar FASE-B separar la division en subfases cuando un gate depende de otro.
+   par VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2: original_sha256=7c22017d5c7d9c32cfbd4450d5b7c2a38fff9fd4c27126257f4877a71df1e1df sanitized_sha256=558dc0ac993416e68abfdd0ca0a120ba1ca611c45d067a2fc0183038548932eb
+      input_fragment (77 chars): Una fase condicionada por evidencia no se declara decidida en la preparacion.
+   par VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2: original_sha256=8790a0996be513ef37f0afcc4e8f2ff8de730a3e327dea2a51df78248c029aa7 sanitized_sha256=c3bccb03f11adda1c21e24be18039bbe6182ca5d0eb99f73a1ca32553183cec5
+      input_fragment (80 chars): En templates conservar el intro y mover solo contadores dinamicos (diff minimo).
+   par EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4: original_sha256=1d9617b2d0f459e9d3a56284e281ab197f7d35e366800e55a0eddae88018bbc9 sanitized_sha256=f387e6b5ed36f69588fa02de8814435b21096b77138e6b864ae8cd988125661e
+      input_fragment (93 chars): La reapertura de una fase de verificacion ocurre en sesion de decision, no dentro de la fase.
+
+-- sha del propio input_fragment guardado (por si el fragmento fuera el original)
+   REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1  fragmento_sha=727e55303731c7df  ==original? False  ==sanitized? True
+   VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2  fragmento_sha=558dc0ac993416e6  ==original? False  ==sanitized? True
+   VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2  fragmento_sha=c3bccb03f11adda1  ==original? False  ==sanitized? True
+   EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4  fragmento_sha=f387e6b5ed36f695  ==original? False  ==sanitized? True
+
+### ¿Existe ALGUN fichero versionado cuyo sha256 (bytes crudos del blob) case con un original_sha256?
+-- poblacion: 2988 ficheros versionados
+-- coincidencias sobre el BLOB de HEAD: 0 []
+-- coincidencias sobre los BYTES EN DISCO: 0 []
+
+### ¿Existe algun fichero de candidatos versionado (el insumo que AC3 pidiria)?
+-- rutas versionadas con 'candidat' en el nombre: 3 ['evidence/FASE-P4/t3a-sonda-candidatos.json', 'evidence/FASE-P4/t3a-sonda-candidatos.md', 'evidence/FASE-P4/t3a_sonda_candidatos.py']
+
+### ¿Esta el texto original (pre-saneado) guardado en algun sitio versionado?
+-- busqueda literal del primer fragmento en HEAD: 2 archivo(s)
+      HEAD:evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json
+      HEAD:evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/13-jev-ac3-verificabilidad-sha.txt
+
+### Cláusula AC3 (texto íntegro, para no parafrasearla)
+| AC3 | Muestra objetivo de 60–100 pares, humana, saneada, con originales rastreables por sha y partición por plan. Inputs, etiquetas y manifiesto quedan versionados antes de la primera inferencia, incluida conectividad | A/B; `muestra.json`, `etiquetas.json`, `protocolo.json`; productor y checker `scripts/evaluate_jev_pilot.py` previstos |

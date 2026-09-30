@@ -1,0 +1,436 @@
+== F3 barrido por parrafo. Alcance: corpus-completo (383 archivos .md)
+== Lista de archivos del alcance:
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/03-prompt-fase-2.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/04-prompt-fase-3.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/05-prompt-fase-4.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/06-prompt-fase-5.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/07-prompt-fase-6-release.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-checklist-implementacion.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/README.md
+   .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/dependencias-fases.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/01-plan-maestro.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-1.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-5.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/06-checklist-implementacion.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/README.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/dependencias-fases.md
+   .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/gh-issue-bug4a-body.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/01-plan-maestro.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/02-prompt-fase-1.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/03-prompt-fase-2.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/04-prompt-fase-3.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/05-prompt-fase-4.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/06-prompt-fase-5-release.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/07-checklist-implementacion.md
+   .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/01-plan-maestro.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/02-prompt-fase-A.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/03-prompt-fase-B.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/04-prompt-fase-C-A.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/06-prompt-fase-D.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/07-prompt-fase-E.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/08-prompt-fase-RELEASE.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/09-checklist-implementacion.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/README.md
+   .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/dependencias-fases.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/01-plan-maestro.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-E2E-ZIONE.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-A.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-B.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-C.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-A.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-B.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-C.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-D.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-A.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-B.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/06-checklist-implementacion.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/README.md
+   .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/dependencias-fases.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/01-plan-maestro.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/02-prompt-fase-A.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/03-prompt-fase-B.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/04-prompt-fase-C.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/05-prompt-fase-D.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/06-prompt-fase-RELEASE.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/07-checklist-implementacion.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/README.md
+   .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/dependencias-fases.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/01-plan-maestro.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/02-prompt-fase-A.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/03-prompt-fase-B.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/04-prompt-fase-C.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/05-prompt-fase-D.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/06-prompt-fase-E.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/07-checklist-implementacion.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/README.md
+   .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/dependencias-fases.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/01-plan-maestro.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/02-prompt-fase-A.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/03-prompt-fase-B.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/04-prompt-fase-C.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/05-prompt-fase-D.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/06-prompt-fase-E.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/07-prompt-fase-F.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/08-prompt-fase-release.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/09-checklist-implementacion.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/README.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/01-plan-maestro.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/02-prompt-fase-0.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/03-prompt-fase-1.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/04-prompt-fase-2.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/05-prompt-fase-3.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/06-prompt-fase-release.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/07-checklist-implementacion.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/dependencias-fases.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/01-plan-maestro.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/02-prompt-fase-0.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/03-prompt-fase-1.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/04-prompt-fase-2.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/05-prompt-fase-3.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/06-prompt-fase-4.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/07-prompt-fase-release.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/08-checklist-implementacion.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/09-analisis-post-implementacion.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/dependencias-fases.md
+   .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/BLOCKED_BY_GATES.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-1.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-5.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-6.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/06-checklist-implementacion.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-analisis-fases-1-4--OBSOLETO.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/README.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/dependencias-fases.md
+   .opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/BLOCKED_BY_GATES.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/01-plan-maestro.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-E.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-F.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-G.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-H.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-I.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/06-checklist-implementacion.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/README.md
+   .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/dependencias-fases.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+   .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/01-plan-maestro.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/02-prompt-fase-1.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/03-prompt-fase-2.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/04-prompt-fase-3.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/05-prompt-fase-4.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/06-prompt-fase-5.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/07-prompt-fase-release.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/08-checklist-implementacion.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/09-analisis-post-implementacion.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/10-dependencias-fases.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/BLOCKED_BY_GATES.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260731_164842.md
+   .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/02_PROPUESTA_COMERCIAL_20260731_164842.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/01-plan-maestro.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/02-prompt-fase-1.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/03-prompt-fase-2.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/04-prompt-fase-3.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/05-prompt-fase-4.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/06-prompt-fase-5-release.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/07-checklist-implementacion.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/HOOK-PDF-2026-07-09/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/01-plan-maestro.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/02-prompt-fase-0-a.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/03-prompt-fase-0-b.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/03-prompt-fase-1.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/04-prompt-fase-2.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/05-prompt-fase-3.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/06-prompt-fase-release-a.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/07-checklist-implementacion.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/07-prompt-fase-release-b.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/08-analisis-post-implementacion.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/08-prompt-fase-release-c.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/dependencias-fases.md
+   .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/evidence/FASE-RELEASE-A/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260730_143715.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/00-lecciones-capitalizadas.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/01-plan-maestro.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/05-prompt-inicio-sesion-fase-V2.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/05-prompt-inicio-sesion-fase-V3.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/06-checklist-implementacion.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/dependencias-fases.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/01-plan-maestro.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-E.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-F.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/06-checklist-implementacion.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/README.md
+   .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/01-plan-maestro.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-1.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/06-checklist-implementacion.md
+   .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/01-plan-maestro.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-A.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-B.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-C.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-D.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-E.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-F.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/06-checklist-implementacion.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/README.md
+   .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/dependencias-fases.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-0.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1A.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1B.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-5.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-6.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-7.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/06-checklist-implementacion.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/README.md
+   .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/dependencias-fases.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-1.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-5.md
+   .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-6.md
+   .opencode/plans/Archives/ROICRII/06-checklist-implementacion.md
+   .opencode/plans/Archives/ROICRII/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ROICRII/README.md
+   .opencode/plans/Archives/ROICRII/dependencias-fases.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-1.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-5.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-6-v4complete.md
+   .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/ROICRIII/06-checklist-implementacion.md
+   .opencode/plans/Archives/ROICRIII/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ROICRIII/dependencias-fases.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-1A.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-1B.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-2.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-3.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-4.md
+   .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/ROICRIIIF/06-checklist-implementacion.md
+   .opencode/plans/Archives/ROICRIIIF/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/ROICRIIIF/dependencias-fases.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-A.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-C.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-F.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-G.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H2.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/README.md
+   .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/00-lecciones-capitalizadas.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/01-plan-maestro.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P1.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P2.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P3-A.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P3-B.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P4.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P5.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P6.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/README.md
+   .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/dependencias-fases.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/01-plan-maestro.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-E2E.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T1.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-A.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-B.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-C.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T4-A.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T4-B.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/06-checklist-implementacion.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/README.md
+   .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/dependencias-fases.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/01-plan-maestro.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/06-checklist-implementacion.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/README.md
+   .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+   .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/00-lecciones-capitalizadas.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/04-contrato-ejecucion.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-0.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-B.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-G.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/06-checklist-implementacion.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/09-documentacion-post-proyecto.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/README.md
+   .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md
+   .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/00-lecciones-capitalizadas.md
+   .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/01-plan-maestro.md
+   .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/05-prompt-inicio-sesion.md
+   .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/README.md
+== Predicado: un parrafo (separado por linea en blanco) contiene la cadena literal
+   'piloto FASE-C' Y alguna de estas negaciones normalizadas (minusculas, sin acentos):
+   no lo esta, sigue sin autorizar, sin autorizacion, no se ejecuto, no esta autorizada, no estan autorizados, pendientes de su autorizacion, no esta autorizado, sigue pendiente de su autorizacion
+== Clasificacion A (criterio debil): el caracter '⟦' aparece en el MISMO parrafo => CON-NOTA
+== Clasificacion B (criterio fuerte): ademas, el '⟦' cae DESPUES de la ultima negacion del
+   parrafo, o sea que la nota sigue a la frase en lugar de referir a otra cosa del bloque
+== Limites: las tablas markdown sin linea en blanco forman UN parrafo (una fila anotada
+   anota el bloque entero bajo el criterio debil); y '⟦' es la marca de nota datada de la casa.
+
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md:3-3 [CON-NOTA] [SIN-NOTA-DETAS] **Estado: BLOQUEADA POR DEPENDENCIA TÉCNICA** ⟦**ya no por ésa**: re-medido el 2026-09-25 por la conciliación ...
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md:38-40 [CON-NOTA] [SIN-NOTA-DETAS] - **Dependencia técnica**: FASE-B propia necesita la puerta **y** el consumidor C del hermano implementados y ...
+.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md:50-59 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] | # | Pendiente | Estado hoy | Puerta (qué lo desbloquea) | Tipo | |---|---|---|---|---| | P0 | Commitear la c...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:18-27 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido contractualmente por ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md:132-146 [CON-NOTA] [SIN-NOTA-DETAS] | Decisión | Resuelto | Base | |---|---|---| | **¿Se toca `run_all_validations.py` o el hook para añadir check...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md:7-18 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md:3-26 [CON-NOTA] [SIN-NOTA-DETAS] > **Estado de este prompt al 2026-09-24: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue > siendo la ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md:12-25 [CON-NOTA] [SIN-NOTA-DETAS] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md:8-24 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está autorizado; el bloque C y e...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:7-19 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md:270-354 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] - [x] El pack se genera dentro del plan y **no** sustituye ninguna lectura canónica (alternativa descartada: r...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md:33-55 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está autorizado; el bloque C y e...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md:263-272 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido contractualmente por ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md:646-657 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md:1153-1167 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md:1287-1360 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md:232-246 [CON-NOTA] [SIN-NOTA-DETAS] | Decisión | Resuelto | Base | |---|---|---| | **¿Se toca `run_all_validations.py` o el hook para añadir check...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md:519-530 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md:885-899 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md:1019-1092 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md:33-56 [CON-NOTA] [SIN-NOTA-DETAS] > **Estado de este prompt al 2026-09-24: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue > siendo la ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md:385-394 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido contractualmente por ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md:764-778 [CON-NOTA] [SIN-NOTA-DETAS] | Decisión | Resuelto | Base | |---|---|---| | **¿Se toca `run_all_validations.py` o el hook para añadir check...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md:790-801 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md:307-316 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado del bloque B: consultar §13 de la fuente única enlazada abajo.** Está concluido contractualmente por ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md:690-701 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md:1056-1070 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md:1190-1263 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:43-56 [CON-NOTA] [SIN-NOTA-DETAS] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:1121-1137 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está autorizado; el bloque C y e...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:1482-1496 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:1616-1689 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:2698-2710 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está concluido contractualmente ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:2961-3045 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] - [x] El pack se genera dentro del plan y **no** sustituye ninguna lectura canónica (alternativa descartada: r...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md:3626-3649 [CON-NOTA] [SIN-NOTA-DETAS] > **Estado de este prompt al 2026-09-24: CONTRACTUALMENTE PREPARADO, NO EJECUTADO.** FASE-C sigue > siendo la ...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:3-17 [CON-NOTA] [NOTA-DETAS-DE-LA-FRASE] **Estado de B: consultar §13 de la fuente única enlazada abajo.** El bloque B está **concluido contractualment...
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:137-210 [CON-NOTA] [SIN-NOTA-DETAS] - **D1 — estado vigente en la matriz §13; no certificada aquí.** **Antecedente retirado** del 2026-09-23: el d...
+
+TOTAL parrafos que afirman la clausula: 37
+CON-NOTA (criterio debil): 37
+SIN-NOTA (criterio debil): 0
+CON NOTA-DETAS-DE-LA-FRASE (criterio fuerte): 22

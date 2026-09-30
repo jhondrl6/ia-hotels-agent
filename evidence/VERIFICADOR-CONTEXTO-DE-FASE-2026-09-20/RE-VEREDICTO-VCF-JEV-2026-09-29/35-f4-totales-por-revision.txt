@@ -1,0 +1,28 @@
+### F4 totales por ancla, sobre revisiones fijas (LINEAS sumadas con awk)
+### comando: git grep -c -F '<ancla>' <rev> -- '*.md' | awk -F: '{t+=$NF} END {print t+0}'
+-- revision HEAD
+   `.opencode/plans/Archives        -> 178 lineas
+   `/.opencode/plans/Archives       -> 36 lineas
+   `.opencode                       -> 599 lineas
+   `/.opencode                      -> 81 lineas
+-- revision 3c2e6a3
+   `.opencode/plans/Archives        -> 147 lineas
+   `/.opencode/plans/Archives       -> 28 lineas
+   `.opencode                       -> 524 lineas
+   `/.opencode                      -> 72 lineas
+-- revision e5a654b
+   `.opencode/plans/Archives        -> 178 lineas
+   `/.opencode/plans/Archives       -> 36 lineas
+   `.opencode                       -> 599 lineas
+   `/.opencode                      -> 81 lineas
+
+### contraste con lo que midio la sesion del 2026-09-28 (crudo 05, sobre HEAD de entonces)
+   ancla del mandato: 166 lineas   ancla ancha: 564 lineas   (HEAD = 84c1aca mas la tanda)
+   par declarado en la fila S17: 518 contra 66
+
+### poblacion del corpus marcado
+-- .md versionados en HEAD: 704
+-- .md en el arbol de 3c2e6a3: 696
+-- git rev-parse --short HEAD: e5a654b
+-- git grep -c cuenta LINEAS; str.count cuenta OCURRENCIAS (crudo 30b)
+EXIT_F4_TOTALES=0

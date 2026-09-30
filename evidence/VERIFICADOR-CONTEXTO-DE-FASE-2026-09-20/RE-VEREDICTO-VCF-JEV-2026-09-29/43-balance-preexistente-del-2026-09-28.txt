@@ -1,0 +1,12 @@
+== Las lineas con balance roto YA ESTABAN en HEAD (no las escribio esta sesion) ==
+comando: git cat-file blob HEAD:<ruta> y contar U+27E6 / U+27E7 por linea, en UTF-8
+linea 105  aperturas=1 cierres=0
+   | **F3** «Única superviviente» | Barrido por párrafo sobre las **13 fuentes** del plan (sin los packs derivados): **11** párrafos afirman la cláusula, **2 SIN nota** (`01-plan-maestro.md:18-25` y `04-contrato-ejecucion.md:7-16`) y **9 CON nota** con el criterio débil; con el criterio fuerte (el `⟦` 
+linea 145  aperturas=1 cierres=0
+   ⟦**Nota datada 2026-09-29 — ejecutada por instrucción literal del operador, y exactamente como esta sección la
+linea 154  aperturas=0 cierres=1
+   `01a0e0d3-92db-…`, piden instrucción literal propia. Crudos: `SESION-SCRIPTS-CURAS-2026-09-28/39-` y `40-`⟧
+linea 171  aperturas=1 cierres=0
+   reventó imprimiendo `⟦` por la consola. Los crudos `11`-`15` se escriben por archivo con
+total de lineas desbalanceadas en el blob de HEAD: 4
+ninguna de esas lineas toca el diff de esta sesion (crudo 42, delta +2/+2 y +1/+1)

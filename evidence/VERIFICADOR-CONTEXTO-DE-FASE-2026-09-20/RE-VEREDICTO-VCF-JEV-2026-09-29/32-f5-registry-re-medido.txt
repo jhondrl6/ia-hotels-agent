@@ -1,0 +1,128 @@
+### F5 REGISTRY y el escritor (re-uso de m-f5.sh)
+307f48dfa18498bc01b42c9462d111b4d260c737828b4aaa2a4af9ba80da4f45 *docs/contributing/REGISTRY.md
+  ^ sha ANTES del dry-run
+=== 1. Menciones del plan en REGISTRY (ocurrencias, no lineas) ===
+-- git grep -o -F 'EVALUACION-JEV-TYPESAFE-2026-09-21' HEAD -- docs/contributing/REGISTRY.md | wc -l
+0
+-- grep -o -F sobre el archivo en disco | wc -l
+0
+-- grep -n 'EVALUACION-JEV' sobre el archivo en disco
+(sin coincidencias)
+
+=== 2. Menciones del plan VCF en REGISTRY (contraste: si tiene entradas) ===
+-- ocurrencias de VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+7
+-- cabeceras de seccion que lo nombran
+11667:## FASE-RELEASE (VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20) - 2026-09-25
+
+=== 3. Cabecera de ultima actualizacion del REGISTRY versionado ===
+3:> **Ultima actualizacion:** 2026-09-25
+1449:| `docs/contributing/REGISTRY.md` | Ultima actualizacion y version actual |
+
+=== 4. Que soporta el escritor log_phase_completion.py (lectura de su argparse) ===
+usage: log_phase_completion.py [-h] --fase FASE --desc DESC
+                               [--archivos-nuevos ARCHIVOS_NUEVOS]
+                               [--archivos-mod ARCHIVOS_MOD] [--tests TESTS]
+                               [--coherence COHERENCE] [--check-manual-docs]
+                               [--force-skip-docs] [--skip-reason SKIP_REASON]
+                               [--release RELEASE] [--auto-sync] [--dry-run]
+                               [--check-domain-primer]
+
+Registra fase completada en REGISTRY.md segun CONTRIBUTING.md
+
+options:
+  -h, --help            show this help message and exit
+  --fase FASE           Numero o identificador de fase (ej: FASE-12, FASE-
+                        CAUSAL-01)
+  --desc DESC           Descripcion de lo implementado en la fase
+  --archivos-nuevos ARCHIVOS_NUEVOS
+                        Archivos nuevos separados por coma (ej:
+                        modules/foo.py,tests/foo.py)
+  --archivos-mod ARCHIVOS_MOD
+                        Archivos modificados separados por coma
+  --tests TESTS         Numero de tests agregados o modificados
+  --coherence COHERENCE
+                        Coherence score alcanzado (opcional)
+  --check-manual-docs   Verificar que docs manuales esten actualizadas (FAIL
+                        si no)
+  --force-skip-docs     Saltar verificacion de docs manuales (requiere razon
+                        en --skip-reason)
+  --skip-reason SKIP_REASON
+                        Razon para saltarse verificacion de docs (requerido si
+                        --force-skip-docs)
+  --release RELEASE     Version de release (ej: 4.9.0). Activa Version Sync
+                        Gate.
+  --auto-sync           Ejecutar sync_versions.py automaticamente si hay
+                        desincronizacion
+  --dry-run             Solo mostrar lo que se hara sin escribir archivos
+  --check-domain-primer
+                        Verificar que DOMAIN_PRIMER.md este alineado con
+                        modulos actuales
+EXIT_HELP=0
+
+=== 5. Busqueda de soporte de nota datada / entrada tardia en el escritor ===
+79:    parser.add_argument(
+84:    parser.add_argument(
+89:    parser.add_argument(
+94:    parser.add_argument(
+99:    parser.add_argument(
+104:    parser.add_argument(
+110:    parser.add_argument(
+115:    parser.add_argument(
+120:    parser.add_argument(
+125:    parser.add_argument(
+131:    parser.add_argument(
+136:    parser.add_argument(
+141:    parser.add_argument(
+
+=== 6. Ejemplos de cabeceras de entrada en REGISTRY (formato que emite el escritor) ===
+11624:## FASE-C - 2026-09-24
+11644:## FASE-D - 2026-09-24
+11667:## FASE-RELEASE (VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20) - 2026-09-25
+11695:## Estadisticas
+11698:## FASE-{NUMERO} - {FECHA}
+11722:## FASE-0-RELEASE - 2026-05-14
+11766:## FASE-RELEASE - 2026-05-26
+11802:## Estadisticas
+
+=== 7. Prueba de la rama 'el escritor soporta entrada tardia con nota datada' ===
+-- se corre con --dry-run (no escribe: verify despues con git status -uno)
+============================================================
+LOG PHASE COMPLETION: EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-A
+============================================================
+
+[DRY RUN] Contenido que se agregaria a REGISTRY.md:
+
+## EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-A - 2026-09-29
+**Descripcion:** prueba dry-run de entrada tardia
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+-- EXIT del dry-run: ver linea siguiente
+-- git status --porcelain -uno despues del dry-run (0 = no escribio nada)
+0
+-- grep de las opciones del escritor: hay flag de fecha o de nota? (add_argument)
+79:    parser.add_argument(
+84:    parser.add_argument(
+89:    parser.add_argument(
+94:    parser.add_argument(
+99:    parser.add_argument(
+104:    parser.add_argument(
+110:    parser.add_argument(
+115:    parser.add_argument(
+120:    parser.add_argument(
+125:    parser.add_argument(
+131:    parser.add_argument(
+136:    parser.add_argument(
+141:    parser.add_argument(
+-- como se calcula la fecha de la cabecera de la entrada
+152:    fecha = datetime.now().strftime("%Y-%m-%d")
+172:        f"## {fase_id} - {fecha}\n",
+EXIT_F5=0
+307f48dfa18498bc01b42c9462d111b4d260c737828b4aaa2a4af9ba80da4f45 *docs/contributing/REGISTRY.md
+  ^ sha DESPUES del dry-run (debe ser el mismo: el dry-run no escribe)
+0
+  ^ rutas versionadas modificadas despues de todo (0 = el dry-run no toco el arbol)

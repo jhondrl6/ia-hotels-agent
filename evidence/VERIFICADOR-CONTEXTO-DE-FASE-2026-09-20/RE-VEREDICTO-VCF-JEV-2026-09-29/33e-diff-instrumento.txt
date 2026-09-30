@@ -1,0 +1,4 @@
+3c3
+< DEST = "evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/13-jev-ac3-verificabilidad-sha.txt"
+---
+> DEST = sys.argv[1]

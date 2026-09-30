@@ -1,0 +1,8 @@
+### 1. Estado de los archivos tocados: finales de linea y balance de marcadores
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+  CR=0  LF=293  aperturas=0  cierres=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md
+  CR=0  LF=227  aperturas=0  cierres=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+  CR=0  LF=323  aperturas=0  cierres=0
+HECHO-PIPELINE

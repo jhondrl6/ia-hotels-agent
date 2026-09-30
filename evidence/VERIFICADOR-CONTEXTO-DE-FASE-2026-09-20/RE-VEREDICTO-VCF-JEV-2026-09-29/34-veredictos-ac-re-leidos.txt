@@ -1,0 +1,45 @@
+### Veredictos heredados, leidos HOY de su fuente (no transcritos del expediente del 2026-09-28)
+
+== 1. Fila ⟦E1⟧ / AC12 de `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/criterios-de-completitud.md`
+   linea 14, celdas=3
+   [1] ⟦E1⟧ El umbral está aplicado a `confidence` de una pregunta `choice` de dos opciones, su `basis` nombra el campo, y hay prueba de que `probabilidad_si` no gobierna
+   [2] **CUMPLIDO**
+   [3] `informe.json` → `umbral.campo: confidence`, `umbral.basis` (nombra el campo y niega `por_si`), `forma_pregunta.opciones` = 2; `test_triage_pregunta_es_choice_y_no_noul.py` (6 casos) con el caso invertido (`por_si` 0.90 / `confidence` 0.41 → `a-revisar-humano`) y la prueba de que dos candidatos con el **mismo** `por_si` caen en buckets distintos
+
+== 2. Fila AC14 (guard de no-filtrado: verde y rojo del mutante)
+   linea 11, celdas=3
+   [1] `mutation/` tiene rojo y verde del guard de no-filtrado (AC14). Sin rojo, ⚠️
+   [2] **CUMPLIDO — con rojo**
+   [3] `mutation/verde_baseline.json` (guard activo: 14→14, `removed: []`), `mutation/mutante_M-AC10-guard-aditividad.json` (guard apagado: 14→**3**, `removed` = los 11 IDs cuestionados), `mutation/resumen.txt` (símbolo mutado, alcance declarado del observador, destino declarado por el cierre), `mutation/corrida.txt` (`exit 0`). En pytest: `test_rojo_con_el_guard_apagado` + `test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10`
+
+== 3. Artefactos que sostienen AC14, medidos en disco
+   mutation/verde_baseline.json                               549 bytes
+      claves: anchored_after, anchored_before, cuestionadas, emisor_falso, guard_activo, intentos_filtrados, mut, removed, simbolo
+      removed = 0 elementos
+      simbolo = triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO
+   mutation/mutante_M-AC10-guard-aditividad.json              698 bytes
+      claves: anchored_after, anchored_before, cuestionadas, emisor_falso, guard_activo, intentos_filtrados, mut, removed, simbolo
+      removed = 11 elementos
+      simbolo = triage_lesson_relevance.GUARD_ADITIVIDAD_ACTIVO
+   mutation/resumen.txt                                       1141 bytes
+   mutation/corrida.txt                                       276 bytes
+
+== 4. coverage.json: aceptacion (AC15) y su motivo
+   aceptacion = {"estado": "NO-EJERCITADO", "valor": null, "muestra": null, "metodo": null, "motivo": "no hay proveedor de decisiones activo en este plan (deuda D7): el emisor del juicio es un proveedor FALSO determinista, asi que `propuesto / a-revisar-humano` mide la mecanica del camino y no la pertinencia. Publicar aqui una aceptabilidad seria fabricar el disparador de la deuda D6 (contrato E4)", "deuda_afectada": {"D6": "dormida — se re-evalua al existir proveedor real, no antes", "D7": "activar el proveedor; no bloquea una FASE-C offline"}, "prohibido": "simular la aceptabilidad con el proveedor falso para cerrar AC15 en verde (E4)"}
+   umbral     = null
+
+== 5. JEV README: estados de FASE-B / FASE-C / FASE-RELEASE (regla 1.c)
+   linea 23: | FASE-B | Jev/DeepSeek detrás de la costura, SDK y controles probados sin red | **SIN AUTORIZACIÓN PARA EJECUTARLA y sin sus dos bloqueantes humanos resueltos.** ⟦Re-medido el 2026-09-25 por la conciliación final de la orden de calidad: esta fila decía «BLOQU
+   linea 24: | FASE-C | Comparación autorizada y decisión, sin cambios de código | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN (necesita el congelado de B, el preflight de autenticación/cuota y presupuesto escrito) |
+   linea 25: | FASE-RELEASE | Revisión de evidencia y cierre documental | PENDIENTE |
+   linea 31: | `scripts/decision_client.py` | **existe** — entregada por FASE-B del hermano y remediada por su bloque A (`fdd397f`) | La puerta está. Su lectura vigente se hace con sus propios modos de solo lectura, no con este párrafo |
+   linea 32: | `scripts/triage_lesson_relevance.py` | **existe y está versionada** — es el producto del piloto **FASE-C del hermano**, ejecutado y cerrado el **2026-09-24** con mandato propio; sus 37 rutas propias entraron en `5817edd` ⟦**esta celda decía «NO existe — FASE
+   linea 54: | P2 | Re-medir la dependencia externa `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (B/C offline, AC15 parcial) | **Re-medida el 2026-09-24, VUELTA A MEDIR el 2026-09-25 y re-medir al abrir B**: `decision_client.py` **entregada**; `triage_lesson_relevance.py` **e
+   linea 55: | P3 | FASE-B: Jev/DeepSeek tras la costura, SDK y controles probados **sin red** | BLOQUEADA (por **P1 humano**, por la **decisión del gap de contrato** de §Dependencia y por **falta de mandato**: esta conciliación **no** la autoriza). ⟦Antes figuraba además 
+   linea 56: | P4 (portón de P5) | Preflight de autenticación/cuota/saldo de Jev (AC12/AC8, etiquetadas `B/C`) | **NO-EJERCITADO** (sonda con clave sintética y cero red) | No es fase propia: es el primer paso de FASE-C. Exige el cliente con `RetryPolicy(max_retries=0)` de 
+   linea 57: | P5 | FASE-C: comparación autorizada fría/DeepSeek/Jev y decisión, sin cambios de código | BLOQUEADA (por P3, P4 y autorización) | Runner offline verificado; muestra/protocolo versionados; hashes y límites finitos | Medición (inferencias) |
+
+== 6. JEV AC3: su clausula intacta en el maestro del plan
+   | AC3 | Muestra objetivo de 60–100 pares, humana, saneada, con originales rastreables por sha y partición por plan. Inputs, etiquetas y manifiesto quedan versionados antes de la primera inferencia, incluida conectividad | A/B; `muestra.json`, `etiquetas.json`, `protocolo.json`; productor y checker `scripts/evaluate_jev_pilot.py` previstos |
+
+== 7. Regla 1.b del plan VCF: que afirma y donde vive

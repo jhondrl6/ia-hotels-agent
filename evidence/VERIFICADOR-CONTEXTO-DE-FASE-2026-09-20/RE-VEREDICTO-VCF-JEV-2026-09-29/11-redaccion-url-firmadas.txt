@@ -1,0 +1,22 @@
+== Redaccion de URLs firmadas en la evidencia de QMind ==
+Motivo: la salida del CLI trae en originUrl y metadata.originalFileUri una URL de objeto con
+credencial y firma (x-oss-credential / x-oss-signature / x-oss-date / x-oss-expires). La regla
+de la casa es no persistir esos enlaces en evidencia. Los campos se sustituyen por
+REDACTADA-URL-DE-OBJETO-FIRMADA; id, title, status, uri y metadata.fileSha256 se conservan,
+que es lo que sostiene la medicion.
+Re-ejecucion: la PRIMERA pasada (2026-09-29) conto ANTES=275 / 5 / 280 (TOTAL 560) con un
+marcador que contenia los propios tokens, asi que su DESPUES (448) estaba contaminado por el
+marcador: 4 ocurrencias por fuente sustituida. Esta pasada cambia el marcador y re-mide.
+
+01-source-list.json : ocurrencias de tokens de firma ANTES=220 DESPUES=0
+08-t1-upload.json : ocurrencias de tokens de firma ANTES=4 DESPUES=0
+09-source-list-post-t1.json : ocurrencias de tokens de firma ANTES=224 DESPUES=0
+
+TOTAL ocurrencias antes=448 despues=0 en 3 archivos
+
+== Barrido de supervivientes en el expediente completo ==
+comando logico: recorrer el directorio y contar x-oss-credential|x-oss-signature|x-oss-date|x-oss-expires
+exclusion declarada: quedan fuera los instrumentos m-* que DEFINEN el patron y este propio
+informe, que nombra los tokens al describir el comando (autocontagio del contador)
+control aparte, solo en los tres objetos JSON: ocurrencias de la raiz del objeto firmado (qoder-mind.oss) = 0
+    0 supervivientes

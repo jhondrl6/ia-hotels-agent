@@ -136,6 +136,12 @@ comentario de C4. **El criterio es el conteo (3), no la posición.**
   ⟦**D-E tomada en 2026-09-29, en su miembro de la lección** (la subida de la lección §11, abajo). El otro
   miembro de la fila —la re-ingesta de los **2 snapshots vencidos**— sigue sin instrucción y ya tiene su
   crudeza medida en el crudo `40-`. **D-B, D-D y el dueño de S14 siguen sin tomar** ⟧
+  ⟦**Segunda pasada datada el mismo 2026-09-29, por la orden de cierre de deudas**: ese «otro miembro» quedó
+  **ejecutado** — re-ingesta del único snapshot que el Paso 0 midió **VENCIDO** (el `10-analisis` de este plan:
+  106.284 B publicados contra 110.891 en disco), con título nuevo y verificación por descarga + sha256, y
+  **borrado** del gemelo `01a0e0d3-92db-…`. La población resultó **1 y no 2**, porque el `10-analisis` de JEV está
+  fresco. La fila D-E queda cerrada en sus dos miembros; **D-B, D-D y el dueño de S14 siguen sin tomar**. Fuente
+  del hecho: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md` ⟧
 - **Subida de la lección §11 a QMind: NO hecha.** ⟦**Vencido el 2026-09-29 por instrucción explícita del
   operador**: se subió con **título nuevo** por CLI (el `--upload` del escritor responde `[SKIP]` por título y
   habría dejado la versión vieja como verdad publicada). Fuente `01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07` en el
@@ -159,6 +165,15 @@ comentario de C4. **El criterio es el conteo (3), no la posición.**
   registry_fecha 14). Los verificadores mismos SÍ corrieron (quick `[8/13]`–`[13/13]` + directos); lo no
   corrido son los tests que prueban a los verificadores. **Decisión del operador (2026-09-28, opción b):**
   se difieren a la sesión posterior de re-veredicto VCF/JEV con Paso 0 obligatorio, que es su lugar natural.
+  ⟦**Corrido el 2026-09-29 por esa sesión posterior, en la orden de cierre de deudas**: un solo pytest con los
+  seis archivos nombró **82 funciones** (la población se re-midió archivo por archivo con el método canónico y
+  casó con el parte) y dio **1 failed, 81 passed**, `EXIT=1`. El único rojo es
+  `test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion`, y se atribuyó con
+  control en **clon fiel de HEAD**: allí pasa (`1 passed`, receptores **0**) porque los cinco receptores viven
+  bajo `tmp_test/venv-jev-sdk/`, que está en `.gitignore`. Cayó también el **modo completo** (17 checks):
+  **16/17**, con el rojo en `[16/17] Tests` y la suite suelta en **3 failed, 4642 passed** — los tres nombres
+  del baseline, **0 nuevos**. Fuente del hecho y sus crudos:
+  `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md`, §5 y §6 ⟧
 
 ## Instrumentos cazados mientras se medía (ninguno es un rojo del árbol)
 

@@ -1,0 +1,37 @@
+== INVENTARIO FINAL DEL EXPEDIENTE (el ultimo que se escribe; nada se anade despues) ==
+comando: os.listdir y por archivo el conteo del byte 0x0D.
+
+total=113  documento=1  crudos=81  descargas=6  instrumentos=25
+archivos con CR>0=28 ; con CR=0=84
+(se suma 1 al total y a los crudos porque este mismo crudo no existia cuando el guion conto;
+y es CR=0 porque se escribe con newline en LF)
+
+archivos con CR>0                              CR
+03b-comparacion-stdout.log                     2
+06-pre-writeback-strict.txt                    1
+10-t1-verificacion.txt                         28
+12a-id-nueva.txt                               1
+12c-verifica-stdout.log                        1
+17b-cierre-stdout.log                          2
+18-post-writeback-strict.txt                   1
+19-t3-pytest-82.txt                            24
+20-t3-diagnostico.txt                          17
+20b-aislado-wiring.txt                         23
+20c-aislado-un-test.txt                        23
+20d-receptores-no-resueltos.txt                17
+21-control-clon-wiring.txt                     5
+22-t4-modo-completo.txt                        55
+24-t4b-suite-completa.txt                      325
+28b-f3-stdout.log                              1
+29b-f3-stdout.log                              1
+30-f4-par-de-formas.txt                        1
+32-f5-registry-re-medido.txt                   52
+33b-ac3-stdout.log                             1
+34b-veredictos-stdout.log                      1
+37-pipeline-integracion-documental.txt         45
+38-pipeline-packs-e-indice.txt                 7
+39-pipeline-quick.txt                          43
+45b-rebalance-stdout.log                       1
+45c-reinclusion-stdout.log                     1
+46-cierre-quick.txt                            43
+49-quick-post-control.txt                      43

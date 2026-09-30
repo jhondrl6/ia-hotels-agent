@@ -1,0 +1,10 @@
+### git status --porcelain (sin -uno) antes de T4
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/
+EXIT_PORCELAIN=0
+### con -uno (solo versionados modificados)
+EXIT_UNO=0
+### conteos
+1
+0
+### HEAD
+e5a654b

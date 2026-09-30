@@ -1,0 +1,67 @@
+### F2 (re-uso del instrumento versionado m-f2.sh)
+== git ls-files bajo evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C (rutas)
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ac10_delta.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/baseline-pre-post.md
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/cero-red.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/criterios-de-completitud.md
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/faseC_baseline_post.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/faseC_baseline_pre.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/faseC_quick_post.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/faseC_quick_pre.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/huellas_fase_a_antes.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/informe.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/instrumentos/correr_mutation_a_evidencia.py
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/corrida.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/mutante_M-AC10-guard-aditividad.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/resumen.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/mutation/verde_baseline.json
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/no-piso-pasado_ANTES.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/no-piso-pasado_DESPUES.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/r26.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/regression_calidad.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/reporte-triage.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/run_all_validations_quick_post.txt
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/run_tests.txt
+== conteo git ls-files bajo evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/
+23
+== conteo en disco bajo evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/ (find -type f)
+23
+== git log --oneline -- evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/
+5817edd feat(triage): FASE-C del verificador de contexto -- capa de pertinencia aditiva
+== 7f2e9f9 es ancestro de HEAD?
+SI-ANCESTRO
+== 5817edd es ancestro de HEAD?
+SI-ANCESTRO
+== oneline de 7f2e9f9 y 5817edd
+7f2e9f9 test(observador): el observador de escrituras compartido entra a git
+5817edd feat(triage): FASE-C del verificador de contexto -- capa de pertinencia aditiva
+== scripts/triage_lesson_relevance.py versionado?
+scripts/triage_lesson_relevance.py
+== donde vive la rectificacion: grep -n 'Rectificado el 2026-09-24' de los cuatro documentos del plan
+-- 01-plan-maestro.md
+22:⟦Nota datada 2026-09-28 — esta frase seguía en presente sin nota en el párrafo, mientras su rectificación vive en otra fila del mismo plan: ver `dependencias-fases.md` bajo **Estado de B**, que abre con «Rectificado el 2026-09-24 al cerrar FASE-C» y declara el piloto **autorizado y ejecutado con mandato propio y corte «hasta listo para revisión»**. Medido hoy contra disco: `git ls-files evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` devuelve **23 rutas** (18 en la raíz, 1 en `instrumentos/` y 4 en `mutation/`; `find -type f` sobre el mismo directorio da el mismo **23**), y `git merge-base --is-ancestor 7f2e9f9 HEAD` y `git merge-base --is-ancestor 5817edd HEAD` dan **sí** los dos — `5817edd` es precisamente «feat(triage): FASE-C del verificador de contexto — capa de pertinencia aditiva» y `scripts/triage_lesson_relevance.py` está versionado (`git ls-files`). Crudo: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/02-f2-piloto-fase-c-vcf.txt`. Lo que de esta frase queda en pie: el **bloque C** de la orden de calidad sí fue solo documental⟧
+-- 04-contrato-ejecucion.md
+11:⟦Nota datada 2026-09-28 — estado presente vencido, sin nota en el párrafo. La rectificación existe y vive en `dependencias-fases.md` bajo **Estado de B** («Rectificado el 2026-09-24 al cerrar FASE-C»: el piloto quedó **autorizado con mandato propio y corte «hasta listo para revisión»**, cerrado sin commit ni push). Medido hoy: `git ls-files evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/` = **23 rutas** de evidencia de esa fase, y `git merge-base --is-ancestor 5817edd HEAD` = **sí** (el commit que trae las 37 rutas del piloto, `scripts/triage_lesson_relevance.py` incluido, también versionado). Crudo: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/02-f2-piloto-fase-c-vcf.txt`. La cláusula que esta fila gobierna sigue vigente y no cambia con la nota: **los permisos de este plan no amplían ese mandato** — el piloto lo tuvo propio, y quien lea esta fila para pedir permiso para otra fase debe pedir el suyo⟧
+-- 10-analisis-post-implementacion.md
+11:rectificada en `dependencias-fases.md` bajo **Estado de B** («Rectificado el 2026-09-24 al cerrar FASE-C»,
+-- dependencias-fases.md
+7:**⟦Rectificado el 2026-09-24 al cerrar FASE-C⟧**: esa frase sigue siendo cierta sobre el **bloque C**
+194:    («Rectificado el 2026-09-24 al cerrar FASE-C», bajo **Estado de B**) ya cuenta el piloto
+== frase vencida en presente, por documento (linea exacta)
+-- 01-plan-maestro.md
+21:este plan no lo está y no se ejecutó**.
+146:| **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó su bloque A (conciliado, §5-ter) y su **bloque B, concluido contractualmente por su matriz §13, que es la única fuente de su estado**; el **bloque C** —estas enmiendas prospectivas— quedó autorizado el **2026-09-24** solo sobre los documentos de los cuatro planes, y el **piloto FASE-C sigue sin autorización**. Ejecutar una mejora de proceso dentro de la fase sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
+-- 04-contrato-ejecucion.md
+10:plan sigue sin autorizar y no se ejecutó al redactarlas.**
+165:el commit de código** cuando el commit está autorizado; cuando no lo está, el corte utilizable es
+277:**Cada línea lleva su momento (§Dos momentos del cierre).** Las marcadas `⟦remoto⟧` no se ejecutan con
+-- 10-analisis-post-implementacion.md
+9:como enmiendas prospectivas sobre los documentos de los cuatro planes; **el piloto FASE-C no lo está**.
+88:| **L-VCF-10** | «Cero llamadas de red» escrito como afirmación del informe no era verificable, y el primer intento de probarlo con `from conftest import RedProhibida` falló en colección: resolvía al `tests/conftest.py` **raíz**, no al de esta selección (1 test rojo antes de la corrección) | Un guard que no se ejecuta no existe; y en pytest `conftest` no es un importable único bajo colecciones anidadas (es la familia de «la cobertura del verificador se mide»: un ✅ no prueba ausencia) | El guard se expone **por fixture** y hay dos pruebas: que `socket.socket()` bajo el fixture produce `RedProhibida`, y que la costura llega a `RESUELTO` **con el guard armado**. Más la denegatoria AST de 19 módulos capaces de hacer red y el `find_spec` del SDK en el venv. Las tres, en `cero-red.txt` | **INCLUIR** — toda prohibición de proceso necesita un instrumento que falle si se viola; si su prueba depende de un import, que lo resuelva un fixture |
+332:  FASE-C sí sigue sin autorización**. Lo que esta entrada afirma no cambia: esas enmiendas no tocaron
+-- dependencias-fases.md
+6:plan no lo estaba** y ninguna de sus fases se ejecutó ni se diseñó al conciliar.
+119:| **D10** | **Re-leer la interfaz del write-back antes de correr el cierre.** `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (commiteado, PENDIENTE, con disparador anterior al RELEASE de `REFACTOR-WHATSAPP`) piensa añadir `--title`/`--file` a `validate_qmind_writeback.py`, verificar contenido en vez de título, quitar la degradación a PASS y tocar su conexión en `run_all_validations.py` | Este plan, FASE-RELEASE | **CUMPLIDA en su lectura el 2026-09-25** (FASE-RELEASE): `validate_qmind_writeback.py --help` contra el árbol vigente → `--nb`, `--strict`, `--upload`; **sin** `--title` ni `--file`, decide por título y degrada a `exit 0` sin CLI. La firma **no** cambió (el mini-plan no se ejecutó), así que `04-contrato-ejecucion.md` **no** se re-escribió; lectura con su evidencia en `evidence/…/FASE-RELEASE/02-tarea1-firma-writer.txt`. Queda vigente la advertencia para quien sí corra la subida: verificar por contenido, no por título |
+191:  - **piloto FASE-C**: **sigue sin autorización** y no se ejecutó. Su contrato está conciliado y su
+EXIT_F2=0

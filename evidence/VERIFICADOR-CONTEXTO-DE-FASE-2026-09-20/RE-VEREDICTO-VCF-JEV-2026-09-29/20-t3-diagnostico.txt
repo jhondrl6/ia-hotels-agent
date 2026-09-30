@@ -1,0 +1,36 @@
+### 1. Poblacion de la corrida T3 (19-t3-pytest-82.txt)
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+1 failed, 81 passed in 107.19s (0:01:47)
+EXIT_PYTEST=1
+
+### 2. El archivo completo, en AISLADO (18 funciones de test_validate_wiring.py)
+
+tests\test_validate_wiring.py:381: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+1 failed, 17 passed in 48.08s
+EXIT_AISLADO_WIRING=1
+
+### 3. Solo el test que cae, en AISLADO
+
+tests\test_validate_wiring.py:381: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_wiring.py::test_toda_la_poblacion_no_resuelta_queda_fuera_de_produccion
+1 failed in 15.87s
+EXIT_AISLADO_UN_TEST=1
+
+### 4. Estado versionado del insumo que ensucia (tmp_test/)
+0
+  ^ rutas versionadas bajo tmp_test (0 = no esta en el arbol de git)
+.gitignore:28:tmp_test/	tmp_test
+  ^ salida de git check-ignore (vacio = NO ignorado por .gitignore)
+tmp_test/venv-jev-sdk
+### 5. Los 5 receptores no resueltos, leidos del propio reporte
+Traceback (most recent call last):
+  File "C:\Users\Jhond\Github\iah-cli\evidence\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\RE-VEREDICTO-VCF-JEV-2026-09-29\m-20-receptores.py", line 7, in <module>
+    import validate_wiring as vw  # noqa: E402  (el mismo modulo que usa el test)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'validate_wiring'
+EXIT_RECEPTORES=1
+### 6. Que los tres rojos preexistentes de la casa son los mismos nombres
+HECHO

@@ -1,0 +1,25 @@
+== 1. Balance de marcadores: HEAD contra disco, archivo por archivo ==
+comando: contar U+27E6 y U+27E7 en el blob de HEAD (git cat-file) y en el archivo del arbol de trabajo
+(la cuenta NO se hace con grep sobre la salida de git show, que normaliza y puede partir multibyte).
+   HEAD  evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md 6/4 balance=+2
+   disco evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md 8/6 balance=+2
+   delta introducido por esta sesion: aperturas +2, cierres +2
+
+   HEAD  evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md   7/7 balance=+0
+   disco evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md   9/9 balance=+0
+   delta introducido por esta sesion: aperturas +2, cierres +2
+
+== 2. Control de inclusion pura, con el predicado correcto ==
+La linea vieja y la nueva son la misma celda de tabla, alargada. El control no puede ser
+'la linea vieja aparece igual' (su cola cambia por construccion); es: el cuerpo viejo, sin su
+cola de cierre de celda, sigue presente caracter a caracter dentro de la linea nueva.
+
+   evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md : 1 lineas suprimidas, 9 anadidas
+   vieja (973 chars) -> reaparece como prefijo intacto de 1 linea(s) nueva(s): SI
+      nueva mide 1970 chars (delta +997), y empieza igual: True
+
+   evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md : 0 lineas suprimidas, 15 anadidas
+
+== 3. Las notas nuevas, leídas enteras para revisar su balance propio ==
+   00-expediente.md : 6 bloques entre apertura y cierre
+   00-resumen.md : 9 bloques entre apertura y cierre

@@ -1,0 +1,20 @@
+== Pila de marcadores, excluyendo codigo inline, sobre el blob de HEAD (metodo de la casa) ==
+comando: recorrer el texto; en cada linea, los segmentos entre backticks en posicion impar son inline.
+Se reportan aparte las lineas con backticks IMPARES (la trampa de paridad de delimitadores).
+
+crudo              : aperturas=6 cierres=4 balance=+2
+dentro de inline   : aperturas=3 cierres=1
+excluyendo inline  : aperturas=3 cierres=3 balance=+0
+
+lineas con backticks impares (el filtro por contexto pierde fiabilidad aqui): 11
+  linea 3 : 1 backticks (impar) -> Sesión **escritora**, alcance cerrado a la población de la orden `ORDEN — CURA DE HALLAZGO
+  linea 4 : 1 backticks (impar) -> RE-VERIFICACIÓN VCF+JEV (2026-09-28)`. Los hallazgos viajaron verbatim en la orden y cada 
+  linea 184 : 21 backticks (impar) -> | 3 | `python scripts/validate_opencode_refs.py --fix` | reparo **1** referencia y al hace
+  linea 186 : 5 backticks (impar) -> | 4f | normalizacion por bytes del baseline | **defecto nuevo medido, no buscado**: `escri
+  linea 187 : 25 backticks (impar) -> "`, asi que la corrida del paso 4 paso el baseline de `w/lf` a `w/crlf` y **movio la cifra
+  linea 205 : 5 backticks (impar) -> | **D-H** | `validate_plan_citations.py:135` (`escribir_baseline`) escribe sin `newline="
+  linea 206 : 15 backticks (impar) -> "` y convierte a CRLF un archivo que git almacena en LF; medido con el propio guion sobre 
+  linea 272 : 3 backticks (impar) -> ```bash
+  linea 274 : 3 backticks (impar) -> ```
+  linea 283 : 3 backticks (impar) -> ```bash
+  linea 285 : 3 backticks (impar) -> ```

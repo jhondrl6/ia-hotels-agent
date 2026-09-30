@@ -1,0 +1,14 @@
+### 4. git diff --check y poblacion del arbol
+EXIT_DIFF_CHECK=0
+ .../RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md        | 10 +++++++++-
+ .../SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md              |  6 ++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
+EXIT_DIFF_STAT=0
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/
+EXIT_PORCELAIN=0
+### 5. Conteos de la evidencia de esta sesion
+archivos totales: 98
+instrumentos m-*: 22
+descargas: 6

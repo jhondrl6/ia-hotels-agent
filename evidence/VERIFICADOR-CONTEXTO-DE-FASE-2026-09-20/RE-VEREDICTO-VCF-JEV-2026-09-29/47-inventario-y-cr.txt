@@ -1,0 +1,42 @@
+== Inventario final del expediente ==
+comando: os.listdir y por archivo len(bytes) y el conteo del byte 0x0D (retorno de carro).
+Tercera pasada: las dos primeras se contaron a si mismas mal (la primera porque el crudo aun no
+existia al contar; la segunda porque el encabezado que ella misma escribia contenia un retorno de
+carro literal y se contaba como archivo con CR). Es la familia de 'el barredor toca la nota que
+el mismo escribe' y por eso se re-corrio en vez de publicar la cifra con la duda.
+
+total=110  documento=1  crudos=78  descargas=6  instrumentos=25
+archivos con CR>0: 27 ; con CR=0: 83
+bytes totales: 906922
+
+Los 27 con CR son captura verbatim de consola (pytest, run_all_validations, python con stdout
+redirigido bajo Windows). Ningun reporte escrito por instrumento ni este documento estan entre ellos.
+
+archivo                                            CR
+03b-comparacion-stdout.log                          2
+06-pre-writeback-strict.txt                         1
+10-t1-verificacion.txt                             28
+12a-id-nueva.txt                                    1
+12c-verifica-stdout.log                             1
+17b-cierre-stdout.log                               2
+18-post-writeback-strict.txt                        1
+19-t3-pytest-82.txt                                24
+20-t3-diagnostico.txt                              17
+20b-aislado-wiring.txt                             23
+20c-aislado-un-test.txt                            23
+20d-receptores-no-resueltos.txt                    17
+21-control-clon-wiring.txt                          5
+22-t4-modo-completo.txt                            55
+24-t4b-suite-completa.txt                         325
+28b-f3-stdout.log                                   1
+29b-f3-stdout.log                                   1
+30-f4-par-de-formas.txt                             1
+32-f5-registry-re-medido.txt                       52
+33b-ac3-stdout.log                                  1
+34b-veredictos-stdout.log                           1
+37-pipeline-integracion-documental.txt             45
+38-pipeline-packs-e-indice.txt                      7
+39-pipeline-quick.txt                              43
+45b-rebalance-stdout.log                            1
+45c-reinclusion-stdout.log                          1
+46-cierre-quick.txt                                43

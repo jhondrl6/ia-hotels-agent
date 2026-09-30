@@ -1,0 +1,33 @@
+{
+  "id": "01a0ef39-b514-7b10-ae86-5ff435fee0a3",
+  "orgId": "",
+  "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+  "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+  "title": "10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (cierre formal 2026-09-27, lecciones finales 2026-09-29)",
+  "sourceType": "markdown",
+  "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/ab39cfdc-a8b9-4c87-9b1d-e8d0312becef/10-analisis-post-implementacion.md",
+  "status": "pending",
+  "errorMessage": "",
+  "parentSourceId": "",
+  "path": "",
+  "isDir": false,
+  "metadata": {
+    "fileSha256": "0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa",
+    "fileSize": 110891,
+    "originalFileName": "10-analisis-post-implementacion.md",
+    "originalFileSize": 110891,
+    "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+    "originalMimeType": "text/markdown",
+    "retainOriginalFile": true,
+    "sourceFormat": "md"
+  },
+  "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+  "createdAt": {
+    "nanos": 668000000,
+    "seconds": 1790719931
+  },
+  "updatedAt": {
+    "nanos": 668000000,
+    "seconds": 1790719931
+  }
+}

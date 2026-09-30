@@ -1,0 +1,30 @@
+== T1 - verificacion de la re-ingesta por DESCARGA + sha256 ==
+comando de subida : qmind source upload --non-interactive --format json --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 --file <10-analisis VCF> --title "10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (cierre formal 2026-09-27, lecciones finales 2026-09-29)"
+comando de lista  : qmind source list --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 --all --format json
+poblacion PRE  (01-source-list.json)        : 55 fuentes
+poblacion POST (09-source-list-post-t1.json): 56 fuentes
+delta de poblacion: +1
+
+== Fuentes del plan VCF en el POST (stem '10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20') ==
+    id=01a0ef39-b514-7b10-ae86-5ff435fee0a3
+      status=processing  title='10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (cierre formal 2026-09-27, lecciones finales 2026-09-29)'
+      metadata.fileSha256=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa  fileSize=110891  originalFileSize=110891   <== la nueva
+    id=01a0e464-3331-7684-9742-f64e009fb10b
+      status=ready  title='10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+      metadata.fileSha256=e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b  fileSize=106284  originalFileSize=106284
+    id=01a0e0d3-92db-795b-ad7a-48a7c322e8e9
+      status=ready  title='10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)'
+      metadata.fileSha256=fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80  fileSize=94984  originalFileSize=94984
+
+== Descarga de la fuente nueva vs el archivo en disco ==
+comando : qmind source download 01a0ef39-b514-7b10-ae86-5ff435fee0a3 --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 -o descarga-01a0ef39-b514-7b10-ae86-5ff435fee0a3.md --overwrite
+DESCARGA : bytes=110891 sha256=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa CR=0 LF=495
+DISCO    : bytes=110891 sha256=0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa CR=0 LF=495
+identico_crudo=True   delta bytes descarga-disco = +0
+corroboracion aparte: metadata.fileSha256 del servidor == sha del disco: True
+VEREDICTO: FRESCA - la re-ingesta publico el contenido de disco
+
+La fuente anterior del mismo plan (01a0e464-3331-7684-9742-f64e009fb10b) sigue en el notebook con su titulo original
+y el gemelo pendiente de borrado (01a0e0d3-92db-795b-ad7a-48a7c322e8e9) tambien. Forma precedente en la casa:
+TRIBUNAL-OFFLINE-2026-09-09 publica version original + version de cierre con titulos distintos.
+El caso a borrar por T2 es el que repite TITULO exacto, no la version de cierre anterior.

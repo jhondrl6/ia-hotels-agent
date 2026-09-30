@@ -1,0 +1,24 @@
+== Balance de marcadores de nota datada en los archivos tocados ==
+comando logico: contar por archivo las aperturas y los cierres (U+27E6 / U+27E7) sobre el texto UTF-8
+
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md aperturas=8 cierres=6 balance=+2  CR=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md   aperturas=9 cierres=9 balance=+0  CR=0
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29\00-expediente.md aperturas=2 cierres=2 balance=+0  CR=0
+
+== Control de inclusion pura: lo versionado no se perdio al anotar ==
+comando: git diff -U0 sobre las dos rutas anotadas, y lectura de que hay en cada linea '-'.
+
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md : 9 lineas anadidas, 1 suprimidas (git diff --numstat abajo)
+   SUPRIMIDA: -| **D-E** | Decisión | Re-ingesta a QMind de los **2 snapshots vencidos** | Aviso de la casa: el `--upload` responde `[SKIP]` por título, así que la re-ingesta con el mismo título deja la versión vie
+     esa linea reaparece intacta dentro de alguna anadida: False
+
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md : 15 lineas anadidas, 0 suprimidas (git diff --numstat abajo)
+
+== numstat por archivo ==
+   9	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+   15	0	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md
+
+== CJK barrido (la familia que ya costo dos commits en esta casa) ==
+   evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md CJK=0 
+   evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md   CJK=0 
+   evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29\00-expediente.md CJK=0 

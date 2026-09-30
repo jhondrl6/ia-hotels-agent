@@ -1,0 +1,2110 @@
+{
+  "sources": [
+    {
+      "id": "01a0ef39-b514-7b10-ae86-5ff435fee0a3",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (cierre formal 2026-09-27, lecciones finales 2026-09-29)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/ab39cfdc-a8b9-4c87-9b1d-e8d0312becef/10-analisis-post-implementacion.md",
+      "status": "processing",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "0eb1d8feb18eb1a7400c2ec9a4436b92cd7d2bdb208c6471caa33807de97d6aa",
+        "fileSize": 110891,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 110891,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceBatchQueueGeneration": "2026-09-29T22:12:11.668722535Z",
+        "sourceFileSnapshotPendingOssKey": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/ab39cfdc-a8b9-4c87-9b1d-e8d0312becef/ingestion-9dab75a2-c69d-48ba-a507-e8395d06e7d6.md",
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-29T22:12:11.668722535Z"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 668000000,
+        "seconds": 1790719931
+      },
+      "updatedAt": {
+        "nanos": 70000000,
+        "seconds": 1790719932
+      }
+    },
+    {
+      "id": "01a0ef0e-aa1c-7e5d-8486-51d40b8b4f07",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "Leccion: una orden de re-verificacion arranca por la matriz vigente de la fuente unica (Paso 0 del 2026-09-28, versionada en c8b7198)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/62bbccdb-2a75-4b2a-900b-e55884a11f4d/43-leccion-paso-0-2026-09-28.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "d968d4971fd9565a60d8a99435df157d687d49ea01e1a1957c25fe76d41e12b1",
+        "fileSize": 2677,
+        "originalFileName": "43-leccion-paso-0-2026-09-28.md",
+        "originalFileSize": 2677,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-29T21:25:10.812938694Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 3,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 812000000,
+        "seconds": 1790717110
+      },
+      "updatedAt": {
+        "nanos": 237000000,
+        "seconds": 1790717111
+      }
+    },
+    {
+      "id": "01a0e4d9-e442-7d1b-bde5-7e9b669a2701",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/cd0bb54a-cfd7-4e61-b34e-f0729912518e/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16",
+        "fileSize": 17263,
+        "originalFileName": "CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md",
+        "originalFileSize": 17263,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-27T21:51:20.130856337Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 11,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 130000000,
+        "seconds": 1790545880
+      },
+      "updatedAt": {
+        "nanos": 638000000,
+        "seconds": 1790545883
+      }
+    },
+    {
+      "id": "01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6dec1ae0-782c-4443-949e-cc503b77aa20/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9",
+        "fileSize": 15144,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 15144,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-27T21:51:07.346824323Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 13,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 346000000,
+        "seconds": 1790545867
+      },
+      "updatedAt": {
+        "nanos": 540000000,
+        "seconds": 1790545868
+      }
+    },
+    {
+      "id": "01a0e483-2483-7b76-8b05-3c0a6d52d648",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "L-VCF-20: proyeccion de una ruta vence al derivado igual que un sha — trazabilidad (VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, entrada b5591a0)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/dc4dccad-ec2a-4457-95b6-6a4aa72a7983/L-VCF-20-trazabilidad.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "81c6714fda08551c52a3d066b3a10e3aa51de141e124733b6641f6a328b9f3b9",
+        "fileSize": 3754,
+        "originalFileName": "L-VCF-20-trazabilidad.md",
+        "originalFileSize": 3754,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-27T20:16:34.947747984Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 2,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 947000000,
+        "seconds": 1790540194
+      },
+      "updatedAt": {
+        "nanos": 354000000,
+        "seconds": 1790540195
+      }
+    },
+    {
+      "id": "01a0e464-3331-7684-9742-f64e009fb10b",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6b20c94a-e3ee-47f3-8c33-7986c1e51d27/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "e30a1cc32eb3885eee4ffbfa0fd1299bc09ad48a8e8b9875871f5dd8b88bdd0b",
+        "fileSize": 106284,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 106284,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-27T19:42:47.089423776Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 59,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 89000000,
+        "seconds": 1790538167
+      },
+      "updatedAt": {
+        "nanos": 968000000,
+        "seconds": 1790538175
+      }
+    },
+    {
+      "id": "01a0e0d3-92db-795b-ad7a-48a7c322e8e9",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/a2b6480b-b71d-4153-8c28-c0f933e546fe/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "fd9829dcd2adb09af98abbe343cbb7eacd565830d6ccf3247318db217b434e80",
+        "fileSize": 94984,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 94984,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "sourceURLIngestionGeneration": "2026-09-27T03:05:57.211610301Z",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 52,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": null,
+        "vectorIndexRetryAt": null,
+        "vectorIndexRetryKeySha256": null,
+        "vectorIndexRetryPending": false,
+        "vectorIndexRetryVersion": null,
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 211000000,
+        "seconds": 1790478357
+      },
+      "updatedAt": {
+        "nanos": 746000000,
+        "seconds": 1790478362
+      }
+    },
+    {
+      "id": "01a0bfc9-5f5a-783e-9492-16367bbff596",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/05c8597b-5d77-4cb6-b119-cddf46c3d9c7/qmind-upload-10-analisis-saneado.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "87b9b6664f945ac6279f1efaf9aa7682cac8a1c952e633bfc4ff55ce67a49274",
+        "fileSize": 39422,
+        "originalFileName": "qmind-upload-10-analisis-saneado.md",
+        "originalFileSize": 39422,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 538000000,
+        "seconds": 1789924040
+      },
+      "updatedAt": {
+        "nanos": 387000000,
+        "seconds": 1789924045
+      }
+    },
+    {
+      "id": "01a0a766-4cf6-7ec4-92fd-8edabbfcc3df",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6f17d6f2-efb2-4da4-a7cd-542129b75d9a/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "96c560c8ba6fe2b9900fa84127a1f7c1aff3b23a9131927690ddbee53b1737ee",
+        "fileSize": 109564,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 109564,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 582000000,
+        "seconds": 1789514894
+      },
+      "updatedAt": {
+        "nanos": 127000000,
+        "seconds": 1789514901
+      }
+    },
+    {
+      "id": "01a09d3d-245f-74c0-8a54-39c544ffa0d2",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4dd2872c-4125-4624-8b6a-7db9efda40ec/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "4befa0044a36ea471e90776180f5c9a258cdff54a3f1e13b374295b06b70682f",
+        "fileSize": 12766,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 12766,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 55000000,
+        "seconds": 1789344425
+      },
+      "updatedAt": {
+        "nanos": 849000000,
+        "seconds": 1789344425
+      }
+    },
+    {
+      "id": "01a09347-e9c4-78ac-a954-0769f8d4da57",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: TRIBUNAL-OFFLINE-2026-09-09 (cierre v4.76.0, lecciones finales 2026-09-11)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/3c1cb261-2768-4cb6-86b1-013a9bae93f8/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "3143793725f73fbe1af3dd2965dba820c53acc801847139ec5f3acb36ba4a979",
+        "fileSize": 79114,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 79114,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 788000000,
+        "seconds": 1789177358
+      },
+      "updatedAt": {
+        "nanos": 706000000,
+        "seconds": 1789177363
+      }
+    },
+    {
+      "id": "01a08bd9-c22a-7b30-9c14-512fbeea2cf6",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: TRIBUNAL-OFFLINE-2026-09-09 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/5bc7f136-af99-415f-8cae-b7f3b9d1cff2/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "b17b5d17a346da37a47d15259a342a8f6c836b563009258ba96f5f197d2e08da",
+        "fileSize": 6452,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 6452,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 178000000,
+        "seconds": 1789052699
+      },
+      "updatedAt": {
+        "nanos": 128000000,
+        "seconds": 1789052700
+      }
+    },
+    {
+      "id": "01a08916-1244-7c5a-8db2-6a09ed024eb3",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-BOTS: Potencialización iah-cli — lección de forma \"revalidar citas de código no revalida premisas\" (2026-09-01, auditoría 2026-09-02)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f58bfe63-cdf8-4320-882e-c8d17a1f0916/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "dcb18005511477740915c12c3ad3e7fc8fb20d5b0cd6049ac4e49b1a01a2994f",
+        "fileSize": 55391,
+        "originalFileName": "CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md",
+        "originalFileSize": 55391,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 196000000,
+        "seconds": 1789006320
+      },
+      "updatedAt": {
+        "nanos": 668000000,
+        "seconds": 1789006323
+      }
+    },
+    {
+      "id": "01a06ebb-001b-7a1a-a195-2714a9db271e",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/fe373de6-73c4-4be6-b4b9-e35e9485ceee/QMIND-WRITE-BACK.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "dd92f91265f3beea7b4766bbdc471efd308e10ef9372cac70126d21c7e9de4ac",
+        "fileSize": 128779,
+        "originalFileName": "QMIND-WRITE-BACK.md",
+        "originalFileSize": 128779,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 155000000,
+        "seconds": 1788564144
+      },
+      "updatedAt": {
+        "nanos": 426000000,
+        "seconds": 1788564149
+      }
+    },
+    {
+      "id": "01a06501-ff19-7210-af46-5383911bc170",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: Dossier de estabilización pre-tribunal SalenteReal — advisory 2-no-3 (H10), A1-A6, B1-B5, lección de forma (2026-09-03)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/fc95b7b0-53d2-4db0-993d-3f72befef1c6/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "812009ea101ee82afdf6a6ece758b514b3eb204ec8e44677c860ea1725cae6a6",
+        "fileSize": 45381,
+        "originalFileName": "CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md",
+        "originalFileSize": 45381,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 793000000,
+        "seconds": 1788401024
+      },
+      "updatedAt": {
+        "nanos": 546000000,
+        "seconds": 1788401027
+      }
+    },
+    {
+      "id": "01a064ad-3e70-76c7-9a68-f991afdf2c0b",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: Auditoría brechas diagnóstico vs módulos SalenteReal (2026-09-03)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/1c8e7e28-d217-4440-b9e7-e66a2244d7b9/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "7423952a5e8831dda95aedc14d844ec1f2bcd50008331ed55376568bae4712d1",
+        "fileSize": 12999,
+        "originalFileName": "CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md",
+        "originalFileSize": 12999,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 448000000,
+        "seconds": 1788395470
+      },
+      "updatedAt": {
+        "nanos": 843000000,
+        "seconds": 1788395471
+      }
+    },
+    {
+      "id": "01a0590c-6979-70ce-94dc-c6987f36f188",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "VALIDADOR-URL-PROPIA 10-analisis-post-implementacion (FASE-RELEASE 4.74.0 cerrada)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/87a8f996-dba8-4d36-88c4-fa06767390cd/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "c10747a4599237835dcf71b7b81f7ae82805d637bea0aa71ec45fa92651e4813",
+        "fileSize": 29481,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 29481,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 793000000,
+        "seconds": 1788200380
+      },
+      "updatedAt": {
+        "nanos": 979000000,
+        "seconds": 1788200382
+      }
+    },
+    {
+      "id": "01a04e6b-bf98-7ba9-b225-b3d7f94b201d",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: Decisión pre-commit framework vs hook custom (2026-08-29, con decisiones registradas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/9ea7da61-bcdb-4323-b115-407b15802420/CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "c0d574d9e93c9443b1de6598e485be9238c134d348efc3b6aca8ec465183ad8b",
+        "fileSize": 13327,
+        "originalFileName": "CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md",
+        "originalFileSize": 13327,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 384000000,
+        "seconds": 1788022079
+      },
+      "updatedAt": {
+        "nanos": 510000000,
+        "seconds": 1788022081
+      }
+    },
+    {
+      "id": "01a04e68-d649-7956-a656-a53ca8dd43a3",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: Decisión pre-commit framework vs hook custom (2026-08-29)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/224a764c-12f4-4b76-8586-0e07a6431965/CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "6894d1b43c96476d45f44df825b88487e879eef08bf4bdfe45a10f94226f94a1",
+        "fileSize": 12411,
+        "originalFileName": "CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md",
+        "originalFileSize": 12411,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 585000000,
+        "seconds": 1788021888
+      },
+      "updatedAt": {
+        "nanos": 304000000,
+        "seconds": 1788021890
+      }
+    },
+    {
+      "id": "01a04d9f-7237-7d1f-952c-66add3080644",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Sync versions CLI note",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/a4477546-13b1-4f53-aca8-8d8407940aca/sync-versions-cli-note.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "da688dc4b7f46e71f1dcb69516fbede82e5350b7692cbab533ec479554d60499",
+        "fileSize": 1418,
+        "originalFileName": "sync-versions-cli-note.md",
+        "originalFileSize": 1418,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 231000000,
+        "seconds": 1788008690
+      },
+      "updatedAt": {
+        "nanos": 693000000,
+        "seconds": 1788008690
+      }
+    },
+    {
+      "id": "01a04d9f-56cd-793d-a9d9-6e3d9269bc71",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Roadmap EnrichLabs vertical hotels strategy",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/3802dfd4-ea76-4783-9151-e6294bcd2d63/roadmap-enrichlabs-vertical-hotels-strategy.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "291947d1603f59fc31de07958f8c681a12463eab598d6320c5dac3b6ef30b5c1",
+        "fileSize": 4172,
+        "originalFileName": "roadmap-enrichlabs-vertical-hotels-strategy.md",
+        "originalFileSize": 4172,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 213000000,
+        "seconds": 1788008683
+      },
+      "updatedAt": {
+        "nanos": 583000000,
+        "seconds": 1788008683
+      }
+    },
+    {
+      "id": "01a04d9f-3af7-719c-85a3-a8348a4ced99",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Bugs no onboarding Luxor (2026-07-06)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f7e48b3e-79a6-4e53-92df-1696c5055a25/bugs_no_onboarding_luxor_2026-07-06.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "0a10099de3c5efd52ccb79bc6e45a7da578e842d39e4572240b13072c0f7986d",
+        "fileSize": 16856,
+        "originalFileName": "bugs_no_onboarding_luxor_2026-07-06.md",
+        "originalFileSize": 16856,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 87000000,
+        "seconds": 1788008676
+      },
+      "updatedAt": {
+        "nanos": 810000000,
+        "seconds": 1788008677
+      }
+    },
+    {
+      "id": "01a04d9f-2399-7717-96df-4d43ab999bae",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Zione proposal asset alignment block (2026-07-23)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/a04c68d6-0ffb-4d52-ab8b-f73db2c284c5/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "eb999fae8123f3d70518dae7d1db8bae31cf631bc63a0aa57e3255a41880ff25",
+        "fileSize": 28181,
+        "originalFileName": "ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md",
+        "originalFileSize": 28181,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 105000000,
+        "seconds": 1788008670
+      },
+      "updatedAt": {
+        "nanos": 6000000,
+        "seconds": 1788008672
+      }
+    },
+    {
+      "id": "01a04d9f-05ea-72ae-a795-1ed51e652b7f",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Regresión",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6716b1f4-38b2-401d-ba10-7ef8282b8e4d/Regresión.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "3f32569b0d03f5f8ddb31031a8e0cba230e46d929482abacab32d194bdb3e35e",
+        "fileSize": 10036,
+        "originalFileName": "Regresión.md",
+        "originalFileSize": 10036,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 506000000,
+        "seconds": 1788008662
+      },
+      "updatedAt": {
+        "nanos": 209000000,
+        "seconds": 1788008664
+      }
+    },
+    {
+      "id": "01a04d9e-bb90-7921-9989-1b81a134cdd5",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Regresión II",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/94e4fce3-a80a-4e24-857c-463f2e168b81/RegrasiónII.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "9bc320f3eadbbe03166e50392912d2afcd198ec62e9eb9fe3e415bcd4a1e5ca2",
+        "fileSize": 13272,
+        "originalFileName": "RegrasiónII.md",
+        "originalFileSize": 13272,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 472000000,
+        "seconds": 1788008643
+      },
+      "updatedAt": {
+        "nanos": 865000000,
+        "seconds": 1788008644
+      }
+    },
+    {
+      "id": "01a04d9e-994c-7367-babb-edcbf9d39286",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: ROICRIII",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/e2c4dd13-ad54-45a5-9c71-e86dd64fabf5/ROICRIII.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "f3790ecbc302b98483799dff7371c97dd7e941dcae21379c0229b6cb963623b0",
+        "fileSize": 41516,
+        "originalFileName": "ROICRIII.md",
+        "originalFileSize": 41516,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 700000000,
+        "seconds": 1788008634
+      },
+      "updatedAt": {
+        "nanos": 798000000,
+        "seconds": 1788008642
+      }
+    },
+    {
+      "id": "01a04d9e-8103-764c-821b-d8d61b076216",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: ROICRIII fase 6 resultado y faltantes",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/5a8a2beb-acdb-41d4-ae83-cac3a7b7e2d7/ROICRIII-fase-6-resultado-y-faltantes.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "d1b4072d28b8cbe17c9cbcfefd6d3979640b49533ce45787bbd0fa27902e1813",
+        "fileSize": 17564,
+        "originalFileName": "ROICRIII-fase-6-resultado-y-faltantes.md",
+        "originalFileSize": 17564,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 483000000,
+        "seconds": 1788008628
+      },
+      "updatedAt": {
+        "nanos": 887000000,
+        "seconds": 1788008629
+      }
+    },
+    {
+      "id": "01a04d9e-6770-7d95-a165-2b2b1030cc28",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Pendientes históricos",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/a5b70b02-e384-4c10-8a98-a34ee28f480f/Pendiente.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "38b9c4dca30229a4c8f7da53eb5a1fd8430a9cc5cd3a4ec6dd9a6b5f6acc58f4",
+        "fileSize": 9951,
+        "originalFileName": "Pendiente.md",
+        "originalFileSize": 9951,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 936000000,
+        "seconds": 1788008621
+      },
+      "updatedAt": {
+        "nanos": 231000000,
+        "seconds": 1788008623
+      }
+    },
+    {
+      "id": "01a04d9e-4573-75c8-9dcd-824bcea65ca8",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Pendiente IMP-03 CAPEX breakdown",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/d9f8d2e0-1b6c-4bb6-8fe0-8fb5ce80eeae/PENDIENTE-IMP-03-CAPEX-BREAKDOWN.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "ace2815b73f7b421dcdfc9d3395f012c7e7a7a20e1669dcd37550b24271a3a64",
+        "fileSize": 17193,
+        "originalFileName": "PENDIENTE-IMP-03-CAPEX-BREAKDOWN.md",
+        "originalFileSize": 17193,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 235000000,
+        "seconds": 1788008613
+      },
+      "updatedAt": {
+        "nanos": 697000000,
+        "seconds": 1788008615
+      }
+    },
+    {
+      "id": "01a04d9e-290c-7b5d-b180-c0184c5915ad",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Módulo hook PDF",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/3605ea54-7ef3-4eda-a455-6b1e3ba2cc9d/MODULO-HOOK-PDF.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "34a03ddc1d5972aede56106acfa7e28f3c8a1a12bf5edbcbff14896417a8ad1a",
+        "fileSize": 22478,
+        "originalFileName": "MODULO-HOOK-PDF.md",
+        "originalFileSize": 22478,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 964000000,
+        "seconds": 1788008605
+      },
+      "updatedAt": {
+        "nanos": 414000000,
+        "seconds": 1788008608
+      }
+    },
+    {
+      "id": "01a04d9e-10dd-74bd-b081-41cd0a7dcfc0",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Luxor recalibración financiera",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/d0cd8f40-a7a8-4448-886a-3be3cbf8d4d3/LUXOR-RECALIBRACION-FINANCIERA.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "fa3ac7a9d573e5004dfd99e24cbddbedbedd028c2240788c9e183c382d32e246",
+        "fileSize": 23905,
+        "originalFileName": "LUXOR-RECALIBRACION-FINANCIERA.md",
+        "originalFileSize": 23905,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 773000000,
+        "seconds": 1788008599
+      },
+      "updatedAt": {
+        "nanos": 498000000,
+        "seconds": 1788008601
+      }
+    },
+    {
+      "id": "01a04d9d-f8c1-7572-90d7-768586280c6e",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Investigación resultados",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/5de11b0f-99df-4c61-9ed7-d7a9bf1331c7/INVESTIGACION_RESULTADOS.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "1710019994f888ad45e13fc777248a77f143a82716cec48d2c429294cb59b84b",
+        "fileSize": 11055,
+        "originalFileName": "INVESTIGACION_RESULTADOS.md",
+        "originalFileSize": 11055,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 601000000,
+        "seconds": 1788008593
+      },
+      "updatedAt": {
+        "nanos": 487000000,
+        "seconds": 1788008594
+      }
+    },
+    {
+      "id": "01a04d9d-7eea-793f-b18f-87f2d6bcc7fe",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Investigación contexto",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/3d7a6ef5-a01e-4318-901e-023fef09eb24/INVESTIGACION_CONTEXTO.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "fca81160d9545df41672cdb708d133ddf5a6572ed95ef8ca835329c5d0140239",
+        "fileSize": 14854,
+        "originalFileName": "INVESTIGACION_CONTEXTO.md",
+        "originalFileSize": 14854,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 410000000,
+        "seconds": 1788008562
+      },
+      "updatedAt": {
+        "nanos": 557000000,
+        "seconds": 1788008564
+      }
+    },
+    {
+      "id": "01a04d9d-6191-7900-bc66-4ea668d21c1c",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT-1 README delivery present in production",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/a4923678-a4b5-4809-9878-bcd66e845063/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "d53e688209d93570272a9f6fddde5c0a3d590cf612a2f3fca663ff15651d78eb",
+        "fileSize": 35750,
+        "originalFileName": "DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md",
+        "originalFileSize": 35750,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 897000000,
+        "seconds": 1788008554
+      },
+      "updatedAt": {
+        "nanos": 636000000,
+        "seconds": 1788008556
+      }
+    },
+    {
+      "id": "01a04d9d-4cab-726f-a569-f65dd9242ca8",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Validación comercial código vivo (2026-08-19)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/8ebf3715-5265-4ce4-8189-9d6518d6086f/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "abce5ec31cdc089bd9c1622bd409acba165853ba60d99132e9f3e64008cbafed",
+        "fileSize": 37575,
+        "originalFileName": "CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md",
+        "originalFileSize": 37575,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 547000000,
+        "seconds": 1788008549
+      },
+      "updatedAt": {
+        "nanos": 864000000,
+        "seconds": 1788008551
+      }
+    },
+    {
+      "id": "01a04d9d-322b-7ce0-b6b4-e7699d8e3ad0",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Validación coherencia plan entrega (2026-08-04)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4b8cff1a-41c0-4eb7-a582-e658d198487e/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "9732653985eb82b81eb3b654260a4b57bd25334539cdc9fce313bb17d4cce0c7",
+        "fileSize": 44927,
+        "originalFileName": "CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md",
+        "originalFileSize": 44927,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 763000000,
+        "seconds": 1788008542
+      },
+      "updatedAt": {
+        "nanos": 84000000,
+        "seconds": 1788008545
+      }
+    },
+    {
+      "id": "01a04d9d-1b22-7da9-948a-d8b04725bb53",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Onboarding injection gap (2026-07-28)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/8e7a034b-5fef-462a-b26a-478625aee3cc/CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "4065a9c6d79429be7419690ac538311e2a2bd2be06f2aeef892c9d59d43200ca",
+        "fileSize": 28366,
+        "originalFileName": "CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md",
+        "originalFileSize": 28366,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 866000000,
+        "seconds": 1788008536
+      },
+      "updatedAt": {
+        "nanos": 626000000,
+        "seconds": 1788008540
+      }
+    },
+    {
+      "id": "01a04d9d-034a-7bd1-a98e-ce449e3e8db7",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Evidence tier false confidence IAO (2026-07-30)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/961cbc78-230b-48e0-9df9-78c0248c4174/CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "e75692b30b5ee0590a6fa302ee489b7e00b6b8f350bbe47880be0cabbf32ea95",
+        "fileSize": 38305,
+        "originalFileName": "CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md",
+        "originalFileSize": 38305,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 762000000,
+        "seconds": 1788008530
+      },
+      "updatedAt": {
+        "nanos": 657000000,
+        "seconds": 1788008533
+      }
+    },
+    {
+      "id": "01a04d9c-e6ce-70f2-8959-98c78314c847",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT4 residual fixes",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/57b18836-4223-4fbe-a5ac-d710cf8d84d9/CONTEXT-DT4-RESIDUAL-FIXES.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "bedae667aef80de098471256f9257196b66bc47c9bc90b5debc0275733c2125b",
+        "fileSize": 26861,
+        "originalFileName": "CONTEXT-DT4-RESIDUAL-FIXES.md",
+        "originalFileSize": 26861,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 470000000,
+        "seconds": 1788008523
+      },
+      "updatedAt": {
+        "nanos": 743000000,
+        "seconds": 1788008525
+      }
+    },
+    {
+      "id": "01a04d9c-ce3d-7240-bed1-e91c8af314de",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT-4 root cause",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/79ffdab7-bf1c-45ea-af9d-f37916670fba/CONTEXT-DT-4.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "7769ee587dba700ffcd2ec03a2e36e795043661dd82e90b99ab40de4e7305381",
+        "fileSize": 35860,
+        "originalFileName": "CONTEXT-DT-4.md",
+        "originalFileSize": 35860,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 181000000,
+        "seconds": 1788008517
+      },
+      "updatedAt": {
+        "nanos": 723000000,
+        "seconds": 1788008519
+      }
+    },
+    {
+      "id": "01a04d9c-2453-75e2-9fb7-e8964bf26240",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT-3 tech debt post-DT2",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/5f875f94-0f4e-47c8-8e72-f70fc7f898a6/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "7c9eb38d1b916185c1c88a2399032440b93b5eb9cd1859d641fcbf4e45dc89c3",
+        "fileSize": 27229,
+        "originalFileName": "CONTEXT-DT-3-TECH-DEBT-POST-DT2.md",
+        "originalFileSize": 27229,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 683000000,
+        "seconds": 1788008473
+      },
+      "updatedAt": {
+        "nanos": 645000000,
+        "seconds": 1788008475
+      }
+    },
+    {
+      "id": "01a04d9b-fbee-78c9-ae66-60ceb36b47de",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT-3 post-analysis validated (2026-07-25)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/4cbc6d37-b063-4213-a21a-1f9cf7606df4/CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "326b5b2c10b15b3766a8b7b0dc5201863122a2757faac99965549fffdb724c69",
+        "fileSize": 20299,
+        "originalFileName": "CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md",
+        "originalFileSize": 20299,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 342000000,
+        "seconds": 1788008463
+      },
+      "updatedAt": {
+        "nanos": 823000000,
+        "seconds": 1788008464
+      }
+    },
+    {
+      "id": "01a04d9b-c7db-7cde-a940-830dec18a59f",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Diagnóstico coherencia módulo entrega (2026-08-02)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/1b4b85f8-b157-4195-ae06-624811688918/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "90c3531e21bf23c642d52d96a8bdf18387b4f4b53423b68ba434aa063962e3b6",
+        "fileSize": 41099,
+        "originalFileName": "CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md",
+        "originalFileSize": 41099,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 35,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseRevision": 1,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": "2026-08-29T13:02:54.346131043Z",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 11000000,
+        "seconds": 1788008450
+      },
+      "updatedAt": {
+        "nanos": 532000000,
+        "seconds": 1788008457
+      }
+    },
+    {
+      "id": "01a04d9b-e230-71e2-8668-7b6650df5059",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: DT-2 delivery contract residual",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f97f8cb6-3241-4ac1-b37e-8dd7e07922f9/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "db6929dac2d19da76e68717f1fe8d653810ba10f281333ee3fcef79d0f25d8f2",
+        "fileSize": 23622,
+        "originalFileName": "CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md",
+        "originalFileSize": 23622,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 22,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseRevision": 1,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": "2026-08-29T13:01:43.13028837Z",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 752000000,
+        "seconds": 1788008456
+      },
+      "updatedAt": {
+        "nanos": 515000000,
+        "seconds": 1788008457
+      }
+    },
+    {
+      "id": "01a04d9b-acf4-7dde-9083-7a1d8fcc154f",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Delivery ZIP packaging broken (2026-08-01)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/87dba339-d716-4559-add2-1e9296c1a53e/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "21ee4096a42c10ee10d75591986c357898d2dc6edb1c9f5f0aaaaa8c032312c6",
+        "fileSize": 29782,
+        "originalFileName": "CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md",
+        "originalFileSize": 29782,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexAttempts": 0,
+        "vectorIndexChunkCount": 25,
+        "vectorIndexError": "",
+        "vectorIndexErrorClass": null,
+        "vectorIndexLeaseRevision": 1,
+        "vectorIndexLeaseUntil": null,
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexNextAttemptAt": null,
+        "vectorIndexRepairedAt": "2026-08-29T13:03:01.699156155Z",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 124000000,
+        "seconds": 1788008443
+      },
+      "updatedAt": {
+        "nanos": 433000000,
+        "seconds": 1788008457
+      }
+    },
+    {
+      "id": "01a04d9b-8373-70d4-b839-5fabc968fee8",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Bugs vs DT3 clasificación (2026-07-25)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/6c133a52-089d-4bc9-b572-d1d78af50d40/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "ded7c6c9e8632e124537c63ef967081e530e61b4fe2dcf9ead917d3f587fe7b6",
+        "fileSize": 6158,
+        "originalFileName": "CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md",
+        "originalFileSize": 6158,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 499000000,
+        "seconds": 1788008432
+      },
+      "updatedAt": {
+        "nanos": 529000000,
+        "seconds": 1788008433
+      }
+    },
+    {
+      "id": "01a04d9b-6d62-790e-a52c-09575fadfcda",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Bugs onboarding ADR template (2026-07-22)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f0107fdb-2b2a-4f8a-9a37-e32f946fb143/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "6e2803a07dd8006c4f93f1100438f546e0cd55471fa2c9a7d87f6b6371962571",
+        "fileSize": 29057,
+        "originalFileName": "BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md",
+        "originalFileSize": 29057,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 850000000,
+        "seconds": 1788008426
+      },
+      "updatedAt": {
+        "nanos": 679000000,
+        "seconds": 1788008428
+      }
+    },
+    {
+      "id": "01a04d9b-519a-7a45-b3eb-31aecc791520",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT-H: Audit Bug 1 forense (2026-07-22)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/c9b989ec-91eb-4517-a39b-b1542dcf7cf5/AUDIT-BUG-1-FORENSIC-2026-07-22.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "69e2832d50e000549f6f6ab6d699da83768d4060df2bc8c903e008da51ae41e1",
+        "fileSize": 26913,
+        "originalFileName": "AUDIT-BUG-1-FORENSIC-2026-07-22.md",
+        "originalFileSize": 26913,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 738000000,
+        "seconds": 1788008419
+      },
+      "updatedAt": {
+        "nanos": 755000000,
+        "seconds": 1788008421
+      }
+    },
+    {
+      "id": "01a04d9a-e267-7ae7-b486-0ea19addf5f3",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: Salento Real v4complete ejecución (2026-08-27)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/dee5b086-514a-4246-932a-830f71868f9e/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "9ff9b680b62e9ff89ae33df79b67d8c6cba7839e40a9f6c56ab7a3212799c6fa",
+        "fileSize": 32136,
+        "originalFileName": "CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md",
+        "originalFileSize": 32136,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 271000000,
+        "seconds": 1788008391
+      },
+      "updatedAt": {
+        "nanos": 345000000,
+        "seconds": 1788008393
+      }
+    },
+    {
+      "id": "01a04d9a-ca7d-72da-b92c-3852fbeaee61",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "CONTEXT: REFACTOR-COHERENCIA-NARRATIVA fugas WhatsApp (2026-08-22)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/3d2a7f69-42c4-4608-b736-c8b67a7729b3/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "2b8b002907c89487a52917729f00c2f15462431a8692b8a8a432cae15c925b54",
+        "fileSize": 32825,
+        "originalFileName": "CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md",
+        "originalFileSize": 32825,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 149000000,
+        "seconds": 1788008385
+      },
+      "updatedAt": {
+        "nanos": 192000000,
+        "seconds": 1788008391
+      }
+    },
+    {
+      "id": "01a04d9a-b307-75ed-9600-8ba2fb0680e2",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: REFACTOR-COHERENCIA-NARRATIVA-2026-08-22 (lecciones aprendidas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/8973e1fa-494e-47b5-ae79-b4b95c911bbc/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "ac0fcb7d5a510f7038d0fe8534ddc5d427dd75589a58d5857182afce7de79707",
+        "fileSize": 27278,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 27278,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 143000000,
+        "seconds": 1788008379
+      },
+      "updatedAt": {
+        "nanos": 839000000,
+        "seconds": 1788008380
+      }
+    },
+    {
+      "id": "01a04d9a-9a44-7ed7-969a-4209c61053be",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: RC1-RC2-ENTREGA-COHERENTE-2026-08-04 (lecciones aprendidas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/c7771525-c319-4387-bdc3-16c25977431e/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "bbb5f8f6ae1d4ea43b246d9b3e04e12d4f7e4bfffecf2f4482b93fa434c5874e",
+        "fileSize": 42592,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 42592,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 804000000,
+        "seconds": 1788008372
+      },
+      "updatedAt": {
+        "nanos": 810000000,
+        "seconds": 1788008375
+      }
+    },
+    {
+      "id": "01a04d9a-827b-78df-b696-2226c88b58f3",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 (lecciones aprendidas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/bda08cfe-2743-4de1-bfc5-2804d45dca30/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "b4650ba8afeb4673ebf333310a03c9ed9b4bc5e6321738ea4f01b41592903092",
+        "fileSize": 10412,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 10412,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 715000000,
+        "seconds": 1788008366
+      },
+      "updatedAt": {
+        "nanos": 732000000,
+        "seconds": 1788008367
+      }
+    },
+    {
+      "id": "01a04d9a-6b03-7d5a-808f-810113e05b9b",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: CREDIBILIDAD-NUMERICA-2026-08-20 (lecciones aprendidas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/924691fb-05a1-4bb4-9726-4e200187b8d5/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "4101ddfa951d3f72f742623a2891b6ae96b5681322db459a1fed736b1fbb6c94",
+        "fileSize": 32224,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 32224,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 707000000,
+        "seconds": 1788008360
+      },
+      "updatedAt": {
+        "nanos": 399000000,
+        "seconds": 1788008362
+      }
+    },
+    {
+      "id": "01a04d9a-4eae-7ac5-97b1-4b01ae81a1f2",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: COHERENCIA-MODULO-ENTREGA-2026-08-03 (lecciones aprendidas)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/01a4bdc9-d7b9-430a-bf78-ab052a5f8c60/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "78b00d10c9ad58f6f86282234e59db5c8657f71c154928f29381eaa06a5a1a62",
+        "fileSize": 26150,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 26150,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 454000000,
+        "seconds": 1788008353
+      },
+      "updatedAt": {
+        "nanos": 35000000,
+        "seconds": 1788008355
+      }
+    },
+    {
+      "id": "01a04d99-e68b-778a-a86b-40ff5f41ec8a",
+      "orgId": "",
+      "userId": "3fe4f94d-97f5-4487-8236-367553ef7ba1",
+      "notebookId": "01a04d98-b7bd-778c-8441-26fdc7e35f45",
+      "title": "10-analisis: SR-PIPELINE-FIXES-2026-08-27 (lecciones aprendidas y decisiones)",
+      "sourceType": "markdown",
+      "uri": "notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/9091ec5a-1c29-4b3e-ad53-8081a7efb88e/10-analisis-post-implementacion.md",
+      "status": "ready",
+      "errorMessage": "",
+      "parentSourceId": "",
+      "path": "",
+      "isDir": false,
+      "metadata": {
+        "fileSha256": "2e35b8902dc58c76fe9484439805881059bfc460431ed638625f8a805f67de1a",
+        "fileSize": 41913,
+        "originalFileName": "10-analisis-post-implementacion.md",
+        "originalFileSize": 41913,
+        "originalFileUri": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+        "originalMimeType": "text/markdown",
+        "retainOriginalFile": true,
+        "sourceFormat": "md",
+        "vectorIndexError": "",
+        "vectorIndexModel": "text-embedding-v4",
+        "vectorIndexStatus": "ready"
+      },
+      "originUrl": "REDACTADA-URL-DE-OBJETO-FIRMADA-ver-11-redaccion-url-firmadas.txt",
+      "createdAt": {
+        "nanos": 795000000,
+        "seconds": 1788008326
+      },
+      "updatedAt": {
+        "nanos": 944000000,
+        "seconds": 1788008328
+      }
+    }
+  ],
+  "totalSize": 0,
+  "currentPage": 0,
+  "pageSize": 0
+}

@@ -1,0 +1,4 @@
+== Control final de las cuatro escrituras documentales ==
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29\00-expediente.md CR=0  CJK=0  marcadores-crudo=2/2  excluyendo-inline=1/1
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md CR=0  CJK=0  marcadores-crudo=8/6  excluyendo-inline=6/6
+evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/00-resumen.md   CR=0  CJK=0  marcadores-crudo=9/9  excluyendo-inline=9/9
