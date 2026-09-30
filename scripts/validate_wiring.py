@@ -53,13 +53,31 @@ LIMITE DECLARADO (L-R.4: una regla sin verificador declara su limite)
     `poblacion`/`cobertura`/`limites`. **Un ✅ no prueba ausencia de callers no
     gobernados**: prueba que la poblacion descubierta esta conforme o registrada.
 
+COMO SE DECIDE QUE ES ROJO (el criterio de la clausula de produccion)
+    Dos clausulas, y hasta la cura del 2026-09-30 solo la primera movia el exit code:
+      (i)  las **violaciones de cableado** (`SENAL_OMITIDA`, `KWARGS_OPACOS`, `ARGUMENTO_PROHIBIDO`,
+           `CONTRATO_MUERTO_VIGENTE`, `SIMBOLO_GOBERNADO_AUSENTE`) ya daban EXIT 1.
+      (ii) la **clausula de produccion** — que ningun caller productivo quedo sin resolver y que la
+           poblacion gobernada no esta vacia — solo vivia en un test de la suite. Medido el
+           2026-09-30: `--quiet` salia **0** con cinco receptores sin resolver en produccion y la
+           cola dava [11/13] en verde; o sea la cola podia estar 13/13 con su clausula roja.
+    El criterio, entonces: es **rojo** un `RECEPTOR_NO_RESUELTO` fuera de `tests/` (aca es donde una
+    senal se esconde) y `gobernadas_resueltas == 0` (sin un caller resuelto, «cero huecos» no afirma
+    nada). Es **registro, no rojo** `TEST_EXENTO_DE_SENAL` y el `RECEPTOR_NO_RESUELTO` bajo `tests/`:
+    un test que ejerce el default lo hace a proposito y su hueco solo puede esconder un test. Los
+    cuatro siguen publicados en `poblacion`/`cobertura`. El contrato de codigos no se mueve: lo que
+    cambia es **que** entra en «hallazgos». Los hallazgos del criterio no son amparables por el
+    registro de `EXCEPCIONES`: una excepcion tipada puede cubrir una omision concreta, no apagar la
+    clausula que mide si el verificador todavia esta mirando.
+
 Uso:
     python scripts/validate_wiring.py                       # verificar
     python scripts/validate_wiring.py --write-report        # verificar + publicar JSON
     python scripts/validate_wiring.py --ignore-known         # rojo sin excepciones tipadas
     python scripts/validate_wiring.py --root DIR             # verificar otro arbol (tests)
 
-Salida: 0 = conforme; 1 = violaciones; 2 = error de uso o lector fallido.
+Salida: 0 = conforme (cableado y clausula de produccion); 1 = hallazgos (omision, contrato muerto,
+hueco de cobertura en produccion o poblacion gobernada vacia); 2 = error de uso o lector fallido.
 """
 
 from __future__ import annotations
@@ -806,6 +824,55 @@ def aplicar_excepciones(violaciones: list[dict], excepciones: list[dict]) -> dic
     }
 
 
+# ----------------------------------------------------------------------------------- criterio
+#
+# La clausula de produccion existia como afirmacion del artefacto (`cobertura`) y como test de
+# suite, pero no como criterio del exit code. Este bloque es el unico sitio donde se define que
+# hallazgo cuenta; el CLI lo lee a traves de `verificar()`, asi que la cola de validaciones y quien
+# invoque el script juzgan con el mismo criterio que la suite.
+
+FUENTE_CLAUSULA = ("clausula de produccion: ningun caller productivo quedo sin resolver y la "
+                   "poblacion gobernada no esta vacia (GOBERNADOS, AC7)")
+
+
+def _hallazgos_del_criterio(cobertura: dict, poblacion: list) -> list:
+    """Los dos rojos de la clausula de produccion, convertidos en hallazgos con coordenadas.
+
+    Se calcula sobre la `cobertura` **ya publicada** del reporte, no sobre una cuenta paralela: si
+    el criterio y el artefacto divergieran, el verde de uno taparia el rojo del otro.
+    """
+    hallazgos: list[dict] = []
+
+    for registro in poblacion:
+        if registro["clasificacion"] != "RECEPTOR_NO_RESUELTO" or registro["en_tests"]:
+            continue
+        hallazgos.append({
+            "tipo": "HUECO_DE_COBERTURA_EN_PRODUCCION",
+            "archivo": registro["archivo"],
+            "linea": registro["linea"],
+            "simbolo": f"{registro['metodo']} (receptor sin resolver)",
+            "receptor": registro["receptor"],
+            "resolucion": registro["resolucion"],
+            "detalle": (f"el AST no deduce el tipo de `{registro['receptor']}` "
+                        f"({registro['resolucion']}), asi que no puede probar que la senal viajo; "
+                        f"el hueco esta fuera de `{DIR_TESTS}/`"),
+            "fuente_politica": FUENTE_CLAUSULA,
+        })
+
+    if cobertura["gobernadas_resueltas"] == 0:
+        hallazgos.append({
+            "tipo": "VERDE_VACIO_SIN_GOBERNADOS_RESUELTOS",
+            "archivo": "(poblacion)", "linea": 0, "simbolo": "GOBERNADOS",
+            "detalle": (f"ninguna de las {cobertura['llamadas_descubiertas']} llamadas descubiertas "
+                        f"resolvio a un productor gobernado: «cero huecos» sobre una poblacion "
+                        f"gobernada vacia no afirma nada. O el arbol no tiene callers, o la "
+                        f"resolucion de receptores se cayo"),
+            "fuente_politica": FUENTE_CLAUSULA,
+        })
+
+    return hallazgos
+
+
 # -------------------------------------------------------------------------------- reporte
 def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
     datos = poblar(root)
@@ -818,6 +885,32 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
     conteo: dict[str, int] = {}
     for registro in datos["poblacion"]:
         conteo[registro["clasificacion"]] = conteo.get(registro["clasificacion"], 0) + 1
+
+    cobertura = {
+        "archivos_en_alcance": datos["archivos_analizados"],
+        "archivos_excluidos_por_rol": len(datos["exclusiones"]),
+        "llamadas_descubiertas": len(datos["poblacion"]),
+        "por_clasificacion": dict(sorted(conteo.items())),
+        "receptores_no_resueltos": sum(
+            1 for r in datos["poblacion"]
+            if r["clasificacion"] == "RECEPTOR_NO_RESUELTO"
+        ),
+        # La cifra que importa: un hueco en produccion si puede esconder una senal;
+        # un hueco bajo tests/ solo puede esconder un test, no un caller real.
+        "receptores_no_resueltos_en_produccion": sum(
+            1 for r in datos["poblacion"]
+            if r["clasificacion"] == "RECEPTOR_NO_RESUELTO" and not r["en_tests"]
+        ),
+        "gobernadas_resueltas": sum(
+            1 for r in datos["poblacion"] if r["gobernado"]
+        ),
+        "exclusiones_por_clase": EXCLUSIONES_POR_CLASE,
+    }
+
+    # El criterio entra en la MISMA lista que decide el exit code: un rojo de clausula y un rojo de
+    # cableado se leen igual en la cola, y ninguno se puede quedar en advertencia silenciosa.
+    abiertas.extend(_hallazgos_del_criterio(cobertura, datos["poblacion"]))
+    abiertas.sort(key=lambda v: (v["archivo"], v["linea"], v["tipo"]))
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -836,26 +929,7 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
             }
             for (cls, metodo), pol in sorted(GOBERNADOS.items())
         },
-        "cobertura": {
-            "archivos_en_alcance": datos["archivos_analizados"],
-            "archivos_excluidos_por_rol": len(datos["exclusiones"]),
-            "llamadas_descubiertas": len(datos["poblacion"]),
-            "por_clasificacion": dict(sorted(conteo.items())),
-            "receptores_no_resueltos": sum(
-                1 for r in datos["poblacion"]
-                if r["clasificacion"] == "RECEPTOR_NO_RESUELTO"
-            ),
-            # La cifra que importa: un hueco en produccion si puede esconder una senal;
-            # un hueco bajo tests/ solo puede esconder un test, no un caller real.
-            "receptores_no_resueltos_en_produccion": sum(
-                1 for r in datos["poblacion"]
-                if r["clasificacion"] == "RECEPTOR_NO_RESUELTO" and not r["en_tests"]
-            ),
-            "gobernadas_resueltas": sum(
-                1 for r in datos["poblacion"] if r["gobernado"]
-            ),
-            "exclusiones_por_clase": EXCLUSIONES_POR_CLASE,
-        },
+        "cobertura": cobertura,
         "poblacion": datos["poblacion"],
         "violaciones": abiertas,
         "excepciones_aplicadas": aplicadas,
