@@ -53,6 +53,20 @@ Su mensaje nombra exactamente las cinco rutas de arriba. Tambien es el rojo que 
 seleccion marca como unica causa: `1 failed, 17 passed`.
 
 Lectura honesta del resultado: **el check no encontro un defecto de produccion; encontro su propio insumo**.
+
+⟦**Re-investigado el mismo dia, 2026-09-30, por pedido del operador.** Este diagnostico se sostiene y se
+refuerza con el desglose de los 30 no resueltos (25 bajo `tests/`, 5 bajo el aislado, **0** en cualquier otro
+directorio) y con la causa de raiz que aqui no se veia: **`scripts/decision_client.py:137-139` si excluye
+`tmp_test` y `site-packages`, y `EXCLUSIONES_POR_ROL` del wiring no** - la cura de S11 (`fdd397f`, 2026-09-23)
+se aplico a un escaner y no al otro. Dos cosas mas, que no dependen de la eleccion: el script **sale
+`EXIT 0` con los 5 presentes** (la unica cola lo registra verde), y el derivado versionado `.opencode/wiring_report.json`
+publica `receptores_no_resueltos_en_produccion = 0` desde `d7ff932` (2026-09-20) sin que ningun `--check` lo
+contra-verifique. **Y hay una tercera salida que este documento no preveia**: gobernar el alcance por la
+declaracion del propio `.gitignore` (`git ls-files --others --ignored --exclude-standard`), medida sin tocar el
+arbol - saca exactamente los 684 del aislado, **cero** ficheros fuera de `tmp_test`, deja `gobernadas_resueltas`
+en 75 y baja el tiempo de 17,1 s a 9,8 s. Todo eso, con la rectificacion del coste de re-anclaje (aqui se
+temia un re-anclaje de bateria que no existe: ningun test pinea 1.368 ni 183), esta en
+`04-reinvestigacion-alerta-wiring-2026-09-30.md`.⟧
 La clausula que governa ("ningun caller productivo quedo sin resolver") se esta midiendo contra el SDK de
 terceros de un entorno que el propio `.gitignore` declara fuera del proyecto. Es la familia del
 «rojo de herramienta que no ve su insumo», pero al reves: ve un insumo que no deberia estar en su poblacion.

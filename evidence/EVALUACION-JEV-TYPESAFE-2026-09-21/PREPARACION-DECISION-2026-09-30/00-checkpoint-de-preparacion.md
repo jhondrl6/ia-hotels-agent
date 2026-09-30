@@ -44,7 +44,7 @@ verificador que escribe pisa el pasado»). Se paso siempre ruta explicita a `tem
 |---|---|---|
 | Etiqueta humana de los 4 pares y acuerdo de umbrales (P1 / D-D) | la persona designada (hoy `revision_humana = «obligatoria, pendiente de designar responsable»`) | su firma; ninguna sesion puede producirla |
 | Elegir salida (a) o (b) del gap de contrato | Operador | lectura de `01-`; la eleccion abre el mandato de codigo correspondiente |
-| Decidir si `tmp_test/` se excluye por rol o se saca del repo | dueno de `scripts/validate_wiring.py` | `03-` trae las dos salidas medidas; la (a) apaga un rojo de suite y por eso no se aplica sola |
+| Decidir `tmp_test/`: exclusion por rol (a), mudar el aislado (b), **o gobernar el alcance por la declaracion del `.gitignore` (c, la recomendada)** | dueno de `scripts/validate_wiring.py` | `03-` traza (a) y (b); `04-reinvestigacion-alerta-wiring-2026-09-30.md` trae las **tres** medidas y rectifica a `03-`: el re-anclaje que (a) temia no existe (ningun test pinea 1.368 ni 183), y (c) saca exactamente los 684 del aislado sin tocar ni un fichero del proyecto. Las tres apagan el rojo de suite, por eso ninguna se aplica sola. **Ninguna cierra los dos defectos que `04-` descubre: `EXIT 0` del verificador con la clausula rota, y el informe versionado vencido desde `d7ff932` sin `--check`** |
 | FASE-B (2 bloqueantes humanos, corre sin red), FASE-C (preflight + presupuesto escrito, la unica con red), RELEASE | Operador, en ese orden | permisos explicitos; `README:95` sigue vigente: ninguna fase es ejecutable hoy |
 | D7 + S10 (activar Jev como segundo proveedor detras de la costura), D3, D6, S14, S19 no es de este plan | sus filas en el registro `33-` del plan hermano | cada una con su puerta ajena |
 
@@ -56,6 +56,7 @@ verificador que escribe pisa el pasado»). Se paso siempre ruta explicita a `tem
     01-gap-de-contrato.md
     02-material-muestra-y-umbrales.md
     03-aislado-y-wiring.md
+    04-reinvestigacion-alerta-wiring-2026-09-30.md    <- anadido el mismo dia, rectifica a `03-`
 
 Las tres copias son **identicas byte a byte** a las piezas originales del plan
 (`evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/{muestra,etiquetas,protocolo}.json`), que no se tocaron: los
