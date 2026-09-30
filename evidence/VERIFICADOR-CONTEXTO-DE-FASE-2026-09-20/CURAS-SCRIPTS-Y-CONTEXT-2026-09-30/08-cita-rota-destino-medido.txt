@@ -1,0 +1,11 @@
+# crudo 08 - la cita rota del plan JEV, medida antes de sellar (2026-09-30)
+# seccion buscada: '## Cierre formal de ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 (2026-09-27)'
+  JEV (destino citado por README y 04-contrato) :: dependencias-fases.md
+     menciones de 'Cierre formal' = 0 | cabeceras de seccion = []
+  VCF (hermano) :: dependencias-fases.md
+     menciones de 'Cierre formal' = 1 | cabeceras de seccion = ['## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)']
+# y los dos documentos que citan el destino equivocado (se leen por su seccion, no por numero de linea):
+  JEV README.md: lineas con la cita = [3] (la ancla se cita por seccion, no por numero)
+  JEV 04-contrato-ejecucion.md: lineas con la cita = [21] (la ancla se cita por seccion, no por numero)
+# verificacion del destino real en el hermano:
+  VCF dependencias-fases.md, seccion en su linea 1179: ## Cierre formal de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22` (2026-09-27)

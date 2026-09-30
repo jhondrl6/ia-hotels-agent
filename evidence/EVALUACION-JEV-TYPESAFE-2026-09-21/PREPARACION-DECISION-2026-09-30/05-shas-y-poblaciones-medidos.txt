@@ -1,0 +1,21 @@
+# crudo 05 - poblaciones y shas de la muestra, medidos 2026-09-30
+# revision: 7737347e1572b52cb50e527086d7df8cc3950b71
+  muestra.json: 2651 bytes  sha256 1abfaafe100159f02096d70a1e9a90cc61cee5d3300e8c8af739dcc316053698
+  etiquetas.json: 836 bytes  sha256 bf72272aa88837f81517f32d07958dee2c9c038f0dcd89b1c87229177d112dc0
+  protocolo.json: 1311 bytes  sha256 fa327b5887ac36cdb2b225724499c62be6a4ba6b673618b8147d26bfb06a442d
+poblacion 1 (git ls-tree -r HEAD): 3110 blobs distintos
+poblacion 2 (arbol de trabajo): 9307 ficheros indexados
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1
+     original_sha256 casa en HEAD: False | casa en arbol de trabajo: False
+     sanitized_sha256 declarado == sha256_text(input_fragment): True
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2
+     original_sha256 casa en HEAD: False | casa en arbol de trabajo: False
+     sanitized_sha256 declarado == sha256_text(input_fragment): True
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2
+     original_sha256 casa en HEAD: False | casa en arbol de trabajo: False
+     sanitized_sha256 declarado == sha256_text(input_fragment): True
+  EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4
+     original_sha256 casa en HEAD: False | casa en arbol de trabajo: False
+     sanitized_sha256 declarado == sha256_text(input_fragment): True
+limite declarado: sha256_text es el de scripts/evaluate_jev_pilot.py; la poblacion 2 excluye los
+entornos virtuales y caches nombrados arriba, y ficheros de mas de 4 MB.

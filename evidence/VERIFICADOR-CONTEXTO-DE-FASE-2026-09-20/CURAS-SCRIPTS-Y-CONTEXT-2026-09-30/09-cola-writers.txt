@@ -1,0 +1,37 @@
+# T7 cola de writers: packs -> indice -> --check x2
+# revision pre-cola: 7737347e1572b52cb50e527086d7df8cc3950b71
+# status pre-cola (-uno): 16 lineas
+
+== [1/4] packs ==
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+PACKS_EXIT=0
+
+== [2/4] indice ==
+[OK] 340 IDs definidos + 54 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=329 commit=11 sin_fuente=0
+INDICE_EXIT=0
+
+== [3/4] packs --check ==
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+PACKS_CHECK_EXIT=0
+
+== [4/4] indice --check ==
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+INDICE_CHECK_EXIT=0

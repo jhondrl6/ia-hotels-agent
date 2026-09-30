@@ -1,0 +1,12 @@
+== baterias por poblacion, POST cura y POST correcciones ==
+T1                     EXIT=0  26 passed in 1.47s
+T2                     EXIT=0  5 passed in 3.37s
+T3                     EXIT=0  17 passed in 0.30s
+T4-c9                  EXIT=0  12 passed in 0.99s
+T4-hermana             EXIT=0  30 passed in 2.22s
+T2T3-briefing          EXIT=0  57 passed in 3.71s
+T3-gobernanza          EXIT=0  54 passed in 21.62s
+T3-denominador         EXIT=0  5 passed in 0.47s
+T2-hermana             EXIT=0  7 passed in 15.97s
+hermana-indice         EXIT=0  9 passed in 22.61s
+T5-costura             EXIT=0  87 passed, 2 warnings in 8.33s

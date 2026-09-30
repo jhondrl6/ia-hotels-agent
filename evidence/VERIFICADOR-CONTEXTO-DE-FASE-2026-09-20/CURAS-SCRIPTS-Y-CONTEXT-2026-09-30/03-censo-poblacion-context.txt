@@ -1,0 +1,26 @@
+=== 1. CONTEXT autodeclarados (raiz de .opencode/context/, no recursivo) ===
+  CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  total declarados = 1
+=== 2. nombres CONTEXT-* citados por los planes archivados ===
+  distintos citados = 9
+  CONTEXT-...-2026-08-04.md -> AUSENTE-EN-DISCO
+  CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md -> AUSENTE-EN-DISCO
+  CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL -> .opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md
+  CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md -> AUSENTE-EN-DISCO
+  CONTEXT-DT-3-TECH-DEBT-POST-DT2 -> .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md
+  CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md -> AUSENTE-EN-DISCO
+  CONTEXT-JEV- -> AUSENTE-EN-DISCO
+  CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 -> .opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md
+  CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md -> AUSENTE-EN-DISCO
+=== 3. union gobernada: sha en disco vs metadata.fileSha256 publicado ===
+  .opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+     sha_disco=5587f27ddd5a52de…  tam=17272  fuentes_que_casan_por_metadata=1 ['01a0efcc-3297-7782-9467-757fe81018fc']
+  .opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md
+     sha_disco=db6929dac2d19da7…  tam=23622  fuentes_que_casan_por_metadata=1 ['01a04d9b-e230-71e2-8668-7b6650df5059']
+  .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md
+     sha_disco=289f16b13a38e101…  tam=27260  fuentes_que_casan_por_metadata=0 []
+  .opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md
+     sha_disco=6ebc4e8a101d259c…  tam=31843  fuentes_que_casan_por_metadata=0 []
+=== 4. poblacion medida: raiz de context/ (sin Historico) ===
+  ficheros CONTEXT-* en raiz = 2: ['CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md', 'CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md']
+  ficheros CONTEXT-* bajo Historico/ = 18

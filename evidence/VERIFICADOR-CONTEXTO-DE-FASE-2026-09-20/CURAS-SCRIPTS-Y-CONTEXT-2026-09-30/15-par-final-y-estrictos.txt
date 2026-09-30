@@ -1,0 +1,22 @@
+== par del parte 19- tras la regeneracion final ==
+=== el par, como lo publica el parte 19- ===
+  numerador (lineas con sello UTC = p1 + p2) = 53
+  denominador (lineas totales de los cinco packs) = 13819
+  lineas que normalizan los CUATRO patrones vigentes = 58
+  lineas que normalizarian los CINCO = 63
+  ratio numerador/denominador = 0.38 %
+=== clave generado_por_sha: publicada en el meta o solo prosa ajena? ===
+  FASE-A.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-B.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-C.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-D.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-RELEASE.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=7
+
+== writeback --strict ==
+[PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+WRITEBACK_STRICT=0
+== frescura de CONTEXT ==
+[OK] frescura de CONTEXT: 1 fresco(s), 0 problema(s)
+CONTEXT_FRESHNESS=0
+== gobernanza ==
+GOBERNANZA=0

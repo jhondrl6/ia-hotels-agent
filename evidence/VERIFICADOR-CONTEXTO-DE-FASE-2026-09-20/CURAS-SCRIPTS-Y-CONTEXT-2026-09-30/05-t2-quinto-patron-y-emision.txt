@@ -1,0 +1,58 @@
+T2 — S19(d), salida (c): quinto patron de NORMALIZAR + emision de `generado_por_sha`.
+Revision de partida 7737347e1572b52cb50e527086d7df8cc3950b71 (Paso 0.1: paridad 0 0, `status -uno` = 0).
+
+== 1. El coste de la fila sigue sosteniendose (Paso 0.5 y 21-c6-s19d-coste-medido.txt) ==
+Medido hoy con `m-01-par-parte-19.py` (crudo `01-`), sobre los cinco packs versionados del plan VCF:
+  patrones de NORMALIZAR del verificador versionado : 4  (ninguno cubre `generado_por_sha`)
+  clave en el bloque meta de los packs              : NO en los cinco (5-6 menciones por pack, todas prosa)
+  numerador (lineas con sello UTC, p1+p2)           : 53        — igual que el antecedente del 09-29
+  denominador (lineas totales de los cinco packs)   : 13.544    — el antecedente decia 9.991; esta vencido
+  lineas que normalizan los cuatro patrones         : 58        — el antecedente decia 58; se mantiene
+  ratio                                             : 0,39 %    (deriva: 0,56 % → 0,55 % → 0,39 %)
+El coste de la cura sigue siendo el que la fila midio: **+1 linea por pack (5) y 1 patron nuevo**. La
+diferencia con la orden del 09-28 es que esa superficie hoy esta autorizada, asi que la salida (c) se
+ejecuta en vez de quedar abierta. No hubo que PARAR.
+
+== 2. Rojo antes de la cura ==
+    python -m pytest tests/test_verify_packs_quinto_patron_generado_por_sha.py -q
+    3 failed, 2 errors   EXIT=1
+Atribucion: 3 fallan porque el escritor no emite la clave (`meta.get('generado_por_sha') is None`) y el
+verificador no la estabiliza; los 2 errors son el fixture `arbol_con_identidad_movida`, que exige el
+literal de emision para poder parchearlo (falla en setup, no en asercion).
+
+== 3. Verde despues de la cura ==
+    python -m pytest tests/test_verify_packs_quinto_patron_generado_por_sha.py -q
+    5 passed   EXIT=0
+Hermanos re-corridos con la cura puesta:
+    tests/test_verify_packs_in_committed_tree.py + tests/quality_gates/phase_briefing/
+    + tests/quality_gates/governance_numbers/ + tests/test_verify_index_in_committed_tree.py
+    127 passed   EXIT=0
+
+== 4. Dientes, por prueba y por mutante ==
+- `test_el_quinto_patron_estabiliza_la_identidad_del_generador` lleva su control anti-verde-vacio dentro:
+  filtra el patron quinto y exige que SIN el, los dos textos **dejen** de casar. Si el patron no hiciera
+  nada, la mitad superior de la prueba se leeria como verde vacio.
+- `test_un_arbol_cuya_identidad_del_generador_se_mueve_reproduce`: en un clon de `3c2e6a3` con el escritor
+  curado superpuesto, los packs publicados llevan la identidad real y el escritor parchado emite otra;
+  el verificador curado dice `5/5 reproducidos`, EXIT 0.
+- `test_control_negativo_el_instrumento_versionado_sin_quinto_patron_diverge`: el MISMO arbol, con el
+  verificador leido de `7737347` (`git show`, cuatro patrones): EXIT 1, `DIVERGE`, y la salida nombra
+  `generado_por_sha`. El rojo del instrumento viejo no acusa al commit: se nombra a si mismo.
+- `test_la_emision_no_entra_en_la_llave_de_frescura`: la clave no esta en `sources[]` y el `--check` del
+  arbol de trabajo sigue en EXIT 0. Sin esto la cura se leeria como la salida (a), que el parte 19- §5
+  descarto por coste medido (cada edicion del escritor re-venceria los cinco packs).
+
+Dos defectos propios de este arnes, declarados y corregidos aqui porque son la leccion:
+1. La primera version del parche inyectaba una constante al principio del archivo y `from __future__`
+   dejo de ser la primera sentencia: el escritor moria con rc=1, que el verificador admite, y el veredicto
+   salia `NO-PRODUCIDO` (0/5) en vez del `DIVERGE` que se queria medir. Se arreglo poniendo el literal
+   dentro del propio campo y anadiendo `ast.parse` como pre-chequeo del mutante (R2.8: un mutante se
+   verifica sintacticamente antes de fiarse de su rojo).
+2. El instrumento versionado copia a un temporal no resuelve a sus hermanos: el rojo era
+   `ModuleNotFoundError`. Se paso `PYTHONPATH=scripts` al subprocess; sin eso el control no mediria al
+   instrumento, sino al arnes.
+
+== 5. Lo que queda pendido de T2 ==
+Regenerar los cinco packs (el campo nuevo vive en el meta) y re-publicar el par del parte 19- sobre el
+arbol ya regenerado: es el paso `packs → indice → --check x2 → quick` de T7, que ademas es el que mueve
+el denominador de 13.544 a 13.549 (+5 lineas, una por pack).

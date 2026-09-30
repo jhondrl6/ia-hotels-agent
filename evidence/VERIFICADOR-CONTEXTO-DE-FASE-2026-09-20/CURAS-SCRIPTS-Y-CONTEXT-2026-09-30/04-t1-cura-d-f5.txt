@@ -1,0 +1,65 @@
+T1 — D-F5: la bateria primero, la cura despues, y los tres mutantes que le dan dientes.
+Revision de partida: 7737347e1572b52cb50e527086d7df8cc3950b71 (paridad 0 0, arbol -uno = 0).
+
+== 1. Rojo antes de la cura (TDD) ==
+    python -m pytest tests/test_registry_fecha_documental.py -q
+    22 failed, 4 passed   EXIT=1
+
+Atribucion del rojo (los 22 no son 22 causas):
+- 14 pruebas preexistentes caen porque el arnes del expediente ya pasa `--fecha` y el escritor
+  versionado la rechaza: `log_phase_completion.py: error: unrecognized arguments: --fecha ...`.
+  Es el rojo que se esperaba al cambiar la firma del CLI, no una regresion.
+- 8 nuevas (rechazo sin bandera x2, las 7 formas ISO del parametrizado menos una que todavia no
+  existia, fecha declarada vs reloj, nota) caen porque la cura no esta escrita.
+
+== 2. Verde despues de la cura ==
+    python -m pytest tests/test_registry_fecha_documental.py -q
+    26 passed   EXIT=0
+
+La linea que se nego a adivinar: `date.fromisoformat` en Python 3.13 tambien traga la forma basica
+`20260923`, asi que el guard es `re.fullmatch(r"\d{4}-\d{2}-\d{2}", ...)` ANTES del parseo. Sin ese
+ancla, el parametrizado de forma laxa pasaba por valido.
+
+== 3. Mutation check (R2.8), tres mutantes, cada uno con su caida nombrada ==
+Snapshot intacto del curado: `temp/lpc-intacto.py`, sha256 64a46bce299fbd3f… (el mismo tras cada
+restauracion; `git status` muestra ` M scripts/log_phase_completion.py` por la cura, no por el mutante).
+
+Mutante A — `--fecha` opcional con default de reloj (la forma "compatible" de la cura):
+    caen 2: test_una_entrada_tardia_sin_fecha_se_niega_y_no_escribe
+            test_el_rechazo_sin_fecha_no_abre_ningun_archivo_del_expediente
+    2 failed, 24 passed  EXIT=1
+
+Mutante B — la bandera existe pero el cuerpo sigue mirando `datetime.now()`:
+    caen 2: test_la_fecha_declarada_manda_sobre_el_reloj_en_los_dos_sitios
+            test_generar_entrada_registry_conserva_los_datos_declarados
+    2 failed, 24 passed  EXIT=1
+
+Mutante C — guard de forma apagado (`if False and not re.fullmatch(...)`), parseo laxo:
+    cae 1: test_fecha_que_no_es_iso_estricta_se_niega[20260923]
+    1 failed, 25 passed  EXIT=1
+    Las otras seis formas malas las cortaba igual `date.fromisoformat` (ValueError de calendario);
+    el guard de forma es el unico que corta la forma basica, y por eso su control cae solo ahi.
+
+Primer intento de mutante A, declarado y descartado: se inyecto un f-string con comillas escapadas y
+el archivo quedo con SyntaxError — dio "22 failed, 4 passed" pero el rojo no media nada (moría en la
+importacion). Se repitio con un helper `_reloj_casa()` y `ast.parse` como pre-chequeo del mutante.
+Leccion aplicada: un mutante se verifica sintacticamente antes de fiarse de su rojo.
+
+== 4. Control negativo con el instrumento versionado ==
+`test_el_control_negativo_del_escritor_versionado_estampa_el_reloj` (nuevo) lee con
+`git show 7737347:scripts/log_phase_completion.py` (revision publicada FIJA, no HEAD), afirma que esa
+fuente no conoce `--fecha` ni `--nota` y que si contiene `datetime.now()`, y lo ejecuta con su propio
+`main()`: sobre la misma invocacion de entrada tardia, esa revision escribio
+`## FASE-TARDIA - 2026-09-30` (la fecha del reloj) y movio el encabezado. O sea el defecto que D-F5
+registra, reproducido con el instrumento versionado. Pasa en verde ANTES de la cura y sigue pasando
+despues (porque el ancla es una revision inmutable).
+
+== 5. Desviacion declarada ==
+Hacer obligatoria `--fecha` rompe las lineas de uso documentadas del escritor en
+`.agents/workflows/phased_project_executor.md` (varias invocaciones sin bandera) y en
+`docs/CONTRIBUTING.md:213`. Ninguno de los dos archivos esta en el alcance autorizado de esta sesion
+(el workflow por su proyeccion a los packs y porque es config central; CONTRIBUTING por el limite
+declarado de S32, que esta orden reitera). Quedan como pendiente del operador con su fila en el
+checkpoint final: la alternativa era dejar `--fecha` opcional, y eso es el mutante A de arriba — un
+escritor que sigue estampando la fecha del dia en cuanto nadie le pasa la bandera, que es exactamente
+la deuda que se cerraba.

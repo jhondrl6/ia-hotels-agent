@@ -1,0 +1,24 @@
+=== packs medidos (nombre, lineas, tocadas-4, tocadas-5) ===
+  FASE-A.md: 2480 lineas, 10 tocadas con los cuatro patrones, 11 con los cinco
+  FASE-B.md: 2211 lineas, 9 tocadas con los cuatro patrones, 10 con los cinco
+  FASE-C.md: 2303 lineas, 13 tocadas con los cuatro patrones, 14 con los cinco
+  FASE-D.md: 2382 lineas, 9 tocadas con los cuatro patrones, 10 con los cinco
+  FASE-RELEASE.md: 4443 lineas, 17 tocadas con los cuatro patrones, 18 con los cinco
+=== por patron (lineas que casan, sumando los cinco packs) ===
+  p1 generado-prosa: 48
+  p2 generated_at-json: 5
+  p3 HEAD-prosa: 48
+  p4 head-json: 5
+  p5 generado_por_sha-json: 5
+=== el par, como lo publica el parte 19- ===
+  numerador (lineas con sello UTC = p1 + p2) = 53
+  denominador (lineas totales de los cinco packs) = 13819
+  lineas que normalizan los CUATRO patrones vigentes = 58
+  lineas que normalizarian los CINCO = 63
+  ratio numerador/denominador = 0.38 %
+=== clave generado_por_sha: publicada en el meta o solo prosa ajena? ===
+  FASE-A.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-B.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-C.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-D.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=6
+  FASE-RELEASE.md: clave_en_bloque_meta=SI menciones_en_todo_el_pack=7

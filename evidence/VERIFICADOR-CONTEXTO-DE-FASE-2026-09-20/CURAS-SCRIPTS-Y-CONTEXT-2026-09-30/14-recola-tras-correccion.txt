@@ -1,0 +1,29 @@
+== re-cola tras corregir el sello (packs -> indice -> --check x2 -> quick) ==
+[pack] FASE-A: COMPLETO -> FASE-A.md
+[pack] FASE-B: COMPLETO -> FASE-B.md
+[pack] FASE-C: COMPLETO -> FASE-C.md
+[pack] FASE-D: COMPLETO -> FASE-D.md
+[pack] FASE-RELEASE: COMPLETO -> FASE-RELEASE.md
+[denominador] 5 packs · COMPLETO 5 · SECCION-NO-RESUELTA 0 · FUENTE-AUSENTE 0 · fuentes 37 · secciones pedidas 23, resueltas 23, declaradas no resueltas 0
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+PACKS_EXIT=0
+INDICE_EXIT=0
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme
+PACKS_CHECK=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+INDICE_CHECK=0
+REFS_EXIT=0
+[PASS] OpenCode References: todas las referencias existen
+QUICK_EXIT=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico

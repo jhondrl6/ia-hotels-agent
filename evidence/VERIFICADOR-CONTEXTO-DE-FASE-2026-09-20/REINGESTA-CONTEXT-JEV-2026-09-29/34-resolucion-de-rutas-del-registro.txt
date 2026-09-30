@@ -1,0 +1,13 @@
+== rutas tipo arbol citadas ==
+  .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md                           OK
+  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacio OK
+  .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md          OK
+  docs/contributing/REGISTRY.md                                                                   OK
+  scripts/log_phase_completion.py                                                                 OK
+  scripts/validate_lesson_capitalization.py                                                       OK
+
+== crudos numerados citados: se buscan por nombre entre las carpetas de evidencia del plan ==
+  10-analisis                  NO RESUELVE
+  20-permisos-pre.json         NO RESUELVE
+
+RESUMEN: rutas_rotas=0  crudos_sin_resolver=2

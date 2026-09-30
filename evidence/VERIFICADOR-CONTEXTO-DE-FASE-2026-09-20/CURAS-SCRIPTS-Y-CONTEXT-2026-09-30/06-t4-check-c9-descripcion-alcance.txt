@@ -1,0 +1,70 @@
+T4 — fila 10 (sub-punto de §S29): gobernar la DESCRIPCION del alcance, no solo el comportamiento.
+Revision de partida 7737347e1572b52cb50e527086d7df8cc3950b71.
+
+== 1. Que se puso ==
+Check nuevo `C9` dentro de `scripts/validate_lesson_capitalization.py`:
+- `regla_vigente_del_alcance(cutoff)` mide la regla **ejecutando** `clasificar_planes` sobre un corpus en
+  scratch de dos planes archivados que solo difieren en la fecha de su nombre. Devuelve `cutoff` (la cura
+  a-prima vigente) o `carpeta` (la regla anterior).
+- `GOBERNADOS_POR_DEFECTO` = el workflow `.agents/workflows/phased_project_executor.md` **y** su copia
+  congelada en `tests/quality_gates/governance_numbers/fixtures/` (la copia se alineo a mano en la cura
+  porque no hay writer que la sincronice: eso lo midio la propia fila, `git grep -ln "governance_numbers/
+  fixtures" HEAD -- scripts tests` = 0 resultados).
+- El parrafo se recorta por su rotulo (`- **Alcance hacia delante**`) hasta el siguiente rotulo, no por
+  numero de linea ni por «el ultimo bloque»: el changelog del workflow **cita** la frase vencida como
+  historia en su entrada v2.27.0, y un barrido por todo el archivo la cazaria y fabricaria un rojo falso
+  sobre texto que hay que conservar (la familia de «barrido por literal: verifica el asunto»).
+- Polaridad leida por forma de clausula en dos direcciones: el parrafo tiene que afirmar la regla que el
+  codigo ejerce y NO afirmar la contraria. Tri-estado R2.9: `LECTOR-FALLIDO` / `AUSENTE` /
+  `DESCRIPCION-VENCIDA`, con `AUSENTE` tambien para poblacion de textos vacia (un verde sin candidates
+  no es un verde).
+- Bandera `--goberna` (repetible) para poder gobernar textos de scratch en las pruebas.
+- La linea de cobertura publica la poblacion nueva: `descripcion del alcance: regla=cutoff en 2 texto(s)
+  gobernado(s)`.
+
+== 2. Sin re-numerar quick ni hook ==
+`C9` no anade un check al runner ni al hook: vive dentro de `[10/13]` del rapido y de `[7/7]` del hook,
+que ya invocaban este script. El codigo `C9` esta fuera de la familia C1..C8 a proposito: esa familia
+describe el artefacto `00-lecciones-capitalizadas.md` y esta enumerada en el template y en el workflow
+(anadirle un miembro dejaria vencida esa enumeracion, y tocar el workflow es otra puerta). El control
+`test_c9_no_renumera_el_quick_ni_el_hook` lo afirma leyendo la estructura del runner y del hook, no una
+cota magicada.
+
+== 3. Rojo antes de la cura ==
+No aplica como TDD estricto: la bateria nueva (`tests/test_validate_lesson_capitalization_c9_descripcion_alcance.py`)
+se escribio despues del check y su «oportunidad de perder» se midio con mutantes, que es la forma que la
+casa usa para un check que no tiene estado previo que reproducir. La bateria entera del script siguio en
+verde con el check puesto: 30 passed (las preexistentes) + 12 passed (las nuevas) = 42 passed, EXIT 0.
+
+== 4. Mutantes, con su caida nombrada y el EXIT leido sin tuberia ==
+Mutante D — revertir la cura a-prima en `clasificar_planes` (volver a `continue` sobre `Archives/`):
+    python scripts/validate_lesson_capitalization.py --quiet   →   EXIT=1 (sin tuberia)
+    salida: `… | descripcion del alcance: regla=carpeta en 2 texto(s) gobernado(s)`
+            `[FAIL] Capitalización del Paso 0: 2 violacion(es) (C9=2)`
+    Es decir: con el codigo revertido, los DOS textos reales conformes de hoy pasan a ser la descripcion
+    vencida. El check mira el comportamiento, no la cadena.
+    Caen 4 de las 12 pruebas nuevas: `test_c9_el_parrafo_conforme_gana`,
+    `test_la_sonda_de_regla_vigente_lee_el_comportamiento`, `test_c9_la_salida_publica_su_poblacion`,
+    `test_c9_sobre_los_los_dos_textos_reales_del_repo_no_da_hallazgos`. Restaurado el archivo, las 12
+    vuelven a pasar (EXIT 0).
+Primer intento del mutante D, declarado: lei el EXIT detras de un `| tail`, que devuelve el codigo del
+`tail` (0) y no el del script. Se repitio la corrida redirigiendo a archivo y leyendo `$?` sin tuberia;
+el valor vigente es el `EXIT=1` de arriba.
+
+== 5. Control negativo con el instrumento versionado ==
+`test_control_negativo_el_instrumento_versionado_es_ciego_al_parrafo`: el mismo corpus de scratch con un
+parrafo que describe la exclusion por carpeta. El script curado corta `C9=1` (EXIT 1); el verificador
+commiteado en `7737347`, leido con `git show` y ejecutado, da EXIT 0 sobre ese mismo corpus. La ceguera
+que la fila 10 registro queda reproducida por el instrumento versionado, y el rojo de arriba se atribuye
+al check nuevo.
+Defecto propio de este control, declarado y corregido: en su primera version el versionado se corria como
+subprocess desde un temporal y `duenos_del_corpus` importa `build_lesson_index` desde el directorio de su
+propio `__file__`. El rojo que salia eran dos `C7` del arnes (el instrumento no veia su insumo), no del
+corpus. Se primero paso el differential a in-process con el ROOT del repo y luego, para el subprocess, se
+anadio `PYTHONPATH=scripts`. La asercionexige ahora `rojo == []` en el versionado, que es lo que hace que
+la comparacion sirva.
+
+== 6. Que NO goberna C9 ==
+Solo la polaridad del alcance (cutoff vs carpeta) sobre esos dos textos. No goberna ningun otro parrafo
+del workflow, ni sus cifras (eso es `validate_governance_numbers.py`), ni la pertinencia de lo
+capitalizado (el limite que el propio script declara en su salida).
