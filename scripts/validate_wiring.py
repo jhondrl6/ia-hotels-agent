@@ -20,6 +20,21 @@ POR QUE UN VERIFICADOR Y NO UN TEST POR CALLER
     sobre el arbol, sin lista fija de archivos: un archivo nuevo con un caller que omita
     la senal cae en la poblacion sin que nadie la registre.
 
+COMO SE DECIDE QUE ESTA EN EL ARBOL (dos capas de exclusion, ninguna lista a mano)
+    El alcance es `rglob("*.py")` menos **dos** capas. `EXCLUSIONES_POR_ROL` goberna lo
+    versionado que no es fuente (`evidence`, `archives`, `output`): Git no lo declara
+    ignorado, asi que solo la tabla lo ve. La segunda capa **pregunta al propio Git** que esta
+    fuera del control de versiones (`ls-files --others --ignored --exclude-standard`),
+    resuelto en lote. La recidiva que motiva esta capa: la tabla era una lista y nadie la
+    amplio cuando aparecio el aislado del piloto JEV (`tmp_test/`, 684 `.py` en alcance). Sus
+    cinco `field.validate(...)` de pydantic metieron un SDK de terceros en
+    `receptores_no_resueltos_en_produccion`, que es la poblacion sobre la que se mide la
+    clausula de produccion. El parte que mide las tres salidas y recomienda esta (seccion 6):
+    evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-09-30/04-reinvestigacion-alerta-wiring-2026-09-30.md
+    Con la declaracion, un aislado nuevo sale excluido sin que nadie registre su nombre. La
+    exclusion se publica **contada** en `excluidos_por_declaracion_git`, con su motivo y el
+    estado de la consulta (S11: una exclusion sin conteo es el defecto, no su cura).
+
 COMO DECIDE QUIEN ESTA GOBERNADO (gobernar por productor, no por simbolo)
     `validate` es nombre comun en este repo (`PrecisionValidator`, `NoDefaultsValidator`,
     `EnvValidator`, `plan_validator`, `content_validator`). Gobernar por nombre de metodo
@@ -60,7 +75,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_REPORT = ROOT / ".opencode" / "wiring_report.json"
-SCHEMA_VERSION = "1.0"
+# 1.1: el artefacto publica la clave `excluidos_por_declaracion_git` (capa de alcance por
+# declaracion de Git), que el reporte 1.0 no tenia.
+SCHEMA_VERSION = "1.1"
+CONSULTA_GIT_TIMEOUT = 120
 
 # --------------------------------------------------------------------------- politica
 #
@@ -116,6 +134,8 @@ GOBERNADOS: dict[tuple[str, str], dict] = {
 NOMBRES_GOBERNADOS = {metodo for (_cls, metodo) in GOBERNADOS}
 
 # Exclusion por ROL de directorio (no por archivo conocido); se publica con su motivo.
+# Es la capa de lo **versionado**: Git no declara ignorado a `evidence`, `archives` ni
+# `output`, asi que la tabla sigue siendo necesaria despues de la capa de declaracion.
 EXCLUSIONES_POR_ROL: dict[str, str] = {
     ".git": "historial de version-control, no es fuente",
     "venv": "entorno virtual de terceros",
@@ -135,6 +155,15 @@ EXCLUSIONES_POR_ROL: dict[str, str] = {
     "archives": "registro historico cerrado; gobernarlo implicaria reescribir historia",
     "Archives": "registro historico cerrado de .opencode/plans",
 }
+
+# Segunda capa del alcance: lo que el propio Git declara fuera del control de versiones. No
+# es una lista que haya que ampliar; es la consulta del parte 04- del 2026-09-30, salida (c).
+MOTIVO_DECLARACION_GIT = (
+    "el propio repositorio los declara ignorados por `.gitignore`, asi que no son fuente del "
+    "contrato: gobernarlos seria medir senales dentro de un entorno virtual o de un scratch "
+    "que el proyecto ya rechazo. La tabla de roles no alcanza para esto porque lo ignorado "
+    "no esta versionado, y una lista de nombres depende de que alguien se acuerde de ampliarla"
+)
 
 # Los tests se gobiernan para `prohibidos` (una firma vieja re-introducida en un test es
 # la recidiva que AC16 quiere romper) y NO para `senales` (un test que ejerce el default
@@ -185,9 +214,52 @@ def _relativo(path: Path, root: Path) -> str:
         return path.as_posix()
 
 
-def archivos_en_alcance(root: Path) -> tuple[list[Path], list[dict]]:
-    """Descubre el arbol sin lista fija. Devuelve (fuentes, exclusiones con motivo)."""
-    fuentes: list[Path] = []
+def _declaracion_de_ignorados(root: Path) -> tuple[set[str], str]:
+    """Las rutas `.py` que el propio Git declara ignoradas bajo `root`, y el estado de la consulta.
+
+    Se resuelve en **lote** con `-z` (una ruta con espacios no rompe el corte) porque preguntar
+    archivo por archivo seria un proceso por fichero sobre 17 mil. Git devuelve rutas relativas
+    al cwd, que es `root`, en posix: el mismo formato que usan los registros del verificador.
+
+    Devuelve `(conjunto, estado)`. El conjunto puede estar vacio por dos motivos que hay que
+    distinguir en el artefacto: `GIT_OK` con cero ignorados (el arbol no declara nada) y
+    `SIN_GIT` (no hay repositorio, no hay binario, o la consulta murio). El segundo caso es el
+    limite declarado en `limites`: se vuelve a la tabla de roles, no se cierra los ojos.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "ls-files", "--others", "--ignored", "--exclude-standard", "-z"],
+            cwd=str(root), capture_output=True, timeout=CONSULTA_GIT_TIMEOUT,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        return set(), f"SIN_GIT ({type(exc).__name__})"
+    if proc.returncode != 0:
+        pista = proc.stderr.decode("utf-8", "replace").strip().splitlines()
+        return set(), f"SIN_GIT ({(pista[0] if pista else f'rc={proc.returncode}')[:70]})"
+    crudos = proc.stdout.decode("utf-8", "replace").split("\0")
+    return {ruta for ruta in crudos if ruta.endswith(".py")}, "GIT_OK"
+
+
+def _excluidos_por_declaracion_git(descartadas: list[str], estado: str) -> dict:
+    """La exclusion contada y con nombre, que es la regla de S11 aplicada a esta capa."""
+    return {
+        "cantidad": len(descartadas),
+        "estado": estado,
+        "motivo": MOTIVO_DECLARACION_GIT,
+        "ejemplo": descartadas[0] if descartadas else "",
+    }
+
+
+def archivos_en_alcance(root: Path) -> tuple[list[Path], list[dict], dict]:
+    """Descubre el arbol sin lista fija, y lo achica con **dos** capas de exclusion.
+
+    Capa 1 `EXCLUSIONES_POR_ROL`: lo versionado que no es fuente. Capa 2 declaracion de Git:
+    lo que el `.gitignore` ya dejo fuera del control de versiones, sin lista a mano.
+
+    Devuelve `(fuentes, exclusiones_por_rol, excluidos_por_declaracion_git)`. La segunda capa
+    solo puede **achicar** la primera: ante cualquier fallo de Git el conjunto sale vacio.
+    """
+    candidatas: list[Path] = []
     exclusiones: list[dict] = []
     for path in sorted(root.rglob("*.py")):
         partes = set(path.relative_to(root).parts[:-1])
@@ -198,8 +270,18 @@ def archivos_en_alcance(root: Path) -> tuple[list[Path], list[dict]]:
                  "motivo": EXCLUSIONES_POR_ROL[rol[0]]}
             )
             continue
+        candidatas.append(path)
+
+    ignorados, estado = _declaracion_de_ignorados(root)
+    fuentes: list[Path] = []
+    descartadas: list[str] = []
+    for path in candidatas:
+        ruta = path.relative_to(root).as_posix()
+        if ruta in ignorados:
+            descartadas.append(ruta)
+            continue
         fuentes.append(path)
-    return fuentes, exclusiones
+    return fuentes, exclusiones, _excluidos_por_declaracion_git(descartadas, estado)
 
 
 def _cls_de_expresion(node) -> str | None:
@@ -420,14 +502,15 @@ def _metodo_de(nodo: ast.Call) -> str | None:
     return None
 
 
-def arboles_de(root: Path) -> tuple[list[dict], list[dict]]:
+def arboles_de(root: Path) -> tuple[list[dict], list[dict], dict]:
     """Parsea cada fuente UNA vez.
 
     Antes el recorrido era doble (una pasada para las firmas, otra para los callers):
     610 archivos leidos y parseados dos veces por cada corrida del quick. Devuelve
-    `[{"ruta", "arbol", "es_test"}]` y la lista de exclusiones por rol.
+    `[{"ruta", "arbol", "es_test"}]`, la lista de exclusiones por rol y el conteo de lo que
+    saco la declaracion de Git.
     """
-    fuentes, exclusiones = archivos_en_alcance(root)
+    fuentes, exclusiones, excluidos = archivos_en_alcance(root)
     analizadas: list[dict] = []
     for path in fuentes:
         try:
@@ -442,7 +525,7 @@ def arboles_de(root: Path) -> tuple[list[dict], list[dict]]:
             "arbol": tree,
             "es_test": rel == f"{DIR_TESTS}.py" or rel.startswith(DIR_TESTS + "/"),
         })
-    return analizadas, exclusiones
+    return analizadas, exclusiones, excluidos
 
 
 def firmar_simbolos(root: Path) -> dict:
@@ -499,7 +582,7 @@ def poblar(root: Path) -> dict:
       EXCLUIDA_POR_CLASE            resuelve a tipo no gobernado        -> registro, no viola
       RECEPTOR_NO_RESUELTO          el AST no deduce el tipo            -> se cuenta y publica
     """
-    arboles, exclusiones = arboles_de(root)
+    arboles, exclusiones, excluidos = arboles_de(root)
     info = _firmas_desde(arboles)
     firmas = info["firmas"]
     poblacion: list[dict] = []
@@ -648,6 +731,7 @@ def poblar(root: Path) -> dict:
         "faltantes": info["faltantes"],
         "archivos_analizados": len(arboles),
         "exclusiones": exclusiones,
+        "excluidos_por_declaracion_git": excluidos,
     }
 
 
@@ -779,6 +863,10 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
         # `venv/`) inflando el artefacto a 1,4 MB y tapando lo legible. El rol y su
         # motivo siguen publicados, con cantidad y un ejemplo para ir a buscarlos.
         "exclusiones_por_rol": _agrupar_exclusiones(datos["exclusiones"]),
+        # La otra capa del alcance, tambien contada: `cantidad`, `estado` de la consulta,
+        # `motivo` y un `ejemplo` para ir a buscarlas. Sin el conteo publicado, una exclusion
+        # silenciosa vuelve a ser S11.
+        "excluidos_por_declaracion_git": datos["excluidos_por_declaracion_git"],
         "limites": [
             "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
             "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` "
@@ -794,6 +882,12 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
             "clases. Limite medido al inventariar las 74 exclusiones del arbol",
             "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO "
             "prueba que no existan callers fuera del alcance del AST",
+            "el alcance por declaracion de Git **falla hacia abajo**: si no hay Git o el arbol "
+            "no es un repositorio, `excluidos_por_declaracion_git` sale con `estado` SIN_GIT y "
+            "`cantidad` 0, y el alcance vuelve a ser el que goberna `EXCLUSIONES_POR_ROL`. "
+            "El regreso es sobre-inclusivo (reaparece el falso positivo del aislado), nunca "
+            "ciego a codigo del proyecto; el estado se publica en la misma clave para que el "
+            "lector pueda comprobar cual de los dos casos esta viendo",
         ],
     }
 
@@ -814,13 +908,18 @@ def verificar(reporte: dict) -> list:
 def resumen_de(reporte: dict) -> str:
     cobertura = reporte["cobertura"]
     por = cobertura["por_clasificacion"]
+    excluidos = reporte["excluidos_por_declaracion_git"]
+    alcance_git = f"{excluidos['cantidad']} excluidos por declaracion de Git"
+    if excluidos["estado"] != "GIT_OK":
+        # El numero solo diria "0", que se lee como "no habia nada que excluir".
+        alcance_git += f" ({excluidos['estado']})"
     return (
         f"{cobertura['llamadas_descubiertas']} llamadas descubiertas en "
         f"{cobertura['archivos_en_alcance']} archivos | gobernadas "
         f"{cobertura['gobernadas_resueltas']} (conformes {por.get('GOBERNADA_CONFORME', 0)}, "
         f"omisiones {por.get('GOBERNADA_CON_OMISION', 0)}) | amparadas por excepcion "
         f"{len(reporte['excepciones_aplicadas'])} | violaciones {len(reporte['violaciones'])} "
-        f"| receptores no resueltos {cobertura['receptores_no_resueltos']}"
+        f"| {alcance_git} | receptores no resueltos {cobertura['receptores_no_resueltos']}"
     )
 
 
