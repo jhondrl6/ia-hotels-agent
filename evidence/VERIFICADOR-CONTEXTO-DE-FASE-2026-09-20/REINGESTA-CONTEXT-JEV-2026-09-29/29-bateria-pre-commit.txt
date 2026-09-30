@@ -1,0 +1,16 @@
+fecha_bateria=2026-09-29  hora=2026-09-29T20:35:37-05:00
+EXIT_STRICT=0
+[PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+EXIT_PACKS=0
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+EXIT_INDICE=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+EXIT_DIFF_CHECK=0  lineas=0
+EXIT_CONTEO_LOG=1  (grep -c devuelve 1 cuando el conteo es 0: el numero de arriba es el que vale)
+0

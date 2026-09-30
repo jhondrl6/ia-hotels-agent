@@ -1,0 +1,63 @@
+fecha_cierre=2026-09-29  hora=2026-09-29T20:14:26-05:00
+== self-control del expediente nuevo ==
+bytes=16640
+lineas=238
+CR=0
+backticks=392
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    print(chr(0x27E6).encode().decode())
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u27e6' in position 0: character maps to <undefined>
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    print(chr(0x27E7).encode().decode())
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u27e7' in position 0: character maps to <undefined>
+apertura_anadida_para_citar_la_forma=0
+cierre_anadido_para_citar_la_forma=0
+== secciones ==
+22:## 1. PASO 0 — re-medido, y la hipotesis del parte caso caracter a caracter
+52:## 2. T1 — la unica escritura, con titulo nuevo que conserva el stem
+91:## 3. Redaccion de las URL firmadas de los JSON persistidos (crudos `07a-`, `07-`, `07b-`)
+113:## 4. Los tres sellos fechados (crudos `08-`, `08b-`, `09-`, `10-`)
+147:## 5. Fraudes de instrumento cazados mientras se media (declarados, no corregidos en el pasado)
+170:## 6. Leccion sistémica (la que pide la orden, escrita aqui)
+189:## 7. Estado del notebook al cerrar, y lo que sigue vencido
+198:## 8. El pipeline de cierre, en el orden de la casa
+229:## 9. Lo que queda vivo al cerrar esta tanda
+== barrido de credenciales repetido (m-11, ya con todos los archivos) ==
+EXIT_BARRIDO=0
+== (a) la fecha mal escrita ==
+  RE-VEREDICTO-VCF-JEV-2026-09-29 -> 0
+  RE-VERIFICACION-VCF-JEV-2026-09-28 -> 0
+  total_en_la_carpeta_de_esta_tanda=0
+  en_HEAD (lineas con la cadena, archivo:conteo)=0 coincidencias
+  EXIT_GREP_HEAD=1 (1 = sin coincidencias)
+
+== (b) CJK en lo que se commitea ==
+  archivos_barridos=66  CJK_total=0
+
+== (c) crudos con extension .log ==
+  en_esta_carpeta=0 []
+  git_check_ignore_vuelve='.gitignore:20:*.log\tevidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/prueba.log' EXIT=0 (confirma que la regla sigue activa)
+
+== (d) credenciales en TODA la carpeta ==
+  TOTAL_forma=0  TOTAL_ancho=0
+  descargas_guardadas=2 bytes=[17263, 17272]
+     descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md forma=0
+     descarga-01a0efcc-3297-7782-9467-757fe81018fc.md forma=0
+== reconfirmacion FINAL de la fuente publicada (descarga + sha256 contra disco) ==
+Downloaded evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/17b-reconfirmacion-01a0efcc-3297-7782-9467-757fe81018fc.md (17272 bytes)
+EXIT_DESCARGA=0
+bytes_descarga=17272
+sha_descarga=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+bytes_disco=17272
+sha_disco=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+DIFF_EXIT=0  (0 = la fuente publicada casa con el disco: divergence CERRADA)

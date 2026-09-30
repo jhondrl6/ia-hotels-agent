@@ -1,0 +1,6 @@
+fecha_upload=2026-09-29  hora=2026-09-29T19:52:10-05:00
+archivo=.opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+bytes_local=17272
+sha_local=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+titulo_nuevo=CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21 (cierre 2026-09-29, plan archivado en Archives)
+EXIT_UPLOAD=0

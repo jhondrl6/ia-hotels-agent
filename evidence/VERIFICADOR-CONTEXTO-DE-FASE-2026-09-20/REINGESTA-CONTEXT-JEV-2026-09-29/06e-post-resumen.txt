@@ -1,0 +1,23 @@
+fecha_post=2026-09-29  hora=2026-09-29T19:55:05-05:00
+EXIT_LIST_JSON=0
+EXIT_LIST_TABLA=0
+bytes_json=117898
+tabla Total:
+1:Total: 56
+GREP_EXIT=0
+stderr:
+== ANALISIS (m-06-post.py) ==
+claves_raiz=['currentPage', 'pageSize', 'sources', 'totalSize']
+totalSize_json=0  currentPage=0  pageSize=0
+total_items=56
+coincidencias_del_stem=2
+  id=01a0e4d9-e442-7d1b-bde5-7e9b669a2701  status=ready  fileSha256=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+     title=CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21
+  id=01a0efcc-3297-7782-9467-757fe81018fc  status=ready  fileSha256=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+     title=CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21 (cierre 2026-09-29, plan archivado en Archives)
+titulos_repetidos=0
+fuente_anterior_presente=True (debe ser True: esta orden NO borra)
+fuente_nueva_presente=True
+anterior.fileSha256=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+nueva.fileSha256=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+PY_EXIT=0

@@ -1,0 +1,13 @@
+== self-control del expediente nuevo, medido en UTF-8 ==
+bytes=17827  lineas=248
+CR=0
+marcadores=1/1  balance=0  (los dos citan la FORMA de la casa dentro de codigo inline)
+backticks=422  par=True
+CJK=0
+lineas_con_backtick_impar=2
+menciones_de_la_fecha_mala=0
+menciones_de_la_cadena_partida=1 (la forma en que se cita aqui, para no autocontaminar el barrido)
+
+== barrido de TODA la carpeta al cerrar ==
+archivos=70  forma=0  ancho=0  CJK=0  con_extension_log=0  menciones_fecha_mala=0
+los dos unicos md que llevan la cadena partida son este expediente y el crudo 11:

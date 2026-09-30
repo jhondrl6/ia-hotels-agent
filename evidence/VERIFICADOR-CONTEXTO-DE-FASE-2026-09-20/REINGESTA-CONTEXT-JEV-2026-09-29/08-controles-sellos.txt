@@ -1,0 +1,29 @@
+== E1 : evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+  CR_head=0  CR_disco=0
+  CJK_head=0  CJK_disco=0
+  marcadores_crudo  head=2/2 balance=0  disco=4/4 balance=0  delta=+2/+2
+  lineas_backtick_impar  head=6  disco=6
+  marcadores_sin_inline  head=1/1  disco=3/3  delta=+2/+2
+  backticks_head=658  backticks_disco=672
+  numstat=12	0	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+  lineas_anadidas=12  lineas_suprimidas=0
+  marcadores_en_lo_anadido=2/2
+  backticks_en_lo_anadido=14 (par=True)
+  citas_nuevas_de_rutas=2 ['REINGESTA-CONTEXT-JEV-2026-09-29', 'evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/00-expediente.md']
+  cifras_re_transcritas_en_lo_anadido=1 ['2026']
+
+== E2 : evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+  CR_head=0  CR_disco=0
+  CJK_head=0  CJK_disco=0
+  marcadores_crudo  head=8/6 balance=2  disco=9/7 balance=2  delta=+1/+1
+  lineas_backtick_impar  head=11  disco=11
+  marcadores_sin_inline  head=5/5  disco=6/6  delta=+1/+1
+  backticks_head=611  backticks_disco=615
+  numstat=7	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+  lineas_anadidas=7  lineas_suprimidas=1
+    suprimida_0=-| **D-E** | Decisión | Re-ingesta a QMind de los **2 snapshots vencidos** | Aviso de la casa: el `--upload` responde `[SKIP]` por título, así que la re-ingesta
+  marcadores_en_lo_anadido=3/3
+  backticks_en_lo_anadido=38 (par=True)
+  citas_nuevas_de_rutas=1 ['evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/00-expediente.md']
+  cifras_re_transcritas_en_lo_anadido=3 ['15.144', '2026', '4.607']
+

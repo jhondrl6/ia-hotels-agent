@@ -127,6 +127,14 @@ de la secuela que la fila D9 ya declara); **(c)** no tocar nada y dar por sufici
 diferido sea la ruta del propio plan. Coste de (a): una escritura externa irreversible mas; coste de (b): una
 fila nueva en el libro de deuda ajena a este alcance.
 
+⟦**2026-09-29, ejecutada con la opcion (a) por la pegada de una orden nueva**: el `CONTEXT` de JEV fue
+re-ingestado por CLI con **titulo nuevo que conserva el stem** y verificado **por descarga + sha256** contra el
+archivo local, no por titulo. La fuente anterior **no se borro**: el notebook queda con la forma original +
+cierre, la misma que ya publica `TRIBUNAL-OFFLINE-2026-09-09`. Fuente del hecho, con sus crudos:
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/00-expediente.md`. La leccion
+sistemica que deja va escrita en ese expediente: un archivado vence tambien los `CONTEXT` ya publicados, no solo
+los `10-analisis`, y `validate_qmind_writeback.py` no los mira.⟧
+
 ---
 
 ## 5. T3 — las 82 funciones diferidas: 81 pasan y el unico rojo se atribuye en clon limpio
@@ -348,6 +356,10 @@ declara en vez de editar: no es letra de este mandato.
 **Vivas al cerrar, sin cambio y con su dueño** (esta sesion no las toco porque no le fueron asignadas):
 D-B, D-D, D-F5, el dueño de S14, D3, D6 (dormida), D7, S10, S19(d), las fases B/C/RELEASE de JEV, y la
 divergencia nueva de §4 con sus tres opciones.
+
+⟦**2026-09-29, una de estas vivas dejo de estarlo**: la divergencia nueva de §4 se cerro con la opcion (a) de sus
+tres opciones, por la pegada de una orden nueva, con su propia tanda de crudos en
+`REINGESTA-CONTEXT-JEV-2026-09-29/`. Las demas de la lista siguen vivas y sin dueño nuevo.⟧
 
 ---
 

@@ -1,0 +1,12 @@
+REINGESTA-CONTEXT-JEV-2026-09-29\02-source-list-pre.json bytes=82211 forma_casa=0 marcadores=55
+  coincidencias_anchas_por_ruta=ninguna
+  hojas_largas_quedan_en=ninguna
+REINGESTA-CONTEXT-JEV-2026-09-29\03-t1-upload.json bytes=1238 forma_casa=0 marcadores=1
+  coincidencias_anchas_por_ruta=ninguna
+  hojas_largas_quedan_en=ninguna
+REINGESTA-CONTEXT-JEV-2026-09-29\05-get-01a0efcc-3297-7782-9467-757fe81018fc.json bytes=1764 forma_casa=0 marcadores=1
+  coincidencias_anchas_por_ruta=ninguna
+  hojas_largas_quedan_en=ninguna
+REINGESTA-CONTEXT-JEV-2026-09-29\06-source-list-post.json bytes=84165 forma_casa=0 marcadores=56
+  coincidencias_anchas_por_ruta=ninguna
+  hojas_largas_quedan_en=ninguna

@@ -1,0 +1,30 @@
+fecha_final=2026-09-29  hora=2026-09-29T20:17:09-05:00
+== self-control del expediente y barrido de la carpeta ==
+EXIT_SELF_CONTROL=0
+== self-control del expediente nuevo, medido en UTF-8 ==
+bytes=18079  lineas=250
+CR=0
+marcadores=1/1  balance=0  (los dos citan la FORMA de la casa dentro de codigo inline)
+backticks=432  par=True
+CJK=0
+lineas_con_backtick_impar=2
+menciones_de_la_fecha_mala=0
+menciones_de_la_cadena_partida=1 (la forma en que se cita aqui, para no autocontaminar el barrido)
+
+== barrido de TODA la carpeta al cerrar ==
+archivos=73  forma=0  ancho=0  CJK=0  con_extension_log=0  menciones_fecha_mala=0
+los dos unicos md que llevan la cadena partida son este expediente y el crudo 11:
+
+== git diff --check ==
+EXIT=0  lineas=0 (0 = vacio)
+== estado del arbol ==
+EXIT_STATUS=0  lineas_porcelain=3
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/
+EXIT_HEAD=0  head=f624e02881d7a4213378ab1b7ed3ce49a1c2607a
+
+== numstat de los dos archivos sellados ==
+12	0	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+1	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+EXIT_NUMSTAT=0

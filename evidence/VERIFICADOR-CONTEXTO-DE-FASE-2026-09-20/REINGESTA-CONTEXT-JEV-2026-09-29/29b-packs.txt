@@ -1,0 +1,5 @@
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)

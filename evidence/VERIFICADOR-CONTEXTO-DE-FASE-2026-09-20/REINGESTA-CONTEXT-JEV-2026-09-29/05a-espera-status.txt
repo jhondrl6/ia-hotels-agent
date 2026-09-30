@@ -1,0 +1,31 @@
+fecha_verificacion=2026-09-29  hora=2026-09-29T19:53:24-05:00
+fuente_nueva=01a0efcc-3297-7782-9467-757fe81018fc
+intento=1 EXIT_GET=0 status=ready
+
+== DESCARGA DE LA FUENTE NUEVA ==
+Downloaded evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/descarga-01a0efcc-3297-7782-9467-757fe81018fc.md (17272 bytes)
+EXIT_DESCARGA=0
+-rw-r--r-- 1 Jhond 197609 17272 Sep 29 19:53 evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/descarga-01a0efcc-3297-7782-9467-757fe81018fc.md
+bytes_descarga=17272
+sha_descarga=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+CR_descarga=0
+LF_descarga=125
+
+== ARCHIVO LOCAL ==
+bytes_local=17272
+sha_local=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+CR_local=0
+LF_local=125
+
+== CRITERIO ==
+delta_bytes=0
+identico_crudo=True
+
+== DIFF (debe estar vacio) ==
+DIFF_EXIT=0
+
+== CORROBORACION DEL SERVIDOR (aparte, no el criterio) ==
+status=ready
+title=CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21 (cierre 2026-09-29, plan archivado en Archives)
+metadata.fileSha256=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+metadata.fileSize=17272

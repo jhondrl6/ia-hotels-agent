@@ -1,0 +1,39 @@
+fecha_cierre_definitivo=2026-09-29  hora=2026-09-29T20:27:38-05:00
+EXIT_BARRIDO=0  EXIT_CITAS=0  EXIT_SELLOS=0  EXIT_DIFF=0  EXIT_STATUS=0  EXIT_HEAD=0
+
+== 1. barrido y self-control ==
+menciones_de_la_fecha_mala=0
+menciones_de_la_cadena_partida=1 (la forma en que se cita aqui, para no autocontaminar el barrido)
+
+== barrido de TODA la carpeta al cerrar ==
+archivos=84  forma=0  ancho=0  CJK=0  con_extension_log=0  menciones_fecha_mala=0
+los dos unicos md que llevan la cadena partida son este expediente y el crudo 11:
+
+== 2. citas del expediente ==
+  citados_sin_archivo=NINGUNO
+  crudos_reales_sin_nombrar=['27a', '27b']
+  citas_rotas=0 []
+bytes=23147  lineas=308  CR=0  CJK=0
+marcadores=1/1  backticks=652 par=True
+
+== 3. sellos: lo que importa de los dos archivos ==
+== E1 : evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+  CR_head=0  CR_disco=0
+  CJK_head=0  CJK_disco=0
+  marcadores_crudo  head=2/2 balance=0  disco=4/4 balance=0  delta=+2/+2
+  marcadores_sin_inline  head=1/1  disco=3/3  delta=+2/+2
+  numstat=12	0	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+== E2 : evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+  CR_head=0  CR_disco=0
+  CJK_head=0  CJK_disco=0
+  marcadores_crudo  head=8/6 balance=2  disco=9/7 balance=2  delta=+1/+1
+  marcadores_sin_inline  head=5/5  disco=6/6  delta=+1/+1
+  numstat=1	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+
+== 4. arbol ==
+lineas_diff_check=0
+lineas_status=3
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VEREDICTO-VCF-JEV-2026-09-29/00-expediente.md
+ M evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/
+HEAD=f624e02881d7a4213378ab1b7ed3ce49a1c2607a

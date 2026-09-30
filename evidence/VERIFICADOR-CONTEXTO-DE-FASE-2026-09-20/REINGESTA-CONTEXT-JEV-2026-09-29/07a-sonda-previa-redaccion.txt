@@ -1,0 +1,4 @@
+02-source-list-pre.json bytes=115315 forma=220 secuencias_u=0 no_ascii=34
+03-t1-upload.json bytes=1868 forma=4 secuencias_u=0 no_ascii=0
+05-get-01a0efcc-3297-7782-9467-757fe81018fc.json bytes=2394 forma=4 secuencias_u=0 no_ascii=0
+06-source-list-post.json bytes=117898 forma=224 secuencias_u=0 no_ascii=34

@@ -1,0 +1,12 @@
+fecha_medicion=2026-09-29  hora=2026-09-29T19:50:43-05:00
+notebook=01a04d98-b7bd-778c-8441-26fdc7e35f45
+-- listado json --
+EXIT_LIST_JSON=0
+bytes_json=115315
+-- listado tabla --
+EXIT_LIST_TABLA=0
+Total impresos por la tabla (linea que empieza por Total):
+1:Total: 55
+GREP_TOTAL_EXIT=0
+stderr json:
+stderr tabla:

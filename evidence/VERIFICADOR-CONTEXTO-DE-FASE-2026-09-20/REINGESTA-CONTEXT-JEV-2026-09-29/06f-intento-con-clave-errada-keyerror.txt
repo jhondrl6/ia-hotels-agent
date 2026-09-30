@@ -1,0 +1,15 @@
+fecha_post=2026-09-29  hora=2026-09-29T19:54:14-05:00
+EXIT_LIST_JSON=0
+EXIT_LIST_TABLA=0
+bytes_json=117898
+tabla Total:
+1:Total: 56
+GREP_EXIT=0
+stderr:
+== ANALISIS (m-06-post.py) ==
+Traceback (most recent call last):
+  File "C:\Users\Jhond\Github\iah-cli\evidence\VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20\REINGESTA-CONTEXT-JEV-2026-09-29\m-06-post.py", line 19, in <module>
+    items = data["items"]
+            ~~~~^^^^^^^^^
+KeyError: 'items'
+PY_EXIT=1

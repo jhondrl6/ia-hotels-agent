@@ -1,0 +1,33 @@
+fecha_medicion=2026-09-29  hora=2026-09-29T19:50:02-05:00
+fuente=01a0e4d9-e442-7d1b-bde5-7e9b669a2701
+notebook=01a04d98-b7bd-778c-8441-26fdc7e35f45
+salida_descarga (01b-descarga.log):
+Downloaded evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md (17263 bytes)
+EXIT_DESCARGA=0
+
+== DESCARGA ==
+-rw-r--r-- 1 Jhond 197609 17263 Sep 29 19:50 evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md
+bytes_descarga=17263
+04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16 *evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md
+CR_descarga=0
+LF_descarga=125
+
+== DISCO ==
+-rw-r--r-- 1 Jhond 197609 17272 Sep 27 17:02 .opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+bytes_disco=17272
+5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914 *.opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+CR_disco=0
+LF_disco=125
+
+== CONTRASTE ==
+delta_bytes_disco_menos_descarga=9
+shas_iguales=NO (sigue VENCIDA)
+sha_descarga=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+sha_disco=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+
+== DIFF (numero de linea y contenido) ==
+5c5
+< La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
+---
+> La ruta inicialmente evaluada fue `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20`. El plan derivado vive en `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21`: allí se fijan ACs, fases y permisos; aquí se conserva evidencia, límites y alternativas.
+DIFF_EXIT=1

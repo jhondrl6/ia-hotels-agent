@@ -1,0 +1,16 @@
+longitud_fila_head=1970  disco=2625
+cifras_head=3  disco=3
+cifras_nuevas_en_la_fila=[]
+cifras_perdidas_en_la_fila=[]  (debe ser vacio: la fila no se reescribe, se alarga)
+el_head_es_prefijo_del_disco_primeros_400=True
+cifras_nuevas_en_E1=[]
+
+== resolucion de la ruta apuntada por los tres sellos ==
+ruta=evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/00-expediente.md
+existe=False
+existe_carpeta=True
+
+== donde cayeron los sellos de E1 (cabecera, no numero de linea) ==
+  §4 lleva_marca_del_sello=True  tamano_trozo=2578
+  §10 lleva_marca_del_sello=True  tamano_trozo=3365
+  en_§10_nombra_la_divergencia=True

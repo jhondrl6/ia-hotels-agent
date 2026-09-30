@@ -1,0 +1,14 @@
+fecha=2026-09-29  hora=2026-09-29T20:38:26-05:00
+== antes ==
+con_CR=43  sin_CR=62
+descargas_y_reconfirmacion (intocables, ya en LF):
+  descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md CR=0 bytes=17263 sha=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+  descarga-01a0efcc-3297-7782-9467-757fe81018fc.md CR=0 bytes=17272 sha=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+  17b-reconfirmacion-01a0efcc-3297-7782-9467-757fe81018fc.md CR=0 bytes=17272 sha=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+== normalizando (excluidas las tres descargas) ==
+archivos_reducidos=43
+con_CR_despues=0  sin_CR_despues=105
+== las descargas siguen intactas (sha por identidad, no por confianza) ==
+  descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md CR=0 bytes=17263 sha=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+  descarga-01a0efcc-3297-7782-9467-757fe81018fc.md CR=0 bytes=17272 sha=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+  17b-reconfirmacion-01a0efcc-3297-7782-9467-757fe81018fc.md CR=0 bytes=17272 sha=5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914

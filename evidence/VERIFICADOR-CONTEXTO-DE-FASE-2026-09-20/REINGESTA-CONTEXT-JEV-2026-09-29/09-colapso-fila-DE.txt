@@ -1,0 +1,9 @@
+lineas_fisicas_de_la_fila_antes=7  (i=118 j=124, base 1: 119-125)
+identico_salvo_espacios=True
+lineas_archivo_antes=300  despues=294
+filas_de_tabla_antes=61  despues=61
+marcadores_antes=9/7  despues=9/7
+la_fila_empieza_por_D-E=True  termina_en_cierra=True
+longitud_fila=2625
+escrito_con_LF=True
+numstat_post=1	1	evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/RE-VERIFICACION-VCF-JEV-2026-09-28/00-expediente.md

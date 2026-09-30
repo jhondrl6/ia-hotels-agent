@@ -1,0 +1,17 @@
+fecha_pipeline=2026-09-29  hora=2026-09-29T20:11:00-05:00
+== validate_qmind_writeback.py --strict ==
+EXIT=0
+[PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+
+== build_phase_briefing.py --check (no se regenero nada) ==
+EXIT=0
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+
+== build_lesson_index.py --check ==
+EXIT=0
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0

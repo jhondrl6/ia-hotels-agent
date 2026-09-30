@@ -1,0 +1,10 @@
+type_raiz=dict  clave_items=items/sources/data
+total_items=55
+otras_claves_raiz=['currentPage', 'pageSize', 'totalSize']
+coincidencias_del_stem=1
+  id=01a0e4d9-e442-7d1b-bde5-7e9b669a2701
+  title=CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21
+  status=ready
+  fileSha256=04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16
+titulos_repetidos=0
+fuente_objetivo_presenta=True

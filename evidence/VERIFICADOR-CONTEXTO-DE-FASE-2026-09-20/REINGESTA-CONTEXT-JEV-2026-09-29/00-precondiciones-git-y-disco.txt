@@ -1,0 +1,25 @@
+fecha_medicion=2026-09-29  hora=2026-09-29T19:49:01-05:00
+== git status --porcelain (sin tuberia, a archivo) ==
+EXIT_STATUS=0
+lineas_status=1
+?? evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/
+== git status --porcelain -uno ==
+EXIT_STATUS_UNO=0
+lineas_status_uno=0
+== git rev-parse HEAD ==
+EXIT_HEAD=0
+f624e02881d7a4213378ab1b7ed3ce49a1c2607a
+== git rev-parse origin/master ==
+EXIT_ORIGIN=0
+f624e02881d7a4213378ab1b7ed3ce49a1c2607a
+== git log origin/master..HEAD (a archivo, sin tuberia) ==
+EXIT_LOG=0
+lineas_parity=0
+== archivo en disco ==
+-rw-r--r-- 1 Jhond 197609 17272 Sep 27 17:02 .opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+EXIT_LS=0
+bytes_disco=17272
+5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914 *.opencode/context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+EXIT_SHA=0
+CR_disco=0
+LF_disco=125

@@ -1,0 +1,19 @@
+== (a) la fecha mal escrita ==
+  RE-VEREDICTO-VCF-JEV-2026-09-29 -> 0
+  RE-VERIFICACION-VCF-JEV-2026-09-28 -> 0
+  total_en_la_carpeta_de_esta_tanda=0
+  en_HEAD (lineas con la cadena, archivo:conteo)=0 coincidencias
+  EXIT_GREP_HEAD=1 (1 = sin coincidencias)
+
+== (b) CJK en lo que se commitea ==
+  archivos_barridos=66  CJK_total=0
+
+== (c) crudos con extension .log ==
+  en_esta_carpeta=0 []
+  git_check_ignore_vuelve='.gitignore:20:*.log\tevidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/REINGESTA-CONTEXT-JEV-2026-09-29/prueba.log' EXIT=0 (confirma que la regla sigue activa)
+
+== (d) credenciales en TODA la carpeta ==
+  TOTAL_forma=0  TOTAL_ancho=0
+  descargas_guardadas=2 bytes=[17263, 17272]
+     descarga-01a0e4d9-e442-7d1b-bde5-7e9b669a2701.md forma=0
+     descarga-01a0efcc-3297-7782-9467-757fe81018fc.md forma=0
