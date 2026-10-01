@@ -124,4 +124,4 @@ class TestIntegracionRepoReal:
         """
         src = (ROOT / "scripts" / "git_hooks" / "pre-commit").read_text(encoding="utf-8")
         assert "validate_plan_closure.py" in src
-        assert "[5/7]" in src
+        assert "[5/8]" in src

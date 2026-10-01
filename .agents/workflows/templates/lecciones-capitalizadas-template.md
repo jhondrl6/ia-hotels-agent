@@ -72,7 +72,7 @@ sigue siendo un resultado valido (executor, *Proceso común: proporcionalidad y 
   obligatorio, y su forma debe poder comprobarse — una frase de las formas «no verifico…»,
   «no comprueba…» o «no garantiza…»:
   - [ ] Este archivo es verificado por `scripts/validate_lesson_capitalization.py`
-    (check `[7/7]` del hook `scripts/git_hooks/pre-commit` y un check de
+    (check `[7/8]` del hook `scripts/git_hooks/pre-commit` y un check de
     `run_all_validations.py --quick`, cuyo ordinal y denominador vigentes imprime la corrida), que comprueba **forma y trazabilidad**: consultas a
     una capa corpus-wide, ≥3 descartes, AC nombrado que existe en el plan maestro, ID con el
     dueño que publica el índice generado y ≥2 fuentes distintas. Un `[OK]` suyo significa

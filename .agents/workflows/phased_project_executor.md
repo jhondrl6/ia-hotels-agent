@@ -1,5 +1,5 @@
 ---
-description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código —o, si el commit no está autorizado, en «listo para revisión» (ver *Cinco cortes* en «Proceso común»). El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/7]` del pre-commit). Ejecutado por agentes AI.
+description: Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código —o, si el commit no está autorizado, en «listo para revisión» (ver *Cinco cortes* en «Proceso común»). El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/8]` del pre-commit). Ejecutado por agentes AI.
 version: v2.27.0
 ---
 
@@ -142,7 +142,7 @@ Archivar primero es lo que rompe las dos cosas de arriba: el write-back resuelve
 plan por nombre y el índice del corpus se queda sin sus lecciones hasta la próxima corrida.
 El orden, con su verificación medida y su pata degradada, es la regla **R2.10**: la segunda
 regeneración del índice es obligatoria porque el índice publica el plan dueño **con su ruta** y
-`[6/7]` del pre-commit falla contra el árbol final.
+`[6/8]` del pre-commit falla contra el árbol final.
 
 El cierre documental de RELEASE termina en «listo para revisión»; el commit único **posterior y
 separado** (opcional, con autorización expresa del operador) materializa RELEASE + archivado y deja
@@ -303,11 +303,11 @@ python scripts/build_lesson_index.py                          # 3b. el índice c
   tarde, y su verificación solo mira `Archives/`.
 - El paso **2** precede al archivado para que las lecciones del plan cerrado entren al corpus que
   consulta el Paso 0 del siguiente; el paso **3b** es obligatorio porque el `git mv` cambia rutas que
-  el índice publica: **el `[6/7]` del pre-commit bloquea el commit de cierre** si se omite. El
+  el índice publica: **el `[6/8]` del pre-commit bloquea el commit de cierre** si se omite. El
   invariante verificable es «el índice refleja el árbol al commitear», no «una sola corrida».
 - El bloque canónico de comandos del cierre sigue siendo el de R2.5; esta regla aporta el porqué del
   orden y qué se apaga si se invierte.
-- **Fuera del cierre también alcanza, pero ya está verificado**: `[6/7]` corre en **todo** commit, así
+- **Fuera del cierre también alcanza, pero ya está verificado**: `[6/8]` corre en **todo** commit, así
   que un commit documental que edite un `.md` de `plans/` o `context/` lleva su índice regenerado
   **en el mismo commit**. No es una obligación nueva sino lo que el hook comprueba; se escribe aquí
   para que nadie lo descubra a mitad de un cierre, que fue el caso que lo midió.
@@ -319,7 +319,7 @@ los cuatro hechos de arriba, leídos en el código de los verificadores el 2026-
 bloqueó el que editó un plan.
 
 **Verificador mecánico**: **parcial, ya activo, con una pata que se degrada.**
-- Pata del índice: **dura** — `[6/7]` del pre-commit (`build_lesson_index.py --check`) bloquea el
+- Pata del índice: **dura** — `[6/8]` del pre-commit (`build_lesson_index.py --check`) bloquea el
   commit con el índice vencido contra el árbol.
 - Pata de QMind: **condicional** — solo corre en `run_all_validations.py` **completo** (un check del
   modo completo, fuera de `--quick`; su etiqueta vigente la imprime la corrida y la contrasta
@@ -695,7 +695,7 @@ Cuando la fase no completa por agotamiento:
 
 **Capa fría — índice generado del corpus** (`.opencode/LECCIONES-INDEX.md`):
 - `grep`-ear el índice por módulo afectado, síntoma o palabra clave es la forma barata de mirar el corpus **completo** (todos los IDs definidos en análisis y `CONTEXT-*.md`, con su dueño y sus citas — el conteo vigente está en el encabezado del índice) en vez de consultar solo al plan predecesor.
-- Se regenera con `python scripts/build_lesson_index.py`; el pre-commit lo verifica con `--check` (check `[6/7]` del hook versionado en `scripts/git_hooks/pre-commit`, instalar con `python scripts/install_git_hooks.py`). Si no existe o está vencido, **generarlo antes de consultar**.
+- Se regenera con `python scripts/build_lesson_index.py`; el pre-commit lo verifica con `--check` (check `[6/8]` del hook versionado en `scripts/git_hooks/pre-commit`, instalar con `python scripts/install_git_hooks.py`). Si no existe o está vencido, **generarlo antes de consultar**.
 - Es un índice, no un juicio: dice qué existe y dónde está escrito; si una lección aplica, lo decide quien redacta el plan y lo registra en §2 del archivo.
 
 **Output del paso** — `00-lecciones-capitalizadas.md`, creado con el template
@@ -712,7 +712,7 @@ Las lecciones de §2 se inyectan en el contexto de los prompts de fase (§2 del 
 > **Por qué ahora es un archivo y no una instrucción.** Hasta v2.21.0 el Paso 0 ordenaba producir la tabla, pero su destino era una sección de `10-analisis-post-implementacion.md` marcada `(si aplica)`. Medido sobre los 24 planes archivados: la sección aparece en **6** (18 %). Y el plan `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` citaba únicamente a su predecesor teniendo 24 planes más en el corpus, con un defecto ya documentado desde `EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31`. Es L-R.1 en su forma exacta: una regla que vive solo en el workflow y no en el artefacto que la fase rellena, se cumple por coincidencia.
 
 **Verificación mecánica del output** (desde v2.24.0). El artefacto lo comprueba
-`scripts/validate_lesson_capitalization.py`, cableado como `[7/7]` del hook versionado
+`scripts/validate_lesson_capitalization.py`, cableado como `[7/8]` del hook versionado
 `scripts/git_hooks/pre-commit` y como un check de `run_all_validations.py --quick` (su ordinal y
 denominador vigentes los imprime la corrida y los contrasta `validate_governance_numbers.py`; fijarlos
 aquí sería una cifra D2 que caduca al añadir checks). Verifica
@@ -805,7 +805,7 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
   cambia" que nombre un AC/tarea/archivo → NO crear prompts de fase. Primero se
   capitaliza, después se diseña la fase.
   → Desde v2.24.0 esto **no depende solo de quien escribe**: lo corta el commit con
-    scripts/validate_lesson_capitalization.py (`[7/7]` del hook, checks C1 y C4). Lo que
+    scripts/validate_lesson_capitalization.py (`[7/8]` del hook, checks C1 y C4). Lo que
     sigue siendo humano es el juicio de pertinencia, que el script declara no poder verificar.
 ```
 

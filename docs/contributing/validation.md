@@ -319,7 +319,7 @@ python scripts/run_all_validations.py --quick
 ### 13.3 Integracion en Pre-commit
 
 Medido el 2026-09-12: **no** hay gate automatico sobre este check. El hook activo es el
-versionado en `scripts/git_hooks/pre-commit` (7 checks, instalar con
+versionado en `scripts/git_hooks/pre-commit` (8 checks, instalar con
 `python scripts/install_git_hooks.py`), que **no** invoca `run_all_validations.py`; la entrada
 `agent-ecosystem` de `.pre-commit-config.yaml` corre `scripts/doctor.py --agent` y hoy esta
 configuracion esta declarada pero no instalada (ver
