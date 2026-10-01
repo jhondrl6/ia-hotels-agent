@@ -48,9 +48,13 @@ FASE completada
     │
     └── Paso 6: Documentacion Post-Fase
         ├── Lee docs/contributing/documentation_rules.md para checklist
-        ├── Ejecuta: python scripts/log_phase_completion.py --fase N
-        │   ├── Registra en docs/contributing/REGISTRY.md (auto) y estampa con la fecha de HOY
-        │   │   su "> **Ultima actualizacion:**" (fecha de la ultima ENTRADA DOCUMENTAL)
+        ├── Ejecuta: python scripts/log_phase_completion.py --fase FASE-A --fecha 2026-09-21 --desc "..."
+        │   │   (`--fase`, `--desc` y `--fecha` son las tres banderas obligatorias del escritor; el
+        │   │   ejemplo usa el caso documentado de la FASE-A de JEV. `--nota` es opcional y lleva el
+        │   │   motivo cuando el registro es tardio)
+        │   ├── Registra en docs/contributing/REGISTRY.md (auto) y estampa con la fecha que DECLARO
+        │   │   `--fecha` su "> **Ultima actualizacion:**" (fecha de la ultima ENTRADA DOCUMENTAL;
+        │   │   desde D-F5 el script ya no toma la fecha del reloj)
         │   ├── Escribe solo lo declarado por quien registra: el script NO ejecuta tests ni
         │   │   verifica contratos, asi que ninguna garantia sale marcada como cumplida
         │   └── Muestra POR_HACER para docs manuales
@@ -209,8 +213,12 @@ NOTA: DOMAIN_PRIMER es regenerable automaticamente. NO editar manualmente.
 Cuando una fase marca un **release** (nueva version), antes de decir "documentacion actualizada":
 
 ```bash
-# Registrar fase + verificar que docs manuales estan al dia
+# Registrar fase + verificar que docs manuales estan al dia.
+# `--fase`, `--desc` y `--fecha` son las tres obligatorias; --fecha es YYYY-MM-DD real (aqui, el
+# caso documentado de la FASE-A de JEV) y `--nota` lleva el texto que explica la entrada.
 python scripts/log_phase_completion.py --fase FASE-X \
+    --fecha 2026-09-21 --desc "Release X.Y.0" \
+    --nota "cierre de release: la fecha que estampa la entrada es la de la fase, no la de la corrida" \
     --release X.Y.0 --check-manual-docs
 ```
 

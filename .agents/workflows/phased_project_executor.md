@@ -785,8 +785,11 @@ Usar template `.agents/workflows/templates/prompt-fase-template.md`
 ```
 □ FASE-1 a FASE-N (impl): Cada prompt termina con:
     ./venv/Scripts/python.exe scripts/log_phase_completion.py \
-        --fase FASE-X --desc "..." \
+        --fase FASE-X --fecha 2026-09-21 --desc "..." \
         --archivos-mod "..." --tests "N" --check-manual-docs
+    (--fecha es obligatoria desde D-F5: el writer ya no toma la fecha del reloj. El valor del
+    ejemplo es la FASE-A de JEV, 2026-09-21, que es el caso documentado en REGISTRY; en la
+    practica se pasa la fecha en que cerro ESA fase.)
 
 □ FASE-RELEASE: NO registra fases anteriores. Solo verifica el registro, sincroniza y valida.
   Motivo medido: `log_phase_completion.py` es aditivo — cada corrida apila una entrada nueva
@@ -1005,9 +1008,12 @@ Si **una** fase del plan no tiene entrada (porque su sesión la saltó), se regi
 una sola vez, con los datos de aquella ejecución:
 
 ```bash
-# Ejemplo: solo para una fase que resultó sin registrar
+# Ejemplo: solo para una fase que resultó sin registrar. `--fecha` lleva la fecha en que cerro
+# ESA fase (2026-04-13, su entrada real en REGISTRY), no la del dia; `--nota` lleva el motivo.
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-GEO-BRIDGE \
+    --fecha 2026-04-13 \
+    --nota "registrada en tardanza el 2026-09-30: el cierre de la fase no dejo entrada en REGISTRY" \
     --desc "Bridge enrichment geo_enriched → delivery" \
     --archivos-nuevos "modules/asset_generation/geo_enriched_bridge.py,tests/asset_generation/test_geo_enriched_bridge.py" \
     --archivos-mod "modules/asset_generation/v4_asset_orchestrator.py" \
@@ -1134,9 +1140,11 @@ python scripts/validate_qmind_writeback.py --strict
 for f in FASE-GEO-BRIDGE FASE-CONF-GATE; do
   printf '%s: %s\n' "$f" "$(grep -c "^## $f - " docs/contributing/REGISTRY.md)"
 done
-# Solo si alguna sale en 0, registrar ESA fase una vez:
-#   ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-GEO-BRIDGE --desc "..." \
-#       --check-manual-docs
+# Solo si alguna sale en 0, registrar ESA fase una vez (`--fecha` = la de su cierre, 2026-04-13):
+#   ./venv/Scripts/python.exe scripts/log_phase_completion.py \
+#       --fase FASE-GEO-BRIDGE --fecha 2026-04-13 \
+#       --nota "registrada en tardanza: la fase cerro sin entrada en REGISTRY" \
+#       --desc "..." --check-manual-docs
 
 # 2. Sincronizar versiones
 ./venv/Scripts/python.exe scripts/sync_versions.py
@@ -1285,18 +1293,34 @@ FASE completada (checklist muestra ✅)
 
 #### COMO: Comandos Exactos
 
+**El CLI del escritor, medido sobre su propio `argparse`** (`scripts/log_phase_completion.py`):
+quince banderas y **tres obligatorias** — `--fase`, `--desc` y `--fecha`. `--fecha` existe desde
+D-F5 y reemplazo al reloj: el script ya no toma `datetime.now()`, asi que registrar en tardanza una
+fase cerrada otro dia no puede estampar la fecha del dia. Acepta unicamente `YYYY-MM-DD` con dos
+digitos de mes y de dia **y** calendario real, y rechaza las formas vecinas del ISO (`2026-9-3`,
+`20260903`); sin la bandera el script se niega y no escribe nada. Las doce restantes son opcionales:
+`--nota` (una linea que viaja dentro de la entrada: el motivo de un registro tardio),
+`--archivos-nuevos`, `--archivos-mod`, `--tests`, `--coherence`, `--release` con `--auto-sync`,
+`--check-manual-docs` con `--force-skip-docs` y su `--skip-reason`, `--check-domain-primer` y
+`--dry-run` (muestra la entrada sin tocar REGISTRY). Los ejemplos de abajo llevan fechas reales: la
+de la fase nombrada cuando esa fase tiene entrada en `docs/contributing/REGISTRY.md`, y el caso
+documentado de la FASE-A de JEV (2026-09-21) cuando el ejemplo es generico.
+
 **Caso 1: Fase de iteración (FASE-N, FASE-A, etc.)**
 
 ```bash
-# Minimo (registra en REGISTRY nomas)
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-12 --desc "Descripcion"
+# Minimo (registra en REGISTRY nomas): las tres obligatorias, sin nota
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-12 --fecha 2026-03-25 --desc "Descripcion"
 ```
 
 ```bash
 # Recomendado (con verificacion de docs manuales)
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-12 \
+    --fecha 2026-03-25 \
     --desc "Google Travel Scraper integration" \
+    --nota "fase de la iteracion de scrapers; la fecha es la de su cierre, no la de esta corrida" \
     --archivos-nuevos "modules/scrapers/google_travel.py,tests/scrapers/test_google_travel.py" \
     --archivos-mod "modules/providers/benchmark_resolver.py" \
     --tests "15" \
@@ -1312,7 +1336,9 @@ FASE completada (checklist muestra ✅)
 
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-RELEASE-4.10.0 \
+    --fecha 2026-09-21 \
     --desc "Release 4.10.0" \
+    --nota "release marker; --release se auto-detecta del nombre de la fase" \
     --archivos-mod "modules/foo.py" \
     --check-manual-docs
 
@@ -1325,7 +1351,8 @@ FASE completada (checklist muestra ✅)
 ```bash
 # Solo si hay razon valida: no-aplica, en-release-posterior, etc.
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
-    --fase FASE-X --desc "..." \
+    --fase FASE-X --fecha 2026-09-21 --desc "..." \
+    --nota "docs manuales no aplican: no hubo cambios arquitectonicos" \
     --check-manual-docs --force-skip-docs --skip-reason "no-aplica"
 ```
 
