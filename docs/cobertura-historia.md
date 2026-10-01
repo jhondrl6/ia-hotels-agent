@@ -15,6 +15,18 @@
 
 ---
 
+> **Ronda del 2026-10-01 (la cifra subio a 4,688).** Medido con el metodo canonico de la casa
+> (`grep -rE "^\s*def test_" tests --include=*.py` = **4,688**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests` = **4,688** en `ed3670e`): **las dos cifras cuadran**. La nota
+> que esta ronda corrige decia «en el commit que lleva esta nota los dos comandos dan 4,584» y estaba vencida
+> **en los dos sentidos**: ni el arbol de trabajo ni HEAD daban ese numero — daban 4,688 los dos. El delta contra
+> la ronda anterior (4,682) es **+6** y cae **entero** en la fila `root test files` (1.044 → **1.050**): las 6
+> funciones del nuevo `tests/test_hook_precommit_packs_check.py` (0 → 6), la bateria del `[8/8]` del hook
+> pre-commit que entró en `0ff9f25`. Atribucion cerrada por comparacion de arboles, no de memoria: entre
+> `fbfdc57` y `HEAD` el unico archivo de tests que cambia de presencia bajo el metodo grep es ese (medido con
+> `git grep -l -E "^\s*def test_"` en las dos revisiones). Las otras 21 filas no se movieron y la suma de las 22
+> da exactamente **4,688** (verificado sumando la tercera columna de la tabla, no de memoria).
+>
 > **Segunda ronda del 2026-09-30 (la cifra subio a 4,682).** Medido con el metodo canonico de la casa
 > (`grep -rE "^\s*def test_" tests --include=*.py` = **4,682**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests` = **4,682** en `fbfdc57`, y vuelve a dar 4.682 en el commit
