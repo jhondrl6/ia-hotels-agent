@@ -23,6 +23,7 @@ prueban que nadie abrio el archivo.
 
 import contextlib
 import importlib.util
+import io
 import json
 import re
 import subprocess
@@ -47,6 +48,10 @@ REV_ESCRITOR_DEFECTUOSO = "da382b1"
 # escritor todavia estampaba `datetime.now()`. Nunca HEAD: la cura que se escribe hoy moveria HEAD y el
 # control perderia su premisa.
 REV_ESCRITOR_SIN_BANDERAS = "7737347"
+# Revision publicada FIJA del escritor despues de la doctrina `--fecha` y ANTES de la guarda de
+# unicidad de la fila 15: no conoce `--plan`, asi que es el instrumento con el que se reproduce la
+# colision de cabeceras. Nunca HEAD.
+REV_ESCRITOR_SIN_UNICIDAD = "bb1be59"
 HOY = datetime.now().strftime("%Y-%m-%d")   # el reloj real, para probar que la entrada NO lo usa
 
 # Los consumidores reales que la configuracion vigente si toca. Se copian al repositorio temporal
@@ -144,6 +149,7 @@ class Expediente:
     def __init__(self, tmp_path: Path, *, config_src: Path = None):
         self.rai = tmp_path / "repo"
         self.escrituras = []
+        self.stdout = ""
         self._crear(config_src or SYNC_CONFIG)
 
     def _crear(self, config_src: Path):
@@ -178,7 +184,8 @@ class Expediente:
     def registrar(self, fase: str, dia: str, *, tests: str = "", coherence=None,
                   escritor: Path = None, nota: str = None, pasar_fecha: bool = True,
                   reloj: str = None, pasar_fecha_textual: str = None,
-                  capturar_salida: bool = False):
+                  capturar_salida: bool = False, plan: str = None,
+                  capturar_stdout: bool = False):
         """Corre el ESCRITOR REAL (`main()` de log_phase_completion) sobre este expediente.
 
         Con `escritor=` se le pasa otra versi&oacute;n del archivo (p. ej. la commiteada antes de B)
@@ -191,7 +198,8 @@ class Expediente:
         literal (una fecha mal escrita), y `capturar_salida` convierte el `SystemExit` del rechazo en el
         codigo que el control tiene que observar. `reloj` ancla `datetime.now()` del modulo a un dia
         DISTINTO del declarado, que es la unica forma de probar que la fecha de la entrada no sale del
-        reloj (D-F5).
+        reloj (D-F5). `plan` repone `--plan` (fila 15) y `capturar_stdout` devuelve ademas lo impreso,
+        que es donde vive el mensaje del rechazo.
         """
         lpc = _cargar(f"lpc_reg_{dia}_{fase}_{escritor or 'vigente'}_{reloj}", escritor or LPC)
         lpc.ROOT_DIR = self.rai
@@ -212,24 +220,30 @@ class Expediente:
             argv += ["--fecha", dia]
         if nota is not None:
             argv += ["--nota", nota]
+        if plan is not None:
+            argv += ["--plan", plan]
         if tests:
             argv += ["--tests", tests]
         if coherence is not None:
             argv += ["--coherence", str(coherence)]
         argv_orig, sys.argv = sys.argv, argv
+        stdout = io.StringIO()
         obs = _observador()
         try:
             with obs.observador_de_escrituras() as registro:
-                try:
-                    rc = lpc.main()
-                except SystemExit as exc:
-                    if not capturar_salida:
-                        raise
-                    rc = f"SystemExit({exc.code})"
+                with contextlib.redirect_stdout(stdout):
+                    try:
+                        rc = lpc.main()
+                    except SystemExit as exc:
+                        if not capturar_salida:
+                            raise
+                        rc = f"SystemExit({exc.code})"
             self.escrituras = [(op, r) for op, r, _ in registro.operaciones]
             _exigir_rutas_en_temporal(self.rai, [r for _, r in self.escrituras])
         finally:
             sys.argv = argv_orig
+        if capturar_stdout:
+            self.stdout = stdout.getvalue()
         return rc, lpc
 
     def sincronizar(self, *, check_only: bool = False):
@@ -499,61 +513,178 @@ def test_la_entrada_cerrada_antes_no_se_toca(tmp_path):
 
 
 def test_repetir_el_registro_y_cambiar_de_dia(tmp_path):
-    """Comportamiento explícito al repetir: append de entradas, cabecera unica, fecha del dia nuevo.
+    """La segunda corrida sobre la misma fase y fecha se niega; una fecha nueva si escribe.
 
-    Se afirma el comportamiento real, no una «idempotencia» que el script no implementa:
-    `log_phase_completion` apila una entrada `## FASE-…` por corrida (eso no es la fuente del
-    conflicto) y la cabecera "> **Ultima actualizacion:**" permanece UNICA y con la fecha de la
-    ultima entrada, que al cambiar el dia TIENE que moverse.
+    Re-anclado el 2026-10-01 por la guarda de unicidad del escritor (fila 15 del registro 33-).
+    La version anterior afirmaba `entradas == numero` y lo vendia como comportamiento vigente: dos
+    corridas apilaban dos entradas bajo la MISMA cabecera `## {fase} - {fecha}`, que es exactamente
+    el camino por el que nacieron las colisiones que esa fila declara. Hoy la segunda ronda sale
+    rechazada y no toca el expediente; la tercera, con fecha nueva, escribe.
+
+    Lo que NO cambio y sigue asegurado aqui: la cabecera "> **Ultima actualizacion:**" permanece
+    unica y con la fecha de la ultima entrada ESCRITA, el append entre fechas distintas no muta las
+    entradas previas, y `sync_versions` en modo escritura sigue escribiendo a los consumidores sin
+    meterse en el REGISTRY.
     """
     espejo = Expediente(tmp_path)
     patron_entradas = r"(?ms)^## FASE-.*?(?=^---$|^## |\Z)"
-    entradas_previas = re.findall(patron_entradas, espejo.texto())
-    assert len(entradas_previas) == 1
-    for numero, dia in enumerate((DIA_1, DIA_1, DIA_2), start=1):
+    baseline = re.findall(patron_entradas, espejo.texto())
+    assert len(baseline) == 1
+    entradas_previas = baseline
+
+    # (fase, dia, escribe) — la segunda ronda repite fase Y fecha: es la colision de la fila 15
+    rondas = [("FASE-REP", DIA_1, True), ("FASE-REP", DIA_1, False), ("FASE-REP", DIA_2, True)]
+    escritas = 0
+    ultima_fecha_escrita = "2020-01-01"   # la que trae el expediente recien creado
+
+    for numero, (fase, dia, escribe) in enumerate(rondas, start=1):
         version = f"{NUEVA_VERSION.rsplit('.', 1)[0]}.{numero - 1}"
         espejo.publicar_nueva_release(NUEVA_FECHA_RELEASE, version)
-        rc, _ = espejo.registrar("FASE-REP", dia)
-        assert rc == 0
+        rc, _ = espejo.registrar(fase, dia, capturar_salida=True)
         rutas_registro = {Path(r).resolve() for op, r in espejo.escrituras
                           if op == "Path.write_text"}
-        assert rutas_registro >= {espejo.registry.resolve(), espejo.tracker.resolve()}
-        assert espejo.fecha_cabecera() == dia
+
+        if escribe:
+            escritas += 1
+            ultima_fecha_escrita = dia
+            assert rc == 0, f"ronda {numero}: se esperaba escritura, rc={rc}"
+            assert rutas_registro >= {espejo.registry.resolve(), espejo.tracker.resolve()}
+            assert espejo.entradas(fase) == escritas, (
+                "el append entre fechas distintas sigue siendo el comportamiento vigente: "
+                "no se vende como idempotencia")
+        else:
+            assert rc == "SystemExit(1)", f"ronda {numero}: la repeticion debio negarse, rc={rc}"
+            assert rutas_registro == set(), (
+                f"el rechazo abrio el expediente para escribir: {rutas_registro}")
+            assert espejo.entradas(fase) == escritas, (
+                "la ronda rechazada apilo una entrada igual: la guarda no se disparo")
+
+        assert espejo.fecha_cabecera() == ultima_fecha_escrita
         assert espejo.cabeceras() == 1, "repetir no puede duplicar la cabecera de fecha"
-        assert espejo.entradas("FASE-REP") == numero, (
-            "el append por fase es el comportamiento vigente: no se vende como idempotencia")
         texto = espejo.texto()
-        assert f"> **Total fases completadas:** {numero + 1}\n" in texto
+        assert f"> **Total fases completadas:** {escritas + 1}\n" in texto
         entradas = re.findall(patron_entradas, texto)
-        assert len(entradas) == len(entradas_previas) + 1
-        assert entradas[:-1] == entradas_previas, "se muto o desaparecio una entrada previa"
-        assert entradas[-1].startswith(f"## FASE-REP - {dia}\n")
-        assert "**Descripcion:** registro de prueba\n" in entradas[-1]
-        assert "`modules/ejemplo.py`" in entradas[-1]
-        assert json.loads(espejo.tracker.read_bytes()) == {"modules/ejemplo.py": "FASE-REP"}
+        assert len(entradas) == len(baseline) + escritas, (
+            f"ronda {numero}: el expediente tiene {len(entradas)} entradas con {escritas} escrituras")
+        if escribe:
+            assert entradas[:-1] == entradas_previas, "se muto o desaparecio una entrada previa"
+            assert entradas[-1].startswith(f"## {fase} - {dia}\n")
+            assert "**Descripcion:** registro de prueba\n" in entradas[-1]
+            assert "`modules/ejemplo.py`" in entradas[-1]
+        else:
+            assert entradas == entradas_previas, (
+                "la ronda rechazada movio una entrada del expediente")
+        assert json.loads(espejo.tracker.read_bytes()) == {"modules/ejemplo.py": fase}
         huellas_registradas = {p: _huella(p) for p in (espejo.registry, espejo.tracker)}
 
-        ok_escritura, resultados, escrituras = espejo.sincronizar(check_only=False)
+        ok_escritura, resultados, escrituras_sync = espejo.sincronizar(check_only=False)
         assert ok_escritura is True, resultados
         assert "UPDATED" in resultados.values(), "cada ronda debe ejercitar escritura real"
-        assert ("Path.write_text", (espejo.rai / "AGENTS.md").as_posix()) in escrituras
-        assert all(Path(r).resolve() not in rutas_registro for _, r in escrituras)
+        assert ("Path.write_text", (espejo.rai / "AGENTS.md").as_posix()) in escrituras_sync
+        assert all(Path(r).resolve() not in rutas_registro for _, r in escrituras_sync)
         assert version in (espejo.rai / "AGENTS.md").read_text(encoding="utf-8")
         assert NUEVA_FECHA_RELEASE in _fechas_en_otros(espejo)["AGENTS.md"]
-        assert espejo.fecha_cabecera() == dia, "sync sustituyo la fecha de la entrada"
+        assert espejo.fecha_cabecera() == ultima_fecha_escrita, "sync sustituyo la fecha de la entrada"
         assert espejo.texto() == texto
         assert {p: _huella(p) for p in huellas_registradas} == huellas_registradas
 
         ok_check, resultados_check, escrituras_check = espejo.sincronizar(check_only=True)
         assert ok_check is True, resultados_check
         assert escrituras_check == [], f"check escribio en la ronda {numero}: {escrituras_check}"
-        assert espejo.fecha_cabecera() == dia
+        assert espejo.fecha_cabecera() == ultima_fecha_escrita
         assert espejo.cabeceras() == 1
-        assert espejo.entradas("FASE-REP") == numero
+        assert espejo.entradas(fase) == escritas
         assert espejo.texto() == texto
         assert {p: _huella(p) for p in huellas_registradas} == huellas_registradas
         entradas_previas = entradas
-    assert espejo.entradas("FASE-REP") == 3
+    assert espejo.entradas("FASE-REP") == 2
+
+
+def test_colision_de_encabezado_sin_plan_se_niega_y_no_escribe(tmp_path):
+    """Fila 15: la misma fase y la misma fecha dos veces no apila una cabecera repetida.
+
+    Medido por operaciones observadas: no basta con que los bytes queden iguales, hay que ver que
+    nadie abrio el expediente en modo escritura.
+    """
+    espejo = Expediente(tmp_path)
+    assert espejo.registrar("FASE-COL", DIA_1, capturar_salida=True)[0] == 0
+    antes = {p: _huella(p) for p in (espejo.registry, espejo.tracker)}
+
+    rc, _ = espejo.registrar("FASE-COL", DIA_1, capturar_salida=True, capturar_stdout=True)
+    assert rc == "SystemExit(1)"
+    assert espejo.escrituras == [], f"el rechazo escribio: {espejo.escrituras}"
+    assert {p: _huella(p) for p in (espejo.registry, espejo.tracker)} == antes
+    assert "COLISION DE ENCABEZADO" in espejo.stdout
+    assert "--plan" in espejo.stdout, "el rechazo debe decir como reponerse"
+    assert espejo.entradas("FASE-COL") == 1
+
+
+def test_el_plan_desambigua_sin_tocar_la_primera_entrada(tmp_path):
+    """Con `--plan` la segunda entrada se escribe bajo cabecera propia y la primera queda intacta."""
+    espejo = Expediente(tmp_path)
+    assert espejo.registrar("FASE-COL", DIA_1, capturar_salida=True)[0] == 0
+    primera = espejo.texto()
+
+    rc, _ = espejo.registrar("FASE-COL", DIA_1, capturar_salida=True,
+                             plan="EVALUACION-JEV-TYPESAFE-2026-09-21")
+    assert rc == 0
+    texto = espejo.texto()
+    assert "## FASE-COL - 2026-09-23 (EVALUACION-JEV-TYPESAFE-2026-09-21)\n" in texto
+    patron = r"(?ms)^## FASE-COL - 2026-09-23\n.*?(?=^---$|^## |\Z)"
+    antes, despues = re.findall(patron, primera), re.findall(patron, texto)
+    assert len(antes) == len(despues) == 1, "la entrada historica se duplico o desaparecio"
+    assert antes == despues, "la primera entrada se re-escribio al desambiguar con --plan"
+    assert espejo.entradas("FASE-COL") == 2
+    # el desempate no rompe el contador de fases ni la cabecera de fecha
+    assert espejo.cabeceras() == 1
+    assert "> **Total fases completadas:** 3\n" in texto
+
+
+def test_la_colision_con_plan_declinado_tambien_se_niega(tmp_path):
+    """Re-registrar el mismo plan, fase y fecha se niega igual: la llave compuesta es la clave."""
+    espejo = Expediente(tmp_path)
+    plan = "EVALUACION-JEV-TYPESAFE-2026-09-21"
+    assert espejo.registrar("FASE-COL", DIA_1, capturar_salida=True, plan=plan)[0] == 0
+    antes = {p: _huella(p) for p in (espejo.registry, espejo.tracker)}
+
+    rc, _ = espejo.registrar("FASE-COL", DIA_1, capturar_salida=True, capturar_stdout=True,
+                             plan=plan)
+    assert rc == "SystemExit(1)"
+    assert espejo.escrituras == []
+    assert {p: _huella(p) for p in (espejo.registry, espejo.tracker)} == antes
+    assert "declinado" in espejo.stdout
+
+
+def test_control_negativo_escritor_de_bb1be59_reproduce_la_colision(tmp_path):
+    """El escritor versionado antes de la guarda publica DOS entradas bajo la misma cabecera.
+
+    Ejercita el instrumento commiteado en `bb1be59` (que no conoce `--plan`), leido con `git show`
+    sobre una revision FIJA, nunca HEAD: la cura de hoy moveria HEAD y el control perderia premisa.
+    Sin este control, el verde de la guarda podria ser un verde vacio.
+    """
+    assert _rev_existe(REV_ESCRITOR_SIN_UNICIDAD), f"revision {REV_ESCRITOR_SIN_UNICIDAD} no existe"
+    escritor_viejo = _fuente_versionada(tmp_path, REV_ESCRITOR_SIN_UNICIDAD,
+                                        "scripts/log_phase_completion.py")
+    fuente_vieja = escritor_viejo.read_text(encoding="utf-8")
+    assert '"--plan"' not in fuente_vieja and "--plan" not in fuente_vieja, (
+        "la revision fijada ya conoce la bandera: el control perdio su premisa")
+
+    espejo = Expediente(tmp_path)
+    for ronda in (1, 2):
+        rc, _ = espejo.registrar("FASE-COL", DIA_1, escritor=escritor_viejo, capturar_salida=True)
+        assert rc == 0, f"ronda {ronda}: el escritor viejo no tiene guarda, debio escribir"
+    texto = espejo.texto()
+    assert texto.count("\n## FASE-COL - 2026-09-23\n") == 2, (
+        "el control negativo no reprodujo la colision que la fila 15 declara")
+    assert espejo.entradas("FASE-COL") == 2
+
+
+def test_las_dos_colisiones_publicadas_siguen_ahi_y_el_escritor_no_las_toca():
+    """El expediente real conserva las dos colisiones que declara la fila 15: no se edita a mano."""
+    texto = REGISTRY.read_text(encoding="utf-8")
+    assert texto.count("\n## FASE-A - 2026-09-21\n") == 2, (
+        "las dos entradas colisionadas de la fila 15 cambiaron de numero: o alguien las re-escribio "
+        "a mano (prohibido) o la premisa de esta prueba vencio; se re-ancla con su nota")
 
 
 def test_fecha_de_release_distinta_de_la_de_entrada_llega_a_los_otros_docs(tmp_path):

@@ -19,6 +19,24 @@ Uso:
 `--fecha` es obligatoria desde D-F5: el script ya no saca la fecha de `datetime.now()`, asi que una
 entrada tardia no puede estampar la fecha del dia. Sin la bandera el script se niega y no escribe.
 
+La cabecera que escribe el script es `## {fase} - {fecha}`. Dos planes distintos que cierren la misma
+fase el mismo dia producen la MISMA cabecera, y el REGISTRY no se edita a mano para desempatar. Por eso
+existe `--plan`:
+
+    # Cierre de la FASE-A de la hermana de gobernanza (publicada primero, sin `--plan`)
+    python scripts/log_phase_completion.py --fase FASE-A --fecha 2026-09-21 \
+        --desc "Context JEV: verificador de escritura"
+
+    # La FASE-A de JEV, misma fase y misma fecha: sin `--plan` el script se niega y no escribe nada
+    python scripts/log_phase_completion.py --fase FASE-A --fecha 2026-09-21 \
+        --plan EVALUACION-JEV-TYPESAFE-2026-09-21 \
+        --desc "JEV: evaluacion de tipos segura" --nota "registrada en tardanza el 2026-09-30"
+
+Con `--plan` la cabecera sale `## {fase} - {fecha} ({plan})`. La bandera es opcional mientras no haya
+colision: el control de unicidad se dispara sobre las operaciones observadas (cuenta cuantas lineas
+exactas con ese encabezado hay en REGISTRY.md) y solo entonces exige que se nombre el plan. Si aun
+con `--plan` el encabezado ya existe, tambien se niega: seria re-registrar la misma entrada.
+
 El script:
 1. Lee CONTRIBUTING.md para extraer reglas de documentacion
 2. Genera entrada en REGISTRY.md (auto)
@@ -122,6 +140,17 @@ def parse_args():
              "por ejemplo). Sin esta bandera la entrada no imprime linea de nota."
     )
     parser.add_argument(
+        "--plan",
+        default=None,
+        help="Nombre del plan al que pertenece la fase que se registra (ej: "
+             "--plan EVALUACION-JEV-TYPESAFE-2026-09-21 "
+             "--fecha 2026-09-21). Opcional: solo hace falta cuando la cabecera "
+             "'## {fase} - {fecha}' ya existe en REGISTRY.md, que es cuando dos planes cierran la "
+             "misma fase el mismo dia. Con la bandera la cabecera sale "
+             "'## {fase} - {fecha} ({plan})' y el desempate queda en el expediente, no en una "
+             "edicion a mano."
+    )
+    parser.add_argument(
         "--desc",
         required=True,
         help="Descripcion de lo implementado en la fase"
@@ -186,6 +215,57 @@ def parse_args():
     return parser.parse_args()
 
 
+def encabezado_entrada(fase_id: str, fecha: str, plan=None) -> str:
+    """Cabecera Markdown de la entrada: `## {fase} - {fecha}`, con el plan si viene al caso.
+
+    La forma sin `--plan` es la historica, asi que las 500 entradas ya publicadas no cambian.
+    `actualizar_registry` cuenta `content.count("## FASE-")` para el total de fases: el parentesis
+    del plan deja intacto ese conteo.
+    """
+    plan_txt = (plan or "").strip()
+    base = f"## {fase_id} - {fecha}"
+    return f"{base} ({plan_txt})" if plan_txt else base
+
+
+def contar_encabezado(registry_path: Path, encabezado: str) -> int:
+    """Cuantas lineas del expediente son EXACTAMENTE este encabezado (una colision observable)."""
+    if not registry_path.exists():
+        return 0
+    objetivo = encabezado.strip()
+    return sum(1 for linea in registry_path.read_text(encoding="utf-8").splitlines()
+               if linea.strip() == objetivo)
+
+
+def verificar_unicidad_encabezado(args, fase_id: str) -> bool:
+    """Guarda de la fila 15: no escribe dos entradas bajo la misma cabecera.
+
+    Devuelve False cuando el encabezado resultante ya existe y hay que negarse. No re-escribe nada:
+    el REGISTRY no se edita a mano y las colisiones ya publicadas (las dos de `## FASE-A - 2026-09-21`)
+    quedan como estan.
+    """
+    encabezado = encabezado_entrada(fase_id, args.fecha, args.plan)
+    existentes = contar_encabezado(REGISTRY_FILE, encabezado)
+    if not existentes:
+        return True
+
+    print("\n" + "=" * 60)
+    print("COLISION DE ENCABEZADO: el registro se niega a escribir")
+    print("=" * 60)
+    print(f"  Encabezado: {encabezado}")
+    print(f"  Ya existe en: {existentes} lugar(es) de {REGISTRY_FILE.name}")
+    if args.plan:
+        print("\n  Con `--plan` ya declinado la cabecera sigue repetida: esa combinacion de fase,")
+        print("  fecha y plan esta registrada. No se escribe una segunda entrada identica.")
+    else:
+        print("\n  Dos planes distintos estan cerrando la misma fase en la misma fecha. La cabecera")
+        print("  historica `## {fase} - {fecha}` no los distingue, y el expediente no se arregla a")
+        print("  mano. Reponga nombrando el plan:")
+        print(f"    python scripts/log_phase_completion.py --fase {fase_id} --fecha {args.fecha} \\")
+        print("        --plan NOMBRE-DEL-PLAN ...")
+    print("=" * 60)
+    return False
+
+
 def generar_entrada_registry(args):
     """Genera la entrada para REGISTRY.md"""
 
@@ -211,7 +291,7 @@ def generar_entrada_registry(args):
     
     # Construir markdown
     lines = [
-        f"## {fase_id} - {fecha}\n",
+        f"{encabezado_entrada(fase_id, fecha, getattr(args, 'plan', None))}\n",
         f"**Descripcion:** {args.desc}\n",
     ]
     nota = (getattr(args, "nota", None) or "").strip()
@@ -745,6 +825,18 @@ def main():
     print("=" * 60)
     print("LOG PHASE COMPLETION: " + fase_id)
     print("=" * 60)
+
+    # ============================================================
+    # PASO 0: unicidad del encabezado (fila 15 del registro 33-, 2026-10-01)
+    # Antes que cualquier otra cosa: el gate de version puede llamar a sync_versions y el tracker se
+    # escribe al final, asi que negarse aqui es negarse antes de tocar el expediente.
+    # ============================================================
+    if not verificar_unicidad_encabezado(args, fase_id):
+        if args.dry_run:
+            print("\n[DRY RUN] No se escribio nada y no se habria escrito nada: el rechazo es real.")
+            return 1
+        print("\nSaliendo con exit code 1 sin escribir REGISTRY.md.")
+        sys.exit(1)
 
     # ============================================================
     # AUTO-DETECT: FASE-RELEASE-X.Y.Z activa Version Sync Gate automaticamente
