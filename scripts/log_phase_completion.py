@@ -641,7 +641,7 @@ def verificar_docs_manuales(fase_id, args):
     return False
 
 
-def check_version_sync(release_version: str, dry_run: bool = False) -> bool:
+def check_version_sync(release_version: str, fecha: str, dry_run: bool = False) -> bool:
     """
     Verifica que CHANGELOG.md y VERSION.yaml esten sincronizados con release_version.
     
@@ -650,6 +650,7 @@ def check_version_sync(release_version: str, dry_run: bool = False) -> bool:
     
     Args:
         release_version: Version del release (ej: "4.9.0")
+        fecha: La fecha declarada con --fecha; el mensaje de accion la reproduce, no la inventa
         dry_run: Si True, solo muestra el estado sin hacer nada
     
     Returns:
@@ -688,7 +689,7 @@ def check_version_sync(release_version: str, dry_run: bool = False) -> bool:
         print(f"\n  (!) CHANGELOG no tiene entrada [{release_version}]")
         print(f"      CHANGELOG dice: {changelog_ver or 'N/A'}")
         print("\n  ACCION: Crear entrada en CHANGELOG.md antes de continuar")
-        print("  python scripts/log_phase_completion.py --fase ... --desc '...'")
+        print("  python scripts/log_phase_completion.py --fase ... --fecha " + fecha + " --desc '...'")
         print("  (luego reabrir con --release " + release_version + ")")
         return False
     
@@ -761,14 +762,14 @@ def main():
     # ============================================================
     if args.release:
         print("\n[VERSION GATE] Release detectado: " + args.release)
-        gate_ok = check_version_sync(args.release, dry_run=args.dry_run)
+        gate_ok = check_version_sync(args.release, args.fecha, dry_run=args.dry_run)
         
         if not gate_ok and not args.dry_run:
             print("\n[!] Version Sync Gate FALLO. Resolve los issues antes de continuar.")
             print("    Pasos:")
             print("      1. python scripts/version_consistency_checker.py --fix")
             print("      2. python scripts/sync_versions.py")
-            print("      3. python scripts/log_phase_completion.py --release " + args.release + " ...")
+            print("      3. python scripts/log_phase_completion.py --release " + args.release + " --fecha " + args.fecha + " ...")
             sys.exit(1)
         
         # Auto-sync si se pidio y hay desincronizacion
