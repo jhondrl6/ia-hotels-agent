@@ -45,7 +45,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "validate_wiring.py"
 RUNNER = ROOT / "scripts" / "run_all_validations.py"
-ARTEFACTO = ROOT / ".opencode" / "wiring_report.json"
 
 # Revision publicada y fija: la que ya tiene la capa de alcance (abd181c) y el criterio del EXIT
 # (paso 2), y TODAVIA NO tiene `--check`. Nunca HEAD.
@@ -434,7 +433,6 @@ def test_dientes_un_mutante_por_cada_rama_del_check(tmp_path):
         "return json.loads(texto_canonico(objeto))  # MUTADO-SIN-NORMALIZAR",
         tmp_path, "sin_normalizar")
     mod1 = _cargar("vw_mutado_sin_normalizar", sin_normalizar)
-    leido = json.loads(intacto)
     fresco = mod1.construir_reporte(base, ignore_known=True)
     estado1, lineas1, _ = mod1.comparar_derivado(destino, fresco)
     assert estado1 == mod1.ESTADO_DIVERGE, (
