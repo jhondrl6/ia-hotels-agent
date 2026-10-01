@@ -1,7 +1,8 @@
 {
   "cobertura": {
     "archivos_en_alcance": 688,
-    "archivos_excluidos_por_rol": 8414,
+    "archivos_excluidos_por_rol": 8417,
+    "archivos_excluidos_por_rol_versionado": 127,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -32,37 +33,43 @@
   "exclusiones_por_rol": {
     ".venv-wsl": {
       "cantidad": 582,
+      "cantidad_versionada": 0,
       "ejemplo": ".venv-wsl/bin/activate_this.py",
       "motivo": "entorno virtual de terceros"
     },
     "archives": {
       "cantidad": 12,
+      "cantidad_versionada": 12,
       "ejemplo": "archives/deprecated_modules_20260304/assessment.py",
       "motivo": "registro historico cerrado; gobernarlo implicaria reescribir historia"
     },
     "build": {
       "cantidad": 14,
+      "cantidad_versionada": 0,
       "ejemplo": "tmp_test/venv-jev-sdk/Lib/site-packages/pip/_internal/operations/build/__init__.py",
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
       "cantidad": 115,
+      "cantidad_versionada": 115,
       "ejemplo": "evidence/FASE-A/faseA_contrafactual.py",
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
-      "cantidad": 81,
+      "cantidad": 84,
+      "cantidad_versionada": 0,
       "ejemplo": "temp/_verify_salentoreal.py",
       "motivo": "scratch y respaldos locales (gitignorado), no fuente versionada"
     },
     "venv": {
       "cantidad": 7610,
+      "cantidad_versionada": 0,
       "ejemplo": "venv/Lib/site-packages/_pytest/__init__.py",
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-01T20:36:37+00:00",
-  "git_sha": "8a906e0",
+  "generado": "2026-10-01T23:18:14+00:00",
+  "git_sha": "0731741",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -71,6 +78,7 @@
     "gobernar `validate` por nombre de metodo seria un falso verde: solo se gobierna cuando el receptor resuelve a una clase de `GOBERNADOS`",
     "una funcion de MODULO que se llame como un metodo gobernado (`validate_opencode_refs.validate(...)`) resuelve a su modulo y queda excluida: gobernar funciones de modulo pediria tabla propia de (modulo, funcion), no la de clases. Limite medido al inventariar las 74 exclusiones del arbol",
     "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO prueba que no existan callers fuera del alcance del AST",
+    "los contadores brutos de exclusion (`exclusiones_por_rol.*.cantidad`, su `ejemplo` y `cobertura.archivos_excluidos_por_rol`) se publican contados y con motivo, pero **no gobernan la deriva** del derivado: cuentan ficheros que el propio Git declara fuera del control de versiones, o sea el disco de quien corre, y caducarian con un scratch sin que el arbol tocara una linea. Lo gobernado es la contraparte versionada (`exclusiones_por_rol.*.cantidad_versionada`, `cobertura.archivos_excluidos_por_rol_versionado`) y el `estado` de la consulta",
     "el alcance por declaracion de Git **falla hacia abajo**: si no hay Git o el arbol no es un repositorio, `excluidos_por_declaracion_git` sale con `estado` SIN_GIT y `cantidad` 0, y el alcance vuelve a ser el que goberna `EXCLUSIONES_POR_ROL`. El regreso es sobre-inclusivo (reaparece el falso positivo del aislado), nunca ciego a codigo del proyecto; el estado se publica en la misma clave para que el lector pueda comprobar cual de los dos casos esta viendo"
   ],
   "modo_excepciones": "APLICADAS",
@@ -3497,7 +3505,7 @@
       ]
     }
   },
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "verificador": "scripts/validate_wiring.py",
   "violaciones": []
 }
