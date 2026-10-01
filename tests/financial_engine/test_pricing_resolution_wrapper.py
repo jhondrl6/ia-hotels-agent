@@ -8,10 +8,13 @@ feature flags, pricing calculator, and shadow logger.
 
 import pytest
 import json
+import os
 import tempfile
 from pathlib import Path
 from dataclasses import asdict
 from unittest.mock import Mock, MagicMock, patch
+
+from dotenv import load_dotenv
 
 from modules.financial_engine.pricing_resolution_wrapper import (
     PricingResolutionResult,
@@ -22,7 +25,10 @@ from modules.financial_engine.pricing_resolution_wrapper import (
 from modules.financial_engine.feature_flags import (
     FinancialFeatureFlags,
     RolloutMode,
+    get_flags,
+    reset_flags,
 )
+import modules.financial_engine.feature_flags as feature_flags_module
 from modules.financial_engine.shadow_logger import ShadowLogger, ShadowComparison
 
 
@@ -555,6 +561,84 @@ class TestShadowLoggingData:
         assert flags_dict["shadow_logging_enabled"] is True
 
 
+@pytest.fixture
+def flags_pristinos(monkeypatch):
+    """Aisla el LECTOR del unico estado que lee: el env `FINANCIAL_*` y la cache de `get_flags()`.
+
+    Cura de la fila 13 (registro 33-, medido 2026-10-01). `modules/utils/config_checker.py:23-24`
+    hace `load_dotenv(<root>/.env)` **en tiempo de import**, y eso deja cinco variables
+    `FINANCIAL_*` en `os.environ` para toda la sesion: medido, importarlo pasa de 0 a 5 variables y
+    `get_flags()` las congela. Once de las veinueve selecciones de la matriz directorio-a-directorio
+    (`temp/cierre-deuda-2026-10-01_fila13_matriz.md`) ponen roja esta prueba, asi que no hay UN
+    contaminador al que ir a restaurar: el estado es compartido y legitimo (configuracion del
+    proceso), y la guarda va en quien lo lee.
+
+    `monkeypatch` restituye en el teardown tanto las variables como la cache, que es lo que la
+    pieza 1 envenena a proposito mas abajo.
+    """
+    import modules.financial_engine.feature_flags as ff
+
+    for clave in [k for k in os.environ if k.startswith("FINANCIAL_")]:
+        monkeypatch.delenv(clave, raising=False)
+    monkeypatch.setattr(ff, "_flags", None)
+    yield
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _proceso_como_llego():
+    """La primera pieza del diente envenena el proceso sin monkeypatch: esto lo devuelve.
+
+    Sin este restitucion, curar la fila 13 fabricaria un contaminador nuevo para el resto de la
+    suite — el mismo defecto que se esta curando, del lado de quien lo estampa.
+    """
+    import modules.financial_engine.feature_flags as ff
+
+    env_antes = {k: v for k, v in os.environ.items() if k.startswith("FINANCIAL_")}
+    cache_antes = ff._flags
+    yield
+    for clave in [k for k in os.environ if k.startswith("FINANCIAL_")]:
+        if clave not in env_antes:
+            del os.environ[clave]
+    os.environ.update(env_antes)
+    ff._flags = cache_antes
+
+
+class TestAislamientoFlagsFila13:
+    """El par contaminante y la guarda, en orden fijo dentro de una sola invocacion.
+
+    Pieza 1 envenena con el mismo mecanismo que usa el producto (`load_dotenv` de python-dotenv,
+    que es la linea exacta de `config_checker.py:24`); pieza 2 demuestra que el veneno llega al
+    lector sin guarda; pieza 3 demuestra que la guarda es lo que lo impide. Y el reader real,
+    `TestCalculatePriceWithShadowFunction::test_function_default_flags`, corre despues de estas
+    tres en el MISMO proceso: su verde depende de `flags_pristinos`, no del azar del orden.
+    """
+
+    def test_pieza_1_el_mecanismo_real_deja_el_estado_no_pristino(self, tmp_path):
+        dotenv_falso = tmp_path / ".env"
+        dotenv_falso.write_text(
+            "FINANCIAL_PRICING_HYBRID_MODE=active\nFINANCIAL_V410_ENABLED=true\n",
+            encoding="utf-8")
+        load_dotenv(dotenv_falso)
+
+        assert os.environ.get("FINANCIAL_PRICING_HYBRID_MODE") == "active"
+        reset_flags()
+        assert get_flags().pricing_hybrid_mode == RolloutMode.ACTIVE
+
+    def test_pieza_2_sin_guarda_el_lector_hereda_el_veneno(self):
+        """El par existe: sin aislamiento el default del lector ya no es el default del producto."""
+        assert os.environ.get("FINANCIAL_PRICING_HYBRID_MODE") == "active", (
+            "la pieza 1 no enveneno: este diente estaria verde por vacio")
+        reset_flags()
+        result = calculate_price_with_shadow(rooms=20, expected_loss_cop=50_000_000)
+        assert result.monthly_price_cop == 437_500  # rama ACTIVE, no el legacy esperado
+
+    def test_pieza_3_con_la_guarda_el_lector_vuelve_a_los_defaults(self, flags_pristinos):
+        """Con la guarda, el mismo lector en el mismo proceso envenenado da el legacy esperado."""
+        assert os.environ.get("FINANCIAL_PRICING_HYBRID_MODE") is None
+        result = calculate_price_with_shadow(rooms=20, expected_loss_cop=50_000_000)
+        assert result.monthly_price_cop == 2_500_000  # legacy 5% de 50M
+
+
 class TestCalculatePriceWithShadowFunction:
     """Test the convenience function calculate_price_with_shadow."""
 
@@ -594,8 +678,12 @@ class TestCalculatePriceWithShadowFunction:
         assert result.monthly_price_cop == 2_500_000  # legacy 5% of 50M
         assert mock_shadow_logger.log_comparison.called
 
-    def test_function_default_flags(self):
-        """Test function works with default flags (SHADOW mode)."""
+    def test_function_default_flags(self, flags_pristinos):
+        """Test function works with default flags (SHADOW mode).
+
+        Pide `flags_pristinos` porque "default" es una afirmacion sobre un entorno limpio, y el
+        entorno del proceso puede traer el `.env` ya cargado por un import anterior (fila 13).
+        """
         result = calculate_price_with_shadow(
             rooms=20,
             expected_loss_cop=50_000_000,
