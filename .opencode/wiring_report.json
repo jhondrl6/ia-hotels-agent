@@ -1,7 +1,7 @@
 {
   "cobertura": {
     "archivos_en_alcance": 688,
-    "archivos_excluidos_por_rol": 8405,
+    "archivos_excluidos_por_rol": 8414,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -51,7 +51,7 @@
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
-      "cantidad": 72,
+      "cantidad": 81,
       "ejemplo": "temp/_verify_salentoreal.py",
       "motivo": "scratch y respaldos locales (gitignorado), no fuente versionada"
     },
@@ -61,8 +61,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-01T18:05:39+00:00",
-  "git_sha": "0a57c96",
+  "generado": "2026-10-01T20:36:37+00:00",
+  "git_sha": "8a906e0",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
