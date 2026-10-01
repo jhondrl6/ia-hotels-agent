@@ -150,7 +150,10 @@ def verde() -> dict:
     assert medida["keys"] == BASELINE_KEYS, (
         f"el baseline debe ser exactamente las cuatro aserciones del maestro §1: {medida['keys']}"
     )
-    assert medida["historicas"] == 8, "la poblacion congelada tambien forma parte del verde"
+    # 10 desde la letra C (2026-10-01): al pasar el hook real a denominador /8, las menciones
+    # `[7/7]`/`[6/7]` del changelog congelado del fixture (linea 1505) dejaron de ser VIVA-normativa
+    # y pasaron a contar como H1-denominador-de-otra-epoca. Antes 8 (con el hook en /7).
+    assert medida["historicas"] == 10, "la poblacion congelada tambien forma parte del verde"
     return medida
 
 

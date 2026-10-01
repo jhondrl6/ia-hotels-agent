@@ -137,7 +137,10 @@ def test_coverage_basis_legible_sin_abrir_el_codigo(informe_real: dict):
     # Antes 12 (D2, 2026-09-26) y 11 antes de esa. Es el denominador, no un umbral: lo fija la
     # cantidad de checks que el runner ejecuta en el modo rápido.
     assert cb["documents_scanned"] and cb["fuentes"]["quick"]["total"] == 13
-    assert cb["fuentes"]["hook"]["total"] == 7
+    # 8 desde la letra C (2026-10-01): `verify_packs_in_committed_tree.py` entro al hook como [8/8].
+    # Antes 7 (desde 2026-09-12, v2.24.0), 6 antes de esa. Es el denominador, no un umbral: lo fija
+    # la cantidad de checks que el hook versionado ejecuta.
+    assert cb["fuentes"]["hook"]["total"] == 8
     assert [f["familia"] for f in cb["families_not_covered"]] == [
         "prosa-de-conteo-sin-patron",
         "conteos-fuera-de-los-documentos-de-gobierno",
