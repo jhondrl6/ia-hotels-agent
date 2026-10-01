@@ -36,6 +36,7 @@ Si quieres actualizar **cualquier documento** del repositorio, sigue este flujo:
 || Actualizar benchmarks regionales | `docs/contributing/procedures.md` §5 | Script update_benchmarks.py + research JSON |
 || Verificar capabilities nuevas | `docs/contributing/capabilities.md` §13 | Matriz de capacidades + gate de cierre |
 | Gestionar evidencia | `docs/contributing/capabilities.md` §14 | Estructura del Evidence Ledger |
+| Alinear la cifra de cobertura de tests | `docs/cobertura-historia.md` | La ronda aparca su nota ahi; en `AGENTS.md` solo cambian la cabecera y la fila de la tabla |
 
 ---
 

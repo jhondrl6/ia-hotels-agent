@@ -68,6 +68,7 @@ Guia rapida para encontrar la informacion que necesitas tras la actualizacion Fi
 |-----------|-----------|
 | [CONTRIBUTING.md](docs/CONTRIBUTING.md) | Reglas obligatorias para mantenimiento de documentacion contextual |
 | [AGENTS.md](AGENTS.md) | Politica y contexto global del agente (fuente primaria) |
+| [docs/cobertura-historia.md](docs/cobertura-historia.md) | Historial de rondas de la cifra de cobertura de tests (las notas fechadas que ya no viven en AGENTS.md) |
 | [error_catalog.json](.agent/memory/error_catalog.json) | Catalogo de errores para self-healing |
 
 ---
