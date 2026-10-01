@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-25
+> **Ultima actualizacion:** 2026-09-21
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 501
+> **Total fases completadas:** 502
 
 ---
 
@@ -11683,6 +11683,24 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `docs/GUIA_TECNICA.md` | Guia Tecnica |
 | `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
 | `CHANGELOG.md` | Changelog |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: sin dato declarado
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-A - 2026-09-21
+**Descripcion:** FASE-A de EVALUACION-JEV-TYPESAFE-2026-09-21: muestra humana/saneada, protocolo y checker offline; ejecutada offline 2026-09-21 con scripts/evaluate_jev_pilot.py, checker y metricas en verde (AC10), muestra BORRADOR con etiquetas y umbrales pendientes de humano (AC3 parcial); artefactos publicados en origin/master (push 9665c57..51b0793)
+**Nota:** registrada en tardanza el 2026-09-30: la fase cerro sin entrada en REGISTRY; el pendiente lo declara la fila 4 del registro unificado 33-
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
