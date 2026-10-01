@@ -429,8 +429,8 @@ def test_dientes_un_mutante_por_cada_rama_del_check(tmp_path):
     # Mutante 1: sin normalizar, la fecha del calculo fresco choca con la publicada y el check se
     # vuelve un rojo permanente: la otra forma de no gobernar nada.
     sin_normalizar = _mutante(
-        "return json.loads(_normalizado(texto_canonico(objeto)))",
-        "return json.loads(texto_canonico(objeto))  # MUTADO-SIN-NORMALIZAR",
+        "return json.loads(_normalizado(texto_canonico(",
+        "return json.loads(texto_canonico((  # MUTADO-SIN-NORMALIZAR",
         tmp_path, "sin_normalizar")
     mod1 = _cargar("vw_mutado_sin_normalizar", sin_normalizar)
     fresco = mod1.construir_reporte(base, ignore_known=True)
@@ -443,7 +443,7 @@ def test_dientes_un_mutante_por_cada_rama_del_check(tmp_path):
 
     # Mutante 2: la divergencia se calcula y se tira.
     ciega = _mutante(
-        "divergencias = _divergencias(_para_comparar(leido), _para_comparar(reporte))",
+        "divergencias = _divergencias(leido, reporte, rutas_procedencia=rutas)",
         "divergencias = []  # MUTADO-CIEGO",
         tmp_path, "ciega")
     mod2 = _cargar("vw_mutado_ciega", ciega)

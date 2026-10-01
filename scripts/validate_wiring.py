@@ -110,7 +110,10 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_REPORT = ROOT / ".opencode" / "wiring_report.json"
 # 1.1: el artefacto publica la clave `excluidos_por_declaracion_git` (capa de alcance por
 # declaracion de Git), que el reporte 1.0 no tenia.
-SCHEMA_VERSION = "1.1"
+# 1.2: cada exclusion por rol y `cobertura` publican su contraparte **versionada**
+# (`cantidad_versionada`, `archivos_excluidos_por_rol_versionado`), que es la que goberna la
+# deriva del derivado; el contador bruto pasa a ser procedencia de la maquina.
+SCHEMA_VERSION = "1.2"
 CONSULTA_GIT_TIMEOUT = 120
 
 # --------------------------------------------------------------------------- politica
@@ -291,21 +294,30 @@ def archivos_en_alcance(root: Path) -> tuple[list[Path], list[dict], dict]:
 
     Devuelve `(fuentes, exclusiones_por_rol, excluidos_por_declaracion_git)`. La segunda capa
     solo puede **achicar** la primera: ante cualquier fallo de Git el conjunto sale vacio.
+
+    Cada exclusion de la capa 1 sale marcada con `no_versionada`: si Git ya declaraba ese
+    fichero fuera del control de versiones, la exclusion describe la **maquina** que corre y
+    no el **arbol** versionado. La marca es lo que separa un contador gobernable de uno que
+    caduca con el primer scratch (ver `_rutas_de_procedencia`).
     """
+    # La declaracion de Git se resuelve ANTES del recorrido: la capa 1 la necesita para saber
+    # si lo que descarta por rol estaba ademas fuera del control de versiones.
+    ignorados, estado = _declaracion_de_ignorados(root)
     candidatas: list[Path] = []
     exclusiones: list[dict] = []
     for path in sorted(root.rglob("*.py")):
+        ruta = path.relative_to(root).as_posix()
         partes = set(path.relative_to(root).parts[:-1])
         rol = sorted(partes & set(EXCLUSIONES_POR_ROL))
         if rol:
             exclusiones.append(
                 {"ruta": _relativo(path, root), "rol": rol[0],
-                 "motivo": EXCLUSIONES_POR_ROL[rol[0]]}
+                 "motivo": EXCLUSIONES_POR_ROL[rol[0]],
+                 "no_versionada": ruta in ignorados}
             )
             continue
         candidatas.append(path)
 
-    ignorados, estado = _declaracion_de_ignorados(root)
     fuentes: list[Path] = []
     descartadas: list[str] = []
     for path in candidatas:
@@ -769,15 +781,23 @@ def poblar(root: Path) -> dict:
 
 
 def _agrupar_exclusiones(exclusiones: list[dict]) -> dict:
-    """Resume las exclusiones por rol de directorio: cantidad, motivo y un ejemplo."""
+    """Resume las exclusiones por rol de directorio: cantidad, motivo y un ejemplo.
+
+    Publica dos numeros por rol. `cantidad` es lo que hay en el disco de quien corre y
+    `cantidad_versionada` es lo de ese total que el propio Git **no** declara ignorado: la
+    primera es procedencia de la maquina, la segunda es estado del arbol. GOBERNA solo la
+    segunda ver `limites` (13).
+    """
     agrupado: dict[str, dict] = {}
     for item in exclusiones:
         rol = item["rol"]
         entrada = agrupado.setdefault(rol, {
-            "cantidad": 0, "motivo": item["motivo"],
+            "cantidad": 0, "cantidad_versionada": 0, "motivo": item["motivo"],
             "ejemplo": item["ruta"],
         })
         entrada["cantidad"] += 1
+        if not item["no_versionada"]:
+            entrada["cantidad_versionada"] += 1
     return dict(sorted(agrupado.items()))
 
 
@@ -904,6 +924,11 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
     cobertura = {
         "archivos_en_alcance": datos["archivos_analizados"],
         "archivos_excluidos_por_rol": len(datos["exclusiones"]),
+        # El mismo total, pero solo con lo que Git no declaro ignorado: lo que caduca cuando
+        # cambia el arbol versionado y no cuando alguien tira un scratch a `temp/`.
+        "archivos_excluidos_por_rol_versionado": sum(
+            1 for e in datos["exclusiones"] if not e["no_versionada"]
+        ),
         "llamadas_descubiertas": len(datos["poblacion"]),
         "por_clasificacion": dict(sorted(conteo.items())),
         "receptores_no_resueltos": sum(
@@ -971,6 +996,13 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
             "clases. Limite medido al inventariar las 74 exclusiones del arbol",
             "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO "
             "prueba que no existan callers fuera del alcance del AST",
+            "los contadores brutos de exclusion (`exclusiones_por_rol.*.cantidad`, su `ejemplo` "
+            "y `cobertura.archivos_excluidos_por_rol`) se publican contados y con motivo, pero "
+            "**no gobernan la deriva** del derivado: cuentan ficheros que el propio Git declara "
+            "fuera del control de versiones, o sea el disco de quien corre, y caducarian con un "
+            "scratch sin que el arbol tocara una linea. Lo gobernado es la contraparte versionada "
+            "(`exclusiones_por_rol.*.cantidad_versionada`, "
+            "`cobertura.archivos_excluidos_por_rol_versionado`) y el `estado` de la consulta",
             "el alcance por declaracion de Git **falla hacia abajo**: si no hay Git o el arbol "
             "no es un repositorio, `excluidos_por_declaracion_git` sale con `estado` SIN_GIT y "
             "`cantidad` 0, y el alcance vuelve a ser el que goberna `EXCLUSIONES_POR_ROL`. "
@@ -1007,6 +1039,22 @@ NORMALIZAR = (
     (re.compile(r'"generado": "[^"]*"'), '"generado": "V"'),
     (re.compile(r'"git_sha": "[^"]*"'), '"git_sha": "V"'),
 )
+
+# Segunda familia de procedencia: los contadores **brutos** de exclusion, que miden el disco de
+# quien corre y no el arbol versionado. Medido el 2026-10-01: un scratch nuevo en `temp/` (que
+# Git declara ignorado) movia `cantidad` y `archivos_excluidos_por_rol`, y con eso el artefacto
+# versionado caducaba dos veces en la misma sesion sin que el veredicto gobernado se moviera ni
+# una unidad. La regla no es dejar de contarlos: S11 castiga la exclusion **anonima**, no el
+# numero de ficheros que hay en un directorio que el proyecto ya rechazo. Se siguen publicando
+# `cantidad`, `ejemplo` y `motivo`; lo que se contra-verifica contra el arbol es su contraparte
+# versionada (`cantidad_versionada`, `archivos_excluidos_por_rol_versionado`), que es la unica
+# que puede cambiar sin tocar el disco de alguien.
+PROCEDENCIA = (
+    "cobertura.archivos_excluidos_por_rol",
+    "excluidos_por_declaracion_git.cantidad",
+    "excluidos_por_declaracion_git.ejemplo",
+)
+SENTINELA_PROCEDENCIA = "PROCEDENCIA-NO-GOBERNADA"
 TOPE_DIVERGENCIAS = 12
 
 ESTADO_CONFORME = "CONFORME"
@@ -1032,14 +1080,47 @@ def _digest(texto: str) -> str:
     return hashlib.sha256(_normalizado(texto).encode("utf-8")).hexdigest()
 
 
-def _para_comparar(objeto) -> dict:
-    """El objeto canonico, con los campos de procedencia neutralizados.
+def _rutas_de_procedencia(*objetos) -> frozenset:
+    """Las rutas punteadas cuyo valor es estado de la maquina, no del arbol versionado.
+
+    Se calcula sobre **todos** los objetos que se van a comparar, no solo sobre el fresco: si el
+    artefacto publicado conoce un rol que el arbol de hoy ya no tiene (se borro el ultimo
+    scratch), esa `cantidad` sigue siendo procedencia y no puede ponerse roja por ausencia.
+    """
+    rutas = set(PROCEDENCIA)
+    for objeto in objetos:
+        if not isinstance(objeto, dict):
+            continue
+        for rol in (objeto.get("exclusiones_por_rol") or {}):
+            rutas.add(f"exclusiones_por_rol.{rol}.cantidad")
+            rutas.add(f"exclusiones_por_rol.{rol}.ejemplo")
+    return frozenset(rutas)
+
+
+def _neutralizar_procedencia(objeto, rutas: frozenset, donde: str = ""):
+    """Copia del objeto con las `rutas` de procedencia reemplazadas por una sentinela."""
+    if isinstance(objeto, dict):
+        salida = {}
+        for clave, valor in objeto.items():
+            sub = f"{donde}.{clave}" if donde else clave
+            salida[clave] = (SENTINELA_PROCEDENCIA if sub in rutas
+                             else _neutralizar_procedencia(valor, rutas, sub))
+        return salida
+    if isinstance(objeto, list):
+        return [_neutralizar_procedencia(v, rutas, f"{donde}.{i}")
+                for i, v in enumerate(objeto)]
+    return objeto
+
+
+def _para_comparar(objeto, rutas: frozenset = frozenset()) -> dict:
+    """El objeto canonico, con la procedencia neutralizada.
 
     Se re-serializa y se re-parsea en vez de tocar el diccionario: asi el orden de claves y el EOL
     del fichero en disco dejan de contar (S20: el writer emite CRLF en Windows y el blob viaja en LF)
     y la normalizacion es exactamente la misma que goberna el digest.
     """
-    return json.loads(_normalizado(texto_canonico(objeto)))
+    return json.loads(_normalizado(texto_canonico(
+        _neutralizar_procedencia(objeto, rutas) if rutas else objeto)))
 
 
 def _hoja(valor) -> str:
@@ -1047,7 +1128,8 @@ def _hoja(valor) -> str:
     return texto if len(texto) <= 70 else texto[:67] + "..."
 
 
-def _divergencias(publicado, fresco, ruta: str = "") -> list[str]:
+def _divergencias(publicado, fresco, ruta: str = "",
+                  rutas_procedencia: frozenset = frozenset()) -> list[str]:
     """Cada hoja que no cuadra, nombrada con su ruta punteada. Cortada en `TOPE_DIVERGENCIAS`.
 
     El tope existe porque el artefacto tiene 174 registros de poblacion: una divergencia de formato
@@ -1078,7 +1160,8 @@ def _divergencias(publicado, fresco, ruta: str = "") -> list[str]:
         elif a != b or type(a) is not type(b):
             salida.append(f"{donde}: publicado {_hoja(a)} | fresco {_hoja(b)}")
 
-    caminar(_para_comparar(publicado), _para_comparar(fresco), ruta)
+    caminar(_para_comparar(publicado, rutas_procedencia),
+            _para_comparar(fresco, rutas_procedencia), ruta)
     return salida
 
 
@@ -1087,6 +1170,10 @@ def comparar_derivado(ruta: Path, reporte: dict) -> tuple[str, list, str]:
 
     No escribe nada: `--check` lee y compara, y la reparacion es volver a publicar con `--write-report`.
     Doctrina de la casa: este script reporta, no auto-arregla.
+
+    El artefacto puede conocer roles que el arbol de hoy ya no tiene (y viceversa): la lista de
+    rutas de procedencia se calcula contra los dos, asi que un contador de maquina no pone rojo
+    por haber desaparecido.
     """
     if not ruta.exists():
         return ESTADO_AUSENTE, [], ""
@@ -1097,8 +1184,9 @@ def comparar_derivado(ruta: Path, reporte: dict) -> tuple[str, list, str]:
     if not isinstance(leido, dict):
         return ESTADO_ILEGIBLE, [f"el artefacto no es un objeto JSON ({type(leido).__name__})"], ""
 
-    divergencias = _divergencias(_para_comparar(leido), _para_comparar(reporte))
-    digest = _digest(texto_canonico(reporte))
+    rutas = _rutas_de_procedencia(leido, reporte)
+    divergencias = _divergencias(leido, reporte, rutas_procedencia=rutas)
+    digest = _digest(texto_canonico(_para_comparar(reporte, rutas)))
     if not divergencias:
         return ESTADO_CONFORME, [], digest
     return ESTADO_DIVERGE, divergencias, digest
