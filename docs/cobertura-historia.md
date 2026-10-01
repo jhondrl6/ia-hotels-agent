@@ -15,6 +15,38 @@
 
 ---
 
+> **Segunda ronda del 2026-10-01 — CIERRE-DEUDA (la cifra subio a 4,698).** Medido con el metodo canonico de la
+> casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,698**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk en `c4d0ffe` = **4,698**): **las dos cifras
+> cuadran**, y esta vez porque las diez funciones nuevas se commitearon **antes** de medir — la regla de la casa
+> al reves de lo que paso los dias 25 y 26. El delta contra la ronda de la manana (4,688) es **+10** y se
+> atribuyo **por comparacion de arboles, no de memoria**: `git grep -c` en `321a0cf` y en `HEAD`, restados por
+> archivo, da exactamente tres sumandos y ninguno mas —
+> **+5** en `tests/test_registry_fecha_documental.py` (20 → 25: los dientes de la guarda `--plan` de la fila 15,
+> que son rechazo medido por operaciones observadas, desambiguacion que no re-escribe la primera entrada, plan
+> declinado que tambien se niega, caracterizacion de que las dos colisiones publicadas siguen en el expediente, y
+> el control negativo que ejecuta el escritor versionado en `bb1be59`);
+> **+3** en `tests/financial_engine/test_pricing_resolution_wrapper.py` (36 → 39: el diente de tres piezas del
+> aislamiento de flags de la fila 13, envenenar-con-el-mecanismo-real / sin-guarda-da-437.500 / con-guarda-da
+> 2.500.000);
+> **+2** en `tests/test_diagnostic_geo_metrics.py` (3 → 5: el diente de PERDIDA de seccion de la fila 14, que
+> ubica la tabla por el dato y no por el titulo, mas el test que declara el anclaje vigente).
+> Distribucion por filas: +3 a `financial_engine` (549 → **552**) y +7 a `root test files` (1.050 → **1.057**);
+> las otras 20 filas no se movieron y la suma de las 22 de la tercera columna da **4,698** (verificado sumando
+> los sumandos con un instrumento que los enumera, no de memoria).
+>
+> **Nota de instrumento, porque esta ronda si tuvo uno nuevo**: el bisect de la fila 13 (`temp/
+> cierre-deuda-2026-10-01_fila13_matriz.py`, 29 selecciones sobre 117 unidades de coleccion) corrio pytest una
+> vez por seleccion y **no conto funciones-test por archivo**: la cifra que publica esta nota sale de los dos
+> instrumentos canonicos de arriba, no de la matriz. Lo que aporto la matriz es el veredicto de rama — 11
+> bloques rojos, no un contaminador — y por eso la cura fue aislamiento en el lector y no restaurar en el que
+> ensucia.
+>
+> **Lo que esta ronda NO sumo**: `scripts/log_phase_completion.py` gano bandera y guarda pero es codigo de
+> produccion, no test; y el rojo que la matriz delató en `tests/delivery`
+> (`test_faq_generator_output_is_jsonld`, que llama a `api.deepseek.com` y revienta por read timeout) tampoco:
+> cae en aislado, no por orden, y no se curo aqui.
+>
 > **Ronda del 2026-10-01 (la cifra subio a 4,688).** Medido con el metodo canonico de la casa
 > (`grep -rE "^\s*def test_" tests --include=*.py` = **4,688**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests` = **4,688** en `ed3670e`): **las dos cifras cuadran**. La nota

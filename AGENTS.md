@@ -404,16 +404,18 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,688 funciones totales)
+### Cobertura por Modulo (4,698 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
 > **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`. En el commit
-> que lleva esta nota **los dos comandos dan 4,688** (medido 2026-10-01 sobre `ed3670e`): las seis funciones
-> nuevas — la bateria del `[8/8]` del hook, `tests/test_hook_precommit_packs_check.py` (0 → 6), entrada en
-> `0ff9f25` — viajan con la cifra, que es la regla de la casa. La nota deja constancia de su correccion: la
-> afirmacion anterior («los dos comandos dan 4,584») estaba vencida en los dos sentidos — ni el arbol ni HEAD
-> daban ese numero hoy. Eso es el estado de **ese
+> que lleva esta nota **los dos comandos dan 4,698** (medido 2026-10-01 sobre `c4d0ffe`, segunda ronda del
+> dia): el +10 contra la ronda de la manana sale de tres archivos y se atribuye archivo por archivo en
+> `docs/cobertura-historia.md` — `tests/test_registry_fecha_documental.py` (20 → 25),
+> `tests/financial_engine/test_pricing_resolution_wrapper.py` (36 → 39) y
+> `tests/test_diagnostic_geo_metrics.py` (3 → 5). Las diez viajan con la cifra, que es la regla de la casa.
+> La nota anterior de hoy subio `4,584 → 4,688` sobre `ed3670e` y ya dejo escrita la razon: la afirmacion
+> de `4,584` estaba vencida en los dos sentidos — ni el arbol ni HEAD daban ese numero. Eso es el estado de **ese
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
 
@@ -423,7 +425,7 @@ python scripts/run_all_validations.py           # Completo
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|
-| financial_engine | 549 | `tests/financial_engine/` |
+| financial_engine | 552 | `tests/financial_engine/` (+3 en la ronda del 2026-10-01: el diente de tres piezas del aislamiento de flags, `test_pricing_resolution_wrapper.py` 36 → 39) |
 | asset_generation | 472 | `tests/asset_generation/` |
 | quality_gates | 870 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses; **+9 en la ronda del 2026-09-28**: 6 en `phase_briefing/test_briefing_proyeccion_workflow_gobernada.py` — la cura de S32, que gobierna por `--check` la proyeccion del workflow y pierde su verde cuando se la apaga — y 3 en `governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py` — la cura de D-A sobre los estados que se delegaban en D1) |
 | commercial_documents | 363 | `tests/commercial_documents/` |
@@ -444,7 +446,7 @@ python scripts/run_all_validations.py           # Completo
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 1050 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido; **+40 en la ronda del 2026-09-30**: 6 en `test_registry_fecha_documental.py` (14 → 20, la cura de D-F5 con sus rechazos y su forma ISO), 5 en el nuevo `test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), 17 en el nuevo `test_verify_qmind_context_freshness.py` (S34, con su control negativo contra el hermano versionado) y 12 en el nuevo `test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29: gobernar la descripcion del alcance, no solo el alcance); **+31 en la segunda ronda del 2026-09-30**, las tres baterias del wiring: 12 en `test_validate_wiring_alcance_por_declaracion_git.py` (el paso 1, alcance por declaracion de Git, llegado de la tanda anterior), 8 en el nuevo `test_validate_wiring_criterio_en_el_exit.py` (el paso 2: la clausula de produccion en el EXIT, con su control negativo anclado a `abd181c`) y 11 en el nuevo `test_validate_wiring_check_derivado_versionado.py` (el paso 3: `--check` sobre `.opencode/wiring_report.json`, con los tres estados del lector y dos mutantes; **+6 en la ronda del 2026-10-01**: 6 nuevas en `tests/test_hook_precommit_packs_check.py` (0 → 6), la bateria del `[8/8]` del hook pre-commit que entró en `0ff9f25`) |
+| root test files | 1057 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido; **+40 en la ronda del 2026-09-30**: 6 en `test_registry_fecha_documental.py` (14 → 20, la cura de D-F5 con sus rechazos y su forma ISO), 5 en el nuevo `test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), 17 en el nuevo `test_verify_qmind_context_freshness.py` (S34, con su control negativo contra el hermano versionado) y 12 en el nuevo `test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29: gobernar la descripcion del alcance, no solo el alcance); **+31 en la segunda ronda del 2026-09-30**, las tres baterias del wiring: 12 en `test_validate_wiring_alcance_por_declaracion_git.py` (el paso 1, alcance por declaracion de Git, llegado de la tanda anterior), 8 en el nuevo `test_validate_wiring_criterio_en_el_exit.py` (el paso 2: la clausula de produccion en el EXIT, con su control negativo anclado a `abd181c`) y 11 en el nuevo `test_validate_wiring_check_derivado_versionado.py` (el paso 3: `--check` sobre `.opencode/wiring_report.json`, con los tres estados del lector y dos mutantes; **+6 en la ronda del 2026-10-01**: 6 nuevas en `tests/test_hook_precommit_packs_check.py` (0 → 6), la bateria del `[8/8]` del hook pre-commit que entró en `0ff9f25`; **+7 en la segunda ronda del 2026-10-01 (CIERRE-DEUDA)**: +5 en `test_registry_fecha_documental.py` (20 → 25, los dientes de la guarda `--plan` de la fila 15 con su control negativo sobre el escritor versionado en `bb1be59`) y +2 en `test_diagnostic_geo_metrics.py` (3 → 5, el diente de perdida de seccion de la fila 14, que ubica la tabla por el dato y sobrevive un renombre del titulo). Los tres archivos de la ronda, con su instrumento y su contrafactual, en `docs/cobertura-historia.md`) |
 
 ---
 
