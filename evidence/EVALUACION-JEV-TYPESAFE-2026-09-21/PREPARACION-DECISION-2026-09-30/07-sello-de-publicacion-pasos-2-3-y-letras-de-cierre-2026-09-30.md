@@ -272,3 +272,61 @@ cambio de estado. Todo eso quedo en esta sesion.
    quedaron bajo `temp/`, que `.gitignore` excluye. Este documento los transcribe y los nombra por archivo.
 7. **Este sello no puede nombrarse a si mismo dentro del rango que sella**: se escribio despues de `d37928c`
    y de su empuje, asi que su propio commit queda fuera de la cuenta de arriba.
+
+---
+
+## Addendum 2026-10-01 (CIERRE-DEUDA) — tres citas de este sello vencieron, y se estampan aqui
+
+Este texto es **aditivo**: ninguna de las lineas de arriba se re-escribe. Lo que pasa es que tres de sus
+afirmaciones, publicadas como pendientes, dejaron de ser ciertas, y un sello que no estampa lo que caduco
+de el empieza a narrar un estado que ya no existe. Medido el 2026-10-01 sobre el arbol de `c4d0ffe`.
+
+### (1) Las dos filas ajenas que este sello dejo sin firmar: ya estan firmadas
+
+§«Lo que este sello NO cierra», punto 1. La letra B de la orden del 2026-10-01 las estampo: **`32792b6`**
+— «docs(registros): las filas 4 y 8 estampan el cierre que la letra 4 ya ejecuto». Cae sobre la fila 4 de
+`REINGESTA-CONTEXT-JEV-2026-09-29/33-registro-unificado-de-pendientes-2026-09-29.md` y la fila 8 de
+`CURAS-SCRIPTS-Y-CONTEXT-2026-09-30/00-resumen.md`, con anotador nuevo y texto original intacto, que es la
+forma en que el cierre de un registro ajeno puede darse sin re-escribirlo. El punto 1 de arriba queda
+vencido y asi se declara, no se borra.
+
+### (2) Las dos invocaciones sin `--fecha` del escritor: cerradas, y su ancla se volvio a mover dos veces
+
+§«Lo que este sello NO cierra», punto 2, las citaba en `:691` y `:771`. **`bb1be59`** las cerró y este
+addendum estampa el re-anclaje que esa tanda publico: `:692` y `:772` (verificado con
+`git show bb1be59:scripts/log_phase_completion.py`, que es lectura de una revision fija, no del arbol).
+
+Pero la linea literal **volvio a moverse en la misma sesion que escribe esta nota**: la guarda `--plan` de
+la fila 15 (**`c4d0ffe`**) metio veinte lineas delante del primer print. Medido hoy, las dos invocaciones
+impresas del escritor estan en **`:772`** y **`:864`**, y el rechazo nuevo añadio una tercera en **`:263`**.
+Lo que si se verifico, porque es la clausula que importa y no el numero: las **tres** llevan `--fecha` en
+su propio texto, asi que el contador de la doctrina sigue en 0. Se publica la condicion («toda invocacion
+impresa por el escritor declara su `--fecha`») y no solo la coordenada, porque la coordenada es exactamente
+lo que un commit posterior mueve.
+
+### (3) La L3 retroactiva del rango que este sello sella: corrida, con `findings_count=0`
+
+§«Lo que este sello NO cierra» no la nombraba: la L3 era el pendiente que la propia orden dejo abierto
+(linea 231: «queda registrado aqui en vez de barrido», con el operador eligiendo empujar sin escaneo). La
+correida retroactiva cubrio **`6582a2c..8c29c7e`** — es decir, el rango completo que este sello sella, los
+cuatro fast-forwards de la linea 225 mas `8c29c7e` — y dio **`findings_count=0`**.
+
+Procedencia, declarada: esa corrida es de la **sesion anterior** y no se re-ejecuto aqui, asi que se
+estampa como registro ajeno verificado en su coherencia (el rango casa con los cuatro shas que este mismo
+sello enumera) y no como medicion propia.
+
+### (4) Lo que este addendum tampoco cierra, en la misma forma
+
+El commit que lleve esta seccion es **posterior** a la corrida del punto (3), asi que por la logica de
+baseline que usa el propio instrumento **queda fuera del rango que sella**. No es una excepcion de este
+sello: es la regla que ya anoto la fila 16 del `33-` el 2026-10-01 («el commit que estampa el cierre queda
+sin revision L3, y la proxima L3 lo barre a el y a lo que siga»). Se declara aqui en vez de barrerse, que
+es lo que hace este documento cuando algo suyo sigue abierto.
+
+Y una cuarta, nueva, medida en esta tanda: el punto 4 de arriba predijo exactamente el coste que se cobro.
+Los ocho scripts decratch que `CIERRE-DEUDA` escribio en `temp/` —un directorio que ni siquiera se
+versiona— vencieron `.opencode/wiring_report.json` (`exclusiones_por_rol.temp.cantidad`: 72 → 80) y
+cortaron el quick [11/13]. Se republico con `--write-report`. El veredicto de cableado no se movio ni una
+unidad (174 llamadas, 75 gobernadas, 0 violaciones antes y despues); lo que se movio fue la fotografia de
+un directorio transitorio. Vale la pena que quien revise el gate se pregunte si un conteo de `temp/` debe
+ser parte de un artefacto versionado, porque hoy obliga a re-publicar cada vez que alguien tira un scratch.
