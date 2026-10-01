@@ -73,18 +73,33 @@ COMO SE DECIDE QUE ES ROJO (el criterio de la clausula de produccion)
 Uso:
     python scripts/validate_wiring.py                       # verificar
     python scripts/validate_wiring.py --write-report        # verificar + publicar JSON
+    python scripts/validate_wiring.py --check                # + contra-verificar el publicado
     python scripts/validate_wiring.py --ignore-known         # rojo sin excepciones tipadas
     python scripts/validate_wiring.py --root DIR             # verificar otro arbol (tests)
 
-Salida: 0 = conforme (cableado y clausula de produccion); 1 = hallazgos (omision, contrato muerto,
-hueco de cobertura en produccion o poblacion gobernada vacia); 2 = error de uso o lector fallido.
+Salida: 0 = conforme (cableado, clausula de produccion y derivado); 1 = hallazgos (omision, contrato
+muerto, hueco de cobertura en produccion o poblacion gobernada vacia); 2 = error de uso o lector
+fallido (incluye el artefacto que `--check` no encuentra o no puede parsear); 3 = el artefacto
+versionado DIVERGE del calculo en memoria. El 3 se separa del 1 porque la cola traduce cada codigo
+con un diagnostico distinto: mezclar «falta una senal en un caller» con «el artefacto esta vencido»
+mandaria a quien repara a buscar un caller que no existe.
+
+EL DERIVADO VERSIONADO (`--check`)
+    `.opencode/wiring_report.json` esta versionado y publica contadores que se leen como vigentes
+    (`receptores_no_resueltos_en_produccion`). Medido el 2026-09-30: seguia en `schema_version 1.0`
+    con `git_sha d7ff932` del 2026-09-20, o sea describia un arbol que ya no existe, y la cola lo
+    re-calculaba sin publicarlo ni compararlo (`run_all_validations.py`). `--check` regenera en
+    memoria y confronta, neutralizando los dos campos de **procedencia** (`generado`, `git_sha`) al
+    estilo `NORMALIZAR` del escritor de packs: lo que se goberna es el contenido, no cuando se corrio.
 """
 
 from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
+import re
 import subprocess
 import sys
 import warnings
@@ -979,6 +994,138 @@ def verificar(reporte: dict) -> list:
     return reporte["violaciones"]
 
 
+# ------------------------------------------------------------------ el derivado versionado
+#
+# El artefacto es un **derivado**: su verdad es el arbol, y un derivado publicado que nadie
+# contra-verifica describe un arbol que ya no existe (parte 04-, seccion 5). Los unicos campos que
+# se neutralizan son los de procedencia: `generado` (cuando se corrio) y `git_sha` (que commit sello
+# la corrida). Ni uno ni otro gouverna el contenido: son cita, no clausula, y el mismo artefacto
+# correcto se re-emite en cada commit.
+
+VOLATILES = ("generado", "git_sha")
+NORMALIZAR = (
+    (re.compile(r'"generado": "[^"]*"'), '"generado": "V"'),
+    (re.compile(r'"git_sha": "[^"]*"'), '"git_sha": "V"'),
+)
+TOPE_DIVERGENCIAS = 12
+
+ESTADO_CONFORME = "CONFORME"
+ESTADO_DIVERGE = "DIVERGE"
+ESTADO_AUSENTE = "AUSENTE"
+ESTADO_ILEGIBLE = "ILEGIBLE"
+# Cada estado del lector con su codigo: AUSENTE e ILEGIBLE no son «sin divergencias» (R2.9).
+CODIGO_DEL_ESTADO = {ESTADO_CONFORME: 0, ESTADO_DIVERGE: 3, ESTADO_AUSENTE: 2, ESTADO_ILEGIBLE: 2}
+
+
+def texto_canonico(objeto) -> str:
+    """La misma serializacion que escribe `publicar`, sin el salto de linea final."""
+    return json.dumps(objeto, indent=2, ensure_ascii=False, sort_keys=True)
+
+
+def _normalizado(texto: str) -> str:
+    for patron, reemplazo in NORMALIZAR:
+        texto = patron.sub(reemplazo, texto)
+    return texto
+
+
+def _digest(texto: str) -> str:
+    return hashlib.sha256(_normalizado(texto).encode("utf-8")).hexdigest()
+
+
+def _para_comparar(objeto) -> dict:
+    """El objeto canonico, con los campos de procedencia neutralizados.
+
+    Se re-serializa y se re-parsea en vez de tocar el diccionario: asi el orden de claves y el EOL
+    del fichero en disco dejan de contar (S20: el writer emite CRLF en Windows y el blob viaja en LF)
+    y la normalizacion es exactamente la misma que goberna el digest.
+    """
+    return json.loads(_normalizado(texto_canonico(objeto)))
+
+
+def _hoja(valor) -> str:
+    texto = json.dumps(valor, ensure_ascii=False)
+    return texto if len(texto) <= 70 else texto[:67] + "..."
+
+
+def _divergencias(publicado, fresco, ruta: str = "") -> list[str]:
+    """Cada hoja que no cuadra, nombrada con su ruta punteada. Cortada en `TOPE_DIVERGENCIAS`.
+
+    El tope existe porque el artefacto tiene 174 registros de poblacion: una divergencia de formato
+    imprimio antes miles de lineas y tapo la que importaba. El corte se publica contado.
+    """
+    salida: list[str] = []
+
+    def caminar(a, b, donde: str):
+        if len(salida) >= TOPE_DIVERGENCIAS:
+            return
+        if isinstance(a, dict) and isinstance(b, dict):
+            for clave in sorted(set(a) | set(b)):
+                sub = f"{donde}.{clave}" if donde else clave
+                if clave not in a:
+                    salida.append(f"{sub}: SOLO EN EL CALCULO FRESCO {_hoja(b[clave])}")
+                elif clave not in b:
+                    salida.append(f"{sub}: SOLO EN EL ARTEFACTO, el emisor ya no lo publica "
+                                  f"{_hoja(a[clave])}")
+                else:
+                    caminar(a[clave], b[clave], sub)
+        elif isinstance(a, list) and isinstance(b, list):
+            if len(a) != len(b):
+                salida.append(f"{donde}: lista de {len(a)} elementos publicados contra {len(b)} "
+                              "calculados")
+                return
+            for indice, (elemento_a, elemento_b) in enumerate(zip(a, b)):
+                caminar(elemento_a, elemento_b, f"{donde}.{indice}")
+        elif a != b or type(a) is not type(b):
+            salida.append(f"{donde}: publicado {_hoja(a)} | fresco {_hoja(b)}")
+
+    caminar(_para_comparar(publicado), _para_comparar(fresco), ruta)
+    return salida
+
+
+def comparar_derivado(ruta: Path, reporte: dict) -> tuple[str, list, str]:
+    """`(estado, divergencias, digest)` entre el artefacto publicado y el calculo en memoria.
+
+    No escribe nada: `--check` lee y compara, y la reparacion es volver a publicar con `--write-report`.
+    Doctrina de la casa: este script reporta, no auto-arregla.
+    """
+    if not ruta.exists():
+        return ESTADO_AUSENTE, [], ""
+    try:
+        leido = json.loads(ruta.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return ESTADO_ILEGIBLE, [f"el artefacto no se pudo leer: {type(exc).__name__}"], ""
+    if not isinstance(leido, dict):
+        return ESTADO_ILEGIBLE, [f"el artefacto no es un objeto JSON ({type(leido).__name__})"], ""
+
+    divergencias = _divergencias(_para_comparar(leido), _para_comparar(reporte))
+    digest = _digest(texto_canonico(reporte))
+    if not divergencias:
+        return ESTADO_CONFORME, [], digest
+    return ESTADO_DIVERGE, divergencias, digest
+
+
+def lineas_del_check(ruta_check: Path, estado: str, divergencias: list, digest: str,
+                     quiet: bool) -> list:
+    """Lo que el CLI imprime del derivado, en un orden fijo: el veredicto, no la decoracion."""
+    if estado == ESTADO_CONFORME:
+        if quiet:
+            return []
+        return [f"       derivado: {_relativo(ruta_check, ROOT)} conforme con el calculo en "
+                f"memoria (digest {digest[:12]})"]
+    if estado == ESTADO_AUSENTE:
+        return [f"[2] Derivado AUSENTE: no existe {_relativo(ruta_check, ROOT)}. Un artefacto que "
+                "no esta no puede informar «sin divergencias»: publicar con --write-report"]
+    if estado == ESTADO_ILEGIBLE:
+        return [f"[2] Derivado ILEGIBLE en {_relativo(ruta_check, ROOT)}"] + [
+            f"  - {d}" for d in divergencias]
+    bloque = [f"[FAIL] Derivado: {_relativo(ruta_check, ROOT)} DIVERGE del calculo en memoria "
+              f"(digest {digest[:12]})"]
+    bloque += [f"  - {d}" for d in divergencias]
+    bloque.append("  (reparar: python scripts/validate_wiring.py --write-report y commitear el "
+                  "artefacto regenerado)")
+    return bloque
+
+
 def resumen_de(reporte: dict) -> str:
     cobertura = reporte["cobertura"]
     por = cobertura["por_clasificacion"]
@@ -1005,6 +1152,8 @@ def main(argv=None) -> int:
                     nargs="?", help="publicar el JSON del reporte")
     ap.add_argument("--ignore-known", action="store_true",
                     help="no aplicar excepciones tipadas: muestra lo que tapan")
+    ap.add_argument("--check", default=None, const=str(DEFAULT_REPORT), nargs="?",
+                    help="contra-verificar el artefacto publicado contra el calculo en memoria")
     ap.add_argument("--json", action="store_true", help="salida maquina")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args(argv)
@@ -1024,10 +1173,24 @@ def main(argv=None) -> int:
         publicar(reporte, Path(args.write_report))
 
     viol = verificar(reporte)
+    ruta_check = Path(args.check) if args.check else None
+    # La clausula manda sobre el derivado: con un hallazgo en el codigo, decir «ademas el artefacto
+    # esta vencido» desvia a quien repara. El check solo opina cuando no hay rojo de cableado.
+    estado, divergencias, digest = (
+        comparar_derivado(ruta_check, reporte) if ruta_check
+        else (None, [], ""))
+
     if args.json:
-        print(json.dumps({"resumen": resumen_de(reporte), "violaciones": viol},
-                         ensure_ascii=False, indent=2))
-        return 1 if viol else 0
+        payload = {"resumen": resumen_de(reporte), "violaciones": viol}
+        if ruta_check:
+            payload["derivado"] = {
+                "ruta": _relativo(ruta_check, ROOT), "estado": estado,
+                "divergencias": divergencias, "digest": digest,
+            }
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        if viol:
+            return 1
+        return CODIGO_DEL_ESTADO[estado] if ruta_check else 0
 
     if viol:
         if not args.quiet:
@@ -1039,9 +1202,15 @@ def main(argv=None) -> int:
             print("  (para ver lo que tapan las excepciones tipadas: --ignore-known)")
         return 1
 
-    if not args.quiet:
+    codigo = CODIGO_DEL_ESTADO[estado] if ruta_check else 0
+    if ruta_check:
+        # El veredicto del derivado va ANTES del resumen: quien consume la cola lee la ultima linea
+        # como el denominador poblado, y eso no se puede desplazar.
+        for linea in lineas_del_check(ruta_check, estado, divergencias, digest, args.quiet):
+            print(linea)
+    if codigo == 0 and not args.quiet:
         print(f"[OK] Wiring: {resumen_de(reporte)}")
-    return 0
+    return codigo
 
 
 if __name__ == "__main__":

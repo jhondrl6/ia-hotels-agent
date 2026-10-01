@@ -1,7 +1,7 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 611,
-    "archivos_excluidos_por_rol": 8285,
+    "archivos_en_alcance": 687,
+    "archivos_excluidos_por_rol": 8405,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -9,55 +9,26 @@
       "PlanValidator": "valida planes de contenido",
       "PrecisionValidator": "audita precision numerica, no promesa WhatsApp (AC7: excluir)"
     },
-    "gobernadas_resueltas": 70,
-    "llamadas_descubiertas": 169,
+    "gobernadas_resueltas": 75,
+    "llamadas_descubiertas": 174,
     "por_clasificacion": {
       "EXCLUIDA_POR_CLASE": 43,
       "EXCLUIDA_POR_CLASE_NO_GOBERNADA": 31,
-      "GOBERNADA_CONFORME": 14,
-      "GOBERNADA_CON_OMISION": 3,
+      "GOBERNADA_CONFORME": 21,
       "RECEPTOR_NO_RESUELTO": 25,
-      "TEST_EXENTO_DE_SENAL": 53
+      "TEST_EXENTO_DE_SENAL": 54
     },
     "receptores_no_resueltos": 25,
     "receptores_no_resueltos_en_produccion": 0
   },
   "comando": "python scripts/validate_wiring.py --write-report",
-  "excepciones_aplicadas": [
-    {
-      "ac": "AC1",
-      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-      "baja_cuando": "generate_assets propague whatsapp_html_detected a detect_pains",
-      "dueno": "FASE-B",
-      "linea_amparada": 286,
-      "motivo": "Divergencia real de la fila F-A' del maestro §1: es el hallazgo que este verificador debe poder nombrar, no un falso positivo. Sigue abierto porque corregir el caller le toca a FASE-B (AC1) y G corre antes.",
-      "senal": "whatsapp_html_detected",
-      "simbolo": "PainSolutionMapper.detect_pains",
-      "tipo_excepcion": "HALLAZGO_CONOCIDO"
-    },
-    {
-      "ac": "AC1",
-      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-      "baja_cuando": "el caller propague la senal",
-      "dueno": "FASE-B",
-      "linea_amparada": 309,
-      "motivo": "Misma causa, invocacion pre-gen del orquestador. Precision medida por G: la divergencia no es una linea, son tres.",
-      "senal": "whatsapp_html_detected",
-      "simbolo": "CoherenceValidator.validate",
-      "tipo_excepcion": "HALLAZGO_CONOCIDO"
-    },
-    {
-      "ac": "AC1",
-      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
-      "baja_cuando": "el caller propague la senal",
-      "dueno": "FASE-B",
-      "linea_amparada": 447,
-      "motivo": "Misma causa, invocacion post-gen. Registrada aparte para que el conteo de hallazgos no se reduzca corrigiendo solo una de las tres.",
-      "senal": "whatsapp_html_detected",
-      "simbolo": "CoherenceValidator.validate",
-      "tipo_excepcion": "HALLAZGO_CONOCIDO"
-    }
-  ],
+  "excepciones_aplicadas": [],
+  "excluidos_por_declaracion_git": {
+    "cantidad": 684,
+    "ejemplo": "tmp_test/venv-jev-sdk/Lib/site-packages/annotated_types/__init__.py",
+    "estado": "GIT_OK",
+    "motivo": "el propio repositorio los declara ignorados por `.gitignore`, asi que no son fuente del contrato: gobernarlos seria medir senales dentro de un entorno virtual o de un scratch que el proyecto ya rechazo. La tabla de roles no alcanza para esto porque lo ignorado no esta versionado, y una lista de nombres depende de que alguien se acuerde de ampliarla"
+  },
   "exclusiones_por_rol": {
     ".venv-wsl": {
       "cantidad": 582,
@@ -70,28 +41,28 @@
       "motivo": "registro historico cerrado; gobernarlo implicaria reescribir historia"
     },
     "build": {
-      "cantidad": 8,
-      "ejemplo": "venv/Lib/site-packages/pip/_internal/operations/build/__init__.py",
+      "cantidad": 14,
+      "ejemplo": "tmp_test/venv-jev-sdk/Lib/site-packages/pip/_internal/operations/build/__init__.py",
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
-      "cantidad": 34,
+      "cantidad": 115,
       "ejemplo": "evidence/FASE-A/faseA_contrafactual.py",
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
-      "cantidad": 60,
+      "cantidad": 72,
       "ejemplo": "temp/_verify_salentoreal.py",
       "motivo": "scratch y respaldos locales (gitignorado), no fuente versionada"
     },
     "venv": {
-      "cantidad": 7589,
+      "cantidad": 7610,
       "ejemplo": "venv/Lib/site-packages/_pytest/__init__.py",
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-09-20T15:15:18+00:00",
-  "git_sha": "d7ff932",
+  "generado": "2026-10-01T00:13:23+00:00",
+  "git_sha": "5145173",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -99,7 +70,8 @@
     "los tests estan exentos de la exigencia de `senales` (ejercitan defaults a proposito) pero NO de `argumentos_prohibidos`",
     "gobernar `validate` por nombre de metodo seria un falso verde: solo se gobierna cuando el receptor resuelve a una clase de `GOBERNADOS`",
     "una funcion de MODULO que se llame como un metodo gobernado (`validate_opencode_refs.validate(...)`) resuelve a su modulo y queda excluida: gobernar funciones de modulo pediria tabla propia de (modulo, funcion), no la de clases. Limite medido al inventariar las 74 exclusiones del arbol",
-    "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO prueba que no existan callers fuera del alcance del AST"
+    "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO prueba que no existan callers fuera del alcance del AST",
+    "el alcance por declaracion de Git **falla hacia abajo**: si no hay Git o el arbol no es un repositorio, `excluidos_por_declaracion_git` sale con `estado` SIN_GIT y `cantidad` 0, y el alcance vuelve a ser el que goberna `EXCLUSIONES_POR_ROL`. El regreso es sobre-inclusivo (reaparece el falso positivo del aislado), nunca ciego a codigo del proyecto; el estado se publica en la misma clave para que el lector pueda comprobar cual de los dos casos esta viendo"
   ],
   "modo_excepciones": "APLICADAS",
   "poblacion": [
@@ -192,7 +164,7 @@
       "gobernado": true,
       "hay_kwargs_opacos": false,
       "kwargs_presentes": [],
-      "linea": 2938,
+      "linea": 2943,
       "metodo": "with_validation",
       "posicionales": 1,
       "prohibidos_presentes": [],
@@ -206,20 +178,20 @@
     {
       "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
       "clase_resuelta": "PainSolutionMapper",
-      "clasificacion": "GOBERNADA_CON_OMISION",
+      "clasificacion": "GOBERNADA_CONFORME",
       "en_tests": false,
       "gobernado": true,
       "hay_kwargs_opacos": false,
-      "kwargs_presentes": [],
-      "linea": 286,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 299,
       "metodo": "detect_pains",
       "posicionales": 3,
       "prohibidos_presentes": [],
       "receptor": "self.pain_mapper",
       "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "whatsapp_html_detected"
-      ],
+      "senales_ausentes": [],
       "senales_requeridas": [
         "whatsapp_html_detected"
       ]
@@ -227,22 +199,21 @@
     {
       "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
       "clase_resuelta": "CoherenceValidator",
-      "clasificacion": "GOBERNADA_CON_OMISION",
+      "clasificacion": "GOBERNADA_CONFORME",
       "en_tests": false,
       "gobernado": true,
       "hay_kwargs_opacos": false,
       "kwargs_presentes": [
-        "site_presence_report"
+        "site_presence_report",
+        "whatsapp_html_detected"
       ],
-      "linea": 309,
+      "linea": 327,
       "metodo": "validate",
       "posicionales": 4,
       "prohibidos_presentes": [],
       "receptor": "self.coherence_validator",
       "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "whatsapp_html_detected"
-      ],
+      "senales_ausentes": [],
       "senales_requeridas": [
         "whatsapp_html_detected"
       ]
@@ -250,23 +221,22 @@
     {
       "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
       "clase_resuelta": "CoherenceValidator",
-      "clasificacion": "GOBERNADA_CON_OMISION",
+      "clasificacion": "GOBERNADA_CONFORME",
       "en_tests": false,
       "gobernado": true,
       "hay_kwargs_opacos": false,
       "kwargs_presentes": [
         "generated_assets",
-        "site_presence_report"
+        "site_presence_report",
+        "whatsapp_html_detected"
       ],
-      "linea": 447,
+      "linea": 466,
       "metodo": "validate",
       "posicionales": 4,
       "prohibidos_presentes": [],
       "receptor": "self.coherence_validator",
       "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "whatsapp_html_detected"
-      ],
+      "senales_ausentes": [],
       "senales_requeridas": [
         "whatsapp_html_detected"
       ]
@@ -1104,6 +1074,90 @@
       ]
     },
     {
+      "archivo": "tests/commercial_documents/test_fase_b_promesa_whatsapp.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 108,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_fase_b_promesa_whatsapp.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 173,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_fase_b_promesa_whatsapp.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 195,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_fase_b_promesa_whatsapp.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "whatsapp_html_detected"
+      ],
+      "linea": 330,
+      "metodo": "detect_pains",
+      "posicionales": 3,
+      "prohibidos_presentes": [],
+      "receptor": "PainSolutionMapper()",
+      "resolucion": "constructor_en_linea",
+      "senales_ausentes": [],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
       "archivo": "tests/commercial_documents/test_pain_solution_mapper.py",
       "clase_resuelta": "PainSolutionMapper",
       "clasificacion": "TEST_EXENTO_DE_SENAL",
@@ -1599,7 +1653,7 @@
         "assets_generated",
         "detected_pain_ids"
       ],
-      "linea": 131,
+      "linea": 138,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1625,7 +1679,7 @@
         "assets_generated",
         "detected_pain_ids"
       ],
-      "linea": 163,
+      "linea": 176,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1633,81 +1687,6 @@
       "resolucion": "self_binding_en_la_clase",
       "senales_ausentes": [
         "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
-        "assets_generated"
-      ],
-      "linea": 319,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
-        "assets_generated"
-      ],
-      "linea": 326,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
-        "assets_generated",
-        "site_presence_report"
-      ],
-      "linea": 338,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
         "whatsapp_conflict"
       ],
       "senales_requeridas": [
@@ -1748,84 +1727,9 @@
       "gobernado": true,
       "hay_kwargs_opacos": false,
       "kwargs_presentes": [
-        "score_aeo"
-      ],
-      "linea": 355,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
-        "score_aeo"
-      ],
-      "linea": 360,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
         "assets_generated"
       ],
-      "linea": 410,
-      "metodo": "_generate_dynamic_services_table",
-      "posicionales": 0,
-      "prohibidos_presentes": [],
-      "receptor": "self.gen",
-      "resolucion": "self_binding_en_la_clase",
-      "senales_ausentes": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ],
-      "senales_requeridas": [
-        "site_presence_report",
-        "whatsapp_conflict"
-      ]
-    },
-    {
-      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
-      "clase_resuelta": "V4ProposalGenerator",
-      "clasificacion": "TEST_EXENTO_DE_SENAL",
-      "en_tests": true,
-      "gobernado": true,
-      "hay_kwargs_opacos": false,
-      "kwargs_presentes": [
-        "assets_generated"
-      ],
-      "linea": 453,
+      "linea": 357,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1851,7 +1755,7 @@
         "assets_generated",
         "site_presence_report"
       ],
-      "linea": 473,
+      "linea": 369,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1875,7 +1779,157 @@
       "kwargs_presentes": [
         "assets_generated"
       ],
-      "linea": 499,
+      "linea": 381,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "score_aeo"
+      ],
+      "linea": 386,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "score_aeo"
+      ],
+      "linea": 391,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 441,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 485,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "site_presence_report"
+      ],
+      "linea": 505,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "whatsapp_conflict"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated"
+      ],
+      "linea": 531,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1903,7 +1957,7 @@
         "opportunity_scores",
         "whatsapp_conflict"
       ],
-      "linea": 607,
+      "linea": 639,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -1930,7 +1984,34 @@
         "opportunity_scores",
         "whatsapp_conflict"
       ],
-      "linea": 645,
+      "linea": 679,
+      "metodo": "_generate_dynamic_services_table",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "self.gen",
+      "resolucion": "self_binding_en_la_clase",
+      "senales_ausentes": [
+        "site_presence_report"
+      ],
+      "senales_requeridas": [
+        "site_presence_report",
+        "whatsapp_conflict"
+      ]
+    },
+    {
+      "archivo": "tests/commercial_documents/test_proposal_dynamic.py",
+      "clase_resuelta": "V4ProposalGenerator",
+      "clasificacion": "TEST_EXENTO_DE_SENAL",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "assets_generated",
+        "detected_pain_ids",
+        "opportunity_scores",
+        "whatsapp_conflict"
+      ],
+      "linea": 691,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -3416,7 +3497,7 @@
       ]
     }
   },
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "verificador": "scripts/validate_wiring.py",
   "violaciones": []
 }

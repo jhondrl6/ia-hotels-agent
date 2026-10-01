@@ -683,6 +683,13 @@ class ValidationRunner:
         deducible; el verificador los cuenta y los publica. Un verde aqui prueba que la
         poblacion descubierta esta conforme o registrada, NO que no existan callers
         invisibles.
+
+        Codigos que traduce (cada uno con su diagnostico, porque senalan reparaciones distintas):
+        0 conforme · 1 hallazgos de cableado o de clausula de produccion · 2 verificador o lector
+        caido (arbol ausente, artefacto AUSENTE o ILEGIBLE) · 3 el derivado versionado
+        `.opencode/wiring_report.json` DIVERGE del calculo en memoria. El 3 existe porque el
+        artefacto esta versionado, publica contadores que se leen como vigentes y hasta aqui nadie
+        lo contra-verificaba: la cola lo recalculaba y tiraba el resultado.
         """
         print("[11/13] Checking signal wiring by AST (AC7/AC16)...")
 
@@ -695,32 +702,43 @@ class ValidationRunner:
             ))
             return
 
-        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        exit_code, output = self._run_command([sys.executable, str(script_path), "--check"])
         lineas = [l for l in output.splitlines() if l.strip()]
+        resumen = next((l for l in lineas if l.startswith("[OK] Wiring: ")), None)
+        resumen = (resumen or (lineas[-1] if lineas else "")).replace("[OK] Wiring: ", "")
 
         if exit_code == 0 and lineas:
             self.results.append(ValidationResult(
                 name="Wiring",
                 passed=True,
                 # El mensaje LLEVA el denominador: un [OK] sin poblacion contada es L-R.3.
-                message=lineas[-1].replace("[OK] Wiring: ", ""),
+                message=resumen,
             ))
         elif exit_code == 2:
             # LECTOR-FALLIDO con nombre propio: nunca un favorable, nunca un 0 (R2.9).
             self.results.append(ValidationResult(
                 name="Wiring",
                 passed=False,
-                message="verificador no pudo medir (READ_ERROR, no ausencia de hallazgos)",
+                message=("verificador no pudo medir (READ_ERROR, no ausencia de hallazgos): "
+                         "arbol ausente, o el artefacto que --check lee esta AUSENTE/ILEGIBLE"),
                 details=lineas[:5],
+            ))
+        elif exit_code == 3:
+            self.results.append(ValidationResult(
+                name="Wiring",
+                passed=False,
+                message=("el artefacto publicado esta vencido: .opencode/wiring_report.json "
+                         "DIVERGE del calculo en memoria (no falta un caller, falta publicar)"),
+                details=[l.strip()[2:] for l in lineas if l.strip().startswith("- ")][:5] or lineas[:5],
             ))
         else:
             issues = [l.strip()[2:] for l in lineas if l.strip().startswith("- ")][:5]
             self.results.append(ValidationResult(
                 name="Wiring",
                 passed=False,
-                message=("cableado divergente: falta una senal requerida en algun caller, "
-                         "o el contrato muerto reaparece (el verificador reporta, no "
-                         "reescribe)"),
+                message=("cableado divergente: falta una senal requerida en algun caller, el "
+                         "contrato muerto reaparece, o quedo un hueco de cobertura en produccion "
+                         "(el verificador reporta, no reescribe)"),
                 details=issues or lineas[:5],
             ))
 
