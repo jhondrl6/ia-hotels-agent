@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,651 funciones totales)
+### Cobertura por Modulo (4,682 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -413,6 +413,23 @@ python scripts/run_all_validations.py           # Completo
 > regresion que D-c dejo ver) viajan con la cifra, que es la regla de la casa. Eso es el estado de **ese
 > commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
 > cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+>
+> **Segunda ronda del 2026-09-30 (la cifra subio a 4,682).** Medido con el metodo canonico de la casa
+> (`grep -rE "^\s*def test_" tests --include=*.py` = **4,682**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests` = **4,682** en `fbfdc57`, y vuelve a dar 4.682 en el commit
+> que lleva esta nota, porque esta edicion no anade ni quita ninguna funcion-test): **las dos cifras cuadran**,
+> segunda ronda seguida sin tocar el arbol para medirlas. El delta contra la ronda anterior (4.651, publicada
+> **ese mismo dia** mas abajo) es **+31** y cae **entero** en la fila `root test files` (1.013 → **1.044**), en
+> tres baterias que se nombran con su dueno porque no son tres de la misma tanda: **+12** en el nuevo
+> `tests/test_validate_wiring_alcance_por_declaracion_git.py` — el paso 1 del wiring (salida (c), alcance por
+> declaracion de Git), trabajo de la sesion anterior publicado en `abd181c`, que esta nota incorpora porque la
+> nota de 4.651 se escribio cuando esas doce todavia no estaban en el arbol; y los dos pasos de esta tanda,
+> **+8** en el nuevo `tests/test_validate_wiring_criterio_en_el_exit.py` (paso 2: el criterio de la clausula de
+> produccion codificado en el EXIT, con su control negativo ejecutando el instrumento de `abd181c`) y **+11** en
+> el nuevo `tests/test_validate_wiring_check_derivado_versionado.py` (paso 3: `--check` sobre el derivado
+> versionado, con los tres estados del lector, dos mutantes y la traduccion del codigo nuevo en la cola). Las
+> otras 21 filas no se movieron y la suma de las 22 vuelve a dar exactamente **4,682** (verificado por
+> directorio con el mismo metodo grep y por `tests/*.py` para la fila de raiz, no sumando la columna de memoria).
 >
 > **Ronda del 2026-09-30 (la cifra subio a 4,651).** Medido con el metodo canonico de la casa
 (`grep -rE "^\s*def test_" tests --include=*.py` = **4,651**) y contrastado con el arbol versionado
@@ -572,7 +589,7 @@ como se publico: **4,611** (ronda del 2026-09-28, publicado en la tanda de `0e9c
 | providers | 18 | `tests/providers/` |
 | monitoring | 14 | `tests/monitoring/` |
 | archived (no coleccionables) | 220 | `tests/_archived_broken_tests/` |
-| root test files | 1013 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido; **+40 en la ronda del 2026-09-30**: 6 en `test_registry_fecha_documental.py` (14 → 20, la cura de D-F5 con sus rechazos y su forma ISO), 5 en el nuevo `test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), 17 en el nuevo `test_verify_qmind_context_freshness.py` (S34, con su control negativo contra el hermano versionado) y 12 en el nuevo `test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29: gobernar la descripcion del alcance, no solo el alcance) |
+| root test files | 1044 | `tests/*.py` (integration, harness, data models, multi-hotel P6/P6-R, `functional_test_*`, los validadores de gobernanza, la cura S17/S18 y las cuatro baterias de la orden 2026-09-26: S15, el verificador del arbol del commit, su cura S20 y la cura (b) de S19; mas los dos controles de 2026-09-27 que atan la resolucion del plan archivado a `resolver_plan()` del escritor, el control de la ronda S29 anclado a la **revision fija** `9c4a001` con `git archive`, y los **+3** de la ronda S17 del mismo dia: el quinto escritor `validate_opencode_refs.py` con su `--fix`, su `--write-baseline` y su guard de destino por operaciones observadas — un verde aditivo que sin arbol versionado no tendria oportunidad de perder; **+12 en la ronda del 2026-09-28**: 7 en `test_sync_writers_lf_y_fecha_readme.py` (10 → 17: la forma que promueve `--fix`, el delta EOL contra la forma citada, la cuenta de escritores LF y el ancla del control C7) y 5 nuevas en `test_run_all_validations_denominador_por_modo.py`, la cura de S21 con su [GUARDA] tambien fuera del rapido; **+40 en la ronda del 2026-09-30**: 6 en `test_registry_fecha_documental.py` (14 → 20, la cura de D-F5 con sus rechazos y su forma ISO), 5 en el nuevo `test_verify_packs_quinto_patron_generado_por_sha.py` (S19(d) salida (c)), 17 en el nuevo `test_verify_qmind_context_freshness.py` (S34, con su control negativo contra el hermano versionado) y 12 en el nuevo `test_validate_lesson_capitalization_c9_descripcion_alcance.py` (el sub-punto de S29: gobernar la descripcion del alcance, no solo el alcance); **+31 en la segunda ronda del 2026-09-30**, las tres baterias del wiring: 12 en `test_validate_wiring_alcance_por_declaracion_git.py` (el paso 1, alcance por declaracion de Git, llegado de la tanda anterior), 8 en el nuevo `test_validate_wiring_criterio_en_el_exit.py` (el paso 2: la clausula de produccion en el EXIT, con su control negativo anclado a `abd181c`) y 11 en el nuevo `test_validate_wiring_check_derivado_versionado.py` (el paso 3: `--check` sobre `.opencode/wiring_report.json`, con los tres estados del lector y dos mutantes) |
 
 ---
 
