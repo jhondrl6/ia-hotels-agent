@@ -78,3 +78,62 @@ repositorio en LF. Consecuencia directa sobre la decision de la fila 1 (D-B): si
 declarado**, porque sobre estas tres piezas el mismo contenido da dos shas segun donde se lea. Y la nota
 queda vencida en cuanto alguien normalice las originales: se re-mide, no se re-firma de memoria.
 
+⟦**Nota fechada 2026-10-02 — la fila `tmp_test/` de §«Lo que queda pendiente» esta vencida en su mitad (c), y
+los dos defectos que descubrio `04-` tampoco siguen abiertos.** No se re-escribe la fila: se declara aqui su
+estado medido hoy. Crudo de todas las mediciones de esta nota:
+`../PREPARACION-DECISION-2026-10-02/01-re-medicion-2026-10-02.txt`, cada salida con su comando literal encima.
+
+**La salida (c), verificada con tres mediciones independientes** (no por cita):
+1. `grep -n "^tmp_test/" .gitignore` → `28:tmp_test/`. **Correccion de atribucion, y es la que le falla al
+   prompt que pidio esta nota**: esa declaracion **no es nueva del 2026-10-01**. Medido con
+   `git log --date=short --format="%h %ad %s" -S"tmp_test" -- .gitignore` da `ede7fcb 2026-03-26 chore:
+   Actualizar .gitignore para excluir test outputs y agent memory`, y
+   `git log --since=2026-09-29 --date=short --format="%h %ad %s" -- .gitignore` da **0 lineas**. El
+   `.gitignore` declara el aislado desde antes de que este plan existiera; el `git ls-files tmp_test` de la
+   fila de arriba (**0 lineas**) ya lo decia.
+2. `python scripts/run_all_validations.py --quick` → el check `[11/13]` Wiring publica
+   `… | 684 excluidos por declaracion de Git | …` y el cierre `TOTAL: 13/13 validations passed`.
+3. `python scripts/validate_wiring.py --check` → **EXIT 0** con
+   `derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest 6a1e66b443f7…)`.
+   Un cuarto dato, leido del informe escrito con destino explicito a `temp/` (nunca al versionado):
+   `cobertura.excluidos_por_declaracion_git` es `{"cantidad": 684, "estado": "GIT_OK", "ejemplo":
+   "tmp_test/venv-jev-sdk/…"}` sobre `schema_version 1.2`.
+
+**Cuando se aplico realmente (c)**, medido con
+`git log --date=short --format="%h %ad %s" -S"excluidos_por_declaracion_git" -- scripts/validate_wiring.py`:
+`abd181c 2026-09-30 fix(scripts): el alcance del wiring se goberna por la declaracion del propio Git (paso 1,
+salida (c))` y `0731741 2026-10-01 feat(wiring): adopta la cura del derivado versionado del agente suspendido
+(schema 1.2)`; `git merge-base --is-ancestor` confirma que los dos son ancestros de HEAD. Los dos **fuera de
+este plan**, en la orden de calidad del hermano. Con las horas del mismo comando
+(`git show -s --format="%h %ci %s"`): `abd181c` a las 16:18:59 del 2026-09-30, mientras el mtime de **este
+archivo** es 14:20 de ese dia. O sea que la fila (c) de la tabla de arriba nacio vigente y **quedo vencida el
+mismo dia, dos horas y media despues de escribirse**; la fecha que le asignaba el prompt de esta sesion
+(2026-10-01) le borra el paso 1. Las salidas (a) y (b) de esa misma fila siguen sin aplicarse, pero ya no
+tienen rojo que apagar: el rojo que las motivaba ya lo apago (c).
+
+**Defecto 1 de `04-` — «EXIT 0 del verificador con la clausula rota»: no se reproduce hoy.** Leido en el
+codigo: `scripts/validate_wiring.py` define `_hallazgos_del_criterio`, que convierte los dos rojos de la
+clausula de produccion (`HUECO_DE_COBERTURA_EN_PRODUCCION`, `VERDE_VACIO_SIN_GOBERNADOS_RESUELTOS`) en
+hallazgos que `verificar()` devuelve como `viol`, y un `viol` no vacio retorna **EXIT 1 antes** de que el
+`--check` opine sobre el derivado. La cura es `5145173 2026-09-30 fix(scripts): la clausula de produccion del
+wiring se codifica en el EXIT (paso 2)` (ancestro de HEAD) y su bateria esta versionada:
+`git ls-files tests | grep -E "criterio_en_el_exit"` → `tests/test_validate_wiring_criterio_en_el_exit.py`.
+Poblacion de hoy: `cobertura.receptores_no_resueltos_en_produccion` = **0**, y el filtro directo sobre
+`poblacion` (`clasificacion == RECEPTOR_NO_RESUELTO` y `en_tests` falso) da **0** — dos lecturas del mismo
+informe, no una cita. **Limite declarado de esta nota**: no se corrio un mutante, porque esta sesion no
+puede escribir en `scripts/**`; el contrafactual lo prueba la bateria versionada, no esta re-medicion, y un
+verde de hoy sobre una poblacion con cero huecos de produccion no afirma que la clausula muerda.
+
+**Defecto 2 de `04-` — «el informe versionado esta vencido sin instrumento que lo corte»: curado.** La bandera
+existe desde `fbfdc57 2026-09-30 feat(scripts): el derivado versionado del wiring se contra-verifica con
+--check (paso 3)` (ancestro de HEAD), corre dentro del rapido en `[11/13]`, y su lectura de hoy es CONFORME
+con digest impreso; su bateria `tests/test_validate_wiring_check_derivado_versionado.py` esta versionada.
+**Lo que de `04-` sigue vigente y no se cura aqui**: la nota de instrumento del §«Nota de instrumento» de
+arriba —el `const` de `--write-report` sigue apuntando al informe versionado, y correrla sin argumento
+destino sigue re-escribiendolo.
+
+**Dueno**: la fila original sigue siendo del dueno de `scripts/validate_wiring.py` y del registro `33-` del
+hermano. Esta nota no la borra ni la re-escribe: declara que el 2026-10-02, sobre HEAD `ed44c51`, la salida
+(c) esta aplicada y verificada por tres mediciones, y que los dos defectos de `04-` no sobreviven a la
+re-medicion.⟧
+

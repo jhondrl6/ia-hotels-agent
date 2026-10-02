@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 422,
     "ids_con_definicion": 340,
-    "ids_citados_sin_definicion": 54,
+    "ids_citados_sin_definicion": 56,
     "fechas_por_fuente": {
       "nombre": 329,
       "commit": 11,
@@ -3885,7 +3885,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 77,
+      "total_citas": 79,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -5531,6 +5531,22 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "context/Refuerzo"
+      ]
+    },
+    {
+      "id": "D-B",
+      "familia": "D",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+      ]
+    },
+    {
+      "id": "D-D",
+      "familia": "D",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ]
     },
     {

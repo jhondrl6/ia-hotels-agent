@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `16` análisis de plan + `39` archivos de `.opencode/context/`. `422` `.md` en total como corpus de **citas**.
-- 340 IDs con definición detectada; 54 IDs citados sin definición (ver última sección).
+- 340 IDs con definición detectada; 56 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -34,7 +34,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
-| — | Citados sin definición | 54 |
+| — | Citados sin definición | 56 |
 
 ## `L-*` — Lecciones aprendidas (196)
 
@@ -213,7 +213,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-VCF-16` | El primer ancla del mutante de AC23 no atribuyó: apagado GUARD_NO_TRUNCAMIENTO_ACTIVO, el pack de FASE-RELEASE perdía el bloque de declaración pero la aserción nombra_la_fuente_pedida seguía en True… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
 | `L-VCF-17` | Escribir los packs rompió un gate ajeno: docs/CONTRIBUTING.md entraba al pack por una sección declarada, y la regla de la fase era «el pack se escribe dentro del plan». Copiarlo a… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 26 (solo el plan dueño) |
 | `L-VCF-18` | FASE-D publicó en 09 §D un par def test_ 4.360 → 4.404 («medido al abrir la fase»). Al cerrar, el mismo comando canónico no dio 4.360 sobre ningún árbol: disco 4.557, git grep sobre HEAD 4.470, y… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 11 (solo el plan dueño) |
-| `L-VCF-19` | FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 77 (solo el plan dueño) |
+| `L-VCF-19` | FASE-D transcribió su propia medición de AC20 a tres documentos de cierre (00 §4, 06 AC20/AC23, 10), y cada barrido documental posterior la venció: al regenerar los packs tras escribir el cierre, el… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 79 (solo el plan dueño) |
 | `L-VCF-20` | La tanda de commits de cierre del 2026-09-27 separó el corpus con sus packs (f496914) del workflow (5446cb7) apoyándose en una premisa que se creyó medida: «el workflow entra al pack como lectura… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 37 (solo el plan dueño) |
 | `L-VERIFY.1` | Los documentos del plan (D-AJUST.4, 01-plan-maestro.md) mencionan GATE_BLOCKING_ENABLED y GATE_ENFORCEMENT_ENABLED como dos llaves del bloqueo. Medido con grep: solo GATE_BLOCKING_ENABLED existe en… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 5 (solo el plan dueño) |
 | `L-VERIFY.2` | La matriz T1 buscaba blocks_publish en el acta JSON y no lo encontró. Existe en TribunalOutcome (outcome.py L153) como atributo DTO, pero acta_writer.py no lo serializa. El acta comunica el bloqueo… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase) | 2 (solo el plan dueño) |
@@ -396,7 +396,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (54)
+## Citados sin definición (56)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -440,6 +440,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-I1..S-I8` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `D-09` | 1 | context/Refuerzo |
 | `D-10` | 1 | context/Refuerzo |
+| `D-B` | 1 | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 |
+| `D-D` | 1 | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 |
 | `D-T1` | 1 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `DA-T4B.2` | 1 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `DA-T4B.4` | 1 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |

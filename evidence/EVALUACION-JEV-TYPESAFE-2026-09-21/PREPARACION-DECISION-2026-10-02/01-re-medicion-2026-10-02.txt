@@ -1,0 +1,343 @@
+Crudo de la sesion de reconciliacion documental y paquete decision-ready del 2026-10-02, sobre la pareja
+EVALUACION-JEV-TYPESAFE-2026-09-21 (JEV) y VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 (VCF).
+
+Contenido: PASO 0 (re-medicion de partida) y PASO 1 (verificacion contra disco de las tres afirmaciones con
+las que abrio la sesion). No es una fase de ninguno de los dos planes; no se etiqueto, no se congelo, no se
+infirio, no hubo escritura de codigo, no hubo commit ni push.
+
+Como leerlo:
+- Cada salida va precedida de su comando literal, entre marcadores «=== COMANDO: ... ===», y cada bloque
+  cierra con su «--- EXIT=...». Los EXIT se leen del comando, no de la cadena shell.
+- «git fetch origin --quiet» es el unico comando de la tanda que toca la red; es de solo lectura sobre el
+  arbol de trabajo y lo pide el propio prompt de sesion para medir la paridad. Ningun otro comando llamo a
+  una API.
+- «validate_wiring.py --write-report» se corrio SOLO con destino explicito bajo temp/: su const apunta al
+  informe versionado y correrla sin argumento lo re-escribiria. El crudo de esa corrida es el informe
+  copiado a temp/, no el versionado.
+- Nota de instrumento, medida y no deducida: el payload de «validate_wiring.py --check --json» publica
+  «resumen» como CADENA. Un lector que lo indexa por clave falla con
+  «TypeError: string indices must be integers, not 'str'» y ese error se publico crudo arriba, con su
+  re-medicion debajo.
+- Nota de bytes, para quien re-mida shas sobre este archivo: las lineas impresas por procesos de Python
+  redirectadas con «>» salen con CRLF bajo Windows. Sobre los dos bloques pegados abajo, medido con
+  «tr -cd '\r' < archivo | wc -c»: el bloque del PASO 0 trae 74 CR en 130 LF, y el del PASO 1 trae 64 CR en
+  175 LF. El repositorio esta en LF (core.autocrlf=input), asi que el blob de este archivo no casa con sus
+  bytes en disco: es el artefacto documentado de la tanda del 2026-09-30 sobre las tres piezas del piloto,
+  no un cambio de contenido.
+
+Nota de codificacion, medida y no supuesta: las dos unicas lineas de este archivo que NO son UTF-8 valido
+son salida cruda de la consola de Windows, que imprime en cp1252: la linea de SyntaxWarning del bloque de
+pytest (un `(?![^\W\d_])` del propio codigo) y la linea `Client Material: ... con due-o` del rapido. Se
+publican asi, a nivel de byte, porque re-codificar el artefacto para 'arreglarlo' es lo que convierte un
+crudo en una composicion ajena (precedente documentado en la tanda del 2026-09-25 sobre los .txt de
+evidencia). Si alguien edita este archivo con una herramienta que re-escriba todo el texto, perdio el
+resto de las lineas por camino: se edita a nivel de byte y se exige numstat de una linea.
+
+################ PASO 0 — re-medicion de partida ################
+### PRE — re-medicion de partida 2026-10-02 (sesion de reconciliacion documental JEV/VCF)
+### cwd: /c/Users/Jhond/Github/iah-cli
+
+=== COMANDO: git rev-parse --short HEAD ===
+ed44c51
+--- EXIT=0
+
+=== COMANDO: git status --porcelain -uno ===
+--- EXIT=0
+
+=== COMANDO: git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD ===
+--- EXIT(git fetch origin --quiet)=0
+0	0
+--- EXIT(git rev-list --left-right --count origin/master...HEAD)=0
+
+=== COMANDO: ls scripts/decision_client.py scripts/triage_lesson_relevance.py ===
+scripts/decision_client.py
+scripts/triage_lesson_relevance.py
+--- EXIT=0
+
+=== COMANDO: python scripts/decision_client.py --provider-status ===
+{
+  "provider_status": "NO-CONFIGURADO",
+  "motivo_clase": "env-de-proveedor-sin-definir",
+  "motivo": "IAH_DECISION_PROVIDER no esta definido: no hay proveedor nombrado y esta costura no elige uno por su cuenta",
+  "buscado": {
+    "IAH_DECISION_PROVIDER": null,
+    "IAH_DECISION_PROVIDERS_DIR": null
+  }
+}
+--- EXIT=1
+
+=== COMANDO: python -m pytest tests/quality_gates/jev_pilot -q ===
+.......                                                                  [100%]
+7 passed in 0.22s
+--- EXIT=0
+
+=== COMANDO: python -m pytest tests/quality_gates/decision_client/ -q ===
+........................................................................ [ 82%]
+...............                                                          [100%]
+============================== warnings summary ===============================
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) � NO un \b � evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+87 passed, 2 warnings in 9.93s
+--- EXIT=0
+
+=== COMANDO: python scripts/build_lesson_index.py --check ===
+[OK] Índice de lecciones fresco (340 IDs)
+[fechas] nombre=329 commit=11 sin_fuente=0
+--- EXIT=0
+
+=== COMANDO: python scripts/build_phase_briefing.py --check --plan .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 ===
+[OK] FASE-A: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-B: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-C: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-D: 4 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+[OK] FASE-RELEASE: 10 fuentes frescas y proyeccion del workflow conforme (procedencia distinta, no vence)
+--- EXIT=0
+
+=== COMANDO: python scripts/run_all_validations.py --quick ===
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-10-02 15:15:01
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1370 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 3240 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 174 llamadas descubiertas en 688 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+--- EXIT=0
+
+=== COMANDO: sha256sum evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json ===
+1abfaafe100159f02096d70a1e9a90cc61cee5d3300e8c8af739dcc316053698 *evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json
+bf72272aa88837f81517f32d07958dee2c9c038f0dcd89b1c87229177d112dc0 *evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json
+fa327b5887ac36cdb2b225724499c62be6a4ba6b673618b8147d26bfb06a442d *evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json
+--- EXIT=0
+
+=== PRE — numero de IDs que imprime el --check del indice ===
+--- EXIT(grep IDs)=0 — se imprime abajo
+55:[OK] Índice de lecciones fresco (340 IDs)
+119:=== PRE — numero de IDs que imprime el --check del indice ===
+
+=== PRE — TOTAL del quick ===
+--- EXIT(grep TOTAL)=0 — se imprime abajo
+107:  TOTAL: 13/13 validations passed
+110:  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+124:=== PRE — TOTAL del quick ===
+
+### FIN PASO 0
+
+################ PASO 1 — verificacion de las tres afirmaciones contra disco ################
+=== COMANDO: grep -n "^tmp_test/" .gitignore ===
+28:tmp_test/
+--- EXIT=0
+
+=== COMANDO: grep -n "excluidos por declaracion" (linea del quick, ya medida en Paso 0) ===
+102:  [+] Wiring: 174 llamadas descubiertas en 688 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25
+--- EXIT=0
+
+=== COMANDO: python scripts/validate_wiring.py --check ===
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest 6a1e66b443f7)
+[OK] Wiring: 174 llamadas descubiertas en 688 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25
+--- EXIT=0
+
+=== COMANDO: git ls-files tmp_test (count) ===
+--- EXIT=0 lineas-arriba
+
+=== COMANDO: grep -cE '\"label\": null' etiquetas.json / grep -c '\"review_status\": \"sin_revisar\"' / grep -c '\"human_reviewed\": false' muestra.json ===
+4
+--- EXIT=0
+1
+--- EXIT=0
+1
+--- EXIT=0
+
+=== COMANDO: grep -c 'Ninguna fase de este plan es ejecutable hoy' README.md (JEV) ===
+1
+--- EXIT=0
+
+=== COMANDO: find . -name '*.jsonl' -not -path './venv/*' (precondicion D-V2.1) ===
+--- EXIT=0 — recuento:
+0
+
+=== COMANDO: ls -la evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-09-30/ ===
+total 112
+drwxr-xr-x 1 Jhond 197609     0 Sep 30 19:58 ./
+drwxr-xr-x 1 Jhond 197609     0 Oct  2 15:13 ../
+-rw-r--r-- 1 Jhond 197609  7053 Sep 30 14:20 00-checkpoint-de-preparacion.md
+-rw-r--r-- 1 Jhond 197609  9131 Sep 30 12:40 01-gap-de-contrato.md
+-rw-r--r-- 1 Jhond 197609  9784 Sep 30 12:46 02-material-muestra-y-umbrales.md
+-rw-r--r-- 1 Jhond 197609  7087 Sep 30 14:20 03-aislado-y-wiring.md
+-rw-r--r-- 1 Jhond 197609 11388 Sep 30 14:18 04-reinvestigacion-alerta-wiring-2026-09-30.md
+-rw-r--r-- 1 Jhond 197609  1500 Sep 30 12:45 05-shas-y-poblaciones-medidos.txt
+-rw-r--r-- 1 Jhond 197609  6995 Sep 30 16:36 06-sello-de-publicacion-paso1c-wiring-2026-09-30.md
+-rw-r--r-- 1 Jhond 197609 24697 Oct  1 15:32 07-sello-de-publicacion-pasos-2-3-y-letras-de-cierre-2026-09-30.md
+-rw-r--r-- 1 Jhond 197609   836 Sep 30 12:32 etiquetas-COPIA-IDENTICA.json
+-rw-r--r-- 1 Jhond 197609  2651 Sep 30 12:32 muestra-COPIA-IDENTICA.json
+-rw-r--r-- 1 Jhond 197609  1311 Sep 30 12:32 protocolo-COPIA-IDENTICA.json
+--- EXIT=0
+
+=== COMANDO: ls -la evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/SELLOS-ESTADO-2026-10-01/ ===
+total 16
+drwxr-xr-x 1 Jhond 197609    0 Oct  2 13:43 ./
+drwxr-xr-x 1 Jhond 197609    0 Oct  2 15:13 ../
+-rw-r--r-- 1 Jhond 197609 9851 Oct  2 13:43 00-parte.md
+--- EXIT=0
+
+
+=== COMANDO: python scripts/validate_wiring.py --check --json ===
+(el payload de --json trae 'resumen' como CADENA, no como dict; el primer intento de leerlo por claves dio este error, se publica crudo y se re-mide abajo)
+{
+  "resumen": "174 llamadas descubiertas en 688 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25",
+  "violaciones": [],
+  "derivado": {
+    "ruta": ".opencode/wiring_report.json",
+    "estado": "CONFORME",
+    "divergencias": [],
+    "digest": "6a1e66b443f7654364eea71e80befcb83e1003717922c39ddca694cd877016ec"
+  }
+}
+--- EXIT=0
+(nota de instrumento: un lector que indexa 'resumen' por clave da TypeError: string indices must be integers, not 'str'. El crudo de arriba es el payload real.)
+
+=== COMANDO: python scripts/validate_wiring.py --write-report temp/wiring-post-2026-10-02.json --quiet  (destino explícito a temp/, nunca el versionado) ===
+--- EXIT=0
+
+=== COMANDO: git ls-files tests | grep -E 'criterio_en_el_exit|check_derivado_versionado|alcance_por_declaracion_git' ===
+tests/test_validate_wiring_alcance_por_declaracion_git.py
+tests/test_validate_wiring_check_derivado_versionado.py
+tests/test_validate_wiring_criterio_en_el_exit.py
+--- EXIT=0
+
+=== COMANDO: python -c 'lectura de temp/wiring-post-2026-10-02.json: claves de cobertura y receptores_no_resueltos_en_produccion' ===
+claves de primer nivel: ['cobertura', 'comando', 'excepciones_aplicadas', 'excluidos_por_declaracion_git', 'exclusiones_por_rol', 'generado', 'git_sha', 'limites', 'modo_excepciones', 'poblacion', 'politica', 'schema_version', 'verificador', 'violaciones']
+cobertura: {"archivos_en_alcance": 688, "archivos_excluidos_por_rol": 8422, "archivos_excluidos_por_rol_versionado": 127, "exclusiones_por_clase": {"ContentValidator": "valida contenido generado", "EnvValidator": "valida variables de entorno", "NoDefaultsValidator": "audita defaults financieros, no senales de canal", "PlanValidator": "valida planes de contenido", "PrecisionValidator": "audita precision numerica, no promesa WhatsApp (AC7: excluir)"}, "gobernadas_resueltas": 75, "llamadas_descubiertas": 174, "por_clasificacion": {"EXCLUIDA_POR_CLASE": 43, "EXCLUIDA_POR_CLASE_NO_GOBERNADA": 31, "GOBERNADA_CONFORME": 21, "RECEPTOR_NO_RESUELTO": 25, "TEST_EXENTO_DE_SENAL": 54}, "receptores_no_resueltos": 25, "receptores_no_resueltos_en_produccion": 0}
+receptores_no_resueltos_en_produccion: None
+archivos_en_alcance: None
+poblacion con clasificacion RECEPTOR_NO_RESUELTO y en_tests=False:
+  0
+--- EXIT=0
+
+=== COMANDO: python -c 'lectura de temp/wiring-post-2026-10-02.json: excluidos_por_declaracion_git y schema_version' ===
+type: dict
+value: {"cantidad": 684, "ejemplo": "tmp_test/venv-jev-sdk/Lib/site-packages/annotated_types/__init__.py", "estado": "GIT_OK", "motivo": "el propio repositorio los declara ignorados por `.gitignore`, asi que no son fuente del contrato: gobernarlos seria medir senales dentro de un entorno virtual o de un scratch que el proyecto ya rechazo. La tabla de roles no alcanza para esto porque lo ignorado no esta 
+schema_version: 1.2
+comando: "python scripts/validate_wiring.py --write-report"
+--- EXIT=0
+
+=== COMANDO: python scripts/build_phase_briefing.py --listar-declarado --plan .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 ===
+FASE-A (05-prompt-inicio-sesion-fase-A.md): 6 items declarados, head ed44c51
+  - [archivo] 05-prompt-inicio-sesion-fase-A.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4'] | calificador la tabla A1-A4 con su rectificacion de A3, la medicion A7 y 
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador 
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2', '4'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-B (05-prompt-inicio-sesion-fase-B.md): 6 items declarados, head ed44c51
+  - [archivo] 05-prompt-inicio-sesion-fase-B.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['2', '4'] | calificador las filas del proveedor y D7
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador permisos y la regla de cero red
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-C (05-prompt-inicio-sesion-fase-C.md): 6 items declarados, head ed44c51
+  - [archivo] 05-prompt-inicio-sesion-fase-C.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4', '2'] | calificador la medicion del grep con cero coincidencias
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador permisos, regla de cero red y la seccion «Enmiendas prospect
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['1', '2', '3', '4'] | calificador 
+  - [archivo] dependencias-fases.md | secciones ['Conciliacion'] | calificador su fila de C y la §Conciliacion
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-D (05-prompt-inicio-sesion-fase-D.md): 6 items declarados, head ed44c51
+  - [archivo] 05-prompt-inicio-sesion-fase-D.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['1', '4'] | calificador medicion A7 y la nota de divisor de tokens
+  - [archivo] 04-contrato-ejecucion.md | secciones [] | calificador 
+  - [archivo] 00-lecciones-capitalizadas.md | secciones ['2'] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador cadena y la regla de donde vive el pack generado
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador 
+FASE-RELEASE (05-prompt-inicio-sesion-fase-RELEASE.md): 13 items declarados, head ed44c51
+  - [archivo] 05-prompt-inicio-sesion-fase-RELEASE.md | secciones [] | calificador 
+  - [archivo] 01-plan-maestro.md | secciones ['4', '6'] | calificador 
+  - [archivo] 04-contrato-ejecucion.md | secciones ['Dos momentos del cierre', 'Carga total y frescura del pack', 'Orden del cierre'] | calificador §Dos momentos del cierre, §Carga total y frescura del pack y
+  - [archivo] 00-lecciones-capitalizadas.md | secciones [] | calificador 
+  - [archivo] 06-checklist-implementacion.md | secciones [] | calificador 
+  - [archivo] dependencias-fases.md | secciones [] | calificador 
+  - [archivo] 10-analisis-post-implementacion.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-A.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-B.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-C.md | secciones [] | calificador 
+  - [archivo] 05-prompt-inicio-sesion-fase-D.md | secciones [] | calificador 
+  - [archivo] docs/CONTRIBUTING.md | secciones [] | calificador 
+  - [workflow] .agents/workflows/phased_project_executor.md | secciones [] | calificador FASE-RELEASE
+--- EXIT=0
+
+=== COMANDO: git show -s --format='%h %ad %s' --date=short 5145173 fbfdc57 d5b4059 ===
+5145173 2026-09-30 fix(scripts): la clausula de produccion del wiring se codifica en el EXIT (paso 2)
+fbfdc57 2026-09-30 feat(scripts): el derivado versionado del wiring se contra-verifica con --check (paso 3)
+d5b4059 2026-09-30 docs(AGENTS): la cifra de Cobertura por Modulo sube a 4.682 (segunda ronda del 2026-09-30)
+--- EXIT=0
+
+=== COMANDO: git merge-base --is-ancestor <sha> HEAD (para los tres) ===
+5145173 ES ancestro de HEAD
+fbfdc57 ES ancestro de HEAD
+d5b4059 ES ancestro de HEAD
+
+=== COMANDO: git log --date=short --format='%h %ad %s' -S'excluidos_por_declaracion_git' -- scripts/validate_wiring.py ===
+0731741 2026-10-01 feat(wiring): adopta la cura del derivado versionado del agente suspendido (schema 1.2)
+abd181c 2026-09-30 fix(scripts): el alcance del wiring se goberna por la declaracion del propio Git (paso 1, salida (c))
+--- EXIT=0
+
+=== COMANDO: git log --date=short --format='%h %ad %s' -S'tmp_test' -- .gitignore ===
+ede7fcb 2026-03-26 chore: Actualizar .gitignore para excluir test outputs y agent memory
+--- EXIT=0
+
+=== COMANDO: git log --since=2026-09-29 --date=short --format='%h %ad %s' -- .gitignore ===
+--- EXIT=0
+=== COMANDO: git show -s --format='%h %ad %s' --date=short abd181c 0731741 ede7fcb + git merge-base --is-ancestor ===
+abd181c 2026-09-30 fix(scripts): el alcance del wiring se goberna por la declaracion del propio Git (paso 1, salida (c))
+0731741 2026-10-01 feat(wiring): adopta la cura del derivado versionado del agente suspendido (schema 1.2)
+ede7fcb 2026-03-26 chore: Actualizar .gitignore para excluir test outputs y agent memory
+abd181c ES ancestro de HEAD
+0731741 ES ancestro de HEAD
+ede7fcb ES ancestro de HEAD
+abd181c 2026-09-30 16:18:59 -0500 fix(scripts): el alcance del wiring se goberna por la declaracion del propio Git (paso 1, salida (c))
+5145173 2026-09-30 17:14:30 -0500 fix(scripts): la clausula de produccion del wiring se codifica en el EXIT (paso 2)
+fbfdc57 2026-09-30 19:16:53 -0500 feat(scripts): el derivado versionado del wiring se contra-verifica con --check (paso 3)
+0731741 2026-10-01 18:17:40 -0500 feat(wiring): adopta la cura del derivado versionado del agente suspendido (schema 1.2)

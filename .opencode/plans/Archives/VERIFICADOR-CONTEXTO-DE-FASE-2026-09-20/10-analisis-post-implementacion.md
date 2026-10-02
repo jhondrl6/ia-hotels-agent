@@ -509,3 +509,17 @@ titulo y su poblacion son los `10-analisis`. Las dos comparten mecanismo (identi
 gobernado) y no comparten instrumento, que es la razon por la que la segunda nace como guion propio.
 
 Evidencia de la tanda: `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/CURAS-SCRIPTS-Y-CONTEXT-2026-09-30/`.
+
+### Espejo 2026-10-02 — dossier del gap de contrato (D7/S10)
+
+Una linea, sin re-transcribir cifras (L-VCF-19: este documento es fuente de un pack que el generador mide). La
+sesion de reconciliacion documental sobre la pareja JEV/VCF empaqueto para el operador las peticiones que hoy
+desbloquean el plan piloto —la eleccion de la salida del gap de contrato y la designacion del revisor humano de
+la muestra— en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-10-02/00-paquete-decision.md`,
+cada una con su dueno y su puerta.
+
+Por que viaja aqui y no solo en el expediente del hermano menor: la eleccion de la salida aditiva del gap toca
+`scripts/decision_client.py`, que es la superficie donde **D7** se activa y donde **S10** cobra su geometria del
+`import`. El dossier se escribe en el expediente del piloto porque ahi vive su insumo medido; se decide desde
+este plan porque las dos filas del libro de deuda son suyas. Lo que el paquete **no** hace: elegir por el
+operador, aplicar salida alguna en codigo, ni re-numerar una fila del registro unificado.
