@@ -127,6 +127,15 @@ Para integrarse se requiere además que el consumidor C esté implementado y ver
 | FASE-C | Conectividad, ajuste permitido, comparación real y decisión; **sin escribir código** | A/B verificadas, snapshots versionados y autorizaciones literales con presupuesto | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN |
 | FASE-RELEASE | Revisión de evidencia, transferencia D7/D6 y cierre documental | C con resultado válido o decisión explícita de cierre sin inferencias; deuda visible y permisos separados | PENDIENTE |
 
+⟦Sello 2026-10-01 — esta tabla es del 2026-09-21 y ninguna fila la barrió. Estado re-medido:
+FASE-A ejecutada offline (`evaluate_jev_pilot.py check` OK, 5 guards; `pytest
+tests/quality_gates/jev_pilot -q` en verde; muestra BORRADOR, 4 pares, `sin_revisar`, umbrales
+nulos); FASE-B/C bloqueadas por P1 (revisión humana), la decisión del gap de contrato y el
+mandato — la dependencia técnica está entregada desde el 2026-09-24
+(`ls scripts/decision_client.py scripts/triage_lesson_relevance.py`); RELEASE: ninguna fase
+ejecutada, aunque el archivado (git mv) sí se ejecutó el 2026-09-27. Comandos de re-medida:
+README §Pendientes priorizados y evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-09-30/⟧
+
 Dos fases de implementación (A/B) y una de medición sin código (C): no se cumple el requisito de tres implementaciones para FASE-VERIFY del executor §4.6. La revisión cruzada de artefactos se hace en C y RELEASE; no se omite. Ningún resultado certifica la pipeline hotelera.
 
 Mientras se completa A, no se toca la costura inexistente. Tras B/C del hermano se re-lee el contrato efectivo: este plan se adapta a él, no ordena reescribir las fases ajenas. El permiso de ajustar documentos del 2026-09-21 no autoriza ejecutar A. ⟦**Sello 2026-09-30 — la premisa de esta línea cayó, su regla no.** La costura **no es inexistente**: `scripts/decision_client.py` está en el árbol (69.503 bytes) y su selección prueba en verde (87 passed). Lo que la frase gobernaba sigue gobernado: **esta sesión no la tocó** - ni en la preparación de `evidence/…/PREPARACION-DECISION-2026-09-30/` ni en ninguna otra escritura de esta tanda -, porque la segunda mitad de la línea («se re-lee el contrato efectivo, y este plan se adapta a él») es justo la que hoy tiene documento: la re-lectura medida del contrato efectivo está en ese expediente, con las dos salidas y su coste. Donde queda el trabajo es en la decisión del operador entre esas dos salidas, no en re-escribir esta restricción⟧.

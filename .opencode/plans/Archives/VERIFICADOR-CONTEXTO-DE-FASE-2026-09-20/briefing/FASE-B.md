@@ -9,7 +9,7 @@
 - **fuente de lo declarado**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` (bloque «Prompt de ejecucion»)
 - **estado del pack**: `COMPLETO`
 - **declaracion de lectura en el prompt**: `DECLARADA`
-- **procedencia**: HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+- **procedencia**: HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 - **tokens**: estimados por divisor 4, no recuento de tokenizer
 
 ## Lectura aparte obligatoria (el pack **no** la sustituye)
@@ -223,7 +223,7 @@ Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-imp
 `06-checklist-implementacion.md`.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `c7f0d96055a2445444a9da2abf23f76c4bb416172ecb124384ab0ca1964fedfc` · 12255 bytes copiados de 12255 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md` · sha256 `c7f0d96055a2445444a9da2abf23f76c4bb416172ecb124384ab0ca1964fedfc` · 12255 bytes copiados de 12255 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ## Fuente: `01-plan-maestro.md` §2
 
@@ -245,7 +245,7 @@ Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-imp
 | **¿Una lección propuesta por el proveedor falso entra en §2 del `00-`? (⟦decidido el 2026-09-23⟧)** | **NO, no en automático.** Propuesta ≠ pertinente: exige **revisión humana explícita** y su aceptación o rechazo **registrada** con quién decidió | Lo que prueba el falso es la mecánica del camino, no la pertinencia. Auto-triarse con respuestas sintéticas y escribir el resultado en §2 fabricaría la evidencia que AC15 declara `NO-EJERCITADO`, y rechazar en silencio es la familia del filtro que la matriz ya descartó arriba (`VACUOUS_RECALL`). El rechazo también se publica: una fila no desaparece |
 | **¿La futura FASE-C aplica las mejoras generales de la orden de calidad? (⟦declarado el 2026-09-23⟧)** | **NO.** C conserva el **workflow canónico** y el **proceso común** vigentes: lee `.agents/workflows/phased_project_executor.md`, cierra con los seis pasos del contrato y no renumera nada (AC16 delta 0) | La orden `2026-09-22` autorizó y ejecutó su bloque A (conciliado, §5-ter) y su **bloque B, concluido contractualmente por su matriz §13, que es la única fuente de su estado**; el **bloque C** —estas enmiendas prospectivas— quedó autorizado el **2026-09-24** solo sobre los documentos de los cuatro planes, y el **piloto FASE-C sigue sin autorización**. Ejecutar una mejora de proceso dentro de la fase sería colar un cambio de gobierno por arrastre de una fase, y dejaría la medición de D3/A7 comparada contra dos reglas distintas. De C **sí** entra lo que este plan ya resolvió para sí: las cuatro enmiendas de AC11/AC12/AC15/propuestas |
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 7715 bytes copiados de 55159 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 7715 bytes copiados de 55159 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ## Fuente: `01-plan-maestro.md` §4
 
@@ -506,7 +506,7 @@ Un AC cuya clave no existe en el artefacto está incompleto **antes** de ejecuta
   `build_lesson_index.py --check`. El commit es opcional, posterior y requiere autorización explícita:
   no condiciona ninguno de los cinco cortes. Ningún AC ni prompt cita `archivo:número` (R2.2).
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 26466 bytes copiados de 55159 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md` · sha256 `1aa85df124196041da411719e03baba1b9526392ba171516404b8d4f4862930d` · 26466 bytes copiados de 55159 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ## Fuente: `04-contrato-ejecucion.md` (documento completo)
 
@@ -835,7 +835,7 @@ Consecuencia declarada: ningún AC de este plan puede llegar a `SUPERADO EN E2E`
 comparación.
 
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `39c8b094489b3703ddd707d37fcf24bc5e907eb1db7c742fcee788bad8fe974d` · 30204 bytes copiados de 30204 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md` · sha256 `39c8b094489b3703ddd707d37fcf24bc5e907eb1db7c742fcee788bad8fe974d` · 30204 bytes copiados de 30204 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ## Fuente: `00-lecciones-capitalizadas.md` §2
 
@@ -876,7 +876,7 @@ Dueños distintos representados: **7** — TRIBUNAL-OFFLINE, REFACTOR-COHERENCIA
 
 **Cómo entró L-VCF-20 (registro de la decisión, 2026-09-27, tanda H1).** Los dos párrafos de arriba registran el ingreso de **diez** filas por la decisión D-d y no se reescriben: siguen siendo exactos para esas diez. Con esta son **once** las filas de §2 debidas a este propio plan, y su procedencia es otra — instrucción escrita «Haz H1 y H2» sobre una lección que la sesión de commits **midió al commitear**, ya cerrado el dosier que avaló a las otras diez. El dueño no cambia, y el conteo se re-midió contra el lector en vez de copiar el párrafo anterior: `duenos_del_corpus()` sigue publicando **7** dueños distintos, porque una fila más de este plan no suma un octavo — el mismo motivo por el que las tres de la capa tibia no sumaron. Y una forma que hay que respetar para que el índice la reconozca: la **definición** va en `10-analisis-post-implementacion.md` §Lecciones nuevas, porque el corpus de definiciones del generador son los análisis (`09`/`10`), no este `.md`; escribirla solo aquí la habría registrado como ID citado sin definición, que es la familia de cita fantasma que este plan ya pagó.
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md` · sha256 `445c34c4c9a3863bd04077a2e2e1260718dcb5373f7f4fc35b7391662c638de1` · 24489 bytes copiados de 65400 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ## Fuente: `dependencias-fases.md` (documento completo)
 
@@ -889,7 +889,7 @@ plan no lo estaba** y ninguna de sus fases se ejecutó ni se diseñó al concili
 **⟦Rectificado el 2026-09-24 al cerrar FASE-C⟧**: esa frase sigue siendo cierta sobre el **bloque C**
 (enmiendas documentales) y ya no lo es sobre el **piloto**: el operador autorizó esa tarde, con mandato
 propio y corte **«hasta listo para revisión»**, ejecutar FASE-C, que quedó **cerrada sin commit ni push**
-(ver su fila en §Cadena y su evidencia en `evidence/…/FASE-C/`). Fuente única de
+(ver su fila en §Cadena y su evidencia en `evidence/…/FASE-C/`). ⟦Sello 2026-10-01 — vencido: FASE-C se commiteó el mismo 2026-09-24 en dos tiempos (`7f2e9f9` y `5817edd`, 37 rutas propias) y se empujó (`da382b1..5817edd`); fuente: la fila 3 de §Cadena de este mismo archivo⟧ Fuente única de
 resultados y estados D1/S13:
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`
 **§13, única matriz vigente**; §1–§12 son antecedentes rectificados, no aceptación actual.
@@ -1536,7 +1536,7 @@ acuerdo.⟧ ⟦**S19 — cierre del libro: (a) descartada con medición en contr
 `.agents/`, y casada con S16 porque son la misma superficie; (d) `generado_por_sha` medida el 2026-09-27 en el
 expediente `22-` §3 y no aplicada — su coste es +1 línea por pack y exige un quinto patrón en `NORMALIZAR`, y
 se probó que (b) **no** la necesita para atribuir el rojo. Con (b) cableada al rápido desde el 2026-09-27, S19
-queda CERRADA en su parte gobernable y sobrevive solo por (c).**⟧
+queda CERRADA en su parte gobernable y sobrevive solo por (c).**⟧ ⟦Sello 2026-10-01 — vencido: la (d) está aplicada — build_phase_briefing.py escribe `generado_por_sha` por pack, verify_packs_in_committed_tree.py lo normaliza como quinto patrón, y tests/test_verify_packs_quinto_patron_generado_por_sha.py la cubre (`grep -cE '^\s*def test_' tests/test_verify_packs_quinto_patron_generado_por_sha.py` = 5, medido 2026-10-02)⟧
 **(c) se
 mantiene como puente y queda probada su insuficiencia:** el 2026-09-26 `--check` dio `EXIT=0` con los cinco
 packs ya cambiados por una edición del escritor (244 inserciones / 99 supresiones, 6 líneas de pack citando el
@@ -2147,8 +2147,30 @@ fuente reivindicando la misma asercion cortan `LECTOR-FALLIDO` con exit 3 (medid
 resolvio por el lado del sujeto (la etiqueta dice `CONTEXT freshness (notebook de lecciones)`), no aflojando la
 guarda de ambiguedad.
 
+### S37 — el estado de un plan solo se lee auditando (nueva, 2026-10-01)
 
-> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `e3300ab51712e96098063da4e594c3229c8c9dfecdb0c3f76f6646edd26d5021` · 143865 bytes copiados de 143865 del documento · HEAD `2bc2197` · generado `2026-10-01T19:09:44Z`
+**Censo del número, con su comando y su fecha.** `git grep -c -E "\bSnn\b" HEAD -- '*.md'`, medido el 2026-10-02
+sobre `21b552f`, y el barrido `git grep -nE "\bS3[4-9]\b" -- '*.md'` sobre el árbol de trabajo, dan el mismo
+retrato: **S33 = 7 archivos**, **S34 = 11**, **S35 = 6**, **S36 = 6**, **S37 = 0**. S35 y S36 **no están
+limpios**: sus únicas menciones son la prosa del censo de la fila S34 de arriba y los packs que la copian, de
+modo que tomarlos haría que `git grep -E "\bS35\b"` devuelva dos asuntos distintos bajo la misma clave. El
+primer número libre por el criterio de la casa (cero archivos) es **S37**: lo toma esta fila.
+
+**Hecho medido, no deducido.** La auditoría del 2026-10-01 necesitó ejecutar verificadores y greps para separar
+lo ejecutado de lo pendiente en los dos planes archivados de esta pareja; los sellos de esa fecha son punto, no
+sistema.
+
+- **Dueño**: el operador, o la sesión que toque por primera vez un lint de estado de plan.
+- **Disparador**: la próxima vez que un agente necesite el estado ejecutado/pendiente de un plan archivado y no
+  lo encuentre sellado.
+- **Dos salidas medidas en la auditoría**: despertar D6 con su disparador reformulado (decisión del operador), o
+  un lint mínimo que lea la matriz del checklist contra el disco e imprima la deriva. **Ninguna aplicada en esta
+  tanda.**
+- **Esta fila NO despierta D6**: su causa dormida (`aceptacion = NO-EJERCITADO`, contrato E4) sigue medida y
+  vigente.
+
+
+> **Procedencia**: `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` · sha256 `6b8591568cc148d567ecde55b619ff2c9c76adcfb46b5f407def37081207c2bd` · 146003 bytes copiados de 146003 del documento · HEAD `21b552f` · generado `2026-10-02T16:42:55Z`
 
 ---
 
@@ -2161,8 +2183,8 @@ guarda de ambiguedad.
   "estado": "COMPLETO",
   "declaracion": "DECLARADA",
   "provenance": {
-    "head": "2bc2197",
-    "generated_at": "2026-10-01T19:09:44Z"
+    "head": "21b552f",
+    "generated_at": "2026-10-02T16:42:55Z"
   },
   "no_incluye": [
     "01-plan-maestro.md — 20978 bytes fuera de lo declarado (2, 4)",
@@ -2200,7 +2222,7 @@ guarda de ambiguedad.
     },
     {
       "ruta": ".opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md",
-      "sha256": "e3300ab51712e96098063da4e594c3229c8c9dfecdb0c3f76f6646edd26d5021",
+      "sha256": "6b8591568cc148d567ecde55b619ff2c9c76adcfb46b5f407def37081207c2bd",
       "documento": "dependencias-fases.md",
       "secciones": [],
       "en_pack": true

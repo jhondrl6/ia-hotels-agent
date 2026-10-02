@@ -463,7 +463,7 @@ autorización— es exactamente donde quedaron los permisos.
   vigente es §S16 de `dependencias-fases.md`, con la población re-medida y la unidad declarada⟧ ⟦**Dos
   movimientos más en esta misma lista, el 2026-09-27**: la parte **(c) de S19 tampoco está viva** — era la
   convención de cierre en `.agents/`, y cayó con el mismo mandato D-b que curó S16, así que de S19 solo
-  sobrevive la **(d)** `generado_por_sha`, que es opción medida y no aplicada, no deuda; y **se abre S29**, con
+  sobrevive la **(d)** `generado_por_sha`, que es opción medida y no aplicada, no deuda ⟦Sello 2026-10-01 — vencido: la (d) está aplicada — build_phase_briefing.py escribe `generado_por_sha` por pack, verify_packs_in_committed_tree.py lo normaliza como quinto patrón, y tests/test_verify_packs_quinto_patron_generado_por_sha.py la cubre (`grep -cE '^\s*def test_' tests/test_verify_packs_quinto_patron_generado_por_sha.py` = 5, medido 2026-10-02)⟧; y **se abre S29**, con
   dueño en `scripts/validate_lesson_capitalization.py`: ese verificador excluye `Archives/` por estructura
   antes de mirar su cutoff, de modo que desde el traslado de D-c su `[OK]` **no lee** el `00-` de este plan y
   las diez filas de §2 que entraron hoy quedan sin gate. Población medida de la laguna: **3** archivados con

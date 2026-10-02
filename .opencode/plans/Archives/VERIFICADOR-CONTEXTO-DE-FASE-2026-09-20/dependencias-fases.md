@@ -7,7 +7,7 @@ plan no lo estaba** y ninguna de sus fases se ejecutó ni se diseñó al concili
 **⟦Rectificado el 2026-09-24 al cerrar FASE-C⟧**: esa frase sigue siendo cierta sobre el **bloque C**
 (enmiendas documentales) y ya no lo es sobre el **piloto**: el operador autorizó esa tarde, con mandato
 propio y corte **«hasta listo para revisión»**, ejecutar FASE-C, que quedó **cerrada sin commit ni push**
-(ver su fila en §Cadena y su evidencia en `evidence/…/FASE-C/`). Fuente única de
+(ver su fila en §Cadena y su evidencia en `evidence/…/FASE-C/`). ⟦Sello 2026-10-01 — vencido: FASE-C se commiteó el mismo 2026-09-24 en dos tiempos (`7f2e9f9` y `5817edd`, 37 rutas propias) y se empujó (`da382b1..5817edd`); fuente: la fila 3 de §Cadena de este mismo archivo⟧ Fuente única de
 resultados y estados D1/S13:
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/BLOQUE-B-REMEDIACION-2026-09-23/00-resumen-cierre-B.md`
 **§13, única matriz vigente**; §1–§12 son antecedentes rectificados, no aceptación actual.
@@ -654,7 +654,7 @@ acuerdo.⟧ ⟦**S19 — cierre del libro: (a) descartada con medición en contr
 `.agents/`, y casada con S16 porque son la misma superficie; (d) `generado_por_sha` medida el 2026-09-27 en el
 expediente `22-` §3 y no aplicada — su coste es +1 línea por pack y exige un quinto patrón en `NORMALIZAR`, y
 se probó que (b) **no** la necesita para atribuir el rojo. Con (b) cableada al rápido desde el 2026-09-27, S19
-queda CERRADA en su parte gobernable y sobrevive solo por (c).**⟧
+queda CERRADA en su parte gobernable y sobrevive solo por (c).**⟧ ⟦Sello 2026-10-01 — vencido: la (d) está aplicada — build_phase_briefing.py escribe `generado_por_sha` por pack, verify_packs_in_committed_tree.py lo normaliza como quinto patrón, y tests/test_verify_packs_quinto_patron_generado_por_sha.py la cubre (`grep -cE '^\s*def test_' tests/test_verify_packs_quinto_patron_generado_por_sha.py` = 5, medido 2026-10-02)⟧
 **(c) se
 mantiene como puente y queda probada su insuficiencia:** el 2026-09-26 `--check` dio `EXIT=0` con los cinco
 packs ya cambiados por una edición del escritor (244 inserciones / 99 supresiones, 6 líneas de pack citando el
@@ -1264,3 +1264,25 @@ gobernanza resuelve el sujeto por alias, `qmind` no esta en sus `ALIAS_STOPWORDS
 fuente reivindicando la misma asercion cortan `LECTOR-FALLIDO` con exit 3 (medido en la primera corrida). Se
 resolvio por el lado del sujeto (la etiqueta dice `CONTEXT freshness (notebook de lecciones)`), no aflojando la
 guarda de ambiguedad.
+
+### S37 — el estado de un plan solo se lee auditando (nueva, 2026-10-01)
+
+**Censo del número, con su comando y su fecha.** `git grep -c -E "\bSnn\b" HEAD -- '*.md'`, medido el 2026-10-02
+sobre `21b552f`, y el barrido `git grep -nE "\bS3[4-9]\b" -- '*.md'` sobre el árbol de trabajo, dan el mismo
+retrato: **S33 = 7 archivos**, **S34 = 11**, **S35 = 6**, **S36 = 6**, **S37 = 0**. S35 y S36 **no están
+limpios**: sus únicas menciones son la prosa del censo de la fila S34 de arriba y los packs que la copian, de
+modo que tomarlos haría que `git grep -E "\bS35\b"` devuelva dos asuntos distintos bajo la misma clave. El
+primer número libre por el criterio de la casa (cero archivos) es **S37**: lo toma esta fila.
+
+**Hecho medido, no deducido.** La auditoría del 2026-10-01 necesitó ejecutar verificadores y greps para separar
+lo ejecutado de lo pendiente en los dos planes archivados de esta pareja; los sellos de esa fecha son punto, no
+sistema.
+
+- **Dueño**: el operador, o la sesión que toque por primera vez un lint de estado de plan.
+- **Disparador**: la próxima vez que un agente necesite el estado ejecutado/pendiente de un plan archivado y no
+  lo encuentre sellado.
+- **Dos salidas medidas en la auditoría**: despertar D6 con su disparador reformulado (decisión del operador), o
+  un lint mínimo que lea la matriz del checklist contra el disco e imprima la deriva. **Ninguna aplicada en esta
+  tanda.**
+- **Esta fila NO despierta D6**: su causa dormida (`aceptacion = NO-EJERCITADO`, contrato E4) sigue medida y
+  vigente.

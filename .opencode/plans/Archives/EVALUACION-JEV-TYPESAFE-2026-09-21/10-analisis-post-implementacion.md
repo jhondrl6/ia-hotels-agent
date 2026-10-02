@@ -8,7 +8,7 @@
 |---|---|---|
 | Preparación documental | AJUSTADA el 2026-09-21 | Lecturas, consultas QMind y validación documental; no es fase de código |
 | FASE-A | **EJECUTADA offline el 2026-09-21** (checker + 7 tests en verde + selftest; muestra **BORRADOR**, AC3 parcial por falta de revisión humana) | ⟦Fila rectificada el 2026-09-24 por el bloque C de la orden de calidad: publicaba «PENDIENTE / Sin ejecución», contradicha por el propio §Ejecución de FASE-A de este archivo, por `06-checklist` (AC3 PARCIAL, AC10 FASE-A HECHA) y por `README.md`⟧. Su evidencia quedó commiteada y empujada (`9665c57..51b0793`) |
-| FASE-B | BLOQUEADA POR DEPENDENCIA | Sin ejecución |
+| FASE-B | BLOQUEADA POR DEPENDENCIA ⟦Sello 2026-10-01 — la causa de esta fila quedó vencida: la dependencia técnica se entregó el 2026-09-24 (las dos rutas presentes). Lo que bloquea FASE-B hoy es P1 (revisión humana de la muestra), la decisión del gap de contrato y el mandato, no una dependencia técnica; ver README §Pendientes priorizados P3⟧ | Sin ejecución |
 | FASE-C | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN | Sin ejecución |
 | FASE-RELEASE | PENDIENTE | Sin ejecución |
 
@@ -170,3 +170,8 @@ evidencia que esas dos filas piden sigue siendo `AC6–AC9` con scanner/contract
 para la primera, y `AC10–AC14` más la mecánica de `AC15` con su par verde/rojo para la segunda. Lo que cayó es
 el literal «archivo ausente», que es la mitad más inestable de una fila de estado y la que engaña a quien
 llega después. La corrección del archivo protegido queda pendiente de su dueño, con esta medición como insumo.
+
+⟦**Espejo 2026-10-01 — deuda S37** («el estado de un plan solo se lee auditando»): su fila, su censo con comando y
+fecha, su dueño y su disparador viven en `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`
+§S37, que es la **fuente única**; este plan no la re-transcribe, y como su propio `dependencias-fases.md` está
+protegido por orden del operador el espejo viaja en este análisis⟧
