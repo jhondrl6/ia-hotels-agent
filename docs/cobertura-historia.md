@@ -15,6 +15,23 @@
 
 ---
 
+> **Tanda ADOPCION-Y-CIERRE-DEUDA del 2026-10-01 (la cifra subio a 4,699).** Medido con el metodo canonico de
+> la casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,699**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk en `9181197` = **4,699**): **las dos cifras
+> cuadran** con el delta ya commiteado. El delta contra la segunda ronda de la manana (4,698) es **+1** y se
+> atribuye por archivo, sin mas sumandos: **+1** en `tests/test_diagnostic_geo_metrics.py` (5 → 6: el diente
+> de DELIMITADORES de la fila 17 del registro 33-, `test_geo_table_header_and_separator_pipes_are_paired`,
+> que renderiza el diagnostico end-to-end, ubica la tabla por el dato como el diente de la fila 14 y afirma
+> paridad de pipes y de columnas entre cabecera y separador; rojo antes con la cabecera en 7 pipes contra el
+> separador en 5, mutante con ancla unica verificada por conteo y `ast.parse`, control de renombre puro
+> VERDE — el diente mide delimitadores, no el literal — y control negativo con `git show 7fa8d5c` del
+> generador pre-cura, ejecutado). Distribucion por filas: +1 a `root test files` (1.057 → **1.058**); las
+> otras 21 filas no se movieron y la suma de las 22 de la tercera columna da **4,699** (verificada con un
+> instrumento que enumera los sumandos, `awk -F'|'` sobre las filas numericas de la tabla). La letra 1 de la
+> misma tanda no sumo funciones-test: fue adopcion de trabajo suspendido (la cura faq del provider aislado y
+> la cura wiring del derivado versionado, schema 1.2), no test nuevo.
+>
+
 > **Segunda ronda del 2026-10-01 — CIERRE-DEUDA (la cifra subio a 4,698).** Medido con el metodo canonico de la
 > casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,698**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk en `c4d0ffe` = **4,698**): **las dos cifras
