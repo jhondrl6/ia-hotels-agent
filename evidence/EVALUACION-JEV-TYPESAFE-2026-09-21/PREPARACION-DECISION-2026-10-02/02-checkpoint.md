@@ -150,3 +150,12 @@ espera de autorizacion: primero para el commit, despues para el push. Medido, no
 - **El push publica el estado, no lo produce.** Las filas 1, 6, 9 y 10 de la tabla de pendientes quedan como
   estaban, y el acto de etiquetar (D-D) sigue sin hacer: las tres piezas del piloto no entraron en el commit —
   `git show --stat` sobre esas rutas da **0 lineas** — y conservan su sha de partida con `human_reviewed=false`.⟧
+
+⟦**Addendum 2026-10-02, tercero de la tanda — el rango que estampa la nota de arriba queda incompleto por un
+commit.** Se empujo tambien `e2f7682..15feb2e`, que es la propia nota de disposicion, y el total de la sesion es
+**`ed44c51..15feb2e`**: dos commits, 13 archivos, +861/−65. No se reescribio la linea anterior —esa sigue siendo
+exacta sobre el acto que describe—, se le anade esta, que es la regla de la casa para un segundo push.
+Y aqui se corta la recursion, declarada en vez de perseguida: esta nota se escribe antes de su propio push,
+así que su valor no puede citarse a sí misma. Lo que publica **esta** línea es el rango hasta `15feb2e`; el tip
+con el que quedo el remoto despues de estamparla se mide con `git ls-remote origin refs/heads/master` y no se
+copia aqui. Un cuarto commit que registre eso no informa nada que la orden anterior no informe mejor.⟧

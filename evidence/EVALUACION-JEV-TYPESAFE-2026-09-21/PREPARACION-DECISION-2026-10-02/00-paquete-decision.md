@@ -192,3 +192,8 @@ documental — once rutas — y el operador autorizo commit y push, en ese orden
 `ed44c51..e2f7682`, verificado por identidad contra `git ls-remote origin refs/heads/master`. La disposicion
 completa, con su pre-flight y con las palabras rectificadas, esta en §«Nota de disposicion del push» de
 `02-checkpoint.md`, que es su fuente unica: aqui no se re-transcribe.⟧
+
+⟦**Addendum 2026-10-02 — el rango de mi nota anterior es parcial.** Se empujo un segundo commit
+(`e2f7682..15feb2e`, esta misma nota), y el total de la tanda es `ed44c51..15feb2e`. La disposicion completa y
+el corte de la recursion estan en §«Nota de disposicion del push» con su addendum en `02-checkpoint.md`, que
+sigue siendo la fuente unica.⟧
