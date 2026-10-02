@@ -124,3 +124,15 @@ Sin `pytest`, sin `--no-verify`, sin push, sin APIs, sin tocar baselines. No se 
 de este subdirectorio, ni en `dependencias-fases.md` de este plan (protegido), ni en `.agents/**`, `scripts/**`,
 `tests/**`, `tmp_test/**`, `AGENTS.md`, `.cursorrules`, `VERSION.yaml`, `CHANGELOG.md`, `REGISTRY.md`.
 
+⟦**Nota de disposición 2026-10-02** — el «sin push» de arriba describe la ventana de ejecución del mandato,
+que lo prohibía; esa ventana cerró con el commit. Los dos commits de la tanda —`8a75c03` (los sellos, los packs
+y la fila S37) y `9903012` (la corrección del recuento de los partes)— se empujaron a `origin/master` el
+2026-10-02 como el rango `21b552f..9903012`, con pre-flight antes de empujar (`git fetch origin --quiet` y
+`git rev-list --left-right --count origin/master...HEAD` = **0 2**; `git push --dry-run` mostrando el mismo
+rango) y verificación por identidad tras el push (`git ls-remote origin refs/heads/master` devolvió
+`99030129a4426938351d2be0e7af9a65bf39e1b8`, igual que `git rev-parse HEAD`, y
+`git grep -o 'Sello 2026-10-01' origin/master --` sobre los 9 ficheros fuente dio **17**). L3: **no se corrió**,
+por orden escrita del operador («Push sin L3»). Esta nota entra en un commit **posterior** al rango que
+declara, así que no publica su propia paridad ni su propio sha: el estado vigente se lee con
+`git fetch origin --quiet && git rev-list --left-right --count origin/master...HEAD`.⟧
+
