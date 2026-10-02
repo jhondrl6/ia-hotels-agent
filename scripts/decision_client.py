@@ -90,6 +90,7 @@ import json
 import os
 import re
 import sys
+import time
 import unicodedata
 from datetime import datetime
 from pathlib import Path
@@ -290,13 +291,23 @@ class RespuestaNoul:
 
 class ResultadoEvaluacion:
     """Lo que la costura publica de una corrida. `usage=None` **no** es consumo cero (lección del
-    plan hermano: un usage ausente no puede leerse como 0)."""
+    plan hermano: un usage ausente no puede leerse como 0).
+
+    Los tres campos de pedido y tiempo (`provider_requested`, `model_requested`, `elapsed_ms`) son la
+    mitad (a) del gap de contrato del piloto JEV: `elapsed_ms` vale `None` cuando **no hubo llamada**
+    (payload inyectado por el contract test), porque un temporizador alrededor de una invocacion que
+    no ocurrio publicaria una medicion fabricada. `attempts`, `error_kind` y `usage_normalized` **no**
+    estan aqui a proposito: la costura no observa los reintentos que ocurren dentro del cliente que
+    arma el proveedor, y publicarlos desde aqui seria mentir sobre la llamada facturable. Esa pata es
+    la (b) del dossier, y vive en el runner del piloto."""
 
     __slots__ = ("provider_status", "proveedor", "modelo", "respuestas", "usage",
-                 "request_id", "credencial")
+                 "request_id", "credencial",
+                 "provider_requested", "model_requested", "elapsed_ms")
 
     def __init__(self, provider_status, proveedor, modelo, respuestas, usage,
-                 request_id, credencial):
+                 request_id, credencial, provider_requested=None, model_requested=None,
+                 elapsed_ms=None):
         self.provider_status = provider_status
         self.proveedor = proveedor
         self.modelo = modelo
@@ -304,6 +315,9 @@ class ResultadoEvaluacion:
         self.usage = usage
         self.request_id = request_id
         self.credencial = credencial
+        self.provider_requested = provider_requested
+        self.model_requested = model_requested
+        self.elapsed_ms = elapsed_ms
 
     def por_pregunta(self, id_pregunta: str):
         for r in self.respuestas:
@@ -315,7 +329,10 @@ class ResultadoEvaluacion:
         return {"provider_status": self.provider_status, "proveedor": self.proveedor,
                 "modelo": self.modelo, "respuestas": [r.to_dict() for r in self.respuestas],
                 "usage": self.usage, "request_id": self.request_id,
-                "credencial": self.credencial}
+                "credencial": self.credencial,
+                "provider_requested": self.provider_requested,
+                "model_requested": self.model_requested,
+                "elapsed_ms": self.elapsed_ms}
 
 
 # -----------------------------------------------------------------------------------------
@@ -697,8 +714,18 @@ def evaluar(state, preguntas: Sequence[Pregunta], entorno: dict = None,
                          "cada respuesta con su pregunta")
 
     prov = resolver_proveedor(entorno)
-    payload = (prov["modulo"].evaluar(state, preguntas)
-               if _payload is SIN_PAYLOAD_INYECTADO else _payload)
+    # Pedido != efectivo solo vuelve a tener informacion cuando exista un segundo proveedor con eleccion
+    # (deuda D7). Hoy son el mismo string por construccion, y se publica igual: el contrato del piloto
+    # pide los dos campos, y un null aqui borraría el hecho de que alguien nombro un proveedor.
+    provider_requested = (entorno.get(ENV_PROVIDER) or "").strip() or None
+    model_requested = (prov.get("declara") or {}).get("modelo")
+    if _payload is SIN_PAYLOAD_INYECTADO:
+        _inicio = time.monotonic()
+        payload = prov["modulo"].evaluar(state, preguntas)
+        elapsed_ms = round((time.monotonic() - _inicio) * 1000.0, 3)
+    else:
+        payload = _payload
+        elapsed_ms = None
     credencial = _credencial(prov.get("credencial_env"), entorno)
     try:
         validar_payload(payload, preguntas, prov["nombre"])
@@ -713,6 +740,9 @@ def evaluar(state, preguntas: Sequence[Pregunta], entorno: dict = None,
         usage=payload.get("usage"),
         request_id=payload.get("request_id"),
         credencial=credencial,
+        provider_requested=provider_requested,
+        model_requested=model_requested,
+        elapsed_ms=elapsed_ms,
     )
 
 
@@ -1074,6 +1104,9 @@ def sonda_tres_estados(directorio_falsos: Path) -> dict:
                            "modelo_reportado_por_el_proveedor": r.modelo,
                            "respuestas": [a.to_dict() for a in r.respuestas],
                            "credencial": r.credencial,
+                           "provider_requested": r.provider_requested,
+                           "model_requested": r.model_requested,
+                           "elapsed_ms": r.elapsed_ms,
                            "provocado_por": "falso-forma a traves de la costura, sin red"}
     except (ProveedorNoConfigurado, RespuestaIlegible, LectorFallido) as exc:
         # La etiqueta sale de la clase que se levanto, no de un texto fijo: si los tres caminos

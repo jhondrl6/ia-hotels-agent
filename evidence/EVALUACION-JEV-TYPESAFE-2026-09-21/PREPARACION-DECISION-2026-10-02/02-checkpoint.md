@@ -48,7 +48,7 @@ contrafactual lo prueba la bateria versionada que esta en `git ls-files`.
 | # | Pendiente | Dueno | Puerta (que lo destraba) |
 |---|---|---|---|
 | 1 | **D-B** — elegir la salida del gap de contrato | **DECIDIDA el 2026-10-02** en (a)+(b) con dos tiempos; el ejecutor de (a) pasa a ser quien tenga `scripts/**` en alcance | Ya no espera eleccion: espera **mandato de ejecucion**. (a) autorizada y no ejecutada; (b) atada al mandato de FASE-B. Su lectura y sus letras, en §«Respuesta del operador» de `00-paquete-decision.md` |
-| 2 | **D-D** — designar quien etiqueta los pares y acuerda los umbrales | **CERRADA la designacion** (2026-10-02, segunda respuesta): el operador se nombro revisor de si mismo, con la falta de independencia declarada en el acta; umbrales acordados por clave | Ya no espera un nombre. Espera el **acto de etiquetar**: las cuatro `label`/`importance`, el literal de `reviewer`, la fecha real en `reviewed_at` y el paso `BORRADOR → CONGELADA`. Nada de eso lo produce esta sesion |
+| 2 | **D-D** — designar quien etiqueta los pares y acuerda los umbrales | **CERRADA la designacion** (2026-10-02, segunda respuesta): el operador se nombro revisor de si mismo, con la falta de independencia declarada en el acta; umbrales acordados por clave. Las cuatro etiquetas **estan dictadas y transcritas** el mismo dia (ver §Nota de rectificacion) | Ya no espera ni nombre ni juicio. Espera **una** cosa: el paso `BORRADOR → CONGELADA`, que no se ejecuto sin su palabra explicita |
 | 3 | La sobrecarga de las letras (a)/(b) entre `01-gap-de-contrato.md` y `02-material-muestra-y-umbrales.md` §2 (dos ejes distintos con las mismas etiquetas) | El expediente del 2026-09-30, que no se re-escribe | **CERRADA en su efecto**: la respuesta de D-B dijo «con eje de gap», que es la forma de la fila 1. La prosa vencida del 09-30 queda como esta, con esta nota al lado |
 | 4 | Las salidas (a) y (b) de la fila `tmp_test/` del checkpoint del 2026-09-30 | Dueno de `scripts/validate_wiring.py` | Ya no tienen rojo que apagar: la (c) se aplico. Quedan como opciones muertas declaradas, no como deuda |
 | 5 | El `const` de `--write-report` sigue apuntando al informe versionado | Dueno de `scripts/validate_wiring.py` | Un cambio en `scripts/**`, no autorizado en esta sesion. Mientras tanto: destino explicito a `temp/` siempre |
@@ -159,3 +159,60 @@ Y aqui se corta la recursion, declarada en vez de perseguida: esta nota se escri
 así que su valor no puede citarse a sí misma. Lo que publica **esta** línea es el rango hasta `15feb2e`; el tip
 con el que quedo el remoto despues de estamparla se mide con `git ls-remote origin refs/heads/master` y no se
 copia aqui. Un cuarto commit que registre eso no informa nada que la orden anterior no informe mejor.⟧
+
+---
+
+## Nota de rectificacion 2026-10-02 — las etiquetas se dictaron y se transcribieron, y dos afirmaciones
+## mias de esta misma tanda quedan vencidas
+
+**El dictado del revisor designado (el operador, en primera persona):** `D-AJUST.1` pertinente/alta,
+`D-AJUST.2` no_pertinente/`n/a`, `D-NC2` insuficiente/`n/a`, `D-AJUST.4` pertinente/media, con
+`reviewer = jhon` y `reviewed_at = 2026-10-02`. La transcription es mecanea y no judgement: el criterio es
+suyo y ninguna de esas ocho decisiones se produjo en una sesion de codigo.
+
+**Como se escribio, y por que se puede verificar que no se re-codifico nada.** Antes de mutar, el metodo de
+escritura se probo contra los archivos originales: `json.dumps(obj, ensure_ascii=False, indent=2)` con
+terminadores CRLF **y sin newline final** reproduce ambos bytes idénticos (2.651 y 836). Sobre esa base se
+cambiaron solo las claves dictadas, y el `git diff --numstat` lo confirma: `etiquetas.json` 15/15 y
+`muestra.json` 3/3, con el resto del objeto JSON comparado clave por clave e identico. `status` sigue
+**BORRADOR**.
+
+**Rectificacion numero uno, y es contra mi propio texto de arriba.** Donde §POST y la nota de disposicion
+dicen que «las tres piezas del piloto conservan su sha de partida», eso fue cierto hasta este acto y ahora
+no: con el dictado, `muestra.json` paso a sha256 de disco `07bb440b94002675…` y `etiquetas.json` a
+`4ffbb120ef94b982…`. `protocolo.json` sigue intacto en `fa327b5887ac36cd…`. Y hay una segunda capa que ya
+esta documentada en el checkpoint del 2026-09-30: los shas **de blob** difieren de los de disco por
+`core.autocrlf=input`, asi que la tabla de esa tanda (disk `bf72272a…` / blob `276bda1b…` para las etiquetas)
+queda vencida por contenido, no por instrumento. No la re-escribo: es evidencia cerrada de otra sesion, y se
+le declara al lado.
+
+**Dos interpretaciones que yo puse y que usted puede vetar, separadas del dictado.** (i) Sus dos `n/a`
+quedaron escritos como `importance: null`, porque la rubrica de `protocolo.json` solo define
+`alta|media|baja` y un literal `n/a` ampliaria el dominio sin mandato. Consecuencia medida y no escondida:
+`null` significa ahora dos cosas distintas en el mismo archivo — «sin revisar» y «no aplica» — y se
+distinguen solo por `review_status` y `reviewed_at`, no por el propio campo. **Deuda nueva con dueño**: la
+rubrica de `protocolo.json` no modela «la importancia no aplica a una etiqueta negativa»; o se le anade un
+cuarto valor o se fija la convencion `null` por documento. (ii) `review_status` paso de `sin_revisar` a
+`revisada`: esa palabra no estaba dictada en ninguna parte, la puse yo como la representacion minima del
+hecho, y se cambia con una linea suya.
+
+**Rectificacion numero dos, tambien mia.** Anuncio que el guard `unreviewed_not_frozen` «deja de protestar»
+con los tres campos llenos. Es impreciso: medido sobre los archivos reales, con `status: BORRADOR` el guard
+da **ok** pase lo que pase con el review — solo muerde cuando el estado es `CONGELADA`. Lo que si queda
+probado, y con contrafactual, es la otra direccion, sobre **copias en `temp/`** (los versionados no se
+tocaron): una copia en `CONGELADA` con el review lleno da `check_status OK` y EXIT **0**; la misma copia con
+el review vaciado da `FALLO` y EXIT **1**. O sea, congelar hoy pasaria, y la puerta tiene dientes.
+
+**Lo que instrumento y suites dicen hoy, corrido sobre el árbol etiquetado.**
+`python scripts/evaluate_jev_pilot.py check --muestra … --etiquetas …` → `check_status: OK` con los cinco
+guards en verde (`schema`, `content_sha`, `split_disjoint`, `labels_not_in_payload`, `unreviewed_not_frozen`)
+y `counts {total 4, dev 2, eval 2, excluidos 1}` intactos — los `sanitized_sha256` de los fragmentos no se
+movieron, que es lo que habria roto la transcription. `pytest tests/quality_gates/jev_pilot
+tests/quality_gates/decision_client -q` → **101 passed**.
+
+**Lo que NO hice en este acto:** el paso `BORRADOR → CONGELADA` (espera su palabra explicita), el acuerdo de
+las cuatro filas todavia pendientes del protocolo (`suficiencia_minima`, `margen_vs_deepseek`,
+`tratamiento_abstenciones`, `revision_humana` — las tres primeras dependen del recuento de `pertinente`, que
+ya existe en las etiquetas: dos de cuatro), y el commit de la tanda de codigo mas esta transcription. Con el
+commit, la cifra canonica de `AGENTS.md` pasa de 4.699 a **4.706** (medido: `grep -rE "^\s*def test_" tests
+--include=*.py` en el arbol contra `git grep -c` sobre HEAD) y ese archivo requiere instruccion suya aparte.
