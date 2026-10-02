@@ -182,3 +182,13 @@ sin ejecutar, la otra designada sin etiquetar. No se le anadio un segundo sello 
 un derivado ya regenerado (el README es corpus del indice) por una cuenta que este archivo lleva mejor; la
 rectificacion vive aqui, que es a donde el sello apunta.
 
+### Nota de disposicion (2026-10-02)
+
+⟦**Nota de disposicion 2026-10-02 — la ultima viñeta de arriba («Ningun write y ningun push») quedo vencida el
+mismo dia y se parte en sus dos sentidos.** No hubo escritura de codigo ni de los datos del piloto, y eso sigue
+siendo cierto: `muestra.json`, `etiquetas.json` y `protocolo.json` no entraron en el commit `e2f7682` y
+conservan su sha de partida, con la muestra en BORRADOR y sin una sola etiqueta humana. Pero si hubo escritura
+documental — once rutas — y el operador autorizo commit y push, en ese orden: `e2f7682` sobre
+`ed44c51..e2f7682`, verificado por identidad contra `git ls-remote origin refs/heads/master`. La disposicion
+completa, con su pre-flight y con las palabras rectificadas, esta en §«Nota de disposicion del push» de
+`02-checkpoint.md`, que es su fuente unica: aqui no se re-transcribe.⟧

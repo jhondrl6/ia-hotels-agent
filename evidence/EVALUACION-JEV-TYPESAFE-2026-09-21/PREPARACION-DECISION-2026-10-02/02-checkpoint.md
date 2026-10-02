@@ -121,3 +121,32 @@ dos `--check` y el rapido se corran despues de la ultima escritura, y esa corrid
 con su `TOTAL` impreso, no aqui: publicarla en este archivo volveria a dejar el archivo como la ultima
 escritura y el ciclo no termina. Es el mismo motivo por el que la cifra de cobertura vive en su fuente y no se
 re-transcribe.
+
+## Nota de disposicion del push (2026-10-02)
+
+⟦**Nota de disposicion 2026-10-02 — el «no commiteo ni empujo» de arriba describe la ventana de ejecucion del
+mandato, y esa ventana cerro con dos instrucciones del operador.** El prompt que abrio la tanda terminaba en
+espera de autorizacion: primero para el commit, despues para el push. Medido, no deducido:
+
+- **Commit `e2f7682`** — 13 archivos, +822/−65. Los ocho checks del pre-commit se ejecutaron y cerraron en
+  PASSED (indice fresco en 340 IDs, packs 5/5 reproducidos por el escritor, citas de plan 0 nuevas y 0
+  crecimientos). Sin `--no-verify`.
+- **Pre-flight antes de empujar**: `git fetch origin --quiet` y
+  `git rev-list --left-right --count origin/master...HEAD` = **`0 1`** — un commit adelante, nada atras, o sea
+  fast-forward; `git push --dry-run origin master` mostro el mismo rango `ed44c51..e2f7682` con EXIT 0.
+- **Push `ed44c51..e2f7682`** a `refs/heads/master` de `github.com/jhondrl6/ia-hotels-agent`. Verificado **por
+  identidad y no por el mensaje del comando**: `git ls-remote origin refs/heads/master` devolvio
+  `e2f7682f267a079ebb7035ffb6fa3d313b77c2ba`, igual que `git rev-parse HEAD`, y tras el fetch el conteo de
+  paridad quedo en **`0 0`**.
+- **Lo que de aquella frase sigue vigente**: ninguna fase ejecutada, ninguna inferencia, ninguna credencial,
+  ningun `--fix` ni `--update-baseline`, ninguna etiqueta humana y ninguna linea de `scripts/**`. Y en el
+  commit no entro trabajo ajeno: el arbol estaba limpio sobre `ed44c51` al abrir la sesion.
+- **Rectificacion de una palabra propia, partida en sus dos sentidos**: donde §«Lo que esta sesion NO produjo»
+  dice «ningun commit, ningun push, ningun `--fix`, ningun `--update-baseline`», lo primero y lo segundo ya no
+  son ciertos despues de las dos instrucciones; lo tercero y lo cuarto si. Y donde §«Lo que esta sesion dejo
+  explicitamente sin tocar» del paquete dice «Ningun write», la frase nunca fue cierta tal como se leia: no
+  hubo escritura de codigo ni de datos del piloto, pero esta tanda escribio once rutas documentales, que son
+  justo las que entran en `e2f7682`.
+- **El push publica el estado, no lo produce.** Las filas 1, 6, 9 y 10 de la tabla de pendientes quedan como
+  estaban, y el acto de etiquetar (D-D) sigue sin hacer: las tres piezas del piloto no entraron en el commit —
+  `git show --stat` sobre esas rutas da **0 lineas** — y conservan su sha de partida con `human_reviewed=false`.⟧
