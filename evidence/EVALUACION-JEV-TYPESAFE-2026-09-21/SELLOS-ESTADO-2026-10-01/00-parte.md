@@ -30,6 +30,10 @@ Desacuerdos en el plan JEV: **ninguno**. Las cuatro anclas aparecieron tal como 
 ninguna estaba sellada ya con `Sello 2026-10-01`, y el disco no contradice lo que los sellos afirman
 (comprobaciones en §3).
 
+**Recuento medido sobre el commit** (`git grep -o 'Sello 2026-10-01' HEAD -- .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | wc -l`)
+= **4 sellos**, uno por ancla, y **1 espejo** (`Espejo 2026-10-01`, §1 fila 4-espejo). Este plan no aporta
+prosa a los packs: los cinco que se regeneraron son del hermano.
+
 ---
 
 ## 2. Huellas sha256 PRE / POST

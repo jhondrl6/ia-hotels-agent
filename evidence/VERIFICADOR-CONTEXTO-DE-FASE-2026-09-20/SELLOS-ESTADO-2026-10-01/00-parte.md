@@ -32,9 +32,18 @@ mediciones de este parte se hicieron el **2026-10-02**, y cada cifra lleva abajo
 | 4 | fila de deuda nueva | `dependencias-fases.md`, tras §S34 | **aplicado con desacuerdo de número** — ver §3 |
 | — | (sin espejo en este plan) | — | El espejo de S37 del plan JEV vive en su propio `10-analisis-post-implementacion.md` |
 
-**Recuento efectivo: 16 inserciones en los dos planes** — 4 en JEV (ver el parte hermano) y **12 aquí**
-(3a×2, 3b, 3c, 3d×2, 3e×2, 3f, 3g×2, 3h×2). El mandato hablaba de «7 puntos, 9 inserciones» para este plan;
-los puntos son 8 y las inserciones 12, y la diferencia se justifica por los dos desacuerdos de censo de arriba.
+**Recuento efectivo, medido sobre el commit de la tanda con `git grep -o 'Sello 2026-10-01' HEAD -- … | wc -l`:
+17 sellos en los 9 ficheros fuente** — **4** en el plan JEV y **13** aquí (`README.md` 4 = 3a+3b+3d×2;
+`06-checklist-implementacion.md` 3 = 3a+3g×2; `09-documentacion-post-proyecto.md` 3 = 3e×2+3f;
+`10-analisis-post-implementacion.md` 1 = 3h; `dependencias-fases.md` 2 = 3c+3h). Fuera de los sellos hay dos
+escrituras más: la **fila de deuda S37** (PASO 4) y su **línea espejo** en el `10-analisis` del JEV
+(`git grep -o 'Espejo 2026-10-01'` = 1). Viaje a los derivados: esos 13 sellos aparecen **13 veces** en los
+cinco packs regenerados, porque la prosia del corpus viaja al pack.
+
+El mandato hablaba de «7 puntos, 9 inserciones» para este plan; los puntos medidos son 8 y las inserciones 13,
+y la diferencia se justifica por los dos desacuerdos de censo de la tabla (3h) y por el ancla de 3g que cayó en
+otro sitio. La primera versión de este parte decía «16 / 12»; quedó refutada por el conteo de arriba, que es el
+que se publica.
 
 ## 2. Censo del número de deuda (PASO 4), con su comando y su fecha
 
