@@ -2234,7 +2234,7 @@ class V4DiagnosticGenerator:
 
         # N1 FIX: Removed duplicate header. Template provides "### Metricas de Acceso para IA"
         table = """
-|| Métrica | Score | Detalle | Estado ||
+| Métrica | Score | Detalle | Estado |
 |---------|-------|---------|--------|
 """
         table += "\n".join(rows)

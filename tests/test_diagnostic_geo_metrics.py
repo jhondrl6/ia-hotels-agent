@@ -291,3 +291,43 @@ class TestDiagnosticGEOMetrics:
         """
         doc = _render_diagnostic()
         assert doc.count(GEO_SECTION_TITLE) == 1
+
+    def test_geo_table_header_and_separator_pipes_are_paired(self):
+        """Diente de DELIMITADORES (fila 17 del registro 33-): la cabecera y el
+        separador de la tabla de metricas IA llevan el mismo numero de pipes.
+
+        La forma `|| Metrica | Score | Detalle | Estado ||` (dobles pipes de borde) no
+        es una tabla Markdown valida: el render la deja como texto pegado. La tabla se
+        ubica por el dato, como el diente de perdida de la fila 14, para que un
+        renombre legitimo de la seccion no lo apague.
+        """
+        doc = _render_diagnostic()
+
+        section = _geo_section_window(doc)
+        assert section is not None, (
+            "PERDIDA DE SECCION: la tabla de metricas GEO no llego al documento"
+        )
+
+        lines = section["window"].splitlines()
+        sep_idx = next(
+            (i for i, l in enumerate(lines)
+             if re.match(r"^\|[-: |]+\|$", l.strip()) and "-" in l),
+            None,
+        )
+        assert sep_idx is not None, (
+            "PERDIDA DE TABLA: el bloque de metricas GEO no tiene separador"
+        )
+        header = lines[sep_idx - 1]
+        pipes_header = header.count("|")
+        pipes_sep = lines[sep_idx].count("|")
+        assert pipes_header == pipes_sep, (
+            f"DELIMITADORES SIN PARIDAD: la cabecera lleva {pipes_header} pipes y el "
+            f"separador {pipes_sep}; la forma con dobles pipes de borde no es una tabla "
+            f"Markdown valida (cabecera: {header.strip()!r})"
+        )
+        columnas_header = len(header.strip().strip("|").split("|"))
+        columnas_sep = len(lines[sep_idx].strip().strip("|").split("|"))
+        assert columnas_header == columnas_sep, (
+            f"COLUMNAS SIN PARIDAD: la cabecera declara {columnas_header} columnas y el "
+            f"separador {columnas_sep}"
+        )
