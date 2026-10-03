@@ -300,3 +300,82 @@ ninguna API de inferencia, ninguna credencial, nada instalado; ninguna escritura
 `.opencode/wiring_report.json` ni `dependencias-fases.md`; nada bajo
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`. No corro `--fix` ni `--update-baseline`. Las unicas cuatro
 rutas escritas son `protocolo.json`, `AGENTS.md`, `docs/cobertura-historia.md` y este checkpoint.
+
+---
+
+## Acto de congelado 2026-10-02 — D-1 = (a): `muestra.json` queda CONGELADA y el protocolo queda declarado
+## *inicial*, no definitivo
+
+**La decision es del operador, dictada en su palabra.** Recibida como «D-1 = (a)» con el rider de declaracion
+que se transcribe abajo literal. Esta sesion ejecuto el congelado y **no commiteo ni empuja**: el acto queda en
+el arbol de trabajo, en espera de autorizacion explicita, que es como el contrato de ejecucion del plan pide el
+commit de muestra y protocolo.
+
+**Lo que se movio.** `status` de `BORRADOR` a **`CONGELADA`** en `muestra.json`. Nada mas: round-trip probado
+antes de escribir (la receta `json.dumps(obj, ensure_ascii=False, indent=2)` con CRLF y sin newline final
+reprodujo el archivo original byte a byte, 2.660 B / 64 CR, sha de disco `07bb440b94002675…`), y despues de
+escribir el objeto completo fue comparado clave por clave con el anterior — `review`, `pairs`, `exclusions` y
+`counts` intactos. `git diff --numstat`: **1/1**, una linea. Sha de disco nuevo: `0107a386ae5750cdc0…`
+(2.661 B / 64 CR). Su sha **de blob**: `4a8b30c85a88ae4ca7af5f7595cfe8aaa06903eaaec3675614719c6287639539`
+(2.597 B / 0 CR). Los dos no casan, y la diferencia son 64 bytes = los 64 CR que `core.autocrlf=input` retira al
+indexar. Medido dos veces y por vias distintas antes del commit: desde el indice (`git add` +
+`git cat-file blob :<ruta> | sha256sum`, con `git reset -- <ruta>` despues para no llevar la pieza al commit de
+los documentos) y por normalizacion propia en memoria; las dos rutas dan el mismo valor. El blob sobrevive al
+commit: es propiedad del contenido, no del commit, y se re-verifica contra `HEAD` al cerrar.
+
+**El guard, ahora sobre el estado real.** `python scripts/evaluate_jev_pilot.py check` sobre la pieza versionada
+da `check_status OK`, `muestra_status CONGELADA`, los cinco guards en verde y `counts {4, 2, 2, 1}` — o sea el
+`content_sha` de los fragmentos sigue casando y `unreviewed_not_frozen` se satisface con el review lleno
+(`human_reviewed: true`, `reviewer: jhon`, `reviewed_at: 2026-10-02`). Y el contrafactual deja de ser hipotetico:
+una **copia** de la muestra ya congelada, con el review vaciado, da `FALLO` con el motivo «status CONGELADA sin
+revision humana con dueno y fecha» y **EXIT 1**. La puerta esta puesta sobre el archivo vivo, no sobre un
+ejercicio. `pytest tests/quality_gates/jev_pilot tests/quality_gates/decision_client -q` → **101 passed**; el
+assert de `BORRADOR` de la bateria vive en un fixture de `tmp_path` producido por `prepare()`, no en la pieza
+versionada, por eso el congelado no le mueve el verde (medido antes de escribir).
+
+**El rider, en las palabras del operador.** `protocolo.json` queda **versionado y aprobado por el humano el
+2026-10-02** como *protocolo inicial*, que es lo que `dependencias-fases.md` pide a la entrada de FASE-B; su
+`status` sigue **`BORRADOR`** porque la **congelacion final** corresponde al checkpoint de FASE-C, cuando exista
+el numero del margen. Queda declarado el **conflicto de letras** entre la fila P3 del README del plan («A con
+muestra/protocolo congelados») y la cadena de `dependencias-fases.md` («corpus y protocolo **inicial**
+versionados + aprobacion humana» en B; «checkpoint: **congelacion final**» en C): **goberna la cadena**. Y el
+campo `status` del protocolo queda registrado como **deuda con dueno**: no lo lee nadie — `PROTOCOLO_SCHEMA`
+esta declarado en `scripts/evaluate_jev_pilot.py` y nunca se usa, y el `check` solo toma `--muestra` y
+`--etiquetas` —, por tanto hoy **no es verificable**. Su cura toca `scripts/**` y pide una sesion con ese
+alcance, no esta.
+
+**Lo que el congelado vence, declarado y no re-escrito.** Las menciones vivas de `BORRADOR` quedan como registro
+cerrado de su sesion: seis en este checkpoint, cuatro en `00-paquete-decision.md` y dos en
+`SELLOS-ESTADO-2026-10-01/00-parte.md`. Tambien quedan vencidos por contenido `FASE-A/muestra_check.json` (el
+veredicto guardado con `muestra_status: BORRADOR`) y los dos `-COPIA-IDENTICA.json` de la preparacion del
+2026-09-30, junto con la tabla disk/blob de esa tanda, que hoy desfasa en `protocolo.json` (por la firma de los
+umbrales) y en `muestra.json` (por este acto). Nadie lee esos archivos desde codigo: medido con `git grep -ln` de
+`muestra_check` y `COPIA-IDENTICA` sobre `scripts` y `tests`, la poblacion es vacia, y el unico assert de
+`BORRADOR` en la bateria es de un fixture. Por eso se declaran aqui y no se editan.
+
+**Lo que sigue bloqueado, y no lo quita este acto.** FASE-B necesita ademas la parte (a) de D-B (autorizada, sin
+ejecutar, porque escribe en `scripts/decision_client.py`) y el mandato de ejecucion. FASE-C sigue bloqueada por
+los tres `null` que el operador acepto dejar: `usd` sin tabla de precios nombrada, `tokens_in`/`tokens_out` con
+techo pendiente de medir la recuperacion una vez, y el numero del `margen`, que nace con el `score()` del runner.
+
+**Sha de blob de `protocolo.json`, cerrado con esta linea.** En `e507193` el archivo esta en disco con
+`b656f8b46bf0862890f4e1cb53194dceec3994026776448026c31f8d46b7f04f` (2.465 B / 45 CR) y en el blob con
+`fd9a77286af1e61f0720b66fdd3be9ee4ba4a37d141fe2212b50ba31002ad96d` (2.420 B / 0 CR), medido con
+`git cat-file blob HEAD:… | sha256sum` sobre el commit y no de memoria. Con esto queda cerrada la frase de la
+nota de umbrales que prometia los dos: los dos estan, al lado, en el mismo artefacto.
+
+**D-2 ejecutada en el mismo acto (letra (c), decidida por el operador).** Se corto en `AGENTS.md`
+`§Cobertura por Modulo` la prosa fechada que iba de «En el commit que lleva esta nota los dos comandos dan
+4,699» hasta «…dos veces cada uno.»; quedan intactas las tres frases de definicion y el parrafo que manda el
+historial a `docs/cobertura-historia.md`, y no se movieron la cabecera (4,706) ni la fila `quality_gates` (877).
+La razon, la medicion de perdida y el texto rescatado verbatim aparcan en `docs/cobertura-historia.md`, que es su
+fuente unica. Lo que queda vencido por contenido con este acto: la tabla disk/blob del 2026-09-30,
+`FASE-A/muestra_check.json` y los dos `-COPIA-IDENTICA.json` (medido: ningun archivo de `scripts/` o `tests/` los
+lee), y las menciones vivas de `BORRADOR` en este checkpoint, en `00-paquete-decision.md` y en el sello del
+2026-10-01 -registradas arriba, no re-escritas-.
+
+**Rutas escritas en este acto y una inconsistencia del mandato.** `muestra.json`, `AGENTS.md`,
+`docs/cobertura-historia.md` y este checkpoint. El parrafo de autorizaciones listaba «SOLO» tres rutas y
+`docs/cobertura-historia.md` no estaba entre ellas, pero el propio PUNTO 2 manda aparcar ahi la razon de la poda y
+el Paso 3 la nombra en el commit de documentos: se escribio por esas dos instrucciones explicitas y se declara
+aqui el hueco en la lista, no se resolvio en silencio.

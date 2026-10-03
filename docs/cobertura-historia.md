@@ -15,6 +15,49 @@
 
 ---
 
+> **Poda del 2026-10-02 — D-2 = (c), decidida por el operador: la prosa fechada que sobrevivia en `AGENTS.md` se
+> corta y su texto se rescata aqui, verbatim en sus palabras.** Medido antes de cortar con **dos** instrumentos y
+> no con uno: el que enumera literales (`python temp/chequea_duplicado.py`) dio **12 de 12 presentes** y dejo
+> pasar el corte; el que enumera **frases** (`python temp/prueba_perdida_frases.py`, sobre el bloque leido de
+> `git show HEAD:AGENTS.md` y no del arbol que se estaba editando) dio **0 de 6 copiadas**. La diferencia es el
+> hallazgo y vale como nota de instrumento: la trasladacion del 2026-10-01 trajo a este archivo la *informacion*
+> de esas rondas, reescrita y mas completa -la nota de la tanda ADOPCION-Y-CIERRE-DEUDA y la del CIERRE-DEUDA
+> dicen lo mismo con otras palabras y con mas dientes-, pero no sus **frases**, y entre las seis perdidas estaba
+> la regla normativa «La unidad viaja con la cifra, que es la regla de la casa». Un conteo de literales no cazó un
+> texto que se iba. Por eso el bloque no se borra: se traslada, y queda abajo.
+>
+> Y una nota sobre el instrumento de frases: su primera version comparaba los dos lados con normalizacion
+> distinta -dejaba los `>` de la cita en el historial y se los quitaba al bloque-, asi que despues del rescate
+> seguia dando 5 de 6 faltantes con el texto ya puesto. Nivelada la comparacion dio **6 de 6 presentes y el bloque
+> completo verbatim**. El cero de antes del corte era cierto (el texto no estaba); el rojo de despues era del
+> instrumento. Se declara porque es la misma trampa de delimitadores que la casa ya registro.
+>
+> Lo que no se toco, verificado con `grep -c` despues de cortar: la cabecera `### Cobertura por Modulo (4,706
+> funciones totales)` = 1 y la fila `| quality_gates | 877 |` = 1. El diff es **1/14** (una linea reescrita,
+> catorce menos; 551 lineas pasan a 538). La razon de la poda no es estetica: mientras la cifra de una ronda este
+> escrita en `AGENTS.md`, el primer commit ajeno la vuelve a vencer -que es exactamente lo que hizo `4621049` al
+> subir el arbol a 4.706 sin llevar el archivo-. Hasta hoy este archivo era la fuente unica de la cifra; desde hoy
+> lo es tambien de la prosa.
+>
+> Residuo declarado y **no** corregido, porque el mandato pedía conservar el parrafo intacto: la cabecera del
+> parrafo siguiente sigue diciendo «las notas medidas entre 2026-09-11 y 2026-10-01», y en este archivo hay notas
+> del 2026-10-02. Su cota alta esta vencida por un dia, y es el mismo tipo de literal que se acabo de podar, así
+> que queda registrado como candidato a la misma cura. Dueno: el operador.
+>
+> **Texto rescatado** (las palabras exactas que estaban en `e507193`; re-empaquetada solo la longitud de linea,
+> 1.267 caracteres): «En el commit que lleva esta nota **los dos comandos dan 4,699** (medido 2026-10-01 sobre
+> `9181197`, tanda ADOPCION-Y-CIERRE-DEUDA): el +1 contra la segunda ronda de la manana sale de un archivo y se
+> atribuye en `docs/cobertura-historia.md` — `tests/test_diagnostic_geo_metrics.py` (5 → 6, el diente de
+> delimitadores de la fila 17 del registro 33-). La unidad viaja con la cifra, que es la regla de la casa. La
+> ronda anterior subio `4,688 → 4,698` (medida sobre `c4d0ffe`, segunda ronda del dia): el +10 contra la ronda de
+> la manana salia de tres archivos y se atribuyo archivo por archivo en `docs/cobertura-historia.md` —
+> `tests/test_registry_fecha_documental.py` (20 → 25), `tests/financial_engine/test_pricing_resolution_wrapper.py`
+> (36 → 39) y `tests/test_diagnostic_geo_metrics.py` (3 → 5). Las diez viajaron con la cifra, que es la regla de la
+> casa. La nota anterior de hoy subio `4,584 → 4,688` sobre `ed3670e` y ya dejo escrita la razon: la afirmacion de
+> `4,584` estaba vencida en los dos sentidos — ni el arbol ni HEAD daban ese numero. Eso es el estado de **ese
+> commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos cifras
+> vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.»
+
 > **Ronda del 2026-10-02 — CIERRE DE UMBRALES Y CIFRA (la cifra subio a 4,706).** Medido con el metodo canonico
 > de la casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,706**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk sobre `4621049` = **4,706**): **las dos cifras

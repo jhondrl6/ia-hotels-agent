@@ -408,20 +408,7 @@ python scripts/run_all_validations.py           # Completo
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
-> **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`. En el commit
-> que lleva esta nota **los dos comandos dan 4,699** (medido 2026-10-01 sobre `9181197`, tanda
-> ADOPCION-Y-CIERRE-DEUDA): el +1 contra la segunda ronda de la manana sale de un archivo y se atribuye en
-> `docs/cobertura-historia.md` — `tests/test_diagnostic_geo_metrics.py` (5 → 6, el diente de delimitadores
-> de la fila 17 del registro 33-). La unidad viaja con la cifra, que es la regla de la casa. La ronda
-> anterior subio `4,688 → 4,698` (medida sobre `c4d0ffe`, segunda ronda del dia): el +10 contra la ronda de
-> la manana salia de tres archivos y se atribuyo archivo por archivo en
-> `docs/cobertura-historia.md` — `tests/test_registry_fecha_documental.py` (20 → 25),
-> `tests/financial_engine/test_pricing_resolution_wrapper.py` (36 → 39) y
-> `tests/test_diagnostic_geo_metrics.py` (3 → 5). Las diez viajaron con la cifra, que es la regla de la casa.
-> La nota anterior de hoy subio `4,584 → 4,688` sobre `ed3670e` y ya dejo escrita la razon: la afirmacion
-> de `4,584` estaba vencida en los dos sentidos — ni el arbol ni HEAD daban ese numero. Eso es el estado de **ese
-> commit**, no un invariante: en cuanto una edicion deje funciones test fuera del arbol versionado, las dos
-> cifras vuelven a separarse — y asi paso los dias 25 y 26 de este mes, dos veces cada uno.
+> **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`.
 
 > **El historial de rondas** (las notas medidas entre 2026-09-11 y 2026-10-01, con sus atribuciones por
 > bateria, sus notas de instrumento y sus antecedentes) vive en `docs/cobertura-historia.md`. Cada ronda aparca su
