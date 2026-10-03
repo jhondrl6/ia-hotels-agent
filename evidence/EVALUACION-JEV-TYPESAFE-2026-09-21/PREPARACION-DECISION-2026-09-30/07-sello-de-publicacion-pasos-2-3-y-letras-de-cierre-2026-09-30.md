@@ -330,3 +330,59 @@ cortaron el quick [11/13]. Se republico con `--write-report`. El veredicto de ca
 unidad (174 llamadas, 75 gobernadas, 0 violaciones antes y despues); lo que se movio fue la fotografia de
 un directorio transitorio. Vale la pena que quien revise el gate se pregunte si un conteo de `temp/` debe
 ser parte de un artefacto versionado, porque hoy obliga a re-publicar cada vez que alguien tira un scratch.
+
+---
+
+## Addendum 2026-10-03 (OLA-1) — la cuarta del addendum del 10-01 tiene letra, y su premisa ya estaba curada
+
+Este texto es **aditivo**: ninguna linea de arriba se re-escribe, incluida la pregunta que cierra el punto
+(4). Lo que pasa es que el operador la contesto el 2026-10-03 y que la economia que la preguntaba ya no es
+la que el punto (4) describia.
+
+### (1) La letra llego: decision (d1), dictada por el operador el 2026-10-03
+
+Su texto, en las palabras de la pegada que lo autorizo: sacar el conteo de `temp/` del artefacto versionado
+—`exclusiones_por_rol.temp` deja de pinarse en `.opencode/wiring_report.json`— y que siga publicandose en la
+salida del verificador. Motivo declarado por quien la dicta: la fotografia de un directorio ignorado no es
+una decision de cableado. La decision se registro como **fila 18** del
+`REINGESTA-CONTEXT-JEV-2026-09-29/33-registro-unificado-de-pendientes-2026-09-29.md`, que es donde vive
+ahora el registro de pendientes; su **ejecucion** toca `scripts/` y viaja con la OLA 2 (mandato
+`scripts/` + `tests/` + `config/`). Nada de codigo se movio en esta tanda.
+
+### (2) La premisa economica de esa pregunta esta VENCIDA, y el contrafactual lo dio la misma sesion que estampa
+
+El punto (4) decia «hoy obliga a re-publicar cada vez que alguien tira un scratch». Eso lo levanto el schema
+**1.2** del propio derivado, publicado el 2026-10-01 en la tanda de adopcion: `scripts/validate_wiring.py:1090-1096`
+eleva a PROCEDENCIA `exclusiones_por_rol.<rol>.cantidad` y `.ejemplo` **para todo rol presente en cualquiera
+de los dos objetos comparados** —no solo los del arbol fresco, para que un rol que desaparece no se ponga
+rojo por ausencia—, y `_neutralizar_procedencia` (`:1100-1112`) los sustituye por la sentinela
+`PROCEDENCIA-NO-GOBERNADA` antes de serializar. Lo gobernable es la contraparte versionada: hoy el artefacto
+publica para `temp` una `cantidad` bruta de **90** con `cantidad_versionada` de **0**, y el digester
+compara el 0.
+
+El contrafactual no se construyo, se aprovecho: **esta tanda escribio 14 archivos bajo
+`temp/ola1-2026-10-03/`** y, con ellos puestos, `python -X utf8 scripts/validate_wiring.py --check` devolvio
+`[OK] Wiring: 174 llamadas descubiertas en 689 archivos ... derivado: .opencode/wiring_report.json conforme
+con el calculo en memoria (digest f915bdd4943c)`, **EXIT 0** (crudo `temp/ola1-2026-10-03/15-check-con-temp.txt`),
+y `run_all_validations.py --quick` dio **13/13** dos veces en el mismo arbol. O sea: el impuesto que el punto
+(4) describia ya no se cobra, y se midio con el scratch puesto en vez de con memoria.
+
+### (3) Lo que la (d1) si cambia, dicho con precision para que la Ola 2 no de un paso de mas
+
+Hoy el conteo bruto esta **dentro del artefacto versionado** y **fuera de la salida impresa**: la linea
+`[OK] Wiring: ...` no nombra `exclusiones_por_rol` en ningun caso (buscado en el crudo `15-`, cero
+coincidencias). La decision pide la inversa —fuera del JSON, dentro de la salida—, de modo que ejecutarla
+literal es una **mudanza**, no un retiro, y el retiro a secas dejaria al verificador mudo justo en el dato
+que el operador quiere seguir viendo. Dos cosas que la Ola 2 tiene que medir antes de tocar, declaradas
+aqui en vez de resueltas: quien aserta hoy `exclusiones_por_rol.*.cantidad` en la bateria (hay tests del
+paso 3 que gobiernan el derivado y sus rutas), y que `--check` sigue necesitando una forma estable de
+comparar roles que aparecen o desaparecen entre los dos objetos. Si al final resulta que el operador queria
+solo la gobernanza (que el scratch no caduque el artefacto), **eso ya esta hecho** y no hay ejecucion.
+
+### (4) Lo que este addendum tampoco cierra, en la misma forma que los anteriores
+
+El commit que lleve esta seccion es **posterior** a la revision L3 corrida el 2026-10-03 —que respondio **sin
+hallazgos** y, medido hoy, **no imprime su baseline ni el corte de commits**, asi que su cobertura no se
+afirma desde el arbol—, ni de las ediciones del `33-`, que siguen **sin commitear** y por tanto fuera de
+alcance de cualquier revision de commits. Es la regla que ya anotaron la fila 16 del `33-` y el punto (4) de
+arriba: la proxima L3 barre esto y lo que siga.
