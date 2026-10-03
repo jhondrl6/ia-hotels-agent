@@ -216,3 +216,87 @@ las cuatro filas todavia pendientes del protocolo (`suficiencia_minima`, `margen
 ya existe en las etiquetas: dos de cuatro), y el commit de la tanda de codigo mas esta transcription. Con el
 commit, la cifra canonica de `AGENTS.md` pasa de 4.699 a **4.706** (medido: `grep -rE "^\s*def test_" tests
 --include=*.py` en el arbol contra `git grep -c` sobre HEAD) y ese archivo requiere instruccion suya aparte.
+
+---
+
+## Nota de cierre 2026-10-02, segunda sesion del dia — los umbrales quedan ESCRITOS en el protocolo, la
+## muestra sigue en BORRADOR y la cifra canonica queda estampada
+
+**Lo que cierra esta nota.** La tanda anterior dejaba cuatro filas pendientes y la convencion de los null. Esta
+sesion escribe esas filas en `protocolo.json`. No es fase de JEV ni de VCF: FASE-A/B/C/RELEASE siguen sin
+ejecutarse y `dependencias-fases.md` no se toco.
+
+**Los valores escritos y de donde venia cada uno.** Dos procedencias distintas, separadas: las **filas 1-6 las
+acepto por clave usted el 2026-10-02** (D-D parcial, acta en el paquete de decision de esta misma carpeta) y
+**las filas 7-10 y las convenciones las dicta la pegada de cierre de hoy**, que es otra sesion del mismo dia.
+
+| Clave | Lo que quedo escrito | Procedencia |
+|---|---|---|
+| `limites_gasto.llamadas` | `12` | fila 1, aceptada por clave el 2026-10-02 |
+| `limites_gasto.tokens_in` / `tokens_out` | siguen `null` | fila 2, aceptada el 2026-10-02: el techo pide medir la recuperacion una vez |
+| `limites_gasto.usd` | sigue `null` | fila 3, aceptada el 2026-10-02: sin tabla de precios nombrada |
+| `parametros.timeout_s` | `30` | fila 4, aceptada el 2026-10-02 (presupuesto total por llamada, no por intento) |
+| `criterios_adopcion.latencia_max` | `30000` | fila 5, aceptada el 2026-10-02 (ms por llamada) |
+| `criterios_adopcion.cobertura_min` | `0.95` | fila 6, aceptada el 2026-10-02, sobre el denominador publicado de 4 |
+| `criterios_adopcion.suficiencia_minima` | `0.5` | fila 7, decidida en la pegada de hoy: 2 de 4 pares pertinentes |
+| `criterios_adopcion.margen_vs_deepseek` | sigue `null`, con su **unidad** escrita en la nota | fila 8, decidida hoy: diferencia absoluta de score, no de ratio; el numero espera el `score()` del runner de FASE-B. La fila cierra en su unidad, no en su valor |
+| `criterios_adopcion.tratamiento_abstenciones` | «contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte» | fila 9, la propuesta del material §3 aceptada en la pegada de hoy |
+| `criterios_adopcion.revision_humana` | «obligatoria; designado: jhon (2026-10-02, acta en `PREPARACION-DECISION-2026-10-02/`)» | fila 10: el **nombre** viene del dictado del 2026-10-02 («revisor: yo»), escribirlo en el protocolo es el acto de hoy |
+| `limites_gasto.motivo` | re-escrito con los dos motivos separados | acompana a las filas 2 y 3, que siguen `null` |
+| `nota` | enmendada **conservando su frase de bloqueo** | convencion de los null, unidad del margen, denominador publicado y los null que siguen bloqueando FASE-C |
+
+Ningun valor de la tabla sale de una sesion de codigo: los unicos numeros nuevos de hoy son los que usted dicto
+en la pegada. Lo que no estaba decidido —el numero del margen— queda `null`, no rellenado.
+
+**Metodo, y su prueba antes de escribir.** `json.dumps(obj, ensure_ascii=False, indent=2)` con terminadores CRLF
+**y sin newline final** reproduce el `protocolo.json` original byte a byte (1.311 B, 45 CR). Sobre esa receta se
+muto y se re-escribio, asi que no hay re-codificacion de texto ajeno. `git diff --numstat` de la pieza: **9/9**,
+y las nueve lineas son exactamente las claves de la tabla —`usd`, `tokens_in`, `tokens_out` y
+`margen_vs_deepseek` no aparecen en el diff porque siguen `null` y no se movieron.
+
+**Sha nuevo de `protocolo.json`.** En disco: `b656f8b46bf0862890f4e1cb53194dceec3994026776448026c31f8d46b7f04f`
+(2.465 B / 45 CR / 45 lineas, sin newline final; medido dos veces, con `hashlib` y con `sha256sum`). Al
+commitearse, `core.autocrlf=input` normaliza el blob a LF, asi que **el sha de blob no casa con el de disco** y
+se publican los dos.
+
+**La tabla disk/blob del 2026-09-30 queda vencida por contenido, solo en la fila de `protocolo.json`.** Esa
+tabla decia disk `fa327b5887ac36cd…` / blob `654b37d212b90299…` para el protocolo; el disco ya no es esos bytes.
+**No la re-escribo**: es evidencia cerrada de otra sesion y se la declara al lado, como se hizo con la tanda de
+las etiquetas. Las otras dos piezas del piloto no se movieron ni un byte —`muestra.json` sigue en
+`07bb440b94002675…` y `etiquetas.json` en `4ffbb120ef94b982…`, re-medido despues de la ultima escritura de esta
+sesion.
+
+**El congelado NO se ejecuto, y sigue con dueno.** `muestra.json` conserva `status: BORRADOR`; el paso a
+`CONGELADA` espera su palabra explicita. Lo que si se midio, sobre **copias en `temp/`** y sin tocar los
+versionados: copia en `CONGELADA` con el review lleno → `check_status OK`, EXIT **0**; la misma copia con el
+review vaciado → `FALLO` con el guard `unreviewed_not_frozen` en rojo, EXIT **1**. O sea, congelar hoy pasaria,
+y la puerta tiene dientes.
+
+**Las dos interpretaciones que la tanda anterior puso quedan hoy documentadas en el protocolo.** (i)
+`importance: null` en `etiquetas.json` se lee **«no aplica» al par**, no «sin revisar»: eso resuelve la doble
+lectura del null que dejo la transcription, y la rubrica sigue sin cuarto valor. (ii) `review_status: revisada`
+es la palabra con la que esa transcription represento su firma, no un valor dictado. Las dos viven en la `nota`
+de `protocolo.json` y las dos son vetables por usted con una linea.
+
+**Consecuencia aritmetica declarada, no corregida.** `cobertura_min 0.95` sobre un denominador de 4 exige 4 de
+4: un solo par sin etiqueta la rompe. Es lo que el material de preparacion ya advertia en su columna de
+revisión; la fila se acepto igual y aqui queda dicho.
+
+**Cifra canonica.** `AGENTS.md` pasa de 4.699 a **4.706** y su fila `quality_gates` de 870 a **877**. Medido con
+el metodo de la casa: `grep -rE "^\s*def test_" tests --include=*.py` = **4.706** en el arbol y
+`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk sobre `4621049` = **4.706**; la suma de las 22
+filas de la tabla da 4.706 con un instrumento que enumera los sumandos. La atribucion por archivo y la nota de
+la ronda aparcan en `docs/cobertura-historia.md`. Queda declarado aqui, porque es lo que la hace necesaria: el
++7 lo trajo el commit `4621049` de hoy y ese commit no llevo `AGENTS.md` entre sus rutas, asi que la cabecera
+estaba vencida desde entonces. **Esta sesion no escribio ningun test ni toco `tests/`**: solo estampa la cifra.
+Y como su alcance fijo que en `AGENTS.md` cambian solo la cabecera y la fila, la prosa de la nota vieja sigue
+diciendo «los dos comandos dan 4,699» referida a `9181197`: esa clausula queda vencida y se declara, no se
+re-escribe.
+
+**Lo que NO hizo esta sesion.** Ninguna fase de JEV ni de VCF; no congelo, no etiqueto, no infirio; ninguna red,
+ninguna API de inferencia, ninguna credencial, nada instalado; ninguna escritura en `scripts/**`, `tests/**`,
+`modules/**`, `.agents/**`, `.cursorrules`, `VERSION.yaml`, `CHANGELOG.md`, `REGISTRY.md`, `.gitignore`,
+`tmp_test/**`, `.opencode/refs_baseline.txt`, `.opencode/plans/plan_citations_baseline.json`,
+`.opencode/wiring_report.json` ni `dependencias-fases.md`; nada bajo
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`. No corro `--fix` ni `--update-baseline`. Las unicas cuatro
+rutas escritas son `protocolo.json`, `AGENTS.md`, `docs/cobertura-historia.md` y este checkpoint.

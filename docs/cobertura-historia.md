@@ -15,6 +15,29 @@
 
 ---
 
+> **Ronda del 2026-10-02 — CIERRE DE UMBRALES Y CIFRA (la cifra subio a 4,706).** Medido con el metodo canonico
+> de la casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,706**) y contrastado con el arbol versionado
+> (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk sobre `4621049` = **4,706**): **las dos cifras
+> cuadran**. Antecedente: **4,699** (tanda ADOPCION-Y-CIERRE-DEUDA del 2026-10-01, medida sobre `9181197`). El
+> delta (+7) se atribuye por archivo, sin mas sumandos: **+7** en
+> `tests/quality_gates/decision_client/test_decision_client_campos_pedido_y_tiempo.py` (0 → **7**, la mitad (a)
+> del gap: los tres campos nuevos del pedido viajando en el dict publicado, `provider_requested` saliendo del
+> entorno que nombro el llamador, `model_requested` fijado al pin declarado y no a lo que reporta el proveedor,
+> `elapsed_ms` en null cuando no hubo llamada y cronometrando la llamada real, y el control de que los siete
+> campos viejos no cambiaron de nombre ni de valor). Distribucion por filas: +7 a `quality_gates` (870 →
+> **877**); las otras 21 filas no se movieron y la suma de las 22 de la tercera columna da **4,706**, verificada
+> con un instrumento que enumera los sumandos y no de memoria.
+>
+> Lo que esta ronda deja declarado, que es lo que la hace necesaria: **la unidad no viajó con la cifra**. Los
+> siete tests se commitearon el 2026-10-02 en `4621049`, y ese commit no llevo `AGENTS.md` entre sus rutas, asi
+> que la cabecera siguio diciendo 4,699 mientras el arbol y HEAD daban 4,706 desde ese mismo commit. La sesion
+> que estampa la cifra hoy no escribio ningun test ni toco `tests/`: es la ronda de la costura anterior, aqui
+> queda solo el sello. Y como su alcance fijo que en `AGENTS.md` solo cambian la cabecera y la fila, la prosa de
+> la nota de `§Cobertura por Modulo` sigue afirmando que "en el commit que lleva esta nota los dos comandos dan
+> 4,699": esa clausula queda vencida por esta nota y se declara aqui, no se re-escribe alla. Mide lo mismo que
+> midio: `9181197`, que es su commit, no el que lleva la cabecera a 4,706.
+>
+
 > **Tanda ADOPCION-Y-CIERRE-DEUDA del 2026-10-01 (la cifra subio a 4,699).** Medido con el metodo canonico de
 > la casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,699**) y contrastado con el arbol versionado
 > (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado por awk en `9181197` = **4,699**): **las dos cifras

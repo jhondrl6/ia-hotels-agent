@@ -23,24 +23,24 @@
     "retry_policy": {
       "max_retries": 0
     },
-    "timeout_s": null
+    "timeout_s": 30
   },
   "politica_cache": "sin cache entre brazos; cada llamada declarada con proveedor/modelo efectivo",
   "splits": "determinista por plan (un plan no aparece en dev y eval a la vez)",
   "limites_gasto": {
     "usd": null,
-    "llamadas": null,
+    "llamadas": 12,
     "tokens_in": null,
     "tokens_out": null,
-    "motivo": "sin presupuesto aprobado"
+    "motivo": "null restantes: usd sin tabla de precios nombrada; tokens_in/tokens_out con techo pendiente de medir la recuperacion una vez"
   },
   "criterios_adopcion": {
-    "cobertura_min": null,
+    "cobertura_min": 0.95,
     "margen_vs_deepseek": null,
-    "tratamiento_abstenciones": null,
-    "suficiencia_minima": null,
-    "latencia_max": null,
-    "revision_humana": "obligatoria, pendiente de designar responsable"
+    "tratamiento_abstenciones": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte",
+    "suficiencia_minima": 0.5,
+    "latencia_max": 30000,
+    "revision_humana": "obligatoria; designado: jhon (2026-10-02, acta en evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-10-02/)"
   },
-  "nota": "Los valores nulos son a-decidir por el operador antes de cualquier inferencia; bloquean FASE-C."
+  "nota": "Los valores nulos son a-decidir por el operador antes de cualquier inferencia; bloquean FASE-C. Convencion documental: importance null en etiquetas.json significa 'no aplica' al par, no 'a-decidir'; resuelve la doble lectura que dejo la transcription del 2026-10-02. Su hermana: review_status 'revisada' en etiquetas.json es la palabra con la que esa transcription represento la firma del operador, no un valor dictado; se cambia con una linea suya. Denominador publicado: 4 pares, con muestra chica declarada. En ese denominador se leen suficiencia_minima 0.5 (2 de 4 pertinentes) y cobertura_min 0.95. margen_vs_deepseek cierra en su unidad decidida (diferencia absoluta de score, no de ratio) y su numero sigue null: se fija cuando exista el score() del runner en FASE-B. limites_gasto.usd sigue null (sin tabla de precios nombrada) y tokens_in/tokens_out siguen null (techo pendiente de medir la recuperacion una vez); esos null siguen bloqueando FASE-C hasta que dejen de serlo."
 }
