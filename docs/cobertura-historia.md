@@ -15,6 +15,28 @@
 
 ---
 
+> **Ronda del 2026-10-03 — OLA 2 DEL PILOTO JEV (la cifra sube a 4,717).** Medido con el metodo canonico de la
+> casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,717**) y contrastado con el arbol versionado
+> (`git grep -c -E "^[[:space:]]*def test_" HEAD -- tests` sumado con awk sobre el commit que lleva la pata (b)
+> = **4,717**): **las dos cifras cuadran**. Antecedente: **4,706** (ronda del 2026-10-02, medida sobre `4621049`).
+> El delta (+11) se atribuye por archivo, sin mas sumandos: **+11** en
+> `tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py` (0 → **11**), la pata (b) del ledger del runner
+> - `attempts`, `error_kind` y `usage_normalized` - que nace en `scripts/evaluate_jev_pilot.py` porque la costura
+> declara que no le pertenecen. Su diente no es decorativo: `reservar_presupuesto` niega `max_reintentos` distinto
+> de 0 porque el default medido del SDK 0.7.0 (`RetryPolicy(max_retries=2)`) produce **3 intentos** facturables
+> ante un 429, y `normalizar_usage` trata el uso desconocido como estado y no como cero (medido: `Usage()`
+> resuelve `(None, None)`). El control negativo se ejecuto sobre el instrumento versionado: `git show HEAD:` del
+> guard viejo deja pasar `typesafe_sdk`, que es el nombre real del modulo - la lista prohibida nombraba `typesafe`,
+> un modulo que no existe y por eso nunca mordo.
+>
+> Nota de instrumento, declarada porque el error fue mio y dos veces: la primera medicion de fines de linea uso
+> `grep -c $'\r'` con el patron vacio, o sea conto **todas** las lineas y fabrico un CRLF generalizado que no
+> estaba (los numeros salian iguales al conteo de lineas); el segundo intento en Python conto `b[13:14]`, que es
+> el byte en la posicion 13 del archivo y no el CR. Medido por bytes con `bytes([13])` salio la verdad: cuatro
+> archivos en LF y **dos** crudos de sesion si venian en CRLF, por ser redireccion de stdout de Python/pytest
+> bajo Windows; normalizados con asercion de lineas intactas (31 y 14, menos 31 y menos 14 bytes). La unidad
+> viaja con la cifra, que es la regla de la casa.
+
 > **Poda del 2026-10-02 — D-2 = (c), decidida por el operador: la prosa fechada que sobrevivia en `AGENTS.md` se
 > corta y su texto se rescata aqui, verbatim en sus palabras.** Medido antes de cortar con **dos** instrumentos y
 > no con uno: el que enumera literales (`python temp/chequea_duplicado.py`) dio **12 de 12 presentes** y dejo

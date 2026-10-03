@@ -404,7 +404,7 @@ python scripts/run_all_validations.py --quick  # Rapido
 python scripts/run_all_validations.py           # Completo
 ```
 
-### Cobertura por Modulo (4,706 funciones totales)
+### Cobertura por Modulo (4,717 funciones totales)
 
 > **Aqui vive la cifra**: `Estado Actual`, `§Pruebas` y el arbol de estructuras la **referencian**, no la
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
@@ -419,7 +419,7 @@ python scripts/run_all_validations.py           # Completo
 |--------|---------------|------------|
 | financial_engine | 552 | `tests/financial_engine/` (+3 en la ronda del 2026-10-01: el diente de tres piezas del aislamiento de flags, `test_pricing_resolution_wrapper.py` 36 → 39) |
 | asset_generation | 472 | `tests/asset_generation/` |
-| quality_gates | 877 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses; **+9 en la ronda del 2026-09-28**: 6 en `phase_briefing/test_briefing_proyeccion_workflow_gobernada.py` — la cura de S32, que gobierna por `--check` la proyeccion del workflow y pierde su verde cuando se la apaga — y 3 en `governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py` — la cura de D-A sobre los estados que se delegaban en D1) |
+| quality_gates | 888 | `tests/quality_gates/` (incl. `tribunal/` con los tests del enforcement P2/P3 y la matriz P6-R; +los arneses `decision_client/`, `lesson_relevance/` y `phase_briefing/` de la orden de calidad; +2 en la ronda S31 del 2026-09-27: el control de resolucion del plan anclado a la revision fija `44f53c2` y el control anti-literal de los seis arneses; **+9 en la ronda del 2026-09-28**: 6 en `phase_briefing/test_briefing_proyeccion_workflow_gobernada.py` — la cura de S32, que gobierna por `--check` la proyeccion del workflow y pierde su verde cuando se la apaga — y 3 en `governance_numbers/test_governance_numbers_estados_sin_puntero_d1.py` — la cura de D-A sobre los estados que se delegaban en D1; **+11 en la ronda del 2026-10-03**: los 11 de `jev_pilot/test_jev_pilot_ledger_fase_b.py`, la pata (b) del ledger del piloto JEV — `attempts`, `error_kind` y `usage_normalized` — con su control negativo ejecutado sobre el guard versionado en HEAD, que reproduce el hueco del nombre `typesafe_sdk`) |
 | commercial_documents | 363 | `tests/commercial_documents/` |
 | auditors | 226 | `tests/auditors/` (incl. +11 de AC-S1 en P5, +7 de TestGeminiModelFromRegistry en v4.77.1, +5 de TestGeminiCostAccounting en v4.77.2, +1 del contrato no-medible en v4.77.3) |
 | geo_enrichment | 140 | `tests/geo_enrichment/` |
