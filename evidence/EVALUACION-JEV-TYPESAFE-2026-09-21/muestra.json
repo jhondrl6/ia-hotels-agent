@@ -1,6 +1,6 @@
 {
   "schema": "jev-pilot-muestra/v1",
-  "status": "BORRADOR",
+  "status": "CONGELADA",
   "corpus_source": "own:lecciones_index",
   "temporal_cut": "2026-09-12",
   "review": {
