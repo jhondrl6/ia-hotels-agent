@@ -23,8 +23,12 @@ PROTOCOLO_SCHEMA = "jev-pilot-protocolo/v1"
 LABEL_KEYS = {"label", "etiqueta", "importance", "importancia", "reviewer",
               "reviewed_at", "human_reviewed", "revisado", "aceptado"}
 # Modulos de proveedor/red que el modo offline tiene prohibido importar.
-FORBIDDEN_MODULES = {"typesafe", "httpx", "httpx2", "httpcore", "httpcore2",
-                     "tenacity", "anthropic", "openai", "requests", "urllib.request"}
+# FASE-B (2026-10-03): el nombre REAL del paquete medido es `typesafe_sdk` (distribucion
+# `typesafe-sdk`); `import typesafe` da ModuleNotFoundError, o sea la lista vieja bloqueaba un
+# nombre que no existe y dejaba pasar el que si. Se anaden las dos grafias del nombre real.
+FORBIDDEN_MODULES = {"typesafe", "typesafe_sdk", "typesafe-sdk", "httpx", "httpx2",
+                     "httpcore", "httpcore2", "tenacity", "anthropic", "openai",
+                     "requests", "urllib.request"}
 
 
 def sha256_text(text: str) -> str:
@@ -184,6 +188,124 @@ def metrics(recovery: dict, classification: dict, e2e: dict) -> dict:
         "recall_importante_candidatos": score(classification["rec_num"], classification["den"]),
         "extremo_a_extremo": score(e2e["num"], e2e["den"]),
     }
+
+
+# --- FASE-B, pata (b): attempts, error_kind y usage_normalized ------------------------------
+# La costura (scripts/decision_client.py) conserva pedido/modelo/tiempo --la pata (a), ejecutada
+# en 4621049-- y declara que estas tres NO le pertenecen: nacen en el ledger del runner.
+# El SDK vive fuera del sys.path del producto; estas funciones NO lo importan: reciben objetos y
+# clasifican por nombre de clase, o sea son probables sin red y sin el paquete instalado.
+
+CLASES_DE_ERROR = {
+    "TypeSafeAuthenticationError": "auth",
+    "TypeSafePermissionDeniedError": "auth",
+    "TypeSafeRateLimitError": "cuota",
+    "TypeSafeAPIConnectionError": "conexion",
+    "TypeSafeAPITimeoutError": "timeout",
+    "TypeSafeAPIResponseValidationError": "respuesta_ilegible",
+    "TypeSafeBadRequestError": "peticion",
+    "TypeSafeUnprocessableEntityError": "peticion",
+    "TypeSafeNotFoundError": "peticion",
+    "TypeSafeInternalServerError": "servidor",
+}
+
+
+def error_kind_de(exc: BaseException) -> dict:
+    """Clase del fallo por el nombre real de la excepcion y su `status` (AC9).
+
+    Camina el MRO: una subclase del SDK se clasifica por su antecesor conocido, no por `Exception`.
+    DA-C3/AC2: un fallo y una respuesta negativa no colapsan, y `desconocido` no es `ausente`.
+    """
+    for cls in type(exc).__mro__:
+        clase = CLASES_DE_ERROR.get(cls.__name__)
+        if clase:
+            return {"error_kind": clase, "clase": type(exc).__name__,
+                    "status": getattr(exc, "status", None)}
+    return {"error_kind": "desconocido", "clase": type(exc).__name__,
+            "status": getattr(exc, "status", None)}
+
+
+def normalizar_usage(usage) -> dict:
+    """Tokens observados, separados del coste calculado y del cargo facturado (AC8/AC10).
+
+    Medido en el SDK 0.7.0: `Usage()` resuelve `(None, None)`, o sea «uso desconocido» es un estado
+    del tipo y no un cero. Un timeout sin `usage` tampoco es cero: `sin_usage` conserva la reserva.
+    """
+    def _entero(valor):
+        return valor if isinstance(valor, int) and not isinstance(valor, bool) else None
+
+    if usage is None:
+        return {"input_tokens": None, "output_tokens": None, "total": None,
+                "estado": "sin_usage", "libera_reserva_como_cero": False}
+    entrada = _entero(getattr(usage, "input_tokens", None))
+    salida = _entero(getattr(usage, "output_tokens", None))
+    if entrada is not None and salida is not None:
+        estado = "observado"
+    elif entrada is not None or salida is not None:
+        estado = "parcial"
+    else:
+        estado = "desconocido"
+    total = None if (entrada is None or salida is None) else entrada + salida
+    return {"input_tokens": entrada, "output_tokens": salida, "total": total,
+            "estado": estado, "libera_reserva_como_cero": False}
+
+
+def nuevo_ledger(proveedor: str, modelo_solicitado: str) -> dict:
+    """Fila del ledger antes de cualquier intento: `attempts` en 0 y nada observado."""
+    return {"proveedor": proveedor, "modelo_solicitado": modelo_solicitado,
+            "modelo_efectivo": None, "attempts": 0, "intentos": [], "error_kind": None,
+            "usage_normalized": {"input_tokens": None, "output_tokens": None, "total": None,
+                                 "estado": "no_intentada", "libera_reserva_como_cero": False},
+            "coste_calculado": None, "cargo_facturado": None, "estado": "NO-EJERCITADO"}
+
+
+def reservar_presupuesto(cuenta: dict, limites: dict) -> dict:
+    """AC8: la reserva se comprueba ANTES de cada intento; falta o agotamiento implican cero envios.
+
+    `max_reintentos` distinto de 0 se niega: el default medido del SDK (2) hace 3 intentos por
+    llamada ante un 429 y esos intentos no estan en el ledger. Un techo de tokens en null solo se
+    admite con su autorizacion declarada, porque la corrida que mide el techo no puede exigir el
+    techo que todavia no existe.
+    """
+    motivos: list[str] = []
+    llamadas = limites.get("llamadas")
+    if not isinstance(llamadas, int) or isinstance(llamadas, bool) or llamadas <= 0:
+        motivos.append("presupuesto_de_llamadas_ausente")
+    usadas = cuenta.get("llamadas_usadas")
+    if not isinstance(usadas, int) or isinstance(usadas, bool):
+        motivos.append("cuenta_de_llamadas_ausente")
+    elif isinstance(llamadas, int) and usadas >= llamadas:
+        motivos.append("llamadas_agotadas")
+    if limites.get("max_reintentos") != 0:
+        motivos.append("reintentos_sin_ledger")
+    timeout = limites.get("timeout_s")
+    if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or timeout <= 0:
+        motivos.append("timeout_ausente")
+    autorizacion = limites.get("autorizacion_de_null") or {}
+    for clave in ("tokens_in", "tokens_out"):
+        if limites.get(clave) is None and not autorizacion.get("declarada"):
+            motivos.append(f"techo_de_{clave}_sin_declarar")
+    restantes = (llamadas - usadas) if (isinstance(llamadas, int)
+                                         and isinstance(usadas, int)) else None
+    return {"reservado": not motivos, "motivos": motivos, "llamadas_restantes": restantes}
+
+
+def registrar_intento(ledger: dict, *, resultado: str, excepcion=None, usage=None,
+                      modelo_efectivo=None, duracion_ms=None) -> dict:
+    """Suma un intento al ledger con su clase de error y su usage normalizado."""
+    ledger["attempts"] += 1
+    fila = {"n": ledger["attempts"], "resultado": resultado, "duracion_ms": duracion_ms}
+    if excepcion is not None:
+        clasificado = error_kind_de(excepcion)
+        ledger["error_kind"] = clasificado["error_kind"]
+        fila.update(clasificado)
+    if usage is not None:
+        ledger["usage_normalized"] = normalizar_usage(usage)
+    if modelo_efectivo is not None:
+        ledger["modelo_efectivo"] = modelo_efectivo
+    ledger["intentos"].append(fila)
+    ledger["estado"] = "FALLO" if excepcion is not None else "EJERCITADO"
+    return ledger
 
 
 def _refuse(name: str) -> int:
