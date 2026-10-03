@@ -426,3 +426,56 @@ y el cierre se agrego debajo como nota fechada.
 en disco. Sin red, sin inferencias, sin instalar, sin `--fix` ni `--update-baseline`, sin escribir en `scripts/**`,
 `tests/**` ni `modules/**`, y sin tocar `dependencias-fases.md` ni nada bajo
 `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`.
+
+---
+
+## Acto 2 del 2026-10-02 — el operador dicta `usd`, el margen y la `k`; el protocolo queda con dos null y no
+
+## con cuatro
+
+**Las tres lineas, recibidas literalmente.** `usd = fuera de gobernanza; presupuesto en llamadas 12 y timeout 30;
+reabrir al nombrar la tabla`. `margen = 0,25 sobre extremo_a_extremo; denominador_cero = NO-EVALUABLE, no
+victoria`. `top-k = 8`. Ninguna se infrio: las tres vienen de la palabra del operador, y lo que esta sesion hizo
+fue escribirlas donde cada una gobierna.
+
+**Donde quedo cada una.** `reglas_recuperacion` pasa de «top-k por consulta fria…» a **`top-8`**, que es la clave
+que ya gobernaba esa regla; el numero no se anadi6 como campo nuevo porque el esquema `jev-pilot-protocolo/v1` no
+lo tiene y ampliarlo sin mandato era inventar estructura. `criterios_adopcion.margen_vs_deepseek` deja de ser
+`null` y vale **`0.25`**, y la nota del protocolo fija las dos calificaciones que el numero solo no dice: que la
+diferencia absoluta se mide sobre el cociente **`extremo_a_extremo`** de `metrics()` -no sobre los otros tres-, y
+que un `score()` con denominador cero es **NO-EVALUABLE**, no victoria del brazo que si trajo datos.
+`limites_gasto.usd` **sigue `null`**: la decision de sacarlo de gobernanza no es un precio, y meter prosa en una
+clave monetaria habria creado exactamente el default de dinero que el material del 2026-09-30 prohibio; lo que
+lleva el valor es su `motivo`, que ahora dice «fuera de gobernanza -el presupuesto se goberna en llamadas 12 y
+timeout_s 30-, se reabre cuando el operador nombre la tabla de precios», y la nota del protocolo consigna esa
+reapertura con su condicion (fuente, fecha y los dos modelos).
+
+**Prueba del metodo y huella de la escritura.** Round-trip verificado antes de mutar (la receta de siempre:
+`indent=2`, `ensure_ascii=False`, CRLF, sin newline final). Despues de mutar, las siete claves de primer nivel fuera
+de mandato -`schema`, `status`, `rubrica`, `modelos`, `parametros`, `politica_cache`, `splits`- se compararon con
+el objeto anterior y quedaron iguales. `git diff --numstat`: **4/4** (`reglas_recuperacion`, `motivo`,
+`margen_vs_deepseek`, `nota`); `usd`, `tokens_in` y `tokens_out` no aparecen en el diff porque siguen `null`. Sha
+**de disco**: `cc1f74a322fac4a00210aeef62891f6ed68444219e2a3daf5441cb892b5a1a48` (2.980 B / 45 CR). Sha **de blob**,
+medido desde el indice y re-verificado tras el commit: `d8ef90c353fc87d8d49dbf5055df513a931d78ef9b4e64e7cef9c7b08fe194e8`
+(2.935 B / 0 CR). La diferencia son los 45 CR que `core.autocrlf=input` retira al indexar, y los dos van en esta
+nota: es la regla que esta tanda aprendio a fuerza de prometer uno y publicar el otro.
+
+**Lo que se destrabo y lo que no.** `usd` **deja de bloquear FASE-C** por decision expresa, y el margen ya tiene
+numero, cociente y tratamiento del vacio. Quedan **dos** `null` en el protocolo -`tokens_in` y `tokens_out`- y
+siguen bloqueando FASE-C: su techo pide la corrida de recuperacion una vez, ahora con `k = 8` fijada, y esa pierna
+vive en el runner de FASE-B (`run` y `decide` se niegan con EXIT 2 hasta tener preflight, presupuesto y
+autorizacion literal). `protocolo.json` conserva `status: BORRADOR`: su congelacion final es el checkpoint de
+FASE-C, y con el margen escrito ya solo falta la corrida para que ese acto tenga materia.
+
+**Cota contable, declarada como cota y no como techo.** Medido en el arbol: `.opencode/lecciones_index.json` pesa
+32.622 bytes con 340 lecciones, media de **820 caracteres por entrada** (mediana 780, maxima 1.859) y 425 de media
+en el enunciado; los fragmentos del par miden 77-93 caracteres. Con `k = 8` eso da el orden de magnitud del input
+de la consulta fria, y aqui se para la medicion: la conversion de caracteres a tokens no esta medida en este repo,
+asi que publicar un techo en tokens sobre esa base seria un estimado disfrazado de limite. El numero llega con la
+corrida.
+
+**Verificaciones del acto.** `check` del piloto: `OK`, `muestra_status CONGELADA`, sin guards en rojo (el
+instrumento no lee `protocolo.json`, se re-corrio igual para descartar regresyon).
+`pytest tests/quality_gates/jev_pilot tests/quality_gates/decision_client -q` → **101 passed**. `muestra.json` y
+`etiquetas.json` intactos: `0107a386ae5750cd…` y `4ffbb120ef94b982…`. El plan maestro y sus prompt archivados
+siguen diciendo «top-k» en generico; el valor vive en el protocolo, que es la fuente unica de la regla.

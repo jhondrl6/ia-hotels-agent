@@ -1,7 +1,7 @@
 {
   "schema": "jev-pilot-protocolo/v1",
   "status": "BORRADOR",
-  "reglas_recuperacion": "top-k por consulta fria sobre lecciones_index, mismo conjunto elegible para los tres brazos",
+  "reglas_recuperacion": "top-8 por consulta fria sobre lecciones_index, mismo conjunto elegible para los tres brazos",
   "rubrica": {
     "valores": [
       "pertinente",
@@ -32,15 +32,15 @@
     "llamadas": 12,
     "tokens_in": null,
     "tokens_out": null,
-    "motivo": "null restantes: usd sin tabla de precios nombrada; tokens_in/tokens_out con techo pendiente de medir la recuperacion una vez"
+    "motivo": "null restantes: tokens_in/tokens_out con techo pendiente de medir la recuperacion una vez, ya con k fijada en 8; usd fuera de gobernanza -el presupuesto se goberna en llamadas 12 y timeout_s 30-, se reabre cuando el operador nombre la tabla de precios"
   },
   "criterios_adopcion": {
     "cobertura_min": 0.95,
-    "margen_vs_deepseek": null,
+    "margen_vs_deepseek": 0.25,
     "tratamiento_abstenciones": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte",
     "suficiencia_minima": 0.5,
     "latencia_max": 30000,
     "revision_humana": "obligatoria; designado: jhon (2026-10-02, acta en evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-10-02/)"
   },
-  "nota": "Los valores nulos son a-decidir por el operador antes de cualquier inferencia; bloquean FASE-C. Convencion documental: importance null en etiquetas.json significa 'no aplica' al par, no 'a-decidir'; resuelve la doble lectura que dejo la transcription del 2026-10-02. Su hermana: review_status 'revisada' en etiquetas.json es la palabra con la que esa transcription represento la firma del operador, no un valor dictado; se cambia con una linea suya. Denominador publicado: 4 pares, con muestra chica declarada. En ese denominador se leen suficiencia_minima 0.5 (2 de 4 pertinentes) y cobertura_min 0.95. margen_vs_deepseek cierra en su unidad decidida (diferencia absoluta de score, no de ratio) y su numero sigue null: se fija cuando exista el score() del runner en FASE-B. limites_gasto.usd sigue null (sin tabla de precios nombrada) y tokens_in/tokens_out siguen null (techo pendiente de medir la recuperacion una vez); esos null siguen bloqueando FASE-C hasta que dejen de serlo."
+  "nota": "Los valores nulos son a-decidir por el operador antes de cualquier inferencia; bloquean FASE-C. Convencion documental: importance null en etiquetas.json significa 'no aplica' al par, no 'a-decidir'; resuelve la doble lectura que dejo la transcription del 2026-10-02. Su hermana: review_status 'revisada' en etiquetas.json es la palabra con la que esa transcription represento la firma del operador, no un valor dictado; se cambia con una linea suya. Denominador publicado: 4 pares, con muestra chica declarada. En ese denominador se leen suficiencia_minima 0.5 (2 de 4 pertinentes) y cobertura_min 0.95. Regla de recuperacion con k fijada en 8 (dictada 2026-10-02). margen_vs_deepseek = 0.25, medido como diferencia absoluta del cociente extremo_a_extremo entre Jev y DeepSeek -que es la unidad ya decidida, diferencia de score y no de ratio-; con denominador 4 esa es la diferencia minima no nula, o sea un par de diferencia. Un score con denominador cero es NO-EVALUABLE, no victoria del otro brazo. limites_gasto.usd queda fuera de gobernanza: el presupuesto se goberna en llamadas 12 y timeout_s 30, y la clave se reabre cuando el operador nombre la tabla de precios con fuente, fecha y los dos modelos. tokens_in y tokens_out siguen null porque el techo pide medir la recuperacion una vez, ya con k=8; esos dos null siguen bloqueando FASE-C hasta que dejen de serlo."
 }
