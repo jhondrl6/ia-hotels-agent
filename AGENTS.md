@@ -410,9 +410,10 @@ python scripts/run_all_validations.py           # Completo
 > re-transcriben. Es un retrato del **arbol de trabajo**, que es lo que mide el comando canonico. La cifra
 > **commiteada** se mide sin tocar el arbol, con `git grep -c -E "^\s*def test_" HEAD -- tests`.
 
-> **El historial de rondas** (las notas medidas entre 2026-09-11 y 2026-10-01, con sus atribuciones por
-> bateria, sus notas de instrumento y sus antecedentes) vive en `docs/cobertura-historia.md`. Cada ronda aparca su
-> nota **alli**; en este archivo solo cambian la cifra de la cabecera y la fila de la tabla que le corresponde.
+> **El historial de rondas** vive en `docs/cobertura-historia.md`: las notas aparcadas alli, en orden
+> cronologico descendente, con sus atribuciones por bateria, sus notas de instrumento y sus antecedentes. Cada
+> ronda aparca su nota **alli**; en este archivo solo cambian la cifra de la cabecera y la fila de la tabla que le
+> corresponde.
 
 | Modulo | Funciones test | Directorio |
 |--------|---------------|------------|

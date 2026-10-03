@@ -379,3 +379,50 @@ lee), y las menciones vivas de `BORRADOR` en este checkpoint, en `00-paquete-dec
 `docs/cobertura-historia.md` no estaba entre ellas, pero el propio PUNTO 2 manda aparcar ahi la razon de la poda y
 el Paso 3 la nombra en el commit de documentos: se escribio por esas dos instrucciones explicitas y se declara
 aqui el hueco en la lista, no se resolvio en silencio.
+
+---
+
+## Acto 1 del 2026-10-02 — la nota de congelado queda vencida por su propia firma, D-B se rectifica y el
+
+## disparador del margen ya se cumplio**Rectificacion numero uno, contra un texto mio publicado.** La nota del acto de congelado, en esta misma
+carpeta, escribe que «esta sesion ejecuto el congelado y **no commiteo ni empuja**: el acto queda en el arbol de
+trabajo, en espera de autorizacion explicita». Eso fue cierto hasta el mandato siguiente y hoy no: el congelado se
+commiteo en `e9c8a0d` y se empujo. La frase queda como registro de su momento y **no se re-escribe**, que es la
+regla de la casa sobre evidencia publicada; se declara aqui, al lado. Medido despues del push: rango empujado
+`e507193..e9c8a0d` sobre dos commits (`5665fac` documentos, `e9c8a0d` congelado) y 14 objetos, `4621049`,
+`e507193` y `6c89f4d` siguen siendo ancestros, paridad `0 0` y arbol limpio.
+
+**Rectificacion numero dos, y es contra mi reporte de la tanda anterior.** Dije que FASE-B «necesita la parte (a)
+de D-B». Leido el codigo versionado, la pata (a) **ya esta ejecutada**: `scripts/decision_client.py` expone
+`provider_requested`, `model_requested` y `elapsed_ms` -los tres en el dict publicado, saliendo `provider_requested`
+del entorno que nombro el llamador, `model_requested` del pin declarado y no de lo que reporta el proveedor, y
+`elapsed_ms` en `None` cuando no hubo llamada-, y eso viajo en `4621049` con sus siete funciones de test. La propia
+costura declara ademas que `attempts`, `error_kind` y `usage_normalized` **no** le pertenecen: esa es la pata (b),
+y es lo que FASE-B hereda. El reportador confadio la letra del paquete de decision con el estado del arbol.
+
+**Hallazgo estampado: el disparador del margen se cumplio sin que nadie lo declarara.** La decision del 2026-10-02
+postergaba el numero «hasta que exista el `score()` del runner (FASE-B)». Medido: `score(numerator, denominator)`
+existe en `scripts/evaluate_jev_pilot.py`, publica numerador, denominador y `motivo`, trata el denominador cero
+como caso explícito en vez de un cero mudo, `metrics()` ya arma los cuatro cocientes (recuperacion,
+precision_entre_propuestas, recall_importante_candidatos, extremo_a_extremo) y `test_jev_pilot_offline.py` los
+ejercita con siete funciones dentro de las 101 verdes. Lo que sigue sin existir es la pierna de ejecucion: `run` y
+`decide` se niegan con EXIT 2 porque piden preflight, presupuesto y autorizacion literal. Pero eso no afecta al
+umbral, que es una decision de producto sobre una escala ya definida -con denominador 4 las unicas diferencias
+absolutas posibles son 0,25, 0,50, 0,75 y 1,00-. Un aplazamiento cuya condicion se cumplio deja de ser aplazamiento:
+o se fija el numero, o se declara que sigue esperando otra cosa. Dueno: el operador.
+
+**Lo que tambien se hizo aqui, en AGENTS.md y con letra (b).** El parrafo «El historial de rondas» dejo de llevar
+rango de fechas: decia «las notas medidas entre 2026-09-11 y 2026-10-01» cuando el archivo de destino ya tenia notas
+del 2026-10-02. No se volvio a anclar la cota -eso es la via (a) y la habria vuelto a vencer al commit siguiente-: se retiro
+el literal y el parrafo ahora apunta al archivo y describe el orden. Medido despues del cambio:
+`grep -c "2026-09-11 y 2026-10-01" AGENTS.md` = **0** (la unica mencion versionada que queda es la cita con la que
+`docs/cobertura-historia.md` declara su propio cierre), la cabecera `(4,706 funciones totales)` = 1, la fila
+`quality_gates | 877` = 1, diff **4/3** y 538 lineas pasan a 539. La razon de la poda y su prueba de perdida estan
+aparcadas en `docs/cobertura-historia.md`, que es la fuente unica; su nota de residuo «no corregido» se dejo intacta
+y el cierre se agrego debajo como nota fechada.
+
+**Rutas escritas en este acto:** `AGENTS.md`, `docs/cobertura-historia.md` y este checkpoint. `muestra.json`,
+`protocolo.json` y `etiquetas.json` no se tocan: los dos ultimos conservan `4ffbb120ef94b982…` y `b656f8b46bf08628…`
+en disco. Sin red, sin inferencias, sin instalar, sin `--fix` ni `--update-baseline`, sin escribir en `scripts/**`,
+`tests/**` ni `modules/**`, y sin tocar `dependencias-fases.md` ni nada bajo
+`evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/`.

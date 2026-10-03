@@ -44,6 +44,14 @@
 > del 2026-10-02. Su cota alta esta vencida por un dia, y es el mismo tipo de literal que se acabo de podar, así
 > que queda registrado como candidato a la misma cura. Dueno: el operador.
 >
+> **Ese residuo quedo cerrado el 2026-10-02, en el acto siguiente y por su letra (b), decidida por el operador.**
+> El parrafo de `AGENTS.md` ya no lleva rango de fechas: apunta al archivo y describe el orden. No se re-ancló la
+> cota a 2026-10-02, que es la via (a) y habria vuelto a vencer al commit siguiente; se retiro el literal, que es
+> la cura estructural. Medido despues del cambio: `grep -c "2026-09-11 y 2026-10-01" AGENTS.md` = 0, y la unica
+> mencion versionada que queda del rango es la de esta nota, que lo cita para declararlo cerrado. La cabecera del
+> parrafo de arriba («no corregido») se deja intacta a proposito: describe el estado que esa nota registro, y su
+> cierre vive aqui, como nota fechada anadida sobre evidencia publicada.
+>
 > **Texto rescatado** (las palabras exactas que estaban en `e507193`; re-empaquetada solo la longitud de linea,
 > 1.267 caracteres): «En el commit que lleva esta nota **los dos comandos dan 4,699** (medido 2026-10-01 sobre
 > `9181197`, tanda ADOPCION-Y-CIERRE-DEUDA): el +1 contra la segunda ronda de la manana sale de un archivo y se
