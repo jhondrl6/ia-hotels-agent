@@ -1,0 +1,31 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 18 items
+
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_el_guard_bloquea_el_nombre_real_del_sdk PASSED [  5%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_error_kind_distingue_clases_y_conserva_status PASSED [ 11%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_error_kind_clasifica_subclases_por_su_antecesor PASSED [ 16%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_error_kind_desconocido_no_es_ausente PASSED [ 22%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_usage_desconocido_no_es_cero PASSED [ 27%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_usage_no_entero_no_se_cuela_como_token PASSED [ 33%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_presupuesto_completo_reserva_y_agotado_no PASSED [ 38%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_los_defaults_del_sdk_se_niegan_porque_gastan_sin_ledger PASSED [ 44%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_techo_de_tokens_null_bloquea_salvo_autorizacion_declarada PASSED [ 50%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_el_ledger_cuenta_intentos_y_no_colapsa_exito_con_fallo PASSED [ 55%]
+tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::test_los_tres_campos_de_la_pata_b_viven_en_el_runner_y_no_en_la_costura PASSED [ 61%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_prepare_dedups_and_marks_draft PASSED [ 66%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_sample_detects_content_change PASSED [ 72%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_split_rejects_same_plan_in_both_sets PASSED [ 77%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_labels_do_not_enter_payload PASSED [ 83%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_unreviewed_sample_is_not_frozen PASSED [ 88%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_metrics_known_counts_and_empty_denominator PASSED [ 94%]
+tests/quality_gates/jev_pilot/test_jev_pilot_offline.py::test_prepare_and_check_do_not_construct_clients PASSED [100%]
+
+============================= 18 passed in 0.13s ==============================
+HEAD (guard viejo): NO BLOQUEADO (dejo pasar y el paquete no esta en el venv) -> HUECO
+disco (guard curado): BLOQUEADO -> bloqueado: typesafe_sdk
+conjuntos: HEAD tiene typesafe_sdk? False | disco? True

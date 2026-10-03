@@ -1,0 +1,14 @@
+# sdk_contract.txt - superficie leida del SDK real 2026-10-03
+# interpreter: tmp_test/venv-jev-sdk (modulo importable: typesafe_sdk; distribucion typesafe-sdk==0.7.0)
+
+publico: Answer, AsyncModels, AsyncTypeSafeClient, Choice, ChoiceAnswer, ChoiceModel, JSONContent, JSONValue, ListModelsResponse, ModelMetadata, Models, Noul, NoulAnswer, NoulCriteria, NoulModel, Question, QuestionModel, Questions, RetryPolicy, Score, ScoreAnswer, ScoreModel, SystemOneResponse, TypeSafeAPIConnectionError, TypeSafeAPIError, TypeSafeAPIResponseValidationError, TypeSafeAPITimeoutError, TypeSafeAuthenticationError, TypeSafeBadRequestError, TypeSafeClient, TypeSafeError, TypeSafeInternalServerError, TypeSafeNotFoundError, TypeSafePermissionDeniedError, TypeSafeRateLimitError, TypeSafeUnprocessableEntityError, Usage, constants
+
+class RetryPolicy(max_retries: int = 2, backoff_initial: float = 0.5, backoff_max: float = 5.0, backoff_jitter: float = 0.25, http_statuses: set[int] = <factory>, respect_retry_after: bool = True, api_connection_error: bool = True, api_timeout_error: bool = True, exceptions: set[type[BaseException]] = <factory>, predicate: collections.abc.Callable[[BaseException], bool] | None = None, timeout: float | None = 30.0) -> None
+class Usage(*, input_tokens: int | None = None, output_tokens: int | None = None) -> None
+class TypeSafeClient(*, api_key: str | None = None, model: str | None = None, retry: typesafe_sdk._core.retry.RetryPolicy | None = None, timeout: float | httpx2.Timeout | None = None, headers: collections.abc.Mapping[str, str] | None = None, transport: httpx2.BaseTransport | None = None, http_client: httpx2.Client | None = None, base_url: str | None = None) -> None
+class SystemOneResponse(*, model: str, usage: typesafe_sdk._core.response_types.Usage, answers: dict[str, typing.Annotated[typesafe_sdk._core.response_types.NoulAnswer | typesafe_sdk._core.response_types.ChoiceAnswer | typesafe_sdk._core.response_types.ScoreAnswer, FieldInfo(annotation=NoneType, required=True, discriminator='type')]] = <factory>) -> None
+
+RetryPolicy().max_retries = 2 (default medido: 3 intentos ante 429)
+RetryPolicy(max_retries=0).max_retries = 0
+Usage() -> (None, None) (ambos int|None: el uso desconocido es estado del tipo)
+clases de error: TypeSafeAPIConnectionError, TypeSafeAPIError, TypeSafeAPIResponseValidationError, TypeSafeAPITimeoutError, TypeSafeAuthenticationError, TypeSafeBadRequestError, TypeSafeClient, TypeSafeError, TypeSafeInternalServerError, TypeSafeNotFoundError, TypeSafePermissionDeniedError, TypeSafeRateLimitError, TypeSafeUnprocessableEntityError

@@ -1,0 +1,28 @@
+# requirements-pilot.txt - FASE-B del piloto JEV (EVALUACION-JEV-TYPESAFE-2026-09-21)
+# Versiones EFECTIVAMENTE RESUELTAS en la ruta que corre el piloto, no los minimos de PyPI.
+# Medicion: venv/Scripts/python.exe (3.13.3) con el site-packages del SDK aislado ANADIDO AL FINAL
+# del sys.path. Crudo: temp/ola2-2026-10-03/01-resolucion-hibrida.json (temp/ esta en .gitignore,
+# se transcribe aqui). Origen efectivo entre corchetes: [producto] = venv del proyecto,
+# [aislado] = tmp_test/venv-jev-sdk (ignorado por .gitignore:28, verificado el 2026-10-03).
+#
+# No se toco requirements.txt del proyecto (prohibido por el prompt de FASE-B, tarea 2) y no se
+# instalo nada: la ruta resuelve con lo que ya existe en los dos entornos.
+
+typesafe-sdk==0.7.0          # [aislado] el SDK real; modulo importable: typesafe_sdk
+httpx2==2.13.0               # [aislado] transporte que exige el SDK (no confundir con httpx)
+httpcore2==2.13.0            # [aislado]
+tenacity==9.1.4              # [aislado] RetryPolicy del SDK vive aqui por debajo
+truststore==0.10.4           # [aislado]
+pydantic==2.12.5             # [producto] pin del proyecto; satisface el floor del SDK (>=2.12.0)
+pydantic-core==2.41.5        # [producto] alineado al pin anterior, no el 2.46.5 del entorno aislado
+anyio==4.11.0                # [producto]
+h11==0.16.0                  # [producto]
+idna==3.11                   # [producto]
+annotated-types==0.7.0       # [producto]
+typing-extensions==4.15.0    # [producto]
+typing-inspection==0.4.2     # [producto]
+
+# advertencia de instrumento, medida el 2026-10-03: si en vez de anadir al final se usa
+# PYTHONPATH=<...>/site-packages, esa ruta queda ANTES del site-packages del venv y pydantic se
+# resuelve 2.13.5 (la del entorno aislado), no 2.12.5. El comando corre entonces con un pydantic
+# que el proyecto no pinea. La regla del piloto es sys.path.append, nunca PYTHONPATH.

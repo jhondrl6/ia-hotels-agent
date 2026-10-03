@@ -1,0 +1,67 @@
+{
+  "artefacto": "entorno.json",
+  "fase": "FASE-B",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha_medicion": "2026-10-03",
+  "instrumento": "venv/Scripts/python.exe -c 'import sys; sys.path.append(SITE_PAIS_ISOLADO); import typesafe_sdk, importlib.metadata as md; ...'",
+  "crudo": "temp/ola2-2026-10-03/01-resolucion-hibrida.json (temp/ excluido por .gitignore:21; se transcribe aqui)",
+  "python": "3.13.3",
+  "interprete_del_piloto": "venv/Scripts/python.exe",
+  "ruta_duradera": {
+    "decision": "reuso VERIFICADO del entorno de sonda del 2026-09-21, sin instalar nada y sin red",
+    "motivo_de_no_recrear": "pip install resolveria pydantic 2.13.5 por encima del pin del proyecto (2.12.5) y cambiaria el entorno que el piloto dice medir",
+    "site_packages_del_sdk": "tmp_test/venv-jev-sdk/Lib/site-packages",
+    "regla_de_resolucion": "el site-packages del SDK se ANADE AL FINAL de sys.path; el interprete del producto conserva sus pines",
+    "exclusion_de_git_comprobada": ".gitignore:28 declara tmp_test/",
+    "trampa_medida": "usar PYTHONPATH en vez de sys.path.append coloca el path del SDK ANTES del del venv y pydantic se resuelve 2.13.5, no 2.12.5: la corrida dejaria de ser el entorno del proyecto"
+  },
+  "resolucion_efectiva": [
+    { "paquete": "typesafe-sdk", "version": "0.7.0", "origen": "aislado" },
+    { "paquete": "httpx2", "version": "2.13.0", "origen": "aislado" },
+    { "paquete": "httpcore2", "version": "2.13.0", "origen": "aislado" },
+    { "paquete": "tenacity", "version": "9.1.4", "origen": "aislado" },
+    { "paquete": "truststore", "version": "0.10.4", "origen": "aislado" },
+    { "paquete": "pydantic", "version": "2.12.5", "origen": "producto", "nota": "satisface el floor declarado por el SDK (pydantic>=2.12.0, leido de su METADATA)" },
+    { "paquete": "pydantic-core", "version": "2.41.5", "origen": "producto" },
+    { "paquete": "anyio", "version": "4.11.0", "origen": "producto" },
+    { "paquete": "h11", "version": "0.16.0", "origen": "producto" },
+    { "paquete": "idna", "version": "3.11", "origen": "producto" },
+    { "paquete": "annotated-types", "version": "0.7.0", "origen": "producto" },
+    { "paquete": "typing-extensions", "version": "4.15.0", "origen": "producto" },
+    { "paquete": "typing-inspection", "version": "0.4.2", "origen": "producto" }
+  ],
+  "hechos_del_sdk_medidos": {
+    "modulo_importable": "typesafe_sdk",
+    "no_es": "typesafe (ModuleNotFoundError medido; el plan y FORBIDDEN_MODULES nombraban 'typesafe')",
+    "distribucion_pypi": "typesafe-sdk==0.7.0",
+    "RetryPolicy_default": { "max_retries": 2, "otras": "backoff_initial 0.5, backoff_max 5.0, backoff_jitter 0.25" },
+    "RetryPolicy_piloto": { "max_retries": 0 },
+    "consecuencia_contable": "con default, un 429 produce 3 intentos por llamada; con max_retries=0 produce 1 (AC8)",
+    "Usage": { "input_tokens": "int | None", "output_tokens": "int | None", "medido": "Usage() -> (None, None), o sea el uso desconocido existe en el tipo y no puede tratarse como cero" },
+    "clases_de_error": [
+      "TypeSafeAuthenticationError",
+      "TypeSafeRateLimitError",
+      "TypeSafeAPIConnectionError",
+      "TypeSafeAPITimeoutError",
+      "TypeSafeAPIResponseValidationError",
+      "TypeSafeBadRequestError",
+      "TypeSafeNotFoundError",
+      "TypeSafePermissionDeniedError",
+      "TypeSafeInternalServerError",
+      "TypeSafeUnprocessableEntityError",
+      "TypeSafeAPIError",
+      "TypeSafeError"
+    ],
+    "superficies_publicas_utilizadas": [
+      "TypeSafeClient(api_key, model, retry, timeout, ...)",
+      "Models.list() -> ListModelsResponse(models=[ModelMetadata(name, description, release_date)])",
+      "SystemOneResponse(model, usage, answers)",
+      "Question/Choice/Score/Noul y sus respuestas tipadas"
+    ],
+    "pin_de_modelo": "jev-1.13.0 NO se verifico contra el servicio: es declaracion (decision_client.py:118-125 la publica con verificado_desde_este_repo=false). Su comprobacion pertenece al preflight P4, que puede leer Models.list()"
+  },
+  "credenciales": "sin valores en este archivo ni en ninguno de la evidencia; solo se registra presencia por nombre (TYPESAFE_API_KEY, DEEPSEEK_API_KEY presentes en .env; OPENROUTER_API_KEY presente y RECHAZADA como transporte del piloto)",
+  "transporte_alterno_evaluado": {
+    "openrouter_typesafe_jev_router": "RECHAZADO para este piloto: router de respaldo no declarado, sin ventana ni version documentadas; romperia AC8/AC9 (sus pruebas estan ancladas a las clases y al transporte del SDK real) y haria incognoscible el modelo efectivo que exige AC12. Queda como plan B documentado; ante indisponibilidad AC12 manda detener o aplazar, no sustituir el brazo"
+  }
+}
