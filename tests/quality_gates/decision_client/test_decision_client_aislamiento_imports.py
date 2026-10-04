@@ -183,31 +183,98 @@ def test_en_el_arbol_real_no_hay_archivos_no_parseables(escaneo_arbol_real):
     assert scan["no_parseables"] == [], scan["no_parseables"][:5]
 
 
+# --- la denegatoria de cero red, con sus excepciones ESCRITAS ---------------------------------
+# `DENEGADOS` es una lista negra, no una whitelist: lo que no esta aca se permite, asi que un nombre
+# que falte es un hueco. Medido el 2026-10-03 con el piloto JEV: la lista nombraba `typesafe`, que NO
+# es un modulo importable (el paquete real es `typesafe_sdk`, y `httpcore2` tampoco estaba), o sea el
+# mismo agujero que el commit `be8ccec` cerro en `FORBIDDEN_MODULES` del runner. Se completan los
+# nombres reales.
+DENEGADOS = {"socket", "ssl", "select", "asyncio", "subprocess", "multiprocessing", "threading",
+             "http", "httpx", "httpcore", "httpx2", "httpcore2", "urllib", "urllib3", "requests",
+             "aiohttp", "ftplib", "smtplib", "telnetlib", "smbclient", "tenacity", "typesafe",
+             "typesafe_sdk", "jev"}
+
+# Excepcion autorizada por el operador el 2026-10-03 (OLA 2 de FASE-B del piloto JEV), en su forma
+# estrecha: (archivo, funcion que porta el import, modulo). `cargar_sdk` y `cargar_transporte` son las
+# unicas dos funciones de la puerta desde donde el SDK y su transporte son alcanzables, y AC9 no se
+# puede medir sin ellas: el `MockTransport` de `httpx2` es lo que permite probar 401/429/timeout con la
+# clase real del SDK y la red bloqueada. Un import a nivel de modulo, o en cualquier otro archivo, NO
+# cae dentro: por eso la triple lleva el nombre de la funcion y no solo el del modulo.
+EXCEPTADAS = {("decision_client.py", "cargar_sdk", "typesafe_sdk"),
+              ("decision_client.py", "cargar_transporte", "httpx2")}
+
+
+def _imports_de_un_arbol(arbol) -> set:
+    """{(funcion_o_None, raiz_del_modulo)} para todo import estatico del archivo.
+
+    `None` es nivel de modulo: un `import httpx2` suelto en el archivo queda afuera de cualquier
+    excepcion que nombre una funcion, que es justamente la forma que no se autorizo.
+    """
+    salida = set()
+    funciones = [n for n in ast.walk(arbol)
+                 if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    cubiertos = {id(n) for f in funciones for n in ast.walk(f)}
+    for f in funciones:
+        for nodo in ast.walk(f):
+            if isinstance(nodo, ast.Import):
+                salida |= {(f.name, a.name.split(".")[0]) for a in nodo.names}
+            elif isinstance(nodo, ast.ImportFrom) and nodo.module and nodo.level == 0:
+                salida.add((f.name, nodo.module.split(".")[0]))
+    for nodo in ast.walk(arbol):
+        if id(nodo) in cubiertos:
+            continue
+        if isinstance(nodo, ast.Import):
+            salida |= {(None, a.name.split(".")[0]) for a in nodo.names}
+        elif isinstance(nodo, ast.ImportFrom) and nodo.module and nodo.level == 0:
+            salida.add((None, nodo.module.split(".")[0]))
+    return salida
+
+
+def _violaciones(nombre_archivo: str, arbol) -> list:
+    """Los import denegados que no estan cubiertos por una excepcion escrita, en triples."""
+    return sorted((nombre_archivo, funcion, raiz)
+                  for funcion, raiz in _imports_de_un_arbol(arbol)
+                  if raiz in DENEGADOS
+                  and (nombre_archivo, funcion, raiz) not in EXCEPTADAS)
+
+
+def test_la_excepcion_de_cero_red_solo_cubre_la_funcion_que_la_declara():
+    """El contrafactual de la excepcion: el mismo modulo a nivel de modulo, o en otra funcion, sigue siendo rojo.
+
+    Sin este control, la triple autorizada degeneraria en «el archivo puede importar httpx2 donde
+    sea», que es exactamente la decision implicita que el contrato de ejecucion prohibe.
+    """
+    dentro = ("import ast\n\n\n"
+              "def cargar_transporte():\n    import httpx2\n    return httpx2\n")
+    arriba = "import ast\nimport httpx2\n"
+    otra_funcion = "import ast\n\n\ndef otra():\n    import httpx2\n"
+    assert _violaciones("decision_client.py", ast.parse(dentro)) == []
+    assert _violaciones("decision_client.py", ast.parse(arriba)) == [
+        ("decision_client.py", None, "httpx2")]
+    assert _violaciones("decision_client.py", ast.parse(otra_funcion)) == [
+        ("decision_client.py", "otra", "httpx2")]
+    assert _violaciones("cualquier_otro.py", ast.parse(dentro)) == [
+        ("cualquier_otro.py", "cargar_transporte", "httpx2")]
+
+
 def test_la_puerta_y_sus_proveedores_no_importan_nada_que_pueda_hacer_red(dc, script_ruta,
                                                                          proveedores_falsos):
     """Cero red verificado estaticamente, con denegatoria (no con whitelist que uno olvida ampliar).
 
     Lista negra: todo modulo desde el que se puede abrir una conexion o negociar TLS. Si manana la
     puerta necesita uno, este test se pone rojo y la decision de romper el cero red deja de ser
-    implicita - que es el punto del contrato de ejecucion.
+    implicita - que es el punto del contrato de ejecucion. La unica excepcion vigente esta escrita en
+    `EXCEPTADAS` con archivo, funcion y modulo; la prueba de arriba goberna que no se ensanche sola.
     """
-    DENEGADOS = {"socket", "ssl", "select", "asyncio", "subprocess", "multiprocessing", "threading",
-                 "http", "httpx", "httpcore", "httpx2", "urllib", "urllib3", "requests", "aiohttp",
-                 "ftplib", "smtplib", "telnetlib", "smbclient", "tenacity", "typesafe", "jev"}
     rutas = [script_ruta] + sorted(proveedores_falsos.glob("*.py"))
     assert len(rutas) >= 3, "la poblacion de esta prueba se redujo a nada"
     usados = set()
     for path in rutas:
         arbol = ast.parse(path.read_text(encoding="utf-8"))
-        modulos = set()
-        for nodo in ast.walk(arbol):
-            if isinstance(nodo, ast.Import):
-                modulos |= {a.name.split(".")[0] for a in nodo.names}
-            elif isinstance(nodo, ast.ImportFrom) and nodo.module and nodo.level == 0:
-                modulos.add(nodo.module.split(".")[0])
-        usados |= modulos
-        tocados = modulos & DENEGADOS
-        assert not tocados, f"{path.name} importa {sorted(tocados)}: eso ya no es cero red"
+        usados |= {raiz for _, raiz in _imports_de_un_arbol(arbol)}
+        violaciones = _violaciones(path.name, arbol)
+        assert not violaciones, (
+            f"{path.name} importa {violaciones}: eso ya no es cero red sin excepcion escrita")
     assert {"argparse", "ast"} <= usados or "importlib" in usados
 
 

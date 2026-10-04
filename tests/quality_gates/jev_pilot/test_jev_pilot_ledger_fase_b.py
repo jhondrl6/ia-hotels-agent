@@ -97,11 +97,20 @@ def test_error_kind_distingue_clases_y_conserva_status():
 
 
 def test_error_kind_clasifica_subclases_por_su_antecesor():
-    """AC9: el SDK publica jerarquia (TypeSafeAPIError < TypeSafeRateLimitError); una subclase
-    nueva del proveedor no puede volverse `desconocido` solo por no estar nombrada."""
-    base = _tipo("TypeSafeAPIError", status=429)
-    hija = _tipo("TypeSafeRateLimitError", bases=(base,), status=429)
-    assert ejv.error_kind_de(hija())["error_kind"] == "cuota"
+    """AC9: el SDK publica jerarquia; una subclase nueva del proveedor no puede volverse
+    `desconocido` solo por no estar nombrada en la tabla.
+
+    Medido con mutante el 2026-10-03: la version anterior de este control usaba una hija ya
+    nombrada (`TypeSafeRateLimitError`), asi que apagar la caminata del MRO la dejaba verde. Aqui la
+    hija lleva un nombre que la tabla NO conoce: si alguien corta el MRO, esto cae por `desconocido`.
+    """
+    antecesor = _tipo("TypeSafeRateLimitError", status=429)
+    hija = _tipo("TypeSafeNuevaErrorDelProveedor", bases=(antecesor,), status=429)
+    clasificado = ejv.error_kind_de(hija())
+    assert clasificado["error_kind"] == "cuota", clasificado
+    assert clasificado["clase"] == "TypeSafeNuevaErrorDelProveedor", (
+        "la clase publica del ledger debe ser la real, no la del antecesor que la clasifico")
+    assert clasificado["status"] == 429
 
 
 def test_error_kind_desconocido_no_es_ausente():

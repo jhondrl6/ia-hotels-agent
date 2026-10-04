@@ -1263,6 +1263,159 @@ def _exit_del_informe(informe: dict) -> int:
     return 0 if informe["status"] == "SIN-HALLAZGOS" else 1
 
 
+# =========================================================================================
+# FASE-B del piloto JEV (2026-10-03): el brazo `jev` y su preflight, DENTRO de esta puerta
+# =========================================================================================
+# AC6 no es una preferencia de estilo: `escanear_aislamiento()` publica como HALLAZGOS cualquier
+# import estatico del SDK que no viva en este archivo, y `en_la_puerta` es la excepcion declarada.
+# Por eso el runner del piloto (`scripts/evaluate_jev_pilot.py`) llama a estas funciones en vez de
+# importar `typesafe_sdk` el mismo. El import va diferido dentro de la funcion: ningun modo offline
+# de la casa acaba trayendo un paquete que no esta en `venv/`.
+
+SDK_MODULO = "typesafe_sdk"
+# Ruta duradera medida el 2026-10-03 y congelada en `FASE-B/entorno.json`: el site-packages del
+# entorno aislado se ANADE AL FINAL de `sys.path`. Con `PYTHONPATH` quedaria antes del venv y
+# `pydantic` resolveria 2.13.5 contra el pin 2.12.5 del proyecto: la corrida dejaria de ser el
+# entorno que el piloto dice medir.
+SDK_SITIO_AISLADO = ("tmp_test", "venv-jev-sdk", "Lib", "site-packages")
+JEV_MAX_REINTENTOS_AUTORIZADO = 0
+JEV_TIMEOUT_PILOTO_S = 30.0
+
+
+class BrazoNoInstalable(Exception):
+    """El brazo real no se pudo ni construir: falta el entorno aislado o el modulo. No es un fallo
+    del proveedor, y no se confunde con `NO-CONFIGURADO` ni con `ILEGIBLE` (DA-C3)."""
+
+
+def ruta_del_sdk(raiz: Path = None) -> Path:
+    return (Path(raiz) if raiz is not None else ROOT).joinpath(*SDK_SITIO_AISLADO)
+
+
+def cargar_sdk(sitio: Path = None, raiz: Path = None) -> dict:
+    """Importa el SDK anadiendo su site-packages AL FINAL de `sys.path`; nunca por `PYTHONPATH`.
+
+    Publica la resolucion efectiva porque la trampa medida es justamente el orden de `sys.path`: si
+    `pydantic` sale con otra version, esta corrida ya no es la del proyecto.
+    """
+    sitio = Path(sitio) if sitio is not None else ruta_del_sdk(raiz)
+    if not sitio.is_dir():
+        raise BrazoNoInstalable(f"el site-packages aislado del SDK no existe: {sitio}")
+    texto = str(sitio)
+    estaba = texto in sys.path
+    if not estaba:
+        sys.path.append(texto)
+    try:
+        # Import ESTATICO y diferido, no `import_module(nombre)`: AC6 cuenta el primero como la
+        # excepcion de la puerta (la publica en `en_la_puerta`) y el segundo como un limite del
+        # escaneo. Preferir el segundo seria aplicarse la excepcion a escondidas.
+        import typesafe_sdk
+    except ImportError as exc:
+        if not estaba:
+            sys.path.remove(texto)
+        raise BrazoNoInstalable(f"no se pudo importar {SDK_MODULO} desde {sitio}: {exc}") from exc
+    import importlib.metadata as md
+    resolucion = {}
+    for paquete in ("typesafe-sdk", "pydantic", "httpx2"):
+        try:
+            resolucion[paquete] = md.version(paquete)
+        except Exception as exc:
+            resolucion[paquete] = f"SIN-METADATA:{type(exc).__name__}"
+    return {"modulo": typesafe_sdk, "sitio": sitio.as_posix(), "ya_estaba_en_sys_path": estaba,
+            "sys_path_ultima": sys.path[-1], "resolucion": resolucion}
+
+
+def cliente_jev(modulo, *, modelo, api_key=None, transport=None,
+                timeout: float = JEV_TIMEOUT_PILOTO_S,
+                max_reintentos: int = JEV_MAX_REINTENTOS_AUTORIZADO):
+    """AC8: el cliente del piloto se construye con `RetryPolicy(max_retries=0)`.
+
+    `api_key=None` es intencional: el SDK la resuelve desde su propia variable de entorno, asi esta
+    costura nunca lee el valor de una credencial. `max_reintentos` distinto de 0 se niega tambien
+    aqui y no solo en el runner: el default medido del SDK 0.7.0 es 2, o sea 3 intentos por 429, y
+    esos intentos extra no entrarian en el ledger del piloto.
+    """
+    if max_reintentos != JEV_MAX_REINTENTOS_AUTORIZADO:
+        raise ValueError(f"el piloto autoriza max_retries={JEV_MAX_REINTENTOS_AUTORIZADO}; "
+                         f"se pidio {max_reintentos!r}")
+    retry = modulo.RetryPolicy(max_retries=max_reintentos)
+    opciones = {"api_key": api_key, "model": modelo, "retry": retry, "timeout": timeout}
+    if transport is not None:
+        opciones["transport"] = transport
+    return modulo.TypeSafeClient(**opciones)
+
+
+def preflight_jev(cliente, *, timeout: float = JEV_TIMEOUT_PILOTO_S) -> dict:
+    """AC12: la autenticacion real se comprueba con `Models.list()`, que es metadatos y no inferencia.
+
+    No hay superficie de cuota/saldo en el SDK 0.7.0 medido: quien la busque la ve en `None` y el
+    artefacto lo estampa como NO-DISPONIBLE-POR-SDK en vez de fingir un cero.
+    """
+    respuesta = cliente.models.list(timeout=timeout)
+    modelos = [{"name": m.name, "release_date": m.release_date} for m in respuesta.models]
+    superficies = [n for n in dir(cliente) if not n.startswith("_")]
+    return {"estado": "AUTENTICADA", "modelos": modelos, "cantidad": len(modelos),
+            "request_id": _request_id_de(respuesta),
+            "superficie_del_cliente": superficies,
+            "cuota_o_saldo": None,
+            "motivo_cuota": "NO-DISPONIBLE-POR-SDK: `typesafe_sdk` 0.7.0 expone `models` y "
+                            "`system_one` y nada de saldo/cuota"}
+
+
+def cargar_transporte():
+    """El transporte que exige el SDK, importado DENTRO de la puerta (AC6).
+
+    No es un adorno: `escanear_aislamiento()` cuenta como HALLAZGOS un `import httpx2` en cualquier
+    otro archivo del arbol, y un test que construya su `MockTransport` por su cuenta pondria rojo el
+    escaneo de la casa. Las pruebas del piloto piden el modulo aqui y asi la regla sigue siendo cierta
+    con la red bloqueada.
+    """
+    import httpx2
+    return httpx2
+
+
+def _request_id_de(respuesta):
+    """El `request_id` del SDK es una propiedad que LANZA cuando la cabecera falta, no un opcional.
+
+    Medido con `MockTransport`: `getattr(respuesta, "request_id", None)` no sirve, porque el default de
+    `getattr` solo cubre atributos ausentes y aqui lo que hay es una excepcion del propio SDK. Sin
+    esta envolvente, un 200 sin `x-typesafe-request-id` habria reventado la corrida del piloto.
+    """
+    try:
+        return respuesta.request_id
+    except Exception:
+        return None
+
+
+def _answers_crudos(respuesta) -> dict:
+    crudo = {}
+    for nombre, answer in dict(getattr(respuesta, "answers", {}) or {}).items():
+        fila = {"tipo": getattr(answer, "type", None)}
+        for campo in ("noul", "choice", "score", "confidence", "probabilities", "legend"):
+            valor = getattr(answer, campo, None)
+            if valor is not None:
+                fila[campo] = valor
+        crudo[nombre] = fila
+    return crudo
+
+
+def system_one_jev(cliente, *, state, questions, modelo=None) -> dict:
+    """Una llamada System One, normalizada a la forma del contrato sin tocar lo que consume C.
+
+    `usage` y `modelo` se preservan ANTES de cualquier descarte (AC4). El SDK exige el campo `usage`
+    en `SystemOneResponse`, o sea un 200 sin `usage` revienta en `TypeSafeAPIResponseValidationError`
+    y nunca llega a convertirse en `null` ni en coste cero (AC9, medido en `_core/response_types.py`).
+    """
+    respuesta = cliente.system_one(state=state, questions=questions, model=modelo)
+    uso = getattr(respuesta, "usage", None)
+    return {
+        "modelo": getattr(respuesta, "model", None),
+        "usage": {"input_tokens": getattr(uso, "input_tokens", None),
+                  "output_tokens": getattr(uso, "output_tokens", None)},
+        "answers": _answers_crudos(respuesta),
+        "request_id": _request_id_de(respuesta),
+    }
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--falsos-directorio",
