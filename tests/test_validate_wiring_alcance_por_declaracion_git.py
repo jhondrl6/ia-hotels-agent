@@ -284,8 +284,14 @@ def test_lo_versionado_sigue_excluyendose_por_rol(reporte_real):
 
     agrupado = reporte_real["exclusiones_por_rol"]
     assert "evidence" in agrupado, f"`evidence` dejo de exclarse por rol; roles: {sorted(agrupado)}"
-    assert agrupado["evidence"]["cantidad"] > 0
+    # Re-anclado el 2026-10-03 por la mudanza (a) de la fila 18 (schema 1.3): el artefacto ya no
+    # publica `cantidad`, y `evidence` SI esta versionado, o sea la misma fuerza recae sobre la
+    # contraparte versionada. Si alguien borra la tabla de roles, esto sigue cayendo por la misma
+    # causa que caia antes.
+    assert agrupado["evidence"]["cantidad_versionada"] > 0
     assert agrupado["evidence"]["motivo"].strip()
+    assert "cantidad" not in agrupado["evidence"] and "ejemplo" not in agrupado["evidence"], (
+        f"el emisor volvio a publicar el conteo de la maquina: {sorted(agrupado['evidence'])}")
     assert not [x for x in _rutas(vw.archivos_en_alcance(ROOT)[0], ROOT)
                 if x.startswith("evidence/")], (
         "un .py de la evidencia versionada volvio a entrar en la poblacion")

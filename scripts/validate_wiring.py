@@ -113,7 +113,12 @@ DEFAULT_REPORT = ROOT / ".opencode" / "wiring_report.json"
 # 1.2: cada exclusion por rol y `cobertura` publican su contraparte **versionada**
 # (`cantidad_versionada`, `archivos_excluidos_por_rol_versionado`), que es la que goberna la
 # deriva del derivado; el contador bruto pasa a ser procedencia de la maquina.
-SCHEMA_VERSION = "1.2"
+# 1.3: DECISION (d1) del sello `07-`, dictada por el operador el 2026-10-03 y ejecutada por la fila 18
+# del `33-registro-unificado`: `exclusiones_por_rol.<rol>` deja de publicar `cantidad` y `ejemplo` y se
+# queda con `cantidad_versionada` y `motivo`. Cambia la FORMA del artefacto, no solo un valor, por eso
+# sube el numero. El conteo bruto no desaparece del verificador: pasa a la salida impresa
+# (`resumen_de`), que es donde le toca vivir a un numero que describe el disco de quien corre.
+SCHEMA_VERSION = "1.3"
 CONSULTA_GIT_TIMEOUT = 120
 
 # --------------------------------------------------------------------------- politica
@@ -781,24 +786,37 @@ def poblar(root: Path) -> dict:
 
 
 def _agrupar_exclusiones(exclusiones: list[dict]) -> dict:
-    """Resume las exclusiones por rol de directorio: cantidad, motivo y un ejemplo.
+    """Resume las exclusiones por rol con lo que es **estado del arbol**: `cantidad_versionada` y `motivo`.
 
-    Publica dos numeros por rol. `cantidad` es lo que hay en el disco de quien corre y
-    `cantidad_versionada` es lo de ese total que el propio Git **no** declara ignorado: la
-    primera es procedencia de la maquina, la segunda es estado del arbol. GOBERNA solo la
-    segunda ver `limites` (13).
+    Desde el schema 1.3 este objeto ya no publica `cantidad` ni `ejemplo`: son el disco de quien corre
+    (un scratch en `temp/` los mueve sin tocar una linea versionada), y publicarlos hacia caducar el
+    derivado dos veces en la misma sesion. El numero bruto sigue existiendo y se imprime en la salida
+    -ver `exclusiones_brutas_por_rol` y `resumen_de`-, solo que ya no viaja en el artefacto gobernado.
     """
     agrupado: dict[str, dict] = {}
     for item in exclusiones:
         rol = item["rol"]
         entrada = agrupado.setdefault(rol, {
-            "cantidad": 0, "cantidad_versionada": 0, "motivo": item["motivo"],
-            "ejemplo": item["ruta"],
+            "cantidad_versionada": 0, "motivo": item["motivo"],
         })
-        entrada["cantidad"] += 1
         if not item["no_versionada"]:
             entrada["cantidad_versionada"] += 1
     return dict(sorted(agrupado.items()))
+
+
+def exclusiones_brutas_por_rol(root: Path = None) -> dict:
+    """El conteo bruto por rol, para la SALIDA impresa: vive aqui, no en el artefacto versionado.
+
+    Coste deliberado: recorre el arbol (`archivos_en_alcance`) sin parsear AST. Se llama solo en el
+    camino que imprime el resumen, porque un numero que describe la maquina no puede obligar a
+    re-publicar un derivado gobernado.
+    """
+    root = Path(root) if root is not None else ROOT
+    _, exclusiones, _ = archivos_en_alcance(root)
+    brutos: dict[str, int] = {}
+    for item in exclusiones:
+        brutos[item["rol"]] = brutos.get(item["rol"], 0) + 1
+    return dict(sorted(brutos.items()))
 
 
 # --------------------------------------------------------------------------- excepciones
@@ -996,13 +1014,15 @@ def construir_reporte(root: Path, ignore_known: bool = False) -> dict:
             "clases. Limite medido al inventariar las 74 exclusiones del arbol",
             "un ✅ prueba que la poblacion descubierta esta conforme o registrada; NO "
             "prueba que no existan callers fuera del alcance del AST",
-            "los contadores brutos de exclusion (`exclusiones_por_rol.*.cantidad`, su `ejemplo` "
-            "y `cobertura.archivos_excluidos_por_rol`) se publican contados y con motivo, pero "
-            "**no gobernan la deriva** del derivado: cuentan ficheros que el propio Git declara "
-            "fuera del control de versiones, o sea el disco de quien corre, y caducarian con un "
-            "scratch sin que el arbol tocara una linea. Lo gobernado es la contraparte versionada "
-            "(`exclusiones_por_rol.*.cantidad_versionada`, "
-            "`cobertura.archivos_excluidos_por_rol_versionado`) y el `estado` de la consulta",
+            "los contadores brutos de exclusion **ya no se publican en el artefacto** (schema 1.3, "
+            "decision (d1) del sello `07-`): `exclusiones_por_rol.<rol>` sale solo con su contraparte "
+            "versionada y su `motivo`, y lo mismo vale para `cobertura.archivos_excluidos_por_rol`, "
+            "que sigue contado pero goberna la deriva solo en su forma versionada. El numero bruto no "
+            "desaparece del verificador: se imprime en el resumen (`exclusiones_por_rol: <rol> "
+            "bruto=N versionada=M`), porque un scratch en `temp/` -que Git declara fuera del control de "
+            "versiones- no puede caducar un derivado gobernado. S11 sigue vigente: la exclusion "
+            "anonima es lo que estaba prohibido, no mostrar cuantos ficheros hay en un directorio que "
+            "el proyecto ya rechazo",
             "el alcance por declaracion de Git **falla hacia abajo**: si no hay Git o el arbol "
             "no es un repositorio, `excluidos_por_declaracion_git` sale con `estado` SIN_GIT y "
             "`cantidad` 0, y el alcance vuelve a ser el que goberna `EXCLUSIONES_POR_ROL`. "
@@ -1044,11 +1064,15 @@ NORMALIZAR = (
 # quien corre y no el arbol versionado. Medido el 2026-10-01: un scratch nuevo en `temp/` (que
 # Git declara ignorado) movia `cantidad` y `archivos_excluidos_por_rol`, y con eso el artefacto
 # versionado caducaba dos veces en la misma sesion sin que el veredicto gobernado se moviera ni
-# una unidad. La regla no es dejar de contarlos: S11 castiga la exclusion **anonima**, no el
-# numero de ficheros que hay en un directorio que el proyecto ya rechazo. Se siguen publicando
-# `cantidad`, `ejemplo` y `motivo`; lo que se contra-verifica contra el arbol es su contraparte
-# versionada (`cantidad_versionada`, `archivos_excluidos_por_rol_versionado`), que es la unica
-# que puede cambiar sin tocar el disco de alguien.
+# una unidad. La regla no era dejar de contarlos: S11 castiga la exclusion **anonima**, no el
+# numero de ficheros que hay en un directorio que el proyecto ya rechazo.
+#
+# Desde el schema 1.3 (fila 18 del `33-registro-unificado`, decision (d1) estampada por el operador
+# el 2026-10-03) el emisor RETIRA `cantidad` y `ejemplo` del objeto `exclusiones_por_rol`, y el
+# conteo bruto pasa a la salida impresa. Por eso las dos rutas de abajo siguen aqui: son no-op
+# contra el calculo fresco de hoy y son las que evitan que el `--check` del commit de transicion
+# lea como DIVERGE una clave que el artefacto publicado todavia lleva. Se retiran cuando el
+# publicado este en 1.3 -ver el docstring de `_rutas_de_procedencia`-, no antes.
 PROCEDENCIA = (
     "cobertura.archivos_excluidos_por_rol",
     "excluidos_por_declaracion_git.cantidad",
@@ -1086,6 +1110,12 @@ def _rutas_de_procedencia(*objetos) -> frozenset:
     Se calcula sobre **todos** los objetos que se van a comparar, no solo sobre el fresco: si el
     artefacto publicado conoce un rol que el arbol de hoy ya no tiene (se borro el ultimo
     scratch), esa `cantidad` sigue siendo procedencia y no puede ponerse roja por ausencia.
+
+    Desde el schema 1.3 el emisor ya no publica `cantidad` ni `ejemplo`, asi que estas dos rutas son
+    **no-op sobre el calculo de hoy**. Se conservan a proposito y solo se retiran cuando el artefacto
+    publicado este tambien en 1.3: el `--check` compara contra el derivado del commit previo, y ese
+    todavia las lleva. Retirarlas en el mismo commit de la mudanza produce un rojo que parece de
+    cableado y es de transicion (fila 18, paso 3).
     """
     rutas = set(PROCEDENCIA)
     for objeto in objetos:
@@ -1214,7 +1244,13 @@ def lineas_del_check(ruta_check: Path, estado: str, divergencias: list, digest: 
     return bloque
 
 
-def resumen_de(reporte: dict) -> str:
+def resumen_de(reporte: dict, brutos: dict = None) -> str:
+    """La linea que ve quien corre el verificador.
+
+    `brutos` es el conteo por rol que el artefacto ya NO publica (schema 1.3). Si falta, la linea
+    printedice `bruto=no-publicado` en vez de omitir el desglose: un resumen que calla lo que no le
+    llego se lee como «no habia nada que mostrar» (L-R.3), que es justo el defecto que S11 castiga.
+    """
     cobertura = reporte["cobertura"]
     por = cobertura["por_clasificacion"]
     excluidos = reporte["excluidos_por_declaracion_git"]
@@ -1222,13 +1258,24 @@ def resumen_de(reporte: dict) -> str:
     if excluidos["estado"] != "GIT_OK":
         # El numero solo diria "0", que se lee como "no habia nada que excluir".
         alcance_git += f" ({excluidos['estado']})"
+    roles = reporte["exclusiones_por_rol"]
+    if brutos:
+        detalle = ", ".join(
+            f"{rol} bruto={brutos.get(rol, 0)} versionada={dato.get('cantidad_versionada')}"
+            for rol, dato in roles.items())
+    elif roles:
+        detalle = "bruto=no-publicado, " + ", ".join(
+            f"{rol} versionada={dato.get('cantidad_versionada')}" for rol, dato in roles.items())
+    else:
+        detalle = "ningun rol excluido"
     return (
         f"{cobertura['llamadas_descubiertas']} llamadas descubiertas en "
         f"{cobertura['archivos_en_alcance']} archivos | gobernadas "
         f"{cobertura['gobernadas_resueltas']} (conformes {por.get('GOBERNADA_CONFORME', 0)}, "
         f"omisiones {por.get('GOBERNADA_CON_OMISION', 0)}) | amparadas por excepcion "
         f"{len(reporte['excepciones_aplicadas'])} | violaciones {len(reporte['violaciones'])} "
-        f"| {alcance_git} | receptores no resueltos {cobertura['receptores_no_resueltos']}"
+        f"| {alcance_git} | receptores no resueltos {cobertura['receptores_no_resueltos']} "
+        f"| exclusiones_por_rol: {detalle}"
     )
 
 
@@ -1257,6 +1304,21 @@ def main(argv=None) -> int:
         print(f"[2] verificador fallido al medir {root}: {type(exc).__name__}: {exc}")
         return 2
 
+    # El desglose bruto por rol se calcula UNA vez y solo si alguien va a leer el resumen: es el
+    # numero que el schema 1.3 saco del artefacto gobernado, y recorrer el arbol para imprimilo no
+    # puede ser el precio de cada modo `--check` mudo.
+    brutos_guardados = None
+
+    def resumen() -> str:
+        nonlocal brutos_guardados
+        if brutos_guardados is None:
+            try:
+                brutos_guardados = exclusiones_brutas_por_rol(root)
+            except Exception as exc:  # el lector no pudo: se declara, no se omite
+                brutos_guardados = {}
+                print(f"  [AVISO] conteo bruto por rol no medible: {type(exc).__name__}: {exc}")
+        return resumen_de(reporte, brutos_guardados)
+
     if args.write_report:
         publicar(reporte, Path(args.write_report))
 
@@ -1269,7 +1331,7 @@ def main(argv=None) -> int:
         else (None, [], ""))
 
     if args.json:
-        payload = {"resumen": resumen_de(reporte), "violaciones": viol}
+        payload = {"resumen": resumen(), "violaciones": viol}
         if ruta_check:
             payload["derivado"] = {
                 "ruta": _relativo(ruta_check, ROOT), "estado": estado,
@@ -1282,7 +1344,7 @@ def main(argv=None) -> int:
 
     if viol:
         if not args.quiet:
-            print(f"[FAIL] Wiring: {len(viol)} violacion(es) de cableado | {resumen_de(reporte)}")
+            print(f"[FAIL] Wiring: {len(viol)} violacion(es) de cableado | {resumen()}")
         for v in viol:
             print(f"  - {v['tipo']} {v['archivo']}:{v['linea']} {v['simbolo']} :: "
                   f"{v['detalle']}  [politica: {v['fuente_politica']}]")
@@ -1297,7 +1359,7 @@ def main(argv=None) -> int:
         for linea in lineas_del_check(ruta_check, estado, divergencias, digest, args.quiet):
             print(linea)
     if codigo == 0 and not args.quiet:
-        print(f"[OK] Wiring: {resumen_de(reporte)}")
+        print(f"[OK] Wiring: {resumen()}")
     return codigo
 
 
