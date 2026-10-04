@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-09-21
+> **Ultima actualizacion:** 2026-10-03
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 502
+> **Total fases completadas:** 503
 
 ---
 
@@ -11705,6 +11705,38 @@ _Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que e
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: sin dato declarado
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B - 2026-10-03 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+**Descripcion:** Piloto JEV FASE-B: runner con run/preflight/presupuesto, brazo Jev en la puerta, DeepSeek por costura, pata (b) del ledger (attempts/error_kind/usage_normalized) y mudanza fila 18
+**Nota:** registrada en tardanza el 2026-10-04: la OLA 2 cerro FASE-B sin entrada en REGISTRY
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `scripts/proveedores/deepseek.py` | NUEVO | Deepseek |
+| `tests/quality_gates/jev_pilot/conftest.py` | NUEVO | Conftest |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_sdk_ac9.py` | NUEVO | Test Jev Pilot Sdk Ac9 |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py` | NUEVO | Test Jev Pilot Run Guards |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py` | NUEVO | Test Jev Pilot Deepseek Brazo |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py` | NUEVO | Test Jev Pilot Protocolo Check |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py` | NUEVO | Test Jev Pilot Ledger Fase B |
+| `tests/test_validate_wiring_diente_mudanza_1_3.py` | NUEVO | Test Validate Wiring Diente Mudanza 1 3 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/decision_client.py` | Decision Client |
+| `scripts/evaluate_jev_pilot.py` | Evaluate Jev Pilot |
+| `scripts/validate_wiring.py` | Validate Wiring |
+| `tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py` | Test Decision Client Aislamiento Imports |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 70 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

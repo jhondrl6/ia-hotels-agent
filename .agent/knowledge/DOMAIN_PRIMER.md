@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-09-25 | v4.78.0 Gobernanza, costura, pertinencia y carga medida*
+*Auto-generado: 2026-10-04 | v4.78.0 Gobernanza, costura, pertinencia y carga medida*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

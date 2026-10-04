@@ -284,5 +284,9 @@
   "22": "FASE-B",
   "scripts/validate_governance_numbers.py": "FASE-A",
   "tests/quality_gates/governance_numbers": "FASE-A",
-  ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20": "FASE-D"
+  ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20": "FASE-D",
+  "scripts/decision_client.py": "FASE-B",
+  "scripts/evaluate_jev_pilot.py": "FASE-B",
+  "scripts/validate_wiring.py": "FASE-B",
+  "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py": "FASE-B"
 }

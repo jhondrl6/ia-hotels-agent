@@ -123,7 +123,7 @@ Para integrarse se requiere además que el consumidor C esté implementado y ver
 | Fase propia | Trabajo | Entrada | Estado al ajustar |
 |---|---|---|---|
 | FASE-A | Corpus, rúbrica, checker y protocolo offline | Instrucción de fase y participación humana para etiquetas/criterios; no depende de B/C | PENDIENTE |
-| FASE-B | Adaptadores y runner integrado; SDK real con transporte falso; controles de presupuesto y métricas | A y B/C offline del hermano; archivo compartido liberado, sin ejecución concurrente | BLOQUEADA POR DEPENDENCIA |
+| FASE-B | Adaptadores y runner integrado; SDK real con transporte falso; controles de presupuesto y métricas | A y B/C offline del hermano; archivo compartido liberado, sin ejecución concurrente | BLOQUEADA POR DEPENDENCIA ⟦**2026-10-04: vencido — EJECUTADA el 2026-10-03** (OLA 2; `be8ccec`, `dccbb6a`, `f884ada`, `bcd8d2a`, `4895d04`; rango `4c113de..4895d04`) y registrada en `REGISTRY.md` hoy con `--fecha 2026-10-03`. La columna es «Estado **al ajustar**» (2026-09-21), así que la celda se conserva como foto de ese día y se corrige aquí, no borrándola: su causa ya estaba vencida desde el 2026-09-24 y lo que faltaba eran dos decisiones del operador y el mandato, que llegaron el 2026-10-02 y el 2026-10-03⟧ |
 | FASE-C | Conectividad, ajuste permitido, comparación real y decisión; **sin escribir código** | A/B verificadas, snapshots versionados y autorizaciones literales con presupuesto | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN |
 | FASE-RELEASE | Revisión de evidencia, transferencia D7/D6 y cierre documental | C con resultado válido o decisión explícita de cierre sin inferencias; deuda visible y permisos separados | PENDIENTE |
 
@@ -135,6 +135,25 @@ mandato — la dependencia técnica está entregada desde el 2026-09-24
 (`ls scripts/decision_client.py scripts/triage_lesson_relevance.py`); RELEASE: ninguna fase
 ejecutada, aunque el archivado (git mv) sí se ejecutó el 2026-09-27. Comandos de re-medida:
 README §Pendientes priorizados y evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-09-30/⟧
+
+⟦Sello 2026-10-04 — cierre documental de FASE-B; este sello **no** borra el de arriba, lo deja
+como antecedente del 2026-10-01 y corrige dos de sus afirmaciones, que hoy son falsas:
+(1) «FASE-B/C bloqueadas por P1 (revisión humana), la decisión del gap de contrato y el mandato»:
+**FASE-B se ejecutó el 2026-10-03 y se registró en `REGISTRY.md` el 2026-10-04** — sus tres
+bloqueantes se resolvieron antes (P1 con `muestra.json` `CONGELADA` y revisión humana de `jhon`
+del 2026-10-02; el *gap* con D-B, aplicado como pata (b) del ledger dentro del runner; y el mandato
+expreso de la OLA 2). **FASE-C sigue como la decía: sin ejecutar y sin autorización**, con
+`protocolo.json` en `BORRADOR` porque su congelado es C.
+(2) «muestra BORRADOR, 4 pares, `sin_revisar`, umbrales nulos»: vencido — `muestra.json` figura
+`CONGELADA` con `counts` 4 / dev 2 / eval 2 / excluidos 1 y `review.human_reviewed: true`, y
+`protocolo.json` tiene sus techos de tokens escritos el 2026-10-03 con la corrida k=8
+(`tokens_in=1834`, `tokens_out=139`, máximo observado por llamada, con su `motivo`); `usd` sigue
+`null`, declarado FUERA DE GOBERNANZA por el operador.
+Lo que el sello del 2026-10-01 acertó y se mantiene: FASE-A ejecutada offline, la dependencia
+técnica entregada desde el 2026-09-24, y el archivado (git mv) ejecutado el 2026-09-27.
+Comandos con los que se re-mide hoy: `ls evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/`,
+`grep -c "## FASE-B - 2026-10-03 (EVALUACION-JEV-TYPESAFE-2026-09-21)" docs/contributing/REGISTRY.md`
+y la matriz de `06-checklist-implementacion.md`⟧
 
 Dos fases de implementación (A/B) y una de medición sin código (C): no se cumple el requisito de tres implementaciones para FASE-VERIFY del executor §4.6. La revisión cruzada de artefactos se hace en C y RELEASE; no se omite. Ningún resultado certifica la pipeline hotelera.
 

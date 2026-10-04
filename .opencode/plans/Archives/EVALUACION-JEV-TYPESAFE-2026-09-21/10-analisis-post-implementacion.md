@@ -1,6 +1,6 @@
 # Análisis de ejecución — EVALUACION-JEV-TYPESAFE-2026-09-21
 
-**Estado de ejecución: PENDIENTE.** Este archivo acumula evidencia desde la preparación; no afirma que el piloto se haya implementado.
+**Estado de ejecución (foto con la que se escribió esta línea, 2026-09-21): PENDIENTE.** ⟦Sello 2026-10-04 — vencido: este encabezado se escribió cuando el piloto no tenía ninguna fase de implementación ejecutada. **FASE-A se ejecutó el 2026-09-21 y FASE-B el 2026-10-03**, con su registro en `REGISTRY.md` del 2026-10-04; la fila de esa fase está en §Resumen de ejecución y su crudo completo en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/`. Lo que sigue pendiente es FASE-C y FASE-RELEASE⟧. Este archivo acumula evidencia desde la preparación; no afirma que el piloto se haya implementado. ⟦2026-10-04: esa segunda cláusula ya no se puede citar en presente — hay implementación certificada en A y B; se conserva la frase porque describe la política del documento, que sigue siendo que **el verde no se afirma leyendo este archivo sino sus artefactos**⟧
 
 ## Resumen de ejecución
 
@@ -8,7 +8,7 @@
 |---|---|---|
 | Preparación documental | AJUSTADA el 2026-09-21 | Lecturas, consultas QMind y validación documental; no es fase de código |
 | FASE-A | **EJECUTADA offline el 2026-09-21** (checker + 7 tests en verde + selftest; muestra **BORRADOR**, AC3 parcial por falta de revisión humana) | ⟦Fila rectificada el 2026-09-24 por el bloque C de la orden de calidad: publicaba «PENDIENTE / Sin ejecución», contradicha por el propio §Ejecución de FASE-A de este archivo, por `06-checklist` (AC3 PARCIAL, AC10 FASE-A HECHA) y por `README.md`⟧. Su evidencia quedó commiteada y empujada (`9665c57..51b0793`) |
-| FASE-B | BLOQUEADA POR DEPENDENCIA ⟦Sello 2026-10-01 — la causa de esta fila quedó vencida: la dependencia técnica se entregó el 2026-09-24 (las dos rutas presentes). Lo que bloquea FASE-B hoy es P1 (revisión humana de la muestra), la decisión del gap de contrato y el mandato, no una dependencia técnica; ver README §Pendientes priorizados P3⟧ | Sin ejecución |
+| FASE-B | **EJECUTADA el 2026-10-03 (OLA 2) y registrada en `docs/contributing/REGISTRY.md` el 2026-10-04 con `--fecha 2026-10-03`** — commits `be8ccec`, `dccbb6a`, `f884ada`, `bcd8d2a`, `4895d04`; rango publicado `4c113de..4895d04`. ⟦Sello 2026-10-04: esta fila abría con «BLOQUEADA POR DEPENDENCIA» y su segunda celda decía «Sin ejecución»; ambas quedaron vencidas por la tanda. El sello del 2026-10-01 que se conserva debajo acertó en el diagnóstico (no era una dependencia técnica sino P1, el *gap* y el mandato) y caducó en el estado: los tres se resolvieron entre el 2026-10-02 y el 2026-10-03⟧ ⟦Sello 2026-10-01 — la causa de esta fila quedó vencida: la dependencia técnica se entregó el 2026-09-24 (las dos rutas presentes). Lo que bloquea FASE-B hoy es P1 (revisión humana de la muestra), la decisión del gap de contrato y el mandato, no una dependencia técnica; ver README §Pendientes priorizados P3⟧ | **15 artefactos en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/`** (medido con `ls`): `import_scanner.txt` (población 822/9825 `.py`, `[SIN-HALLAZGOS]` en la puerta), `integracion.json`, `contract.txt` (estado por AC con su coordenada), `modelos.json`, `mutation.json` (par de mutación 10/10 con causa y restauración por sha256), `budget_tests.txt`, `entorno.json`, `requirements-pilot.txt`, `sdk_contract.txt`, `metrics_tests.txt`, `preflight.json` (401 y luego AUTENTICADA), `corrida_k8_2026-10-03.txt` (dos llamadas reales, `attempts` 1, `usage_normalized.estado = observado`) y la `00-nota-de-ronda-2026-10-03-ola2b.md` con su sello del quinto corte. **Lo que NO se ejecutó**: la comparación de tres brazos y la decisión, que son de C. Iteraciones: la nota de ronda §Cifra canónica publica árbol de trabajo y commiteado con su comando y su HEAD, y el paso 8 (disparo de S14) quedó **NO-EJERCITADO con sus tres crudos** en vez de un verde prestado |
 | FASE-C | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN | Sin ejecución |
 | FASE-RELEASE | PENDIENTE | Sin ejecución |
 
@@ -145,6 +145,15 @@ ejecutaron; `acceptance` del piloto sigue **NO-EJERCITADO** (proveedor habilitad
 proveedor ejercitado, los tres contratos que separó la revisión); **D7 sigue inactiva** por decisión del operador y
 D6 conserva dueño y disparador. Los bloqueantes que sobreviven a este archivado son humanos y de permiso —revisión
 de artefactos y consentimiento—, no de código.
+
+⟦**Sello 2026-10-04, sobre el párrafo de arriba sin reescribirlo**: de sus cláusulas, «**las fases B y C de
+integración no se ejecutaron**» quedó vencida a medias y hay que separarlas — **FASE-B se ejecutó el 2026-10-03**
+(OLA 2; `be8ccec`, `dccbb6a`, `f884ada`, `bcd8d2a`, `4895d04`), con adaptadores y runner en producción de `scripts/`
+y sus 15 artefactos en `FASE-B/`; **FASE-C sigue sin ejecutarse**, así que «no hay comparación de tres brazos ni
+decisión» y «`acceptance` del piloto sigue NO-EJERCITADO como resultado medido» siguen siendo cierto: la corrida
+k=8 del 2026-10-03 fueron **dos llamadas de instrumento** (preflight y techos), no la medición del piloto. Que el
+SDK quedara ejercitado con proveedor real no equipara «instrumentado» a «ejercitado en la comparación»: la
+distinción de los tres contratos que hizo esta revisión sigue en pie⟧
 
 ## Sello 2026-09-30 — las dos filas de §Hitos y evidencia de entrada de `dependencias-fases.md`, que esta sesión no pudo editar
 

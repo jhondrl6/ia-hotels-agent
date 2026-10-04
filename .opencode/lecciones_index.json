@@ -5306,6 +5306,14 @@
       ]
     },
     {
+      "id": "D-B",
+      "familia": "D",
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+      ]
+    },
+    {
       "id": "D-A-QUICK-TRECE",
       "familia": "D",
       "total_citas": 6,
@@ -5397,6 +5405,14 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "D-D",
+      "familia": "D",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ]
     },
     {
@@ -5531,22 +5547,6 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "context/Refuerzo"
-      ]
-    },
-    {
-      "id": "D-B",
-      "familia": "D",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
-      ]
-    },
-    {
-      "id": "D-D",
-      "familia": "D",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ]
     },
     {
