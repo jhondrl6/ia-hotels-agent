@@ -9,6 +9,7 @@ termino en espera de autorizacion, y el operador la dio: **commit si, push no, L
   que quedaron escritas en el material de esta sesion -aqui, en el `cierre_2026-10-04` de
   `preflight.json` y en el de `mutation.json`- describian el quinto corte, un estado anterior real, y este
   sello las vence sin borrarlas.
+- **Sello del push (mismo 2026-10-04, marca 2026-10-04T20:39:47Z): la tanda se empujo a `origin/master` en el rango `6cdb430..594ebb5` (dos commits) el 2026-10-04, y la paridad se re-midio contra el servidor, no contra el ref local: `git ls-remote origin refs/heads/master` = `594ebb5f8417c4411ef4e5092f687f515b5b5d9a`, igual que `git rev-parse HEAD`, con `rev-list --left-right --count origin/master...HEAD` = 0/0. la revision L3 **no se corrio**: el operador indico «commit sin L3» y luego «git push». Queda como opcion suya sobre el rango ya empujado, no como deuda de esta sesion. precision que este sello se traga y no se calla: el commit que estampa el rango `6cdb430..594ebb5` viaja el siguiente (`594ebb5..` en cuanto se empuje), asi que el rango citado es el estado medido al estampar, no la afirmacion de que todo lo posterior este publicado.
 - Cifra canonica de pruebas: `grep -rE "^\s*def test_" tests --include=*.py` = **4,795** sobre el arbol de
   trabajo; `git grep -c -E "^\s*def test_" HEAD -- tests` sumado = **4,776**. El delta de 19 es trabajo de
   esta sesion sin commitear. **Tras el sello `7899f0f` las dos convergen**: el mismo comando sobre HEAD da
@@ -197,6 +198,7 @@ nadie lea ese ruido como una fuga.
    arbol: clon limpio de `7899f0f` **fuera del repo** (`AppData/Local/Temp`, no bajo `temp/`: un clon
    anidado si rompe el gate del derivado), baterias tocadas = 90 passed y, en el archivo del wiring,
    15 passed / 1 skipped con la razon citable.
+   **El push se dio**: la tanda se empujo a `origin/master` en el rango `6cdb430..594ebb5` (dos commits) el 2026-10-04, y la paridad se re-midio contra el servidor, no contra el ref local: `git ls-remote origin refs/heads/master` = `594ebb5f8417c4411ef4e5092f687f515b5b5d9a`, igual que `git rev-parse HEAD`, con `rev-list --left-right --count origin/master...HEAD` = 0/0. la revision L3 **no se corrio**: el operador indico «commit sin L3» y luego «git push». Queda como opcion suya sobre el rango ya empujado, no como deuda de esta sesion.
 2. **`respuestas` vacias del brazo DeepSeek**: causa **medida** en la tanda (b) —el modelo devuelve el id
    recortado (`1` por `sonda:1`) y `_mapear_respuestas` descarta la respuesta—; **la cura no se autorizo**:
    es del brazo `scripts/proveedores/deepseek.py` y moveria sus diez tests.

@@ -25,7 +25,10 @@
 > **Sello posterior dentro de la misma sesion (mismo 2026-10-04):** la tanda se commiteo en `7899f0f`
 > (rango `6cdb430..7899f0f`), sin push y sin revision L3 por indicacion del operador. Con ese commit la cifra
 > commiteada pasa a **4.795**, igual que la medida del arbol de trabajo, y el delta de 19 deja de ser
-> «trabajo sin commitear»: es versionado. La verificacion del árbol del commit se hizo en un clon limpio
+> «trabajo sin commitear»: es versionado, y **el rango `6cdb430..594ebb5` esta empujado** a `origin/master`
+> (paridad re-medida contra el servidor: `git ls-remote origin refs/heads/master` = `594ebb5`,
+> `rev-list --left-right --count origin/master...HEAD` = 0/0). El L3 deep no se corrio, por indicacion.
+> La verificacion del árbol del commit se hizo en un clon limpio
 > **fuera del repo**, donde la fila 5 corta su salto condicional y las otras dos baterias suman 90 passed.
 >
 > Atribucion por archivo, medida por directorio y no derivada de la fila anterior: **+11** en la raiz,
