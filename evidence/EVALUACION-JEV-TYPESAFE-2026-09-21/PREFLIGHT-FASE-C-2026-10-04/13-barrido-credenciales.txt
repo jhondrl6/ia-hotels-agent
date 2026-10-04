@@ -1,0 +1,28 @@
+BARRIDO FINAL DE CREDENCIALES (V6 / §8-B de la SESION 2.5). Corrida de cierre, re-hecha sobre los bytes
+definitivos del expediente y de las escrituras de docs y derivado.
+Criterio: los VALORES de las variables de `.env` con sufijo `_KEY` / `_PASSWORD` / `_CREDENTIALS_PATH` y
+longitud >= 8, buscados como subcadena. Se imprime solo nombre de variable y archivo: jamas el valor,
+su longitud exacta o un prefijo.
+
+variables de la familia: 12 -> ['DEEPSEEK_API_KEY', 'GA4_CREDENTIALS_PATH', 'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'GOOGLE_MAPS_API_KEY', 'OPENAI_API_KEY', 'OPENROUTER_API_KEY', 'PAGESPEED_API_KEY', 'SERPAPI_API_KEY', 'SERPSTACK_API_KEY', 'SMTP_PASSWORD', 'TYPESAFE_API_KEY']
+informativas (longitud >= 8): 10 -> ['DEEPSEEK_API_KEY', 'GA4_CREDENTIALS_PATH', 'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'GOOGLE_MAPS_API_KEY', 'OPENROUTER_API_KEY', 'PAGESPEED_API_KEY', 'SERPAPI_API_KEY', 'SERPSTACK_API_KEY', 'TYPESAFE_API_KEY']
+excluidas por cortas (placeholder del `.env` local, no credencial): 2 -> ['OPENAI_API_KEY', 'SMTP_PASSWORD']
+archivos barridos: 25 = 19 del expediente (incluidos `00-resumen.md` y
+  `09-registro-deepseek-flash.md`) + 6 de produccion, docs y derivado: `scripts/proveedores/deepseek.py`,
+  `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py`, `FASE-B/preflight.json`, `AGENTS.md`,
+  `docs/cobertura-historia.md`, `.opencode/wiring_report.json`
+resultado: SIN HALLAZGOS
+
+HALLAZGO DE INSTRUMENTO, declarado y no escondido: la primera pasada, sin piso de longitud, dio DOS falsos
+positivos en `08c-arnes-saldo.py`. Las dos variables excluidas tienen un valor de tres caracteres (un
+placeholder del `.env` de la maquina) y esos tres caracteres son literalmente `***`, el marcador de redaccion
+que el propio arnes escribe: el barrido se casaba a si mismo contra un valor que no puede casar una
+credencial. Con el piso de 8 el resultado es SIN HALLAZGOS, y el valor real de `DEEPSEEK_API_KEY` si esta
+entre las informativas y NO aparece en ninguno de los archivos. Precedente de la casa: el barrido de la
+deuda declaro el mismo ruido con `LLM_PROVIDER` (`deepseek`), nombre de proveedor y no secreto.
+
+barrido complementario por NOMBRE (no por valor): `DEEPSEEK_API_KEY` aparece solo como nombre de variable de
+entorno y como `credencial_env` del contrato del brazo; la busqueda del patron de asignacion con valor sobre
+el expediente no dio coincidencias.
+nota de auto-referencia: este archivo se escribe despues del barrido, asi que no se barrio contra si mismo; su
+contenido es nombre, criterio y conteo, sin valores.

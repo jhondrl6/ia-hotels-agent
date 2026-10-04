@@ -1,0 +1,205 @@
+{
+ "arnes": "p2_mutantes_cierre_a.py",
+ "fecha": "2026-10-04T21:25:55+00:00",
+ "revision_arranque": "5ca63953b966b18f8e55a79c7669ca1196fc6f1e",
+ "objetivo": "scripts/proveedores/deepseek.py",
+ "bateria": "tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py",
+ "sha_baseline_antes_de_la_ronda": "289842457a5ba3591a0e7e593616e10b6096965c096d200e149cb1ee544d1b28",
+ "sha_baseline_antes_de_la_ronda_trunco": "289842457a5b",
+ "resultado_por_mutante": [
+  {
+   "id": "M1-el-recorte-vuelve-a-descartarse",
+   "predichos": [
+    "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+   ],
+   "causa_predicha": "desaparece la segunda vuelta del emparejamiento: la respuesta recortada vuelve al basurero y el payload sale `respuestas: []` con el envio cobrado, o sea el defecto de la deuda (fila 2) reapareciendo tal cual",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "3 failed, 12 passed in 0.43s",
+    "kill_set": [
+     "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa",
+     "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+     "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [
+    "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa",
+    "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo"
+   ],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "E       AssertionError: el brazo volvio a tirar una respuesta que el servicio si trajo\nE       assert [] == [{'pregunta_i...ipo': 'noul'}]\nE         \nE         Right contains one more item: {'pregunta_id': 'sonda:1', 'probabilidad_si': 1.0, 'tipo': 'noul'}\nE         Use -v to get more diff\n_____ test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa _____\nE       IndexError: list index out of range\n___________ test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo ____________\nE       AssertionError: assert [] == [{'eleccion':...o': 'choice'}]\nE         \nE         Right contains one more item: {'eleccion': 'pertinente', 'pregunta_id': 'pert:L-R.9', 'tipo': 'choice'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.26s",
+    "fallidos": []
+   },
+   "sha_mutante": "14fc4fe9dfaa",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  },
+  {
+   "id": "M2-toma-el-prefijo-en-vez-de-la-cola",
+   "predichos": [
+    "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa"
+   ],
+   "causa_predicha": "el recorte se toma del lado equivocado del delimitador: `pert:L-R.1` busca `pert` en vez de `L-R.1` y la respuesta del triaje se pierde otra vez",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "3 failed, 12 passed in 0.40s",
+    "kill_set": [
+     "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa",
+     "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+     "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [
+    "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+    "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+   ],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "E       AssertionError: el brazo volvio a tirar una respuesta que el servicio si trajo\nE       assert [] == [{'pregunta_i...ipo': 'noul'}]\nE         \nE         Right contains one more item: {'pregunta_id': 'sonda:1', 'probabilidad_si': 1.0, 'tipo': 'noul'}\nE         Use -v to get more diff\n_____ test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa _____\nE       IndexError: list index out of range\n___________ test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo ____________\nE       AssertionError: assert [] == [{'eleccion':...o': 'choice'}]\nE         \nE         Right contains one more item: {'eleccion': 'pertinente', 'pregunta_id': 'pert:L-R.9', 'tipo': 'choice'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.26s",
+    "fallidos": []
+   },
+   "sha_mutante": "36fcfa4b94d2",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  },
+  {
+   "id": "M3-adivina-el-recorte-ambiguo",
+   "predichos": [
+    "test_un_recorte_ambiguo_no_se_adivina"
+   ],
+   "causa_predicha": "se quita el control de unicidad entre preguntas: con `a:1` y `b:1` la `1` suelta se asigna a la primera y la filiacion sale inventada",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "1 failed, 14 passed in 0.39s",
+    "kill_set": [
+     "test_un_recorte_ambiguo_no_se_adivina"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "____________________ test_un_recorte_ambiguo_no_se_adivina ____________________\nE       AssertionError: el brazo le asigno una respuesta ambigua a una de las dos preguntas\nE       assert [{'pregunta_i...ipo': 'noul'}] == []\nE         \nE         Left contains one more item: {'pregunta_id': 'a:1', 'probabilidad_si': 0.5, 'tipo': 'noul'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_un_recorte_ambiguo_no_se_adivina",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.26s",
+    "fallidos": []
+   },
+   "sha_mutante": "9c985fe30c63",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  },
+  {
+   "id": "M4-el-recorte-roba-la-respuesta-exacta",
+   "predichos": [
+    "test_la_coincidencia_exacta_no_le_cede_su_respuesta_al_recorte"
+   ],
+   "causa_predicha": "el recorte ya no respeta las respuestas consumidas: la misma cruda se publica dos veces, una con el id exacto y otra con el preguntado",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "1 failed, 14 passed in 0.39s",
+    "kill_set": [
+     "test_la_coincidencia_exacta_no_le_cede_su_respuesta_al_recorte"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "_______ test_la_coincidencia_exacta_no_le_cede_su_respuesta_al_recorte ________\nE       AssertionError: el recorte le duplico al servicio una respuesta que ya tenia dueno por id exacto\nE       assert [{'pregunta_i...ipo': 'noul'}] == [{'pregunta_i...ipo': 'noul'}]\nE         \nE         At index 0 diff: {'pregunta_id': 'sonda:1', 'tipo': 'noul', 'probabilidad_si': 0.25} != {'pregunta_id': '1', 'tipo': 'noul', 'probabilidad_si': 0.25}\nE         Left contains one more item: {'pregunta_id': '1', 'probabilidad_si': 0.25, 'tipo': 'noul'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_coincidencia_exacta_no_le_cede_su_respuesta_al_recorte",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.25s",
+    "fallidos": []
+   },
+   "sha_mutante": "131cc5247577",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  },
+  {
+   "id": "M5-rellena-lo-que-no-vino",
+   "predichos": [
+    "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo"
+   ],
+   "causa_predicha": "la rama choice planta un `confidence` que el servicio no trajo: sale un numero inventado y la puerta deja de poder marcarlo como ILEGIBLE",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "2 failed, 13 passed in 0.40s",
+    "kill_set": [
+     "test_deepseek_no_inventa_confidence_y_la_puerta_responde_ilegible",
+     "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [
+    "test_deepseek_no_inventa_confidence_y_la_puerta_responde_ilegible"
+   ],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "______ test_deepseek_no_inventa_confidence_y_la_puerta_responde_ilegible ______\nE       AssertionError: assert 'confidence' not in {'confidence': 0.5, 'eleccion': 'pertinente', 'pregunta_id': 'c1', 'probabilidades': {'insuficiente': 0.1, 'no_pertinente': 0.2, 'pertinente': 0.7}, ...}\n___________ test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo ____________\nE       AssertionError: assert [{'confidence...o': 'choice'}] == [{'eleccion':...o': 'choice'}]\nE         \nE         At index 0 diff: {'pregunta_id': 'pert:L-R.9', 'tipo': 'choice', 'confidence': 0.5, 'eleccion': 'pertinente'} != {'pregunta_id': 'pert:L-R.9', 'tipo': 'choice', 'eleccion': 'pertinente'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_deepseek_no_inventa_confidence_y_la_puerta_responde_ilegible\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.26s",
+    "fallidos": []
+   },
+   "sha_mutante": "66d2833a8893",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  },
+  {
+   "id": "M6-publica-el-id-del-servicio",
+   "predichos": [
+    "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa",
+    "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+    "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+   ],
+   "causa_predicha": "la fila se arma con el `pregunta_id` que trajo el servicio y no con el preguntado: la puerta cuenta la fila como pregunta no pedida y ademas deja sin respuesta la que si se pidio",
+   "rojo": {
+    "rc": 1,
+    "linea_final": "3 failed, 12 passed in 0.41s",
+    "kill_set": [
+     "test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa",
+     "test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+     "test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla"
+    ]
+   },
+   "cayeron_todos_los_predichos": true,
+   "cayo_algo_no_predicho": [],
+   "rojo_ruidoso": true,
+   "crudo_rojo": "E       AssertionError: el brazo volvio a tirar una respuesta que el servicio si trajo\nE       assert [{'pregunta_i...ipo': 'noul'}] == [{'pregunta_i...ipo': 'noul'}]\nE         \nE         At index 0 diff: {'pregunta_id': '1', 'tipo': 'noul', 'probabilidad_si': 1.0} != {'pregunta_id': 'sonda:1', 'tipo': 'noul', 'probabilidad_si': 1.0}\nE         Use -v to get more diff\n_____ test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa _____\nE       AssertionError: assert ('L-R.1' == 'pert:L-R.1'\nE         \nE         - pert:L-R.1\nE         + L-R.1)\n___________ test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo ____________\nE       AssertionError: assert [{'eleccion':...o': 'choice'}] == [{'eleccion':...o': 'choice'}]\nE         \nE         At index 0 diff: {'pregunta_id': 'L-R.9', 'tipo': 'choice', 'eleccion': 'pertinente'} != {'pregunta_id': 'pert:L-R.9', 'tipo': 'choice', 'eleccion': 'pertinente'}\nE         Use -v to get more diff\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa\nFAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo",
+   "verde_tras_restaurar": {
+    "rc": 0,
+    "linea_final": "15 passed in 0.26s",
+    "fallidos": []
+   },
+   "sha_mutante": "0bf3d0223a67",
+   "sha_restaurado": "289842457a5b",
+   "restauracion_coincide": true
+  }
+ ],
+ "mutantes_equivalentes_declarados": [
+  {
+   "id": "M2a-split-con-maxsplit-1",
+   "mutante": "pid.split(DELIMITADOR_DE_PREFIJO, 1)[1]",
+   "resultado": "VERDE (rc=0)",
+   "lectura": "equivalente: con un solo `:` coincide con `rsplit(.., 1)[1]`"
+  },
+  {
+   "id": "M2b-split-sin-maxsplit",
+   "mutante": "pid.split(DELIMITADOR_DE_PREFIJO)[1]",
+   "resultado": "VERDE (rc=0)",
+   "lectura": "equivalente por el mismo motivo: `pert:L-R.1` parte en ['pert', 'L-R.1'] porque el resto usa guiones y punto, no `:`"
+  }
+ ],
+ "todos_restaurados": true,
+ "todos_cortaron_por_su_causa": true,
+ "git_status_objetivo_antes": "M scripts/proveedores/deepseek.py",
+ "git_status_objetivo_despues": "M scripts/proveedores/deepseek.py",
+ "git_status_identico": true,
+ "lectura_del_status": "el archivo figura M en git por la cura de esta sesion (A1), no por los mutantes: la restauracion la goberna el sha y el status es el mismo antes y despues de la ronda",
+ "cantidad_de_mutantes": 6
+}

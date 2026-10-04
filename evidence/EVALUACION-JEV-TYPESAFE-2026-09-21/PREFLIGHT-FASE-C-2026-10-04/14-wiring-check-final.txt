@@ -1,0 +1,2 @@
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest b4705a4b5d38)
+[OK] Wiring: 174 llamadas descubiertas en 698 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=122 versionada=122, temp bruto=138 versionada=0, venv bruto=7610 versionada=0

@@ -1,0 +1,40 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product ______
+
+puerta = <module 'decision_client_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\decision_client.py'>
+sdk = {'modulo': <module 'typesafe_sdk' from 'C:\\Users\\Jhond\\Github\\iah-cli\\tmp_test\\venv-jev-sdk\\Lib\\site-packages\...ite-packages', 'sys_path_ultima': 'C:\\Users\\Jhond\\Github\\iah-cli\\tmp_test\\venv-jev-sdk\\Lib\\site-packages', ...}
+raiz_repo = WindowsPath('C:/Users/Jhond/Github/iah-cli')
+
+    def test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product(puerta, sdk, raiz_repo):
+        """El site-packages del SDK va AL FINAL de `sys.path`, y por eso `pydantic` sigue siendo el proyecto.
+    
+        Medido el 2026-10-03: con `PYTHONPATH` esa ruta queda ANTES del venv y pydantic resuelve 2.13.5,
+        o sea la corrida dejaria de ser el entorno del piloto. Este es el diente de esa trampa: si alguien
+        cambia `append` por `insert(0, ...)`, la version reportada sube y el control cae por la causa
+        escrita.
+        """
+        sitio = str(puerta.ruta_del_sdk(raiz_repo))
+        assert sitio in sys.path, "la ruta duradera no esta en sys.path: el SDK no se esta cargando por ella"
+        venv_paquete = next((p for p in sys.path if "venv" in p.lower() and "site-packages" in p.lower()),
+                            None)
+>       assert venv_paquete is not None and sys.path.index(sitio) > sys.path.index(venv_paquete), (
+            "el site-packages del SDK quedo ANTES que el del venv: la resolucion dejo de ser la del "
+            "proyecto (la trampa de PYTHONPATH, medida el 2026-10-03)")
+E       AssertionError: el site-packages del SDK quedo ANTES que el del venv: la resolucion dejo de ser la del proyecto (la trampa de PYTHONPATH, medida el 2026-10-03)
+E       assert ('C:\\Users\\Jhond\\Github\\iah-cli\\tmp_test\\venv-jev-sdk\\Lib\\site-packages' is not None and 14 > 14)
+E        +  where 14 = <built-in method index of list object at 0x00000153F7D5B780>('C:\\Users\\Jhond\\Github\\iah-cli\\tmp_test\\venv-jev-sdk\\Lib\\site-packages')
+E        +    where <built-in method index of list object at 0x00000153F7D5B780> = ['C:\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli',...\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli', ...].index
+E        +      where ['C:\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli',...\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli', ...] = sys.path
+E        +  and   14 = <built-in method index of list object at 0x00000153F7D5B780>('C:\\Users\\Jhond\\Github\\iah-cli\\tmp_test\\venv-jev-sdk\\Lib\\site-packages')
+E        +    where <built-in method index of list object at 0x00000153F7D5B780> = ['C:\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli',...\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli', ...].index
+E        +      where ['C:\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli',...\\Users\\Jhond\\Github\\iah-cli\\tests', 'C:\\Users\\Jhond\\Github\\iah-cli', 'C:\\Users\\Jhond\\Github\\iah-cli', ...] = sys.path
+
+tests\quality_gates\jev_pilot\test_jev_pilot_sdk_ac9.py:311: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_sdk_ac9.py::test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product
+1 failed in 0.41s
+EXIT=1
+.                                                                        [100%]
+1 passed in 0.29s
+EXIT_VENV=0

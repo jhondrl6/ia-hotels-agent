@@ -15,6 +15,55 @@
 
 ---
 
+> **Ronda del 2026-10-04 — SESION 2.5 / PREFLIGHT DE FASE-C (la cifra sube a 4,800).** Medido con el metodo
+> canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,800**) y contrastado
+> con el arbol versionado en el momento de la medida (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado =
+> **4,795**, con `HEAD` = `5ca6395`): el delta de **5** es trabajo de esta sesion sin commitear; la sesion
+> termina en espera de autorizacion y el commit no es condicion de ninguno de sus cinco cortes. Suma de la
+> tercera columna de la tabla contra la cabecera: **4,800 = 4,800**, 22 filas, 3 celdas por fila,
+> `python scripts/validate_agents_md.py` EXIT=0 y `python scripts/validate_governance_numbers.py`
+> `SIN-HALLAZGOS`.
+>
+> Atribucion por archivo, medida y no derivada de la fila anterior: **+5** en `tests/quality_gates/`,
+> `jev_pilot/test_jev_pilot_deepseek_brazo.py` 10 → 15 (fila 2 de la deuda, Cierre A). Son los dientes del id
+> recortado que cura `scripts/proveedores/deepseek.py`: noul, choice del triaje y score con el prefijo perdido,
+> el recorte ambiguo que **no** se adivina, la prioridad de la coincidencia exacta y el no-relleno por la via
+> nueva. Las diez pruebas previas del archivo quedaron verdes **sin re-anclar ninguna** -se midio: ninguna
+> asercion dependia del descarte, asi que el re-anclaje que prometia el prompt resulto ser no-actado, y se
+> declara como no-actado en vez de inventar un cambio-.
+>
+> **Contrafactual, ejecutado y no escrito**: el antecedente se midio sobre el blob versionado en la revision
+> fija de arranque, cargado con `git show 5ca6395:scripts/proveedores/deepseek.py` y sin tocar el arbol
+> (`PREFLIGHT-FASE-C-2026-10-04/02-antecedente-id-recortado-en-5ca6395.json`): 4 de 4 casos de recorte salen
+> `respuestas: []` y la puerta responde `respuesta-vacia:list`. Sobre el arbol curado, 3 de 4 salen VALIDA y el
+> cuarto -el ambiguo- sigue rechazado por diseno (`03-`). Sin ese diferencial el verde de las cinco pruebas
+> nuevas afirmaria solo que hay mas pruebas.
+>
+> **Dientes con su mutante, y dos mutantes que no lo fueron**: seis mutantes sobre el archivo de produccion,
+> cada uno con ancla de ocurrencia unica verificada antes de mutar, rojo con su kill-set publicado, restauracion
+> con sha igual al baseline `289842457a5b` y bateria verde (`15 passed`) tras cada restauracion
+> (`04-mutantes-cierre-a-crudo.json`). Dos variantes del corte por delimitador -`split(SEP, 1)[1]` y despues
+> `split(SEP)[1]`- dieron **VERDE**: son mutantes **EQUIVALENTES**, porque los ids del corpus (`sonda:1`,
+> `pert:L-R.1`) llevan un solo `:` y ahi `split` y `rsplit` coinciden. Se declaran en el crudo como hallazgo de
+> instrumento y se sustituyen por `split(SEP)[0]`, que toma el prefijo y si muerde; un verde de mutante
+> equivalente no prueba que la rama este cubierta.
+>
+> **Nota de interprete (rojo que no es del codigo)**: la bateria adyacente
+> (`tests/quality_gates/jev_pilot/ + decision_client/ + lesson_relevance/`) dio **1 failed, 246 passed** bajo el
+> `python` global y **247 passed** bajo `venv/Scripts/python.exe`, el interprete del piloto. El rojo es de
+> `test_jev_pilot_sdk_ac9.py::test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product` y su firma es
+> `assert (14 > 14)`: con el interprete global la unica entrada de `sys.path` que casa con
+> `"venv" and "site-packages"` es el propio `tmp_test/venv-jev-sdk`, o sea la prueba se compara contra si misma.
+> No es regresion de esta tanda -el archivo ni mira el brazo ni importa el mapper- y queda registrado con su
+> crudo (`06b-`) y su dueno (`test_jev_pilot_sdk_ac9.py`), sin curarlo aqui: V3 acota la escritura de produccion
+> a `scripts/proveedores/deepseek.py`.
+>
+> **Consumo de red de la ronda**: 1 envio autenticado (la lectura de saldo que cerro el cuarto estado de AC12
+> del brazo, `07-saldo-crudo.json`), cero reintentos; las cinco pruebas nuevas corren con transporte inyectado
+> bajo el guard `RedProhibida` del `conftest.py` de la seleccion. El registro `deepseek-flash` (Cierre C) esta en
+> `PREFLIGHT-FASE-C-2026-10-04/09-registro-deepseek-flash.md`, con MEDIDO y NO MEDIDO separados y sin congelar
+> nada: `protocolo.json` sigue BORRADOR y `muestra.json` sigue CONGELADA.
+
 > **Ronda del 2026-10-04 — DEUDA DECLARADA AL CIERRE DE FASE-B (la cifra sube a 4,795).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,795**) y
 > contrastado con el arbol versionado en el momento de la medida (`git grep -c -E "^\s*def test_" HEAD --

@@ -1,0 +1,84 @@
+{
+ "revision": "arbol-de-trabajo",
+ "ruta_cargada": "\\temp\\sesion25-2026-10-04\\brazo-arbol.py",
+ "casos": [
+  {
+   "caso": "sonda-recortada",
+   "preguntas": [
+    "sonda:1"
+   ],
+   "devuelto_por_el_servicio": [
+    "1"
+   ],
+   "respuestas": [
+    {
+     "pregunta_id": "sonda:1",
+     "tipo": "noul",
+     "probabilidad_si": 1.0
+    }
+   ],
+   "cantidad": 1,
+   "puerta": "VALIDA"
+  },
+  {
+   "caso": "triaje-recortado",
+   "preguntas": [
+    "pert:L-R.1"
+   ],
+   "devuelto_por_el_servicio": [
+    "L-R.1"
+   ],
+   "respuestas": [
+    {
+     "pregunta_id": "pert:L-R.1",
+     "tipo": "choice",
+     "eleccion": "pertinente",
+     "probabilidades": {
+      "pertinente": 0.7,
+      "no_pertinente": 0.2,
+      "insuficiente": 0.1
+     },
+     "confidence": 0.7
+    }
+   ],
+   "cantidad": 1,
+   "puerta": "VALIDA"
+  },
+  {
+   "caso": "recorte-ambiguo",
+   "preguntas": [
+    "a:1",
+    "b:1"
+   ],
+   "devuelto_por_el_servicio": [
+    "1"
+   ],
+   "respuestas": [],
+   "cantidad": 0,
+   "puerta": "ILEGIBLE",
+   "motivos": [
+    "respuesta-vacia:list"
+   ]
+  },
+  {
+   "caso": "score-recortado",
+   "preguntas": [
+    "triage:L-R.4"
+   ],
+   "devuelto_por_el_servicio": [
+    "L-R.4"
+   ],
+   "respuestas": [
+    {
+     "pregunta_id": "triage:L-R.4",
+     "tipo": "score",
+     "nivel": 2,
+     "leyenda": "completo",
+     "confidence": 0.6
+    }
+   ],
+   "cantidad": 1,
+   "puerta": "VALIDA"
+  }
+ ]
+}

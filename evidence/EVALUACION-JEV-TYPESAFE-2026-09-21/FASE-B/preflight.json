@@ -86,7 +86,7 @@
       "sdk_instalado": "NO-APLICA: el comparador es un API HTTP, no un SDK; se integra como modulo de proveedor de la costura en scripts/proveedores/deepseek.py",
       "autenticacion_real": "NO-INTENTADA",
       "autenticacion_motivo": "esta tanda autorizo la primera llamada de preflight de JEV (paso 3), no una de DeepSeek. La prueba de la falta de credencial se hizo con transporte inyectado y red bloqueada (tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py), o sea sin enviar nada.",
-      "cuota_o_saldo": "NO-EJERCITADO",
+      "cuota_o_saldo": "MEDIDO-POR-API: USD 4.94 de saldo total (granted 0.00, topped_up 4.94), is_available true, leido el 2026-10-04T21:28:55Z con GET https://api.deepseek.com/user/balance, HTTP 200, un envio y cero reintentos. Crudo: evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/07-saldo-crudo.json. El valor anterior de esta clave era «NO-EJERCITADO» y se conserva transcripto en `cierre_c_2026-10-04_cuota_o_saldo.valor_anterior`.",
       "modelo_pedido": "deepseek-chat",
       "modelo_devuelto": null,
       "alias_movil_declado": "deepseek-chat es alias movil del proveedor: se publica como `alias_movil: true` en el brazo porque impide reproducibilidad estricta y no puede presentarse como version fijada",
@@ -220,6 +220,48 @@
         "uso_de_la_sonda_original_de_la_fila_2": "138/36 con request_id `3317ed3c-7afa-4a1e-9697-eb4baf3a6c34` (esta en `cierre_2026-10-04`, no se duplica aqui)",
         "desborde_declarado": "la autorizacion decia «sondas minimas (un par de envios)» y la tanda se fue a cinco. Motivo medido: el tercer envio —pedir `deepseek-flash` con tope 64— devolvio 200 con `content` vacio, y con ese resultado no se podia separar «el nombre no existe» de «existe pero responde en otra forma»; se agrego un par control/efecto con tope 254, que es lo que decide. No se hizo un sexto envio: con el par decisivo la pregunta ya estaba contestada",
         "lectura_corta": "el eco del servicio es una etiqueta de serving, no un nombre para pedir: `deepseek-flash` se puede pedir (200) pero cambia la forma de la respuesta a modo razonamiento y vacia el `content`. La fila queda como esta y la pregunta de que significa esa etiqueta va al proveedor, no a este arbol"
+      },
+      "cierre_c_2026-10-04_cuota_o_saldo_medido": {
+        "sesion": "SESION 2.5 (FASE-B.1) — preflight de FASE-C, item 2 de la deuda de FASE-B",
+        "estado": "MEDIDO (camino (i) del §6 de la sesion), no DECLARADO: el numero lo publico el servicio, no el dueno",
+        "valor_publicado_en_la_clave_cuota_o_saldo": "MEDIDO-POR-API: USD 4.94 (total), granted 0.00, topped_up 4.94, is_available true",
+        "via": "GET https://api.deepseek.com/user/balance con `Authorization: Bearer <la clave del brazo>` y `Accept: application/json`; es la via que la API publica para saldo",
+        "respuesta_del_servicio": {
+          "http_status": 200,
+          "claves": ["balance_infos", "is_available"],
+          "is_available": true,
+          "currency": "USD",
+          "total_balance": "4.94",
+          "granted_balance": "0.00",
+          "topped_up_balance": "4.94"
+        },
+        "forma": "la clave `cuota_o_saldo` de arriba se re-escribe porque el criterio C4 de la sesion lo exige («ya no es NO-EJERCITADO»); el valor anterior queda transcripto aqui, no borrado. Los otros tres estados del brazo no se tocan y el brazo `jev` tampoco: su `cuota_o_saldo` sigue DECLARADA-POR-CONSOLA $10.00 con su procedencia",
+        "valor_anterior": "NO-EJERCITADO",
+        "envios_y_reintentos": "1 envio, 0 reintentos (A2 y AC8). No hay segundo envio: la lectura salio 200 a la primera",
+        "credenciales": "la clave entra por `.env` al entorno del proceso y no se imprime en ningun camino: ni el valor, ni la longitud, ni un prefijo (V6). El arnes afirma antes de escribir que la clave no esta en el crudo, y el barrido final del expediente lo vuelve a medir",
+        "que_no_cubro_esta_lectura": "el saldo no ejercita el mapper: la via es un GET de facturacion, no un `chat/completions`. El trafico real que ejercicio el mapper siguen siendo los 6 envios de la deuda",
+        "arnes": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/08c-arnes-saldo.py",
+        "crudo": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/07-saldo-crudo.json",
+        "fecha_medicion": "2026-10-04T21:28:55Z (marca del crudo)"
+      },
+      "cierre_d_2026-10-04_cura_del_id_recortado": {
+        "sesion": "SESION 2.5 (FASE-B.1), item 2 de la deuda en su parte de codigo: Cierre A",
+        "que_cierra": "`cierre_b_2026-10-04_estabilidad_del_alias.causa_medida_del_respuestas_vacio.duena_sugerida` nombraba a `scripts/proveedores/deepseek.py` y decia «NO se curo en esta sesion». Aqui se curó, con autorizacion A1 del prompt de la sesion",
+        "cura": "`_mapear_respuestas` deja de tirar la respuesta cuyo id llega recortado: empareja primero por id exacto y, si no hay exacta, por la forma recortada del id preguntado (el ultimo segmento despues de `:`), y publica la fila con el id **preguntado**. El recorte ambiguo (dos preguntas que comparten cola) no se adivina: se deja fuera, que es el estado honesto",
+        "se_equilibra_con_D5": "la cura cambia el **emparejamiento**, no el relleno: los campos que el servicio no trajo siguen ausentes y la puerta los marca ILEGIBLE (D5 y la prueba `test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo`)",
+        "tests": "tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py pasa de 10 a 15 `def test_`. Las diez previas quedan verdes sin re-anclar: medida una por una, ninguna asercion dependia del descarte; el unico cambio en ese archivo es una linea de su docstring y cinco pruebas nuevas",
+        "dientes_y_mutantes": "seis mutantes, cada uno con su rojo por la causa prevista y restauracion verificada por sha (baseline `289842457a5b`, los seis restaurados, bateria verde 15 passed tras cada restauracion). Dos variantes del corte por delimitador (`split(SEP, 1)[1]` y `split(SEP)[1]`) resultaron EQUIVALENTES —los ids del corpus llevan un solo `:`— y se declaran como hallazgo de instrumento en el crudo en vez de contarse como diente",
+        "antecedente_reproducido": "sobre el blob versionado en la revision de arranque `5ca6395` (cargado con `git show`, sin tocar el arbol) el arnes reproduce el defecto en 4 de 4 casos de recorte: `respuestas: []` y la puerta respondiendo `respuesta-vacia:list`; en el arbol curado 3 de 4 salen VALIDA y el cuarto es el ambiguo, que sigue rechazado por diseno",
+        "lo_que_no_se_afirma": "la cura no se volvio a probar con trafico real: eso pedia un segundo envio de `chat/completions` y V5 lo niega. Lo medido con red sigue siendo la tanda de la deuda (3 de 3 con el id recortado)",
+        "estado_ac12_del_brazo": "los cuatro estados quedan completos: habilitacion_declarada true | sdk_instalado NO-APLICA | autenticacion_real AUTENTICADA (`cierre_2026-10-04`) | cuota_o_saldo MEDIDO (`cierre_c_2026-10-04_cuota_o_saldo_medido`)",
+        "evidencia": [
+          "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/01-pre-bateria-brazo-10-tests.txt",
+          "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/02-antecedente-id-recortado-en-5ca6395.json",
+          "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/03-post-cura-id-recortado-en-el-arbol.json",
+          "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/04-mutantes-cierre-a-crudo.json",
+          "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/05-post-bateria-brazo-15-tests.txt"
+        ],
+        "cierre_de_la_frase_duena_sugerida": "la `duena_sugerida` del cierre_b queda ejercitada por esta fila; el texto original no se re-escribe, se supersede"
       }
     }
   },

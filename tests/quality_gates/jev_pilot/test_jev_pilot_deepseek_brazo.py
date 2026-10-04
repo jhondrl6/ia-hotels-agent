@@ -7,7 +7,10 @@ Tres cosas se prueban aqui y cada una con su contrafactual:
   toco el transporte: el guard de red del conftest esta armado, y un envio lo habria gritado;
 * **usage y modelo se preservan antes de descartarlos** (AC4 / L-ENT.9): el payload del servicio
   llega intacto a `ResultadoEvaluacion`, y `model_requested` sigue siendo distinto de `modelo`;
-* **no se inventa `confidence`**: si el servicio no la trajo, la puerta responde `ILEGIBLE`.
+* **no se inventa `confidence`**: si el servicio no la trajo, la puerta responde `ILEGIBLE`;
+* **un id que vuelve recortado no se descarta** (Cierre A de la sesion 2.5): el servicio contesto
+  `1` a una pregunta `sonda:1` y el mapper la tiraba, asi que el envio se cobraba y el ledger
+  quedaba vacio. Las cinco pruebas de esa familia van con su contrafactual escrito.
 
 `modules/providers/llm_provider.py` no se toca ni se importa desde el piloto, y el ultimo control
 lo afirma por AST sobre los tres archivos del piloto.
@@ -203,6 +206,110 @@ def test_un_deepseek_sin_modelo_devuelto_no_se_rellena_con_el_pineado(proveedor,
     with pytest.raises(dc.RespuestaIlegible) as vio:
         dc.validar_payload(payload, [dc.Pregunta("n1", "noul", "¿Sigues vigente?")], NOMBRE)
     assert any("metadata-modelo-usage" in m for m in vio.value.motivos)
+
+
+# ------------------------------------------------ el id recortado: el brazo no tira lo que le contestaron
+
+def _respuesta_del_servicio(proveedor, preguntas, bruto):
+    """Pide con `preguntas` y devuelve el payload del brazo ante una unica respuesta `bruto`.
+
+    El crudo se mete por el envelope real (`choices[0].message.content`), no por la raiz: el caso de
+    la deuda es un chat-completion que contesto y aun asi salia `respuestas: []`.
+    """
+    def transporte(request):
+        return _crudo_ok([bruto])
+
+    return proveedor.evaluar("estado del plan", preguntas, transporte=transporte,
+                             entorno={"DEEPSEEK_API_KEY": CLAVE_SINTETICA})
+
+
+def test_un_id_recortado_devuelve_la_respuesta_mapeada_en_vez_de_descartarla(proveedor, dc):
+    """C1 (Cierre A): el modelo contesto `1` a una pregunta `sonda:1` y esa respuesta es del ledger.
+
+    Medido en la deuda (fila 2): 3 de 3 envios con content devolvieron el id recortado con
+    `finish_reason = stop`, y `_mapear_respuestas` casaba por id exacto, asi que el payload salia
+    `respuestas: []` con el envio ya cobrado. El contrafactual es el antecedente: el mismo arnes
+    sobre el blob versionado en la revision de arranque da cantidad 0.
+    """
+    preguntas = [dc.Pregunta("sonda:1", "noul", "¿Sigues vigente?")]
+    payload = _respuesta_del_servicio(proveedor, preguntas,
+                         {"pregunta_id": "1", "tipo": "probabilidad_si", "probabilidad_si": 1.0})
+    assert payload["respuestas"] == [{"pregunta_id": "sonda:1", "tipo": "noul",
+                                      "probabilidad_si": 1.0}], (
+        "el brazo volvio a tirar una respuesta que el servicio si trajo")
+    assert dc.validar_payload(payload, preguntas, NOMBRE) is payload, (
+        "la fila sale con el id del servicio y no con el preguntado: la cobertura la cuenta la puerta")
+
+
+def test_el_prefijo_del_triaje_recortado_conserva_la_respuesta_completa(proveedor, dc):
+    """La forma del triaje (`pert:L-R.1` -> `L-R.1`): recortar el prefijo no recorta la respuesta.
+
+    Es el id que usa `scripts/triage_lesson_relevance.py`, y es la razon por la que el hueco importa
+    fuera del piloto: un emisor que recorta el prefijo vacia el ledger sin ruido y sin devolver el
+    gasto. Aqui se afirma que los tres campos que trajo el servicio siguen viajando.
+    """
+    preguntas = [dc.Pregunta("pert:L-R.1", "choice", "¿Cual?",
+                             opciones=("pertinente", "no_pertinente", "insuficiente"))]
+    payload = _respuesta_del_servicio(proveedor, preguntas,
+                         {"pregunta_id": "L-R.1", "eleccion": "pertinente",
+                          "probabilidades": {"pertinente": 0.7, "no_pertinente": 0.2,
+                                             "insuficiente": 0.1},
+                          "confidence": 0.7})
+    fila = payload["respuestas"][0]
+    assert fila["pregunta_id"] == "pert:L-R.1" and fila["tipo"] == "choice"
+    assert fila["eleccion"] == "pertinente" and fila["confidence"] == 0.7
+    assert fila["probabilidades"] == {"pertinente": 0.7, "no_pertinente": 0.2,
+                                      "insuficiente": 0.1}
+    assert dc.validar_payload(payload, preguntas, NOMBRE) is payload
+
+
+def test_un_recorte_ambiguo_no_se_adivina(proveedor, dc):
+    """`1` con `a:1` y `b:1` en la mano no dice de quien es: emparejarla seria inventar la filiacion.
+
+    La otra mitad del criterio de D5: se conserva lo que el servicio trajo, no se rellena ni se
+    reparte. Sin este control, la cura del recorte seria un generador de atribuciones falsas, que
+    es peor que el ledger vacio porque se lee como dato.
+    """
+    preguntas = [dc.Pregunta("a:1", "noul", "¿Primera?"), dc.Pregunta("b:1", "noul", "¿Segunda?")]
+    payload = _respuesta_del_servicio(proveedor, preguntas, {"pregunta_id": "1", "probabilidad_si": 0.5})
+    assert payload["respuestas"] == [], (
+        "el brazo le asigno una respuesta ambigua a una de las dos preguntas")
+    with pytest.raises(dc.RespuestaIlegible) as vio:
+        dc.validar_payload(payload, preguntas, NOMBRE)
+    assert any("respuesta-vacia" in m for m in vio.value.motivos), vio.value.motivos
+
+
+def test_la_coincidencia_exacta_no_le_cede_su_respuesta_al_recorte(proveedor, dc):
+    """`1` es el id exacto de una pregunta y la vez el recorte de otra: la exacta la consume primero.
+
+    Sin el control de consumo, el emparejamiento por recorte le roba la respuesta a la pregunta a la
+    que le pertenece por contrato, y el ledger queda con dos filas del mismo envio: una de ellas
+    atribuida a quien no la pidio.
+    """
+    preguntas = [dc.Pregunta("sonda:1", "noul", "¿Sigues vigente?"),
+                 dc.Pregunta("1", "noul", "La pregunta que se llama 1")]
+    payload = _respuesta_del_servicio(proveedor, preguntas, {"pregunta_id": "1", "probabilidad_si": 0.25})
+    assert payload["respuestas"] == [{"pregunta_id": "1", "tipo": "noul",
+                                      "probabilidad_si": 0.25}], (
+        "el recorte le duplico al servicio una respuesta que ya tenia dueno por id exacto")
+
+
+def test_el_recorte_no_rellena_lo_que_el_servicio_no_trajo(proveedor, dc):
+    """D5 sobre la via nueva: emparejar por recorte no autoriza a completar la fila.
+
+    El `confidence` que no vino sigue sin venir, y la puerta lo convierte en `ILEGIBLE` con el guard
+    que lo produjo nombrado. Es el mismo criterio de la prueba de arriba, ejercitado por el camino
+    que abre esta cura: la fila llega por id recortado.
+    """
+    preguntas = [dc.Pregunta("pert:L-R.9", "choice", "¿Cual?",
+                             opciones=("pertinente", "no_pertinente", "insuficiente"))]
+    payload = _respuesta_del_servicio(proveedor, preguntas, {"pregunta_id": "L-R.9", "eleccion": "pertinente"})
+    assert payload["respuestas"] == [{"pregunta_id": "pert:L-R.9", "tipo": "choice",
+                                      "eleccion": "pertinente"}]
+    with pytest.raises(dc.RespuestaIlegible) as vio:
+        dc.validar_payload(payload, preguntas, NOMBRE)
+    assert any("campos-conocidos" in m and "confidence" in m for m in vio.value.motivos), \
+        vio.value.motivos
 
 
 # ------------------------------------------------------------------------ la declaracion del brazo

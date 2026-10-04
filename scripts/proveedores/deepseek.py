@@ -112,20 +112,66 @@ def _contenido_a_respuestas(crudo) -> dict:
     return datos if isinstance(datos, dict) else {"respuestas": datos}
 
 
+DELIMITADOR_DE_PREFIJO = ":"
+
+
+def _recorte_de(pid: str) -> str:
+    """La forma recortada con la que el servicio devuelve un id preguntado con prefijo.
+
+    Medido en la deuda (3 de 3 envios con content): a `sonda:1` contesto `1`, y el triaje pregunta
+    con ids como `pert:L-R.1`. Un id sin prefijo no tiene forma recortada, asi que solo casa por
+    exactitud.
+    """
+    return pid.rsplit(DELIMITADOR_DE_PREFIJO, 1)[1] if DELIMITADOR_DE_PREFIJO in pid else ""
+
+
+def _emparejar_respuestas(trayidas: list, preguntas) -> dict:
+    """Que respuesta cruda va con que pregunta, sin consumir ninguna dos veces.
+
+    Primero la coincidencia exacta, que es la que el contrato pide; despues el recorte, y solo
+    cuando el recorte nombra a una sola pregunta. Con `a:1` y `b:1` en la mano un `1` suelto no
+    dice de cual es, y asignarsela a la primera seria inventar la filiacion de la respuesta.
+    """
+    exacta = {}
+    for indice, r in enumerate(trayidas):
+        exacta[r["pregunta_id"]] = indice
+    emparejadas: dict = {}
+    tomadas = set()
+    for p in preguntas:
+        indice = exacta.get(p.id)
+        if indice is not None and indice not in tomadas:
+            emparejadas[p.id] = trayidas[indice]
+            tomadas.add(indice)
+    for p in preguntas:
+        if p.id in emparejadas:
+            continue
+        recorte = _recorte_de(p.id)
+        if not recorte:
+            continue
+        candidatas = [q for q in preguntas
+                      if q.id not in emparejadas and _recorte_de(q.id) == recorte]
+        libres = [i for i, r in enumerate(trayidas)
+                  if i not in tomadas and r["pregunta_id"] == recorte]
+        if len(candidatas) == 1 and len(libres) == 1:
+            emparejadas[p.id] = trayidas[libres[0]]
+            tomadas.add(libres[0])
+    return emparejadas
+
+
 def _mapear_respuestas(crudo, preguntas) -> list:
     """Conserva lo que el servicio trajo y no rellena lo que no trajo.
 
     Un campo de probabilidad ausente se deja ausente a proposito: la puerta lo convierte en
     `ILEGIBLE`, que es el estado honesto, y no en un numero inventado que despues se lee como
-    probabilidad calibrada.
+    probabilidad calibrada. La fila se publica con el id **preguntado**, no con el que devolvio el
+    servicio: la cobertura de preguntas se cuenta contra los ids del pedido.
     """
-    por_id = {}
-    for r in (crudo.get("respuestas") or []):
-        if isinstance(r, dict) and r.get("pregunta_id"):
-            por_id[r["pregunta_id"]] = r
+    trayidas = [r for r in (crudo.get("respuestas") or [])
+                if isinstance(r, dict) and r.get("pregunta_id")]
+    emparejadas = _emparejar_respuestas(trayidas, preguntas)
     salida = []
     for p in preguntas:
-        bruto = por_id.get(p.id)
+        bruto = emparejadas.get(p.id)
         if bruto is None:
             continue
         if p.tipo == "noul":

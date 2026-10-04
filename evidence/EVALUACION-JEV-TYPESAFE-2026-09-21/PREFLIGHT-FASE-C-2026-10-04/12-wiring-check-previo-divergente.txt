@@ -1,0 +1,4 @@
+[FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest b4705a4b5d38)
+  - cobertura.archivos_excluidos_por_rol_versionado: publicado 131 | fresco 134
+  - exclusiones_por_rol.evidence.cantidad_versionada: publicado 119 | fresco 122
+  (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)

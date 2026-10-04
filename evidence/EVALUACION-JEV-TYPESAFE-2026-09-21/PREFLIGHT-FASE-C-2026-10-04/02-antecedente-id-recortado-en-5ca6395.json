@@ -1,0 +1,67 @@
+{
+ "revision": "5ca6395",
+ "ruta_cargada": "\\temp\\sesion25-2026-10-04\\brazo-5ca6395.py",
+ "casos": [
+  {
+   "caso": "sonda-recortada",
+   "preguntas": [
+    "sonda:1"
+   ],
+   "devuelto_por_el_servicio": [
+    "1"
+   ],
+   "respuestas": [],
+   "cantidad": 0,
+   "puerta": "ILEGIBLE",
+   "motivos": [
+    "respuesta-vacia:list"
+   ]
+  },
+  {
+   "caso": "triaje-recortado",
+   "preguntas": [
+    "pert:L-R.1"
+   ],
+   "devuelto_por_el_servicio": [
+    "L-R.1"
+   ],
+   "respuestas": [],
+   "cantidad": 0,
+   "puerta": "ILEGIBLE",
+   "motivos": [
+    "respuesta-vacia:list"
+   ]
+  },
+  {
+   "caso": "recorte-ambiguo",
+   "preguntas": [
+    "a:1",
+    "b:1"
+   ],
+   "devuelto_por_el_servicio": [
+    "1"
+   ],
+   "respuestas": [],
+   "cantidad": 0,
+   "puerta": "ILEGIBLE",
+   "motivos": [
+    "respuesta-vacia:list"
+   ]
+  },
+  {
+   "caso": "score-recortado",
+   "preguntas": [
+    "triage:L-R.4"
+   ],
+   "devuelto_por_el_servicio": [
+    "L-R.4"
+   ],
+   "respuestas": [],
+   "cantidad": 0,
+   "puerta": "ILEGIBLE",
+   "motivos": [
+    "respuesta-vacia:list"
+   ]
+  }
+ ]
+}

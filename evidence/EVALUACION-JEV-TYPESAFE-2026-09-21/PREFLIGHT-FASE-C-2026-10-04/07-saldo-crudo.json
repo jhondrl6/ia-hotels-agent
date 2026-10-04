@@ -1,0 +1,32 @@
+{
+ "arnes": "p3_saldo_deepseek.py",
+ "autorizacion": "A2: una (1) llamada autenticada de lectura, cero reintentos",
+ "via": {
+  "metodo": "GET",
+  "url": "https://api.deepseek.com/user/balance",
+  "acepta": "application/json",
+  "fuente_de_la_via": "documentacion publica del endpoint de saldo de DeepSeek (la pagina `api/get-user-balance`); el sitio de docs no resolvio desde esta maquina (curl HTTP=000) y la via se copio de un espejo de terceros (CodexBar/docs/deepseek.md): por eso el crudo registra el riesgo de un 404 como medida, no como sorpresa"
+ },
+ "credencial": {
+  "env_var": "DEEPSEEK_API_KEY",
+  "presente": true,
+  "motivo": "presencia por nombre y bool: el valor, su longitud y cualquier prefijo quedan fuera (V6)"
+ },
+ "fecha_utc": "2026-10-04T21:28:55+00:00",
+ "http_status": 200,
+ "envios": 1,
+ "reintentos": 0,
+ "respuestas_claves": [
+  "balance_infos",
+  "is_available"
+ ],
+ "is_available": true,
+ "balance_infos": [
+  {
+   "currency": "USD",
+   "total_balance": "4.94",
+   "granted_balance": "0.00",
+   "topped_up_balance": "4.94"
+  }
+ ]
+}
