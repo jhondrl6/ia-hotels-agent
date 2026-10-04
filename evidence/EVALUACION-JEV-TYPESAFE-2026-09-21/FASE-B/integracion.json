@@ -1,0 +1,81 @@
+{
+  "artefacto": "integracion.json",
+  "fase": "FASE-B",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha_medicion": "2026-10-03",
+  "head_base": "4c113debd2e7e7d0c63ee2de96e6882ed34b1de2",
+  "pregunta_que_responde": "cuanto cuesta en el arbol agregar los dos brazos del piloto, declarado por archivo y por lineas, sin esconder los tests (la cuenta de AC1 del hermano separa runner, tests y manifiesto)",
+  "modificados": [
+    {
+      "archivo": "scripts/decision_client.py",
+      "agregadas": 153,
+      "borradas": 0
+    },
+    {
+      "archivo": "scripts/evaluate_jev_pilot.py",
+      "agregadas": 309,
+      "borradas": 10
+    }
+  ],
+  "nuevos_o_tocados_de_esta_ronda": [
+    {
+      "archivo": "scripts/proveedores/deepseek.py",
+      "lineas": 174,
+      "versionado": false
+    },
+    {
+      "archivo": "tests/quality_gates/jev_pilot/conftest.py",
+      "lineas": 116,
+      "versionado": false
+    },
+    {
+      "archivo": "tests/quality_gates/jev_pilot/test_jev_pilot_sdk_ac9.py",
+      "lineas": 341,
+      "versionado": false
+    },
+    {
+      "archivo": "tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py",
+      "lineas": 319,
+      "versionado": false
+    },
+    {
+      "archivo": "tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py",
+      "lineas": 265,
+      "versionado": false
+    },
+    {
+      "archivo": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py",
+      "lineas": 305,
+      "versionado": true
+    }
+  ],
+  "archivos_de_produccion_tocados": [
+    "scripts/decision_client.py",
+    "scripts/evaluate_jev_pilot.py",
+    "scripts/proveedores/deepseek.py"
+  ],
+  "costura_reutilizada_no_forkeada": "la integracion no crea un framework de proveedores ni un buscador nuevo: DeepSeek es un modulo de proveedor de `decision_client.py` (dict PROVEEDOR + evaluar(state, preguntas), resuelto por IAH_DECISION_PROVIDER) y Jev son funciones dentro de la misma puerta, que es el unico sitio donde AC6 admite el import del SDK",
+  "modules/providers/llm_provider.py": {
+    "cambiado": false,
+    "medicion": "git diff --numstat -- modules/providers/llm_provider.py = vacio (medido 2026-10-03)",
+    "ademas": "ningun archivo del piloto lo importa ni lo carga en runtime: control por AST en test_los_tres_archivos_del_piloto_no_importan_llm_provider"
+  },
+  "excepcion_de_cero_red_autorizada": {
+    "decidida_por": "operador, 2026-10-03 (OLA 2), opcion «excepcion nombrada en el test»",
+    "donde": "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py:EXCEPTADAS",
+    "forma": "triple (archivo, funcion, modulo): solo ('decision_client.py', 'cargar_sdk', 'typesafe_sdk') y ('decision_client.py', 'cargar_transporte', 'httpx2')",
+    "diente": "test_la_excepcion_de_cero_red_solo_cubre_la_funcion_que_la_declara: un import a nivel de modulo, en otra funcion o en otro archivo sigue siendo rojo",
+    "agujero_cerrado_de_paso": "la misma lista negra nombraba `typesafe` (un modulo que NO existe: el real es `typesafe_sdk`) y no nombraba `httpcore2`; se completaron los nombres reales. Es el mismo defecto que `be8ccec` cerro en FORBIDDEN_MODULES del runner, reproducido en la seleccion del hermano."
+  },
+  "incompatibilidad_registrada": {
+    "choque": "AC9 (SDK real + MockTransport de httpx2) contra test_la_puerta_y_sus_proveedores_no_importan_nada_que_pueda_hacer_red, que vetaba a la puerta importar el transporte",
+    "resolucion": "por decision explicita del operador, con excepcion escrita y su contrafactual; no se rebajo la asercion",
+    "estado": "RESUELTA el 2026-10-03"
+  },
+  "bloqueante_vigente": {
+    "cual": "P4 abrio con 401 y quedo RESUELTO el mismo 2026-10-03",
+    "causa_medida": "la cadena en .env no era la llave activa de la consola (forma: prefijo apikey_ correcto, cabeza y cola distintas, longitud > 80). El operador reemplazo la credencial y Models.list() respondio AUTENTICADA con 2 modelos listados",
+    "consecuencia": "la corrida k=8 del split dev se corro (2 llamadas, attempts 1, usage observado) y los techos tokens_in/tokens_out quedaron escritos en protocolo.json con su comando; `usd` sigue null por decision y `status` sigue BORRADOR",
+    "evidencia": "FASE-B/preflight.json, FASE-B/corrida_k8_2026-10-03.txt"
+  }
+}

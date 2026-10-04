@@ -1,0 +1,48 @@
+{
+  "artefacto": "modelos.json",
+  "fase": "FASE-B",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha_medicion": "2026-10-03",
+  "instrumento": "venv/Scripts/python.exe temp/ola2-2026-10-03/p4_preflight.py + lectura del SDK (constants.py, _core/response_types.py, _core/client/sync/client.py)",
+  "unidad": "modelos SOLICITADOS y reglas de validacion del devuelto. El efectivo de Jev SI se midio el 2026-10-03, tras reabrirse P4 con la credencial reemplazada: las dos llamadas del split dev devolvieron `jev-1.13.0`. DeepSeek sigue NO-EJERCITADO (no se autorizo).",
+  "jev": {
+    "modelo_solicitado": "jev-1.13.0",
+    "fuente_del_valor": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json:modelos.jev_pin",
+    "viaja_como_argumento": "si: `run` lo lee del protocolo y se lo pasa a `cliente_jev`. `PIN_MODELO_DECLARADO` en la puerta sigue con `usado_por_el_codigo: false` y su test de un solo uso lo goberna, asi que el pin del piloto no entra por la puerta por detras.",
+    "aliases_rechazados": [
+      "jev-latest",
+      "jev-preview"
+    ],
+    "default_del_sdk_leido": "typesafe_sdk.constants.DEFAULT_MODEL == 'jev-latest' (medido 2026-10-03): el paquete pinea un alias movil, o sea un cliente construido sin `model` heredaria un valor no reproducible",
+    "modelo_efectivo_real": "jev-1.13.0 (medido en la corrida k=8 del split dev, 2/2 llamadas)",
+    "porque_no": null,
+    "reglas_de_validacion_del_devuelto": [
+      "el ledger guarda `modelo_solicitado` y `modelo_efectivo` como campos distintos; nunca se copia el pedido en el efectivo",
+      "`system_one_jev` toma `respuesta.model` del envelope del SDK; si el servicio no lo trae, la validacion propia del SDK lanza TypeSafeAPIResponseValidationError(field_path='model') y la puerta no rellena",
+      "la igualdad pedido == efectivo NO se exige: el pin es la intencion del piloto, y una respuesta de otro modelo es un hallazgo que se publica, no un motivo para rebautizarlo",
+      "un 200 sin `usage` es respuesta fallida (TypeSafeAPIResponseValidationError medida), nunca usage=null ni coste cero"
+    ],
+    "contraste_del_pin_contra_el_servicio": "Models.list() devuelve solo los alias moviles `jev-latest` y `jev-preview`; el pin `jev-1.13.0` no esta listado y SIN EMBARGO el servicio lo acepta y lo devuelve intacto (sonda de preflight req_01a1038065b6738686ba8225660c33a0 y las dos llamadas de la corrida). La lista no es exhaustiva para nombres versionados: ver FASE-B/preflight.json:contraste_del_pin",
+    "medicion_del_efectivo": "FASE-B/corrida_k8_2026-10-03.txt (ledger con request_id y usage por llamada)"
+  },
+  "deepseek": {
+    "modelo_solicitado": "deepseek-chat",
+    "alias_movil": true,
+    "declaracion": "`deepseek-chat` es alias movil del proveedor y el brazo lo declara `alias_movil: true` en su PROVEEDOR: impide reproducibilidad estricta y no puede presentarse como version fijada (tarea 1 del prompt de FASE-B)",
+    "modelo_efectivo_real": "NO-EJERCITADO",
+    "porque_no": "esta tanda no autorizo llamadas DeepSeek; su prueba se hizo con transporte inyectado y red bloqueada",
+    "reglas_de_validacion_del_devuelto": [
+      "el payload lleva `modelo` = lo que el servicio devolvio en la raiz de la respuesta; si falta, es None y la puerta lo falla por metadata-modelo-usage",
+      "usage se preserva del envelope crudo (prompt_tokens / completion_tokens -> input_tokens / output_tokens) ANTES de cualquier descarte (AC4)",
+      "el cuerpo de respuestas se lee de choices[0].message.content; un content que no es JSON es RespuestaServicioFalla, no una lista vacia (DA-C3)",
+      "`confidence` y `probabilidades` no se rellenan: un self-report no es una probabilidad calibrada y la puerta responde ILEGIBLE antes que aceptar un numero inventado"
+    ]
+  },
+  "anthropic": {
+    "estado": "EXCLUIDO por protocolo; sin API habilitada; no se usa como fallback",
+    "prueba": "tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic"
+  },
+  "openrouter": {
+    "estado": "RECHAZADO como transporte del piloto (decision cerrada; ver entorno.json:transporte_alterno_evaluado)"
+  }
+}

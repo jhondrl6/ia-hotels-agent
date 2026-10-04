@@ -1,0 +1,97 @@
+contract.txt - estado de cada AC del piloto al cerrar el paso 1 de FASE-B (OLA 2, 2026-10-03)
+================================================================================================
+Unidad de este archivo: ESTADO POR AC con la coordenada que lo respalda. No re-transcribe cifras de
+otro artefacto: cada fila apunta a su evidencia. Lo que no se ejercito dice NO-EJERCITADO y su causa,
+en vez de un verde prestado (AC11 del maestro: "estado de cada AC respaldado por su artefacto, no por
+prosa").
+
+AC  estado              que lo respalda (ruta:coordenada)
+--  ------------------  --------------------------------------------------------------
+AC2 EJERCITADO          "ausencia, error y respuesta negativa no colapsan":
+                        - tests/quality_gates/jev_pilot/test_jev_pilot_ledger_fase_b.py::
+                          test_error_kind_desconocido_no_es_ausente (11 previos, sigue verde)
+                        - tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::
+                          test_el_estado_de_la_cuenta_de_deepseek_no_se_confunde_con_una_respuesta_negativa
+                          (un p_yes 0.11 no se reclasifica como abstencion)
+                        - preflight.json distingue FALLO-401 / NO-INTENTADA / NO-DISPONIBLE-POR-SDK
+AC3 EJERCITADO          guards mecanicos de la muestra (5 de FASE-A) + la capa fria nueva:
+                        - tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::
+                          test_la_capa_fria_solo_lleva_id_y_enunciado  (planes_que_lo_citan no entra)
+                        - ::test_el_recorte_de_k_es_determinista_y_publica_su_desempate
+                        - ::test_muestra_sin_congelar_no_se_envia
+AC4 EJERCITADO (con alcance) pedido != efectivo vive en el ledger y sobrevive la normalizacion:
+                        - test_jev_pilot_sdk_ac9.py::test_el_modelo_efectivo_es_el_devuelto_y_no_el_pin
+                        - test_jev_pilot_deepseek_brazo.py::test_usage_y_modelo_crudos_sobreviven_el_adapter
+                        - test_una_respuesta_sin_cabecera_de_request_id_no_revienta_la_corrida (usage
+                          preservado ante un fallo de metadato)
+                        EJERCITADO con llamadas reales el 2026-10-03: las dos del split dev devolvieron
+                        `jev-1.13.0` (FASE-B/corrida_k8_2026-10-03.txt). Lo que sigue sin medir es el
+                        efectivo del brazo DeepSeek y la comparacion entre brazos: eso es FASE-C.
+AC5 NO-EJERCITADO       reproduccion de informe desde registros (`report`) sigue sin implementarse:
+                        pertenece a FASE-C y no esta en el mandato de OLA 2. Declarado, no absorbido.
+AC6 PARCIAL con deuda   aislamiento: scripts/decision_client.py --scan-imports = SIN-HALLAZGOS sobre
+                        822/9825 .py (import_scanner.txt), con la excepcion de la puerta PUBLICADA.
+                        El par de mutacion de los diez dientes nuevos: mutation.json (10/10 caen por la
+                        causa nombrada, restauracion verificada por sha256).
+                        NO-EJERCITADO: test_real_triage_guard_preserves_anchored_rows (guard real del
+                        triaje ajeno, superficie fuera del mandato de esta tanda) - ver
+                        mutation.json:ac6_aditividad_no_cubierta_en_esta_ronda.
+AC8 EJERCITADO          reserva antes de cada intento + RetryPolicy(max_reintentos=0):
+                        - run_guards: 6 cortes de cero envios (preflight ausente, cada estado AC12,
+                          preflight de otro proveedor, llamadas agotadas, techos null sin autorizar,
+                          muestra sin congelar)
+                        - test_jev_pilot_sdk_ac9.py::test_con_defaults_el_mismo_429_da_tres_envios_y_el_ledger_ve_uno
+                          (el hueco contable medido con el SDK real, no afirmado)
+                        - ::test_max_retries_cero_da_un_envio_y_el_ledger_coincide
+                        - ::test_cliente_jev_rechaza_reintentos_distintos_de_cero
+AC9 EJERCITADO          SDK real + transporte falso + red bloqueada (conftest sin_red autouse):
+                        - test_el_transporte_falso_fue_invocado_y_el_sdk_serializo_el_contrato
+                        - test_http_failure_cases_remain_distinct (401/429/5xx/timeout por clase Y status)
+                        - test_un_200_sin_usage_es_validacion_y_nunca_coste_cero (field_path == "usage")
+                        - test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product (2.12.5)
+                        Crudo: metrics_tests.txt (85 casos, 71 funciones en la seleccion), mutation.json (M1, M4, M5, M6, M9)
+AC10 EJERCITADO         instrumentos con valores conocidos y denominadores separados:
+                        - test_recuperacion_medida_publica_denominador_y_cero_es_no_evaluable
+                        - test_un_elegible_sin_fila_en_el_ledger_no_es_fallo_de_recuperacion (el 0.0 falso que
+generaba la corrida k=8: un elegible del split no despacho no es omision de la capa fria)
+                        - test_una_leccion_importante_ausente_de_candidatos_baja_la_recuperacion
+                        - test_usage_dict_del_la_puerta_se_normaliza_igual_que_el_objeto_del_sdk
+AC11 PARCIAL            preparations documentales de esta fase: contract.txt, modelos.json,
+                        integracion.json, import_scanner.txt, metrics_tests.txt, mutation.json,
+                        preflight.json + requirements-pilot.txt/entorno.json/sdk_contract.txt/
+                        budget_tests.txt (previos). Falta el cierre post-fase del plan (README,
+                        dependencias, checklist, 09, 10), que es paso propio de cierre.
+AC12 EJERCITADO         los cuatro estados por proveedor, sin credenciales ni headers:
+                        - jev: habilitacion_declarada true | sdk_instalado true |
+                         autenticacion_real AUTENTICADA | cuota_o_saldo DECLARADA-POR-CONSOLA $10.00
+                         (el SDK no la expone: NO-DISPONIBLE-POR-SDK, y el numero lo declaro el dueno)
+                         - deepseek: habilitacion true | sdk NO-APLICA | autenticacion NO-INTENTADA |
+                         cuota NO-EJERCITADO
+                        El primer intento del porton dio 401 y se detuvo ahi (cero reintentos); tras el
+                        reemplazo de la credencial por el operador, la segunda llamada abrio AC12 y
+                        protocolo.json quedo con los dos techos escritos y `status` BORRADOR.
+AC13/AC14/AC15          NO-EJERCITADOS: pertenecen a FASE-C.
+
+Como abrio P4 (dos llamadas, cero reintentos cada una)
+------------------------------------------------------
+Intento 1: GET https://api.typesafe.ai/v1/models -> 401 TypeSafeAuthenticationError, request_id
+req_01a10301e779743e971a4cb20bf5fceb. Medido sin red y sin imprimir valores: la credencial SI llegaba
+al Config del SDK y el endpoint era el correcto, o sea no era plomeria. La forma de la cadena en .env
+(prefijo `apikey_` valido, cabeza y cola distintas de la llave Active de consola, longitud > 80) probo
+que **no era la llave activa**: credencial vencida, no credencial muerta de la cuenta.
+
+Intento 2, tras el reemplazo de TYPESAFE_API_KEY por el operador: AUTENTICADA, 2 modelos listados
+(`jev-latest`, `jev-preview`). Contraste del pin: `jev-1.13.0` NO esta entre los listados, pero una
+sonda minima de preflight (req_01a1038065b6738686ba8225660c33a0, usage 288/21) y las dos llamadas de la
+corrida muestran que el servicio **lo acepta y lo devuelve intacto en `model`**. Lectura gobernable:
+`Models.list()` no es exhaustiva para nombres versionados, y `PIN_MODELO_DECLARADO` de
+decision_client.py pasa de `verificado_desde_este_repo: false` a verificado **por aceptacion** -no por
+listado-, que es la forma en que hay que leerlo. Los dos alias que la misma declaracion rechaza
+(`jev-latest`, `jev-preview`) no se usaron en ninguna llamada.
+
+Comandos de reproduccion de esta fila
+--------------------------------------
+  venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -v      # metrics_tests.txt
+  venv/Scripts/python.exe scripts/decision_client.py --scan-imports       # import_scanner.txt
+  venv/Scripts/python.exe temp/ola2-2026-10-03/mutacion.py                # mutation.json
+  venv/Scripts/python.exe temp/ola2-2026-10-03/p4_preflight.py            # preflight.json

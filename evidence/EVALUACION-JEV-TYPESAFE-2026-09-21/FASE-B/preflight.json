@@ -1,0 +1,100 @@
+{
+  "schema": "jev-pilot-preflight/v1",
+  "artefacto": "preflight.json",
+  "fase": "FASE-B",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha_medicion": "2026-10-03",
+  "instrumento": "venv/Scripts/python.exe temp/ola2-2026-10-03/p4_preflight.py (el brazo lo construye scripts/decision_client.py: cliente_jev + preflight_jev, RetryPolicy(max_retries=0), timeout 30)",
+  "crudo": "temp/ola2-2026-10-03/33-preflight-crudo.json (temp/ excluido por .gitignore:21; se transcribe aqui lo gobernable)",
+  "corte": "P4 PASS el 2026-10-03 tras el reemplazo de la credencial. La causa del 401 del primer intento queda medida abajo (credencial vencida distinta de la activa de consola).",
+  "transporte_salida": {
+    "dns_local": {
+      "api.typesafe.ai": "NO-RESUELVE: gaierror [Errno 11001] getaddrinfo failed",
+      "docs.typesafe.ai": "NO-RESUELVE: gaierror [Errno 11001] getaddrinfo failed"
+    },
+    "sali_al_servicio": true,
+    "prueba_de_salida": "el 401 trae request_id del servidor (req_01a10301e779743e971a4cb20bf5fceb) y endpoint GET https://api.typesafe.ai/v1/models: una respuesta HTTP del servicio, no un fallo de nombre",
+    "proxy_env_en_el_proceso": {},
+    "nota": "la maquina sale por proxy de sistema: las variables de proxy del proceso estan vacias y aun asi la conexion se establecio. El DNS local no resuelve, o sea un preflight que asumiera `getaddrinfo` daria un rojo de transporte que no existe. Se registra el transporte real observado, no el supuesto."
+  },
+  "cuota_o_saldo_superficie_leida": {
+    "metodos_publicos_de_TypeSafeClient": [
+      "close",
+      "models",
+      "system_one"
+    ],
+    "expojo_algo_de_cuota_balance_o_saldo": false,
+    "como_se_midio": "dir(TypeSafeClient) filtrado por prefijo _ y buscado en {quota, balance, credit, usage, billing} sobre los nombres publicos, medido el 2026-10-03"
+  },
+  "credenciales": "sin valores en este archivo ni en ningun artefacto de la evidencia: se registra presencia por nombre y el resultado de autenticar, jamas la clave ni su longitud ni un prefijo",
+  "proveedores": {
+    "jev": {
+      "habilitacion_declarada": true,
+      "fuente_habilitacion": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json:modelos.jev_pin y la decision del operador registrada en PREPARACION-DECISION-2026-10-02",
+      "sdk_instalado": true,
+      "sdk_resolucion_efectiva": {
+        "typesafe-sdk": "0.7.0",
+        "pydantic": "2.12.5",
+        "httpx2": "2.13.0",
+        "nota": "pydantic 2.12.5 = el pin del proyecto: la ruta duradera anade el site-packages del SDK AL FINAL de sys.path. Con PYTHONPATH habria resuelto 2.13.5 y la corrida dejaria de ser la del proyecto (medido y documentado en entorno.json)."
+      },
+      "autenticacion_real": "AUTENTICADA",
+      "autenticacion_detalle": {
+        "intento_1_2026-10-03": "HTTP 401 con la credencial vencida que habia en .env (request_id req_01a10301e779743e971a4cb20bf5fceb)",
+        "intento_2_2026-10-03": "AUTENTICADA tras reemplazo de la credencial por el operador; Models.list() respondio 2 modelos, cero reintentos, un envio",
+        "modelos_listados_por_el_servicio": [
+          "jev-latest",
+          "jev-preview"
+        ],
+        "endpoint": "GET https://api.typesafe.ai/v1/models"
+      },
+      "plomeria_descartada_por_medicion": {
+        "TYPESAFE_API_KEY_estaba_en_el_proceso_antes_de_cargar_env": false,
+        "la_clave_llego_al_Config_del_SDK": true,
+        "base_url_efectiva": "https://api.typesafe.ai",
+        "modelo_por_defecto_efectivo": "jev-1.13.0",
+        "que_significa": "el 401 es de credencial rechazada por el servicio, no de una clave que nunca llego al cliente ni de un endpoint equivocado. Medido sin imprimir el valor: `Config.api_key` es `field(repr=False)` y el control afirma `bool(...)`."
+      },
+      "cuota_o_saldo": "DECLARADA-POR-CONSOLA: $10.00 USD al 2026-10-03",
+      "cuota_o_saldo_motivo": "el SDK 0.7.0 no expone superficie de saldo/cuota (NO-DISPONIBLE-POR-SDK); el valor publicado arriba es el que declaro el dueno por consola, con su procedencia en cuota_o_saldo_procedencia",
+      "modelo_pedido": "jev-1.13.0",
+      "modelo_devuelto": null,
+      "contraste_del_pin": {
+        "pin_declarado": "jev-1.13.0",
+        "esta_entre_los_listados": false,
+        "aceptado_por_el_servicio": true,
+        "modelo_efectivo_devuelto": "jev-1.13.0",
+        "como_se_probo": "una sonda minima de preflight (state de una linea, una pregunta noul, cero reintentos), fuera de la muestra y del techo de la corrida: request_id req_01a1038065b6738686ba8225660c33a0, usage 288/21",
+        "lectura": "Models.list() NO es exhaustiva para nombres versionados: lista los dos alias moviles y acepta el pin fijo, que ademas devuelve intacto en `model`. La declaracion de decision_client.py (PIN_MODELO_DECLARADO, verificado_desde_este_repo: false) queda verificada por aceptacion hoy, y su `aliases_moviles_rechazados` se sostiene: no se uso ninguno de los dos alias"
+      },
+      "cuota_o_saldo_procedencia": "captura del operador (POST22.png, consola Typesafe AI, pesta~na API Keys, 2026-10-03); el SDK 0.7.0 sigue sin superficie para leerla, asi que el numero vive aqui como dato declarado, no como medicion",
+      "causa_del_401_medida_2026-10-03": {
+        "hallazgo": "la cadena en .env NO es la llave activa de la consola: el 401 es una credencial vencida o ajena, no un problema del servicio ni del transporte",
+        "metodo": "comparacion de forma por booleans: prefijo, 4 caracteres de cabeza y 4 de cola contra los fragmentos que la consola publica enmascarados; sin imprimir el valor ni su longitud",
+        "empieza_con_prefijo_apikey_": true,
+        "cabeza_casa_con_la_consola_2412": false,
+        "cola_casa_con_la_consola_4361": false,
+        "longitud_mayor_de_80": true,
+        "es_la_llave_activa_de_la_consola": false,
+        "llave_activa_en_consola": "iah-cli--planlint--dev--2026-09 (Active, creada 2026-09-20, saldo $10.00)",
+        "accion_que_desbloquea": "el operador reemplaza TYPESAFE_API_KEY en .env por la llave activa (o crea una nueva con Create key y la pega); despues, UNA llamada de Models.list() con max_retries=0 reabre P4"
+      }
+    },
+    "deepseek": {
+      "habilitacion_declarada": true,
+      "fuente_habilitacion": "protocolo.json:modelos.comparador = DeepSeek; la skill del fabricante no cubre este brazo",
+      "sdk_instalado": "NO-APLICA: el comparador es un API HTTP, no un SDK; se integra como modulo de proveedor de la costura en scripts/proveedores/deepseek.py",
+      "autenticacion_real": "NO-INTENTADA",
+      "autenticacion_motivo": "esta tanda autorizo la primera llamada de preflight de JEV (paso 3), no una de DeepSeek. La prueba de la falta de credencial se hizo con transporte inyectado y red bloqueada (tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py), o sea sin enviar nada.",
+      "cuota_o_saldo": "NO-EJERCITADO",
+      "modelo_pedido": "deepseek-chat",
+      "modelo_devuelto": null,
+      "alias_movil_declado": "deepseek-chat es alias movil del proveedor: se publica como `alias_movil: true` en el brazo porque impide reproducibilidad estricta y no puede presentarse como version fijada"
+    }
+  },
+  "enmienda_pendiente_de_duena": "AC12 exige que la indisponibilidad detenga o aplace, y que no se elimine un brazo de la comparacion. Con `jev.autenticacion_real = FALLO-401`, la corrida de recuperacion (paso 4) y el levantamiento de los techos tokens_in/tokens_out quedan aplazados hasta que el operador renueve o reemplace TYPESAFE_API_KEY. Anthropic sigue excluido y OpenRouter sigue rechazado: ninguno de los dos sustituye el brazo.",
+  "comandos_de_reproduccion": [
+    "venv/Scripts/python.exe temp/ola2-2026-10-03/p4_preflight.py",
+    "venv/Scripts/python.exe scripts/evaluate_jev_pilot.py run --proveedor jev --muestra evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json --protocolo evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json --indice .opencode/lecciones_index.json --preflight evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/preflight.json --out-dir temp/ola2-2026-10-03/run --k 8 --autorizar-null 'corrida que mide el techo, operador 2026-10-03'"
+  ]
+}

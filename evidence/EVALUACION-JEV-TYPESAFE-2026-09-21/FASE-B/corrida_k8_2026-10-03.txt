@@ -1,0 +1,73 @@
+# Corrida de recuperacion k=8 — FASE-B del piloto JEV, 2026-10-03
+
+Acto autorizado por el operador: UNA corrida, k=8, llamadas <= 12, timeout 30, con
+`autorizacion_de_null` declarada para tokens_in/tokens_out (la corrida mide el techo que todavia
+no existe). Split `dev` por decision de esta tanda: el maestro §Pre-registro reserva `eval` hasta
+congelar prompt y umbrales, y el protocolo sigue BORRADOR.
+
+## Comando que la midio
+
+    venv/Scripts/python.exe temp/ola2-2026-10-03/correr_k8.py
+
+Cliente: `scripts/decision_client.py:cliente_jev` con `RetryPolicy(max_retries=0)`, timeout 30,
+construido solo despues de preflight (AC12) y reserva (AC8). Ruta duradera del SDK: site-packages
+aislado anadido AL FINAL de sys.path; resolucion efectiva medida en la corrida:
+typesafe-sdk 0.7.0 / pydantic 2.12.5 / httpx2 2.13.0.
+
+## Consumo
+
+```json
+{
+  "llamadas_usadas": 2,
+  "intentos": 2,
+  "usage_estados": [],
+  "tokens_in_max": 1834,
+  "tokens_out_max": 139
+}
+```
+
+## Ledger (una linea por llamada)
+
+```json
+{"proveedor": "jev", "modelo_solicitado": "jev-1.13.0", "modelo_efectivo": "jev-1.13.0", "attempts": 1, "intentos": [{"n": 1, "resultado": "exito", "duracion_ms": 284.426}], "error_kind": null, "usage_normalized": {"input_tokens": 1537, "output_tokens": 138, "total": 1675, "estado": "observado", "libera_reserva_como_cero": false}, "coste_calculado": null, "cargo_facturado": null, "estado": "EJERCITADO", "pair_id": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2", "split": "dev", "candidatos_frios": ["D-AJUST.2", "DA-V5", "DA-V6", "L-B4", "L-C1", "L-D2", "L-E2E.4", "L-E3"], "leccion_target_en_candidatos": true, "answers": {"VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2": {"tipo": "choice", "choice": "D-AJUST.2", "confidence": 0.91, "probabilities": {"DA-V6": 0.0, "L-E3": 0.0, "L-E2E.4": 0.0, "ninguna-aplica": 0.04, "L-D2": 0.02, "L-C1": 0.0, "DA-V5": 0.01, "L-B4": 0.0, "D-AJUST.2": 0.93}}}, "request_id": "req_01a103822ba877bcb93788106884130b"}
+{"proveedor": "jev", "modelo_solicitado": "jev-1.13.0", "modelo_efectivo": "jev-1.13.0", "attempts": 1, "intentos": [{"n": 1, "resultado": "exito", "duracion_ms": 223.956}], "error_kind": null, "usage_normalized": {"input_tokens": 1834, "output_tokens": 139, "total": 1973, "estado": "observado", "libera_reserva_como_cero": false}, "coste_calculado": null, "cargo_facturado": null, "estado": "EJERCITADO", "pair_id": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2", "split": "dev", "candidatos_frios": ["D-NC2", "L-NC11", "L-NC12", "L-NC2", "L-P4.4", "L-V.4", "D-NC1", "D-PF4"], "leccion_target_en_candidatos": true, "answers": {"VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2": {"tipo": "choice", "choice": "D-NC2", "confidence": 0.93, "probabilities": {"L-NC12": 0.02, "ninguna-aplica": 0.01, "L-P4.4": 0.0, "D-NC1": 0.01, "D-PF4": 0.0, "D-NC2": 0.94, "L-NC2": 0.02, "L-V.4": 0.0, "L-NC11": 0.0}}}, "request_id": "req_01a103822c9f723594c8714f3c2b4196"}
+```
+
+## Metrica 1 (recuperacion), recalculada desde el ledger
+
+```json
+{
+  "value": null,
+  "numerator": 0,
+  "denominator": 0,
+  "motivo": "denominador_cero; 2 elegible(s) sin fila en el ledger: no medidos, no fallados",
+  "presentes": [],
+  "elegibles": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+  ],
+  "medidos": [],
+  "sin_medir": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+  ]
+}
+```
+
+Los dos pares pertinentes-importantes del protocolo versionado viven en `eval`, y esta corrida
+despacho `dev`: por eso la metrica sale **NO-EVALUABLE con `sin_medir`**, y no 0.0. El instrumento
+imprimia 0.0 antes de la correccion de esta tanda (`recuperacion_medida` contaba como omision una
+fila que nunca se despacho); su diente es
+`test_un_elegible_sin_fila_en_el_ledger_no_es_fallo_de_recuperacion`.
+
+## Lo que si se midio
+
+- `attempts` = 1 por llamada y `intentos` = 2: coinciden con los envios, que
+  es lo que `max_reintentos=0` tiene que dar (AC8).
+- `usage_normalized.estado` = `observado` en las dos, con total calculado: nunca cero por defecto
+  de lectura (AC10).
+- `modelo_efectivo` = `jev-1.13.0` en las dos, devuelto por el servicio y no copiado del pin
+  (AC4). El servicio ademas lo echo igual que lo pedido, pese a no listarlo en `Models.list()`.
+- Techos escritos en `protocolo.json`: tokens_in=1834, tokens_out=139, maximo observado
+  por llamada, sin margen, con su comando y su consecuencia declarados en el `motivo`.
+- `protocolo.status` sigue `BORRADOR` y `usd` sigue null: el congelado es FASE-C.
