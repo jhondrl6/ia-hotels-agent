@@ -15,6 +15,43 @@
 
 ---
 
+> **Ronda del 2026-10-04 — DEUDA DECLARADA AL CIERRE DE FASE-B (la cifra sube a 4,795).** Medido con el
+> metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,795**) y
+> contrastado con el arbol versionado en el momento de la medida (`git grep -c -E "^\s*def test_" HEAD --
+> tests` sumado = **4,776**): el delta de **19** es trabajo de esta sesion sin commitear -la sesion termina
+> en espera de autorizacion, y el `git commit` no es condicion de ninguno de sus cinco cortes-. Las dos
+> cifras no se contradicen: median arboles distintos.
+>
+> Atribucion por archivo, medida por directorio y no derivada de la fila anterior: **+11** en la raiz,
+> `test_verify_qmind_context_freshness.py` 17 → 28, la poblacion **declarada** del `10-analisis` del piloto
+> JEV (fila 4 del registro de deuda). Su contrafactual no es una parodia escrita en el test: se lee con
+> `git show 6cdb430:scripts/verify_qmind_context_freshness.py`, se carga y **se ejecuta** sobre el mismo
+> arbol sintetico (un CONTEXT fresco y un `10-analisis` con el cuerpo del notebook distinto del disco), y
+> alla el diente versionado devuelve `[OK]` con el cuerpo vencido mientras el actual devuelve
+> `[VENCIDO]`. Sin ese diferencial el verde de la bateria nueva afirmaria solo que hay mas pruebas.
+> **+4** en la raiz, `test_validate_wiring_alcance_por_declaracion_git.py` 12 → 16, la premisa de disco de
+> la fila 230 (fila 5 del registro, deuda del hermano que el cierre de FASE-B asigno a esta tanda): su
+> control anclado a `4c113de` compara por AST las aserciones de la version fija con las actuales y exige
+> que sean las mismas seis, sin mover una -el salto es condicional al insumo de maquina, no un
+> re-abarrote-. Y **+4** en `tests/quality_gates/`, el archivo nuevo
+> `lesson_relevance/test_triage_guard_real_aditividad.py` (fila 1, AC6), cuyo mutante corta el **texto** de
+> la clausula de reinsercion y no el simbolo `GUARD_ADITIVIDAD_ACTIVO`, que ya apagan los dientes de AC14
+> de la ronda anterior.
+>
+> Aritmetica de la tabla: quality_gates 942 → **946**, root 1063 → **1078**, cabecera 4,776 → **4,795**.
+> La suma de la tercera columna casa con la cabecera (4,795), que es lo que chequea el instrumento de
+> cierre de ronda.
+>
+> Nota de instrumento, para que la proxima ronda no la vuelva a descubrir: la corrida real del diente de
+> frescura bajo red mostro tres `SIN-DESCARGA` por `error: QMind network request failed` que, al
+> envenenar la cache de bajadas, convirtieron un `CONTEXT` fresco en `[VENCIDO]` en la primera pasada. El
+> rojo previsto de la fila 4 se atribuyo por otra via (la fuente publicada del `10-analisis` pesa 15.144
+> bytes y el disco 21.249, con sus sha256 publicados en el expediente), y en la segunda pasada todo salio
+> FRESCO. Un `SIN-DESCARGA` es ruido de transporte, no veredicto de contenido: quien lea ese rojo tiene
+> que mirar la lista de fuentes que no bajaron antes de atribuirlo.
+
+---
+
 > **Ronda del 2026-10-03 — OLA 2 (CONTINUACION 2) DEL PILOTO JEV (la cifra sube a 4,776).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,776**) y
 > contrastado con el arbol versionado (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado = **4,717**):
@@ -44,7 +81,7 @@
 > deltas a la cifra anterior.
 >
 > Instrumento y dos notas de instrumento, porque la ronda dejo medidas y no supuestas:
-> (a) el par de mutacion se corri6 sobre los archivos reales con restauracion por sha256 en `finally`
+> (a) el par de mutacion se curtio sobre los archivos reales con restauracion por sha256 en `finally`
 > (`evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/mutation.json`: 10 mutantes, 10 caen por la causa
 > nombrada, 0 restauraciones fallidas). Dos de sus caidas son hallazgos sobre el propio test, no sobre el
 > codigo: `test_error_kind_clasifica_subclases_por_su_antecesor` estaba verde **sin diente** (su subclase
@@ -58,7 +95,7 @@
 > Lo que esta ronda **no** suma y se declara: la bateria completa no se corro (no se pidio), el diente de
 > aditividad sobre `triage_lesson_relevance.py` (AC6 del prompt de FASE-B) sigue NO-EJERCITADO por no estar
 > esa ruta en el mandato, y P4 cayo en 401 del servicio, con lo que la corrida de recuperacion k=8 no se
-> corri6 y los techos `tokens_in`/`tokens_out` del protocolo siguen en null. Nada de eso entra en la cifra.
+> curtio y los techos `tokens_in`/`tokens_out` del protocolo siguen en null. Nada de eso entra en la cifra.
 
 > **Ronda del 2026-10-03 — OLA 2 DEL PILOTO JEV (la cifra sube a 4,717).** Medido con el metodo canonico de la
 > casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,717**) y contrastado con el arbol versionado

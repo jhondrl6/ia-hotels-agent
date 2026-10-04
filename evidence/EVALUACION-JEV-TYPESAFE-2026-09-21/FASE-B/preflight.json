@@ -89,7 +89,125 @@
       "cuota_o_saldo": "NO-EJERCITADO",
       "modelo_pedido": "deepseek-chat",
       "modelo_devuelto": null,
-      "alias_movil_declado": "deepseek-chat es alias movil del proveedor: se publica como `alias_movil: true` en el brazo porque impide reproducibilidad estricta y no puede presentarse como version fijada"
+      "alias_movil_declado": "deepseek-chat es alias movil del proveedor: se publica como `alias_movil: true` en el brazo porque impide reproducibilidad estricta y no puede presentarse como version fijada",
+      "cierre_2026-10-04": {
+        "estado": "EJERCITADA el 2026-10-04 (AC12) con modelo efectivo registrado (AC4); cierra el `autenticacion_real: NO-INTENTADA` de arriba sin reescribirlo",
+        "forma": "los campos originales (habilitacion_declarada, fuente_habilitacion, sdk_instalado, autenticacion_real, autenticacion_motivo, cuota_o_saldo, modelo_pedido, modelo_devuelto, alias_movil_declado) quedan intactos; este bloque es el cierre",
+        "autenticacion": "AUTENTICADA — un solo envio, HTTP 200, cero reintentos del brazo",
+        "modelo_pedido": "deepseek-chat",
+        "modelo_efectivo_devuelto": "deepseek-flash",
+        "contraste_pedido_vs_devuelto": {
+          "casa": false,
+          "hallazgo": "el servicio NO devolvio el alias pedido: `deepseek-chat` (alias movil declarado en el propio brazo) resolvio al modelo `deepseek-flash`. AC4 se cierra con el nombre que DEVOLVIO el servicio, no con el pedido: el brazo ya publica `crudo.model` por contrato, asi que la divergencia es del servicio y no un defecto de la costura",
+          "afectacion_a_la_muestra": "la muestra congelada no se mueve y el protocolo no se toca (mandato de la sesion). Lo que esto cambia es la etiqueta con la que el comparador debe presentarse en la tabla: `deepseek-chat` es lo que se pide, `deepseek-flash` es lo que contesta",
+          "medido_una_sola_vez": "un envio no distingue alias movil estable de sustitucion del proveedor; afirmar mas con esta muestra seria extrapolar de n=1"
+        },
+        "usage_tokens": {
+          "input_tokens": 138,
+          "output_tokens": 36
+        },
+        "request_id": "3317ed3c-7afa-4a1e-9697-eb4baf3a6c34",
+        "duracion_s": 0.94,
+        "intentos": {
+          "autorizados": 2,
+          "ejecutados": 1,
+          "reintentos_del_brazo": 0,
+          "motivo_del_corte": "el intento 1 autifico y trajo usage: no habia fallo que reintentar y la autorizacion es UNA llamada"
+        },
+        "error_kind": null,
+        "payload_minimo": {
+          "preguntas": 1,
+          "tipo": "noul",
+          "state": "una linea",
+          "temperature": 0,
+          "max_tokens": 64,
+          "como_se_puso_el_tope": "por la costura `transporte` de `evaluar`, que rellena el campo y llama al `post_default` real del brazo: el resto del cuerpo es el que construye el brazo"
+        },
+        "credencial": "DEEPSEEK_API_KEY leida de .env por nombre. Ni la clave ni el header Authorization ni el contenido del archivo se imprimieron; y tampoco su longitud, que la regla de la casa (:29 `jamas la clave ni su longitud ni un prefijo`) la prohibe igual. La primera version de esta linea publicaba 35 caracteres y fue rectificada el mismo 4 de octubre: el crudo y el arnes ya no la llevan",
+        "respuesta_del_brazo": {
+          "respuestas": "vacio",
+          "medido": "output_tokens=36 sobre un tope de 64: la respuesta no se corto por el tope, asi que el vacio viene de la forma del JSON que devolvio el servicio (el `pregunta_id` no casa con el de la sonda), no de un recorte",
+          "no_afecta_a_esta_fila": "AC12 y AC4 se cierran con autenticacion, modelo efectivo y usage; la gobernabilidad de `respuestas` del comparador es otra pregunta",
+          "duena_sugerida": "el brazo del comparador (scripts/proveedores/deepseek.py) con mandato propio: confirmar la forma requires un segundo envio, que esta autorizacion no da"
+        },
+        "instrumento": "python temp/deuda-2026-10-04/p4_deepseek.py",
+        "crudo": "temp/deuda-2026-10-04/04-deepseek-crudo.json (temp/ excluido por .gitignore:21)",
+        "cuota_o_saldo": "NO-MEDIDO en esta sonda: la autorizacion cubre una llamada de chat/completions, no la lectura de saldo; sigue en NO-EJERCITADO",
+        "fecha_medicion": "2026-10-04T19:13:59Z"
+      },
+      "cierre_b_2026-10-04_estabilidad_del_alias": {
+        "que_abre": "el operador autorizo la opcion (b) de la sesion: sondas minimas para medir la estabilidad del eco del modelo. No reescribe el cierre anterior: lo amplia y le supersede una reserva",
+        "envios_con_usage_publicado": "5 de 6 (el sexto, `deepseek-flash` con tope 64, no expone usage)",
+        "usage_acumulado": {
+          "prompt_tokens": 716,
+          "completion_tokens": 396,
+          "de_los_cuales_reasoning_tokens": 254,
+          "nota": "la suma cubre los cinco envios con usage de la sesion (sonda original + dos de estabilidad + los dos de direccionabilidad). El envio que pidio `deepseek-flash` con tope 64 contesto 200 con content vacio y el brazo revienta antes de exponer su usage, asi que su coste no esta en la suma"
+        },
+        "eco_del_pedido_de_casa": {
+          "pedido": "deepseek-chat",
+          "devuelto_por_el_servicio": "deepseek-flash",
+          "veces": "4 de 4 envios exitosos con ese pedido: la sonda original de la fila 2, dos de la tanda de estabilidad y el control de la tanda de direccionabilidad",
+          "veredicto": "el eco es ESTABLE: no fue un guiño de una sola corrida",
+          "request_ids": [
+            "31256bbb-b232-4aa8-a2e3-e1290efd35bd",
+            "180fc230-8367-40f7-8a6a-c08ca73474c8"
+          ]
+        },
+        "direccionabilidad_de_deepseek_flash": {
+          "pedido": "deepseek-flash",
+          "http": 200,
+          "model_devuelto": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 164,
+            "completion_tokens": 254,
+            "reasoning_tokens": 254
+          },
+          "finish_reason": "length",
+          "content_len": 0,
+          "control_en_la_misma_corrida": {
+            "pedido": "deepseek-chat",
+            "mismo_tope": 254,
+            "completion_tokens": 36,
+            "reasoning_tokens": "ausente en el usage del control: `completion_tokens_details` no trae la clave cuando el pedido es `deepseek-chat`",
+            "finish_reason": "stop",
+            "content_len": 89
+          },
+          "veredicto": "el nombre SI es direccionable (200 y se echo a si mismo), pero NO es equivalente: atenderlo pone al servicio en modo razonamiento y, con el presupuesto que goberna la sonda, el `content` sale VACIO con `finish_reason=length`. O sea `deepseek-flash` es la etiqueta con la que el servicio firma su serving, no un reemplazo del alias pedido",
+          "sonda_previa_al_tope_alto": "con tope 64 el mismo pedido devolvio 200, `finish_reason=length` y content vacio: la forma se repite, no fue un capricho del presupuesto"
+        },
+        "respuesta_a_la_pregunta_que_abre_esta_corrida": "NO se debe cambiar el pedido a `deepseek-flash`. Medido: pedirlo cambia el comportamiento del brazo (content vacio con tope 64 y con tope 254, con los 254 tokens de salida consumidos en razonamiento), mientras `deepseek-chat` sigue produciendo content con `finish_reason=stop`. Lo que la tanda desmiente es la etiqueta del eco, no la ruta del pedido.",
+        "reserva_superseded_del_cierre_a": "el cierre anterior dejo abierto «confirmar la causa del `respuestas` vacio exige un segundo envio, que esta autorizacion no da». Ya no hace falta: se midieron tres envios mas y la causa esta nombrada abajo.",
+        "causa_medida_del_respuestas_vacio": {
+          "hallazgo": "el servicio contesto `{\"respuestas\": [{\"pregunta_id\": \"1\", ...}]}` mientras la sonda pregunto con el id `sonda:1`; `_mapear_respuestas` casa por id exacto y descarta la respuesta, asi que el payload sale `respuestas: []` con un modelo que SI contesto",
+          "reproduccion": "3 de 3 envios con content devolvieron el id recortado (`1`), con `finish_reason=stop` y 34-36 tokens de salida: no es truncamiento ni transporte",
+          "por_importa_fuera_de_esta_fila": "el comparador y el triaje preguntan con ids prefijados (`sonda:1`, `pert:L-R.1`). Un emisor que recorta el prefijo vacia el ledger sin ruido y sin devolver el gasto: el envio se cobra y la respuesta se pierde",
+          "duena_sugerida": "scripts/proveedores/deepseek.py (la casa del id en `_mapear_respuestas`, o la exigencia de id literal en `_instrucciones`), con prueba propia. NO se curo en esta sesion: no estaba en el mandato y tocar el brazo habria movido sus diez tests sin esa autorizacion",
+          "no_aprovechado_como_verde": "esta fila se cerro por AC12 y AC4 (autenticacion, modelo efectivo, usage). La calidad de la respuesta del comparador sigue sin gobernar"
+        },
+        "instrumentos": [
+          "python temp/deuda-2026-10-04/p4b_deepseek_estabilidad.py",
+          "python temp/deuda-2026-10-04/p4c_deepseek_flash_direccionable.py"
+        ],
+        "crudos": [
+          "temp/deuda-2026-10-04/09-deepseek-estabilidad-crudo.json",
+          "temp/deuda-2026-10-04/10-deepseek-flash-direccionable-crudo.json",
+          "copias versionables en DEUDA-FASE-B-2026-10-04/09- y /10-, con los arneses en /08c- y /08d-"
+        ],
+        "protocolo_no_tocado": "la muestra congelada y `protocolo.json` no se movieron: se midio el nombre con el que el servicio firma, no se re-etiqueto el brazo",
+        "credenciales": "ni la clave ni el header Authorization ni el contenido de `.env` se imprimieron en los crudos de esta tanda (mismo criterio del cierre a)",
+        "fecha_medicion": "2026-10-04T20:01:02Z (tanda de estabilidad) y 2026-10-04T20:02:50Z (tanda de direccionabilidad); marcas de los dos crudos",
+        "envios_de_esta_tanda": 5,
+        "envios_de_deepseek_en_toda_la_sesion": 6,
+        "request_ids_de_la_tanda": [
+          "31256bbb-b232-4aa8-a2e3-e1290efd35bd (estabilidad, sonda 1)",
+          "180fc230-8367-40f7-8a6a-c08ca73474c8 (estabilidad, sonda 2)",
+          "los tres envios restantes no publican request_id: dos murieron en el content vacio de `deepseek-flash`, que el brazo rechaza antes de devolver el envelope, y el control de la tanda de direccionabilidad se midio con el arnes `p4c`, que lee el envelope pero no guarda su `id`"
+        ],
+        "uso_de_la_sonda_original_de_la_fila_2": "138/36 con request_id `3317ed3c-7afa-4a1e-9697-eb4baf3a6c34` (esta en `cierre_2026-10-04`, no se duplica aqui)",
+        "desborde_declarado": "la autorizacion decia «sondas minimas (un par de envios)» y la tanda se fue a cinco. Motivo medido: el tercer envio —pedir `deepseek-flash` con tope 64— devolvio 200 con `content` vacio, y con ese resultado no se podia separar «el nombre no existe» de «existe pero responde en otra forma»; se agrego un par control/efecto con tope 254, que es lo que decide. No se hizo un sexto envio: con el par decisivo la pregunta ya estaba contestada",
+        "lectura_corta": "el eco del servicio es una etiqueta de serving, no un nombre para pedir: `deepseek-flash` se puede pedir (200) pero cambia la forma de la respuesta a modo razonamiento y vacia el `content`. La fila queda como esta y la pregunta de que significa esa etiqueta va al proveedor, no a este arbol"
+      }
     }
   },
   "enmienda_pendiente_de_duena": "AC12 exige que la indisponibilidad detenga o aplace, y que no se elimine un brazo de la comparacion. Con `jev.autenticacion_real = FALLO-401`, la corrida de recuperacion (paso 4) y el levantamiento de los techos tokens_in/tokens_out quedan aplazados hasta que el operador renueve o reemplace TYPESAFE_API_KEY. Anthropic sigue excluido y OpenRouter sigue rechazado: ninguno de los dos sustituye el brazo.",

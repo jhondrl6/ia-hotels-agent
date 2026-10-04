@@ -1,0 +1,35 @@
+...F........                                                             [100%]
+================================== FAILURES ===================================
+_ test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo _
+
+reporte_real = {'cobertura': {'archivos_en_alcance': 697, 'archivos_excluidos_por_rol': 127, 'archivos_excluidos_por_rol_versionado':...to porque lo ignorado no esta versionado, y una lista de nombres depende de que alguien se acuerde de ampliarla'}, ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1149/test_el_informe_publica_los_ex0')
+
+    def test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo(reporte_real,
+                                                                                      tmp_path):
+        """S11 aplicado a esta capa: una exclusion sin conteo publicado es el defecto, no la cura.
+    
+        Se lee el JSON que escribio el writer real, no el objeto en memoria (R2.4).
+        """
+        destino = tmp_path / "informe-wiring.json"
+        vw.publicar(reporte_real, destino)
+        leido = json.loads(destino.read_text(encoding="utf-8"))
+    
+        assert CLAVE in leido, f"el artefacto no publica `{CLAVE}`"
+        publicado = leido[CLAVE]
+        assert isinstance(publicado, dict), (
+            f"se esperaba un objeto con su conteo y su motivo, llego {type(publicado).__name__}")
+        assert publicado["estado"] == "GIT_OK", (
+            f"la consulta no se resolvio ({publicado['estado']!r}): el alcance de esta corrida no "
+            "goberno por declaracion de Git")
+>       assert publicado["cantidad"] > 0, (
+            "el conteo es cero sobre el arbol real, que tiene el aislado en disco: la capa no "
+            f"esta cortando nada ({publicado})")
+E       AssertionError: el conteo es cero sobre el arbol real, que tiene el aislado en disco: la capa no esta cortando nada ({'cantidad': 0, 'ejemplo': '', 'estado': 'GIT_OK', 'motivo': 'el propio repositorio los declara ignorados por `.gitignore`, asi que no son fuente del contrato: gobernarlos seria medir senales dentro de un entorno virtual o de un scratch que el proyecto ya rechazo. La tabla de roles no alcanza para esto porque lo ignorado no esta versionado, y una lista de nombres depende de que alguien se acuerde de ampliarla'})
+E       assert 0 > 0
+
+tests\test_validate_wiring_alcance_por_declaracion_git.py:247: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_wiring_alcance_por_declaracion_git.py::test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo
+1 failed, 11 passed in 8.38s
+EXIT=1

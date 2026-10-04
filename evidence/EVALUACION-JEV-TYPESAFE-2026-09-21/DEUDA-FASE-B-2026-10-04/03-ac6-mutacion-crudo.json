@@ -1,0 +1,24 @@
+{
+  "artefacto": "mutacion AC6 sobre el guard real",
+  "fecha": "2026-10-04T19:07:24Z",
+  "archivo_mutado": "scripts/triage_lesson_relevance.py",
+  "nodo_que_debe_caer": "tests/quality_gates/lesson_relevance/test_triage_guard_real_aditividad.py::test_real_triage_guard_preserves_anchored_rows",
+  "ocurrencias_del_literal": 1,
+  "sha_original_12": "8538cf89c246",
+  "simbolo_no_apagado": "no se toca GUARD_ADITIVIDAD_ACTIVO: se corta el texto de la clausula de reinsercion, que es la otra mitad del guard",
+  "aplicado": true,
+  "sha_mutante_12": "5691f0d126e5",
+  "rojo_con_el_mutante": {
+    "codigo_de_salida": 1,
+    "tail_de_la_caida": "            \"el emisor no devolvio ninguna eleccion: no hay respuestas que el guard pueda estar preservando\")\n>       assert s[\"removed\"] == [], f\"el triaje filtro filas ancladas de �2: {s['removed']}\"\nE       AssertionError: el triaje filtro filas ancladas de �2: ['L-R.1', 'L-R.3', 'L-R.4', 'L-NC10', 'L-PF6', 'L-PF10', 'L-V2.3', 'L-V2.1', 'L-V2.2', 'D-V2.1', 'L-HF1']\nE       assert ['L-R.1', 'L-...'L-PF10', ...] == []\nE         \nE         Left contains 11 more items, first extra item: 'L-R.1'\nE         Use -v to get more diff\ntests\\quality_gates\\lesson_relevance\\test_triage_guard_real_aditividad.py:112: AssertionError\n=========================== short test summary info ===========================\nFAILED tests/quality_gates/lesson_relevance/test_triage_guard_real_aditividad.py::test_real_triage_guard_preserves_anchored_rows\n!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!\n1 failed in 0.81s",
+    "cae_por_la_causa_nombrada": true
+  },
+  "restaurado_12": "8538cf89c246",
+  "restauracion_coincide": true,
+  "verde_tras_restaurar": {
+    "codigo_de_salida": 0,
+    "tail_de_la_caida": ".                                                                        [100%]\n1 passed in 0.76s",
+    "cae_por_la_causa_nombrada": false
+  },
+  "git_status_del_archivo_despues": "(limpio)"
+}

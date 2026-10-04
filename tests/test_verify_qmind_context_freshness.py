@@ -25,6 +25,7 @@ import hashlib
 import importlib.util
 import io
 import json
+import re
 import subprocess
 import sys
 from contextlib import redirect_stdout
@@ -36,6 +37,17 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "verify_qmind_context_freshness.py"
 REV_HERMANO_VERSIONADO = "7737347"
 NB = "01a04d98-b7bd-778c-8441-26fdc7e35f45"
+
+# Revision publicada y fija del cierre documental de FASE-B: su `verify_qmind_context_freshness.py` ya tenia
+# el criterio de bytes, pero su poblacion era solo `CONTEXT-*`. El control negativo se ancla aqui, nunca a
+# HEAD (HEAD es el arbol que esta prueba ayuda a cambiar).
+REV_SIN_POBLACION_DECLARADA = "6cdb430"
+DEFAULT_PLANS = ROOT / ".opencode" / "plans"
+# El literal del fixture esta aqui a proposito y se contrasta contra el modulo en cada corrida: si la
+# declaracion del guion se mueve, el fixture dejo de montar lo que el guion goberna y el verde diria otra
+# cosa (las cotas que crea una prueba se declaran).
+REL_DECLORADO = "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md"
+PLAN_10_ANALISIS = DEFAULT_PLANS / REL_DECLORADO
 
 UNO = "CONTEXT-UNO-2026-09-21.md"
 DOS = "CONTEXT-DOS-2026-09-20.md"
@@ -58,7 +70,11 @@ def _cargar(nombre: str, ruta: Path):
 
 @pytest.fixture
 def vq():
-    return _cargar("vq_fresco", SCRIPT)
+    mod = _cargar("vq_fresco", SCRIPT)
+    # El literal con el que los fixtures montan la poblacion declarada tiene que ser el que el guion
+    # goberna; se comprueba en TODA corrida de esta familia, no solo en la prueba de la declaracion.
+    _afirmar_rel_comun(mod)
+    return mod
 
 
 class QmindFalso:
@@ -414,3 +430,275 @@ def test_la_guarde_del_denominador_sigue_cerrando_la_renumeracion():
     assert len(completo) == 18, f"el completo no llego a 18: {len(completo)}"
     assert completo[-1] == "self._check_context_freshness", (
         f"el check nuevo no es el ultimo del completo: {completo[-3:]}")
+
+
+# =============================================================== la poblacion declarada (FILA 4, 2026-10-04)
+#
+# El gobernado nuevo NO es un `CONTEXT-*` autodeclarado: entra por `POBLACION_DECLARADA`, con su ruta bajo
+# `--plans-dir` y el prefijo de titulo con el que se buscan sus candidatas. El criterio sigue siendo
+# descarga + sha256 por bytes. Lo que se prueba aqui es la poblacion nueva y el recorte de la bajada, y que
+# el viejo `10-analisis` del hermano (que decide por titulo) pueda seguir conviviendo con un cuerpo vencido.
+
+DECLORADO_NOMBRE = "10-analisis-post-implementacion.md"
+
+
+def _afirmar_rel_comun(vq) -> str:
+    """La declaracion del guion y la del fixture tienen que ser la misma ruta, o nada prueba nada."""
+    assert len(vq.POBLACION_DECLARADA) == 1, (
+        f"la poblacion declarada dejo de ser una entrada ({len(vq.POBLACION_DECLARADA)}): los fixtures de "
+        "esta familia montan una sola, re-leerlos antes de tocar esta cota")
+    assert vq.POBLACION_DECLARADA[0]["rel"] == REL_DECLORADO, (
+        f"el guion declara {vq.POBLACION_DECLARADA[0]['rel']!r} y el fixture monta {REL_DECLORADO!r}")
+    return REL_DECLORADO
+
+
+def _contexto_vacio(tmp_path: Path) -> Path:
+    """Raiz de CONTEXT sin autodeclaraciones: el unico gobernado que queda es el declarado."""
+    contexto = tmp_path / "context"
+    contexto.mkdir(parents=True, exist_ok=True)
+    return contexto
+
+
+def _plans_con_declorado(tmp_path: Path, contenido: bytes, *, con_plan: bool = True) -> Path:
+    """`plans/Archives/<PLAN>/10-analisis-post-implementacion.md` montado en tmp con el cuerpo que se diga."""
+    plans = tmp_path / "plans"
+    destino = plans / REL_DECLORADO
+    if not con_plan:
+        (plans / "Archives").mkdir(parents=True, exist_ok=True)
+        return plans
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_bytes(contenido)
+    return plans
+
+
+def _rev_existe(rev: str) -> bool:
+    return subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"{rev}^{{commit}}"],
+        cwd=str(ROOT), capture_output=True,
+    ).returncode == 0
+
+
+def _correr(mod, contexto: Path, plans: Path, fuentes: list, contenidos: dict) -> tuple[int, str]:
+    """`main()` del modulo dado con el doble de E/S montado: sirve para el actual y para el versionado.
+
+    El doble se instala sobre el modulo que se va a correr, asi el diferencial no compara dos
+    implementaciones del arnes sino la MISMA frontera sustituida en dos copias del mismo guion.
+    """
+    falso = QmindFalso(fuentes, contenidos)
+    anterior = mod._run_qmind
+    mod._run_qmind = falso
+    buffer = io.StringIO()
+    try:
+        with redirect_stdout(buffer):
+            salio = mod.main(["--context-dir", str(contexto), "--plans-dir", str(plans)])
+    finally:
+        mod._run_qmind = anterior
+    return salio, buffer.getvalue()
+
+
+CUERPO_DECLORADO = b"# 10-analisis del piloto JEV\n\n## 3. Lecciones\n\ncuerpo vigente 2026-10-04\n"
+CUERPO_PUBLICADO_VIEJO = CUERPO_DECLORADO + b"\n(snapshot ingested 2026-09-27, sin el cierre de FASE-B)\n"
+
+
+def test_la_poblacion_declorada_resuelve_bajo_plans_dir_y_declara_su_identificacion(vq, tmp_path):
+    plans = _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    resueltos, fuera = vq.poblacion_declorada(plans)
+    assert fuera == [], fuera
+    assert [r["ruta"].name for r in resueltos] == [DECLORADO_NOMBRE], resueltos
+    assert resueltos[0]["criterio"] == "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21", (
+        "el prefigo con el que se recorta la bajada cambio de forma: la seleccion de candidatas deja de "
+        "ser la que se pruebo")
+    assert resueltos[0]["ruta"] == plans / _afirmar_rel_comun(vq), (
+        "la ruta gobernada no es la declarada bajo --plans-dir: el diente gobernaria otra raiz")
+    assert "01a04d98" in resueltos[0]["identificacion"], (
+        "la declaracion dice como identificar la fuente, pero ya no nombra el notebook")
+
+
+def test_un_plan_que_no_esta_en_esta_raiz_se_publica_fuera_de_alcance_no_se_calla(vq, tmp_path):
+    plans = _plans_con_declorado(tmp_path, CUERPO_DECLORADO, con_plan=False)
+    resueltos, fuera = vq.poblacion_declorada(plans)
+    assert resueltos == []
+    assert [rel for rel, _ in fuera] == [_afirmar_rel_comun(vq)], fuera
+    assert "--plans-dir" in fuera[0][1], fuera[0][1]
+
+
+def test_el_arbol_real_goberna_el_10_analisis_del_plan_jev(vq):
+    """El residuo anclado al arbol: sin red, el declarado resuelve y su archivo existe.
+
+    Un `git mv` del plan, un renombre del `10-analisis` o una segunda entrada declarada mueven esta linea;
+    por eso se mide aqui y no dentro de un fixture.
+    """
+    resueltos, fuera = vq.poblacion_declorada(DEFAULT_PLANS)
+    assert fuera == [], fuera
+    assert [r["ruta"] for r in resueltos] == [PLAN_10_ANALISIS], (
+        f"la poblacion declarada del arbol ya no es el 10-analisis del JEV: {resueltos}")
+    assert PLAN_10_ANALISIS.is_file(), (
+        f"el archivo declarado no esta en el arbol: {PLAN_10_ANALISIS}")
+
+
+def test_vencido_por_bytes_aunque_la_fuente_lo_nombre_por_prefijo(vq, monkeypatch, tmp_path):
+    """El caso de la fila 4: publicacion del 2026-09-27 con cuerpo anterior y disco del 2026-10-04."""
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    sid = "01a0ffff-0000-7000-8000-000000000100"
+    titulo = (f"{vq.POBLACION_DECLARADA[0]['criterio_titulo']} (cierre offline, lecciones finales "
+              "2026-09-27)")
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                   [_fuente(sid, titulo, CUERPO_PUBLICADO_VIEJO)],
+                                   {sid: CUERPO_PUBLICADO_VIEJO})
+    assert salio == 1, salida
+    assert f"[VENCIDO] {DECLORADO_NOMBRE} ({_afirmar_rel_comun(vq)})" in salida, salida
+    assert "barrido completo" in salida, salida
+    assert "ninguna de 1 fuente(s) examinada(s) casa" in salida, (
+        "el VENCIDO no publica cuantas fuentes se examinaron: " + salida)
+    assert "sha_disco=" in salida, salida
+    assert falso.descargas == 1, (
+        f"se bajaron {falso.descargas} fuentes habiendo solo una en el notebook: el recorte no goberno")
+
+
+def test_fresco_cuando_la_fuente_declorada_casa_y_no_hace_falta_barrer(vq, monkeypatch, tmp_path):
+    """La mitad que falta: con el prefijo que casa por bytes se baja UNA fuente y no las 56.
+
+    Sin este control, un `criterio` que recortara mal (por ejemplo el stem del archivo, que no aparece en
+    el titulo publicado) daria igualmente VERDE tras un barrido completo: el verde seria caro, no falso.
+    Este control es el que distingue las dos cosas.
+    """
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    bueno = "01a0ffff-0000-7000-8000-000000000101"
+    decoy = "01a0ffff-0000-7000-8000-000000000102"
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                   [_fuente(bueno, "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 "
+                                                   "(cierre 2026-10-04)", CUERPO_DECLORADO),
+                                    _fuente(decoy, "Otra fuente del mismo plan", b"cuerpo ajeno")],
+                                   {bueno: CUERPO_DECLORADO, decoy: b"cuerpo ajeno"})
+    assert salio == 0, salida
+    assert "[FRESCO]" in salida and "barrido completo" not in salida, salida
+    assert falso.descargas == 1, (
+        f"bajo {falso.descargas}: el recorte por prefijo no goberno la bajada del declarado")
+
+
+def test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes(vq, monkeypatch, tmp_path):
+    """El prefijo recorta, nunca decide: titulo irreconocible + bytes que casan = FRESCO."""
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    sid = "01a0ffff-0000-7000-8000-000000000103"
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                [_fuente(sid, "Snapshot del cierre sin prefijo alguno",
+                                         CUERPO_DECLORADO)],
+                                {sid: CUERPO_DECLORADO})
+    assert salio == 0, salida
+    assert "[FRESCO]" in salida and "barrido completo" in salida, salida
+
+
+def test_el_declorado_vencido_corta_rojo_aunque_el_context_este_fresco(vq, monkeypatch, tmp_path):
+    """Las dos poblaciones alimentan el MISMO exit code: una no puede tapar a la otra."""
+    contexto, _ = _contexto(tmp_path)
+    plans = _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    ctx_bytes = (contexto / UNO).read_bytes()
+    viejo = "01a0ffff-0000-7000-8000-000000000104"
+    ctx_fresco = "01a0ffff-0000-7000-8000-000000000105"
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                [_fuente(ctx_fresco, f"CONTEXT: {UNO[:-3]}", ctx_bytes),
+                                 _fuente(viejo, "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (v0)",
+                                         CUERPO_PUBLICADO_VIEJO)],
+                                {ctx_fresco: ctx_bytes, viejo: CUERPO_PUBLICADO_VIEJO})
+    assert salio == 1, salida
+    assert "[FRESCO] CONTEXT-UNO" in salida, salida
+    assert f"[VENCIDO] {DECLORADO_NOMBRE}" in salida, salida
+    assert "[FAIL] frescura de CONTEXT" in salida, salida
+
+
+def test_el_declorado_que_desaparece_del_disco_es_no_evaluable_no_es_silencio(vq, monkeypatch, tmp_path):
+    """Directorio del plan presente, archivo borrado o movido: salida 2 con el nombre de la ruta declarada.
+
+    Si la resolucion pidiera `is_file()` la entrada se cairia sola y el check quedaria verde sin
+    candidatos, que es exactamente el hueco que la deuda de la fila 4 registro.
+    """
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    (plans / _afirmar_rel_comun(vq)).unlink()
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans, [], {})
+    assert salio == 2, salida
+    assert "[NO-EVALUABLE]" in salida and DECLORADO_NOMBRE in salida, salida
+
+
+def test_la_interfaz_publica_la_poblacion_declorada_con_su_linea(vq, monkeypatch, tmp_path):
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    sid = "01a0ffff-0000-7000-8000-000000000106"
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                [_fuente(sid, "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre)",
+                                         CUERPO_DECLORADO)],
+                                {sid: CUERPO_DECLORADO})
+    assert salio == 0, salida
+    assert "poblacion declarada: 1 gobernado(s) (" in salida, salida
+    linea_declorada = next(l for l in salida.splitlines() if l.startswith("poblacion declarada:"))
+    assert DECLORADO_NOMBRE in linea_declorada, linea_declorada
+    assert "poblacion: 0 CONTEXT gobernado(s)" in salida, (
+        "la linea de CONTEXT perdio su forma: las aserciones existentes de la poblacion se aflojarian")
+    assert "[OK] frescura de CONTEXT" in salida, salida
+
+
+def test_el_resumen_sigue_llevando_el_token_que_filtra_el_runner(vq, monkeypatch, tmp_path):
+    """La etiqueta del estado puede anunciar mas alcance, pero no puede perder el token del cableado.
+
+    `run_all_validations.py` escoge su resumen con un filtro por cadena: si la linea final lo pierde, el
+    runner publica la ultima linea cualquiera (el detalle de la poblacion) como si fuera el estado.
+    """
+    src = (ROOT / "scripts" / "run_all_validations.py").read_text(encoding="utf-8")
+    filtro = re.search(r'if "(frescura de [^"]+)" in l', src)
+    assert filtro, "el runner ya no filtra el resumen por la cadena conocida: re-leer el cableado"
+    contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    sid = "01a0ffff-0000-7000-8000-000000000107"
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                [_fuente(sid, "sin prefijo", CUERPO_DECLORADO)], {sid: CUERPO_DECLORADO})
+    assert salio == 0, salida
+    assert filtro.group(1) in salida.splitlines()[-1], (
+        f"la linea de estado no lleva `{filtro.group(1)}`: {salida.splitlines()[-1]!r}")
+
+
+def test_control_negativo_el_diente_versionado_era_verde_con_el_cuerpo_vencido(tmp_path):
+    """El `6cdb430` goberno solo CONTEXT: sobre el MISMO arbol dice [OK] mientras el 10-analisis esta vencido.
+
+    Se lee y se ejecuta la copia versionada (`git show`), no una parodia escrita aqui. El arbol sintetico
+    tiene un CONTEXT fresco y un `10-analisis` cuyo cuerpo publicado no casa: la version vieja devuelve 0,
+    la nueva 1. Eso es lo que prueba que la cura cierra el hueco de la fila 4 y no otro.
+    """
+    assert _rev_existe(REV_SIN_POBLACION_DECLARADA), (
+        f"la revision {REV_SIN_POBLACION_DECLARADA} no esta en el repo: re-anclar el control")
+    proc = subprocess.run(
+        ["git", "show", f"{REV_SIN_POBLACION_DECLARADA}:scripts/verify_qmind_context_freshness.py"],
+        capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT))
+    assert proc.returncode == 0, proc.stderr[:200]
+    ruta_vieja = tmp_path / "diente_versionado.py"
+    ruta_vieja.write_text(proc.stdout, encoding="utf-8", newline="\n")
+    viejo = _cargar("vq_versionado", ruta_vieja)
+
+    assert not hasattr(viejo, "POBLACION_DECLARADA"), (
+        "la revision anclada ya declara la poblacion nueva: el control dejo de ser anterior a la cura "
+        "y hay que re-ancalarlo a una revision previa")
+
+    contexto = _contexto_vacio(tmp_path)
+    (contexto / UNO).write_text("# Contexto uno\n\n## Leccion durable: un archivado vence tambien "
+                                "los CONTEXT\n", encoding="utf-8", newline="\n")
+    ctx_bytes = (contexto / UNO).read_bytes()
+    plans = _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
+    sid_ctx = "01a0ffff-0000-7000-8000-000000000108"
+    sid_ana = "01a0ffff-0000-7000-8000-000000000109"
+    fuentes = [_fuente(sid_ctx, f"CONTEXT: {UNO[:-3]}", ctx_bytes),
+               _fuente(sid_ana, "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline)",
+                       CUERPO_PUBLICADO_VIEJO)]
+    contenidos = {sid_ctx: ctx_bytes, sid_ana: CUERPO_PUBLICADO_VIEJO}
+
+    salio_viejo, salida_vieja = _correr(viejo, contexto, plans, fuentes, contenidos)
+    assert salio_viejo == 0, (
+        "el diente versionado ya no da verde con el cuerpo del 10-analisis vencido: el control perdio su "
+        "premissa y hay que re-leer la cura antes de afirmar que era ciega")
+    assert "poblacion: 1 CONTEXT gobernado(s)" in salida_vieja and "10-analisis" not in salida_vieja, (
+        "la salida del versionado ya menciona al 10-analisis: la copia anclada no es anterior a la cura")
+
+    nuevo = _cargar("vq_contra_diente", SCRIPT)
+    salio_nuevo, salida_nueva = _correr(nuevo, contexto, plans, fuentes, contenidos)
+    assert salio_nuevo == 1, (
+        "el instrumento actual tampoco ve el 10-analisis vencido sobre el mismo arbol: no hay "
+        "differential y la prueba no afirma la cura")
+    assert f"[VENCIDO] {DECLORADO_NOMBRE} ({REL_DECLORADO})" in salida_nueva, salida_nueva
+    assert "[FRESCO] CONTEXT-UNO" in salida_nueva, (
+        "el CONTEXT del diferencial dejo de estar fresco: el rojo vendria de otra causa")
+

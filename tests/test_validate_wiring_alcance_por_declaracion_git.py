@@ -35,9 +35,10 @@ from __future__ import annotations
 import ast
 import importlib.util
 import json
+import shutil
 import subprocess
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import pytest
 
@@ -170,6 +171,42 @@ def _rutas(fuentes: list[Path], raiz: Path) -> set[str]:
     return {str(p.relative_to(raiz).as_posix()) for p in fuentes}
 
 
+# ------------------------------------------------------------------ la premisa de disco de la fila 230
+
+NOMBRE_TEST_FILA_230 = "test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo"
+
+
+def _insumo_del_aislado_materializado(raiz: Path) -> tuple[bool, str]:
+    """`(materializado, motivo)`: si el arbol trae el insumo que la clausula de conteo goberna.
+
+    La fila 230 exige `excluidos_por_declaracion_git.cantidad > 0`, y ese conteo sale de los `.py` que
+    **Git declara ignorados** y que **no** caen bajo `EXCLUSIONES_POR_ROL`. En el arbol de trabajo esa
+    interseccion son los 684 `.py` de `tmp_test/` (el aislado del piloto JEV); en un clon limpio es el
+    conjunto vacio por construccion, porque `.gitignore` declara ese directorio fuera del control de
+    versiones y un clon no lo lleva. O sea: el rojo del clon limpio no era un fallo de la capa de alcance,
+    era el test exigiendo un insumo de maquina.
+
+    Se corta aqui y no dentro del verificador: `cantidad == 0` con `estado == GIT_OK` es un resultado
+    legitimo del instrumento (asi lo declara su propio `limites`), y un test de arbol real no puede
+    afirmarlo. La premisa consulta la tabla de roles del guion (`vw.EXCLUSIONES_POR_ROL`) y el corte
+    propio de `_declaracion_git`, no `archivos_en_alcance()`: si el predicado se midiera con la funcion
+    que se esta probando, el verde seria circular.
+    """
+    ignorados = _declaracion_git(raiz)
+    sin_rol = {r for r in ignorados
+               if not (set(PurePosixPath(r).parts[:-1]) & set(vw.EXCLUSIONES_POR_ROL))}
+    if sin_rol:
+        return True, ""
+    return False, (
+        f"ningun `.py` declarado ignorado por Git queda fuera de `EXCLUSIONES_POR_ROL` en {raiz}: el "
+        "arbol es un clon limpio y la clausula de conteo no tiene poblacion que gobernar. El insumo es el "
+        "aislado del piloto (`tmp_test/`), que `.gitignore` declara fuera del control de versiones, por "
+        "lo que nunca viaja en un clon. Medido con: git -C <arbol> ls-files --others --ignored "
+        "--exclude-standard | grep '\\.py$'. La gobernanza del conteo sigue cubierta por los dos arboles "
+        "sinteticos de este archivo, que materializan su propio aislado y no dependen del disco de la "
+        "maquina.")
+
+
 # ---------------------------------------------------------------------- el alcance, en el arbol real
 
 @pytest.fixture(scope="module")
@@ -232,7 +269,20 @@ def test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motiv
     """S11 aplicado a esta capa: una exclusion sin conteo publicado es el defecto, no la cura.
 
     Se lee el JSON que escribio el writer real, no el objeto en memoria (R2.4).
+
+    PREMISA CONDICIONAL (fila 5 de la deuda declarada al cierre de FASE-B, 2026-10-04). La clausula de
+    conteo goberna una poblacion que vive en la **maquina**, no en el **arbol**: su insumo son los `.py`
+    que Git declara ignorados y que la tabla de roles no cubre. En el arbol de trabajo eso son los 684
+    `.py` de `tmp_test/`; en un clon limpio del mismo commit es el conjunto vacio, y el rojo era el test
+    pidiendo un directorio que `.gitignore` jamas deja clonar (preexistente: caia igual en `4c113de`).
+    No se afloja ni una asercion: cuando el insumo esta, la prueba corre entera; cuando no esta, se salta
+    con la razon que se puede citar. La gobernanza del conteo sobre un aislado que existe no se pierde —
+    la sostienen los dos arboles sinteticos de abajo, que montan su propio aislado en `tmp_path`.
     """
+    materializado, motivo = _insumo_del_aislado_materializado(ROOT)
+    if not materializado:
+        pytest.skip(motivo)
+
     destino = tmp_path / "informe-wiring.json"
     vw.publicar(reporte_real, destino)
     leido = json.loads(destino.read_text(encoding="utf-8"))
@@ -470,3 +520,141 @@ def test_dientes_si_se_apaga_la_consulta_a_git_vuelve_el_aislado(tmp_path):
     assert "SENAL_OMITIDA" in {v["tipo"] for v in reporte["violaciones"]}, (
         "el mutante reincorporo la ruta al alcance pero no a la poblacion: el verde del arbol "
         "curado no vendria de la gobernanza")
+
+
+# ================================================= el predicado de la premisa de disco (fila 5, 2026-10-04)
+#
+# La prueba de la fila 230 goberna un conteo cuyo insumo vive en la maquina. Estas tres lineas sostienen
+# que la premisa se corta en los dos estados y que no se aflojo ninguna asercion para lograrlo.
+
+REV_SIN_PREMISA = "4c113de"      # publicada y fija: su copia de este archivo caia en clon limpio
+
+
+def _clon_limpio_sintetico(base: Path) -> Path:
+    """El MISMO arbol de `_arbol_aislado(con_git=True)` menos el directorio que Git declara ignorado.
+
+    Las dos mitades del estado difieren en un `rmtree`: si el predicado dijera otra cosa, la diferencia
+    no podria atribuirse a nada mas.
+    """
+    arbol = _arbol_aislado(base, con_git=True)
+    shutil.rmtree(arbol / RAIZ)
+    return arbol
+
+
+def _fuente_funcion(texto: str, nombre: str) -> str:
+    arbol = ast.parse(texto)
+    for nodo in arbol.body:
+        if isinstance(nodo, ast.FunctionDef) and nodo.name == nombre:
+            fuente = ast.get_source_segment(texto, nodo)
+            assert fuente, f"{nombre} no tiene fuente recuperable"
+            return fuente
+    raise AssertionError(f"{nombre} no esta en la fuente anclada: re-leer el control")
+
+
+def _aserciones(funcion_fuente: str) -> list[str]:
+    """Los `assert` de una funcion, canonicos por `ast.unparse`: lo que no se puede re-redactar sin mover."""
+    cuerpo = ast.parse(funcion_fuente).body[0]
+    salida = []
+    for nodo in ast.walk(cuerpo):
+        if isinstance(nodo, ast.Assert):
+            salida.append(ast.unparse(nodo.test))
+    return salida
+
+
+def test_el_predicado_ve_el_aislado_materializado_y_la_prueba_no_se_salta(tmp_path):
+    """Estado arbol: con el aislado en disco el predicado dice materializado, y la capa corta dos rutas."""
+    base = _arbol_aislado(tmp_path / "con-aislado", con_git=True)
+    materializado, motivo = _insumo_del_aislado_materializado(base)
+    assert materializado is True and motivo == "", (materializado, motivo)
+
+    _fuentes, _roles, excl = vw.archivos_en_alcance(base)
+    assert excl["estado"] == "GIT_OK" and excl["cantidad"] == 2, excl
+    assert excl["ejemplo"].startswith(RAIZ + "/"), excl
+
+
+def test_el_predicado_ve_el_clon_limpio_y_su_salto_trae_la_razon_citable(tmp_path):
+    """Estado clon limpio: sin el aislado el predicado corta el salto, y el instrumento dice GIT_OK con 0.
+
+    La segunda mitad es la que da sentido al salto: `cantidad == 0` con `estado == GIT_OK` es un resultado
+    legitimo del verificador (lo declara su propio bloque `limites`), no un fallo de cableado. Sin ella,
+    «salto» y «el instrumento esta roto» serian la misma palabra.
+    """
+    base = _clon_limpio_sintetico(tmp_path / "clon-limpio")
+    materializado, motivo = _insumo_del_aislado_materializado(base)
+    assert materializado is False, motivo
+    assert "tmp_test/" in motivo and ".gitignore" in motivo, motivo
+    assert "ls-files" in motivo, "la razon tiene que decir como se midio, si no no es citable: " + motivo
+
+    _fuentes, _roles, excl = vw.archivos_en_alcance(base)
+    assert excl["estado"] == "GIT_OK" and excl["cantidad"] == 0, excl
+
+
+def test_control_anclado_a_4c113de_la_cura_pone_la_premisa_sin_mover_ninguna_asercion():
+    """La version fija no tenia premisa (por eso caia) y sus seis aserciones siguen estando, iguales.
+
+    El control se hace sobre el texto versionado con `git show`, no sobre una parodia escrita aqui: lo que
+    se afirma es que entre esa revision y hoy la unica diferencia en la fila 230 es la guarda de la premisa.
+    """
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"{REV_SIN_PREMISA}^{{commit}}"],
+        cwd=str(ROOT), capture_output=True)
+    assert proc.returncode == 0, f"la revision fija {REV_SIN_PREMISA} no esta en el repo: re-anclar"
+    show = subprocess.run(
+        ["git", "show", f"{REV_SIN_PREMISA}:tests/test_validate_wiring_alcance_por_declaracion_git.py"],
+        capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT))
+    assert show.returncode == 0, show.stderr[:200]
+    viejo = show.stdout
+
+    assert NOMBRE_TEST_FILA_230 in viejo, "la revision anclada no tiene la prueba que se curo"
+    assert "pytest.skip" not in viejo and "_insumo_del_aislado_materializado" not in viejo, (
+        "la revision anclada ya tiene premisa condicional: el control dejo de ser anterior a la cura y "
+        "hay que re-ancalarlo mas atras")
+
+    viejas = _aserciones(_fuente_funcion(viejo, NOMBRE_TEST_FILA_230))
+    nuevas = _aserciones(_fuente_funcion(Path(__file__).read_text(encoding="utf-8"),
+                                         NOMBRE_TEST_FILA_230))
+    assert viejas, "el versionado no tiene aserciones: no hay nada que comparar"
+    assert nuevas == viejas, (
+        "la cura movio aserciones de la fila 230 (no es un salto condicional, es un re-abarrote):\n"
+        f"  versionadas: {viejas}\n  actuales:    {nuevas}")
+    assert len(viejas) == 6, f"se esperaban seis aserciones en la fila 230, hay {len(viejas)}: re-leer"
+
+
+def test_la_guarda_salta_con_insumo_ausente_y_corre_con_insumo_puesto(tmp_path, monkeypatch):
+    """El diente del predicado sobre la propia prueba: el MISMO informe, dos premisas, dos cortes.
+
+    Se le pasa a la funcion de la fila 230 un reporte sintetico que cumple las seis aserciones (con su
+    `cantidad` mayor que cero, su `GIT_OK`, su motivo y su ejemplo). Con la premisa en `True` la funcion
+    termina sin saltar; con la premisa en `False` corta por `Skipped`, no por `AssertionError`. Asi se ve
+    que el salto goberna la ausencia del insumo de maquina y no el resultado del instrumento.
+    """
+    base = _arbol_aislado(tmp_path / "arbol-guarda", con_git=True)
+    reporte = vw.construir_reporte(base, ignore_known=True)
+    assert reporte[CLAVE]["cantidad"] > 0, reporte[CLAVE]      # premissa del doble
+
+    mod = sys.modules[__name__]
+    original = mod._insumo_del_aislado_materializado
+    try:
+        monkeypatch.setattr(mod, "_insumo_del_aislado_materializado",
+                            lambda raiz: (True, ""), raising=True)
+        con_insumo = tmp_path / "corrio"
+        mod.test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo(
+            reporte, con_insumo)
+        assert json.loads((con_insumo / "informe-wiring.json").read_text(encoding="utf-8"))[CLAVE]
+
+        monkeypatch.setattr(mod, "_insumo_del_aislado_materializado",
+                            lambda raiz: (False, "el aislado no esta materializado en este arbol"),
+                            raising=True)
+        sin_insumo = tmp_path / "salto"
+        with pytest.raises(pytest.skip.Exception) as corta:
+            mod.test_el_informe_publica_los_excluidos_por_declaracion_git_con_conteo_y_motivo(
+                reporte, sin_insumo)
+        assert "materializado" in str(corta.value), str(corta.value)
+        assert not (sin_insumo / "informe-wiring.json").exists(), (
+            "el salto se publico despues de escribir el artefacto: la guarda va detras de la escritura")
+    finally:
+        mod._insumo_del_aislado_materializado = original
+    assert mod._insumo_del_aislado_materializado is original, (
+        "el monkeypatch no se devolvio: el predicado quedo parcheado para las pruebas de despues")
+
+

@@ -1,0 +1,50 @@
+{
+  "sonda": "deepseek-preflight-deuda-2026-10-04",
+  "fecha": "2026-10-04T19:13:59Z",
+  "instrumento": "python temp/deuda-2026-10-04/p4_deepseek.py",
+  "via": "brazo de la costura: scripts/proveedores/deepseek.py:evaluar con transporte que anade max_tokens y despues llama a post_default (el unico camino de red del brazo)",
+  "endpoint": "https://api.deepseek.com/v1/chat/completions",
+  "modelo_pedido": "deepseek-chat",
+  "alias_movil_declarado": true,
+  "credencial": {
+    "variable": "DEEPSEEK_API_KEY",
+    "presente_en_env": true,
+    "leida_de": ".env (una linea, por nombre; el archivo no se imprime)",
+    "rectificada_2026-10-04": "se retiro `longitud` de esta salida: la regla de la casa (preflight.json:29) publica presencia por nombre y el resultado de autenticar, jamas la clave ni su longitud ni un prefijo"
+  },
+  "payload": {
+    "state": "una linea",
+    "preguntas": 1,
+    "tipo_pregunta": "noul",
+    "max_tokens": 64,
+    "temperature": 0
+  },
+  "intentos": [
+    {
+      "intento": 1,
+      "reintentos_del_brazo": 0,
+      "ok": true,
+      "modelo_efectivo_devuelto": "deepseek-flash",
+      "usage": {
+        "input_tokens": 138,
+        "output_tokens": 36
+      },
+      "request_id": "3317ed3c-7afa-4a1e-9697-eb4baf3a6c34",
+      "respuestas": [],
+      "duracion_s": 0.94
+    }
+  ],
+  "autenticacion_real": "AUTENTICADA",
+  "modelo_efectivo_devuelto": "deepseek-flash",
+  "usage_tokens": {
+    "input_tokens": 138,
+    "output_tokens": 36
+  },
+  "request_id": "3317ed3c-7afa-4a1e-9697-eb4baf3a6c34",
+  "contraste_del_pedido": {
+    "pedido": "deepseek-chat",
+    "devuelto": "deepseek-flash",
+    "casa": false,
+    "lectura": "el brazo publica lo que DEVOLVO el servicio, nunca el pedido re-etiquetado (AC4); si el servicio no nombra el modelo, esto es None y se declara"
+  }
+}

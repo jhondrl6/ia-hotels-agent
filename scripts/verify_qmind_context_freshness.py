@@ -20,6 +20,15 @@ Poblacion (se publica en la salida, con sus exclusiones y su razon):
   Fuera, con su razon medida: los que no declaran (la politica del write-back es por aporte declarado,
   executor v2.18.0) y todo `Historico/` (contenido congelado: R2.5 y la nota «QMind y archivado»).
 
+  3. (FILA 4 de la deuda de FASE-B, 2026-10-04) Una **poblacion declarada**: `POBLACION_DECLARADA` nombra
+     archivos que no son `CONTEXT-*` autodeclarados, con su ruta bajo `--plans-dir` y con como identificar
+     su fuente en el notebook. Entra por declaracion explicita, no por patron de nombre ni por deteccion de
+     contenido, y se goberna por el MISMO criterio de arriba: descarga + sha256. El hermano
+     `validate_qmind_writeback.py` si mira los `10-analisis` archivados, pero decide por titulo (:131-147),
+     asi que su `[PASS]` es compatible con un cuerpo vencido — que es justo el hueco que la deuda registro.
+     La poblacion declarada se imprime en su propia linea y los planes que no resuelven bajo el
+     `--plans-dir` de la corrida se publican como `FUERA-de-ALCANCE` con su razon: no se callan.
+
 La bajada va **por shell** (`shell=True`), no por `CreateProcess` sobre el shim: `qmind` es un `.cmd` de
 npm y desde `subprocess` de Python con el nombre resuelto falla con `FileNotFoundError [WinError 2]`
 (medido 2026-09-29). Los ids que entran al comando estan validados por patron, no interpolados crudos.
@@ -53,9 +62,28 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONTEXT = ROOT / ".opencode" / "context"
 DEFAULT_PLANS = ROOT / ".opencode" / "plans"
 NOTEBOOK_TITULO = "iah-cli-lecciones"
+# Identidad del notebook al que se declara la poblacion de (3). No resuelve nada: la resolucion sigue por
+# titulo o por `--nb`. Se publica para que el lector sepa en que cuaderno hay que buscar la fuente.
+NOTEBOOK_ID_DECLARADO = "01a04d98-b7bd-778c-8441-26fdc7e35f45"
 
 ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 NOMBRE_CONTEXT = re.compile(r"CONTEXT-[A-Za-z0-9._-]+")
+
+# Poblacion declarada (FILA 4 de la deuda de FASE-B, 2026-10-04). Un `10-analisis` que el hermano de la
+# casa si lista, pero solo por titulo: cambio el cuerpo el 2026-10-04 (`6cdb430`) y el `--strict` del
+# hermano siguio en `[PASS]`. Cada entrada declara su ruta **bajo `--plans-dir`** (por eso la bateria
+# puede montarla en un tmp) y el prefijo de titulo con el que se buscan sus candidatas; la preferencia de
+# titulo nunca es el veredicto, solo el recorte de la bajada, y si ninguna candidata casa se barren todas
+# las fuentes del notebook (barrido completo), igual que con los CONTEXT.
+POBLACION_DECLARADA = (
+    {
+        "rel": "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md",
+        "criterio_titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "identificacion": (f"fuente del notebook {NOTEBOOK_ID_DECLARADO} cuyo titulo lleva el prefijo "
+                           "`10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21` (la publicacion original y "
+                           "sus cierres); si ningun titulo lo lleva, barrido completo de las fuentes"),
+    },
+)
 
 # Las dos grafias vivas de la autodeclaracion. La copia vieja anclaba `^Lección durable:` a inicio de
 # linea y el CONTEXT de JEV la escribe como encabezado: el detector devolvia 0 sobre un archivo que si
@@ -211,16 +239,49 @@ def poblacion_del_context(context_dir: Path, plans_dir: Path) -> tuple[list[Path
     return gobernados, excluidos
 
 
+def poblacion_declorada(plans_dir: Path) -> tuple[list[dict], list[tuple[str, str]]]:
+    """(gobernados declarados, entradas fuera de alcance con su razon).
+
+    La ruta se resuelve **bajo `plans_dir`**, no contra la raiz del repo: asi la bateria puede montar la
+    poblacion en un tmp y el arbol real queda gobernado por el mismo codigo. Una entrada cuyo directorio de
+    plan no existe en esta raiz se publica como `FUERA-de-ALCANCE`; una entrada cuyo directorio existe pero
+    cuyo archivo ya no esta **si entra**, y el lazo de frescura la corta NO-EVALUABLE: un `git mv` del plan
+    no puede convertir un gobernado en silencio.
+    """
+    resueltos: list[dict] = []
+    fuera: list[tuple[str, str]] = []
+    for entrada in POBLACION_DECLARADA:
+        ruta = plans_dir / entrada["rel"]
+        if not ruta.parent.is_dir():
+            fuera.append((entrada["rel"], f"el plan declarado no existe bajo este --plans-dir "
+                                          f"({ruta.parent}): la corrida no goberna esa raiz"))
+            continue
+        resueltos.append({"ruta": ruta, "criterio": entrada["criterio_titulo"],
+                          "rel": entrada["rel"], "identificacion": entrada["identificacion"]})
+    return resueltos, fuera
+
+
 def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Path,
                        tope_barrido: int = 0) -> tuple[int, list[str]]:
     """Cada gobernado necesita una fuente publicada cuyos bytes descargados casen con el disco."""
-    gobernados, excluidos = poblacion_del_context(context_dir, plans_dir)
+    ctx_gobernados, excluidos = poblacion_del_context(context_dir, plans_dir)
+    declarados, fuera_de_alcance = poblacion_declorada(plans_dir)
+
     lineas: list[str] = []
-    lineas.append(f"poblacion: {len(gobernados)} CONTEXT gobernado(s) "
-                  f"({', '.join(g.name for g in gobernados) or '—'}) | "
+    lineas.append(f"poblacion: {len(ctx_gobernados)} CONTEXT gobernado(s) "
+                  f"({', '.join(g.name for g in ctx_gobernados) or '—'}) | "
                   f"{len(excluidos)} excluido(s)")
     for ruta, razon in excluidos:
         lineas.append(f"  [EXCLUIDO] {ruta.name}: {razon}")
+    lineas.append(f"poblacion declarada: {len(declarados)} gobernado(s) "
+                  f"({', '.join(d['ruta'].name for d in declarados) or '—'}) | "
+                  f"{len(fuera_de_alcance)} fuera de alcance")
+    for rel, razon in fuera_de_alcance:
+        lineas.append(f"  [FUERA-de-ALCANCE] {rel}: {razon}")
+
+    gobernados = [{"ruta": r, "criterio": r.stem, "etiqueta": r.name} for r in ctx_gobernados]
+    gobernados += [{"ruta": d["ruta"], "criterio": d["criterio"],
+                    "etiqueta": f"{d['ruta'].name} ({d['rel']})"} for d in declarados]
 
     if not gobernados:
         if list(context_dir.glob("CONTEXT-*.md")):
@@ -229,24 +290,26 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
             lineas.append("[NO-EVALUABLE] frescura de CONTEXT: hay `CONTEXT-*` en la raiz y ninguno "
                           "gobernado (un verde sin candidatos no es un verde)")
             return 2, lineas
-        lineas.append("[NO-EVALUABLE] frescura de CONTEXT: no hay CONTEXT-* en la raiz gobernarada")
+        lineas.append("[NO-EVALUABLE] frescura de CONTEXT: no hay CONTEXT-* en la raiz gobernarada "
+                      "y la poblacion declarada no resolvio bajo este --plans-dir")
         return 2, lineas
 
     fuentes = listar_fuentes(nb)
     lineas.append(f"notebook {NOTEBOOK_TITULO}: {len(fuentes)} fuente(s) publicada(s)")
 
     salio = 0
-    for gobernado in gobernados:
-        if not gobernado.is_file():
+    for g in gobernados:
+        ruta, etiqueta = g["ruta"], g["etiqueta"]
+        if not ruta.is_file():
             # El censo lo nombro y el disco ya no lo tiene: no es rojo del notebook ni verde propio.
-            lineas.append(f"  [NO-EVALUABLE] {gobernado.name}: el archivo gobernado ya no existe en "
-                          f"{gobernado} (¿movido, borrado o aun no regenerate?)")
+            lineas.append(f"  [NO-EVALUABLE] {etiqueta}: el archivo gobernado ya no existe en "
+                          f"{ruta} (¿movido, borrado o aun no regenerate?)")
             return 2, lineas
-        sha_disco = sha256_de(gobernado)
-        candidatas = [f for f in fuentes if gobernado.stem in (f["title"] or "")]
+        sha_disco = sha256_de(ruta)
+        candidatas = [f for f in fuentes if g["criterio"] in (f["title"] or "")]
         bajadas = list(candidatas)
         barrido_completo = False
-        if not any(sha_disco == _hash_bajado(nb, f["id"], scratch, gobernado.stem) for f in bajadas):
+        if not any(sha_disco == _hash_bajado(nb, f["id"], scratch, ruta.stem) for f in bajadas):
             # Ninguna fuente que lo nombra casa: antes de decir VENCIDO se examinan TODAS las fuentes,
             # porque el criterio es byte a byte y un titulo puede no conservar el stem.
             bajadas = list(fuentes)
@@ -255,23 +318,23 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
         for fuente in bajadas:
             if fuente["id"] in [c["id"] for c in casadas]:
                 continue
-            descargado = _hash_bajado(nb, fuente["id"], scratch, gobernado.stem)
+            descargado = _hash_bajado(nb, fuente["id"], scratch, ruta.stem)
             if descargado is None:
                 salio = max(salio, 1)
-                lineas.append(f"  [SIN-DESCARGA] {fuente['id']} no bajable para {gobernado.name}")
+                lineas.append(f"  [SIN-DESCARGA] {fuente['id']} no bajable para {etiqueta}")
                 continue
             if descargado == sha_disco:
                 corrobora = "coincide" if fuente["sha_metadata"] == sha_disco else (
                     f"DESACUERDO metadata={fuente['sha_metadata'][:12] or '(ausente)'}")
                 casadas.append(dict(fuente, corroboracion=corrobora))
         if casadas:
-            lineas.append(f"  [FRESCO] {gobernado.name}: {len(casadas)} fuente(s) que casan por "
+            lineas.append(f"  [FRESCO] {etiqueta}: {len(casadas)} fuente(s) que casan por "
                           f"descarga+sha256 "
                           f"({', '.join(c['id'][:13] + '…' + c['corroboracion'] for c in casadas)})"
                           + (" [barrido completo]" if barrido_completo else ""))
             continue
         salio = 1
-        lineas.append(f"  [VENCIDO] {gobernado.name}: sha_disco={sha_disco[:12]}… y ninguna de "
+        lineas.append(f"  [VENCIDO] {etiqueta}: sha_disco={sha_disco[:12]}… y ninguna de "
                       f"{len(bajadas)} fuente(s) examinada(s) casa "
                       f"({len(candidatas)} la nombran por titulo)"
                       + (" [barrido completo]" if barrido_completo else ""))
@@ -335,7 +398,8 @@ def main(argv=None) -> int:
     estado = "OK" if salio == 0 else ("NO-EVALUABLE" if salio == 2 else "FAIL")
     resumen = [l for l in lineas if l.startswith("  [VENCIDO]")
                or l.startswith("  [SIN-DESCARGA]")]
-    print(f"[{estado}] frescura de CONTEXT: {len([l for l in lineas if '[FRESCO]' in l])} fresco(s), "
+    print(f"[{estado}] frescura de CONTEXT/10-analisis declarados: "
+          f"{len([l for l in lineas if '[FRESCO]' in l])} fresco(s), "
           f"{len(resumen)} problema(s)")
     return salio
 

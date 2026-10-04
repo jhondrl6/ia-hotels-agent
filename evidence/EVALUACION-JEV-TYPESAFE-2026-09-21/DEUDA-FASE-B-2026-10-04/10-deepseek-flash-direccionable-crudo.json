@@ -1,0 +1,75 @@
+{
+  "sonda": "deepseek-flash-direccionable-2026-10-04",
+  "fecha": "2026-10-04T20:02:50Z",
+  "instrumento": "python temp/deuda-2026-10-04/p4c_deepseek_flash_direccionable.py",
+  "motivo": "la tanda anterior dio 200 con content vacio y finish_reason=length pidiendo `deepseek-flash`: con ese dato no se decide si el nombre es direccionable",
+  "endpoint": "https://api.deepseek.com/v1/chat/completions",
+  "preguntas": 1,
+  "tipo": "noul",
+  "temperature": 0,
+  "max_tokens": 254,
+  "credencial": {
+    "variable": "DEEPSEEK_API_KEY",
+    "presente_en_env": true
+  },
+  "envios": [
+    {
+      "modelo_pedido": "deepseek-flash",
+      "motivo_de_pedirlo": "decidir si el echo del servicio es un nombre que el servicio atiende",
+      "http": 200,
+      "model_devuelto_por_el_servicio": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 164,
+        "completion_tokens": 254,
+        "total_tokens": 418,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 254
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 164
+      },
+      "finish_reason": "length",
+      "content_len": 0,
+      "content_head": "",
+      "razon_de_la_forma": null
+    },
+    {
+      "modelo_pedido": "deepseek-chat",
+      "motivo_de_pedirlo": "control en el MISMO cuerpo y con el MISMO tope: si aqui el content sale y alla no, la diferencia es del modelo pedido y no del presupuesto",
+      "http": 200,
+      "model_devuelto_por_el_servicio": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 138,
+        "completion_tokens": 36,
+        "total_tokens": 174,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 138
+      },
+      "finish_reason": "stop",
+      "content_len": 89,
+      "content_head": "{\"respuestas\": [{\"pregunta_id\": \"1\", \"tipo\": \"probabilidad_si\", \"probabilidad_si\": 1.0}]}",
+      "razon_de_la_forma": null,
+      "json_claves": [
+        "respuestas"
+      ],
+      "pregunta_ids_devueltos": [
+        "1"
+      ]
+    }
+  ],
+  "lectura": {
+    "eco_estable_de_deepseek_chat": true,
+    "model_devuelto_al_pedir_flash": "deepseek-flash",
+    "model_devuelto_al_pedir_chat": "deepseek-flash",
+    "content_flash_len": 0,
+    "content_chat_len": 89,
+    "finish_flash": "length",
+    "finish_chat": "stop"
+  }
+}

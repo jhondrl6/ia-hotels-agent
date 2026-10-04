@@ -1,0 +1,112 @@
+{
+  "sonda": "deepseek-estabilidad-del-alias-2026-10-04",
+  "fecha": "2026-10-04T20:01:02Z",
+  "instrumento": "python temp/deuda-2026-10-04/p4b_deepseek_estabilidad.py",
+  "autorizacion": "el operador autorizo la opcion (b) de la sesion: sondas minimas para medir la estabilidad del eco del modelo",
+  "endpoint": "https://api.deepseek.com/v1/chat/completions",
+  "modelo_declarado_por_el_brazo": "deepseek-chat",
+  "alias_movil_declarado": true,
+  "credencial": {
+    "variable": "DEEPSEEK_API_KEY",
+    "presente_en_env": true
+  },
+  "payload_fijo": {
+    "state": "una linea",
+    "preguntas": 1,
+    "tipo": "noul",
+    "temperature": 0,
+    "max_tokens": 64
+  },
+  "sondas": [
+    {
+      "sonda": 1,
+      "motivo": "repeticion 1 del pedido de casa",
+      "modelo_pedido_en_el_cuerpo": "deepseek-chat",
+      "ok": true,
+      "modelo_efectivo_devuelto": "deepseek-flash",
+      "usage": {
+        "input_tokens": 138,
+        "output_tokens": 36
+      },
+      "request_id": "31256bbb-b232-4aa8-a2e3-e1290efd35bd",
+      "respuestas": [],
+      "n_respuestas": 0,
+      "duracion_s": 1.45,
+      "forma_de_la_respuesta": {
+        "choices": 1,
+        "finish_reason": "stop",
+        "content_len": 89,
+        "content_head": "{\"respuestas\": [{\"pregunta_id\": \"1\", \"tipo\": \"probabilidad_si\", \"probabilidad_si\": 1.0}]}",
+        "json_claves": [
+          "respuestas"
+        ],
+        "json_respuestas": 1,
+        "json_pregunta_ids": [
+          "1"
+        ]
+      }
+    },
+    {
+      "sonda": 2,
+      "motivo": "repeticion 2 del pedido de casa",
+      "modelo_pedido_en_el_cuerpo": "deepseek-chat",
+      "ok": true,
+      "modelo_efectivo_devuelto": "deepseek-flash",
+      "usage": {
+        "input_tokens": 138,
+        "output_tokens": 34
+      },
+      "request_id": "180fc230-8367-40f7-8a6a-c08ca73474c8",
+      "respuestas": [],
+      "n_respuestas": 0,
+      "duracion_s": 0.87,
+      "forma_de_la_respuesta": {
+        "choices": 1,
+        "finish_reason": "stop",
+        "content_len": 87,
+        "content_head": "{\"respuestas\": [{\"pregunta_id\": \"1\", \"tipo\": \"probabilidad_si\", \"probabilidad_si\": 1}]}",
+        "json_claves": [
+          "respuestas"
+        ],
+        "json_respuestas": 1,
+        "json_pregunta_ids": [
+          "1"
+        ]
+      }
+    },
+    {
+      "sonda": 3,
+      "motivo": "el nombre que el servicio echo, pedido explicitamente",
+      "modelo_pedido_en_el_cuerpo": "deepseek-flash",
+      "ok": false,
+      "clase": "RespuestaServicioFalla",
+      "mensaje": "el mensaje del servicio vino sin contenido",
+      "duracion_s": 0.92,
+      "forma_de_la_respuesta": {
+        "choices": 1,
+        "finish_reason": "length",
+        "content_len": 0,
+        "content_head": "",
+        "json_claves": "NO_ES_JSON",
+        "json_respuestas": null,
+        "json_pregunta_ids": null
+      }
+    }
+  ],
+  "resumen": {
+    "envios_ejecutados": 3,
+    "envios_exitosos": 2,
+    "eco_de_deepseek_chat": [
+      "deepseek-flash"
+    ],
+    "respuesta_a_pedir_deepseek_flash": {
+      "ok": false,
+      "modelo_devuelto": null,
+      "mensaje": "el mensaje del servicio vino sin contenido"
+    },
+    "respuestas_no_vacias": [
+      0,
+      0
+    ]
+  }
+}

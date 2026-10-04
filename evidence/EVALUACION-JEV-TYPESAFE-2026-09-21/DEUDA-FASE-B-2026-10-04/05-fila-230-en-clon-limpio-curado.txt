@@ -1,0 +1,5 @@
+...s............                                                         [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_validate_wiring_alcance_por_declaracion_git.py:284: ningun `.py` declarado ignorado por Git queda fuera de `EXCLUSIONES_POR_ROL` en C:\Users\Jhond\Github\iah-cli\temp\clon-2026-10-04: el arbol es un clon limpio y la clausula de conteo no tiene poblacion que gobernar. El insumo es el aislado del piloto (`tmp_test/`), que `.gitignore` declara fuera del control de versiones, por lo que nunca viaja en un clon. Medido con: git -C <arbol> ls-files --others --ignored --exclude-standard | grep '\.py$'. La gobernanza del conteo sigue cubierta por los dos arboles sinteticos de este archivo, que materializan su propio aislado y no dependen del disco de la maquina.
+15 passed, 1 skipped in 8.45s
+EXIT=0
