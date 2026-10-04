@@ -2,13 +2,18 @@
 
 Plan: `EVALUACION-JEV-TYPESAFE-2026-09-21`. FASE-B cerro documentalmente el 2026-10-04 con `6cdb430` y
 declaro una deuda de cinco filas. Esta sesion ejecuta **solo** esa deuda, en el arbol de trabajo, y
-termina en espera de autorizacion: **sin `git commit` y sin `git push`**.
+termino en espera de autorizacion, y el operador la dio: **commit si, push no, L3 no**.
 
-- Revision al arrancar y al cerrar la medicion: `6cdb430` (el arbol de trabajo lleva las escrituras de esta
-  sesion sin commitear).
+- Revision al arrancar: `6cdb430`. **Sello del cierre: la tanda se commiteo en `7899f0f` (rango `6cdb430..7899f0f`) el
+  2026-10-04, sin `git push` y sin revision L3, por indicacion expresa del operador. Las frases «sin commit»
+  que quedaron escritas en el material de esta sesion -aqui, en el `cierre_2026-10-04` de
+  `preflight.json` y en el de `mutation.json`- describian el quinto corte, un estado anterior real, y este
+  sello las vence sin borrarlas.
 - Cifra canonica de pruebas: `grep -rE "^\s*def test_" tests --include=*.py` = **4,795** sobre el arbol de
   trabajo; `git grep -c -E "^\s*def test_" HEAD -- tests` sumado = **4,776**. El delta de 19 es trabajo de
-  esta sesion sin commitear; las dos cifras median arboles distintos.
+  esta sesion sin commitear. **Tras el sello `7899f0f` las dos convergen**: el mismo comando sobre HEAD da
+  ahora **4.795** (antes, sobre `6cdb430`, 4.776), o sea la frase «median arboles distintos» describe el
+  estado anterior al sello y no el vigente.
 - Consumo de red de la sesion: **una** llamada Jev-style de preflight no se repitio; DeepSeek recibio **6 envios** en total (1 de la fila 2 autorizada en el mandato + 5 de la tanda (b)), todos con su request_id en los crudos.
 - Gate: `python scripts/run_all_validations.py --quick` = **13/13** (crudo `07-quick-gate-post-docs.txt`). La suite
   completa no se corrio, por mandato.
@@ -187,7 +192,11 @@ nadie lea ese ruido como una fuga.
 
 ## Lo que queda abierto al terminar la sesion
 
-1. **Autorizacion**: ninguna escritura de esta sesion esta commiteada. Fila por fila, el arbol espera.
+1. **Push y L3**: la sesion esta commiteada en `7899f0f` y **no empujada**; el push y la revision L3 siguen siendo
+   acto del operador (esta tanda se hizo «commit sin L3», por indicacion). Verificacion del commit en su propio
+   arbol: clon limpio de `7899f0f` **fuera del repo** (`AppData/Local/Temp`, no bajo `temp/`: un clon
+   anidado si rompe el gate del derivado), baterias tocadas = 90 passed y, en el archivo del wiring,
+   15 passed / 1 skipped con la razon citable.
 2. **`respuestas` vacias del brazo DeepSeek**: causa **medida** en la tanda (b) —el modelo devuelve el id
    recortado (`1` por `sonda:1`) y `_mapear_respuestas` descarta la respuesta—; **la cura no se autorizo**:
    es del brazo `scripts/proveedores/deepseek.py` y moveria sus diez tests.

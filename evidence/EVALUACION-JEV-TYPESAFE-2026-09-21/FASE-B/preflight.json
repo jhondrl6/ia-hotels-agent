@@ -133,7 +133,12 @@
         "instrumento": "python temp/deuda-2026-10-04/p4_deepseek.py",
         "crudo": "temp/deuda-2026-10-04/04-deepseek-crudo.json (temp/ excluido por .gitignore:21)",
         "cuota_o_saldo": "NO-MEDIDO en esta sonda: la autorizacion cubre una llamada de chat/completions, no la lectura de saldo; sigue en NO-EJERCITADO",
-        "fecha_medicion": "2026-10-04T19:13:59Z"
+        "fecha_medicion": "2026-10-04T19:13:59Z",
+        "sello_commit_2026-10-04": {
+          "estado_real_despues_del_sello": "esta tanda se commiteo en `7899f0f` (rango `6cdb430..7899f0f`) el 2026-10-04, sin `git push` y sin revision L3, por indicacion expresa del operador",
+          "lo_que_no_se_reescribe": "el `estado`/`forma` de arriba sigue diciendo «sin commit ni push»: describia el quinto corte de la sesion, que era cierto entonces. Este bloque lo vence y no lo borra",
+          "lo_que_sigue_pendiente": "el push y la revision L3, y las reservas de fondo de este cierre (las que no hablan de commit): en preflight, el `cuota_o_saldo` NO-EJERCITADO, la pregunta por el significado de la etiqueta `deepseek-flash` y la causa ya medida pero no curada del id recortado; en mutation, que AC6 se ejercicio sobre el guard del triaje ajeno y no sobre el arnes propio del piloto"
+        }
       },
       "cierre_b_2026-10-04_estabilidad_del_alias": {
         "que_abre": "el operador autorizo la opcion (b) de la sesion: sondas minimas para medir la estabilidad del eco del modelo. No reescribe el cierre anterior: lo amplia y le supersede una reserva",

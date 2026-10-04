@@ -304,7 +304,12 @@
       },
       "bateria_completa": "python -m pytest tests/quality_gates/lesson_relevance/ -q → 62 passed (58 previos + 4 nuevas de este archivo). Cero red: el guard autouse de sockets del conftest sigue armao para cada caso.",
       "limitacion_de_la_unidad": "el tail de la caida llega con un caracter de reemplazo donde va el «§» de «§2» (consola cp1252 leida como utf-8, leccion «evidencia de consola no es UTF-8»). Es forma de la impresion, no contenido del artefacto: el crudo guarda lo que devolvio pytest y la firma completa se transcribe arriba.",
-      "nota_del_control_de_caida": "el marcador `cae_por_la_causa_nombrada` se afirma solo sobre un rojo y sobre la linea `E ` del fallo: en la corrida verde el tail re-imprime la fuente del assert y el literal apareceria igualmente, que fue el rojo falso de la primera pasada del arnes"
+      "nota_del_control_de_caida": "el marcador `cae_por_la_causa_nombrada` se afirma solo sobre un rojo y sobre la linea `E ` del fallo: en la corrida verde el tail re-imprime la fuente del assert y el literal apareceria igualmente, que fue el rojo falso de la primera pasada del arnes",
+      "sello_commit_2026-10-04": {
+        "estado_real_despues_del_sello": "esta tanda se commiteo en `7899f0f` (rango `6cdb430..7899f0f`) el 2026-10-04, sin `git push` y sin revision L3, por indicacion expresa del operador",
+        "lo_que_no_se_reescribe": "el `estado`/`forma` de arriba sigue diciendo «sin commit ni push»: describia el quinto corte de la sesion, que era cierto entonces. Este bloque lo vence y no lo borra",
+        "lo_que_sigue_pendiente": "el push y la revision L3, y las reservas de fondo de este cierre (las que no hablan de commit): en preflight, el `cuota_o_saldo` NO-EJERCITADO, la pregunta por el significado de la etiqueta `deepseek-flash` y la causa ya medida pero no curada del id recortado; en mutation, que AC6 se ejercicio sobre el guard del triaje ajeno y no sobre el arnes propio del piloto"
+      }
     }
   },
   "rondas_del_arnes": "primera pasada: 10 mutantes (M1-M10). Segunda pasada el mismo dia, tras la corrida k=8: +4 (M11-M14) sobre los dos dientes nuevos del lector de protocolo y del calculo de recuperacion. 14/14 caen por la causa nombrada."

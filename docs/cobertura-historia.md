@@ -22,6 +22,12 @@
 > en espera de autorizacion, y el `git commit` no es condicion de ninguno de sus cinco cortes-. Las dos
 > cifras no se contradicen: median arboles distintos.
 >
+> **Sello posterior dentro de la misma sesion (mismo 2026-10-04):** la tanda se commiteo en `7899f0f`
+> (rango `6cdb430..7899f0f`), sin push y sin revision L3 por indicacion del operador. Con ese commit la cifra
+> commiteada pasa a **4.795**, igual que la medida del arbol de trabajo, y el delta de 19 deja de ser
+> «trabajo sin commitear»: es versionado. La verificacion del árbol del commit se hizo en un clon limpio
+> **fuera del repo**, donde la fila 5 corta su salto condicional y las otras dos baterias suman 90 passed.
+>
 > Atribucion por archivo, medida por directorio y no derivada de la fila anterior: **+11** en la raiz,
 > `test_verify_qmind_context_freshness.py` 17 → 28, la poblacion **declarada** del `10-analisis` del piloto
 > JEV (fila 4 del registro de deuda). Su contrafactual no es una parodia escrita en el test: se lee con
