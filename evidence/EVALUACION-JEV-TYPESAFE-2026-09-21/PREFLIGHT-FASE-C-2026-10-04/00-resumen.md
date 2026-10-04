@@ -144,7 +144,8 @@ como rojo de codigo.
    mutantes con su causa y su restauracion por sha, bateria adyacente 247 verde con el interprete del piloto.
 3. **Cierre documental**: `preflight.json` con los dos cierres, `AGENTS.md` y `docs/cobertura-historia.md` por
    su flujo, `wiring_report.json` re-publicado, `09-registro-deepseek-flash.md` y este resumen.
-4. **Listo para revision**: los 20 archivos de este expediente con su manifiesto sha256, el gate 13/13 y el
+4. **Listo para revision**: los archivos de este expediente con su manifiesto sha256 (la cuenta autoritativa es
+   la linea `Total:` de abajo, medida con `ls` y recalculada en cada sello), el gate 13/13 y el
    barrido de credenciales SIN HALLAZGOS.
 5. **Espera de autorizacion**: nada de esto esta commiteado. `git commit`, `git push` y la revision L3 son acto
    del operador; la apertura de FASE-C tambien, y esta sesion no la ofrece.
@@ -204,9 +205,10 @@ los arneses corrieron en `temp/sesion25-2026-10-04/`.
 | `16-quick-gate-post-resumen.txt` | 3124 | `7f27e7d38776b323` | `7319cb76d7be31d3` | MIXTO(43) |
 | `17-quick-gate-de-certificacion.txt` | 3119 | `b7ccf5585feb1d22` | `69343a3ccb5dce8e` | MIXTO(43) |
 | `18-verificacion-en-clon-del-commit.txt` | 2622 | `9ea3d629e70442e2` | `dfa476db68849bc6` | CRLF |
+| `19-sello-del-push-paridad.txt` | 2083 | `b81654dd0580c94d` | `b9481bae25802484` | CRLF |
 
 
-Total: **21 archivos**, 73173 bytes. Los tres arneses `.py` (`08a-`, `08b-`, `08c-`) son los que movieron
+Total: **22 archivos**, 75256 bytes. Los tres arneses `.py` (`08a-`, `08b-`, `08c-`) son los que movieron
 `evidence.cantidad_versionada` del derivado (+3: 119 → 122); el resto son crudos `.json`/`.txt` y dos `.md`.
 El manifiesto se recalculo **despues** del barrido final (`13-`) y del crudo del gate (`16-`), que son
 los ultimos archivos del expediente en cambiar de bytes. El sha del propio `00-resumen.md` no se lista
@@ -219,7 +221,7 @@ Esta corrida se estampa aqui, y no en un crudo nuevo, porque abrir un archivo de
 vencida la tabla que lo registraba. `00-resumen.md` es el unico archivo del expediente que cambia de bytes
 despues del manifiesto, y es el unico que no esta en el.
 
-- `python scripts/run_all_validations.py --quick` (arbol de trabajo, con los 20 archivos del expediente y las
+- `python scripts/run_all_validations.py --quick` (arbol de trabajo, con el expediente y las
   cinco escrituras de docs/derivado ya publicadas): **13/13**, EXIT=0. Es la cuarta corrida del gate en la
   sesion (`10-`, `15-`, `16-` y esta) y su crudo es `17-`. Las tres corridas anteriores valian sobre bytes que
   todavia iban a cambiar: esta es la unica que corre sobre el expediente completo; despues se anadieron `18-` (la verificacion en el arbol del commit) y este
@@ -279,3 +281,20 @@ dejan, no se borran.
   asi que vive en el commit siguiente (`7547c1b..` en cuanto se commitee este sello). Nada de lo posterior al
   rango citado esta afirmado como publicado.
 
+## Sello del push (mismo 2026-10-04, segundo acto)
+
+La orden llego en dos actos: «git commit sin L3» y despues «Git Push». Este apartado estampa el segundo y
+**vence, sin borrarlas, las citas que quedaron publicadas diciendo «sin push»**: la de este mismo archivo
+(«No empujado ... 0/1»), la de `docs/cobertura-historia.md` y la de `preflight.json` ->
+`proveedores.deepseek.cierre_d_2026-10-04_cura_del_id_recortado.sello_commit_2026-10-04`.
+
+- **Empujado**: `5ca6395..9fb039f`, es decir `7547c1b` (el trabajo) y `9fb039f` (su sello de commit). Fue
+  fast-forward: el pre-flight midio `0/2` y `git push --dry-run` nombro el mismo rango; alcance 2 commits /
+  50 objetos / 28 archivos, sin binarios grandes. Salida: `5ca6395..9fb039f  HEAD -> master`, EXIT 0.
+- **Paridad re-medida contra el servidor**: `git ls-remote origin refs/heads/master` = `9fb039f9ef89c0f0981fe169c580aa4a2d032bb7`,
+  igual que `git rev-parse HEAD` (`9fb039f9ef89c0f0981fe169c580aa4a2d032bb7`), con `git rev-list --left-right --count
+  origin/master...HEAD` = **0 / 0**. Crudo: `19-sello-del-push-paridad.txt`.
+- **L3**: no se corrio ni antes ni despues del push. La decision del commit no se arrastra: este sello es
+  un commit nuevo, lo que re-abre el gate en lugar de cerrarlo, y queda opcion del operador sobre lo publicado.
+- **Precision que este sello se traga**: se escribe antes de su propio commit, asi que el rango citado es el
+  del push ya dado; el commit con este texto viaja en el segundo (`9fb039f..`) y su sha no puede listarse aqui.

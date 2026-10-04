@@ -73,6 +73,14 @@
 > fixture salta con su causa). Un `EXIT 3` de `test_validate_wiring_check_derivado_versionado.py` en el clon se
 > probo **preexistente**: corre igual sobre `5ca6395` porque cuatro roles de `exclusiones_por_rol` no existen en
 > un clon limpio y el emisor deja de publicarlos; se registra con su duena en vez de rebajar la asercion.
+>
+> **Sello del push (2026-10-04, segundo acto):** la orden `Git Push` empujo `5ca6395..9fb039f` (el trabajo
+> `7547c1b` y su sello `9fb039f`) con fast-forward y EXIT 0. La paridad se re-midio **contra el servidor**:
+> `git ls-remote origin refs/heads/master` = `9fb039f9ef89c0f0981fe169c580aa4a2d032bb7`, igual que `git rev-parse HEAD`, con
+> `rev-list --left-right --count origin/master...HEAD` = **0 / 0**. La linea de arriba que decia
+> «sin push (conteo `0/1`)» se deja: describia el momento de estampar y este sello la vence. La L3 no se
+> corrio ni antes ni despues del push, y este sello es un commit nuevo que re-abre su gate en lugar de
+> cerrarlo.
 
 > **Ronda del 2026-10-04 — DEUDA DECLARADA AL CIERRE DE FASE-B (la cifra sube a 4,795).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,795**) y

@@ -1,0 +1,33 @@
+SELLO DEL PUSH - SESION 2.5 (FASE-B.1), 2026-10-04T22:38:18+00:00
+
+Orden del operador: «estampa el sello del push, commitea y envia de nuevo», despues de «git commit sin L3»
+y de «Git Push». Este archivo registra el push de la sesion y las medidas que lo avalan.
+
+== paridad, medida contra el SERVIDOR y no contra el ref local ==
+$ git ls-remote origin refs/heads/master
+9fb039f9ef89c0f0981fe169c580aa4a2d032bb7	refs/heads/master
+$ git rev-parse HEAD
+9fb039f9ef89c0f0981fe169c580aa4a2d032bb7
+$ git rev-list --left-right --count origin/master...HEAD
+0 / 0
+
+== alcance empujado, medido sobre el rango 5ca6395..9fb039f ==
+ commits: 2 | objetos: 50 | archivos: 28
+ pre-flight: `rev-list --left-right --count origin/master...HEAD` = 0/2 antes de empujar
+ `git push --dry-run` dijo `5ca6395..9fb039f  HEAD -> master` (fast-forward, sin force)
+ salida: `To https://github.com/jhondrl6/ia-hotels-agent.git  5ca6395..9fb039f  HEAD -> master`, EXIT 0
+ binarios de mas de 200 KB en el rango: ninguno
+
+== lo que este sello vence, sin reescribir ==
+ `docs/cobertura-historia.md:68` decia «sin push (origin/master sigue en 5ca6395, conteo 0/1)»
+ `PREFLIGHT-FASE-C-2026-10-04/00-resumen.md:264` decia «No empujado ... 0/1 (un commit local por delante)»
+ `FASE-B/preflight.json` -> `proveedores.deepseek.cierre_d_2026-10-04_cura_del_id_recortado
+   .sello_commit_2026-10-04` decia «Sin push: origin/master sigue en 5ca6395 y el conteo es 0/1»
+ Las tres lineas se dejan escritas: describian el estado al momento de estampar.
+
+== precision que este sello se traga ==
+ Se escribe ANTES de su propio commit, asi que el rango citado (5ca6395..9fb039f) es el del push ya dado.
+ El commit que contiene este texto viaja en el segundo push (9fb039f..), y su sha no puede listarse
+ aqui: listarse a si mismo cambiaria lo que lista. Se declara en vez de esconderse.
+ La revision L3 no se corrio ni antes ni despues del push. La decision del commit no se arrastra: un
+ commit nuevo (este sello) re-abre su gate en lugar de cerrarlo, y queda a eleccion del operador.
