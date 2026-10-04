@@ -1,0 +1,37 @@
+Verificacion del commit 7547c1be420c7bd97c8469b0b5ab4ba6a8951136 en su propio arbol.
+Clon limpio HECHO FUERA DEL REPO (`$LOCALAPPDATA/Temp/clon-7547c1b`), con `git clone --no-checkout` y
+`core.longpaths=true` + `core.autocrlf=input` DENTRO del clon (S20). No se cloneo dentro del arbol: un
+`.git` anidado rompe el gate del derivado versionado (V7, medido en la deuda).
+
+Comando: git -C <clon> rev-parse HEAD
+Salida:   7547c1be420c7bd97c8469b0b5ab4ba6a8951136  (el arbol commiteado, no el de trabajo)
+
+Bateria 1: python -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py -q
+Salida:    15 passed  (EXIT 0)  -> C2 se cumple sobre el arbol del commit, no solo sobre el de trabajo
+
+Bateria 2: python -m pytest tests/quality_gates/jev_pilot/ -q
+Salida:    77 passed, 13 skipped  -> los 13 saltos son el SDK ausente en el clon (`tmp_test/` esta
+           excluido por `.gitignore:28`); el salto lleva la causa nombrada por el fixture `sdk`.
+
+Bateria 3: python -m pytest tests/quality_gates/jev_pilot/ decision_client/ lesson_relevance/ -q
+Salida:    233 passed, 14 skipped, EXIT 0
+
+Cifra commiteada: git grep -c -E '^\s*def test_' HEAD -- tests (sumado en el clon) = 4800
+  -> converge con la medida del arbol de trabajo; el delta de 5 que publicaba el arranque se versiono.
+
+ROJO EN CLON LIMPIO, MEDIDO Y ATRIBUIDO A LA MAQUINA, NO AL COMMIT:
+  tests/test_validate_wiring_check_derivado_versionado.py::test_el_derivado_versionado_del_repo_pasa_su_propio_check  -> EXIT 3
+  Motivo impreso: `exclusiones_por_rol` tiene cuatro roles (`.venv-wsl`, `build`, `temp`, `venv`) SOLO EN
+  EL ARTEFACTO: el emisor no los publica en un clon limpio porque los directorios no existen en el.
+  Control ejecutado en el MISMO clon sobre el tip anterior `5ca6395`: 1 failed, 10 passed con la misma
+  firma. O sea el rojo es preexistente a este commit y es del estado de la maquina contra el artefacto
+  publicado en otra. No se 'arregla' rebajando la asercion ni re-publicando el derivado desde un clon:
+  eso fijaria numeros de un arbol que no es el de trabajo. Queda como deuda con duena
+  (`scripts/validate_wiring.py`: la poblacion de roles sin directorio deberia publicarse con cantidad 0 y
+  su motivo, no desaparecer del artefacto).
+
+En el arbol de trabajo, con los cuatro directorios presentes: `python scripts/validate_wiring.py --check`
+= conforme (digest b4705a4b5d38, EXIT 0).
+
+Gate posterior al commit (arbol de trabajo): `python scripts/run_all_validations.py --quick` = 13/13,
+EXIT 0. Packs: `python scripts/verify_packs_in_committed_tree.py` = 5/5 reproducidos, EXIT 0.

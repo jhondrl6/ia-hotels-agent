@@ -261,7 +261,10 @@
           "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/04-mutantes-cierre-a-crudo.json",
           "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREFLIGHT-FASE-C-2026-10-04/05-post-bateria-brazo-15-tests.txt"
         ],
-        "cierre_de_la_frase_duena_sugerida": "la `duena_sugerida` del cierre_b queda ejercitada por esta fila; el texto original no se re-escribe, se supersede"
+        "cierre_de_la_frase_duena_sugerida": "la `duena_sugerida` del cierre_b queda ejercitada por esta fila; el texto original no se re-escribe, se supersede",
+        "sello_commit_2026-10-04": "la tanda se commiteo en `7547c1b` (rango `5ca6395..7547c1b`) el 2026-10-04 por orden expresa del operador («git commit sin L3`). Sin push: `origin/master` sigue en `5ca6395` y el conteo `origin/master...HEAD` es 0/1. Las frases «sin commitear» y «en espera de autorizacion» de esta sesion describian el quinto corte y este sello las vence sin borrarlas",
+        "verificacion_en_el_arbol_del_commit": "clon limpio fuera del repo (`AppData/Local/Temp/clon-7547c1b`, con `--no-checkout`, `core.longpaths` y `core.autocrlf=input` dentro del clon): brazo 15 passed, piloto 77 passed / 13 skipped, las tres baterias adyacentes 233 passed / 14 skipped (el SDK vive bajo `tmp_test/`, excluido por `.gitignore:28`, y el fixture salta con su causa), y `git grep -c -E '^\\s*def test_' HEAD -- tests` = 4.800, que converge con la medida del arbol de trabajo. Crudo `PREFLIGHT-FASE-C-2026-10-04/18-`. Un EXIT 3 de `test_validate_wiring_check_derivado_versionado.py` en el clon se probo preexistente: corre igual sobre `5ca6395`, porque cuatro roles de `exclusiones_por_rol` (`.venv-wsl`, `build`, `temp`, `venv`) no existen en un clon limpio y el emisor deja de publicarlos mientras el artefacto los lista; se registra con su duena en vez de rebajar la asercion",
+        "l3": "no se corrio, por indicacion expresa del operador; sigue siendo opcion suya sobre el rango que se empuje, no deuda de esta sesion"
       }
     }
   },

@@ -203,9 +203,10 @@ los arneses corrieron en `temp/sesion25-2026-10-04/`.
 | `15-quick-gate-final.txt` | 3112 | `fcdf122646ec8c00` | `6cda60fb2a755263` | CRLF |
 | `16-quick-gate-post-resumen.txt` | 3124 | `7f27e7d38776b323` | `7319cb76d7be31d3` | MIXTO(43) |
 | `17-quick-gate-de-certificacion.txt` | 3119 | `b7ccf5585feb1d22` | `69343a3ccb5dce8e` | MIXTO(43) |
+| `18-verificacion-en-clon-del-commit.txt` | 2622 | `9ea3d629e70442e2` | `dfa476db68849bc6` | CRLF |
 
 
-Total: **20 archivos**, 70551 bytes. Los tres arneses `.py` (`08a-`, `08b-`, `08c-`) son los que movieron
+Total: **21 archivos**, 73173 bytes. Los tres arneses `.py` (`08a-`, `08b-`, `08c-`) son los que movieron
 `evidence.cantidad_versionada` del derivado (+3: 119 → 122); el resto son crudos `.json`/`.txt` y dos `.md`.
 El manifiesto se recalculo **despues** del barrido final (`13-`) y del crudo del gate (`16-`), que son
 los ultimos archivos del expediente en cambiar de bytes. El sha del propio `00-resumen.md` no se lista
@@ -221,8 +222,8 @@ despues del manifiesto, y es el unico que no esta en el.
 - `python scripts/run_all_validations.py --quick` (arbol de trabajo, con los 20 archivos del expediente y las
   cinco escrituras de docs/derivado ya publicadas): **13/13**, EXIT=0. Es la cuarta corrida del gate en la
   sesion (`10-`, `15-`, `16-` y esta) y su crudo es `17-`. Las tres corridas anteriores valian sobre bytes que
-  todavia iban a cambiar: esta es la unica que corre sobre el expediente completo, y al ser el ultimo
-  archivo escrito no deja nada pendiente detras de si (el manifiesto se recalculo con ella dentro).
+  todavia iban a cambiar: esta es la unica que corre sobre el expediente completo; despues se anadieron `18-` (la verificacion en el arbol del commit) y este
+  sello, y el manifiesto se recalculo con ellos dentro (el manifiesto se recalculo con ella dentro).
 - `python scripts/validate_wiring.py --check`: conforme, digest `b4705a4b5d38`, EXIT=0.
 
 ## Etiqueta del arbol donde corrio cada verde
@@ -248,3 +249,33 @@ despues del manifiesto, y es el unico que no esta en el.
 - La **revision L3**: no se corrio; es opcion del operador sobre lo que se empuje.
 - El **congelado del protocolo** (paso 3.1 de FASE-C) y la eleccion entre las salidas (a) y (b) del registro:
   `protocolo.json` sigue BORRADOR y `muestra.json` sigue CONGELADA, sin un byte movido (D4, V2).
+
+## Sello del commit (mismo 2026-10-04)
+
+Este sello **vence** las frases de esta sesion que decian «sin commit», «en espera de autorizacion» y «los
+cinco cortes terminan sin commitear»: describian el quinto corte en el momento en que se escribieron y se
+dejan, no se borran.
+
+- **Revision al arrancar**: `5ca6395` (paridad contra el servidor medida arriba, en `§Arranque`).
+- **Commit de la sesion**: `7547c1b` (rango `5ca6395..7547c1b`), 27 archivos, +1.694 / -15. Los hooks pasaron
+  8/8 y la corrida individual de los seis checks sustantivos dio EXIT 0 antes de commitear
+  (`version_consistency_checker`, `sync_versions --check`, `validate_plan_citations`,
+  `build_lesson_index --check`, `validate_lesson_capitalization`, `verify_packs_in_committed_tree`).
+- **No empujado**: `origin/master` sigue en `5ca6395`; `git rev-list --left-right --count origin/master...HEAD`
+  = **0/1** (un commit local por delante). El push es acto del operador.
+- **Revision L3**: **no se corrio**, por indicacion expresa («git commit sin L3»). Sigue siendo opcion suya
+  sobre lo que se empuje, y no es deuda de esta sesion.
+- **Verificacion en el arbol del commit** (clon limpio fuera del repo, V7): brazo **15 passed**, piloto
+  77 passed / 13 skipped por SDK ausente, las tres baterias adyacentes **233 passed / 14 skipped**, y la cifra
+  commiteada `git grep -c -E "^\s*def test_" HEAD -- tests` = **4.800**, que converge con la del arbol de
+  trabajo. Crudo: `18-verificacion-en-clon-del-commit.txt`.
+- **Un rojo del clon limpio que no es de este commit**:
+  `test_el_derivado_versionado_del_repo_pasa_su_propio_check` corta EXIT 3 porque cuatro roles de
+  `exclusiones_por_rol` (`.venv-wsl`, `build`, `temp`, `venv`) no existen en un clon y el emisor deja de
+  publicarlos mientras el artefacto los lista. Se probo **en el mismo clon sobre `5ca6395`**: falla igual
+  (1 failed, 10 passed). Preexistente y de estado de maquina, registrado con su duena en el crudo `18-` en
+  vez de rebajar la asercion ni re-publicar el derivado desde el clon.
+- **Precision que este sello se traga y no se calla**: el sello se escribe **despues** del commit que nombra,
+  asi que vive en el commit siguiente (`7547c1b..` en cuanto se commitee este sello). Nada de lo posterior al
+  rango citado esta afirmado como publicado.
+

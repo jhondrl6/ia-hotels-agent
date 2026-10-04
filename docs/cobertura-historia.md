@@ -63,6 +63,16 @@
 > bajo el guard `RedProhibida` del `conftest.py` de la seleccion. El registro `deepseek-flash` (Cierre C) esta en
 > `PREFLIGHT-FASE-C-2026-10-04/09-registro-deepseek-flash.md`, con MEDIDO y NO MEDIDO separados y sin congelar
 > nada: `protocolo.json` sigue BORRADOR y `muestra.json` sigue CONGELADA.
+>
+> **Sello del commit (mismo 2026-10-04):** la tanda se commiteo en `7547c1b` (rango `5ca6395..7547c1b`) por la orden
+> «git commit sin L3» del operador: **sin push** (`origin/master` sigue en `5ca6395`, conteo `0/1`) y **sin
+> revision L3**. La cifra **commiteada** se re-midio en un clon limpio del propio commit, hecho fuera del repo
+> (V7), con `git grep -c -E "^\s*def test_" HEAD -- tests` = **4.800**: converge con la del arbol de trabajo y el
+> delta de 5 deja de ser trabajo sin versionar. En ese arbol el brazo dio 15 passed y las tres baterias
+> adyacentes 233 passed / 14 skipped (el SDK vive bajo `tmp_test/`, excluido por `.gitignore:28`, asi que el
+> fixture salta con su causa). Un `EXIT 3` de `test_validate_wiring_check_derivado_versionado.py` en el clon se
+> probo **preexistente**: corre igual sobre `5ca6395` porque cuatro roles de `exclusiones_por_rol` no existen en
+> un clon limpio y el emisor deja de publicarlos; se registra con su duena en vez de rebajar la asercion.
 
 > **Ronda del 2026-10-04 — DEUDA DECLARADA AL CIERRE DE FASE-B (la cifra sube a 4,795).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,795**) y
