@@ -18,8 +18,11 @@
 > **Ronda del 2026-10-03 — OLA 2 (CONTINUACION 2) DEL PILOTO JEV (la cifra sube a 4,776).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,776**) y
 > contrastado con el arbol versionado (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado = **4,717**):
-> el delta de **59** es trabajo de esta tanda todavia **sin commitear**, o sea las dos cifras no se
-> contradicen -midieron arboles distintos- y la commiteada subira a 4,776 cuando este rango entre.
+> el delta de **59** era trabajo de esta tanda sin commitear al medir, o sea las dos cifras no se
+> contradicen -median arboles distintos-. **Sello posterior dentro de la misma sesion:** el rango
+> `4c113de..4895d04` se commiteo y se empujo el 2026-10-04 (la medida es del 10-03), y la cifra
+> commiteada paso a ser **4,776**, igual a la
+> del arbol de trabajo. El L3 deep previo al push no devolvio hallazgos.
 > Antecedente: **4,717** (mas arriba en esta misma pagina, la pata (b) del ledger, tandas de OLA 1 y de la
 > continuacion 1 del mismo dia).
 >

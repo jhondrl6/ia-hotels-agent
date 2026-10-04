@@ -4,6 +4,22 @@ Rama `master`, arbol base **4c113de** (empujado y en paridad `0 0` con `origin/m
 abrir). Mandato: `scripts/`, `tests/`, `config/` y esta carpeta. Sin commitear al cerrar la tanda:
 los cinco cortes terminan en espera de autorizacion.
 
+> **Sello del quinto corte, en la misma sesion y despues de medir lo de arriba:** las mediciones >de esta nota son del 2026-10-03 y los commits cayeron ya pasada la medianoche, el 2026-10-04 >entre 10:09 y 10:13 (-0500). La autorizacion
+> llego y la tanda se commiteo en cuatro commits tematicos y se empujo. Rango publicado
+> `4c113de..4895d04`: `dccbb6a` feat(jev) el run y sus dos brazos, `f884ada` feat(wiring) la mudanza
+> (a) de la fila 18 con su derivado, `bcd8d2a` docs(jev) los artefactos de FASE-B, y `4895d04`
+> docs(AGENTS) la cifra. Paridad contra `origin/master` re-medida tras el push: `0 0`. El escaneo
+> L3 deep se corrio **antes** de empujar, por decision del operador, y no devolvio hallazgos.
+> La frase de arriba se conserva tal cual porque describia el estado al cerrar la implementacion,
+> no una promesa.
+>
+> Dos cosas quedan explicitamente fuera de este sello. La fila 18 del
+> `33-registro-unificado-de-pendientes-2026-09-29.md` **no se estampo aqui**: esa ruta esta
+> prohibida para esta sesion, y la mudanza se ejecuto leyendola, no escribiendola -le toca a una
+> sesion con esa ruta autorizada, como la propia fila ya venia diciendo para el sello `07-`. Y el
+> cierre post-fase del plan (README, dependencias, checklist, 09 y 10) sigue pendiente: no era
+> mandato de esta tanda.
+
 ## Que se ejecuto, con su evidencia
 
 | Paso | Estado | Evidencia (ruta) |
@@ -107,3 +123,8 @@ Arbol de trabajo: **4,776** (`grep -rE "^\s*def test_" tests --include=*.py`). C
 cerrar la tanda: **4,717**. El delta de 59 es trabajo sin commitear; la nota de ronda esta en
 `docs/cobertura-historia.md` y la cabecera y las dos filas de la tabla de `AGENTS.md` ya la reflejan
 (gate `python scripts/validate_agents_md.py`: PASS 11/11).
+
+> **Re-medido tras el sello del quinto corte:** con el rango `4c113de..4895d04` ya empujado, la
+> cifra commiteada es **4,776** -el mismo numero que el arbol de trabajo, porque el delta de 59
+> entro con estos commits-. El parrafo de arriba se deja como estaba: media el arbol antes de
+> commitear, y decir hoy "4,717 commiteado" seria citar un HEAD que ya no es el HEAD.
