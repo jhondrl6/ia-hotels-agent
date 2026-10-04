@@ -15,6 +15,48 @@
 
 ---
 
+> **Ronda del 2026-10-03 — OLA 2 (CONTINUACION 2) DEL PILOTO JEV (la cifra sube a 4,776).** Medido con el
+> metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,776**) y
+> contrastado con el arbol versionado (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado = **4,717**):
+> el delta de **59** es trabajo de esta tanda todavia **sin commitear**, o sea las dos cifras no se
+> contradicen -midieron arboles distintos- y la commiteada subira a 4,776 cuando este rango entre.
+> Antecedente: **4,717** (mas arriba en esta misma pagina, la pata (b) del ledger, tandas de OLA 1 y de la
+> continuacion 1 del mismo dia).
+>
+> Atribucion por archivo, medida por directorio y no derivada de la fila anterior: **+54** en
+> `tests/quality_gates/` — 14 en `jev_pilot/test_jev_pilot_sdk_ac9.py`, 15 en
+> `jev_pilot/test_jev_pilot_run_guards.py`, 10 en `jev_pilot/test_jev_pilot_deepseek_brazo.py`, 14 en
+> `jev_pilot/test_jev_pilot_protocolo_check.py` (13 del paso 6 mas el diente del elegible sin fila, que
+> nacio de la corrida k=8) y 1 en `decision_client/test_decision_client_aislamiento_imports.py` (el
+> contrafactual de la excepcion de cero red que autorizo el operador) — y **+5** en la pata de raiz: las 5
+> funciones del nuevo `test_validate_wiring_diente_mudanza_1_3.py` (la mudanza (a) de la fila 18 del
+> `33-registro-unificado`). Aritmetica de la tabla: quality_gates 888 → **942**, root 1058 → **1063**,
+> cabecera 4,717 → **4,776**.
+>
+> La cuenta se declaro mal una vez dentro de la misma ronda y se re-midio: el primer estampado fue
+> 4,775 / 940 / 1064, y estaba mal sumado porque el contrafactual del hermano -que vive en
+> `tests/quality_gates/decision_client/`- se conto en la fila de raiz. Ninguna de las dos versiones se
+> commiteo, asi que no hay errata que abrir; lo que queda registrado es el metodo: cada fila se mide por
+> su directorio (`grep -rE ... tests/quality_gates | wc -l`, y lo mismo sobre `tests/*.py`), no restando
+> deltas a la cifra anterior.
+>
+> Instrumento y dos notas de instrumento, porque la ronda dejo medidas y no supuestas:
+> (a) el par de mutacion se corri6 sobre los archivos reales con restauracion por sha256 en `finally`
+> (`evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/mutation.json`: 10 mutantes, 10 caen por la causa
+> nombrada, 0 restauraciones fallidas). Dos de sus caidas son hallazgos sobre el propio test, no sobre el
+> codigo: `test_error_kind_clasifica_subclases_por_su_antecesor` estaba verde **sin diente** (su subclase
+> ya estaba nombrada en la tabla, o sea apagar la caminata del MRO no la movia) y el ancla de
+> `request_id` era prefijo de una linea mas larga, con lo que mutaba la entrada ajena y daba verde con el
+> defecto puesto. Ambos se corrigieron aqui.
+> (b) cuatro de los diez mutantes salieron primero NO-APLICADO por comparar literales con `\n` contra un
+> arbol checkado en CRLF: un mutante que no casa no es un verde, es un cero que hay que publicar. El arnes
+> traduce el literal al EOL real y emite `ocurrencias_del_literal` por mutante.
+>
+> Lo que esta ronda **no** suma y se declara: la bateria completa no se corro (no se pidio), el diente de
+> aditividad sobre `triage_lesson_relevance.py` (AC6 del prompt de FASE-B) sigue NO-EJERCITADO por no estar
+> esa ruta en el mandato, y P4 cayo en 401 del servicio, con lo que la corrida de recuperacion k=8 no se
+> corri6 y los techos `tokens_in`/`tokens_out` del protocolo siguen en null. Nada de eso entra en la cifra.
+
 > **Ronda del 2026-10-03 — OLA 2 DEL PILOTO JEV (la cifra sube a 4,717).** Medido con el metodo canonico de la
 > casa (`grep -rE "^\s*def test_" tests --include=*.py` = **4,717**) y contrastado con el arbol versionado
 > (`git grep -c -E "^[[:space:]]*def test_" HEAD -- tests` sumado con awk sobre el commit que lleva la pata (b)
