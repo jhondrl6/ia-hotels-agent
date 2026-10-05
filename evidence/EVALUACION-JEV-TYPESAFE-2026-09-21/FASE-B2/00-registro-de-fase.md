@@ -241,6 +241,11 @@ siguiente. **Sin push y sin L3 sigue vigente**: la paridad medida es `0 1` contr
 commiteado y nada empujado. La frase se conserva porque describe el estado al cierre de la fase de
 ejecución, que es lo que esta hoja registra.⟧
 
+⟦Y vencida también en su segunda mitad, en la misma sesión: **«Git Push»** se autorizó y se ejecuto, asi que
+de las tres cosas que la anotacion de arriba declaraba pendientes, dos quedaron hechas (los dos commits) y
+una empujada. El detalle medido esta en §13, incluido lo que el segundo empujon deja sin describir y donde
+vive esa descripcion.⟧
+
 ### Árbol al cerrar, medido
 
 ```
@@ -344,4 +349,64 @@ Dueño si se quiere cerrar: `scripts/evaluate_jev_pilot.py` (`report`, campo `in
 **Push sin ejecutar. Revisión L3 sin ejecutar, por instrucción expresa.** Sin write-back en QMind. Ningún
 documento del hermano ni plan archivado tocado. FASE-C, `muestra.json` y `protocolo.json` siguen intactos
 (el `git diff` de estas rutas contra `40c2754` está vacío; medido en `16-`).
+
+⟦Vencida en su primera frase por §13: el push se ejecuto y la paridad se re-midio contra el servidor.
+La segunda frase sigue vigente: **la L3 no se corrio**, y es decision del operador registrada en la misma
+tanda («No correr L3 ahora»). El asunto de la L3 sobre un tip que se mueve tambien esta en §13.⟧
+
+---
+
+## 13. Sello del push `40c2754..e85954a`
+
+El operador autorizo **«Git Push»**. Antes de empujar se midio el alcance, no solo el tip:
+
+| Chequeo | Comando | Valor |
+|---|---|---|
+| Que dice el servidor | `git ls-remote origin refs/heads/master` | `40c2754…` al arrancar (igual que el ref local: no habia nada que reconciliar) |
+| Que se mueve | `git log --oneline origin/master..HEAD` | **2 commits** (`0a6c84c`, `e85954a`), fast-forward puro, sin divergencia y **sin force** |
+| Objetos | `git rev-list --objects origin/master..HEAD \| wc -l` | 59 objetos |
+| Carga | `git diff --shortstat origin/master..HEAD` | 37 archivos, +4677/−39 |
+
+Empujado: `40c2754..e85954a  master -> master`, `PUSH_EXIT=0`. Paridad re-medida **contra el servidor**, no
+contra el ref local (`24-`): `git ls-remote origin refs/heads/master` = `git rev-parse HEAD` =
+`e85954ae8bd307644e44f37a89a18dc001be9f9d`, `git rev-list --left-right --count origin/master...HEAD` =
+**0 0**, arbol limpio.
+
+### Lo que este push vence, medido por asunto y no por literal
+
+Dos lineas de este propio registro decian lo que el push acabo de hacer:
+
+* `:240` («**Sin push y sin L3 sigue vigente**: la paridad medida es `0 1»`) y `:349` («**Push sin
+  ejecutar**»). Ambas quedan como foto del momento en que se escribieron, con esta anotacion encima; no se
+  reescribieron, porque describen el estado al estampar, que es lo que una hoja de fase registra.
+* `docs/cobertura-historia.md:113`, `:126` y `:138` tambien contienen «sin push», y **no se barren**: esas
+  tres frases hablan de otras rondas y de otros rangos (`origin/master` en `5ca6395`, y el rango
+  `6cdb430..7899f0f`). Contar menciones del literal y barrerlas hubiera convertido una prohibicion ajena en
+  rojo propio.
+
+**Los dos mensajes de commit publicados quedan con una frase vencida** («Sin push», dos ocurrencias). No se
+hace `reword`: reescribir un commiteado ya empujado obliga a `push --force` sobre una rama compartida, y esa
+no es la via de la casa. La errata vive aqui, en el registro, y `git log` sigue siendo la autoridad de que los
+mensajes dicen eso.
+
+### La L3, y el gate que este mismo sello re-abre
+
+El operador eligio **«No correr L3 ahora»**. Queda declarado, con fecha (2026-10-04) y motivo, para que nadie
+lea el rango publicado como ya revisado. Y hay una consecuencia que este sello produce y por eso se enuncia
+aqui: **el commit de sello es un commit nuevo sobre `e85954a`**, asi que si algun dia se corre la L3 sobre
+esta tanda, su baseline ya no es el rango empujado en `40c2754..e85954a` sino el que incluya a este sello. El
+`skip` anterior no se arrastra a un tip nuevo.
+
+**Este sello, empujado, no se describe a si mismo**: la regla de la casa es que un segundo push deja
+incompleto el sello del primero, y reescribirlo abriria el mismo hueco un nivel mas arriba. El rango de este
+segundo empujon (`e85954a..HEAD-del-sello`) queda publicado y verificable con el mismo par de comandos de
+arriba; su autoridad es `git log`, no una nota que persiga al puntero.
+
+### Permisos al cerrar el sello
+
+Commit: tres ejecuciones. Push: ejecutado, paridad `0 0` re-medida contra el servidor. **L3: sin correr, por
+decision expresa del operador.** Sin write-back en QMind. Sin tocar el hermano, los planes archivados,
+`FASE-C/`, `muestra.json` ni `protocolo.json`. Sin ofrecer la fase siguiente: la re-apertura de C es otra
+sesion con otra autorizacion.
+
 

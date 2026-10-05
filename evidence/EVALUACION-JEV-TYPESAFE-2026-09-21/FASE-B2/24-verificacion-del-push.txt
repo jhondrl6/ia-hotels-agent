@@ -1,0 +1,32 @@
+== paridad contra el SERVIDOR, medida despues del push ==
+servidor (git ls-remote origin refs/heads/master):
+e85954ae8bd307644e44f37a89a18dc001be9f9d	refs/heads/master
+HEAD local:
+e85954ae8bd307644e44f37a89a18dc001be9f9d
+rev-list --left-right --count origin/master...HEAD:
+0	0
+arbol de trabajo:
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B2/24-verificacion-del-push.txt
+(linea vacia = limpio)
+
+== rango empujado, medido desde el tip remoto previo ==
+e85954a feat(jev): SESION 3.5 (FASE-B.2) - el commiteado se verifica en su propio arbol y el informe vencido se re-emite
+0a6c84c feat(jev): SESION 3.5 (FASE-B.2) - el runner emite report y decide, y los cuatro CR de FASE-C quedan cerrados
+ 37 files changed, 4677 insertions(+), 39 deletions(-)
+
+== citas que este push vence, medidas por asunto y no por literal ==
+240:siguiente. **Sin push y sin L3 sigue vigente**: la paridad medida es `0 1` contra `origin/master`, o sea un
+344:**Push sin ejecutar. Revisión L3 sin ejecutar, por instrucción expresa.** Sin write-back en QMind. Ningún
+cobertura-historia: las tres citas miden OTRO asunto (sus rangos son 5ca6395 y 6cdb430..7899f0f):
+3
+=== por que no se barren: ===
+> «git commit sin L3» del operador: **sin push** (`origin/master` sigue en `5ca6395`, conteo `0/1`) y **sin
+> «sin push (conteo `0/1`)» se deja: describia el momento de estampar y este sello la vence. La L3 no se
+> (rango `6cdb430..7899f0f`), sin push y sin revision L3 por indicacion del operador. Con ese commit la cifra
+
+== mensajes de commit publicados que el push dejo vencidos ==
+e85954a feat(jev): SESION 3.5 (FASE-B.2) - el commiteado se verifica en su propio arbol y el informe vencido se re-emite
+0a6c84c feat(jev): SESION 3.5 (FASE-B.2) - el runner emite report y decide, y los cuatro CR de FASE-C quedan cerrados
+2
+(reword de un commiteado publicado forzaria push --force: no se hace; la via es errata aqui)
+EXIT=0
