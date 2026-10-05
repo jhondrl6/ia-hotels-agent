@@ -1,0 +1,24 @@
+== 1. el clon limpio, en su propia revision ==
+   revision: 0a6c84c5d33746096855111237355f40c7d48221
+   arbol: limpio
+   bateria: 113 passed, 13 skipped in 0.88s | EXIT 0
+
+== 2. el instrumento commiteado reproduce el artefacto del arbol ==
+   report en el clon: EXIT 0
+   sha LF informe arbol: 990d6d96130a874adcd2
+   sha LF informe clon : 990d6d96130a874adcd2
+   iguales: True
+   invocacion con rutas absolutas mueve solo: ['insumos'] (procedencia, no logica)
+   decide en el clon: EXIT 3 (3 = emitido sin decision)
+   decision.json    iguales: True  sha LF 494df60be00ee87ed6b9
+   decision.md      iguales: True  sha LF 30dd6726de236e57f7f0
+
+== 3. el diferencial que traia el commit 0a6c84c ==
+   SOLO EN EL REGENERADO: /por_brazo/capa_fria/contabilidad/fuera_del_conjunto_elegible = []
+   SOLO EN EL REGENERADO: /por_brazo/deepseek/contabilidad/fuera_del_conjunto_elegible = []
+   SOLO EN EL REGENERADO: /por_brazo/jev/contabilidad/fuera_del_conjunto_elegible = []
+   causa: el informe se emitio a las 20:34 y el campo `fuera_del_conjunto_elegible`
+        entro al instrumento a las 20:45; el commit se llevo el artefacto viejo.
+   decision.json y decision.md NO estaban vencidos: su contenido no porta ese campo
+        (coinciden con el clon en el bloque 2).
+EXIT=0

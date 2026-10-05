@@ -9,4 +9,4 @@ M2: movio ['ds_abstenciones', 'ds_cociente_abstencion'] -> cae por la causa nomb
 M3: movio ['ds_e2e_denominator'] -> cae por la causa nombrada: True
 M4: movio ['centinela_en_el_estado_publicado', 'credencial_estado_claves'] -> cae por la causa nombrada: True
 M5: movio ['margen_estado', 'run_status'] -> cae por la causa nombrada: True
-EXIT=0
+EXIT_MUTACION=0

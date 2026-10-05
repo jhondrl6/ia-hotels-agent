@@ -235,6 +235,12 @@ ni `FASE-C/`, ni `muestra.json`, ni `protocolo.json` (CONGELADAS). Sin ofrecer l
 cortes terminan en **espera de autorización del operador**; el `git commit` es un acto posterior, separado
 y suyo.
 
+⟦Vencida en su primera mitad por el sello de §12: el operador autorizó **«Commit sin L3»** y el trabajo se
+commiteo en `0a6c84c` (32 archivos, +4410/−39, hooks pre-commit en verde) y su reparación en el commit
+siguiente. **Sin push y sin L3 sigue vigente**: la paridad medida es `0 1` contra `origin/master`, o sea un
+commiteado y nada empujado. La frase se conserva porque describe el estado al cierre de la fase de
+ejecución, que es lo que esta hoja registra.⟧
+
 ### Árbol al cerrar, medido
 
 ```
@@ -289,7 +295,7 @@ grep -rE "^\s*def test_" tests --include=*.py | wc -l
 
 ### Artefactos de la ronda
 
-`01-` 02-` batería PRE · `03-` quick PRE · `04-` crudo de `report` · `05-` crudo de `decide` · `06-` batería
+`01-` `02-` batería PRE · `03-` quick PRE · `04-` crudo de `report` · `05-` crudo de `decide` · `06-` batería
 protocolo POST (24) · `07-` batería piloto POST (126) · `08-` scan AC6 · `09-` diff de `llm_provider` (vacío) ·
 `10-` determinismo con shas · `11-` negaciones con EXIT · `12-` arnés de mutación y su crudo · `13-` quick POST ·
 `14-` `wiring --check` · `15-` validadores post-documentación · `16-` mediciones de cierre · `17-` batería del
@@ -297,3 +303,45 @@ piloto tras escribir el registro (126 passed) · `18-` quick post-registro (13/1
 post-registro ·
 `informe_comparativa.json` `decision.json` `decision.md` `mutation.json` (emitidos por el runner y por su
 arnés, no escritos a mano).
+
+---
+
+## 12. Sello del commit `0a6c84c` y su verificación en el propio árbol
+
+El operador autorizó **«Commit sin L3»**. Se stagearon por nombre las ocho rutas del trabajo (nada de
+`git add -A`), se re-corrió el quick gate **con el índice ya poblado** —el Secrets Check escanea
+«tracked + staged», así que la pasada previa no había mirado aún los 25 archivos de `FASE-B2/`— y el commit
+se hizo con los hooks activos, sin `--no-verify`: **32 files, +4410/−39**, `COMMIT_EXIT=0`.
+
+Verificación, medida y no afirmada (`20-`, `21-` y su arnés):
+
+| Chequeo | Instrumento | Valor |
+|---|---|---|
+| Árbol de trabajo | `git status --porcelain` | limpio |
+| Cifra canónica **commiteada** | `git grep -h -c -E "^\s*def test_" HEAD -- "tests/*.py"` sumado | **4.835**, convergiendo con la que publica `AGENTS.md` (ya no es un número de árbol sin commitear) |
+| Paridad con el remoto | `git rev-list --left-right --count origin/master...HEAD` | **0 1** — commiteado, nada empujado |
+| Clon limpio del commit | `git clone --no-checkout` + `core.longpaths` + `core.autocrlf=input` dentro del clon | `0a6c84c`, árbol limpio, batería **113 passed, 13 skipped**, EXIT 0 (los 13 saltos son el SDK ausente en el clon, con su causa nombrada por el fixture `sdk`) |
+| El commiteado reproduce el artefacto | correr `report`/`decide` dentro del clon y comparar por sha normalizado | `informe_comparativa.json` `990d6d96…` **igual**, `decision.json` `494df60b…` **igual**, `decision.md` `30dd6726…` **igual** |
+
+### Lo que la verificación encontró, y se repara en el commit siguiente
+
+**El primer commit se llevó un artefacto una revisión detrás de su propio código.** El diferencial es uno
+solo y está impreso en `21-`: a `informe_comparativa.json` le faltaban las tres claves
+`por_brazo/*/contabilidad/fuera_del_conjunto_elegible`, que el instrumento ganó a las 20:45 mientras el
+informe se había emitido a las 20:34. `decision.json` y `decision.md` no estaban vencidos: su contenido no
+porta ese campo, y por eso casaban. La causa es mi secuencia, no del contrato: regenerar el derivado después
+de tocar el emisor era parte del cierre y no lo hice hasta verificar el commit. Se re-emiten con el código
+commiteado y se re-miden (`16-` con los dos shas por archivo: `317541b3…` en disco, `990d6d96…` normalizado).
+
+**Límite declarado del atributo §8**: «dos corridas producen bytes idénticos salvo la fecha» vale para la
+misma invocación. Corriendo `report` con rutas absolutas desde otra raíz, el bloque `insumos` cambia porque
+publica las rutas tal como se le pasaron —`21-` mide que **solo** se mueve `insumos` y que
+`sha256_de_los_insumos` y los cocientes quedan idénticos—. Es procedencia, no lógica, y se consigna en vez de
+adornarlo: quien busque un sha estable entre máquinas debe comparar `sha256_de_los_insumos`, no el archivo.
+Dueño si se quiere cerrar: `scripts/evaluate_jev_pilot.py` (`report`, campo `insumos`).
+
+**Permisos después del sello**: commit ejecutado dos veces (`0a6c84c` trabajo + el de esta reparación).
+**Push sin ejecutar. Revisión L3 sin ejecutar, por instrucción expresa.** Sin write-back en QMind. Ningún
+documento del hermano ni plan archivado tocado. FASE-C, `muestra.json` y `protocolo.json` siguen intactos
+(el `git diff` de estas rutas contra `40c2754` está vacío; medido en `16-`).
+

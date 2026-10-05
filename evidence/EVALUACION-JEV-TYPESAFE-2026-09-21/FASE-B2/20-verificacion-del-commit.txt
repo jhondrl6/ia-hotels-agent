@@ -1,0 +1,18 @@
+== determinismo, re-medido con el instrumento commiteado (rutas relativas, misma invocacion) ==
+EXIT_R1=0
+EXIT_R2=0
+sha corrida 1: 317541b3e092245060a5c82d8251ec538c475de52bf5aeeb26cdcb27231b1296
+sha corrida 2: 317541b3e092245060a5c82d8251ec538c475de52bf5aeeb26cdcb27231b1296
+identicos: True
+== mutacion: el artefacto regenerado coincide con el del primer commit? ==
+EXIT_MUT=0
+mutation.json normalizado actual: 886776ba3658453b7831
+mutation.json en 0a6c84c       : 886776ba3658453b7831
+iguales (no estaba vencido): True
+== clon limpio del commit: revision, arbol y bateria ==
+0a6c84c5d33746096855111237355f40c7d48221
+(linea vacia arriba = arbol materializado limpio)
+........................................ssssssssssss.s                   [100%]
+113 passed, 13 skipped in 0.91s
+(la verificacion cruzada de artefactos vive en 21-)
+EXIT=0

@@ -108,6 +108,7 @@
       },
       "contabilidad": {
         "filas": 2,
+        "fuera_del_conjunto_elegible": [],
         "fallos_operativos": [],
         "modelos_pedidos": [],
         "modelos_efectivos": [],
@@ -223,6 +224,7 @@
       },
       "contabilidad": {
         "filas": 2,
+        "fuera_del_conjunto_elegible": [],
         "fallos_operativos": [
           {
             "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
@@ -343,6 +345,7 @@
       },
       "contabilidad": {
         "filas": 2,
+        "fuera_del_conjunto_elegible": [],
         "fallos_operativos": [],
         "modelos_pedidos": [
           "deepseek-chat"
