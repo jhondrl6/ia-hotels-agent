@@ -1,0 +1,35 @@
+== control de superficie AC-R7: que toco esta sesion, medido contra ced8715 ==
+-- git status --porcelain -uall
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/00-arranque-medido.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/01-bateria-piloto.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/02-report-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/03-decide-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/04-arnes-contraste.py
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/04-contraste-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/05-control-de-superficie.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/06-bateria-protocolo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.json
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.md
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/informe_comparativa.json
+-- numstat de las rutas prohibidas contra ced8715 (debe salir vacio):
+   scripts/ tests/ config/ VERSION.yaml AGENTS.md .cursorrules .git/hooks
+   (vacio arriba = intactas en el arbol de trabajo)
+-- muestra.json / protocolo.json / etiquetas.json
+   (vacio = intactas)
+-- FASE-C/: solo archivo nuevo? diff de arbol tracked
+   (vacio = ningun tracked de FASE-C modificado)
+-- shas de los tres congelados + decision.json de C, leidos en disco
+   0107a386ae5750cd muestra.json
+   140577a06b2315b5 protocolo.json
+   4ffbb120ef94b982 etiquetas.json
+   0fc9d1e36cbdaa79 decision.json
+   2d3300e783c1f58b decision.md
+   f89bc81143a476a0 informe_comparativa.json
+   5c04bbcfbd6272de respuestas.jsonl
+   d774164e25e2eccb 00-registro-de-fase.md
+-- y su sha en el commit ced8715 (para separar disco de blob):
+cc38fdd167ecaefc317a263ff11bae6dcc30356a evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/decision.json
+701b899900bfd195a8053917cb1bb0d78c15562f evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/decision.md
+9b888b709c9442a9092211623f45c34affc37c96 evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/informe_comparativa.json
+c1ed39229b5a78447069e658174fa82a9371ba5d evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/respuestas.jsonl
+-- hooks: git diff de .git/hooks no aplica (fuera del indice); se declara no tocado

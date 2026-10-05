@@ -1,0 +1,34 @@
+== B2-1: report no compara usage contra limites_gasto ni publica cost_calculated/cost_billed ==
+   claves del informe: ['schema', 'plan', 'generado_sin_red', 'instrumento', 'fecha', 'insumos', 'sha256_de_los_insumos', 'protocolo', 'conjunto_elegible', 'por_brazo', 'criterios', 'senales_mecanicas', 'excluido_en_registros']
+   'cost_calculated' en el informe: False
+   'cost_billed'    en el informe: False
+   'limite' en el informe (texto): False
+   limites_gasto del protocolo: {'usd': None, 'llamadas': 12, 'tokens_in': 1834, 'tokens_out': 139, 'motivo': 'techos escritos el 2026-10-03 con la corrida de recuperacion k=8 del split dev: tokens_in=1834 y tokens_out=139 son el MAXIMO OBSERVADO POR LLAMADA de esas 2 llamadas (2 llamadas, attempts 1 cada una, usage observado, modelo_efectivo jev-1.13.0), sin margen aplicado. Medido con: venv/Scripts/python.exe temp/ola2-2026-10-03/correr_k8.py (crudo y ledger en temp/ola2-2026-10-03/run-k8/, transcrito a FASE-B/corrida_k8_2026-10-03.txt). Consecuencia declarada: `reservar_presupuesto` niega cualquier llamada que se pase, o sea FASE-C tendra que re-anchlar estos dos numeros si sus consultas son mas largas que las de dev -es gobernanza, no error-. usd sigue fuera de gobernanza: el presupuesto se goberna en llamadas 12 y timeout_s 30, y la clave se reabre cuando el operador nombre la tabla de precios con fuente, fecha y los dos modelos.'}
+   usage_por_fila jev: [{"input_tokens": null, "output_tokens": null, "total": null, "estado": "no_intentada", "libera_reserva_como_cero": false}, {"input_tokens": 1778, "output_tokens": 145, "total": 1923, "estado": "observado", "libera_reserva_como_cero": false}]
+   => veredicto: el informe publica los tokens observados y el techo por separado, SIN veredicto de exceso (B2-1/H12 SIGUE VIVA)
+
+== H12 en concreto: tokens_out 145 vs techo congelado ==
+   techo tokens_out congelado = 139 | maximo observado en el informe = 145
+   el numero lo calcula esta lectura de control, NO el instrumento: True
+
+== B2-2: metrics() sin productor ==
+   ocurrencias 'def metrics(' : 1
+   ocurrencias 'metrics(' fuera de la definicion: 3
+   lineas que llaman metrics(): ['# numerador y su denominador (93). `metrics()` envuelve la forma de FASE-A, pero comparte un solo', '# cocientes probado en FASE-A-- sobre sus propios conteos, y `metrics()` queda intacto y sin usar:']
+
+== B2-3: el margen sigue apoyado en 1 par utilizable ==
+   denominador_eval: 2 | paso: 0.5 | denominador_efectivo: 1 | estado: NO-EVALUABLE | umbral: 0.25 | diferencia: 0.0
+
+== B2-5 / AC-R4: transfer_status ==
+   transfer_status: PENDIENTE | jev_recommendation: NO EMITIDA: el emisor no elige sin los criterios evaluables
+
+== H10: el EXIT 3 nacio en B2 y hoy se reproduce ==
+   (medido en el bruto 03: EXIT_DECIDE=3)
+
+== H7: metrics() comparte un solo denominador entre precision y recall ==
+   def metrics() en linea 189
+     :191 clasificacion, extremo a extremo) manteniendo denominadores separados."""
+     :193 "recuperacion": score(recovery["num"], recovery["den"]),
+     :194 "precision_entre_propuestas": score(classification["prec_num"], classification["den"]),
+     :195 "recall_importante_candidatos": score(classification["rec_num"], classification["den"]),
+     :196 "extremo_a_extremo": score(e2e["num"], e2e["den"]),

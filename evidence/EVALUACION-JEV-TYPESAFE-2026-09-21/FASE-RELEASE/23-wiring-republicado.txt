@@ -1,0 +1,19 @@
+== re-publicacion del derivado de cableado por su propio escritor ==
+-- baseline PRE: validate_wiring.py --check (EXIT sin tuberia)
+   CHECK_PRE_EXIT=3
+[FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest 3141ef38f77c)
+  - cobertura.archivos_excluidos_por_rol_versionado: publicado 142 | fresco 143
+  - exclusiones_por_rol.evidence.cantidad_versionada: publicado 130 | fresco 131
+  (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)
+-- writer: validate_wiring.py --write-report
+   WRITER_EXIT=0
+[OK] Wiring: 174 llamadas descubiertas en 699 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=131 versionada=131, temp bruto=146 versionada=0, venv bruto=7610 versionada=0
+-- POST: validate_wiring.py --check
+   CHECK_POST_EXIT=0
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest 3141ef38f77c)
+[OK] Wiring: 174 llamadas descubiertas en 699 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=131 versionada=131, temp bruto=146 versionada=0, venv bruto=7610 versionada=0
+-- delta del derivado
+warning: in the working copy of '.opencode/wiring_report.json', CRLF will be replaced by LF the next time Git touches it
+5	5	.opencode/wiring_report.json
+-- linea de procedencia del artefacto regenerado (generado / git_sha)
+   generado: 2026-10-05T19:36:24+00:00 | git_sha: ced8715 | schema: None

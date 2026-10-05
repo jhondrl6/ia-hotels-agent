@@ -1,0 +1,37 @@
+== verificaciones finales, despues de las ultimas ediciones del registro y del 10-analisis ==
+  scripts/build_lesson_index.py --check          EXIT=0  [OK] Índice de lecciones fresco (344 IDs)
+  scripts/validate_wiring.py --check             EXIT=0  [OK] Wiring: 174 llamadas descubiertas en 699 archivos 
+  scripts/validate_plan_citations.py             EXIT=0  [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimie
+  scripts/validate_lesson_capitalization.py      EXIT=0  [OK] Capitalización del Paso 0: forma y trazabilidad verificadas
+  scripts/validate_plan_closure.py               EXIT=0  [OK] Cierre de planes: ningún plan vivo declara cierre con filas
+  scripts/validate_opencode_refs.py              EXIT=0  [PASS] OpenCode References: todas las referencias existen
+  scripts/validate_document_integration.py       EXIT=0  [PASS] Cross-References (executor <-> CONTRIBUTING)
+  scripts/validate_agents_md.py                  EXIT=0  
+  scripts/validate_governance_numbers.py         EXIT=0  [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en do
+
+== quick gate final (otra pasada) ==
+   QUICK_EXIT=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+== bateria del piloto otra vez, para cerrar con el arbol final ==
+   PYTEST_EXIT=0
+......................................................                   [100%]
+126 passed in 1.23s
+
+== git status final ==
+ M .agent/SYSTEM_STATUS.md
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+ M .opencode/wiring_report.json
+ M CHANGELOG.md
+ M docs/GUIA_TECNICA.md
+ M docs/contributing/REGISTRY.md
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/

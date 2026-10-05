@@ -1,5 +1,98 @@
 # Changelog
 
+## [Sin publicar] - FASE-RELEASE del plan EVALUACION-JEV-TYPESAFE-2026-09-21 - 2026-10-05
+
+> **No es una release.** `VERSION.yaml` sigue en **4.78.0** (la release del hermano
+> `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`, fechada el 2026-09-25) y FASE-RELEASE del piloto JEV tiene
+> prohibido subirla. La entrada vive bajo «Sin publicar» por la misma regla que ya usa este archivo, y es
+> una **desviación declarada del literal del mandato** («CHANGELOG `[X.Y.Z]`, versión leída de
+> VERSION.yaml»): fechar una entrada `[4.78.0]` el 2026-10-05 inventaría una release nueva con el nombre de
+> la anterior. El mandato no se editó para acomodar el resultado; se declara acá y en el registro de la fase.
+
+### Objetivo
+
+Certificar con instrumentos el expediente del piloto JEV y cerrar lo que la evidencia sostiene, sin redactar
+un cierre que ella no sostiene. Cinco cosas: re-verificar artefactos reproduciendo cada cifra con el
+instrumento que la imprime; cerrar cada AC con estado y motivo, conservando los NO-EJERCITADOS con su causa;
+**consumir** el resultado de FASE-C en vez de producirlo; ejecutar la transferencia D7/D6 solo con línea
+literal que nombre archivos y alcance; y cerrar registro oficial, write-back y archivado con los permisos
+resueltos. Estado terminal alcanzado: **checkpoint documental con la deuda visible**.
+
+### Cambios Implementados
+
+- **Re-emisión mecánica** de `report` y `decide` del runner sobre los registros versionados de FASE-C, con
+  salida en la carpeta de esta fase: `sha256_de_los_insumos` idéntico al publicado por FASE-B.2 en sus
+  cuatro insumos, **0 claves de diferencial** estructural ignorando la fecha, `decision.md` con 1 línea de
+  42 distinta (la fecha) y dos corridas de la misma invocación byte a byte. `decide` emite **EXIT 3**
+  («emitido sin decisión») y `run_status=INCOMPLETO` / `decision=null` / `transfer_status=PENDIENTE`.
+- **AC1-AC12 con motivo medido.** Cerradas: AC1, AC2, AC6 (sus dos mitades, con el guard real del triaje
+  ajeno ejercitado), AC7 (en su salida legítima: PENDIENTE, nunca deuda ajena cerrada), AC8, AC9, AC10,
+  AC11, AC12. **PARCIAL con el motivo re-anclado**: AC3 —el motivo publicado («protocolo en BORRADOR») cayó
+  con el congelado de C, y lo que queda es 4 pares contra el objetivo 60-100 y `usd` fuera de gobernanza- y
+  AC4. **Consumida, no producida**: AC5. Ninguna ejecución fallida cerró un AC de comparación.
+- **Halla y declara el vencimiento que la fase anterior no podía escribir** (su mandato no alcanzaba los
+  documentos del plan): ocho frases en presente de seis archivos seguían diciendo `BORRADOR` de un protocolo
+  que FASE-C congeló el 2026-10-04. Se re-anclan las cinco que viven en archivos listados por el mandato y
+  las tres restantes quedan como deuda con su coordenada.
+- **Deuda B2-4 materializada y medida**: en tres corridas del verificador de frescura, el artefacto con
+  descargas fallidas salió `VENCIDO` y el descargable salió `FRESCO`. Contado `[SIN-DESCARGA]` antes del
+  veredicto, **no hay ningún vencido real** en los dos gobernados del plan.
+- **Hallazgo nuevo sobre el instrumento (REL-1)**: `revisar_preflight` corta el brazo comparador porque el
+  guard exige `sdk_instalado` verdadero y un API HTTP honesto registra `NO-APLICA`. Choca con la cláusula de
+  AC12 que declara DeepSeek obligatorio y no permite eliminar un brazo por indisponibilidad.
+- **Deuda visible re-medida, no absorbida**: B2-1 y B2-1c (el informe no publica contabilidad de coste ni
+  veredicto de exceso: techo 139 contra 145 observado), B2-2 (`metrics()` sin productor), B2-3 (margen sobre
+  1 par utilizable), B2-4, B2-5, más REL-1 a REL-4.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/00-registro-de-fase.md` | Registro de la fase: arranque medido, re-emisión, cifra por cifra, superficie, QMind, censo de citas, AC1-AC12, hallazgos y deudas |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/informe_comparativa.json` | Emitido por `report` sobre los registros versionados de C |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.json` | Emitido por `decide` con el schema `jev-pilot-decision/v1` y su `instrumento_de_emision` impreso por el propio modo |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.md` | Acta legible del emisor |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/04-arnes-contraste.py` | Arnés de contraste y determinismo: shas, diferencial estructural por clave, dos corridas |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/NN-*.txt` | Brutos numerados de cada corrida, en `.txt` y nunca `.log` porque el `.gitignore` excluye los logs |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md` | Sellos 2026-10-05: cabecera de sesión, filas FASE-C y FASE-RELEASE, y correcciones datadas en P1, P3, P4, P5, P6 y P7 |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md` | Matriz AC1-AC12 re-anclada con sellos datados (AC3 y AC4 conservan PARCIAL con motivo nuevo; AC6, AC7, AC8 y AC12 cierran), casillas de entrada por fase de C y RELEASE marcadas con su límite |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md` | Tabla §D con columna RELEASE (aquí vive el número y los demás lo referencian), y sellos en §A (los seis modos del runner y sus cuatro códigos de salida), §C y §E |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md` | Resumen de ejecución de FASE-C y FASE-RELEASE, sección de cierre con lecciones nuevas (L-JEV.R1 a L-JEV.R4) y tabla de seguimientos |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md` | Sello de §2 con lo que la corrida verificó y §4 con sus dos cláusulas vencidas (corpus congelado y archivado) |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md` | Solo dos filas de §Decisiones pendientes (registro oficial/write-back/archivado y transferencia D7/D6). La sección «Orden de cierre: hermano primero» no se tocó: sigue siendo decisión del operador del 2026-09-21 |
+| `docs/GUIA_TECNICA.md` | Nota técnica de FASE-RELEASE del plan JEV |
+| `docs/contributing/REGISTRY.md` | Entrada de FASE-RELEASE escrita por su único escritor |
+
+### Tests
+
+Ninguna cifra se transcribe de una nota: lo que sigue lo imprimieron las corridas de esta sesión, con su
+crudo en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/`. Intérprete `venv/Scripts/python.exe`
+(el global da un rojo falso en esta selección).
+
+- `pytest tests/quality_gates/jev_pilot -q` -> **126 passed** (crudo `01-`)
+- `pytest tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py -q` -> **24 passed** (crudo `06-`)
+- `pytest tests/quality_gates/lesson_relevance -q` -> **62 passed** (crudo `19-`)
+- `decision_client.py --scan-imports` -> **[SIN-HALLAZGOS]**, 0 imports prohibidos fuera de la puerta (crudo `09-`)
+- Cifra canónica: **4835** en el árbol de trabajo y **4835** commiteada en el tip, convergentes (crudo `11-`)
+- Validaciones documentales y del plan, en quick y en modo completo, con su EXIT publicado en los crudos
+  `07-`, `08-` y los del cierre documental. Los fallos ajenos se atribuyen por causa y no se corrigen fuera
+  del alcance de esta fase.
+
+### Lo que esta entrada NO afirma
+
+- Que Jev se adopte o se rechace: la etiqueta le corresponde al operador, sobre el registro de C.
+- Que la transferencia D7/D6 esté hecha: `transfer_status = PENDIENTE`, el hermano sin un byte movido.
+- Que el write-back a QMind se haya publicado: se corrieron sus verificaciones de lectura, no el `--upload`.
+- Que el rango publicado esté revisado en capa profunda: el escaneo L3 **no se corrió** y su rango crece con
+  cada commit de esta tanda.
+- Que este plan esté cerrado con decisión: es un checkpoint documental con la deuda visible.
+
+
 ## [4.78.0] - Gobernanza, costura, pertinencia y carga medida — 2026-09-25
 
 ### Objetivo

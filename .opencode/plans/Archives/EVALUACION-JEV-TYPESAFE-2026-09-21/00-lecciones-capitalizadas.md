@@ -61,6 +61,21 @@ Los enunciados siguientes son síntesis de las definiciones leídas; los nombres
 | L-P6.3 | Una matriz offline prueba lógica, no confianza estadística | `.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md`, §Lecciones Aprendidas | AC3 y AC5 no convierten 60–100 pares ni un mock verde en calidad demostrada; conservan MUESTRA-INSUFICIENTE | FASE-A y FASE-C |
 | L-ENT.9 | Proveedor configurado no significa proveedor ejercitado | `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md`, §Lecciones nuevas de este plan | AC4 exige DeepSeek efectivo por solicitud, sin fallback a Anthropic; AC12 distingue habilitación declarada de autenticación probada | FASE-B y FASE-C |
 
+⟦**Sello 2026-10-05 de FASE-RELEASE — qué dijo bien la tabla de arriba y qué corrigió la corrida.** De las
+ocho lecciones de §2, cuatro se verificaron **contra el instrumento y no contra la prosa** al cerrar el
+plan: **L-D5** (validar el instrumento con resultados conocidos antes de publicar un cero) se ve en el
+denominador cero de la capa fría, que hoy emite `precision = None (0/0)` y no un 100 ni un 0; **L-R.3**
+(población explícita del verificador) se ve en que `report` publica `fuera_del_conjunto_elegible` en vez de
+descartar filas; **L-R.4** (regla sin verificador debe declararlo) es la que gobierna los tres huecos que
+esta hoja dejó escritos y no absorbidos —la contabilidad de coste en el informe, el veredicto de exceso
+contra los techos y el brazo que el propio preflight corta—; y **L-T4A.5** (un verde puede no alcanzar la
+rama que certifica) es la razón por la que RELEASE no aceptó el verde heredado y re-corrió `report` y
+`decide` sobre los registros versionados en vez de citar la nota que los copia.
+Lo que **no** comprueba ninguna de las ocho: que la comparación sea decidible. Con
+`denominador_efectivo_de_la_comparacion: 1` y un brazo incompleto por transporte, **L-P6.3** sigue siendo
+la que manda el estado: matriz verde no es confianza estadística, y `MUESTRA-INSUFICIENTE` sigue siendo la
+lectura honesta del poder de la muestra de 4 pares⟧
+
 ## 3. Candidatos evaluados y descartados
 
 | ID | Por qué no se incorpora como requisito de este piloto |
@@ -73,10 +88,10 @@ Los enunciados siguientes son síntesis de las definiciones leídas; los nombres
 
 - `scripts/validate_lesson_capitalization.py` verifica forma, atribución y referencias a AC existentes; **no verifica la pertinencia** ni demuestra que el efecto descrito ya se haya implementado.
 - §2 registra decisiones aplicadas al diseño. La implementación y las métricas semánticas permanecen PENDIENTES; se actualiza cada fila cuando su fase aporte evidencia real.
-- El corpus congelado del piloto aún no existe. Los 320 IDs de la consulta no son 320 ejemplos aptos, etiquetados o autorizados para exportación.
+- El corpus congelado del piloto aún no existe. Los 320 IDs de la consulta no son 320 ejemplos aptos, etiquetados o autorizados para exportación. ⟦Vencido el 2026-10-05 por medición, no por memoria: **el corpus congelado sí existe** — `muestra.json` `CONGELADA` con revisión humana de `jhon` del 2026-10-02, `counts` 4 / dev 2 / eval 2 / excluidos 1, y `protocolo.json` `CONGELADA` desde FASE-C el 2026-10-04 (sha de disco `140577a0…`, el mismo par disco/blob que publicó su registro). Lo que de la frase **sigue vigente y es el punto**: 4 pares no son 60–100, y la congelación no compra potencia⟧
 - QMind fue accesible en estas dos consultas; sus resultados fueron acotados y no constituyen un inventario completo. Las fuentes se contrastaron con archivos locales.
 - `scripts/build_lesson_index.py --check` comprueba frescura del índice generado, no saneamiento de datos ni calidad de etiquetas. Regenerar tras terminar las ediciones.
-- No se ha ejecutado write-back ni archivado. Crear este documento corrige la omisión de preparación, no autoriza el piloto ni simula un cierre de fase.
+- No se ha ejecutado write-back ni archivado. Crear este documento corrige la omisión de preparación, no autoriza el piloto ni simula un cierre de fase. ⟦Parte vencida el 2026-10-05: el **archivado** se ejecutó el 2026-09-27 (12 rutas bajo `Archives/`, verificado por descarga+sha256 y no por título); el **write-back** sigue sin permiso y así lo entrega esta sesión, que corrió solo las verificaciones de lectura (`--strict` en **[PASS] 13/13**) y no el `--upload`, por permiso y por el límite del writer: fija el título antiguo e `is_ingested()` decide por nombre del plan, así que no puede publicar un cierre actualizado⟧
 
 ## 5. Efectos observados al ejecutar FASE-A (2026-09-21)
 

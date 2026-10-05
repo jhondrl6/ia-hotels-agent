@@ -1,0 +1,36 @@
+== Fila 16 (linea 51) y Fila 18 (linea 55) del 33-registro: re-verificacion por asunto ==
+   sha256(fila16) = 7086e3a60e605455 | largo: 5235
+   sha256(fila18) = 7cdf2e6a925bf102 | largo: 7880
+
+-- literales y rangos en la fila 16 (el patron anterior pedia 7 digitos y era falso negativo)
+     'sin commitear'        en fila16: True
+     '0c79e9c..4661b6e'     en fila16: True
+     '4661b6e'              en fila16: True
+     '10dee08'              en fila16: False
+     'ced8715'              en fila16: False
+     'sin push'             en fila16: False
+     'sin revision L3'      en fila16: True
+     'L3'                   en fila16: True
+     rangos hex-hex encontrados: ['0a57c96..2bc2197', '0c79e9c..40c2754', '0c79e9c..4661b6e', 'bb1be59..8810936']
+     menciones '0c79e9c..': ['0c79e9c..4661b6e', '0c79e9c..40c2754']
+     contexto del literal 13: ['a): `0c79e9c..4661b6e` = **13** commits; la OL']
+
+-- git rev-list --count sobre los rangos que la fila 16 cita (medido ahora)
+     git rev-list --count 0c79e9c..4661b6e = 13
+     git rev-list --count 0c79e9c..10dee08 = 14
+     git rev-list --count 0c79e9c..HEAD = 15
+     git rev-list --count 4661b6e..HEAD = 2
+     git rev-list --count 10dee08..HEAD = 1
+
+-- Fila 18: que declara y que litigio ya le paso por encima
+     '4661b6e'            en fila18: True
+     '40c2754'            en fila18: True
+     'f884ada'            en fila18: True
+     'sin commitear'      en fila18: False
+     'sin revision L3'    en fila18: False
+     rangos hex-hex: ['4c113de..40c2754', '4c113de..4661b6e']
+
+-- El hermano NO se toca en esta sesion: git status sobre su arbol
+      ''
+
+-- Y la fila 16 vive en un documento del hermano: AC-R7 veda escribirlo. Se declara, no se edita.

@@ -1,0 +1,28 @@
+== ARRANQUE FASE-RELEASE, medicion del 2026-10-05 (segunda captura) ==
+La primera captura de este bruto (18:31:03Z) imprimio la linea '-- git status --porcelain' seguida de
+linea vacia, es decir 'arbol limpio' con FASE-RELEASE/ ya poblada. Re-ejecutado el bloque, la salida con
+'??' se reprodujo en stdout y tambien redirigida a archivo; la captura vacia no volvio a salir. Se re-mide
+y se reescribe este archivo en lugar de publicar aquella linea, y la deriva queda declarada en el
+00-registro-de-fase.md, seccion 0.
+-- git rev-parse HEAD
+ced8715ae8137a32d9802a2270c790b558ab419f
+-- git status --porcelain
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/
+   STATUS_EXIT=0
+-- git status --porcelain -uall
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/00-arranque-medido.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/02-report-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/03-decide-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/04-arnes-contraste.py
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/04-contraste-crudo.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.json
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/decision.md
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/informe_comparativa.json
+-- paridad origin/master...HEAD
+0	0
+-- git ls-remote origin refs/heads/master
+ced8715ae8137a32d9802a2270c790b558ab419f	refs/heads/master
+-- rango sin L3: git rev-list --count 0c79e9c..HEAD
+15
+-- rama
+master

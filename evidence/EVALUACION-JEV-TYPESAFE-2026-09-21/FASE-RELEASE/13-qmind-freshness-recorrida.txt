@@ -1,0 +1,23 @@
+== re-corida del verificador de frescura (2a) para distinguir VENCIDO de SIN-DESCARGA (deuda B2-4) ==
+comando: ./venv/Scripts/python.exe scripts/verify_qmind_context_freshness.py --strict --quiet
+  [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+  [AVISO] descarga 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 salio 1: error: QMind network request failed
+  [AVISO] descarga 01a10853-6da2-7820-b2a3-fa1cb5ccb4ba salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-f8c1-7572-90d7-768586280c6e salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-7eea-793f-b18f-87f2d6bcc7fe salio 1: error: QMind network request failed
+[FAIL] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 12 problema(s)
+FRESHNESS_2_EXIT=1
+
+== y completa, para contar los [SIN-DESCARGA] de esta re-corida ==
+  [AVISO] descarga 01a10853-6da2-7820-b2a3-fa1cb5ccb4ba salio 1: error: QMind network request failed
+  [AVISO] descarga 01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5 salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-f8c1-7572-90d7-768586280c6e salio 1: error: QMind network request failed
+  [FRESCO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 1 fuente(s) que casan por descarga+sha256 (01a0efcc-3297…coincide)
+  [SIN-DESCARGA] 01a10853-6da2-7820-b2a3-fa1cb5ccb4ba no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5 no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a04d9d-f8c1-7572-90d7-768586280c6e no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [VENCIDO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): sha_disco=424b5828e341… y ninguna de 57 fuente(s) examinada(s) casa (2 la nombran por titulo) [barrido completo]
+[FAIL] frescura de CONTEXT/10-analisis declarados: 1 fresco(s), 4 problema(s)
+GREP_EXIT=0
+
+== conteos ==

@@ -9,8 +9,8 @@
 | Preparación documental | AJUSTADA el 2026-09-21 | Lecturas, consultas QMind y validación documental; no es fase de código |
 | FASE-A | **EJECUTADA offline el 2026-09-21** (checker + 7 tests en verde + selftest; muestra **BORRADOR**, AC3 parcial por falta de revisión humana) | ⟦Fila rectificada el 2026-09-24 por el bloque C de la orden de calidad: publicaba «PENDIENTE / Sin ejecución», contradicha por el propio §Ejecución de FASE-A de este archivo, por `06-checklist` (AC3 PARCIAL, AC10 FASE-A HECHA) y por `README.md`⟧. Su evidencia quedó commiteada y empujada (`9665c57..51b0793`) |
 | FASE-B | **EJECUTADA el 2026-10-03 (OLA 2) y registrada en `docs/contributing/REGISTRY.md` el 2026-10-04 con `--fecha 2026-10-03`** — commits `be8ccec`, `dccbb6a`, `f884ada`, `bcd8d2a`, `4895d04`; rango publicado `4c113de..4895d04`. ⟦Sello 2026-10-04: esta fila abría con «BLOQUEADA POR DEPENDENCIA» y su segunda celda decía «Sin ejecución»; ambas quedaron vencidas por la tanda. El sello del 2026-10-01 que se conserva debajo acertó en el diagnóstico (no era una dependencia técnica sino P1, el *gap* y el mandato) y caducó en el estado: los tres se resolvieron entre el 2026-10-02 y el 2026-10-03⟧ ⟦Sello 2026-10-01 — la causa de esta fila quedó vencida: la dependencia técnica se entregó el 2026-09-24 (las dos rutas presentes). Lo que bloquea FASE-B hoy es P1 (revisión humana de la muestra), la decisión del gap de contrato y el mandato, no una dependencia técnica; ver README §Pendientes priorizados P3⟧ | **15 artefactos en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B/`** (medido con `ls`): `import_scanner.txt` (población 822/9825 `.py`, `[SIN-HALLAZGOS]` en la puerta), `integracion.json`, `contract.txt` (estado por AC con su coordenada), `modelos.json`, `mutation.json` (par de mutación 10/10 con causa y restauración por sha256), `budget_tests.txt`, `entorno.json`, `requirements-pilot.txt`, `sdk_contract.txt`, `metrics_tests.txt`, `preflight.json` (401 y luego AUTENTICADA), `corrida_k8_2026-10-03.txt` (dos llamadas reales, `attempts` 1, `usage_normalized.estado = observado`) y la `00-nota-de-ronda-2026-10-03-ola2b.md` con su sello del quinto corte. **Lo que NO se ejecutó**: la comparación de tres brazos y la decisión, que son de C. Iteraciones: la nota de ronda §Cifra canónica publica árbol de trabajo y commiteado con su comando y su HEAD, y el paso 8 (disparo de S14) quedó **NO-EJERCITADO con sus tres crudos** en vez de un verde prestado |
-| FASE-C | BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN | Sin ejecución |
-| FASE-RELEASE | PENDIENTE | Sin ejecución |
+| FASE-C | **EJECUTADA el 2026-10-04 y CERRADA INCOMPLETA** ⟦Sello 2026-10-05 de FASE-RELEASE: las dos celdas de esta fila decían «BLOQUEADA POR DEPENDENCIA Y AUTORIZACIÓN» y «Sin ejecución»; ambas quedaron vencidas por la propia fase, que tuvo mandato, congelado y presupuesto literal. **Incompleto no es bloqueado ni es éxito**, y esta hoja no lo sube a verde⟧ | **42 artefactos** en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/`. Estado terminal leído de sus artefactos: `run_status=INCOMPLETO`, `decision=null`, `transfer_status=PENDIENTE`. Tres brazos sobre el mismo conjunto elegible (6 filas de respuestas: 2 por brazo), cuatro envíos de inferencia de un techo de 12 y **cero** de conectividad; un envío de jev cayó por `TypeSafeAPIConnectionError` y su reserva no se liberó como cero. Sus cuatro cambios requeridos (CR-1..CR-4) los cerró FASE-B.2 el mismo día. Iteraciones: cuenta por etapa con proveniencia, no estimación |
+| FASE-RELEASE | **EJECUTADA el 2026-10-05 — cierre documental con la deuda visible (checkpoint), no plan cerrado con decisión** | Expediente en `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/`: re-emisión mecánica de `report` y `decide` sobre los registros versionados de C (EXIT 0 y **EXIT 3** = emitido sin decisión), con `sha256_de_los_insumos` idéntico al de FASE-B.2, **0 claves de diferencial** estructural ignorando la fecha y dos corridas byte a byte; batería del piloto **126 passed** con el venv; protocolo **24 passed**; guard real del triaje **62 passed**; cifra canónica **4835** en el árbol y **4835** commiteada en el tip. AC por fila en `06-checklist` y en el §6 de su registro; deudas re-medidas y nuevas en §8 de esa hoja |
 
 ## Registro de preparación
 
@@ -123,9 +123,9 @@ La revisión separó tres contratos: proveedor habilitado, proveedor instrumenta
 
 ## Seguimientos
 
-Etiquetas/saneamiento humanos, criterios/umbrales, presupuesto, entorno aislado, versiones actuales y permisos: dueños y disparadores en `dependencias-fases.md`. Transferencia D7/D6 no ejecutada. No se dispone todavía de evidencia para adoptar o rechazar Jev.
+Etiquetas/saneamiento humanos, criterios/umbrales, presupuesto, entorno aislado, versiones actuales y permisos: dueños y disparadores en `dependencias-fases.md`. Transferencia D7/D6 no ejecutada. No se dispone todavía de evidencia para adoptar o rechazar Jev. ⟦**Re-escrito el 2026-10-05 por FASE-RELEASE, sobre lo medido y no sobre lo recordado.** De esa lista hay que separar tres estados. **Ya resuelto por el operador**: las etiquetas y el saneamiento humanos (revisor `jhon`, `reviewed_at: 2026-10-02`, `etiquetas.json` en `revisada`), los criterios y umbrales (`protocolo.json` `CONGELADA`, con sus techos escritos teniendo la corrida delante) y las versiones actuales (`typesafe-sdk 0.7.0`, `jev-1.13.0` pedido y devuelto). **Resuelto solo a medias**: el presupuesto — hay techo de llamadas (12), de reintentos (`max_retries=0`) y de timeout (30 s), y no hay gobernanza de dinero (`limites_gasto.usd` es `null`, declarado FUERA DE GOBERNANZA). **Sigue abierto**: la transferencia D7/D6, que no podía ejecutarse sin línea literal que nombre archivos y alcance. Y la última frase quedó mal formulada: **sí hay evidencia para medir y hay instrumento para reproducirla** —los cuatro cocientes, con denominadores separados, emitidos desde los registros—; lo que no hay es **base para adoptar o rechazar**: `denominador_efectivo_de_la_comparacion: 1`, `cobertura_min` 0.5 contra un umbral congelado de 0.95 en los tres brazos, un brazo incompleto por un fallo de transporte y `decision=null`. No es lo mismo «no medido» que «no decidible», y confundirlo es exactamente lo que el contrato quiso evitar⟧
 
-## Cierre del plan — PENDIENTE
+## Cierre del plan — PENDIENTE ⟦El titular se conserva como foto de la preparación; el cierre de 2026-10-05 está en la sección «Cierre FASE-RELEASE», al final de este archivo⟧
 
 Sin inferencias, write-back ni archivado. La preparación quedó comiteada y **empujada** el 2026-09-21: base `99a33d8`, rango `2c966f6..99ac860` en `origin/master`, paridad `0/0` verificada con `git ls-remote` y 7/7 checks del hook en cada commit; la instalación del SDK quedó limitada a un entorno aislado. El cierre futuro exige la revisión de artefactos y los permisos del contrato; una decisión administrativa de no ejecutar debe conservar los AC no ejercitados.
 
@@ -184,3 +184,68 @@ llega después. La corrección del archivo protegido queda pendiente de su dueñ
 fecha, su dueño y su disparador viven en `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md`
 §S37, que es la **fuente única**; este plan no la re-transcribe, y como su propio `dependencias-fases.md` está
 protegido por orden del operador el espejo viaja en este análisis⟧
+
+## Cierre FASE-RELEASE (2026-10-05) — estado terminal, lecciones nuevas y seguimientos
+
+**Estado terminal: CHECKPOINT DOCUMENTAL CON LA DEUDA VISIBLE**, uno de los dos terminales legítimos que
+admite el mandato. No es «plan cerrado con evidencia plena», porque C cerró `run_status=INCOMPLETO` con
+`decision=null` y el operador no emitió etiqueta de adopción en esta sesión. Y no es cierre por prosa: cada
+magnitud de este párrafo tiene su instrumento y su crudo en
+`evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/`.
+
+Lo que la certificación **sí** produjo, medido y no recordado:
+
+- La re-emisión mecánica reproduce lo publicado. `report` (EXIT 0) y `decide` (EXIT 3) sobre
+  `FASE-C/respuestas.jsonl` con las versiones congeladas de etiquetas, muestra y protocolo:
+  `sha256_de_los_insumos` **idéntico** al de FASE-B.2 en sus cuatro insumos, **0 claves de diferencial**
+  estructural ignorando la fecha, `decision.md` con **1** línea distinta sobre 42 (la de la fecha), y dos
+  corridas de la misma invocación **byte a byte**. Los cocientes: recuperación 1/2 en los tres brazos,
+  precisión 1/1 en jev y deepseek y **0/0 = None** en la capa fría, recall 1/1, extremo a extremo 1/2.
+- La superficie se verificó con git, no con intención: cero bytes en `scripts/`, `tests/`, `config/`,
+  `VERSION.yaml`, `AGENTS.md`, `.cursorrules`, `muestra.json`, `protocolo.json`, `etiquetas.json`,
+  `FASE-C/` y los dos árboles del hermano. El sha de disco y el sha del blob de `protocolo.json` casan con
+  las dos formas que publicó el registro de C, que es la manera fuerte de decir «no lo toqué».
+- El atributo verificable a terceros se re-midió: `revisar_preflight` sobre el preflight de C devuelve
+  `ok=true` para el brazo jev, y la selección `tests/quality_gates/lesson_relevance/` corre **62 passed**,
+  o sea el guard real del triaje ajeno está ejercitado y no solo descripto.
+
+### Lecciones nuevas de este plan (sesión FASE-RELEASE)
+
+- **L-JEV.R1 — una fase que no tiene la escritura de la fila que niega su hecho deja el hecho ganado y la
+  fila mintiendo.** FASE-C congeló `protocolo.json` el 2026-10-04 y su mandato no alcanzaba los documentos
+  del plan; ocho frases en presente de seis archivos siguieron diciendo `BORRADOR` hasta este cierre. La
+  corrección no es disciplina de quien escribió la fila: es **que el mandato de una fase que muta un
+  artefacto gobernado incluya las filas que lo declaran, o declare explícitamente que no las incluye y
+  nombre quién lo hará**.
+- **L-JEV.R2 — un verificador que depende de la red necesita separar «no casa» de «no pude mirar».** Tres
+  corridas del verificador de frescura en la misma sesión pintaron `VENCIDO` un gobernado fresco por cuatro
+  descargas que fallaron, y en otra corrida el mismo artefacto salió `FRESCO` con su fuente casando. Contar
+  `[SIN-DESCARGA]` antes de pronunciar el veredicto es mandato de esta hoja y la deuda B2-4 dejó de ser
+  teórica. Un `NO-EVALUABLE` por instrumento ciego es más honesto que un `DIVERGE`.
+- **L-JEV.R3 — un patrón de rango mal formado fabrica verdes vacíos.** Contar shas cortos con siete
+  dígitos dio «0 rangos» en una fila que tiene dos. El control no es el conteo, es el patrón.
+- **L-JEV.R4 — el preflight que exige «SDK instalado» a un brazo que no tiene SDK corta el brazo que otra
+  cláusula declara obligatorio.** `ESTADOS_PREFLIGHT_OBLIGATORIOS` pide `sdk_instalado` verdadero; el
+  comparador HTTP registra `NO-APLICA` y el guard lo rechaza. La regla de AC12 («indisponibilidad detiene o
+  aplaza, no elimina un brazo») choca con su propio instrumento, y esto solo se ve **corriendo el guard
+  contra el artefacto honesto**, no leyendo el artefacto.
+
+### Seguimientos abiertos al cerrar (ninguno absorbido)
+
+| # | Deuda | Dueño | Criterio que la pide |
+|---|---|---|---|
+| B2-1 | `report` no compara `usage_normalized` contra los techos ni publica `cost_calculated` / `cost_billed` | `scripts/evaluate_jev_pilot.py` (`report`) | AC4 |
+| B2-1c | El exceso de `tokens_out` observado por C (145) contra el techo congelado (139) no lo publica ningún instrumento | `scripts/evaluate_jev_pilot.py` (`report`) | AC4 y H12 de FASE-B.2 |
+| B2-2 | `metrics()` sin productor: 1 definición, 0 llamadas desde código | contrato de salida de FASE-A | AC10 |
+| B2-3 | Margen apoyado en 1 par utilizable; el umbral 0.25 no discrimina con denominador 2 | re-apertura de C, decisión del operador antes de correr | AC5 |
+| B2-4 | Descarga fallida pinta `VENCIDO` un gobernado fresco | `scripts/verify_qmind_context_freshness.py` | declarada por C y **materializada** en este cierre |
+| B2-5 | Transferencia D7/D6 | `transfer_status: PENDIENTE`, solo con instrucción literal | AC7 |
+| REL-1 | El guard del `run` corta el brazo comparador por pedir `sdk_instalado` verdadero | `scripts/evaluate_jev_pilot.py` (`revisar_preflight`) | AC12 |
+| REL-2 | FASE-C y FASE-B.2 sin entrada en `REGISTRY.md`; el escritor corrió una sola vez, por FASE-RELEASE | operador, con la fecha real de cada cierre | Paso 4.5.1 del executor |
+| REL-3 | Tres frases en presente sobre el congelado del protocolo, fuera del listado de ediciones de este mandato (`01-plan-maestro.md` y dos en `05-prompt-inicio-sesion-fase-B.md`) | documentos del plan | L-JEV.R1 |
+| REL-4 | `05-prompt-inicio-sesion-fase-RELEASE.md` sigue en el índice del README sin señalar que el mandato de 2026-10-05 lo venció | README §Índice | §1 del mandato de RELEASE |
+| REL-5 | Rojo dependiente del orden de colección: verde aislado, rojo en la suite completa (lo imprime el check [16/18], no el quick) | `tests/quality_gates/jev_pilot/` con su conftest | AC2 y AC12 |
+
+**Permisos al cerrar esta hoja**: commit, push, escaneo L3 y write-back a QMind **no ejecutados y no
+ofrecidos**; son actos del operador, cada uno con su instrucción escrita. Esta sesión no ofrece la fase
+siguiente ni re-abre C.

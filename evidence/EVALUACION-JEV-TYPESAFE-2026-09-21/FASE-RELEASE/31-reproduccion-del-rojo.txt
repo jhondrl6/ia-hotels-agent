@@ -1,0 +1,27 @@
+== reproduccion acotada: toda la seleccion tests/quality_gates ==
+........................................................................ [ 20%]
+........................................................................ [ 27%]
+........................................................................ [ 34%]
+........................................................................ [ 41%]
+........................................................................ [ 48%]
+........................................................................ [ 55%]
+........................................................................ [ 62%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+..................................s..................................... [ 83%]
+...................................................sssssss.............. [ 90%]
+...........................................ss........................... [ 97%]
+.......................                                                  [100%]
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+data_models\canonical_assessment.py:192
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+data_models\canonical_assessment.py:257
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+1021 passed, 10 skipped, 10 warnings in 68.28s (0:01:08)
+QG_EXIT=0

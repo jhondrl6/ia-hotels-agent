@@ -1,0 +1,10 @@
+== doctor.py --status (regenera .agent/SYSTEM_STATUS.md, su destino declarado)
+   DOCTOR_STATUS_EXIT=0
+[OK] SYSTEM_STATUS.md regenerado (1 skills, 1270 shadow logs, 10 sesiones)
+
+== que movio el escritor ==
+ M .agent/SYSTEM_STATUS.md
+4	4	.agent/SYSTEM_STATUS.md
+
+== y la superficie prohibida sigue intacta tras TODOS los writers ==
+   (vacio = intacta)

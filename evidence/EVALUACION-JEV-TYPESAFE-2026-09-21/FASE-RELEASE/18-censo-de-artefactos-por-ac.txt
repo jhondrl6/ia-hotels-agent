@@ -1,0 +1,39 @@
+== nota de instrumento: la primera version de este bruto dio AC11 'AUSENTE' por un error de esta
+   sesion (concatene ' (plan)' al nombre del archivo). Re-remedio con la ruta real; el archivo
+   siempre existio. Se reescribe el bruto y la deriva queda declarada en el registro, seccion 2.
+
+== estado congelado de los tres JSON (medido en disco hoy) ==
+   muestra.json     status/review = CONGELADA
+   etiquetas.json   status/review = revisada
+   protocolo.json   status/review = CONGELADA
+   muestra.counts: {"total": 4, "dev": 2, "eval": 2, "excluidos": 1}
+   objetivo de AC3 (01-plan-maestro.md:36): 60-100 pares -> la muestra tiene 4
+
+== versionado (tracked) de los tres congelados y de FASE-C/decision.json ==
+100644 cc38fdd167ecaefc317a263ff11bae6dcc30356a 0	evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/decision.json
+100644 c1ed39229b5a78447069e658174fa82a9371ba5d 0	evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/respuestas.jsonl
+100644 fc28205933e64e7a876a9cefb8136fb3066938e7 0	evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json
+100644 cfda97c919ac11a9e9a32aa8cbee8c5c18414779 0	evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json
+100644 8758e8b20364e097ad36d39e065a63ac368214f9 0	evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json
+   git diff contra ced8715 sobre esas rutas: ''
+
+== AC11: los documentos del plan que el checklist cita (ruta real) ==
+     [x] 00-lecciones-capitalizadas.md              11030 B  sha 42b6b56a9592
+     [x] README.md                                  27673 B  sha bdb4eaa02bdd
+     [x] 01-plan-maestro.md                         33986 B  sha c145cbf7154a
+     [x] 04-contrato-ejecucion.md                   10960 B  sha 2e910c20b090
+     [x] dependencias-fases.md                       7558 B  sha b55670d7ef7a
+     [x] 06-checklist-implementacion.md             12112 B  sha 72e8ce2410f2
+     [x] 09-documentacion-post-proyecto.md          12861 B  sha d8f94c299127
+     [x] 10-analisis-post-implementacion.md         21249 B  sha 424b5828e341
+
+== el 'protocolo BORRADOR' que todavia afirman los documentos del plan (medido, no copiado) ==
+     01-plan-maestro.md                         4 menciones de 'BORRADOR'
+     05-prompt-inicio-sesion-fase-A.md          1 menciones de 'BORRADOR'
+     05-prompt-inicio-sesion-fase-B.md          2 menciones de 'BORRADOR'
+     06-checklist-implementacion.md             3 menciones de 'BORRADOR'
+     09-documentacion-post-proyecto.md          1 menciones de 'BORRADOR'
+     10-analisis-post-implementacion.md         2 menciones de 'BORRADOR'
+     dependencias-fases.md                      1 menciones de 'BORRADOR'
+     README.md                                  10 menciones de 'BORRADOR'
+   y el estado real de protocolo.json medido arriba es CONGELADA (congelado 2026-10-04, jhon)

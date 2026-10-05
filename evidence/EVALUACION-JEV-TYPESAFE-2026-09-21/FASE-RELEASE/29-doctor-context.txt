@@ -1,0 +1,27 @@
+== doctor.py --context (VERIFICA DOMAIN_PRIMER, no lo regenera: regla del mandato y del executor)
+   DOCTOR_CONTEXT_EXIT=0
+============================================================
+CONTEXT INTEGRITY VALIDATOR
+============================================================
+
+
+============================================================
+VALIDATION REPORT
+============================================================
+
+[OK] context_file_paths: PASS
+
+[OK] error_catalog_skills: PASS
+
+[OK] domain_primer_methods: PASS
+
+[OK] domain_primer_file_references: PASS
+
+[OK] agents_path_consistency: PASS
+
+------------------------------------------------------------
+RESULT: All validations passed
+
+
+== y se comprueba que no re-genero el primer: numstat de DOMAIN_PRIMER
+   (vacio = el verificador no escribio)

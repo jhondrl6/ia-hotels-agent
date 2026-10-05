@@ -1,0 +1,8 @@
+== cifra canonica, arbol de trabajo ==
+comando: grep -rE "^\s*def test_" tests --include=*.py | wc -l
+4835
+== cifra canonica commiteada (sin tocar el arbol) ==
+comando: git grep -h -c -E "^\s*def test_" ced8715 -- "tests/*.py" | awk "{s+=\} END {print s}"
+4835
+== functions del piloto (jev_pilot) ==
+111

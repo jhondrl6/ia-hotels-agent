@@ -1,0 +1,33 @@
+== menciones de 'BORRADOR' en los .md del plan, separadas por asunto ==
+   TOTAL medido: 24
+   asunto = protocolo.json: 8
+      01-plan-maestro.md linea 146 | ... `protocolo.json` en `
+      05-prompt-inicio-sesion-fase-B.md linea 3 | ... endiente no bloqueó a B: `protocolo.json` conserva `status: 
+      05-prompt-inicio-sesion-fase-B.md linea 63 | ...  de `jhon` del 2026-10-02, mientras `protocolo.json` sigue `
+      06-checklist-implementacion.md linea 11 | ... eja en PARCIAL es `protocolo.json`, que conserva **`status: 
+      06-checklist-implementacion.md linea 25 | ... do el 2026-10-02, mientras `protocolo.json` seguía y sigue `
+      09-documentacion-post-proyecto.md linea 25 | ... ación de tres brazos ni decisión, y `protocolo.json` sigue `
+      README.md linea 55 | ... s el congelado final del protocolo: `protocolo.json` sigue `
+      README.md linea 128 | ... E, que siguen sin autorización** — con `protocolo.json` en `
+   asunto = muestra: 13
+      01-plan-maestro.md linea 132 | ... tests/quality_gates/jev_pilot -q` en verde; muestra 
+      01-plan-maestro.md linea 147 | ... (2) «muestra 
+      01-plan-maestro.md linea 169 | ... guna de esas fases se haya ejecutado. La muestra sigue en **
+      06-checklist-implementacion.md linea 11 | ... n anterior de esta celda describía la muestra de FASE-A («**
+      10-analisis-post-implementacion.md linea 10 | ... 6-09-21** (checker + 7 tests en verde + selftest; muestra **
+      10-analisis-post-implementacion.md linea 99 | ... - Muestra: **
+      dependencias-fases.md linea 79 | ... erador o persona designada | A, antes de congelar | Muestra 
+      README.md linea 3 | ... ev_pilot.py` + suite auto-verificada en verde; muestra en **
+      README.md linea 22 | ... e 2026-09-21**: checker+métricas en verde (AC10); muestra **
+      README.md linea 53 | ... *Parcialmente hecho**: checker+métricas en verde; muestra **
+      README.md linea 109 | ... parar la decisión humana de P1: dejar disponible la muestra 
+      README.md linea 128 | ... n: FASE-A ya está ejecutada offline (2026-09-21, muestra en 
+      README.md linea 128 | ... e bloqueada**» quedó vencida dos veces: la muestra salió de 
+   asunto = otro / regla condicional (no afirma estado de hoy): 3
+      05-prompt-inicio-sesion-fase-A.md linea 24 | ... les y ambigüedad. Si la persona todavía no revisó, escribir 
+      README.md linea 103 | ... 
+      README.md linea 112 | ...    queda 
+
+== comando con que se midio ==
+   venv/Scripts/python.exe con el arnes de esta hoja (ventana de 90 chars a la izquierda del literal)
+   contraste con el conteo por archivo: grep -o 'BORRADOR' <archivo> | wc -l

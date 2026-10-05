@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 16,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 422,
-    "ids_con_definicion": 340,
+    "ids_con_definicion": 344,
     "ids_citados_sin_definicion": 56,
     "fechas_por_fuente": {
-      "nombre": 329,
+      "nombre": 333,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1551,7 +1551,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -2118,6 +2118,62 @@
       "redefiniciones": []
     },
     {
+      "id": "L-JEV.R1",
+      "familia": "L",
+      "enunciado": "una fase que no tiene la escritura de la fila que niega su hecho deja el hecho ganado y la",
+      "plan": "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
+      "fecha_plan": "2026-09-21",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.R2",
+      "familia": "L",
+      "enunciado": "un verificador que depende de la red necesita separar «no casa» de «no pude mirar». Tres",
+      "plan": "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
+      "fecha_plan": "2026-09-21",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.R3",
+      "familia": "L",
+      "enunciado": "un patrón de rango mal formado fabrica verdes vacíos. Contar shas cortos con siete",
+      "plan": "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
+      "fecha_plan": "2026-09-21",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.R4",
+      "familia": "L",
+      "enunciado": "el preflight que exige «SDK instalado» a un brazo que no tiene SDK corta el brazo que otra",
+      "plan": "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
+      "fecha_plan": "2026-09-21",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-NC1",
       "familia": "L",
       "enunciado": "Fix de copy-paste bug: el texto de un Quick Win decía “Corregir WhatsApp” cuando la condición era not hotel_schema_detected. / Por qué: el texto se escribió para una condición distinta y se reusó sin alinear. / Qué lo previene: cada rama condicional de _build_quick_wins() debe tener su texto validado contra la condición que lo dispara (test unitario con assert de contenido + grep de residuos). INCLUIR. — FASE-R0-A",
@@ -2650,7 +2706,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
@@ -2905,11 +2961,11 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 61,
+      "total_citas": 62,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -2924,7 +2980,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 80,
+      "total_citas": 81,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3305,7 +3361,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 83,
+      "total_citas": 84,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",

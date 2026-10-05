@@ -1,0 +1,4 @@
+== validate_qmind_writeback.py --strict (verificacion de ingestion, solo lectura) ==
+comando: ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --strict
+[PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+WB_STRICT_EXIT=0

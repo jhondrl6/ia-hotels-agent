@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-03
+> **Ultima actualizacion:** 2026-10-05
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 503
+> **Total fases completadas:** 504
 
 ---
 
@@ -11737,6 +11737,24 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 70 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE - 2026-10-05 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+**Descripcion:** Piloto JEV FASE-RELEASE: re-emision mecanica de report/decide sobre los registros versionados de C, AC1-AC12 con estado y motivo medidos, y cierre documental con la deuda visible (checkpoint, decision=null)
+**Nota:** registrada por su propio cierre; FASE-C y FASE-B.2 siguen sin entrada en este registro y se declaran como deuda REL-2 con dueno
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

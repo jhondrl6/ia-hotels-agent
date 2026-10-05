@@ -1,0 +1,179 @@
+== re-lectura del estado vigente del hermano (solo lectura, AC-R4) ==
+== rutas ==
+    00-lecciones-capitalizadas.md
+    01-plan-maestro.md
+    04-contrato-ejecucion.md
+    05-prompt-inicio-sesion-fase-A.md
+    05-prompt-inicio-sesion-fase-B.md
+    05-prompt-inicio-sesion-fase-C.md
+    05-prompt-inicio-sesion-fase-D.md
+    05-prompt-inicio-sesion-fase-RELEASE.md
+    06-checklist-implementacion.md
+    09-documentacion-post-proyecto.md
+    10-analisis-post-implementacion.md
+    dependencias-fases.md
+    README.md
+
+== menciones de D7 y D6, por archivo (linea y texto) ==
+### 00-lecciones-capitalizadas.md (11 lineas)
+   :38  | L-R.4 | Una regla de proceso sin verificador es publicable solo si la regla lo declara | `Archives/TRIBUNAL-OFFLINE-2026-09-09` | Las tres reglas que este plan no cierra (promoción al quick, rebanad
+   :49  | L-HF1 | Un candado con la cobertura equivocada pasa en verde mientras el artefacto miente | `Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03` | El lint declara las familias de aserción que **no** cu
+   :63  **Cómo entraron estas diez (registro de la decisión, 2026-09-27).** Hasta aquí §2 era estrictamente **herencia**: filas copiadas de planes anteriores. Las diez de arriba son de **este** plan, y entran
+   :91  **S10** (la geometría del `import` del SDK cuando D7 se active), **S11** (la exclusión no declarada del
+   :102  `coverage.json` mantiene `acceptance = NO-EJERCITADO` mientras **D7** esté inactiva — y la
+   :118  tramo semántico sigue `NO-EJERCITADO`, con **D6 dormida** (contrato E4). No se re-negoció E1–E5.
+   :154  **no** compra: el juicio del instrumento sigue `NO-EJERCITADO` mientras **D7** esté inactiva, así que
+   :157  emisor falso mientras **D7** esté inactiva — por eso se declaran pendientes en lugar de cerrarse.
+   :163  que espera proveedor (deuda **D7**), y por eso **D6** sigue dormida.
+   :259  | L-R.4 | **aplicada** | La comparación de proveedores declarada fuera de alcance con su porqué (D7), y S10 registrada con dueño y disparador en vez de decideda en silencio |
+   :307  mecánica medida y su `NO-EJERCITADO`, y **D6 sigue dormida** con su causa escrita
+
+### 01-plan-maestro.md (12 lineas)
+   :140  | **¿Entra Jev en este plan?** | **NO, por decisión del operador del 2026-09-20.** El acceso existe y la API está habilitada; posponerlo es distinto de no poder usarlo | FASE-B deja la costura lista y
+   :158  semánticas** entre prompts de fase y estado del plan (D6, disparado por el resultado del triaje de
+   :159  FASE-C); **activar el proveedor de decisiones** ya habilitado (D7); y el write-back de este plan a
+   :183  | AC15 | Denominador del triaje con términos usados, ceros incluidos y familias no juzgadas, **más la aceptabilidad que dispara D6** | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C/coverage
+   :270  otro archivo. La comparación real entre proveedores queda como deuda **D7**: un AC que exigiera
+   :321  **Las propuestas del proveedor falso prueban mecánica y no entran en §2 en automático.** Con `D7`
+   :341  **disparador de la deuda D6** y lo único que decide si el lint de contradicciones se abre en este
+   :344  motivo⟧** — y no es un descuido ni un ⚠️ prestado: con `D7` sin activar el único emisor de juicio es
+   :346  **D6 sigue dormida**. No se abre un lint de contradicciones semánticas sobre una base que nunca juzgó
+   :351  se declara con su nombre. **Re-evaluar D6 toca cuando exista un proveedor real, no antes.**
+   :438  | **D6** | **Lint de contradicciones semánticas** entre los prompts de fase y el estado real del plan (`validate_plan_semantics.py`): fila que sigue llamando PENDIENTE a una fase cerrada, dos ACs inco
+   :439  | **D7** | **Activar el proveedor de decisiones ya habilitado** (Jev): añadirlo como segundo proveedor detrás de `decision_client.py`, correr la comparación que AC9 ya no exige, y restituir «elegir mi
+
+### 04-contrato-ejecucion.md (6 lineas)
+   :31  | **Llamadas reales a un proveedor de decisiones** | **No, en ninguna fase** | Decisión del operador del 2026-09-20: Jev no entra. AC9 certifica la **costura**, no al proveedor; activarlo es deuda **D
+   :80  | **E4** | El tramo **semántico** de AC15 se publica `NO-EJERCITADO` con su motivo y **D6 queda dormida**. No se simula una aceptabilidad con el falso para cerrar el AC | Refuerza lo ya escrito en el 
+   :106  `import` del SDK) y **D7** (activar el proveedor) siguen pendientes y **no son bloqueantes artificiales
+   :107  de una C offline** — C se cierra con proveedor falso por diseño; **D6** sigue dormida; y el **rojo
+   :198  renegocia: registra que el tramo semántico de AC15 salió `NO-EJERCITADO`, que **D6 sigue dormida**,
+   :199  y que su disparador solo se evalúa cuando exista proveedor real (D7). Lo que D **sí** hereda medido
+
+### 05-prompt-inicio-sesion-fase-B.md (9 lineas)
+   :16  proveedor pospuesto cuesta **un archivo** (AC9). Su activación real es la deuda **D7**, y el primer
+   :17  consumidor natural es la deuda **D6**, el lint de contradicciones semánticas.
+   :32  detrás, cuando se active D7, son el SDK oficial del proveedor y el **adapter** que el propio
+   :55  | L-R.4 | Regla sin verificador es publicable solo si lo declara | **AC9 y D7**: la comparación de proveedores se declara **fuera de alcance**, no se omite |
+   :93  que medir, y exigirla produciría un `NO-EJERCITADO` que certifica humo. La comparación es deuda D7.
+   :117  reales, seguimientos y decisiones: **qué se pospuso (D7) y qué coste tiene posponerlo**.
+   :154  Lee 05-prompt-inicio-sesion-fase-B.md, 01-plan-maestro.md §2 (las filas del proveedor y D7) y §4
+   :165  explicas. La comparacion de proveedores NO es de este plan: es la deuda D7.
+   :193  Dónde quedó cerrado y qué quedó abierto (S10, D6, D7): `10-analisis-post-implementacion.md` y
+
+### 05-prompt-inicio-sesion-fase-C.md (12 lineas)
+   :10  > semántico de **AC15** sigue `NO-EJERCITADO` con **D6 dormida**, y **C conserva el workflow canónico y
+   :169  pospuesto (deuda D7): el triaje se ejercita contra el **proveedor falso determinista** que define
+   :172  AC15 queda en ⚠️ y **D6 permanece dormida**: no se abre un lint de contradicciones sobre una base que
+   :173  nunca juzgó nada. Re-evaluar D6 toca cuando exista proveedor real, no antes.
+   :177  `acceptance` es el disparador medible de una deuda ajena (D6); fabricarlo convertiría un número
+   :258  simuló ninguna cifra** (⟦E4⟧); **D6 quedó declarada dormida** en `dependencias-fases.md`.
+   :284  necesita llamar a un servicio real, **para y deja checkpoint** (deuda D7, fuera de este plan).
+   :288  vivirá el `import` del SDK cuando D7 se active) y **D7** (activar el proveedor) son del tramo que
+   :289  consume un proveedor **real**; **D6** está condicionada al `acceptance` semántico, que aquí es
+   :324  AC15 queda en ⚠️ y la deuda D6 sigue dormida en dependencias-fases.md. No abras el lint de
+   :336  Cero red en serio: si necesitas llamar a un servicio real, para y deja checkpoint (es la deuda D7,
+   :344  y marca expresamente que ni los cuatro planes ni sus deudas externas (D2, D3 completa, D6, D7, S10)
+
+### 05-prompt-inicio-sesion-fase-D.md (8 lineas)
+   :10  D7 esté inactiva y, por tanto, **no** activa la deuda D6 — contrato E4).
+   :131  semántico de AC15 es `NO-EJERCITADO` y **D6 sigue dormida**. D no reabre C, no renegocia E1–E5 y no
+   :166  1. `dependencias-fases.md` — FASE-D ✅, y **re-declarar D6 con el estado real de AC15**, no con una
+   :168  alcanzable mientras D7 esté inactiva**, porque con proveedor falso `acceptance` solo puede publicarse
+   :169  como `NO-EJERCITADO` (contrato **E4**). Así que D **no** activa D6 ni la re-asigna por interpretación:
+   :210  - [ ] Dependencia D6 **re-declarada, no re-abierta**: sigue **dormida** porque AC15 publicó
+   :260  NO-EJERCITADO y D6 sigue dormida. No reabras C, no renegocies E1-E5 y no presentes los candidatos
+   :264  fase es determinista o no es. Re-declara D6 con su causa (dormida mientras D7 este inactiva), no la
+
+### 05-prompt-inicio-sesion-fase-RELEASE.md (14 lineas)
+   :19  **Lo que RELEASE no reabre**: E1–E5 no se renegocian, **AC15 sigue `NO-EJERCITADO`**, **D6 sigue dormida con
+   :20  causa**, y **D7 no se activa** aquí.
+   :163  - **D6** — el lint de contradicciones semánticas: **solo puede activarse si AC15 publicó una
+   :164  aceptabilidad real**. Con `acceptance = NO-EJERCITADO`, D6 queda **dormida** y se registra así, con la
+   :166  ⟦Bloque C, 2026-09-24⟧ Esa rama es la **única** alcanzable mientras D7 esté inactiva: con proveedor
+   :167  falso no existe aceptabilidad que medir, así que ningún cierre de RELEASE puede encontrar D6
+   :169  - **D7** — activar el proveedor: confirmar que la costura quedó probada (`files_changed_to_add_provider`)
+   :247  Tarea 3. D6 **dormida con su causa** mientras AC15 siga en `NO-EJERCITADO`; la rama «activada» no es
+   :248  alcanzable sin proveedor real (D7), así que no se escribe como opción abierta de este cierre.
+   :298  con dueño **«Plan propio, posterior»**; **D6 con su causa declarada**.
+   :311  - **No activa el proveedor de decisiones** (D7). Las dos operaciones remotas (D8, D9) **no** se ejecutan
+   :354  reabras, no los re-midas como si fueran pendientes y no promociones su parte NO-EJERCITADA (AC15, D6
+   :358  D6 queda DORMIDA: con D7 inactiva AC15 solo puede publicar NO-EJERCITADO, asi que la rama activada no es
+   :359  alcanzable y no se la deja como opcion abierta. D7 se confirma con files_changed_to_add_provider y no se
+
+### 06-checklist-implementacion.md (12 lineas)
+   :38  | AC9 | B | **extensión LOCAL**: añadir un 2º proveedor **falso** cuesta **un** archivo — no el coste de integrar un SDK real ⟦precisión declarada 2026-09-23⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-
+   :44  | AC15 | C | denominador, términos, ceros **y aceptabilidad** (dispara D6); con proveedor falso el tramo semántico es **`NO-EJERCITADO`, sin simular** ⟦E4⟧ | `evidence/VERIFICADOR-CONTEXTO-DE-FASE-202
+   :110  - [x] Ninguna comparación de proveedores intentada: es D7 y se dice en el cierre. `extensibilidad.txt`
+   :140  **Lo que esta fase no cerró, con su motivo**: activar el proveedor (**D7**), el lint que lo consumiría
+   :141  (**D6**) y una decisión que este repo no puede tomar sola: dónde vivirá el `import` del SDK cuando
+   :142  D7 se active. AC6 (solo la puerta importa) y AC9 (añadir cuesta un archivo) se satisfacen hoy con
+   :145  y su directorio de proveedores». Queda escrito en `10-analisis-post-implementacion.md` para que D7 lo
+   :177  simulada**; es el número que, con proveedor real, decidirá si **D6** se activa — y D6 sigue
+   :274  - [x] Dependencia D6 **re-declarada con su causa**, no re-abierta: sigue **dormida** mientras AC15
+   :275  publique `NO-EJERCITADO` (rama inalcanzable sin D7 activa). Ver `dependencias-fases.md` §Deuda.
+   :291  - [ ] D2/D3/D6/D7 con estado explícito tras leer el `acceptance` de C y el `carga.json` de D;
+   :358  - [x] D1 leída por referencia a la **matriz §13** de la fuente única de B; D2/D3/D6/D7 con estado explícito
+
+### 09-documentacion-post-proyecto.md (6 lineas)
+   :42  real entre proveedores **no** es de este plan: es la deuda **D7**.
+   :45  techo que el plan previó para esta fase (D7 sin activar). Lo que quedó cerrado con medición:
+   :59  literal y **sin ratio simulada** (E4). Consecuencia declarada: **D6 sigue dormida** y este plan no
+   :61  Lo que C **no** cierra y no frena: **D7** (activar el proveedor) y **S10** (dónde vivirá el `import`
+   :138  | Coste de añadir un proveedor (AC9) | sin instrumento (no existía la costura) | **1** archivo, medido por sha256 sobre la frontera copia+door (`costura.json`) | Tests paralelos: 1, declarado aparte y
+   :143  | **Denominador del triaje (AC15) — cuántos IDs recibieron juicio de pertinencia** | sin instrumento (la mitad de pertinencia no existía: `validate_lesson_capitalization.py` declara ese hueco fuera de
+
+### 10-analisis-post-implementacion.md (24 lineas)
+   :27  | FASE-C | **VERIFICADO OFFLINE 2026-09-24 en su mecánica** (AC10–AC14 y AC15 en su parte no semántica; AC15 ⚠️ con `acceptance = NO-EJERCITADO` por contrato E4; AC16/AC17/AC18 en su parte de C) | Ins
+   :28  | FASE-D | **VERIFICADO OFFLINE 2026-09-24** (AC19–AC23; AC16/AC17/AC18 en su parte de D) | Instrumento canónico **volvió a no correr**: `find . -name "*.jsonl" -not -path "./venv/*"` = **0** al abrir
+   :87  | **L-VCF-9** | Apareció una contradicción **entre dos ACs del propio plan**, latente hasta que exista un proveedor real: AC6 dice «ningún archivo fuera de `decision_client.py` importa el SDK» y AC9 d
+   :113  | S3 | **D6: lint de contradicciones semánticas** (`validate_plan_semantics.py`) | Plan propio posterior; entra en **este** directorio si el disparador se cumple vigente este plan | El `acceptance` qu
+   :114  | S4 | **D7: activar el proveedor de decisiones ya habilitado** y correr la comparación | Plan propio posterior | Decisión del operador del 2026-09-20 de no entrar ahora; AC9 dejó la costura probada *
+   :115  | S10 | **Dónde vivirá el `import` del SDK cuando D7 se active**: la puerta (y el archivo nuevo solo declara) o re-anclar AC6 a «puerta + directorio de proveedores». Las dos son coherentes con AC9; so
+   :143  | 5 | **`acceptance = NO-EJERCITADO` y D6 dormida** (E4), sin ratio simulada — y con un test que busca el número y lo niega | **Rechazado: publicar la proporción mecánica** `propuesto/triado` como ace
+   :206  - [x] **Lo que se pospuso (D7) y qué cuesta posponerlo.** No entra ningún proveedor real, y eso tiene
+   :208  miden forma, aislamiento y no-regresión; (ii) **D6** queda sin su consumidor natural, así que su
+   :210  geometría de **S10** se paga entera en D7 y su coste real puede ser una edición de plan (re-anclar
+   :213  coste de extensión verificado, así que D7 no reabre FASE-B.
+   :256  ejercitarse y D6 sigue dormida**: D no re-abrió C (mandato), y el `acceptance` de `coverage.json` no
+   :288  comparación es D7 y `costura.json` certifica la geometría con `1`.
+   :362  - [ ] S1–S7 con dueño y disparador vigentes; **D6 declarada dormida con su causa** mientras AC15 publique
+   :363  `NO-EJERCITADO` (⟦bloque C⟧ la rama «activada» es inalcanzable sin D7, así que no se deja como
+   :444  - **Sin promociones**: AC15 sigue `NO-EJERCITADO`, D6 dormida con causa, D2/D3/D7/S10/S14/S15/S16
+   :452  documento» ratificado por el operador; de la enumeración original quedan vivas D2, D3, D7, S10, S14 y
+   :458  runner imprime dentro del modo completo. De la enumeración original siguen vivas **D3, D7, S10, S14, S16** y
+   :462  executor. De la lista de seis quedan vivas **D3, D7, S10 y S14**, más la parte **(c)** de **S19**; su estado
+   :472  **Vivas hoy: D3, D7, S10 y S14**, más esa **S29** y la **(d)** de S19⟧ ⟦**Cierre formal de la orden de calidad,
+   :479  `--fix` del archivado. De la enumeración original quedan vivas **D3, D6, D7, S10 y S14**, más la **(d)** de
+   :486  **D6**, **D7**, **S10**, **S14** y la **(d)** de **S19**. Estado vigente: §S17 y §S31 de
+   :513  ### Espejo 2026-10-02 — dossier del gap de contrato (D7/S10)
+   :522  `scripts/decision_client.py`, que es la superficie donde **D7** se activa y donde **S10** cobra su geometria del
+
+### dependencias-fases.md (15 lineas)
+   :39  | 3 · [FASE-C](05-prompt-inicio-sesion-fase-C.md) | `triage_lesson_relevance.py`: capa de pertinencia **aditiva** sobre `lecciones_index.json`, nunca filtro | ALTA: es la mitad que el verificador de c
+   :40  | 4 · [FASE-D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga de lectura medido** (AC19–AC23) | MED
+   :52  | D | A, B y C | Los tres estados y `coverage_basis`; el informe de candidatos de C, que el pack exhibe como sección propia; y **el resultado no medido de C, que D acepta sin reabrirlo** (⟦bloque C, 2
+   :75  habilitado es la deuda **D7**, con su disparador. Consecuencia aceptada y escrita: ningún AC de
+   :115  | **D6** | **Lint de contradicciones semánticas** (`validate_plan_semantics.py`): prompts de fase contra estado real del plan, con falsos positivos medidos contra los archivados | Plan propio posterio
+   :116  | **D7** | **Activar el proveedor de decisiones ya habilitado** (Jev) como segundo proveedor detrás de `decision_client.py`; correr la comparación de proveedores y restituir «elegir midiendo» como AC 
+   :222  | `CONTEXTO/C` | **Nada que renegociar.** E1–E5 se conservan y su forma se reconfirmó contra `scripts/decision_client.py` (la validación de `RespuestaEleccion` exige `confidence`; `RespuestaNoul` la f
+   :226  **Qué este bloque NO tocó y por qué.** No ejecutó el piloto FASE-C ni ninguna fase; no activó D6 ni D7;
+   :312  FASE-C offline: **S10** (dónde vivirá el `import` del SDK cuando D7 se active), **D7** (activar el
+   :313  proveedor) y **D6** (lint semántico, **dormida** porque su disparador es el `acceptance` de AC15).
+   :320  en su clave `alcance_de_ac9`, y la ubicación futura de ese SDK es **S10**/D7, coordinada con el plan
+   :1189  medida, ni que D3/D6/D7/S10/S19(d) hayan muerto — siguen con dueño y disparador, re-medidos sin tocar código en
+   :1201  Siguen como estaban **§S19 (d)** con dueño y las vivas **D3, D6, D7, S10 y S14**. Queda **abierto** bajo el dueño
+   :1284  - **Dos salidas medidas en la auditoría**: despertar D6 con su disparador reformulado (decisión del operador), o
+   :1287  - **Esta fila NO despierta D6**: su causa dormida (`aceptacion = NO-EJERCITADO`, contrato E4) sigue medida y
+
+### README.md (9 lineas)
+   :64  es `null` con motivo literal, contrato E4, y por eso D6 sigue dormida: **D la re-declaró, no la re-abrió**)
+   :118  | 4 · [D](05-prompt-inicio-sesion-fase-D.md) | `build_phase_briefing.py`: pack derivado por fase, proveniencia con sha, negativa a truncar y **delta de carga total de lectura**. AC19–AC23 | MEDIA: gob
+   :153  proveedores se pospone como deuda **D7**. Consecuencia aceptada: ningún AC mide calidad de
+   :159  la regla de cero red, y dónde vivirá ese `import` es **S10**/D7 (el propio `--costura` imprime ya
+   :162  mitad del diagnóstico. Queda como deuda **D6** con un disparador medible: la **aceptabilidad** que
+   :163  publique FASE-C. Si el triaje sale inaceptable, D6 **no** se activa — no se apila un segundo
+   :249  | Herencia de forma para C — **ya consumida el 2026-09-24** | `coverage_basis` y el tri-estado, que C re-utilizó **sin reinventarlos**; y la costura de B como **única** puerta al proveedor (C no impor
+   :268  **D7** sigue abierta y su consumidor natural es **D6**, no C); y donde B dejó escrito el problema que
+   :269  C hereda sin resolverlo — **dónde vivirá el `import` del SDK cuando D7 se active** — está en
+

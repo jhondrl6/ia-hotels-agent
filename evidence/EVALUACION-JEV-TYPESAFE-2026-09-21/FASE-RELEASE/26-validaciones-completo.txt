@@ -1,0 +1,63 @@
+== run_all_validations.py MODO COMPLETO (sin bandera), 2026-10-05 ==
+FULL_EXIT=1
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-10-05 14:39:01
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+[14/18] Checking dependencies...
+[15/18] Checking core module imports...
+[16/18] Running tests...
+[17/18] Checking QMind write-back (planes archivados)...
+[18/18] Checking CONTEXT freshness (notebook de lecciones)...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: completo - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1381 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 3382 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 174 llamadas descubiertas en 699 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=131 versionada=131, temp bruto=146 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+  [+] Dependencies: All dependencies satisfied
+  [+] Module Imports: All core modules import successfully
+  [-] Tests: Tests failed: C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+      - ........................................................................ [  1%]
+      - ................................................................s....... [  2%]
+      - ........................................................................ [  4%]
+      ... and 7 more
+  [+] QMind Write-back: [PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [-] QMind CONTEXT Freshness: VENCIDO: un CONTEXT gobernado no tiene fuente publicada que case: re-ingestar por CLI con titulo nuevo que conserve el stem y verificar por descarga + sha256, no por titulo
+      -   [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+      -   [AVISO] descarga 01a04d9e-10dd-74bd-b081-41cd0a7dcfc0 salio 1: error: QMind network request failed
+      -   [AVISO] descarga 01a04d9d-f8c1-7572-90d7-768586280c6e salio 1: error: QMind network request failed
+      ... and 3 more
+
+------------------------------------------------------------
+  TOTAL: 16/18 validations passed
+============================================================
+  STATUS: 2 VALIDATION(S) FAILED
+  [GUARDA] las 18 etiquetas impresas casan con el TOTAL dinamico

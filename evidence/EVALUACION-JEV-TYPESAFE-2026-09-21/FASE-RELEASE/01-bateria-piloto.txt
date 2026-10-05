@@ -1,0 +1,6 @@
+== bateria del piloto, pytest tests/quality_gates/jev_pilot -q, 2026-10-05, arbol ced8715 ==
+comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -q
+........................................................................ [ 57%]
+......................................................                   [100%]
+126 passed in 1.21s
+PYTEST_EXIT=0

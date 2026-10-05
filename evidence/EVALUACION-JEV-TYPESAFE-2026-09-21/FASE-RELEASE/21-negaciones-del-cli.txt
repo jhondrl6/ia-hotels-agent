@@ -1,0 +1,13 @@
+== negaciones del CLI, re-medidas hoy (AC-R9: nada heredado del crudo de B.2) ==
+-- reporte sin insumos
+report exige respuestas, etiquetas, muestra, protocolo: sin ellos no hay registros que reproducir, y publicar un cociente sin insumo seria rellenarlo a mano (AC10). Este modo no abre red ni instancia clientes.
+   EXIT_REPORT_SIN_INSUMOS=2
+-- decide sin insumos
+decide exige informe, protocolo: sin ellos no hay registros que reproducir, y publicar un cociente sin insumo seria rellenarlo a mano (AC10). Este modo no abre red ni instancia clientes.
+   EXIT_DECIDE_SIN_INSUMOS=2
+-- report con insumo ausente en disco
+report no encuentra insumos: evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/no-existe.jsonl
+   EXIT_RESPUESTA_AUSENTE=1
+-- y el decide con un informe que no existe
+decide no encuentra el informe: evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/tampoco.json
+   EXIT_INFORME_AUSENTE=1

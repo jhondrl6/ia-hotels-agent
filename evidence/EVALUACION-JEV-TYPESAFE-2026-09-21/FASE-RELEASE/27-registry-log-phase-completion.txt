@@ -1,0 +1,24 @@
+== log_phase_completion.py, UNA sola corrida (AC-R5) ==
+-- comando literal:
+./venv/Scripts/python.exe scripts/log_phase_completion.py \
+  --fase FASE-RELEASE --fecha 2026-10-05 \
+  --plan EVALUACION-JEV-TYPESAFE-2026-09-21 \
+  --desc "Piloto JEV FASE-RELEASE: re-emision mecanica de report/decide sobre los registros versionados de C, AC1-AC12 con estado y motivo medidos, y cierre documental con la deuda visible (checkpoint, decision=null)" \
+  --nota "registrada por su propio cierre; FASE-C y FASE-B.2 siguen sin entrada en este registro y se declaran como deuda REL-2 con dueno" \
+  --tests 0 --check-manual-docs
+-- dry-run primero (EXIT y contenido ya impresos en la sesion), luego la corrida que escribe:
+   ESCRITOR_EXIT=0
+8:[1/2] Actualizando REGISTRY.md...
+9:       (R) C:\Users\Jhond\Github\iah-cli\docs\contributing\REGISTRY.md
+
+== prueba de que la cabecera existe UNA sola vez para esta fase ==
+-- comando: conteo por python de la cabecera exacta (grep -c sobre este archivo da artefactos por codificacion)
+   menciones de la cabecera: 1
+   menciones de FASE-RELEASE en general: 46
+   cabecera de fecha: '> **Ultima actualizacion:** 2026-10-05'
+   filas del plan JEV: ['## FASE-B - 2026-10-03 (EVALUACION-JEV-TYPESAFE-2026-09-21)', '## FASE-RELEASE - 2026-10-05 (EVALUACION-JEV-TYPESAFE-2026-09-21)']
+
+== delta del registro por numstat ==
+20	2	docs/contributing/REGISTRY.md
+-- y el subproducto .last_doc_phase.json:
+ M docs/contributing/REGISTRY.md

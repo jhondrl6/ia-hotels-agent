@@ -2542,3 +2542,68 @@ Auditoría 2026-04-24 identificó 4 desconexiones documentales en el bloque "Cal
 **Backwards compatibility**: aditiva. El bloque `reviewer_reports` del acta gana `findings` (y `findings_omitted` cuando corresponde) y `gate_report.details` gana claves en los caminos fundamentados; ningún lector existente del acta deja de encontrar lo que buscaba. `package_evidence` aparece ahora también con `suppressed: False`, así que un consumidor que usara esa clave como sinónimo de supresión debe leer la marca, no la presencia.
 
 **Tests**: 21 funciones canónicas nuevas en `tests/test_fase_0_ac20_evidencia_veredicto.py` (productor sobre assessment real y sobre el audit archivado con skip visible si falta el baseline, proyección y tope del DTO, acta escrito y releído desde el writer real,helper never-block y regla AST propia sobre las dos ramas de publish). Quick 11/11; `validate_document_integration.py` en paz; R2 **FUERA DE SERVICIO (R2.1)** con auto-reporte en unidad propia; **Commit `7c6e75f` y push a `origin/master` ejecutados el mismo 2026-09-20 con instrucción literal del operador** (paridad 0/0 verificada con `git ls-remote`; los 7 checks del pre-commit pasaron sin saltar ninguno).
+
+## Nota Técnica — FASE-RELEASE del plan EVALUACION-JEV-TYPESAFE-2026-09-21 (2026-10-05)
+
+**Qué se hizo**: auditar con instrumentos el expediente del piloto JEV y cerrar lo que la evidencia sostiene,
+sin tocar la lógica que decide. Cero red de inferencia, cero escrituras en `scripts/`, `tests/`, `config/`,
+`VERSION.yaml` y configuración central, y cero bytes en el plan hermano. Cuatro actos: re-emitir `report` y
+`decide` del runner sobre los registros versionados de FASE-C hacia `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/`;
+contrastarlos por `sha256_de_los_insumos` y por cocientes contra lo publicado por FASE-B.2; cerrar AC1–AC12
+con estado y motivo; y verificar QMind por sus dos instrumentas de **solo lectura**, dejando el `--upload` en
+manos del operador.
+
+**Dónde vive la regla que se certificó**: el emisor es `scripts/evaluate_jev_pilot.py` en sus modos `report`
+y `decide` (entregados por FASE-B.2), que leen `FASE-C/respuestas.jsonl` más las versiones congeladas de
+etiquetas, muestra y protocolo. Los criterios de adopción no los elige el emisor: están en
+`protocolo.json:criterios_adopcion` (`cobertura_min 0.95`, `margen_vs_deepseek 0.25`, `suficiencia_minima 0.5`,
+`latencia_max 30000`), congelado por FASE-C. Los cuatro códigos de salida del CLI (`0` emitido con decisión,
+`1` insumo ausente, `2` argumentos faltantes, `3` emitido sin decisión) se re-midieron en esta sesión y no se
+citaron del crudo de la fase anterior.
+
+**Decisión de diseño que importa al lector**: **comparar identidades de insumos, no bytes de artefacto**. El
+informe que emite `report` lleva dentro el bloque `insumos` con las rutas *tal como se le pasaron*, y `fecha`
+con la de la invocación; dos corridas desde raíces distintas o con otra fecha difieren en esas claves sin que
+haya cambiado ninguna lógica. El control que publica el arnés `04-arnes-contraste.py` mide las dos cosas por
+separado: diferenciales **0** ignorando `fecha`, `sha256_de_los_insumos` idéntico en sus cuatro entradas, dos
+corridas byte a byte, y con otra fecha más rutas absolutas exactamente **5** claves movidas (`fecha` y las
+cuatro rutas) mientras los cocientes quedan intactos. Un sha de archivo entero no es una prueba portable entre
+máquinas; `sha256_de_los_insumos` sí.
+
+**Hallazgos técnicos que cambian un enunciado del plan**:
+- `protocolo.json` está **`CONGELADA`** desde FASE-C el 2026-10-04 y ocho frases en presente de seis
+  documentos del plan seguían diciendo `BORRADOR`. La causa no es descuido: **el mandato de FASE-C no alcanzaba
+  los documentos del plan**, así que el hecho nació en una fase sin escritura sobre la fila que lo negaba.
+- `revisar_preflight` sobre el preflight honesto de C devuelve `ok=true` para jev y `ok=false` para el brazo
+  comparador, porque `ESTADOS_PREFLIGHT_OBLIGATORIOS` exige `sdk_instalado` verdadero y un API HTTP sin SDK
+  registra `NO-APLICA`. Es un corte al brazo que AC12 declara obligatorio, y solo se ve corriendo el guard
+  contra el artefacto, no leyendo el artefacto.
+- El verificador de frescura de QMind depende de la red y **no distingue «no casa» de «no pude bajar»**: en
+  tres corridas de la misma sesión, cada gobernado salió `VENCIDO` cuando alguna de sus fuentes no descargó y
+  `FRESCO` cuando descargó. Ninguno está vencido.
+- `report` no publica `cost_calculated` ni `cost_billed` ni el veredicto de exceso contra los techos, así que
+  el `tokens_out` observado por C (**145**) contra el techo congelado (**139**) no lo dice ningún instrumento;
+  se declara en el registro y no se calcula a mano dentro del artefacto.
+- El `git status --porcelain` de esta hoja imprimió una vez «árbol limpio» con la carpeta de evidencia ya
+  poblada; re-ejecutado, no se reprodujo. Se re-midió y se reescribió el crudo en lugar de publicar la línea.
+
+**Límites, dichos en el artefacto**: el estado terminal es **checkpoint documental con la deuda visible**, no
+plan cerrado con decisión — `run_status=INCOMPLETO`, `decision=null`, margen `NO-EVALUABLE` con
+`diferencia_calculada 0.0` publicado aparte, y `denominador_efectivo_de_la_comparacion 1` sobre una muestra de
+4 pares contra un objetivo de 60–100. AC5 se **consumió** de C: esta nota no emite etiqueta de adopción. La
+transferencia D7/D6 queda `PENDIENTE` y el hermano se re-leyó antes de afirmarlo (D7 abierta, D6 dormida con
+causa). FASE-C y FASE-B.2 siguen **sin entrada en `REGISTRY.md`** porque el escritor corrió exactamente una
+vez, por esta fase.
+
+**Backwards compatibility**: documental y aditiva. No cambió ninguna interfaz ni ningún congelado; los
+documentos del plan conservan sus fotos fechadas con sellos encima, y `09-documentacion-post-proyecto.md` §D
+gana una columna RELEASE sin mover las de Preparación/A/B/C. El quick gate quedó en **12/13** a mitad de sesión
+por el derivado `.opencode/wiring_report.json` vencido ante la carpeta de evidencia nueva, y se re-publicó por
+su propio escritor (`validate_wiring.py --write-report`), no a mano.
+
+**Tests**: no se transcriben cifras de notas. Lo imprimieron las corridas con su crudo en
+`evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/` y con el intérprete del `venv` (el python global da
+un rojo falso en esta selección): selección del piloto, del protocolo y del guard real del triaje;
+`decision_client.py --scan-imports` en `[SIN-HALLAZGOS]`; y la cifra canónica commiteada contra la del árbol de
+trabajo. La matriz de AC con su artefacto vive en `06-checklist-implementacion.md` y en el §6 del registro de la
+fase.

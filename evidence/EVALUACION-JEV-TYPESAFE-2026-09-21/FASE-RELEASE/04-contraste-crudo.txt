@@ -1,0 +1,73 @@
+==============================================================================
+== 1. shas de los artefactos de las tres hojas (identidad completa, no normalizada)
+==============================================================================
+  informe_comparativa.json     FASE-C        f89bc81143a476a0...
+  informe_comparativa.json     FASE-B2       317541b3e0922450...
+  informe_comparativa.json     FASE-RELEASE  432a61cc6ba7778e...
+
+  decision.json                FASE-C        0fc9d1e36cbdaa79...
+  decision.json                FASE-B2       a65934ba295e499c...
+  decision.json                FASE-RELEASE  7eccaabecbc67249...
+
+  decision.md                  FASE-C        2d3300e783c1f58b...
+  decision.md                  FASE-B2       9fd8149c46e10e9b...
+  decision.md                  FASE-RELEASE  571f1fc6ade363fc...
+
+==============================================================================
+== 2. sha256_de_los_insumos: FASE-B2 vs FASE-RELEASE
+==============================================================================
+  etiquetas   IGUAL  5da5e8a423933111... vs 5da5e8a423933111...
+  muestra     IGUAL  4a8b30c85a88ae4c... vs 4a8b30c85a88ae4c...
+  protocolo   IGUAL  7caed9dc959c1135... vs 7caed9dc959c1135...
+  respuestas  IGUAL  2222023e2ca7966e... vs 2222023e2ca7966e...
+  => los cuatro insumos son los mismos bytes
+  fechas: B2=2026-10-04 RELEASE=2026-10-05
+  bloque `insumos` (rutas tal como se pasaron): IGUAL
+
+==============================================================================
+== 3. cocientes publicados por el instrumento, brazo por brazo
+==============================================================================
+  [FASE-B2 (2026-10-04)]
+    capa_fria: recuperacion=0.5 (1/2) | precision_entre_propuestas=None (0/0) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+    jev: recuperacion=0.5 (1/2) | precision_entre_propuestas=1.0 (1/1) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+    deepseek: recuperacion=0.5 (1/2) | precision_entre_propuestas=1.0 (1/1) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+  [FASE-RELEASE (2026-10-05)]
+    capa_fria: recuperacion=0.5 (1/2) | precision_entre_propuestas=None (0/0) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+    jev: recuperacion=0.5 (1/2) | precision_entre_propuestas=1.0 (1/1) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+    deepseek: recuperacion=0.5 (1/2) | precision_entre_propuestas=1.0 (1/1) | recall_importante_candidatos=1.0 (1/1) | extremo_a_extremo=0.5 (1/2)
+
+  diferencial informe B2 vs RELEASE ignorando `fecha`: 0 claves
+
+==============================================================================
+== 4. el registro de C, escrito SIN instrumento: mismo asunto, otra forma
+==============================================================================
+  claves del informe de C: ['schema', 'fase', 'plan', 'generado_sin_red', 'regenerable_desde', 'comando', 'protocolo', 'conjunto_elegible', 'por_brazo', 'abstenciones_denominador_aparte', 'costo_y_cuentas_tres_monedas', 'hallazgos', 'cambios_requeridos']
+  recuperacion por brazo publicada por C (lectura de sesion, schema sin `por_brazo/cocientes`):
+    capa_fria: recuperacion={'value': 0.5, 'numerator': 1, 'denominator': 2, 'motivo': '', 'presentes': ['EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'elegibles': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'medidos': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'sin_medir': []}
+    deepseek: recuperacion={'value': 0.5, 'numerator': 1, 'denominator': 2, 'motivo': '', 'presentes': ['EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'elegibles': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'medidos': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'sin_medir': []}
+    jev: recuperacion={'value': 0.5, 'numerator': 1, 'denominator': 2, 'motivo': '', 'presentes': ['EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'elegibles': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'medidos': ['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4'], 'sin_medir': []}
+
+  decision.json de C  : run_status=INCOMPLETO decision=None transfer=PENDIENTE
+  cobertura_min de C  : {'capa_fria': 0.5, 'deepseek': 0.5, 'jev': 0.5}
+  cobertura_min RELEASE: {'capa_fria': 0.5, 'jev': 0.5, 'deepseek': 0.5}
+  run_status: C='INCOMPLETO' RELEASE='INCOMPLETO' -> COINCIDE
+  decision: C=None RELEASE=None -> COINCIDE
+  transfer_status: C='PENDIENTE' RELEASE='PENDIENTE' -> COINCIDE
+
+  diferencial decision.json B2 vs RELEASE ignorando `fecha`: 0 claves
+
+==============================================================================
+== 5. determinismo: dos corridas de `report` con la misma invocacion
+==============================================================================
+  corrida 1: EXIT=0 sha=d980bd97049c680f...
+  corrida 2: EXIT=0 sha=d980bd97049c680f...
+  byte a byte: IDENTICOS
+
+== 6. con otra fecha, solo se mueve la linea `fecha` (limite de B2 §12, re-medido aqui)
+  EXIT=0
+    fecha: '2026-10-05' -> '2020-01-01'
+    insumos.etiquetas: 'evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json' -> 'C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESA'
+    insumos.muestra: 'evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json' -> 'C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESA'
+    insumos.protocolo: 'evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json' -> 'C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESA'
+    insumos.respuestas: 'evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/respuesta' -> 'C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESA'
+  claves movidas: 5

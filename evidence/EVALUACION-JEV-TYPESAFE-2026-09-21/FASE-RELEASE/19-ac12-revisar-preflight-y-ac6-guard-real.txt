@@ -1,0 +1,22 @@
+== AC12: revisar_preflight del instrumento sobre FASE-C/preflight.json (el comando que publico C) ==
+comando: venv/Scripts/python.exe -c '...revisar_preflight(...)'
+   jev -> {"ok": true, "motivos": [], "registro": {"habilitacion_declarada": true, "fuente_habilitacion": "protocolo.json:modelos.jev_pin = jev-1.13.0, congelada el 2026-10-04 (sha del congelado en 00-registro-de-fase.md); la deci
+   deepseek -> {"ok": false, "motivos": ["preflight-sdk_instalado='NO-APLICA: el comparador es un API HTTP, no un SDK; el contrato del brazo es `evaluar(state, preguntas)` de scripts/proveedores/deepseek.py, cargado por scripts/decisio
+   anthropic -> {"ok": false, "motivos": ["preflight-habilitacion_declarada=False", "preflight-sdk_instalado=None", "preflight-autenticacion_real=None"], "registro": {"habilitacion_declarada": false, "motivo": "excluido por protocolo.js
+REV_PREFLIGHT_EXIT=0
+
+== AC6: seleccion lesson_relevance (los dientes del guard real) ==
+comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates/lesson_relevance -q
+..............................................................           [100%]
+62 passed in 24.99s
+PYTEST_EXIT=0
+== jev ok= True
+== deepseek ok= False
+   motivo: preflight-sdk_instalado='NO-APLICA: el comparador es un API HTTP, no un SDK; el contrato del brazo es `evaluar(state, preguntas)` de scripts/proveedores/deepseek.py, cargado por scripts/decision_client.py:resolver_proveedor'
+
+== ESTADOS_PREFLIGHT_OBLIGATORIOS (la regla del guard) ==
+{
+ "habilitacion_declarada": true,
+ "sdk_instalado": true,
+ "autenticacion_real": "AUTENTICADA"
+}

@@ -1,0 +1,5 @@
+== diff de llm_provider.py (debe estar vacio) ==
+comando: git diff -- modules/providers/llm_provider.py
+   (vacio = intacto)
+comando: git diff --numstat ced8715 -- modules/providers/llm_provider.py
+   (vacio = intacto contra el tip)

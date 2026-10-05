@@ -1,0 +1,33 @@
+== QMind DESPUES de las ediciones del cierre (solo lectura) ==
+-- b8. validate_qmind_writeback.py --strict
+   WB_STRICT_POST_EXIT=0
+[PASS] QMind Write-back: 13/13 10-analisis archivados ingested en 'iah-cli-lecciones'
+
+-- b9. verify_qmind_context_freshness.py --strict
+   FRESHNESS_POST_EXIT=1
+  [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+  [AVISO] descarga 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-f8c1-7572-90d7-768586280c6e salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-7eea-793f-b18f-87f2d6bcc7fe salio 1: error: QMind network request failed
+  [AVISO] descarga 01a04d9d-6191-7900-bc66-4ea668d21c1c salio 1: error: QMind network request failed
+poblacion: 1 CONTEXT gobernado(s) (CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md) | 19 excluido(s)
+poblacion declarada: 1 gobernado(s) (10-analisis-post-implementacion.md) | 0 fuera de alcance
+notebook iah-cli-lecciones: 57 fuente(s) publicada(s)
+  [SIN-DESCARGA] 01a0efcc-3297-7782-9467-757fe81018fc no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  [SIN-DESCARGA] 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  [SIN-DESCARGA] 01a04d9d-f8c1-7572-90d7-768586280c6e no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  [SIN-DESCARGA] 01a04d9d-7eea-793f-b18f-87f2d6bcc7fe no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  [SIN-DESCARGA] 01a04d9d-6191-7900-bc66-4ea668d21c1c no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  [VENCIDO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: sha_disco=5587f27ddd5a… y ninguna de 57 fuente(s) examinada(s) casa (2 la nombran por titulo) [barrido completo]
+  [SIN-DESCARGA] 01a0efcc-3297-7782-9467-757fe81018fc no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a04d9d-f8c1-7572-90d7-768586280c6e no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a04d9d-7eea-793f-b18f-87f2d6bcc7fe no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [SIN-DESCARGA] 01a04d9d-6191-7900-bc66-4ea668d21c1c no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md)
+  [VENCIDO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): sha_disco=f05d7eab20d2… y ninguna de 57 fuente(s) examinada(s) casa (2 la nombran por titulo) [barrido completo]
+[FAIL] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 12 problema(s)
+
+-- conteo de [SIN-DESCARGA] en esta corrida (mandato 5.5):
+10
+-- sha de disco actual del 10-analisis (para separar el vencido real del transitorio):
+    f05d7eab20d2362d (antes de editar era 424b5828e341...)

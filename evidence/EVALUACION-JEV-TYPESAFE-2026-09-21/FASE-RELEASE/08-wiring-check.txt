@@ -1,0 +1,7 @@
+== wiring --check ==
+comando: ./venv/Scripts/python.exe scripts/validate_wiring.py --check
+[FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest 3141ef38f77c)
+  - cobertura.archivos_excluidos_por_rol_versionado: publicado 142 | fresco 143
+  - exclusiones_por_rol.evidence.cantidad_versionada: publicado 130 | fresco 131
+  (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)
+WIRING_EXIT=3

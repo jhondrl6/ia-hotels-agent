@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-09-25 23:14:06 UTC
+> Auto-generado: 2026-10-05 20:07:30 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -16,17 +16,17 @@
 
 | Skill | Descripcion |
 |-------|-------------|
-| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código —o, si el commit no está autorizado, en «listo para revisión» (ver *Cinco cortes* en «Proceso común»). El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/7]` del pre-commit). Ejecutado por agentes AI. |
+| phased_project_executor.md | Ejecutor de proyectos por fases. Una fase por sesión. Sin excepciones. Iteraciones medidas con `evidence/FASE-D/measure_iterations.py`, cortadas en el commit de código —o, si el commit no está autorizado, en «listo para revisión» (ver *Cinco cortes* en «Proceso común»). El Paso 0 capitaliza lecciones en `00-lecciones-capitalizadas.md` consultando el índice generado del corpus, y ese artefacto lo verifica `scripts/validate_lesson_capitalization.py` (`[7/8]` del pre-commit). Ejecutado por agentes AI. |
 
 
 ## Estado de Datos
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1218 archivos JSON |
+| Shadow logs | 1270 archivos JSON |
 | Sesiones activas | 10 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20260923_003742_86a31470.json |
+| Ultimo shadow log | 20261005_195113_ab98d9df.json |
 | Ultima sesion activa | 2026-09-19_dfa27c04.json |
 | Ultimo contexto actualizado | 2026-09-19T19:58:31.332935+00:00 |
 | Ultima URL procesada | https://www.donalfonsohotel.com/ |

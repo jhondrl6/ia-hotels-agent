@@ -1,0 +1,27 @@
+== suite completa, el mismo comando que corre el check [16/18]: ./venv/Scripts/python.exe -m pytest -q --tb=no ==
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:152: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    before = datetime.utcnow()
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:159: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    after = datetime.utcnow()
+
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+1 failed, 4889 passed, 41 skipped, 4 xfailed, 234 warnings in 407.49s (0:06:47)
+PYTEST_FULL_EXIT=1

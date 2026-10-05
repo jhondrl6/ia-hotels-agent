@@ -1,0 +1,504 @@
+{
+  "schema": "jev-pilot-informe-comparativa/v1",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "generado_sin_red": true,
+  "instrumento": "scripts/evaluate_jev_pilot.py report",
+  "fecha": "2026-10-05",
+  "insumos": {
+    "respuestas": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/respuestas.jsonl",
+    "etiquetas": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/etiquetas.json",
+    "muestra": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json",
+    "protocolo": "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json"
+  },
+  "sha256_de_los_insumos": {
+    "respuestas": "2222023e2ca7966e09d42fb57cc952da2420f10ecea8571d457b3a1207cbac81",
+    "etiquetas": "5da5e8a42393311148c6c6b9253c96597bfd4a9ec5f9477cc963ddf61e1597ac",
+    "muestra": "4a8b30c85a88ae4ca7af5f7595cfe8aaa06903eaaec3675614719c6287639539",
+    "protocolo": "7caed9dc959c113569145ff3b082d8c817de7ae3238e90398a26eceb94df0728"
+  },
+  "protocolo": {
+    "status": "CONGELADA",
+    "congelado": {
+      "revisado_por": "jhon",
+      "fecha": "2026-10-04"
+    },
+    "k": 8,
+    "criterios_adopcion": {
+      "cobertura_min": 0.95,
+      "margen_vs_deepseek": 0.25,
+      "tratamiento_abstenciones": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte",
+      "suficiencia_minima": 0.5,
+      "latencia_max": 30000,
+      "revision_humana": "obligatoria; designado: jhon (2026-10-02, acta en evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-10-02/)"
+    }
+  },
+  "conjunto_elegible": {
+    "denominador_pares_total": 4,
+    "pertinentes": 2,
+    "importantes_elegibles": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "brazos_en_registros": [
+      "capa_fria",
+      "jev",
+      "deepseek"
+    ]
+  },
+  "por_brazo": {
+    "capa_fria": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": null,
+        "numerator": 0,
+        "denominator": 0,
+        "motivo": "denominador_cero"
+      },
+      "recall_importante_candidatos": {
+        "value": 1.0,
+        "numerator": 1,
+        "denominator": 1,
+        "motivo": ""
+      },
+      "extremo_a_extremo": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": ""
+      },
+      "lectura": {
+        "capa_fria_es_un_ranking": true,
+        "elecciones_sobre_recuperables": 0,
+        "poblacion_elegible": 2
+      },
+      "abstenciones": {
+        "con_eleccion": 0,
+        "abstenciones": 0,
+        "sin_eleccion_por_fallo": 0,
+        "sin_fila": 0,
+        "cociente_de_abstencion": {
+          "value": null,
+          "numerator": 0,
+          "denominator": 0,
+          "motivo": "denominador_cero"
+        }
+      },
+      "latencia": {
+        "latencias_ms_de_respuesta": [],
+        "duracion_ms_de_fallos": [],
+        "max_latencia_ms": null,
+        "nota": "la duracion de un intento que fallo por el camino no se cuenta como latencia de respuesta; se publica aparte con esa etiqueta"
+      },
+      "contabilidad": {
+        "filas": 2,
+        "fuera_del_conjunto_elegible": [],
+        "fallos_operativos": [],
+        "modelos_pedidos": [],
+        "modelos_efectivos": [],
+        "usage_por_fila": [
+          null,
+          null
+        ],
+        "request_ids": [],
+        "fallos_de_contabilidad": []
+      },
+      "por_par": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "estado_propuesta": "ranking",
+          "propuesta": [
+            "D-V.3",
+            "DA-F1",
+            "L-NC8",
+            "L-P5.3",
+            "S-I1",
+            "D-T4B-A1",
+            "DA-G1",
+            "DA-G3"
+          ],
+          "target": "D-AJUST.1",
+          "target_en_candidatos": false,
+          "error_kind": null,
+          "acierto": false
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "estado_propuesta": "ranking",
+          "propuesta": [
+            "L-H3",
+            "D-AJUST.4",
+            "D-VUP-A6",
+            "D-VUP-B2",
+            "DA-F2",
+            "L-E2E.4",
+            "L-ENT.12",
+            "L-P6.4"
+          ],
+          "target": "D-AJUST.4",
+          "target_en_candidatos": true,
+          "error_kind": null,
+          "acierto": true
+        }
+      ]
+    },
+    "jev": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": 1.0,
+        "numerator": 1,
+        "denominator": 1,
+        "motivo": ""
+      },
+      "recall_importante_candidatos": {
+        "value": 1.0,
+        "numerator": 1,
+        "denominator": 1,
+        "motivo": ""
+      },
+      "extremo_a_extremo": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": ""
+      },
+      "lectura": {
+        "capa_fria_es_un_ranking": false,
+        "elecciones_sobre_recuperables": 1,
+        "poblacion_elegible": 2
+      },
+      "abstenciones": {
+        "con_eleccion": 1,
+        "abstenciones": 0,
+        "sin_eleccion_por_fallo": 1,
+        "sin_fila": 0,
+        "cociente_de_abstencion": {
+          "value": 0.0,
+          "numerator": 0,
+          "denominator": 1,
+          "motivo": ""
+        }
+      },
+      "latencia": {
+        "latencias_ms_de_respuesta": [
+          395.794
+        ],
+        "duracion_ms_de_fallos": [
+          48.478
+        ],
+        "max_latencia_ms": 395.794,
+        "nota": "la duracion de un intento que fallo por el camino no se cuenta como latencia de respuesta; se publica aparte con esa etiqueta"
+      },
+      "contabilidad": {
+        "filas": 2,
+        "fuera_del_conjunto_elegible": [],
+        "fallos_operativos": [
+          {
+            "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+            "error_kind": "conexion",
+            "attempts": 1
+          }
+        ],
+        "modelos_pedidos": [
+          "jev-1.13.0"
+        ],
+        "modelos_efectivos": [
+          "jev-1.13.0"
+        ],
+        "usage_por_fila": [
+          {
+            "input_tokens": null,
+            "output_tokens": null,
+            "total": null,
+            "estado": "no_intentada",
+            "libera_reserva_como_cero": false
+          },
+          {
+            "input_tokens": 1778,
+            "output_tokens": 145,
+            "total": 1923,
+            "estado": "observado",
+            "libera_reserva_como_cero": false
+          }
+        ],
+        "request_ids": [
+          "req_01a10952459e7afa89006e00420e36a8"
+        ],
+        "fallos_de_contabilidad": []
+      },
+      "por_par": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "estado_propuesta": "sin_eleccion_por_fallo",
+          "propuesta": null,
+          "target": "D-AJUST.1",
+          "target_en_candidatos": false,
+          "error_kind": "conexion",
+          "acierto": false
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "estado_propuesta": "eleccion",
+          "propuesta": "D-AJUST.4",
+          "target": "D-AJUST.4",
+          "target_en_candidatos": true,
+          "error_kind": null,
+          "acierto": true
+        }
+      ]
+    },
+    "deepseek": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": 1.0,
+        "numerator": 1,
+        "denominator": 1,
+        "motivo": ""
+      },
+      "recall_importante_candidatos": {
+        "value": 1.0,
+        "numerator": 1,
+        "denominator": 1,
+        "motivo": ""
+      },
+      "extremo_a_extremo": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": ""
+      },
+      "lectura": {
+        "capa_fria_es_un_ranking": false,
+        "elecciones_sobre_recuperables": 1,
+        "poblacion_elegible": 2
+      },
+      "abstenciones": {
+        "con_eleccion": 1,
+        "abstenciones": 1,
+        "sin_eleccion_por_fallo": 0,
+        "sin_fila": 0,
+        "cociente_de_abstencion": {
+          "value": 0.5,
+          "numerator": 1,
+          "denominator": 2,
+          "motivo": ""
+        }
+      },
+      "latencia": {
+        "latencias_ms_de_respuesta": [
+          1392.648,
+          1133.547
+        ],
+        "duracion_ms_de_fallos": [],
+        "max_latencia_ms": 1392.648,
+        "nota": "la duracion de un intento que fallo por el camino no se cuenta como latencia de respuesta; se publica aparte con esa etiqueta"
+      },
+      "contabilidad": {
+        "filas": 2,
+        "fuera_del_conjunto_elegible": [],
+        "fallos_operativos": [],
+        "modelos_pedidos": [
+          "deepseek-chat"
+        ],
+        "modelos_efectivos": [
+          "deepseek-flash"
+        ],
+        "usage_por_fila": [
+          {
+            "input_tokens": 1054,
+            "output_tokens": 149,
+            "total": 1203,
+            "estado": "observado",
+            "libera_reserva_como_cero": false
+          },
+          {
+            "input_tokens": 932,
+            "output_tokens": 158,
+            "total": 1090,
+            "estado": "observado",
+            "libera_reserva_como_cero": false
+          }
+        ],
+        "request_ids": [
+          "f8a93413-e09c-47d3-a423-6cbd7cbfbac9",
+          "fe14a140-7a64-4b56-9509-beacded8ab16"
+        ],
+        "fallos_de_contabilidad": []
+      },
+      "por_par": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "estado_propuesta": "abstencion",
+          "propuesta": "ninguna-aplica",
+          "target": "D-AJUST.1",
+          "target_en_candidatos": false,
+          "error_kind": null,
+          "acierto": false
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "estado_propuesta": "eleccion",
+          "propuesta": "D-AJUST.4",
+          "target": "D-AJUST.4",
+          "target_en_candidatos": true,
+          "error_kind": null,
+          "acierto": true
+        }
+      ]
+    }
+  },
+  "criterios": {
+    "cobertura_min": {
+      "umbral": 0.95,
+      "medido_por_brazo": {
+        "capa_fria": 0.5,
+        "jev": 0.5,
+        "deepseek": 0.5
+      },
+      "brazo_sujeto": "jev",
+      "estado": "NO CUMPLE",
+      "motivo": ""
+    },
+    "suficiencia_minima": {
+      "umbral": 0.5,
+      "medido": {
+        "value": 0.5,
+        "numerator": 2,
+        "denominator": 4,
+        "motivo": ""
+      },
+      "lectura_congelada": "2 de 4 pares pertinentes",
+      "estado": "CUMPLE"
+    },
+    "margen_vs_deepseek": {
+      "umbral": 0.25,
+      "definicion_congelada": "diferencia absoluta del cociente extremo_a_extremo entre Jev y DeepSeek",
+      "medido_jev": 0.5,
+      "medido_deepseek": 0.5,
+      "diferencia_calculada": 0.0,
+      "denominador_eval": 2,
+      "paso_de_resolucion": 0.5,
+      "denominador_efectivo_de_la_comparacion": 1,
+      "estado": "NO-EVALUABLE",
+      "motivo": "la diferencia esta calculada pero no gobierna: al menos un brazo perdio un par por un fallo del camino, y AC12 no permite medirle al modelo una indisponibilidad de la infraestructura"
+    },
+    "latencia_max": {
+      "umbral_ms": 30000,
+      "medido_ms_por_brazo": {
+        "jev": 395.794,
+        "deepseek": 1392.648
+      },
+      "estado": "CUMPLE",
+      "motivo": "",
+      "nota": "solo intentos con resultado exito; la duracion de un fallo se publica en `latencia.duracion_ms_de_fallos`"
+    },
+    "coste_en_gobernanza": {
+      "usd": null,
+      "en_gobernanza": false,
+      "motivo": "`usd` sigue null en el protocolo congelado, fuera de gobernanza por decision del operador: no hay decision de coste sin coste en gobernanza"
+    }
+  },
+  "senales_mecanicas": [
+    {
+      "id": "S1",
+      "senal": "la recuperacion es el mismo numero en todos los brazos",
+      "base": {
+        "valor": {
+          "capa_fria": 0.5,
+          "jev": 0.5,
+          "deepseek": 0.5
+        }
+      },
+      "consecuencia": "la metrica de recuperacion mide la capa fria, que es comun: por si sola no decide entre brazos"
+    },
+    {
+      "id": "S2",
+      "senal": "capa_fria: precision sin propuestas que contar",
+      "base": {
+        "den_propuestas": 0
+      },
+      "consecuencia": "NO-EVALUABLE, no 0.0: el brazo no hizo ninguna eleccion contable en esta corrida"
+    },
+    {
+      "id": "S3",
+      "senal": "resolucion del extremo a extremo sobre el conjunto elegible medido",
+      "base": {
+        "denominador": 2,
+        "paso_de_la_resolucion": 0.5
+      },
+      "consecuencia": "un margen congelado mas fino que el paso del cociente no discrimina en este denominador; se publica, no se re-lee"
+    },
+    {
+      "id": "S4",
+      "senal": "jev: envios que volvieron con fallo del camino",
+      "base": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "error_kind": "conexion",
+          "attempts": 1
+        }
+      ],
+      "consecuencia": "AC12: la indisponibilidad detiene o aplaza y no elimina el brazo; la comparacion queda incompleta y declarada"
+    },
+    {
+      "id": "S5",
+      "senal": "capa_fria: es un ranking, no un clasificador",
+      "base": {
+        "recall": 1.0,
+        "recuperacion": 0.5
+      },
+      "consecuencia": "su propuesta es el conjunto de candidatos, asi que el recall dentro de candidatos vale 1.0 por construccion y no es una comparacion de calidad entre brazos"
+    }
+  ],
+  "excluido_en_registros": []
+}

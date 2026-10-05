@@ -1,0 +1,25 @@
+== quick gate FINAL, despues de todo el cierre documental y los writers ==
+comando: ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+QUICK_FINAL_EXIT=0
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1381 tracked files + staged (excluidos declarados: 0 binarios conocidos, 1 symlinks)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 743 citas historicas, 0 nuevas y 0 crecimientos (79 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 174 llamadas descubiertas en 699 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=131 versionada=131, temp bruto=146 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+Binary file /tmp/q2.txt matches

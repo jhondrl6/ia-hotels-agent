@@ -1,0 +1,28 @@
+== baseline PRE del indice (EXIT leido sin tuberia) ==
+-- comando: ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+   CHECK_PRE_EXIT=1
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=333 commit=11 sin_fuente=0
+
+== writer: ./venv/Scripts/python.exe scripts/build_lesson_index.py
+   WRITER_EXIT=0
+[OK] 344 IDs definidos + 56 sin definición (16 análisis, 422 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=333 commit=11 sin_fuente=0
+
+== POST: --check
+   CHECK_POST_EXIT=0
+[OK] Índice de lecciones fresco (344 IDs)
+[fechas] nombre=333 commit=11 sin_fuente=0
+
+== que IDs nuevos entraron (L-JEV.R*) ==
+102:| `L-JEV.R1` | una fase que no tiene la escritura de la fila que niega su hecho deja el hecho ganado y la | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 1 (solo el plan dueño) |
+103:| `L-JEV.R2` | un verificador que depende de la red necesita separar «no casa» de «no pude mirar». Tres | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 0 (solo el plan dueño) |
+104:| `L-JEV.R3` | un patrón de rango mal formado fabrica verdes vacíos. Contar shas cortos con siete | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 0 (solo el plan dueño) |
+105:| `L-JEV.R4` | el preflight que exige «SDK instalado» a un brazo que no tiene SDK corta el brazo que otra | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 0 (solo el plan dueño) |
+
+== delta del par generado, por numstat ==
+13	9	.opencode/LECCIONES-INDEX.md
+64	8	.opencode/lecciones_index.json
