@@ -431,6 +431,10 @@ Sin commit. Sin push. Sin revisión L3. Sin write-back en QMind. Sin tocar plane
 ajena. Sin ofrecer la fase siguiente. Los cinco cortes documentales de esta fase terminan en **espera
 de autorización del operador**; el `git commit` es un acto posterior, separado y suyo.
 
+⟦Vencida en parte por el sello de §13: el operador autorizó el commit y se ejecuto en `8c79b60`. Sin
+push y sin L3 sigue vigente; el commit ya no. La frase se conserva porque describia el estado al cierre
+de la fase de ejecucion, que es lo que esta hoja registra.⟧
+
 ---
 
 ## 10. Estado terminal
@@ -505,8 +509,76 @@ parrafo del registro seria perseguir un denominador que mueve el propio texto qu
 mandato pide el verde **al cierre**, no ad infinitum. El sello `23-` y `24-` son los crudos de la
 penultima corrida; esta seccion es la ultima.
 
+⟦Vencida por §13: hubo una escritura mas, y no fue un parrafo de esta hoja sino un acto distinto y
+autorizado por el operador despues de medir el cierre. La advertencia sigue siendo verdadera para lo
+que advierte — no re-corrio los gates por cada parrafo — y el `38` de arriba ya no es el conteo
+vigente: el documento que lo estampa es de la poblacion que cuenta.⟧
+
 **Un cambio pendiente de autorizacion, no ejecutado**: `tests/quality_gates/jev_pilot/` queda con ese
 rojo por diseño. La decision de commitear, empujar y correr la revision L3 es del operador, y abrir
 FASE-RELEASE no se ofrece desde aqui.
+
+⟦De las tres decisiones que enumeraba, una se ejecuto: el commit (`8c79b60`, sello en §13). El rojo de
+`test_jev_pilot_protocolo_check.py:43` sigue exactamente donde estaba — es CR-4 y no lo toca esta fase —,
+y push y L3 siguen sin ejecutar.⟧
+
+---
+
+## 13. Sello del commit `8c79b60`
+
+El operador autorizo el commit sin revision L3. Crudo completo de esta seccion, generado con las
+salidas reales y no transcrito de memoria: **`26-sello-del-commit-8c79b60.txt`**.
+
+| Dato | Valor medido | Comando |
+|---|---|---|
+| Commit | `8c79b602eeaf76d63c9348f2a88518918dcadce5` (`8c79b60`) sobre `d3ab12a` | `git log -1` con formato de tres campos, cuyo texto exacto esta impreso en la cabecera de `26-` (un pipe dentro de una celda parte la tabla, y escaparlo dentro de un code span publica un comando que no es el que se corrio) |
+| Contenido | **40 archivos, +3121 / −6** | `git show --numstat --format= HEAD` agregado con awk |
+| Hook | **8/8 PASSED**, EXIT 0 en `git commit` | salida del hook, capturada en el crudo |
+| Paridad | origin `d3ab12a70f5e…` vs HEAD `8c79b602eeaf…` → `0 1`: **adelantado en 1, SIN PUSH** | `git ls-remote origin refs/heads/master` + `git rev-list --left-right --count origin/master...HEAD` (contando contra el servidor, no contra el ref local) |
+| L3 | **no corrio**, por indicacion expresa | — |
+| Escrituras del sello | `00-registro-de-fase.md` (las tres anotaciones ⟦⟧ de §9/§12 y esta seccion), `25-…post-commit.txt` y `26-…sello….txt` | `git status --porcelain` antes de stagear |
+
+Lo que el sello **no** toca: `protocolo.json` (ya esta en `8c79b60` con el sha de §2 casando en el blob),
+`muestra.json` y `etiquetas.json` (blob **identico** entre `HEAD` y `HEAD~1`, verificado por `git show` y
+no por suposicion), `scripts/`, `tests/`, AGENTS.md y el hermano.
+
+### Dos correcciones que solo aparecieron al verificar el commit en su propio arbol
+
+**1. El gate que goberna este commit no es `.pre-commit-config.yaml`.** Lei ese config (black, ruff con
+`--fix`, `check-json`, `detect-private-key` y un `pytest-v4` con `always_run: true`) y afirme que corriia
+los 18 checks de `run_all_validations --check`, incluida la suite. Falso: lo que git ejecuta es el script
+propio de **8** checks en `.git/hooks/pre-commit` (version, sync, refs, citas, cierre, indice,
+capitalizacion, packs), y **ninguno corre pytest**. De ahi dos consecuencias practicas: el rojo por diseno
+de CR-4 no tenia forma de bloquear el commit (paso 8/8), y el config declarado es papel muerto mientras
+nadie corra `pre-commit install` — que ademas pisaria el script propio, que es el que tiene los `[N/8]`.
+
+**2. El `Secrets Check` del `--quick` no ve este expediente.** Su mensaje imprime `1380 tracked files +
+staged` contra `git ls-files | wc -l` = **3343**, y el numero **no se movio** al entrar los 38 archivos:
+`allowed_dirs = {"archives", "evidence", ".opencode"}` hace `continue` por ruta antes de leer
+(`scripts/run_all_validations.py:288-301`). El matiz que lo hace peor que un hoyo estatico: el pase de
+staged (`_check_staged_content:422`) **no** aplica esa allowlist, o sea los 40 archivos del commit si fueron
+escaneados **durante** el hook y dejan de estarlo en cualquier corrida posterior. Por eso la garantia de
+credenciales de este expediente es la pasada propia de §11, medida archivo por archivo, y no el `13/13`.
+
+### Conteos despues del sello
+
+`ls -1 FASE-C | wc -l` = **41** al momento del sello — 30 archivos numerados (del `00-` al `27-`, contando
+los sufijos `17b` y `17c`) y 11 con el nombre que manda §6; de los numerados, **6 son arneses `.py`**
+(`10-` a `15-`), que son los que el escáner de cableado cuenta y los que movieron el derivado de §5. Antes
+del sello eran 38; suben a 39 con `25-`, a 40 con `26-` y a 41 con `27-` (el `--quick` corrido justo antes
+de sellar, 13/13 EXIT 0): tres crudos que este mismo sello escribe.
+
+Cuarta vez en la sesión que un conteo del expediente se mueve al documentarlo (12 → 14 → 12 en las
+menciones de §11; 36 → 38 → 40 → 41 aquí, y esta redacción me salió primero mal: escribí 41 sin medir, el
+conteo real dio 40, y al generar el crudo de la verificación pasó a 41). Por eso §11 ya publicó el suyo
+**excluyendo al portador**: la población estable de este directorio son los **40 archivos que no son
+`00-registro-de-fase.md`**, y ese número sí queda cerrado porque después de este párrafo no se escribe
+nada más aquí.
+
+### Estado de los permisos despues del sello
+
+Ejecutado: **commit**. Sin ejecutar y sin ofrecer: **push**, **revision L3**, **write-back en QMind**,
+edicion del hermano o de su deuda (`transfer_status` sigue `PENDIENTE`), y cualquier cambio en `scripts/`
+o `tests/` que cerraria CR-1 a CR-4.
 
 

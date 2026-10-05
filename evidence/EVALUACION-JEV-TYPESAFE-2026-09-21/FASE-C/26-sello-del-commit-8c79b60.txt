@@ -1,0 +1,46 @@
+# Sello del commit 8c79b60 - FASE-C del piloto JEV, medido sobre el propio commit
+# fecha de la medicion: 2026-10-05T00:38:22Z
+
+## git log -1 --format='%H|%h|%s'
+8c79b602eeaf76d63c9348f2a88518918dcadce5|8c79b60|feat(jev): SESION 3 (FASE-C) - protocolo CONGELADA, los tres brazos en eval y registro INCOMPLETO con decision=null
+
+## git show --shortstat HEAD
+ 40 files changed, 3121 insertions(+), 6 deletions(-)
+
+## numstat agregado del commit
+archivos 40 | inserciones 3121 | supresiones 6
+
+## paridad contra el servidor (medida con ls-remote, no con el ref local)
+git ls-remote origin refs/heads/master = d3ab12a70f5ee81a459706a33d98ae4ea20a6914
+git rev-parse HEAD                     = 8c79b602eeaf76d63c9348f2a88518918dcadce5
+git rev-list --left-right --count origin/master...HEAD = 0	1  (izquierda = solo en origin: 0 | derecha = solo en HEAD: 1 => el commit esta ADELANTADO en 1 y SIN PUSH)
+
+## hook que goberna el commit (MEDIDO: no es .pre-commit-config.yaml)
+- archivo ejecutado: .git/hooks/pre-commit (script propio de 8 checks, versionado en scripts/git_hooks/)
+# Checks:
+#   [1/8] Version consistency (version_consistency_checker.py)
+#   [2/8] File synchronization (sync_versions.py --check)
+#   [3/8] Referencias .opencode (validate_opencode_refs.py --fix, auto-fix)
+#   [4/8] Citas de línea en planes (validate_plan_citations.py — regla R2.2)
+#   [5/8] Cierre de planes sin filas pendientes (validate_plan_closure.py — regla R2.5)
+#   [6/8] Índice de lecciones al día (build_lesson_index.py --check — capa fría del Paso 0)
+#   [7/8] Capitalización del Paso 0 verificada (validate_lesson_capitalization.py — executor v2.22.0)
+#   [8/8] Packs de briefing reproducibles en el árbol commiteado (verify_packs_in_committed_tree.py — S19)
+- .git/hooks/pre-commit.legacy y 8 pre-commit.bak.* conviven en el directorio: el config declarativo del framework pre-commit (black, ruff, pytest-v4) NO esta instalado como hook.
+- consecuencia medida: el rojo por diseno de CR-4 (test_jev_pilot_protocolo_check.py:43) no bloquea el commit, porque ninguno de los 8 checks corre pytest.
+
+## correcciones que salieron de verificar el commit en su propio arbol
+1) [8/8] verify_packs_in_committed_tree.py LEE HEAD, o sea durante el hook verificaba d3ab12a y no 8c79b60.
+   Re-corrido despues del commit sobre el HEAD nuevo: 5/5 reproducidos, 0 divergentes, EXIT 0.
+2) Secrets Check del --quick publica '1380 tracked files + staged' y ese denominador NO incluyo los 38
+   archivos del expediente: allowed_dirs = {archives, evidence, .opencode} (run_all_validations.py:288-301)
+   hace continue por ruta antes de leer. Medido: git ls-files | wc -l = 3343 contra los 1380 impresos.
+   El pase de staged (_check_staged_content, :422) no aplica esa allowlist, asi que los 40 archivos SI fueron
+   leidos durante el hook y dejan de estarlo en cualquier corrida posterior. La garantia de credenciales del
+   expediente es la pasada propia estampada en 00-registro-de-fase.md S11, no el 13/13.
+
+## invariantes re-medidas sobre el arbol commiteado
+blob LF protocolo.json del congelado: 7caed9dc959c113569145ff3b082d8c817de7ae3238e90398a26eceb94df0728 *-
+  (prometido en S2 del registro: 7caed9dc959c113569145ff3b082d8c817de7ae3238e90398a26eceb94df0728)
+muestra.json: blob IDENTICO en HEAD y HEAD~1 (4a8b30c85a88ae4ca7af5f7595cfe8aaa06903eaaec3675614719c6287639539)
+etiquetas.json: blob IDENTICO en HEAD y HEAD~1 (5da5e8a42393311148c6c6b9253c96597bfd4a9ec5f9477cc963ddf61e1597ac)
