@@ -1,0 +1,54 @@
+== sello del push 4661b6e..10dee08 (SESION DE SELLO - filas 16 y 18 del 33-registro) ==
+
+== paridad contra el SERVIDOR, medida despues del push ==
+servidor (git ls-remote origin refs/heads/master):
+10dee08cce79d701e852172034d9b78c260bcf95	refs/heads/master
+HEAD local:
+10dee08cce79d701e852172034d9b78c260bcf95
+rev-list --left-right --count origin/master...HEAD:
+0	0
+
+== rango empujado, medido desde el tip remoto previo (4661b6e) ==
+git log --oneline 4661b6e..HEAD (1 commit):
+10dee08 docs(jev): SESION DE SELLO - filas 16 y 18 del registro unico, re-ancladas al tip 4661b6e
+
+== arbol de trabajo ==
+Los tres artefactos de este sello (este 26-, el 27- del quick gate y el apendice al
+00-registro-de-fase.md) quedan como untracked/modified hasta el commit de sello; el
+commit los integra. La autoridad del estado vigente es git log / ls-remote, no una
+cifra fija que el proximo empujon mueva.
+
+== citas que este push vence, medidas por asunto y no por literal ==
+- Mensaje de commit publicado 10dee08: 1 ocurrencia de «sin push» (la linea
+  «Cinco cortes hasta espera de autorizacion: sin push en esta operacion»), medida con
+  git log -1 --format=%B 10dee08 | grep -oiE 'sin push' | wc -l = 1. Queda vencida por
+  el push de 10dee08. NO se hace reword: reescribir un commiteado ya empujado obliga a
+  push --force sobre una rama compartida, y esa no es la via de la casa. La errata vive
+  aqui, y git log sigue siendo la autoridad de que el mensaje dice eso.
+- 33-registro-unificado .../33-registro-unificado-de-pendientes-2026-09-29.md, fila 16
+  (linea 51), dentro del anotador «Estampado 2026-10-04» que llevo el propio 10dee08:
+    (a) «las ediciones de esta fila quedan sin commitear, o sea fuera del alcance de
+        cualquier revision de commits hasta que se pidan» -> ya commiteadas y empujadas.
+    (b) «0c79e9c..4661b6e = 13 commits» -> el rango empujado crece con 10dee08; medido
+        ahora, git rev-list --count 0c79e9c..HEAD = 14.
+  Ninguna se reescribe: ambas son foto del momento de estampar, y la convencion del
+  registro es aditiva (se anota encima, no se re-escribe el texto original).
+
+== por que no se barren otras menciones «sin push» ==
+docs/cobertura-historia.md:113, :126 y :138 tambien dicen «sin push», y NO se tocan:
+esas tres frases miden OTROS asuntos y OTROS rangos (origin/master en 5ca6395, y el
+rango 6cdb430..7899f0f). Contar el literal y barrerlo convertira una mencion ajena en
+rojo propio. Medido con: grep -nE 'sin push' docs/cobertura-historia.md (3 lineas).
+
+== consecuencia L3 de este sello ==
+El operador eligio NO correr L3 en el push de 10dee08, y tampoco en este sello. Queda
+declarado con fecha (2026-10-05) para que nadie lea el rango publicado como revisado.
+Y la consecuencia estructural que este sello produce y por eso se enuncia: el commit de
+sello es un commit NUEVO sobre 10dee08, asi que cualquier L3 futura tendra por baseline
+un rango que incluye ya a 10dee08 y a este sello, no el que se estampo en la fila 16.
+El skip anterior no se arrastra a un tip nuevo.
+
+== este sello no se describe a si mismo ==
+Regla de la casa: un segundo push deja incompleto el sello del primero. El rango de este
+segundo empujon (10dee08..HEAD-del-sello) queda publicado y verificable con el mismo par
+de comandos de arriba; no se estampa aqui porque la nota no puede perseguir al puntero.

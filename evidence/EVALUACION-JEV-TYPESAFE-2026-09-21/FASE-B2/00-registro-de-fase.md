@@ -409,4 +409,42 @@ decision expresa del operador.** Sin write-back en QMind. Sin tocar el hermano, 
 `FASE-C/`, `muestra.json` ni `protocolo.json`. Sin ofrecer la fase siguiente: la re-apertura de C es otra
 sesion con otra autorizacion.
 
+### Sello del push `4661b6e..10dee08` (SESION DE SELLO de las filas 16 y 18 del 33-registro)
+
+**Que se empujo, medido contra el servidor (2026-10-05):** `git ls-remote origin refs/heads/master` =
+`10dee08` = `git rev-parse HEAD`; `git rev-list --left-right --count origin/master...HEAD` = `0 0` al cerrar
+este bruto. El rango empujado desde el tip remoto previo es **un solo commit**, medido con `git log --oneline
+4661b6e..HEAD`: `10dee08 docs(jev): SESION DE SELLO - filas 16 y 18 del registro unico, re-ancladas al tip
+4661b6e`. Sus brutos: `26-verificacion-del-push.txt` y `27-quick-gate-post-sello-push.txt`.
+
+**Lo que este push vence, medido por asunto y no por literal:**
+* El mensaje publicado de `10dee08` lleva 1 ocurrencia de «sin push» (`git log -1 --format=%B 10dee08 |
+  grep -oiE 'sin push' | wc -l` = 1); queda vencida y **no se hace reword**: reescribir un commiteado ya
+  empujado obliga a `push --force` sobre una rama compartida, y esa no es la via de la casa.
+* La fila 16 del `33-registro-unificado` (linea 51, anotador «Estampado 2026-10-04») decia «las ediciones de
+  esta fila quedan sin commitear ... hasta que se pidan» y «`0c79e9c..4661b6e` = 13 commits». Ambas quedan
+  superadas: ya estan commiteadas y empujadas, y el rango con `10dee08` medido ahora es `0c79e9c..HEAD` =
+  **14** (`git rev-list --count`). **No se re-escriben**: son foto del momento de estampar y la convencion
+  del registro es aditiva.
+* `docs/cobertura-historia.md:113`, `:126` y `:138` dicen «sin push» de **otros** rangos (`5ca6395`,
+  `6cdb430..7899f0f`); **no se barren**, porque contener el literal y barrerlo convertira una mencion ajena
+  en rojo propio.
+
+**La L3 y el gate que este sello re-abre:** el operador eligio **no correr L3** ni en el push de `10dee08` ni
+aqui; queda declarado con fecha para que nadie lea el rango publicado como ya revisado. Consecuencia
+estructural que este sello produce: el commit de sello es un commit **nuevo sobre `10dee08`**, asi que
+cualquier L3 futura tendra por baseline un rango que ya incluye a `10dee08` y a este sello, no el que estampo
+la fila 16. El skip anterior no se arrastra a un tip nuevo.
+
+**Este sello, empujado, no se describe a si mismo:** la regla de la casa es que un segundo push deja
+incompleto el sello del primero, y reescribirlo abriria el mismo hueco un nivel mas arriba. El rango de este
+segundo empujon (`10dee08..HEAD-del-sello`) queda publicado y verificable con el mismo par de comandos de
+arriba; su autoridad es `git log`, no una nota que persiga al puntero.
+
+**Permisos al cerrar este sello:** Commit de sello: una ejecucion (tres archivos: `26-`, `27-` y este
+apendice). Push: ejecutado, paridad re-medida contra el servidor. **L3: sin correr, por decision expresa del
+operador.** Sin write-back en QMind. Sin tocar `scripts/`, `tests/`, `config/`, `VERSION.yaml`, `AGENTS.md`,
+`.opencode/` ni `decision.json`. Sin ofrecer la fase siguiente: la re-apertura de C y el RELEASE siguen
+pidiendo otra sesion con otra autorizacion.
+
 
