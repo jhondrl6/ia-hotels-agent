@@ -452,7 +452,7 @@ Nada de `scripts/`, `tests/`, `config/`, `VERSION.yaml`, `AGENTS.md`, `.cursorru
 | R7 superficie respetada | **HECHA** | §9.6 y `05-`: cero escrituras en las trece rutas vedadas |
 | R8 cinco cortes y permisos | **HECHA** | §10.1; commit, push y L3 solicitados y no ejecutados |
 | R9 nada heredado | **HECHA** | tip, paridad, rangos, baterías, shas y conteos medidos en la sesión; las negaciones del CLI se re-corrieron en vez de citar el crudo de B.2 (`21-`) |
-| R10 evidencia preservada | **HECHA** | 35 brutos `.txt` y un arnés, numerados en `FASE-RELEASE/`; cada hallazgo nuevo con dueño y criterio (§7 y §8) |
+| R10 evidencia preservada | **HECHA** | brutos `.txt` numerados en `FASE-RELEASE/` (35 y un arnés al corte documental; **37 y dos arneses al cierre del sello**, recuento en §12); cada hallazgo nuevo con dueño y criterio (§7 y §8) |
 
 ### 10.3 Deuda y hallazgos, todos con dueño
 
@@ -501,3 +501,89 @@ siguiente.**
 
 Commit, push, L3 y write-back: **no ejecutados y no ofrecidos como hecho**. Los cinco cortes terminan acá,
 en espera de instrucción escrita del operador.
+
+⟦**Vencida en su primera cláusula por §12**: el operador autorizó «Git Commits» y el trabajo se
+commiteó en `39717b1` (53 archivos, +3416/−69, hooks en verde, verificado en su propio árbol con un clon
+limpio). **Push, L3 y write-back siguen sin ejecutar**, y la frase se conserva porque describe el estado al
+estampar el corte documental. La anotación es aditiva: la foto no se reescribe.⟧
+
+---
+
+## 12. Sello del commit `39717b1`
+
+El operador autorizó **«Git Commits»** (acto 2 de §10.4). No autorizó push ni L3, así que esta hoja estampa
+el commit y su verificación, y deja el rango sin publicar y sin revisar donde estaba.
+
+### Lo que se ejecutó
+
+| Paso | Comando | Valor medido |
+|---|---|---|
+| Stage | `git add` **por nombre** de las 13 rutas modificadas + la carpeta `evidence/…/FASE-RELEASE` | **53 rutas** en el índice (`git diff --cached --name-only \| wc -l`); sin `git add -A`; el árbol sin staging quedó vacío |
+| Commit | `git commit -F temp/fase-release-2026-10-05/mensaje-commit.txt` | `COMMIT_EXIT=0` · `39717b19a99de8ec87d0c4066a257d06c75a74e7` · **53 archivos, +3416/−69** · hooks activos, **sin `--no-verify`**: «All checks PASSED - Commit allowed» |
+| Árbol después del commit | `git status --porcelain` | **vacío** |
+| Paridad | `git rev-list --left-right --count origin/master...HEAD` | **0 1** — commiteado, nada empujado |
+| El servidor | `git ls-remote origin refs/heads/master` | sigue en `ced8715…`, o sea el commit está **solo local** |
+| Rango sin L3 | `git rev-list --count 0c79e9c..HEAD` | **16** (era 15 al arrancar la sesión; este commit lo mueve) |
+
+**El Secrets Check del hook sí miró los archivos nuevos esta vez.** La pasada de pre-commit de §2 corrió con
+la carpeta aún sin stagear y reportó «1381 tracked files + staged»; con el stage lleno, el hook volvió a
+escanear y pasó. Es la diferencia entre un verde que revisó tu evidencia y un verde que no la vio.
+
+### Verificación en el propio árbol del commit (arnés `35-`, crudo `35-`, procedimiento `36-`)
+
+Clon limpio fuera del workspace (`--no-checkout`, y `core.longpaths` y `core.autocrlf=input` **dentro** del
+clon), checkout de `39717b1`, árbol con **0 entradas** de status:
+
+| Chequeo en el clon | Resultado |
+|---|---|
+| `pytest tests/quality_gates/jev_pilot -q` con el intérprete del venv | **113 passed, 13 skipped**, EXIT 0 — los 13 saltos son el SDK del entorno aislado, ausente en el clon, con su causa nombrada por el fixture `sdk` |
+| `report` dentro del clon | EXIT 0 |
+| `decide` dentro del clon | **EXIT 3** (emitido sin decisión) |
+| `informe_comparativa.json` | sha256 normalizado a LF **igual** al commiteado (`1d6a272cb95f…`); el crudo regenerated es `432a61cc6ba7…`, que es **exactamente** el sha de disco que esta hoja publicó en §1 desde otra raíz |
+| `decision.json` | normalizado **igual** (`613da2b719c7…`); crudo `7eccaabecbc6…` = el publicado en §1 |
+| `decision.md` | normalizado **igual** (`f329673bf929…`); crudo `571f1fc6ade3…` = el publicado en §1 |
+| Cifra canónica commiteada | `git grep -h -c -E "^\s*def test_" 39717b1 -- "tests/*.py"` sumado = **4835**, converge con la del árbol y con la que publica `AGENTS.md` |
+
+Las tres formas del mismo artefacto se publican a propósito y no son tres verdades distintas: el **disco** es
+CRLF (`432a61cc…`), el **blob** es LF y su sha256 normalizado es `1d6a272c…`. Con `core.autocrlf=input` la
+paridad entre máquinas se prueba por la forma normalizada; citar un sha de disco y exigir que case con el blob
+es el error que esta casa ya pagó.
+
+### Lo que este commit vence, medido por asunto y no por literal
+
+- **§11 arriba: «Commit, push, L3 y write-back: no ejecutados y no ofrecidos».** La primera de las cuatro
+  quedó ejecutada por instrucción escrita; las tres restantes siguen vigentes. La frase se conserva porque
+  describe el estado al estampar el corte documental —que es lo que esta hoja registra— y se anota acá.
+- **`10-analisis-post-implementacion.md`, párrafo de permisos del cierre**: mismo acto, misma anotación
+  aditiva con su fecha.
+- **Ninguna otra mención «sin commit» del expediente se barre**: las de `FASE-B/`, `FASE-B2/`, `FASE-C/`,
+  `DEUDA-FASE-B-2026-10-04/`, `PREFLIGHT-FASE-C-2026-10-04/` y `docs/cobertura-historia.md` hablan de **sus
+  propias** tandas y sus propios rangos. Contar el literal y barrerlo convertiría prohibiciones ajenas en
+  rojos propios, que es el error que la casa ya declaró dos veces.
+- **La fila 16 del `33-registro-unificado`** (documento del hermano) sigue diciendo «las ediciones de esta
+  fila quedan sin commitear» y estampa `0c79e9c..4661b6e = 13` commits. Con este sello el rango medido es
+  `0c79e9c..HEAD` = **16**. **No se toca**: AC-R7 veda escribir en el hermano y no hay línea literal. Queda
+  declarado en §5 con su medición.
+
+### Consecuencia que este commit produce para la L3
+
+El commit `39717b1` es un commit **nuevo sobre `ced8715`**, así que cualquier L3 futura tendrá por baseline un
+rango que ya lo incluye, no el que estampó la fila 16. El skip anterior no se arrastra a un tip nuevo.
+
+### Permisos al cerrar este sello
+
+Commit: **una ejecución** (`39717b1`) más esta hoja de sello. Push: **sin ejecutar** (no autorizado).
+L3: **sin ejecutar** (no autorizada; la pedí en §10.4 y la instrucción respondió solo el commit).
+Write-back: **sin ejecutar**. Sin tocar el hermano, `scripts/`, `tests/`, `config/`, `VERSION.yaml`,
+`AGENTS.md`, `muestra.json`, `protocolo.json`, `etiquetas.json` ni `FASE-C/`. Sin ofrecer la fase siguiente ni
+re-abrir C.
+
+### Conteos finales del expediente
+
+La carpeta de esta fase pasó de 40 a **43 entradas**: el registro (esta hoja), **37 brutos `.txt`**, **dos
+arneses `.py`** (`04-arnes-contraste.py` y `35-arnes-verificacion-del-commit.py`) y los **tres artefactos**
+emitidos por `report`/`decide`. Los tres artefactos y el registro viajan en el commit `39717b1`; el arnés y
+sus dos brutos (`35-`, `36-`) viajan en este sello. El derivado `.opencode/wiring_report.json` volvió a
+quedar vencido con el arnés nuevo (publicado 131 / fresco 132, `EXIT 3`) y se re-publicó por su escritor a
+**`EXIT 0`** con digest `2e8f095baf00`; el quick gate cerró en **13/13** y `build_lesson_index.py --check` en
+**0** (344 IDs, sin invocar al escritor otra vez).

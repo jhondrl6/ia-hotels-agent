@@ -1,0 +1,26 @@
+==============================================================================
+== verificacion del commit 39717b19a99de8ec87d0c4066a257d06c75a74e7 en su propio arbol
+==============================================================================
+-- clone EXIT=0
+-- git config core.longpaths=true EXIT=0
+-- git config core.autocrlf=input EXIT=0
+-- checkout EXIT=0 | HEAD=39717b19a99de8ec87d0c4066a257d06c75a74e7 | entradas del status=0
+
+== 1. bateria del piloto en el clon
+   EXIT=0 | 113 passed, 13 skipped in 1.26s
+   (los skipped son el SDK del entorno aislado, ausente en el clon, con su causa por fixture)
+
+== 2. reproduccion de report y decide dentro del clon, contra lo commiteado
+   report en el clon: EXIT=0  (0 = emitido)
+   decide en el clon: EXIT=3  (3 = emitido sin decision)
+   informe_comparativa.json   normalizado clon=1d6a272cb95f9bab normalizado commiteado=1d6a272cb95f9bab IGUAL
+       crudo clon=432a61cc6ba7 (CRLF del disco) crudo clon-checkout=1d6a272cb95f
+   decision.json              normalizado clon=613da2b719c75dbf normalizado commiteado=613da2b719c75dbf IGUAL
+       crudo clon=7eccaabecbc6 (CRLF del disco) crudo clon-checkout=613da2b719c7
+   decision.md                normalizado clon=f329673bf929027e normalizado commiteado=f329673bf929027e IGUAL
+       crudo clon=571f1fc6ade3 (CRLF del disco) crudo clon-checkout=f329673bf929
+
+== 3. cifra canonica commiteada, medida sin tocar el arbol de trabajo
+   git grep -h -c -E ... 39717b1 -- tests/*.py  sumado = 4835
+
+-- clon eliminado: C:\Users\Jhond\AppData\Local\Temp\clone-jev-39717b1

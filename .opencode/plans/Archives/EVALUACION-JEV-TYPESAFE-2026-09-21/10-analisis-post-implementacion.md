@@ -249,3 +249,8 @@ Lo que la certificación **sí** produjo, medido y no recordado:
 **Permisos al cerrar esta hoja**: commit, push, escaneo L3 y write-back a QMind **no ejecutados y no
 ofrecidos**; son actos del operador, cada uno con su instrucción escrita. Esta sesión no ofrece la fase
 siguiente ni re-abre C.
+
+⟦**Anotación aditiva del sello (mismo 2026-10-05)**: el operador autorizó «Git Commits» y el trabajo quedó
+commiteado en `39717b1`, verificado en su propio árbol con un clon limpio. **Push, L3 y write-back siguen sin
+ejecutar**, así que el resto del párrafo sigue vigente. El detalle medido vive en el §12 del registro de
+FASE-RELEASE.⟧

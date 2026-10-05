@@ -1,0 +1,26 @@
+== re-publicacion del derivado tras el arnes nuevo del sello (EXIT 3 -> 0) ==
+-- baseline: validate_wiring.py --check
+   PRE_EXIT=3
+[FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest 2e8f095baf00)
+  - cobertura.archivos_excluidos_por_rol_versionado: publicado 143 | fresco 144
+  - exclusiones_por_rol.evidence.cantidad_versionada: publicado 131 | fresco 132
+-- escritor: validate_wiring.py --write-report
+   WRITER_EXIT=0
+[OK] Wiring: 174 llamadas descubiertas en 699 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=132 versionada=132, temp bruto=146 versionada=0, venv bruto=7610 versionada=0
+-- POST: validate_wiring.py --check
+   POST_EXIT=0
+conforme con el calculo en memoria (digest 2e8f095baf00)
+-- numstat del derivado
+warning: in the working copy of '.opencode/wiring_report.json', CRLF will be replaced by LF the next time Git touches it
+5	5	.opencode/wiring_report.json
+
+== quick gate con el arbol del sello staged-ready ==
+   QUICK_EXIT=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+
+== anexo: quick gate re-corrido DESPUES de las ediciones del sello (registro 12- y 10-analisis) ==
+comando: ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
