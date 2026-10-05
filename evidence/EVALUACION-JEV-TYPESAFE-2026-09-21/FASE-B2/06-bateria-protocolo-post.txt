@@ -1,0 +1,6 @@
+........................                                                 [100%]
+24 passed in 0.12s
+EXIT=0
+tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py::test_la_negacion_del_lector_tambien_tiene_codigo_de_salida
+
+24 tests collected in 0.06s

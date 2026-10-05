@@ -1,0 +1,13 @@
+== negacion sin insumos, EXIT leido sin tuberia ==
+report exige respuestas, etiquetas, muestra, protocolo: sin ellos no hay registros que reproducir, y publicar un cociente sin insumo seria rellenarlo a mano (AC10). Este modo no abre red ni instancia clientes.
+EXIT_REPORT=2
+decide exige informe, protocolo: sin ellos no hay registros que reproducir, y publicar un cociente sin insumo seria rellenarlo a mano (AC10). Este modo no abre red ni instancia clientes.
+EXIT_DECIDE=2
+== insumo declarado pero ausente ==
+report no encuentra insumos: no-existe.jsonl, x.json, y.json, z.json
+EXIT_INSUMO_AUSENTE=1
+== antecedente: crudo de FASE-C (los cinco modos de entonces) ==
+usage: evaluate_jev_pilot.py [-h]
+                             {prepare,check,run,protocolo-check,decide} ...
+evaluate_jev_pilot.py: error: argument mode: invalid choice: 'report' (choose from prepare, check, run, protocolo-check, decide)
+EXIT=0

@@ -1,0 +1,22 @@
+== numstat de los archivos tocados ==
+warning: in the working copy of '.opencode/wiring_report.json', CRLF will be replaced by LF the next time Git touches it
+warning: in the working copy of 'docs/cobertura-historia.md', CRLF will be replaced by LF the next time Git touches it
+6	6	.opencode/wiring_report.json
+2	2	AGENTS.md
+45	0	docs/cobertura-historia.md
+847	22	scripts/evaluate_jev_pilot.py
+57	3	tests/quality_gates/jev_pilot/test_jev_pilot_offline.py
+21	6	tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py
+== sha256 de los artefactos emitidos por el runner ==
+informe_comparativa.json 3f3ce6cd0022f688 15370 bytes
+decision.json a65934ba295e499c 5858 bytes
+decision.md 9fd8149c46e10e9b 2395 bytes
+mutation.json 11e109177299d043 11259 bytes
+== lineas de respuestas.jsonl (insumo real de C) ==
+6
+== prueba de ausencia: el runner no importa el SDK ==
+0
+== collect-only del archivo nuevo ==
+
+36 tests collected in 0.06s
+EXIT=0

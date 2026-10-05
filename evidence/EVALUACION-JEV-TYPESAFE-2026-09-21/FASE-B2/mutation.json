@@ -1,0 +1,405 @@
+{
+  "schema": "jev-pilot-mutacion/v1",
+  "sesion": "SESION 3.5 (FASE-B.2) del piloto JEV",
+  "fecha": "2026-10-04",
+  "instrumento": "scripts/evaluate_jev_pilot.py, cargado por importlib desde la ruta versionada",
+  "comando": "venv/Scripts/python.exe evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-B2/12-arnes-mutacion.py",
+  "cero_red": "el guard de sockets del conftest no interviene aqui: ninguna de estas rutas abre transporte, `report`/`decide` no lo instancian y el mutant M4 reemplaza la resolucion de la credencial",
+  "fuente": {
+    "ruta": "scripts/evaluate_jev_pilot.py",
+    "sha256_antes": "41c3f5cb79dbad8349a99d22709f57efc3c6f98c0bc36cd58f57512538dc65c6",
+    "sha256_despues": "41c3f5cb79dbad8349a99d22709f57efc3c6f98c0bc36cd58f57512538dc65c6",
+    "arbol_intacto": true
+  },
+  "insumos": "sinteticos en el temp del sistema (4 pares, 2 brazos), no la corrida de FASE-C",
+  "mutantes": [
+    {
+      "id": "M1",
+      "diente": "test_mutante_acierto_siempre_falso_mueve_los_tres_cocientes_que_usan_la_regla",
+      "mutante": "es_acierto devuelto siempre falso",
+      "verde": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "rojo": {
+        "jev_precision": [
+          0,
+          2
+        ],
+        "jev_recall": [
+          0,
+          1
+        ],
+        "jev_e2e": [
+          0,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "campos_que_se_movieron": [
+        "jev_e2e",
+        "jev_precision",
+        "jev_recall"
+      ],
+      "esperado": "los tres numeradores de clasificacion y e2e caen a 0; la recuperacion NO se mueve porque la pone la funcion testada",
+      "cae_por": "el contador de clasificacion deja de leer el acierto de la fila",
+      "cae_por_la_causa_nombrada": true,
+      "restauracion": "modulo recargado desde la fuente en disco; el arbol no se muto"
+    },
+    {
+      "id": "M2",
+      "diente": "test_mutante_abstencion_vuelta_eleccion_cambia_precision_y_el_denominador_aparte",
+      "mutante": "estado_de_propuesta trata `ninguna-aplica` como eleccion",
+      "verde": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "rojo": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 0,
+        "ds_cociente_abstencion": [
+          0,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "campos_que_se_movieron": [
+        "ds_abstenciones",
+        "ds_cociente_abstencion"
+      ],
+      "esperado": "el denominador propio de abstenciones se vacia y precision sube de 0 a 1",
+      "cae_por": "la abstencion se conto como propuesta: el criterio congelado peridio su columna",
+      "cae_por_la_causa_nombrada": true,
+      "restauracion": "modulo recargado desde la fuente en disco; el arbol no se muto"
+    },
+    {
+      "id": "M3",
+      "diente": "test_un_fallo_del_camino_cuenta_en_extremo_a_extremo_y_no_como_propuesta",
+      "mutante": "estado_de_propuesta colapsa `sin_eleccion_por_fallo` en `sin_fila` (el fallo se vuelve invisible)",
+      "verde": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "rojo": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 1,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "campos_que_se_movieron": [
+        "ds_e2e_denominator"
+      ],
+      "esperado": "el denominador del extremo a extremo baja de 2 a 1: el score sube por excluir el fallo, que es exactamente lo que el maestro :93 prohibe",
+      "cae_por": "el fallo desaparecio del registro y el brazo quedo mejor medido de lo que fue",
+      "cae_por_la_causa_nombrada": true,
+      "restauracion": "modulo recargado desde la fuente en disco; el arbol no se muto"
+    },
+    {
+      "id": "M4",
+      "diente": "test_la_credencial_se_resuelve_por_entorno_y_no_sale_en_ningun_artefacto",
+      "mutante": "credencial_del_sdk publica el valor leido del `.env` y su longitud en el estado",
+      "verde": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "rojo": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "longitud",
+          "nombre",
+          "valor"
+        ],
+        "centinela_en_el_estado_publicado": true
+      },
+      "campos_que_se_movieron": [
+        "centinela_en_el_estado_publicado",
+        "credencial_estado_claves"
+      ],
+      "esperado": "el estado publicado gana las claves `valor` y `longitud` y el centinela aparece en el json: el diente de la fuga cae por la clave nombrada",
+      "cae_por": "una credencial publicada, o incluso su forma (la longitud), es una fuga y no un detalle del registro",
+      "cae_por_la_causa_nombrada": true,
+      "restauracion": "modulo recargado desde la fuente en disco; el arbol no se muto"
+    },
+    {
+      "id": "M5",
+      "diente": "test_una_indisponibilidad_no_elimina_el_brazo",
+      "mutante": "el informe se construye con los fallos operativos del brazo sujeto borrados (la indisponibilidad se esconde del criterio de margen)",
+      "verde": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "NO-EVALUABLE",
+        "run_status": "INCOMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "rojo": {
+        "jev_precision": [
+          1,
+          2
+        ],
+        "jev_recall": [
+          1,
+          1
+        ],
+        "jev_e2e": [
+          1,
+          2
+        ],
+        "jev_recuperacion": [
+          1,
+          2
+        ],
+        "ds_abstenciones": 1,
+        "ds_cociente_abstencion": [
+          1,
+          1
+        ],
+        "ds_e2e_denominator": 2,
+        "margen_estado": "CUMPLE",
+        "run_status": "COMPLETO",
+        "credencial_estado_claves": [
+          "accion",
+          "fuente",
+          "nombre"
+        ],
+        "centinela_en_el_estado_publicado": false
+      },
+      "campos_que_se_movieron": [
+        "margen_estado",
+        "run_status"
+      ],
+      "esperado": "margen pasa de NO-EVALUABLE a evaluable y run_status de INCOMPLETO a COMPLETO, con el brazo todavía publicado",
+      "cae_por": "AC12: medirle al modelo una indisponibilidad de la infraestructura convierte un fallo del camino en veredicto",
+      "cae_por_la_causa_nombrada": true,
+      "restauracion": "modulo recargado desde la fuente en disco; el arbol no se muto"
+    }
+  ],
+  "todos_caeen_por_la_causa_nombrada": true
+}

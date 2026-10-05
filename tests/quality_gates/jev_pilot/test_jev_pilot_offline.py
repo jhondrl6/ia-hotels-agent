@@ -119,8 +119,27 @@ def test_metrics_known_counts_and_empty_denominator():
     assert m["extremo_a_extremo"]["value"] == 0.5
 
 
+def _protocolo_minimo() -> dict:
+    """Protocolo sintetico para el guard de imports: la k y los umbrales, nada del versionado."""
+    return {"schema": "jev-pilot-protocolo/v1", "status": "CONGELADA",
+            "reglas_recuperacion": "top-8 por consulta fria",
+            "criterios_adopcion": {"cobertura_min": 0.95, "margen_vs_deepseek": 0.25,
+                                   "suficiencia_minima": 0.5, "latencia_max": 30000,
+                                   "revision_humana": "obligatoria; designado: jhon (2026-10-02)"},
+            "limites_gasto": {"usd": None, "llamadas": 12, "tokens_in": 1834, "tokens_out": 139},
+            "parametros": {"retry_policy": {"max_retries": 0}, "timeout_s": 30},
+            "modelos": {"jev_pin": "jev-1.13.0", "comparador": "DeepSeek", "excluido": "Anthropic"}}
+
+
 def test_prepare_and_check_do_not_construct_clients(tmp_path, monkeypatch):
-    """AC11: los modos locales nunca instancian clientes ni tocan la red."""
+    """AC11: los modos locales nunca instancian clientes ni tocan la red.
+
+    FASE-B.2 (2026-10-04) re-ancla la mitad de `decide` de esta asercion. El contrato que gobernaba
+    era "los modos que hacen inferencias se niegan en seco"; desde CR-2 `decide` es offline y emite,
+    asi que lo que sigue negado --con el mismo EXIT 2-- es emitir SIN INSUMOS. El cambio se escribe
+    aqui y no en silencio: `main(["decide"])` sin insumos sigue valiendo 2, y con insumos vale 3
+    (emitido sin decision) mientras el guard de imports prohibidos siga armado.
+    """
     real_import = builtins.__import__
 
     def guarded(name, *args, **kwargs):
@@ -130,11 +149,46 @@ def test_prepare_and_check_do_not_construct_clients(tmp_path, monkeypatch):
         return real_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", guarded)
-    _, _, mpath, epath = _prepare_write(tmp_path)
+    muestra, _, mpath, epath = _prepare_write(tmp_path)
     assert ejv.check(mpath, epath)["check_status"] == "OK"
-    # run/decide se niegan sin importar nada (exit != 0).
+    # run sigue negado: es el unico modo que podria gastar una llamada (AC8/AC12).
     assert ejv.main(["run"]) == 2
+    # report/decide se niegan SIN insumos, no por ser modos nuevos.
+    assert ejv.main(["report"]) == 2
     assert ejv.main(["decide"]) == 2
+
+    # Con insumos offline, emiten sin importar nada prohibido (guard armado en todo el bloque).
+    par = muestra["pairs"][0]
+    ruta_respuestas = tmp_path / "respuestas.jsonl"
+    fila = {"pair_id": par["pair_id"], "split": par["split"], "lesson_id_target": par["lesson_id"],
+            "brazo": "jev", "propuesta": par["lesson_id"], "abstencion": False,
+            "candidatos_frios": [par["lesson_id"]], "leccion_target_en_candidatos": True,
+            "attempts": 1, "error_kind": None, "intentos": [], "usage_normalized": None,
+            "duracion_ms": [], "request_id": None}
+    ruta_respuestas.write_text(json.dumps(fila, ensure_ascii=False) + "\n", encoding="utf-8")
+    ruta_protocolo = tmp_path / "protocolo.json"
+    protocolo = _protocolo_minimo()
+    ruta_protocolo.write_text(json.dumps(protocolo, ensure_ascii=False), encoding="utf-8")
+
+    informe = ejv.report(respuestas=ruta_respuestas, etiquetas=epath, muestra=mpath,
+                         protocolo=ruta_protocolo, fecha="2026-10-04")
+    assert informe["generado_sin_red"] is True
+    e2e = informe["por_brazo"]["jev"]["extremo_a_extremo"]
+    assert e2e["value"] is None and e2e["motivo"] == "denominador_cero", e2e
+    # La muestra de `_prepare_write` esta SIN revisar (label None), o sea no hay conjunto elegible:
+    # el emisor publica NO-EVALUABLE con su motivo en vez de inventar un numero (AC10).
+    assert informe["conjunto_elegible"]["importantes_elegibles"] == []
+    assert ejv.main(["report", "--respuestas", str(ruta_respuestas), "--etiquetas", str(epath),
+                     "--muestra", str(mpath), "--protocolo", str(ruta_protocolo),
+                     "--out", str(tmp_path / "informe.json")]) == 0
+    decision = ejv.decide(informe=informe, protocolo=protocolo, fecha="2026-10-04")
+    # La regla congelada se aplico sin red y sin importar el SDK: con 0 de 4 pares pertinentes la
+    # suficiencia no se cumple, y esa es la salida que gobierna (no RECHAZAR, que exige comparacion
+    # valida). El emisor propone; la adopcion la firma el operador.
+    assert decision["schema"] == "jev-pilot-decision/v1"
+    assert decision["run_status"] == "INCOMPLETO"
+    assert decision["decision"] == "MUESTRA-INSUFICIENTE"
+    assert decision["requiere_revision_del_operador"] is True
 
 
 if __name__ == "__main__":

@@ -1,0 +1,24 @@
+== corrida 1 y 2 con la misma fecha (bytes identicos) ==
+EXIT_R1=0
+EXIT_R2=0
+317541b3e092245060a5c82d8251ec538c475de52bf5aeeb26cdcb27231b1296 */tmp/r1.json
+317541b3e092245060a5c82d8251ec538c475de52bf5aeeb26cdcb27231b1296 */tmp/r2.json
+EXIT_D1=3
+EXIT_D2=3
+a65934ba295e499c0af37494a9bf5f0bf224d2203a776d5dac53eea558a6dff7 */tmp/d1/decision.json
+a65934ba295e499c0af37494a9bf5f0bf224d2203a776d5dac53eea558a6dff7 */tmp/d2/decision.json
+9fd8149c46e10e9b686ab70c50c10019075b68f1af2cfb64c95ec20bffc9bb2f */tmp/d1/decision.md
+9fd8149c46e10e9b686ab70c50c10019075b68f1af2cfb64c95ec20bffc9bb2f */tmp/d2/decision.md
+== corrida con otra fecha: solo la linea fecha se mueve ==
+EXIT_D3=3
+4c4
+<   "fecha": "2026-10-04",
+---
+>   "fecha": "2026-10-05",
+DIFF_JSON=1
+4c4
+< - Fecha: 2026-10-04
+---
+> - Fecha: 2026-10-05
+DIFF_MD=1
+EXIT=0

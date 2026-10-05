@@ -1,0 +1,12 @@
+{
+ "mutantes": 5,
+ "todos_caeen": true,
+ "arbol_intacto": true,
+ "sha": "41c3f5cb79db"
+}
+M1: movio ['jev_e2e', 'jev_precision', 'jev_recall'] -> cae por la causa nombrada: True
+M2: movio ['ds_abstenciones', 'ds_cociente_abstencion'] -> cae por la causa nombrada: True
+M3: movio ['ds_e2e_denominator'] -> cae por la causa nombrada: True
+M4: movio ['centinela_en_el_estado_publicado', 'credencial_estado_claves'] -> cae por la causa nombrada: True
+M5: movio ['margen_estado', 'run_status'] -> cae por la causa nombrada: True
+EXIT=0

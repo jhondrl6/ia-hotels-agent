@@ -33,15 +33,30 @@ def guarda(runner, protocolo, nombre: str) -> list:
 
 
 def test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado(runner, real):
-    """Estado del protocolo al 2026-10-03: los dos techos ya estan escritos y `usd` sigue null.
+    """Estado del protocolo desde su congelado: CONGELADA con dueño y fecha, y un solo null.
 
-    Antes de la corrida k=8 este control afirmaba TRES null; la tanda los redujo a uno. La asercion
-    se ancla a lo que el artefacto dice hoy, con el numero junto al comando que lo midio.
+    Re-anclado en FASE-B.2 (2026-10-04) cerrando CR-4. Linea anterior, conservada como antecedente:
+    hasta el 2026-10-03 este control afirmaba `protocolo_status == "BORRADOR"` y su mensaje decia
+    "si alguien lo congelo aqui, esto es el aviso". FASE-C lo congelo (jhon, 2026-10-04,
+    `protocolo.json:congelado`), el aviso sonó y ese rojo es el que la sesion 3 no pudo tocar porque
+    su §5 le prohibia `tests/`: quedo registrado como CR-4 con rojo previo **1 failed / 23 passed**
+    (crudo `FASE-C/22-bateria-protocolo-final.txt`). La cura re-ancla el estado, no baja la asercion:
+    el diente contrario se queda, y sigue avisando si el versionado regresara a BORRADOR, porque eso
+    si seria un hallazgo y no un pendiente.
+
+    Antes de la corrida k=8 el control afirmaba TRES null; la tanda los redujo a uno.
     """
     resultado = runner.validar_protocolo(real)
     assert resultado["check_status"] == "OK", resultado["hallazgos"]
-    assert resultado["protocolo_status"] == "BORRADOR", (
-        "el congelado del protocolo es FASE-C: si alguien lo congelo aqui, esto es el aviso")
+    assert resultado["protocolo_status"] == "CONGELADA", (
+        "el protocolo se devolvio a BORRADOR despues de su congelado del 2026-10-04: hallazgo")
+    assert real["congelado"] == {"revisado_por": "jhon", "fecha": "2026-10-04"}, real["congelado"]
+    # El diente contrario: el mismo lector tiene que seguir viendo un BORRADOR si alguien lo vuelve.
+    vuelto = copy.deepcopy(real)
+    vuelto["status"] = "BORRADOR"
+    assert runner.validar_protocolo(vuelto)["protocolo_status"] == "BORRADOR", (
+        "el ancla nueva se apoyo en un campo que el lector ya no devuelve")
+    assert runner.validar_protocolo(vuelto)["check_status"] == "OK", "BORRADOR dejo de ser forma valida"
     assert resultado["k"] == 8
     assert resultado["umbrales_gobernados"] == 8
     assert resultado["nulos"] == ["limites_gasto.usd"], resultado["nulos"]

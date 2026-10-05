@@ -15,6 +15,51 @@
 
 ---
 
+> **Ronda del 2026-10-04 — SESION 3.5 / FASE-B.2 del piloto JEV (la cifra sube a 4,835).** Medido con el
+> metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,835**) y
+> contrastado con el arbol versionado (`git grep -h -c -E "^\s*def test_" HEAD -- tests/*.py` sumado =
+> **4,800**, con `HEAD` = `40c2754`): el delta de **35** es trabajo de esta sesion sin commitear; la sesion
+> termina en los cinco cortes y el commit no es condicion de ninguno.
+>
+> Atribucion por archivo, medida y no derivada de la fila anterior: **+35** en `tests/quality_gates/`, todos
+> en el nuevo `jev_pilot/test_jev_pilot_report_decide_fase_b2.py` (951 → 986 en la fila de la tabla). Son los
+> dientes con los que se cerraron los cuatro cambios requeridos que FASE-C dejo abiertos:
+>
+> * **CR-1** — los cuatro cocientes del maestro (:88-91) construidos desde `respuestas.jsonl` +
+>   `etiquetas.json`, con los **cuatro denominadores separados** y los valores calculados a mano escritos en
+>   el docstring del archivo. Un control afirma que precision y recall no comparten denominador, porque la
+>   envoltura `metrics()` de FASE-A comparte uno (`evaluate_jev_pilot.py:191-192`) y por eso `report` emite
+>   cociente por cociente con `score()`, la otra pieza probada en FASE-A, sin re-implementarla.
+> * **CR-2** — `report` y `decide`: determinismo byte-a-byte con la fecha fijada, negacion con EXIT 2 y causa
+>   escrita cuando faltan insumos, EXIT 1 cuando el insumo declarado no esta en disco, y un control negativo
+>   **ejercitado sobre el artefacto versionado**: el `informe_comparativa.json` de FASE-C lo escribio un arnes
+>   de sesion, no el runner, y `decide` lo rechaza porque no trae `criterios`.
+> * **CR-3** — `--etiquetas` en el parser de `run` (la via CLI publicaba `recuperacion: null`, H5 de FASE-C) y
+>   la credencial del SDK por el camino del contrato: se rellena `TYPESAFE_API_KEY` desde `.env` **por nombre**
+>   y solo si el entorno no la trae, sin imprimir jamas el valor ni su longitud. La via con `enviar` inyectado
+>   no la toca, medido con contador.
+> * **CR-4** — `test_jev_pilot_protocolo_check.py::test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado`
+>   re-anclado a `CONGELADA` con la causa y la fecha del congelado, **conservando el diente contrario** (una
+>   copia vuelta a BORRADOR sigue siendo leida como BORRADOR por el mismo lector). Rojo previo declarado:
+>   1 failed / 23 passed (crudo `FASE-C/22-bateria-protocolo-final.txt`); despues: **24 passed** y la bateria
+>   del piloto **126 passed** (90 → 126, crudos `06-` y `07-` con el EXIT leido sin tuberia).
+>
+> **Los cinco mutantes, ejecutados y no escritos** (`FASE-B2/mutation.json`, arnes `12-arnes-mutacion.py`): M1
+> `es_acierto` siempre falso (los tres numeradores de clasificacion y e2e caen a 0, la recuperacion NO se mueve
+> porque la pone la funcion testada); M2 `ninguna-aplica` vuelto eleccion (la columna propia de abstenciones se
+> vacia); M3 el `error_kind` colapsado en `sin_fila` (el denominador del extremo a extremo baja de 2 a 1: el
+> score mejora **excluyendo el fallo**, que es lo que el maestro :93 prohibe); M4 la credencial publicada con
+> `valor` y `longitud` (el centinela aparece en el estado); M5 los fallos operativos borrados del informe
+> (margen pasa a evaluable y `run_status` a COMPLETO, con el brazo aun publicado). Cada uno mueve sus campos y
+> el modulo recargado vuelve al verde; el sha de la fuente es identico antes y despues, o sea el arbol de
+> trabajo no se muto.
+>
+> **Lo que la ronda no absorbe**: la limitacion del reintento de descarga en el diente de frescura (dueno
+> `scripts/verify_qmind_context_freshness.py`, instrumento del hermano) y la transferencia D7/D6
+> (`transfer_status: PENDIENTE`), que solo se mueve con instruccion literal que nombre archivos y alcance.
+
+---
+
 > **Ronda del 2026-10-04 — SESION 2.5 / PREFLIGHT DE FASE-C (la cifra sube a 4,800).** Medido con el metodo
 > canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,800**) y contrastado
 > con el arbol versionado en el momento de la medida (`git grep -c -E "^\s*def test_" HEAD -- tests` sumado =

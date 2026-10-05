@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Instrumento del piloto Jev (EVALUACION-JEV-TYPESAFE-2026-09-21).
 
-`prepare` y `check` siguen siendo LOCALES y deterministas: NO importan clientes de inferencia, NO
-abren red y NO leen credenciales, y esa regla la goberna `FORBIDDEN_MODULES` con su test. `run`
-llego en FASE-B (2026-10-03) y no cambia el contrato offline: se construye solo con preflight de
-AC12 y presupuesto de AC8 reservados, y el SDK lo carga la puerta (`scripts/decision_client.py`),
-que es el unico sitio donde AC6 admite ese import. `decide` pertenece a FASE-C y aqui se niega sin
-instanciar nada. Un par de triaje es (target_plan, lesson_id) con
-una etiqueta humana {pertinente|no_pertinente|insuficiente} e importancia.
+`prepare`, `check`, `report` y `decide` son LOCALES y deterministas: NO importan clientes de
+inferencia, NO abren red y NO leen credenciales, y esa regla la goberna `FORBIDDEN_MODULES` con su
+test. `run` llego en FASE-B (2026-10-03) y no cambia el contrato offline: se construye solo con
+preflight de AC12 y presupuesto de AC8 reservados, y el SDK lo carga la puerta
+(`scripts/decision_client.py`), que es el unico sitio donde AC6 admite ese import. `report` y
+`decide` llegaron en FASE-B.2 (2026-10-04) cerrando CR-1..CR-4: reproducen la comparacion y aplican
+la regla congelada desde los registros persistidos, con cero llamadas. `report`/`decide` sin insumos
+se niegan con EXIT 2 y su causa escrita, y `decide` emite pero no elige cuando un criterio queda
+NO-EVALUABLE (EXIT 3). Un par de triaje es (target_plan, lesson_id) con una etiqueta humana
+{pertinente|no_pertinente|insuficiente} e importancia.
 """
 from __future__ import annotations
 
@@ -317,11 +320,18 @@ def registrar_intento(ledger: dict, *, resultado: str, excepcion=None, usage=Non
     return ledger
 
 
-def _refuse(name: str) -> int:
+def _refuse(name: str, faltan: list) -> int:
+    """Negacion con causa escrita y EXIT nombrado: sin insumos no se emite nada (AC10).
+
+    FASE-B.2 reemplaza la negacion historica de `decide` (que se negaba siempre) por esta: el modo
+    ya existe, y lo que sigue negado es emitir sin los registros que lo sustentan. El numero 2 se
+    conserva porque es el que el contrato de FASE-A prometio (`main(["decide"]) == 2`) y porque
+    `run` ya lo usa por la misma razon.
+    """
     sys.stderr.write(
-        f"{name} corresponde a FASE-B/FASE-C: requiere preflight (AC8), "
-        f"presupuesto y autorizacion literal, y no se instancia aqui. "
-        f"El modo offline no construye clientes ni abre red.\n")
+        f"{name} exige {', '.join(faltan)}: sin ellos no hay registros que reproducir, y publicar "
+        f"un cociente sin insumo seria rellenarlo a mano (AC10). Este modo no abre red ni "
+        f"instancia clientes.\n")
     return 2
 
 
@@ -620,10 +630,14 @@ def run(*, muestra: Path, protocolo: Path, indice: Path, preflight: Path, out_di
 
     puerta = None
     resolucion_sdk = None
+    credencial = None
     if enviar is None:
         # La construccion del cliente y el envio van juntos detras de la inyeccion: un test con
         # transporte falso tiene que poder ejercitar el guard, el ledger y la contabilidad sin
         # necesitar la credencial real que `TypeSafeClient` resuelve por entorno.
+        # CR-3: la credencial se resuelve ANTES de abrir la puerta y solo por su nombre de entorno.
+        # Con `enviar` inyectado este bloque no existe, o sea la via offline jamas toca `.env`.
+        credencial = credencial_del_sdk(Path(__file__).resolve().parents[1])
         puerta = _puerta()
         cargado = puerta.cargar_sdk()
         resolucion_sdk = cargado["resolucion"]
@@ -690,7 +704,8 @@ def run(*, muestra: Path, protocolo: Path, indice: Path, preflight: Path, out_di
                  "cuenta": cuenta, "preflight": "OK",
                  "ledger": ledger_ruta.as_posix(), "pares": len(pares), "split": splits,
                  "modelo_solicitado": modelo_solicitado, "k": k,
-                 "resolucion_sdk": resolucion_sdk, "recuperacion": recuperacion,
+                 "resolucion_sdk": resolucion_sdk, "credencial": credencial,
+                 "recuperacion": recuperacion,
                  "modelos_efectivos": sorted({f.get("modelo_efectivo") for f in fila_ledger
                                               if f.get("modelo_efectivo")})}
     _persistir(out_dir, "run_resumen.json", resultado)
@@ -728,6 +743,767 @@ def recuperacion_medida(muestra: dict, etiquetas: dict, filas_ledger: list) -> d
     return cociente
 
 
+# --- FASE-B.2 (2026-10-04): CR-1 y CR-2, los modos que faltaban del contrato del runner -------
+# El maestro fija cuatro cocientes (01-plan-maestro.md:88-91) y exige que cada uno publique su
+# numerador y su denominador (93). `metrics()` envuelve la forma de FASE-A, pero comparte un solo
+# `den` para precision y recall (`:191-192`), o sea NO puede expresar los cuatro denominadores
+# separados que pide AC10. Por eso `report` produce cada cociente con `score()` --el emisor de
+# cocientes probado en FASE-A-- sobre sus propios conteos, y `metrics()` queda intacto y sin usar:
+# re-implementarlo tampoco estaba en el mandato.
+#
+# Ningun numero de aqui nace de una lectura nueva del protocolo: los umbrales se LEEN del
+# `criterios_adopcion` congelado y se aplican, y un cociente sin insumo sale NO-EVALUABLE con su
+# motivo (AC10) en vez de un 0 o un 100.
+
+INFORME_SCHEMA = "jev-pilot-informe-comparativa/v1"
+DECISION_SCHEMA = "jev-pilot-decision/v1"
+COCIENTES_INFORME = ("recuperacion", "precision_entre_propuestas",
+                     "recall_importante_candidatos", "extremo_a_extremo")
+# `run_status` usa los cuatro literales del maestro (:101). Donde la fila trae un error, el literal
+# depende de QUE clase de error es: autenticacion, esquema, peticion o un fallo no clasificable son
+# impedimento operativo del camino (FALLIDO); conexion, timeout, cuota o servidor son
+# indisponibilidad, que segun AC12 detiene o aplaza pero NO elimina el brazo (INCOMPLETO).
+ERRORES_DE_IMPEDIMENTO = {"auth", "respuesta_ilegible", "peticion", "desconocido"}
+ERRORES_DE_INDISPONIBILIDAD = {"conexion", "timeout", "cuota", "servidor"}
+
+
+def leer_respuestas(ruta: Path) -> list:
+    """`respuestas.jsonl` tal como quedo en disco: una fila por (par, brazo), sin re-etiquetar."""
+    filas = []
+    for linea in Path(ruta).read_text(encoding="utf-8").splitlines():
+        if linea.strip():
+            filas.append(json.loads(linea))
+    return filas
+
+
+def estado_de_propuesta(fila) -> str:
+    """Como leida la fila del brazo, no cuantas clases de no-eleccion hay.
+
+    `sin_fila` y `sin_eleccion_por_fallo` se separan a proposito: la primera es un par que este
+    despacho nunca consulto (no medido), la segunda es un envio que salio y volvio vacio (fallo del
+    camino, que si cuenta contra el extremo a extremo). Colapsarlas es la forma facil de mejorar el
+    score excluyendo fallos, y el maestro lo prohibe en :93.
+    """
+    if fila is None:
+        return "sin_fila"
+    propuesta = fila.get("propuesta")
+    if propuesta is None:
+        return "sin_eleccion_por_fallo" if fila.get("error_kind") else "sin_eleccion"
+    if isinstance(propuesta, list):
+        return "ranking"
+    if propuesta == ETIQUETA_DE_NINGUNA:
+        return "abstencion"
+    return "eleccion"
+
+
+def poblacion_de_comparacion(muestra: dict, etiquetas: dict) -> dict:
+    """El conjunto humano elegible: pertinentes de importancia alta o media, con su target."""
+    importantes = []
+    for par in muestra.get("pairs", []):
+        for l in etiquetas.get("labels", []):
+            if (l["pair_id"] == par["pair_id"] and l.get("label") == "pertinente"
+                    and l.get("importance") in ("alta", "media")):
+                importantes.append({"pair_id": par["pair_id"], "lesson_id": par["lesson_id"],
+                                    "importancia": l.get("importance")})
+    pertinentes = sum(1 for l in etiquetas.get("labels", []) if l.get("label") == "pertinente")
+    return {"importantes": importantes,
+            "por_par": {p["pair_id"]: p for p in importantes},
+            "pertinentes": pertinentes,
+            "total_pares": (muestra.get("counts") or {}).get("total")}
+
+
+def es_acierto(par: dict) -> bool:
+    """El brazo acerto en ese par, con la MISMA regla en recall y en extremo a extremo.
+
+    Para un brazo que elige, acertar es proponer el target. Para la capa fria, cuya propuesta es el
+    conjunto de candidatos, acertar es que el target este dentro: la convencion tiene que ser una
+    sola, o el mismo brazo diria 1/2 en un cociente y 0/1 en el otro sobre la misma fila.
+    """
+    if par["estado_propuesta"] == "eleccion":
+        return par["propuesta"] == par["target"]
+    if par["estado_propuesta"] == "ranking":
+        return bool(par["target_en_candidatos"])
+    return False
+
+
+def conteos_por_brazo(filas_brazo: list, poblacion: dict) -> dict:
+    """CR-1: el contador de clasificacion y del extremo a extremo, desde filas persistidas.
+
+    Cuatro denominadores distintos sobre la misma poblacion, cada uno con su regla:
+      * precision  -> entre las elecciones que el brazo DE VERDAD hizo (una abstencion o un fallo
+        no son una propuesta, son su denominador aparte).
+      * recall     -> entre los pares importantes cuyo target SI estaba entre los candidatos,
+        porque fuera de ese conjunto acertar no era una opcion del clasificador.
+      * e2e        -> sobre todo el conjunto importante elegible, incluyendo las omisiones de
+        recuperacion (maestro :90) y los envios que volvieron con fallo (:93).
+      * recuperacion -> la que ya produce `recuperacion_medida`, no se recalcula aqui.
+    """
+    por_par = {f.get("pair_id"): f for f in filas_brazo if f.get("pair_id")}
+    importantes = [p["pair_id"] for p in poblacion["importantes"]]
+    sin_fila = [pid for pid in importantes if pid not in por_par]
+    # Una fila cuyo par no esta en el conjunto elegible NO se descarta en silencio: se cuenta y se
+    # publica. Perderla sin decirlo es la forma barata de que el denominador parezca mas chico.
+    fuera = [f.get("pair_id") for f in filas_brazo if f.get("pair_id") not in set(importantes)]
+    detalle = []
+    for pid in importantes:
+        fila = por_par.get(pid)
+        par = poblacion["por_par"][pid]
+        estado = estado_de_propuesta(fila)
+        recuperable = bool(fila.get("leccion_target_en_candidatos")) if fila else False
+        detalle.append({
+            "pair_id": pid, "estado_propuesta": estado,
+            "propuesta": fila.get("propuesta") if fila else None,
+            "target": par["lesson_id"],
+            "target_en_candidatos": recuperable if fila else None,
+            "error_kind": fila.get("error_kind") if fila else None,
+            "acierto": es_acierto({"estado_propuesta": estado,
+                                   "propuesta": fila.get("propuesta") if fila else None,
+                                   "target": par["lesson_id"], "target_en_candidatos": recuperable}),
+        })
+    recuperables = [d for d in detalle if d["estado_propuesta"] != "sin_fila"
+                    and d["target_en_candidatos"]]
+    enviadas = [d for d in detalle if d["estado_propuesta"] != "sin_fila"]
+    propuestas = [d for d in detalle if d["estado_propuesta"] == "eleccion"]
+    return {
+        "detalle": detalle,
+        "sin_fila": sin_fila,
+        "fuera_del_conjunto": fuera,
+        "poblacion": len(importantes),
+        "prec_num": sum(1 for d in propuestas if d["acierto"]),
+        "den_propuestas": len(propuestas),
+        "rec_num": sum(1 for d in recuperables if d["acierto"]),
+        "den_recuperables": len(recuperables),
+        "e2e_num": sum(1 for d in enviadas if d["acierto"]),
+        "den_elegible": len(enviadas),
+        "abstenciones": sum(1 for d in detalle if d["estado_propuesta"] == "abstencion"),
+        "fallos": sum(1 for d in detalle if d["estado_propuesta"] == "sin_eleccion_por_fallo"),
+        "sin_eleccion": sum(1 for d in detalle if d["estado_propuesta"] == "sin_eleccion"),
+        "rankings": sum(1 for d in detalle if d["estado_propuesta"] == "ranking"),
+    }
+
+
+def cocientes_por_brazo(conteos: dict) -> dict:
+    """Los cuatro cocientes, cada uno con el denominador que le corresponde por definicion."""
+    detalle = conteos["detalle"]
+    eleccion_de_recuperable = [d for d in detalle if d["estado_propuesta"] == "eleccion"
+                               and d["target_en_candidatos"]]
+    return {
+        "recuperacion": None,  # la pone `recuperacion_medida`, no se recalcula aqui
+        "precision_entre_propuestas": score(conteos["prec_num"], conteos["den_propuestas"]),
+        "recall_importante_candidatos": score(conteos["rec_num"], conteos["den_recuperables"]),
+        "extremo_a_extremo": score(conteos["e2e_num"], conteos["den_elegible"]),
+        "lectura": {
+            "capa_fria_es_un_ranking": all(d["estado_propuesta"] in ("ranking", "sin_fila")
+                                           for d in detalle),
+            "elecciones_sobre_recuperables": len(eleccion_de_recuperable),
+            "poblacion_elegible": conteos["poblacion"],
+        },
+    }
+
+
+def conteo_de_abstenciones(conteos: dict) -> dict:
+    """Las abstenciones en denominador propio, como fija el criterio congelado.
+
+    El conteo crudo es un hecho del registro; el cociente que se saca de el es abstenciones entre las
+    decisiones efectivamente tomadas (eleccion + abstencion), y con denominador cero es NO-EVALUABLE.
+    """
+    tomadas = conteos["den_propuestas"] + conteos["abstenciones"]
+    return {"con_eleccion": conteos["den_propuestas"], "abstenciones": conteos["abstenciones"],
+            "sin_eleccion_por_fallo": conteos["fallos"], "sin_fila": len(conteos["sin_fila"]),
+            "cociente_de_abstencion": score(conteos["abstenciones"], tomadas)}
+
+
+def latencias_por_brazo(filas_brazo: list) -> dict:
+    """Latencia solo de los intentos que respondieron: la duracion de un fallo no es una latencia."""
+    de_exito, de_fallo = [], []
+    for fila in filas_brazo:
+        for intento in fila.get("intentos") or []:
+            duracion = intento.get("duracion_ms")
+            if duracion is None:
+                continue
+            (de_fallo if intento.get("resultado") != "exito" else de_exito).append(duracion)
+    return {"latencias_ms_de_respuesta": de_exito, "duracion_ms_de_fallos": de_fallo,
+            "max_latencia_ms": max(de_exito) if de_exito else None,
+            "nota": "la duracion de un intento que fallo por el camino no se cuenta como latencia "
+                    "de respuesta; se publica aparte con esa etiqueta"}
+
+
+def fallos_de_contabilidad(filas: list, protocolo: dict) -> list:
+    """FALLIDO por contabilidad: filas que contradicen el presupuesto congelado del protocolo.
+
+    Con `max_retries=0` congelado, un envio con `attempts` distinto de 1 hizo intentos que no estan
+    en el ledger (AC8). Es un fallo de datos del experimento, no del modelo, y por eso manda
+    `run_status=FALLIDO` con `decision=null` en vez de colarse como un brazo que perdio.
+    """
+    retry = ((protocolo.get("parametros") or {}).get("retry_policy") or {}).get("max_retries")
+    motivos = []
+    for fila in filas:
+        attempts = fila.get("attempts")
+        if fila.get("error_kind") == "auth":
+            motivos.append(f"auth:{fila.get('pair_id')}:{fila.get('brazo')}")
+        if retry == 0 and isinstance(attempts, int) and attempts > 1:
+            motivos.append(f"intentos-fuera-de-ledger:{fila.get('pair_id')}"
+                           f":{fila.get('brazo')}={attempts}")
+    return motivos
+
+
+def senales_mecanicas(informe: dict) -> list:
+    """Hechos numericos que el informe puede decir sin interpretar el protocolo."""
+    senales = []
+    por_brazo = informe["por_brazo"]
+    brazos = list(por_brazo)
+    rec = {b: por_brazo[b]["recuperacion"].get("value") for b in brazos}
+    valores = {v for v in rec.values() if v is not None}
+    if len(brazos) > 1 and len(valores) == 1:
+        senales.append({"id": "S1", "senal": "la recuperacion es el mismo numero en todos los brazos",
+                        "base": {"valor": rec},
+                        "consecuencia": "la metrica de recuperacion mide la capa fria, que es comun: "
+                                        "por si sola no decide entre brazos"})
+    for b in brazos:
+        fila = por_brazo[b]
+        if fila["precision_entre_propuestas"]["motivo"] == "denominador_cero":
+            senales.append({"id": "S2", "senal": f"{b}: precision sin propuestas que contar",
+                            "base": {"den_propuestas": 0},
+                            "consecuencia": "NO-EVALUABLE, no 0.0: el brazo no hizo ninguna eleccion "
+                                            "contable en esta corrida"})
+    margen = informe.get("criterios", {}).get("margen_vs_deepseek", {})
+    if margen.get("denominador_eval"):
+        senales.append({"id": "S3", "senal": "resolucion del extremo a extremo sobre el conjunto "
+                                             "elegible medido",
+                        "base": {"denominador": margen["denominador_eval"],
+                                 "paso_de_la_resolucion": margen["paso_de_resolucion"]},
+                        "consecuencia": "un margen congelado mas fino que el paso del cociente no "
+                                        "discrimina en este denominador; se publica, no se re-lee"})
+    for b in brazos:
+        if por_brazo[b]["contabilidad"]["fallos_operativos"]:
+            senales.append({"id": "S4", "senal": f"{b}: envios que volvieron con fallo del camino",
+                            "base": por_brazo[b]["contabilidad"]["fallos_operativos"],
+                            "consecuencia": "AC12: la indisponibilidad detiene o aplaza y no elimina "
+                                            "el brazo; la comparacion queda incompleta y declarada"})
+    for b in brazos:
+        if por_brazo[b]["lectura"]["capa_fria_es_un_ranking"] and \
+                por_brazo[b]["recall_importante_candidatos"]["value"] is not None:
+            senales.append({"id": "S5", "senal": f"{b}: es un ranking, no un clasificador",
+                            "base": {"recall": por_brazo[b]["recall_importante_candidatos"]["value"],
+                                     "recuperacion": por_brazo[b]["recuperacion"]["value"]},
+                            "consecuencia": "su propuesta es el conjunto de candidatos, asi que el "
+                                            "recall dentro de candidatos vale 1.0 por construccion y "
+                                            "no es una comparacion de calidad entre brazos"})
+    return senales
+
+
+def report(*, respuestas: Path, etiquetas: Path, muestra: Path, protocolo: Path,
+           fecha: str = None) -> dict:
+    """CR-2: la comparacion reproducida desde registros persistidos, sin red y sin clientes.
+
+    Cero llamadas, cero credenciales: solo lee `respuestas.jsonl` + `etiquetas.json` +
+    `muestra.json` + `protocolo.json`. Dos corridas con los mismos insumos dan los mismos bytes
+    salvo `fecha`, que es lo que hace al artefacto regenerable (AC4).
+    """
+    from datetime import date
+    muestra_datos = _load_json(Path(muestra))
+    etiquetas_datos = _load_json(Path(etiquetas))
+    protocolo_datos = _load_json(Path(protocolo))
+    filas = leer_respuestas(Path(respuestas))
+    poblacion = poblacion_de_comparacion(muestra_datos, etiquetas_datos)
+    k = validar_protocolo(protocolo_datos)["k"]
+    brazos: list[str] = []
+    for fila in filas:
+        if fila.get("brazo") and fila["brazo"] not in brazos:
+            brazos.append(fila["brazo"])
+
+    por_brazo = {}
+    for brazo in brazos:
+        filas_brazo = [f for f in filas if f.get("brazo") == brazo]
+        conteos = conteos_por_brazo(filas_brazo, poblacion)
+        cocientes = cocientes_por_brazo(conteos)
+        cocientes["recuperacion"] = recuperacion_medida(muestra_datos, etiquetas_datos, filas_brazo)
+        por_brazo[brazo] = {
+            **cocientes,
+            "abstenciones": conteo_de_abstenciones(conteos),
+            "latencia": latencias_por_brazo(filas_brazo),
+            "contabilidad": {
+                "filas": len(filas_brazo),
+                "fuera_del_conjunto_elegible": conteos["fuera_del_conjunto"],
+                "fallos_operativos": [
+                    {"pair_id": f.get("pair_id"), "error_kind": f.get("error_kind"),
+                     "attempts": f.get("attempts")}
+                    for f in filas_brazo if f.get("error_kind")],
+                "modelos_pedidos": sorted({f.get("modelo_pedido") for f in filas_brazo
+                                           if f.get("modelo_pedido")}),
+                "modelos_efectivos": sorted({f.get("modelo_efectivo") for f in filas_brazo
+                                             if f.get("modelo_efectivo")}),
+                "usage_por_fila": [f.get("usage_normalized") for f in filas_brazo],
+                "request_ids": sorted({f.get("request_id") for f in filas_brazo
+                                       if f.get("request_id")}),
+                "fallos_de_contabilidad": fallos_de_contabilidad(filas_brazo, protocolo_datos),
+            },
+            "por_par": conteos["detalle"],
+        }
+
+    criterios = evaluar_criterios(por_brazo, poblacion, protocolo_datos, brazos)
+    informe = {
+        "schema": INFORME_SCHEMA,
+        "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "generado_sin_red": True,
+        "instrumento": "scripts/evaluate_jev_pilot.py report",
+        "fecha": fecha or date.today().isoformat(),
+        "insumos": {"respuestas": Path(respuestas).as_posix(), "etiquetas": Path(etiquetas).as_posix(),
+                    "muestra": Path(muestra).as_posix(), "protocolo": Path(protocolo).as_posix()},
+        "sha256_de_los_insumos": {nombre: sha256_text(Path(ruta).read_text(encoding="utf-8"))
+                                  for nombre, ruta in (("respuestas", respuestas), ("etiquetas", etiquetas),
+                                                       ("muestra", muestra), ("protocolo", protocolo))},
+        "protocolo": {"status": protocolo_datos.get("status"),
+                      "congelado": protocolo_datos.get("congelado"), "k": k,
+                      "criterios_adopcion": protocolo_datos.get("criterios_adopcion")},
+        "conjunto_elegible": {
+            "denominador_pares_total": poblacion["total_pares"],
+            "pertinentes": poblacion["pertinentes"],
+            "importantes_elegibles": [p["pair_id"] for p in poblacion["importantes"]],
+            "brazos_en_registros": brazos,
+        },
+        "por_brazo": por_brazo,
+        "criterios": criterios,
+        "senales_mecanicas": [],
+        "excluido_en_registros": sorted({f["brazo"] for f in filas
+                                         if f.get("brazo")
+                                         and str(f["brazo"]).lower()
+                                         in str((protocolo_datos.get("modelos") or {})
+                                                .get("excluido") or "").lower()}),
+    }
+    informe["senales_mecanicas"] = senales_mecanicas(informe)
+    return informe
+
+
+BRAZO_SUJETO = "jev"
+BRAZO_COMPARADOR = "deepseek"
+
+
+def evaluar_criterios(por_brazo: dict, poblacion: dict, protocolo: dict, brazos: list) -> dict:
+    """Los cuatro criterios congelados, aplicados sin releerlos.
+
+    Cada criterio publica umbral, medido, estado y motivo. `NO-EVALUABLE` es un estado, no un cero:
+    es la unica forma de que `decide` sepa que NO le toca elegir (maestro :101, AC5).
+    """
+    criterios = protocolo.get("criterios_adopcion") or {}
+    out: dict = {}
+
+    umbral_cob = criterios.get("cobertura_min")
+    medido_cob = {b: por_brazo[b]["recuperacion"].get("value") for b in brazos}
+    valor_sujeto = medido_cob.get(BRAZO_SUJETO)
+    out["cobertura_min"] = {
+        "umbral": umbral_cob, "medido_por_brazo": medido_cob, "brazo_sujeto": BRAZO_SUJETO,
+        "estado": ("NO-EVALUABLE" if valor_sujeto is None or umbral_cob is None
+                   else "CUMPLE" if valor_sujeto >= umbral_cob else "NO CUMPLE"),
+        "motivo": ("el brazo sujeto no tiene recuperacion medida" if valor_sujeto is None else ""),
+    }
+
+    suff = score(poblacion["pertinentes"], poblacion["total_pares"] or 0)
+    umbral_suff = criterios.get("suficiencia_minima")
+    out["suficiencia_minima"] = {
+        "umbral": umbral_suff, "medido": suff,
+        "lectura_congelada": f"{poblacion['pertinentes']} de {poblacion['total_pares']} "
+                             "pares pertinentes",
+        "estado": ("NO-EVALUABLE" if suff["value"] is None or umbral_suff is None
+                   else "CUMPLE" if suff["value"] >= umbral_suff else "NO CUMPLE"),
+    }
+
+    umbral_margen = criterios.get("margen_vs_deepseek")
+    e2e_sujeto = (por_brazo.get(BRAZO_SUJETO) or {}).get("extremo_a_extremo") or {}
+    e2e_comparador = (por_brazo.get(BRAZO_COMPARADOR) or {}).get("extremo_a_extremo") or {}
+    # Denominador efectivo: los pares donde LOS DOS brazos dejaron una eleccion utilizable. Es lo que
+    # realmente compara el margen, y puede ser menor que el denominador del cociente (registro de C,
+    # H6: con un par no hay diferencia que discriminar).
+    eligibles_sujeto = {d["pair_id"] for d in (por_brazo.get(BRAZO_SUJETO) or {}).get("por_par", [])
+                        if d["estado_propuesta"] == "eleccion"}
+    eligibles_comparador = {d["pair_id"] for d in
+                            (por_brazo.get(BRAZO_COMPARADOR) or {}).get("por_par", [])
+                            if d["estado_propuesta"] == "eleccion"}
+    denominador_efectivo = len(eligibles_sujeto & eligibles_comparador)
+    margen = {
+        "umbral": umbral_margen,
+        "definicion_congelada": "diferencia absoluta del cociente extremo_a_extremo entre Jev y "
+                                "DeepSeek",
+        "medido_jev": e2e_sujeto.get("value"), "medido_deepseek": e2e_comparador.get("value"),
+        "diferencia_calculada": None, "denominador_eval": None, "paso_de_resolucion": None,
+        "denominador_efectivo_de_la_comparacion": denominador_efectivo,
+        "estado": "NO-EVALUABLE", "motivo": "",
+    }
+    if e2e_sujeto.get("value") is None or e2e_comparador.get("value") is None:
+        margen["motivo"] = ("alguna de las dos magnitudes extremo_a_extremo no esta medida: "
+                            f"jev={e2e_sujeto.get('value')!r}, "
+                            f"deepseek={e2e_comparador.get('value')!r}")
+    else:
+        diferencia = round(abs(e2e_sujeto["value"] - e2e_comparador["value"]), 4)
+        margen["diferencia_calculada"] = diferencia
+        denominador = e2e_sujeto.get("denominator")
+        margen["denominador_eval"] = denominador
+        margen["paso_de_resolucion"] = (round(1 / denominador, 4) if denominador else None)
+        if umbral_margen is None:
+            margen["motivo"] = "el margen congelado es null, no hay criterio que aplicar"
+        else:
+            fallos = (por_brazo[BRAZO_SUJETO]["contabilidad"]["fallos_operativos"]
+                      + por_brazo[BRAZO_COMPARADOR]["contabilidad"]["fallos_operativos"])
+            if fallos:
+                margen["motivo"] = ("la diferencia esta calculada pero no gobierna: al menos un brazo "
+                                    "perdio un par por un fallo del camino, y AC12 no permite medirle "
+                                    "al modelo una indisponibilidad de la infraestructura")
+                margen["estado"] = "NO-EVALUABLE"
+            else:
+                margen["estado"] = ("CUMPLE" if diferencia >= umbral_margen else "NO CUMPLE")
+    out["margen_vs_deepseek"] = margen
+
+    umbral_lat = criterios.get("latencia_max")
+    latencias = {b: por_brazo[b]["latencia"]["max_latencia_ms"] for b in brazos
+                 if por_brazo[b]["latencia"]["max_latencia_ms"] is not None}
+    worst = max(latencias.values()) if latencias else None
+    out["latencia_max"] = {
+        "umbral_ms": umbral_lat, "medido_ms_por_brazo": latencias,
+        "estado": ("NO-EVALUABLE" if worst is None or umbral_lat is None
+                   else "CUMPLE" if worst <= umbral_lat else "NO CUMPLE"),
+        "motivo": ("" if latencias else "ningun intento dejo una duracion de respuesta"),
+        "nota": "solo intentos con resultado exito; la duracion de un fallo se publica en "
+                "`latencia.duracion_ms_de_fallos`",
+    }
+
+    gastos = protocolo.get("limites_gasto") or {}
+    out["coste_en_gobernanza"] = {
+        "usd": gastos.get("usd"),
+        "en_gobernanza": gastos.get("usd") is not None,
+        "motivo": ("`usd` sigue null en el protocolo congelado, fuera de gobernanza por decision del "
+                   "operador: no hay decision de coste sin coste en gobernanza"
+                   if gastos.get("usd") is None else ""),
+    }
+    return out
+
+
+def estado_del_run(informe: dict, protocolo: dict) -> dict:
+    """`run_status` con los cuatro literales del maestro (:101), como aserciones y no como prosa.
+
+    El orden importa: la contabilidad rota se declara primero porque invalida el experimento entero,
+    y un brazo con indisponibilidad NO se elimina --se marca incompleto-- (AC12).
+    """
+    filas_total = sum(b["contabilidad"]["filas"] for b in informe["por_brazo"].values())
+    impedimentos, indisponibilidades = [], []
+    for brazo, datos in informe["por_brazo"].items():
+        for fallo in datos["contabilidad"]["fallos_operativos"]:
+            clase = fallo.get("error_kind")
+            fila = {"brazo": brazo, **fallo}
+            if clase in ERRORES_DE_IMPEDIMENTO:
+                impedimentos.append(fila)
+            else:
+                indisponibilidades.append(fila)
+        if datos["contabilidad"]["fallos_de_contabilidad"]:
+            impedimentos.append({"brazo": brazo,
+                                 "motivos": datos["contabilidad"]["fallos_de_contabilidad"]})
+    criterios = informe["criterios"]
+    no_evaluables = [c for c, v in criterios.items()
+                     if c != "coste_en_gobernanza" and v.get("estado") == "NO-EVALUABLE"]
+    if filas_total == 0:
+        return {"run_status": "NO-EJERCITADO", "impedimentos": [], "indisponibilidades": [],
+                "criterios_no_evaluables": no_evaluables,
+                "motivos": ["los registros no traen ninguna fila de ningun brazo"]}
+    if impedimentos:
+        return {"run_status": "FALLIDO", "impedimentos": impedimentos,
+                "indisponibilidades": indisponibilidades,
+                "criterios_no_evaluables": no_evaluables,
+                "motivos": ["fallo de autenticacion, esquema, peticion o contabilidad: se corrige o "
+                            "se declara impedimento operativo, nunca se usa para afirmar que Jev no "
+                            "sirve (maestro :101)"]}
+    if indisponibilidades or no_evaluables:
+        motivos = []
+        if indisponibilidades:
+            motivos.append("un envio volvio con el camino caido: AC12 detiene o aplaza el brazo pero "
+                           "no lo elimina, y la comparacion queda incompleta")
+        if no_evaluables:
+            motivos.append("criterios sin magnitud medible: " + ", ".join(no_evaluables))
+        return {"run_status": "INCOMPLETO", "impedimentos": [], "indisponibilidades": indisponibilidades,
+                "criterios_no_evaluables": no_evaluables, "motivos": motivos}
+    return {"run_status": "COMPLETO", "impedimentos": [], "indisponibilidades": [],
+            "criterios_no_evaluables": [], "motivos": []}
+
+
+def regla_de_adopcion(informe: dict, protocolo: dict, estado_run: dict) -> dict:
+    """La regla pre-registrada, aplicada sobre lo que `report` midio.
+
+    `ACTIVAR` y `RECHAZAR` requieren los criterios pre-registrados evaluables (maestro :101): si
+    falta la magnitud, el emisor NO elige y emite `decision=null` con las bases. El emisor propone;
+    la adopcion la firma el operador (AC5).
+    """
+    criterios = informe["criterios"]
+    sufragio = estado_run["run_status"] in ("COMPLETO", "INCOMPLETO")
+    literales = {}
+    cost = criterios["coste_en_gobernanza"]
+    cob = criterios["cobertura_min"]
+    suff = criterios["suficiencia_minima"]
+    margen = criterios["margen_vs_deepseek"]
+    lat = criterios["latencia_max"]
+
+    decision, motivos_null = None, []
+    if sufragio and estado_run["run_status"] == "INCOMPLETO" and estado_run["indisponibilidades"]:
+        motivos_null.append("hubo un fallo operativo en la pata de inferencia: un fallo operativo "
+                            "nunca es RECHAZAR (AC5)")
+    if estado_run["run_status"] == "FALLIDO":
+        motivos_null.append("run_status=FALLIDO por impedimento del camino o de la contabilidad; "
+                            "la decision se declara null y el fallo se corrige, no se convierte en "
+                            "un veredicto sobre el modelo")
+    if estado_run["run_status"] == "NO-EJERCITADO":
+        if cost["en_gobernanza"]:
+            decision = "COSTE-NO-PAGADO"
+            motivos_null.append("no hay envios y el coste esta en gobernanza: COSTE-NO-PAGADO "
+                                "describe la decision de no ejecutar, no un rechazo del modelo")
+        else:
+            motivos_null.append("no hay envios y `usd` sigue fuera de gobernanza: COSTE-NO-PAGADO "
+                                "queda bloqueado porque no hay coste que declarar pagado o no")
+    if estado_run["run_status"] == "NO-EJERCITADO" and not cost["en_gobernanza"]:
+        literales["COSTE-NO-PAGADO"] = {
+            "estado": "BLOQUEADO", "base": "`usd` null en el protocolo congelado: no hay decision de "
+                                           "coste sin coste en gobernanza"}
+    elif decision == "COSTE-NO-PAGADO":
+        literales["COSTE-NO-PAGADO"] = {"estado": "EMITIDA",
+                                        "base": "run_status NO-EJERCITADO con coste en gobernanza"}
+    else:
+        literales["COSTE-NO-PAGADO"] = {
+            "estado": "NO APLICA" if cost["en_gobernanza"] else "BLOQUEADO",
+            "base": ("el run ejecuto envios: la decision de no gastar ya no describe esta corrida"
+                     if cost["en_gobernanza"] else
+                     "`usd` null en el protocolo congelado, fuera de gobernanza por decision del "
+                     "operador: no hay decision de coste sin coste en gobernanza")}
+
+    insuficiente = (suff["estado"] == "NO CUMPLE")
+    if insuficiente:
+        decision = "MUESTRA-INSUFICIENTE"
+        literales["MUESTRA-INSUFICIENTE"] = {
+            "estado": "EMITIDA",
+            "base": f"suficiencia_minima {suff['umbral']} contra {suff['medido']['value']} medido "
+                    f"({suff['medido']['numerator']}/{suff['medido']['denominator']})"}
+    elif suff["estado"] == "CUMPLE":
+        literales["MUESTRA-INSUFICIENTE"] = {
+            "estado": "EXCLUIDA por la regla congelada; ponible por el operador",
+            "base": f"suficiencia_minima se cumple ({suff['medido']['value']} >= {suff['umbral']}) "
+                    f"en el denominador congelado, pero el denominador efectivo de la comparacion es "
+                    f"{margen['denominador_efectivo_de_la_comparacion']} par(es) con eleccion "
+                    "utilizable en los dos brazos",
+            "nota": "si el operador la emite aun asi, la salida es muestra nueva y nunca re-etiquetar "
+                    "la congelada"}
+    else:
+        literales["MUESTRA-INSUFICIENTE"] = {"estado": "NO-EVALUABLE",
+                                             "base": suff["medido"]["motivo"] or "sin poblacion"}
+
+    evaluables = all(criterios[c]["estado"] in ("CUMPLE", "NO CUMPLE")
+                     for c in ("cobertura_min", "margen_vs_deepseek", "latencia_max"))
+    if decision is None and not evaluables:
+        faltan = [c for c in ("cobertura_min", "margen_vs_deepseek", "latencia_max")
+                  if criterios[c]["estado"] == "NO-EVALUABLE"]
+        motivos_null.append("criterios pre-registrados NO-EVALUABLE: " + ", ".join(faltan)
+                            + "; ACTIVAR y RECHAZAR requieren magnitud medida, asi que el emisor no "
+                            "elige y deja las bases para el operador")
+    if cob["estado"] == "CUMPLE":
+        literales["ACTIVAR"] = {"estado": "CUMPLE su condicion", "base": cob}
+    elif cob["estado"] == "NO CUMPLE":
+        literales["ACTIVAR"] = {
+            "estado": "EXCLUIDA por medicion",
+            "base": f"cobertura_min {cob['umbral']} contra {cob['medido_por_brazo'][BRAZO_SUJETO]} "
+                    "medido en el brazo sujeto",
+            "nota": "la condicion de adopcion que si se midio hasta el fondo; tampoco la arregla "
+                    "cambiar de proveedor porque es una propiedad de la capa fria comun"}
+    else:
+        literales["ACTIVAR"] = {"estado": "NO-EVALUABLE", "base": cob["motivo"]}
+
+    if decision is None and evaluables and not insuficiente:
+        if (cob["estado"] == "CUMPLE" and margen["estado"] == "CUMPLE"
+                and lat["estado"] == "CUMPLE"):
+            decision = "ACTIVAR"
+            literales["ACTIVAR"]["estado"] = "EMITIDA"
+            literales["RECHAZAR"] = {"estado": "NO EMITIDA",
+                                     "base": "los criterios congelados se cumplieron"}
+        else:
+            decision = "RECHAZAR"
+            literales["RECHAZAR"] = {
+                "estado": "EMITIDA",
+                "base": f"comparacion valida con criterios evaluables y al menos uno NO CUMPLE: "
+                        f"cobertura={cob['estado']}, margen={margen['estado']}, "
+                        f"latencia={lat['estado']}"}
+    elif decision is None:
+        literales["RECHAZAR"] = {
+            "estado": "NO EMITIDA",
+            "base": "gobernaria el margen extremo_a_extremo, que es "
+                    f"{margen['estado']}" + (", y la pata Jev tuvo un fallo operativo"
+                                             if estado_run["indisponibilidades"] else "")}
+    if decision is None:
+        literales.setdefault("ACTIVAR", {"estado": "NO EMITIDA", "base": "decision=null"})
+    return {"decision": decision,
+            "motivo_decision_null": motivos_null,
+            "literales_y_su_estado": literales,
+            "requiere_revision_del_operador": True,
+            "regla_aplicada": "criterios_adopcion del protocolo congelado, leidos y aplicados sin "
+                              "re-interpretarse; el emisor propone y el operador adopta (AC5)"}
+
+
+def decide(*, informe: dict, protocolo: dict, fecha: str = None) -> dict:
+    """CR-2: emision mecanica de `decision.json` sobre lo que `report` calcula, sin red."""
+    from datetime import date
+    estado_run = estado_del_run(informe, protocolo)
+    regla = regla_de_adopcion(informe, protocolo, estado_run)
+    criterios = informe["criterios"]
+    recomendacion = {
+        "valor": (regla["decision"] if regla["decision"] else
+                  "NO EMITIDA: el emisor no elige sin los criterios evaluables"),
+        "base_medida": [
+            f"run_status={estado_run['run_status']}",
+            f"cobertura_min: {criterios['cobertura_min']['estado']} "
+            f"(umbral {criterios['cobertura_min']['umbral']}, medido "
+            f"{criterios['cobertura_min']['medido_por_brazo'].get(BRAZO_SUJETO)})",
+            f"extremo_a_extremo jev={criterios['margen_vs_deepseek']['medido_jev']} vs "
+            f"deepseek={criterios['margen_vs_deepseek']['medido_deepseek']}, margen "
+            f"{criterios['margen_vs_deepseek']['estado']}",
+            f"latencia_max: {criterios['latencia_max']['estado']} (umbral "
+            f"{criterios['latencia_max']['umbral_ms']} ms)",
+        ],
+        "no_significa": ["no es un cambio de default: `modules/providers/llm_provider.py` no se toca",
+                         "no es deuda cerrada de ningun plan",
+                         "no es un veredicto de calidad si el brazo sujeto tiene fallos del camino"],
+        "antecedente": "FASE-C emito una lectura de sesion ('NO ADOPTAR; MANTENER COMO BRAZO "
+                       "MEDIBLE') que ningun instrumento produjo; este campo es la salida del emisor "
+                       "y se revisa contra ese registro, no lo re-transcribe",
+        "requiere_revision_del_operador": True,
+    }
+    d6 = {
+        "valor": ("NO ELEGIBLE" if criterios["cobertura_min"]["estado"] != "CUMPLE"
+                  else "PENDIENTE DE LA SEGUNDA PATA"),
+        "disparador_del_plan": "D6 exige pertinencia aceptable y candidatos nuevos; no exige que gane "
+                               "Jev",
+        "por_cada_pata": {
+            "pertinencia_aceptable": f"{criterios['cobertura_min']['estado']}: cobertura_min "
+                                     f"{criterios['cobertura_min']['umbral']} contra "
+                                     f"{criterios['cobertura_min']['medido_por_brazo'].get(BRAZO_SUJETO)}",
+            "candidatos_nuevos": "NO la mide este instrumento: su fuente es el triaje versionado "
+                                 "(`candidatos_de_pertinencia`), citado en el registro de la fase",
+        },
+        "independencia": "la pata que falla es una propiedad de la capa fria, comun a los tres brazos",
+    }
+    decision = {
+        "schema": DECISION_SCHEMA,
+        "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "fecha": fecha or date.today().isoformat(),
+        "instrumento_de_emision": "scripts/evaluate_jev_pilot.py decide, sobre el informe de "
+                                  "scripts/evaluate_jev_pilot.py report",
+        "run_status": estado_run["run_status"],
+        "decision": regla["decision"],
+        "motivo_decision_null": regla["motivo_decision_null"],
+        "estado_del_run": {"impedimentos": estado_run["impedimentos"],
+                           "indisponibilidades": estado_run["indisponibilidades"],
+                           "criterios_no_evaluables": estado_run["criterios_no_evaluables"],
+                           "motivos": estado_run["motivos"]},
+        "criterios_congelados": criterios,
+        "literales_y_su_estado": regla["literales_y_su_estado"],
+        "jev_recommendation": recomendacion,
+        "d6_eligibility": d6,
+        "transfer_status": "PENDIENTE",
+        "motivo_transferencia": "la deuda del hermano solo se mueve con instruccion literal del "
+                                "operador que nombre archivos y alcance, tras re-leer su estado; no "
+                                "existe un flag que la simule",
+        "requiere_revision_del_operador": True,
+        "revision_humana_del_protocolo": (protocolo.get("criterios_adopcion") or {})
+                                          .get("revision_humana"),
+    }
+    return decision
+
+
+# Que celda del criterio es "lo medido", por nombre y no por una cadena de `or`: un 0.0 legitimo
+# (una diferencia de margen que efectivamente es cero) es falso en Python y con `or` desaparecia de
+# la tabla, que es la forma mas cara de perder un dato.
+MEDIDO_DEL_CRITERIO = {"cobertura_min": "medido_por_brazo", "suficiencia_minima": "medido",
+                       "margen_vs_deepseek": "diferencia_calculada",
+                       "latencia_max": "medido_ms_por_brazo"}
+
+
+def decision_markdown(decision: dict, informe: dict) -> str:
+    """`decision.md` del mismo calculo: AC5 pide los dos artefactos, no un texto aparte."""
+    lineas = [
+        f"# Decision del piloto JEV - {decision['plan']}",
+        "",
+        f"- Emisor: {decision['instrumento_de_emision']}",
+        f"- Fecha: {decision['fecha']}",
+        f"- `run_status`: **{decision['run_status']}**",
+        f"- `decision`: **{decision['decision'] if decision['decision'] else 'null'}**",
+        "- Estado: propuesto por el runner, **pendiente de revision del operador** (AC5).",
+        "",
+        "## Criterios congelados, aplicados sin releerse",
+        "",
+        "| Criterio | Umbral | Medido | Estado |",
+        "|---|---|---|---|",
+    ]
+    for clave in ("cobertura_min", "suficiencia_minima", "margen_vs_deepseek", "latencia_max"):
+        criterio = decision["criterios_congelados"][clave]
+        campo = MEDIDO_DEL_CRITERIO[clave]
+        valor = criterio.get(campo)
+        if isinstance(valor, dict):
+            if "value" in valor:
+                valor = f"{valor['value']} ({valor['numerator']}/{valor['denominator']})"
+            else:
+                valor = "; ".join(f"{k}={v}" for k, v in valor.items())
+        elif valor is None:
+            valor = f"no medido: {criterio.get('motivo') or criterio.get('medido', {}).get('motivo', '')}"
+        umbral = (criterio.get("umbral") if criterio.get("umbral") is not None
+                  else criterio.get("umbral_ms"))
+        lineas.append(f"| {clave} | {umbral} | {valor} | {criterio['estado']} |")
+    lineas += ["", "## Los cuatro literales", ""]
+    for literal, estado in decision["literales_y_su_estado"].items():
+        lineas.append(f"- **{literal}**: {estado['estado']} - {estado['base']}")
+    if decision["motivo_decision_null"]:
+        lineas += ["", "## Por que `decision = null`", ""]
+        lineas += [f"- {motivo}" for motivo in decision["motivo_decision_null"]]
+    lineas += [
+        "", "## Cocientes por brazo (denominadores separados)", "",
+        "| Brazo | " + " | ".join(COCIENTES_INFORME) + " |",
+        "|---|" + "---|" * len(COCIENTES_INFORME),
+    ]
+    for brazo, datos in informe["por_brazo"].items():
+        celdas = []
+        for cociente in COCIENTES_INFORME:
+            q = datos[cociente]
+            celdas.append("NO-EVALUABLE" if q["value"] is None else
+                          f"{q['value']} ({q['numerator']}/{q['denominator']})")
+        lineas.append(f"| {brazo} | " + " | ".join(celdas) + " |")
+    lineas += [
+        "", "## Separacion de decisiones (AC7)", "",
+        f"- `jev_recommendation`: {decision['jev_recommendation']['valor']}",
+        f"- `d6_eligibility`: {decision['d6_eligibility']['valor']}",
+        f"- `transfer_status`: {decision['transfer_status']} - {decision['motivo_transferencia']}",
+        "",
+    ]
+    return "\n".join(lineas)
+
+
+CREDENCIAL_DEL_SDK = "TYPESAFE_API_KEY"
+
+
+def credencial_del_sdk(raiz: Path, *, nombre: str = CREDENCIAL_DEL_SDK) -> dict:
+    """CR-3: la credencial llega por el camino del contrato, que es el entorno del SDK.
+
+    `decision_client.cliente_jev` pasa `api_key=None` a proposito: el SDK resuelve la clave desde su
+    propia variable de entorno. Este helper solo rellena esa variable cuando NO existe, leyendo
+    `.env` por nombre --la misma via que usaron los arneses de la fase anterior--. No devuelve el
+    valor ni su longitud: un estado. Imprimir la longitud ya es una fuga de la forma del secreto.
+    """
+    import os
+    if os.environ.get(nombre):
+        return {"nombre": nombre, "fuente": "entorno", "accion": "ninguna"}
+    ruta_env = Path(raiz) / ".env"
+    if not ruta_env.exists():
+        return {"nombre": nombre, "fuente": "ausente", "accion": "env-no-encuentra-env"}
+    try:
+        from dotenv import dotenv_values
+    except ImportError:
+        return {"nombre": nombre, "fuente": "ausente", "accion": "dotenv-no-instalado"}
+    valor = dotenv_values(ruta_env).get(nombre)
+    if not valor:
+        return {"nombre": nombre, "fuente": "ausente", "accion": "clave-no-esta-en-env"}
+    os.environ[nombre] = valor
+    return {"nombre": nombre, "fuente": "dotenv", "accion": "rellenada-desde-env"}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="evaluate_jev_pilot.py",
@@ -759,14 +1535,31 @@ def build_parser() -> argparse.ArgumentParser:
                         "`eval` para despues de congelar prompt y umbrales")
     r.add_argument("--autorizar-null",
                    help="motivo literal del operador que autoriza correr con tokens_in/tokens_out en null")
+    r.add_argument("--etiquetas",
+                   help="etiquetas.json del conjunto elegible: sin ella la recuperacion medida no "
+                        "se publica (CR-3; el runner sigue sin leer etiquetas para elegir)")
+
+    rp = sub.add_parser("report", help="reproduce la comparacion desde registros persistidos "
+                                       "(offline: cero red, cero clientes, cero credenciales)")
+    rp.add_argument("--respuestas", help="respuestas.jsonl: una fila por (par, brazo)")
+    rp.add_argument("--etiquetas", help="etiquetas.json del conjunto elegible")
+    rp.add_argument("--muestra", help="muestra.json congelada: la poblacion y los splits")
+    rp.add_argument("--protocolo", help="protocolo.json: k y los criterios congelados")
+    rp.add_argument("--out", help="ruta del informe; sin ella imprime y no escribe")
+    rp.add_argument("--fecha", help="fecha del artefacto; por defecto la de hoy")
+
+    dc = sub.add_parser("decide", help="aplica la regla pre-registrada del protocolo congelado "
+                                       "sobre el informe del runner (offline)")
+    dc.add_argument("--informe", help="informe_comparativa.json producido por `report`")
+    dc.add_argument("--protocolo", help="protocolo.json con los criterios congelados")
+    dc.add_argument("--out-dir", help="directorio donde se escriben decision.json y decision.md")
+    dc.add_argument("--fecha", help="fecha del artefacto; por defecto la de hoy")
 
     pc = sub.add_parser("protocolo-check",
                         help="valida protocolo.json contra el schema, sus ocho umbrales y sus "
                              "null admitidos (sin red)")
     pc.add_argument("--protocolo", required=True)
     pc.add_argument("--out")
-
-    sub.add_parser("decide", help="[FASE-C] no disponible en modo offline")
     return parser
 
 
@@ -798,13 +1591,6 @@ def main(argv: list[str] | None = None) -> int:
             _persistir(Path(args.out).parent, Path(args.out).name, resultado)
         print(json.dumps(resultado, ensure_ascii=False, indent=2))
         return 0 if resultado["check_status"] == "OK" else 1
-    if args.mode == "protocolo-check":
-        datos = _load_json(Path(args.protocolo))
-        resultado = validar_protocolo(datos)
-        if args.out:
-            _persistir(Path(args.out).parent, Path(args.out).name, resultado)
-        print(json.dumps(resultado, ensure_ascii=False, indent=2))
-        return 0 if resultado["check_status"] == "OK" else 1
     if args.mode == "run":
         # Sin alguno de los seis argumentos obligatorios no se construye nada y se sale 2: es el mismo
         # numero que la negacion historica de `run`, asi que el contrato offline del test de FASE-A
@@ -821,12 +1607,51 @@ def main(argv: list[str] | None = None) -> int:
             muestra=Path(args.muestra), protocolo=Path(args.protocolo), indice=Path(args.indice),
             preflight=Path(args.preflight), out_dir=Path(args.out_dir), proveedor=args.proveedor,
             k=args.k, splits=args.splits,
+            etiquetas=Path(args.etiquetas) if args.etiquetas else None,
             autorizacion_de_null={"declarada": True, "motivo": args.autorizar_null}
             if args.autorizar_null else {})
         print(json.dumps(resultado, ensure_ascii=False, indent=2))
         return {"OK": 0, "NEGADO": 2}.get(resultado["status"], 1)
+    if args.mode == "report":
+        faltan = [clave for clave, valor in (("respuestas", args.respuestas), ("etiquetas", args.etiquetas),
+                                             ("muestra", args.muestra), ("protocolo", args.protocolo))
+                  if not valor]
+        if faltan:
+            return _refuse("report", faltan)
+        ausentes = [ruta for ruta in (args.respuestas, args.etiquetas, args.muestra, args.protocolo)
+                    if not Path(ruta).exists()]
+        if ausentes:
+            sys.stderr.write("report no encuentra insumos: " + ", ".join(ausentes) + "\n")
+            return 1
+        informe = report(respuestas=Path(args.respuestas), etiquetas=Path(args.etiquetas),
+                         muestra=Path(args.muestra), protocolo=Path(args.protocolo), fecha=args.fecha)
+        if args.out:
+            _persistir(Path(args.out).parent, Path(args.out).name, informe)
+        print(json.dumps(informe, ensure_ascii=False, indent=2))
+        return 0
     if args.mode == "decide":
-        return _refuse("decide")
+        faltan = [clave for clave, valor in (("informe", args.informe), ("protocolo", args.protocolo))
+                  if not valor]
+        if faltan:
+            return _refuse("decide", faltan)
+        if not Path(args.informe).exists():
+            sys.stderr.write(f"decide no encuentra el informe: {args.informe}\n")
+            return 1
+        informe = _load_json(Path(args.informe))
+        faltan_claves = [clave for clave in ("criterios", "por_brazo") if clave not in informe]
+        if faltan_claves:
+            sys.stderr.write(
+                "decide espera un informe producido por `report`: le faltan "
+                + ", ".join(faltan_claves)
+                + ". Un informe escrito a mano no es un insumo de este emisor (AC10).\n")
+            return 1
+        decision = decide(informe=informe, protocolo=_load_json(Path(args.protocolo)),
+                          fecha=args.fecha)
+        if args.out_dir:
+            _persistir(Path(args.out_dir), "decision.json", decision)
+            _persistir(Path(args.out_dir), "decision.md", decision_markdown(decision, informe))
+        print(json.dumps(decision, ensure_ascii=False, indent=2))
+        return 0 if decision["decision"] else 3
     build_parser().print_help()
     return 0
 

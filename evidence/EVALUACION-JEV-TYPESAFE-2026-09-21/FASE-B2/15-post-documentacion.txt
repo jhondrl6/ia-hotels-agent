@@ -1,0 +1,16 @@
+== validate_agents_md.py (EXIT sin tuberia) ==
+EXIT=0
+    "status": "PASS",
+  "test_count": {
+    "status": "PASS",
+== validate_governance_numbers.py ==
+EXIT=0
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 9 | historica-congelada 10 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 5 (total 18) | hook 8 pasos || familias no cubiertas: 4
+  medido 2026-10-04 con: python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA  S12)
+== suma columna 2 de la tabla contra la cabecera ==
+cabecera 4,835 | suma 4835 | filas 22 | coincide True
+== quick gate post-documentacion ==
+EXIT=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+EXIT=0

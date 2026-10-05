@@ -1,0 +1,130 @@
+{
+  "schema": "jev-pilot-decision/v1",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha": "2026-10-04",
+  "instrumento_de_emision": "scripts/evaluate_jev_pilot.py decide, sobre el informe de scripts/evaluate_jev_pilot.py report",
+  "run_status": "INCOMPLETO",
+  "decision": null,
+  "motivo_decision_null": [
+    "hubo un fallo operativo en la pata de inferencia: un fallo operativo nunca es RECHAZAR (AC5)",
+    "criterios pre-registrados NO-EVALUABLE: margen_vs_deepseek; ACTIVAR y RECHAZAR requieren magnitud medida, asi que el emisor no elige y deja las bases para el operador"
+  ],
+  "estado_del_run": {
+    "impedimentos": [],
+    "indisponibilidades": [
+      {
+        "brazo": "jev",
+        "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+        "error_kind": "conexion",
+        "attempts": 1
+      }
+    ],
+    "criterios_no_evaluables": [
+      "margen_vs_deepseek"
+    ],
+    "motivos": [
+      "un envio volvio con el camino caido: AC12 detiene o aplaza el brazo pero no lo elimina, y la comparacion queda incompleta",
+      "criterios sin magnitud medible: margen_vs_deepseek"
+    ]
+  },
+  "criterios_congelados": {
+    "cobertura_min": {
+      "umbral": 0.95,
+      "medido_por_brazo": {
+        "capa_fria": 0.5,
+        "jev": 0.5,
+        "deepseek": 0.5
+      },
+      "brazo_sujeto": "jev",
+      "estado": "NO CUMPLE",
+      "motivo": ""
+    },
+    "suficiencia_minima": {
+      "umbral": 0.5,
+      "medido": {
+        "value": 0.5,
+        "numerator": 2,
+        "denominator": 4,
+        "motivo": ""
+      },
+      "lectura_congelada": "2 de 4 pares pertinentes",
+      "estado": "CUMPLE"
+    },
+    "margen_vs_deepseek": {
+      "umbral": 0.25,
+      "definicion_congelada": "diferencia absoluta del cociente extremo_a_extremo entre Jev y DeepSeek",
+      "medido_jev": 0.5,
+      "medido_deepseek": 0.5,
+      "diferencia_calculada": 0.0,
+      "denominador_eval": 2,
+      "paso_de_resolucion": 0.5,
+      "denominador_efectivo_de_la_comparacion": 1,
+      "estado": "NO-EVALUABLE",
+      "motivo": "la diferencia esta calculada pero no gobierna: al menos un brazo perdio un par por un fallo del camino, y AC12 no permite medirle al modelo una indisponibilidad de la infraestructura"
+    },
+    "latencia_max": {
+      "umbral_ms": 30000,
+      "medido_ms_por_brazo": {
+        "jev": 395.794,
+        "deepseek": 1392.648
+      },
+      "estado": "CUMPLE",
+      "motivo": "",
+      "nota": "solo intentos con resultado exito; la duracion de un fallo se publica en `latencia.duracion_ms_de_fallos`"
+    },
+    "coste_en_gobernanza": {
+      "usd": null,
+      "en_gobernanza": false,
+      "motivo": "`usd` sigue null en el protocolo congelado, fuera de gobernanza por decision del operador: no hay decision de coste sin coste en gobernanza"
+    }
+  },
+  "literales_y_su_estado": {
+    "COSTE-NO-PAGADO": {
+      "estado": "BLOQUEADO",
+      "base": "`usd` null en el protocolo congelado, fuera de gobernanza por decision del operador: no hay decision de coste sin coste en gobernanza"
+    },
+    "MUESTRA-INSUFICIENTE": {
+      "estado": "EXCLUIDA por la regla congelada; ponible por el operador",
+      "base": "suficiencia_minima se cumple (0.5 >= 0.5) en el denominador congelado, pero el denominador efectivo de la comparacion es 1 par(es) con eleccion utilizable en los dos brazos",
+      "nota": "si el operador la emite aun asi, la salida es muestra nueva y nunca re-etiquetar la congelada"
+    },
+    "ACTIVAR": {
+      "estado": "EXCLUIDA por medicion",
+      "base": "cobertura_min 0.95 contra 0.5 medido en el brazo sujeto",
+      "nota": "la condicion de adopcion que si se midio hasta el fondo; tampoco la arregla cambiar de proveedor porque es una propiedad de la capa fria comun"
+    },
+    "RECHAZAR": {
+      "estado": "NO EMITIDA",
+      "base": "gobernaria el margen extremo_a_extremo, que es NO-EVALUABLE, y la pata Jev tuvo un fallo operativo"
+    }
+  },
+  "jev_recommendation": {
+    "valor": "NO EMITIDA: el emisor no elige sin los criterios evaluables",
+    "base_medida": [
+      "run_status=INCOMPLETO",
+      "cobertura_min: NO CUMPLE (umbral 0.95, medido 0.5)",
+      "extremo_a_extremo jev=0.5 vs deepseek=0.5, margen NO-EVALUABLE",
+      "latencia_max: CUMPLE (umbral 30000 ms)"
+    ],
+    "no_significa": [
+      "no es un cambio de default: `modules/providers/llm_provider.py` no se toca",
+      "no es deuda cerrada de ningun plan",
+      "no es un veredicto de calidad si el brazo sujeto tiene fallos del camino"
+    ],
+    "antecedente": "FASE-C emito una lectura de sesion ('NO ADOPTAR; MANTENER COMO BRAZO MEDIBLE') que ningun instrumento produjo; este campo es la salida del emisor y se revisa contra ese registro, no lo re-transcribe",
+    "requiere_revision_del_operador": true
+  },
+  "d6_eligibility": {
+    "valor": "NO ELEGIBLE",
+    "disparador_del_plan": "D6 exige pertinencia aceptable y candidatos nuevos; no exige que gane Jev",
+    "por_cada_pata": {
+      "pertinencia_aceptable": "NO CUMPLE: cobertura_min 0.95 contra 0.5",
+      "candidatos_nuevos": "NO la mide este instrumento: su fuente es el triaje versionado (`candidatos_de_pertinencia`), citado en el registro de la fase"
+    },
+    "independencia": "la pata que falla es una propiedad de la capa fria, comun a los tres brazos"
+  },
+  "transfer_status": "PENDIENTE",
+  "motivo_transferencia": "la deuda del hermano solo se mueve con instruccion literal del operador que nombre archivos y alcance, tras re-leer su estado; no existe un flag que la simule",
+  "requiere_revision_del_operador": true,
+  "revision_humana_del_protocolo": "obligatoria; designado: jhon (2026-10-02, acta en evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/PREPARACION-DECISION-2026-10-02/)"
+}
