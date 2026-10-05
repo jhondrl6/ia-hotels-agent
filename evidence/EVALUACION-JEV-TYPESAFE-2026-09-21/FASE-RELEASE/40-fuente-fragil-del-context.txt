@@ -1,0 +1,42 @@
+== fuente fragile del CONTEXT: caracterizacion para el 15 ==
+-- comando: sha256sum del CONTEXT gobernado (no se toco en esta sesion; git diff HEAD vacio)
+   disco: 17272 bytes | sha256 5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914
+
+-- metadata.fileSha256 publicado por el SERVIDOR (qmind source list --format json, sin descargar):
+    01a0efcc-3297-7782-9467-757fe81018fc ready | fileSha256 5587f27ddd5a52de316b9f769fd89f85930cc05d498517619dff2ae0ed42d914 | fileSize 17272
+    01a0e4d9-e442-7d1b-bde5-7e9b669a2701 ready | fileSha256 04242f497c1bf086ea96a4d8adbb2e3aaca99c131d07a35de3ec7c605df2ea16 | fileSize 17263
+
+-- descarga DIRECTA de 01a0efcc-3297 (la unica que casa): 3 intentos
+   intento 1: exit=0
+   intento 2: exit=0
+   intento 3: exit=0
+   ctx1.md: 17272 bytes | sha 5587f27ddd5a
+   ctx2.md: 17272 bytes | sha 5587f27ddd5a
+   ctx3.md: 17272 bytes | sha 5587f27ddd5a
+
+-- corrida del verificador en este momento, con su conteo de [SIN-DESCARGA]
+   FRESHNESS_EXIT=0
+  [FRESCO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 1 fuente(s) que casan por descarga+sha256 (01a0efcc-3297…coincide)
+  [FRESCO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) que casan por descarga+sha256 (01a10e39-1625…coincide)
+[OK] frescura de CONTEXT/10-analisis declarados: 2 fresco(s), 0 problema(s)
+   [SIN-DESCARGA] en esta corrida: 0
+
+== APENDICE: las dos corridas del tip que salieron VENCIDO, persistidas de la salida de esta sesion ==
+Capturadas durante el gate posterior al push b04ff08. Se transcriben para que la deriva tenga crudo
+y no solo la memoria de la sesion.
+-- /tmp/fr3.txt
+     [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9e-290c-7b5d-b180-c0184c5915ad salio 1: error: QMind network request failed
+     [SIN-DESCARGA] 01a0efcc-3297-7782-9467-757fe81018fc no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+     [SIN-DESCARGA] 01a04d9e-290c-7b5d-b180-c0184c5915ad no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+     [VENCIDO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: sha_disco=5587f27ddd5a… y ninguna de 58 fuente(s) examinada(s) casa (2 la nombran por titulo) [barrido completo]
+     [FRESCO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) que casan por descarga+sha256 (01a10e39-1625…coincide)
+   [FAIL] frescura de CONTEXT/10-analisis declarados: 1 fresco(s), 3 problema(s)
+-- /tmp/fr4.txt
+     [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+     [AVISO] descarga 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 salio 1: error: QMind network request failed
+     [SIN-DESCARGA] 01a0efcc-3297-7782-9467-757fe81018fc no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+     [SIN-DESCARGA] 01a0e4d9-e442-7d1b-bde5-7e9b669a2701 no bajable para CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+     [VENCIDO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: sha_disco=5587f27ddd5a… y ninguna de 58 fuente(s) examinada(s) casa (2 la nombran por titulo) [barrido completo]
+     [FRESCO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) que casan por descarga+sha256 (01a10e39-1625…coincide)
+   [FAIL] frescura de CONTEXT/10-analisis declarados: 1 fresco(s), 3 problema(s)

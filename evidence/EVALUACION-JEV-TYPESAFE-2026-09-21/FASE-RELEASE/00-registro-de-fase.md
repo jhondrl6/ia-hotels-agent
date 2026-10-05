@@ -293,6 +293,7 @@ respectivamente por el fallo de transporte de la pata jev, no se ascendieron a v
 | **REL-3** | Tres frases en presente sobre `protocolo.json` fuera del listado de ediciones del mandato (`01-plan-maestro.md`, `05-prompt-B` ×2) | nueva, medida | documentos del plan / H13 |
 | **REL-4** | `05-prompt-inicio-sesion-fase-RELEASE.md` sigue siendo el esqueleto vigente en el índice del README, sin señalar que esta pegada lo venció | nueva | README §Índice / §1 del mandato |
 | **REL-5** | Rojo dependiente del orden de colección en la suite completa (H19), invisible en el quick gate | nueva, medida en `28-` y `31-` | `tests/quality_gates/jev_pilot/` con su conftest / AC2 y AC12 |
+| **REL-6** | El verificador de frescura decide por descarga cuando el servidor ya publica `metadata.fileSha256`: una descarga que cae sobre la única fuente que casa produce `[VENCIDO]` falso (anclado en §15) | nueva, medida en `40-` | `scripts/verify_qmind_context_freshness.py` (instrumento del hermano) / B2-4 y H15 |
 
 Ninguna de las cinco deudas anteriores se absorbe, y ninguna se presenta como bloqueante si es
 aplazamiento con dueño.
@@ -456,7 +457,7 @@ Nada de `scripts/`, `tests/`, `config/`, `VERSION.yaml`, `AGENTS.md`, `.cursorru
 
 ### 10.3 Deuda y hallazgos, todos con dueño
 
-B2-1, B2-1c, B2-2, B2-3, B2-4, B2-5 (re-medidos vivos en §8) · REL-1, REL-2, REL-3, REL-4 (§8) · **REL-5**,
+B2-1, B2-1c, B2-2, B2-3, B2-4, B2-5 (re-medidos vivos en §8) · REL-1, REL-2, REL-3, REL-4 (§8) · **REL-5**, · **REL-6** (§15)
 el rojo dependiente del orden en la suite completa (§9.3) · H13 a H18 (§7).
 
 ### 10.4 Petición explícita al operador (cuatro actos, cada uno con su instrucción)
@@ -723,3 +724,56 @@ evidencia, no por esta hoja.
   siendo fresca. Ninguna de las dos casillas gobernadas queda hoy vencida.
 - **§13 (permisos)**: «Write-back, etiqueta de adopción, D7/D6 y las decisiones de REL-1/REL-2/REL-5: sin
   ejecutar y sin ofrecer» — la primera parte se cumplió por instrucción separada; las otras tres siguen igual.
+
+---
+
+## 15. La fuente frágil del `CONTEXT`: el verificador baja lo que ya le dicen (2026-10-05)
+
+Orden del operador: «estampa el 15 con la fuente frágil del CONTEXT, commitea y envía». Crudos `40-` (la
+caracterización), `38-` (frescura post-write-back) y `12-`/`13-` (las tres corridas del corte 1).
+
+**El fenómeno, en números de esta sesión.** El gobernado `CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md`
+tiene **una sola** fuente cuyo contenido casa: `01a0efcc-3297-7782-9467-757fe81018fc`. Las otras dos que lo
+nombran por título no casan (`01a0e4d9-e442…` publica `fileSha256 04242f497c1b`, 17.263 B contra los
+17.272 B del disco). Sobre esa única fuente hay **tres mediciones distintas**: (a) el crudo `40-` registra una racha de 3 descargas directas **0-0-0** (los tres `exit 0`, 17.272 B y sha `5587f27ddd5a…` cada una); (b) su apéndice registra las **dos corridas del verificador en el tip empujado donde esa misma descarga devolvió `salio 1`** y el veredicto salió `[VENCIDO]` (EXIT 1, «1 fresco, 3 problemas», dos `[SIN-DESCARGA]` por corrida); (c) una tercera racha de 3 intentos directos, **no persistida en crudo**, dio **1-1-0** y se declara acá como medida sin evidencia adjunta, que es la forma honesta de contarla. El verificador, mientras tanto, imprimió **`[VENCIDO]` con `[SIN-DESCARGA]`**
+en dos corridas del tip empujado (EXIT 1, «1 fresco, 3 problemas») y **`[FRESCO]`** en las otras dos (EXIT 0,
+«2 fresco(s), 0 problema(s)» — la del crudo `40-` y la del crudo `38-`) — **con el mismo sha de disco en
+cuatro corridas**: `5587f27ddd5a52de…`,
+17.272 B, y `git diff` vacío sobre ese archivo, o sea esta sesión no lo tocó ni una vez.
+
+**Lo que el servidor ya publica y el instrumento no mira.** `qmind source list --format json` trae, por
+cada fuente, `metadata.fileSha256` y `metadata.fileSize`. Para la que nos importa:
+
+| Fuente | `metadata.fileSha256` | `fileSize` | vs disco (`5587f27ddd5a52de…`, 17.272 B) |
+|---|---|---|---|
+| `01a0efcc-3297-7782-9467-757fe81018fc` | `5587f27ddd5a52de…ed42d914` | 17.272 | **IGUAL** |
+| `01a0e4d9-e442-7d1b-bde5-7e9b669a2701` | `04242f497c1bf086…05df2ea16` | 17.263 | distinto |
+
+Es decir: **la identidad que el verificador persigue descargando hasta 58 fuentes ya viene escrita en la
+lista**, sin una sola descarga. Su diseño actual convierte un fallo de red en «no casa», y ahí nace el
+`[VENCIDO]` falso. La cura con la evidencia encima de la mesa es de dos pasos, y ninguno es re-bajar la
+aserción:
+
+1. decidir la frescura por `metadata.fileSha256` (fuente barata, determinista, cero descargas), y
+2. usar la descarga+sha256 solo como **verificación de la promesa del servidor** —y cuando la descarga
+   falle sobre la fuente que por metadata sí casa, emitir **`NO-EVALUABLE` con su motivo**, no `VENCIDO`.
+
+**Por qué esto no es un problema de contenido, y por qué no se arregla re-publicando.** El disco del `CONTEXT`
+está igual que cuando se publicaron las fuentes; lo único que varía entre una corrida y otra de este día es
+si el borde de QMind respondió. Re-publicar el `CONTEXT` «para que vuelva a estar fresco» sería pegar contra
+un síntoma: crearía una fuente nueva (58 → 59) con los mismos bytes, y el verificador seguiría dependiendo de
+la misma descarga. Tampoco se toca el `10-analisis`: esa publicación **sí** tenía materia (los bytes del
+cierre) y ya quedó hecha y verificada por descarga en §14.
+
+**Deuda y su límite.** Se registra como **REL-6**: dueño `scripts/verify_qmind_context_freshness.py`
+(instrumento heredado del hermano), criterio la deuda B2-4 / el hallazgo H15 de esta hoja, con la
+advertencia de que la cura cambia un **contrato de verificación** — el nombre del artefacto dice
+«descarga + sha256» — así que su dueño tiene que decidir si el contrato se re-escribe o si la metadata entra
+como primera vía con la descarga de respaldo. **No se abre aquí, y no se anota en el `10-analisis`**:
+escribirlo ahí volvería a vencer el archivo que esta sesión acaba de publicar en QMind, y la deuda no vale
+ese costo. Vive en el registro de la fase, que no es fuente gobernada.
+
+**Verificación al estampar esta hoja.** `verify_qmind_context_freshness.py --strict` en el árbol del sello:
+**EXIT 0**, `2 fresco(s), 0 problema(s)`, **0 `[SIN-DESCARGA]`** — el `CONTEXT` casa con `01a0efcc-3297…` y
+el `10-analisis` con `01a10e39-1625…`. El rojo de las dos corridas anteriores del tip no queda «curado» por
+esta línea: queda **reproducido y explicado**, con la fuente, los números y la cura propuesta.
