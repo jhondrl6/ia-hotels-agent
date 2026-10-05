@@ -570,11 +570,26 @@ es el error que esta casa ya pagó.
 El commit `39717b1` es un commit **nuevo sobre `ced8715`**, así que cualquier L3 futura tendrá por baseline un
 rango que ya lo incluye, no el que estampó la fila 16. El skip anterior no se arrastra a un tip nuevo.
 
+### Conteos del expediente al estampar este sello
+
+La carpeta pasó de 43 a **44 entradas**: **38 brutos `.txt`** (entra `37-verificacion-del-push.txt`), los **dos
+arneses `.py`**, el registro y los **tres artefactos** emitidos por `report`/`decide`. El derivado
+`.opencode/wiring_report.json` y el índice **no** volvieron a vencerse con los archivos `.txt` nuevos
+(`validate_wiring.py --check` y `build_lesson_index.py --check` en **EXIT 0** sin re-invocar a sus escritores),
+que es la asimetría con el arnés `.py` del §12. Quick gate con el sello redactado: **13/13, EXIT 0**.
+
+---
+
 ### Permisos al cerrar este sello
 
 Commit: **una ejecución** (`39717b1`) más esta hoja de sello. Push: **sin ejecutar** (no autorizado).
 L3: **sin ejecutar** (no autorizada; la pedí en §10.4 y la instrucción respondió solo el commit).
-Write-back: **sin ejecutar**. Sin tocar el hermano, `scripts/`, `tests/`, `config/`, `VERSION.yaml`,
+Write-back: **sin ejecutar**.
+
+⟦**Vencidas dos de las tres por §13**: la instrucción siguiente autorizó «Git Push + L3». El push se
+ejecutó (`ced8715..6a8be5c`, paridad 0 0 contra el servidor) y la L3 se corrió **antes** de empujar, sin
+hallazgos. **Write-back: sigue sin ejecutar.** Las frases se conservan porque describen el estado al
+estampar.⟧ Sin tocar el hermano, `scripts/`, `tests/`, `config/`, `VERSION.yaml`,
 `AGENTS.md`, `muestra.json`, `protocolo.json`, `etiquetas.json` ni `FASE-C/`. Sin ofrecer la fase siguiente ni
 re-abrir C.
 
@@ -587,3 +602,82 @@ sus dos brutos (`35-`, `36-`) viajan en este sello. El derivado `.opencode/wirin
 quedar vencido con el arnés nuevo (publicado 131 / fresco 132, `EXIT 3`) y se re-publicó por su escritor a
 **`EXIT 0`** con digest `2e8f095baf00`; el quick gate cerró en **13/13** y `build_lesson_index.py --check` en
 **0** (344 IDs, sin invocar al escritor otra vez).
+
+---
+
+## 13. Sello del push `ced8715..6a8be5c` y de la L3 corrida sobre ese rango
+
+El operador autorizó **«Git Push + L3»** (actos 1 y 3 de §10.4). El write-back, la etiqueta de adopción, la
+línea literal de D7/D6 y la decisión sobre REL-1/REL-2/REL-5 **no** estaban en la instrucción: siguen
+pendientes.
+
+### Pre-flight de alcance, medido antes de empujar
+
+| Chequeo | Comando | Valor |
+|---|---|---|
+| Estado del remoto al arrancar | `git fetch origin --quiet` + `git ls-remote origin refs/heads/master` | `ced8715…` — sin nada que reconciliar |
+| Ancestria (¿fast-forward?) | `git merge-base --is-ancestor ced8715 HEAD` | **sí** → fast-forward puro, **sin `--force`** |
+| Que se mueve | `git log --oneline origin/master..HEAD` | **2 commits**: `39717b1` (trabajo) y `6a8be5c` (sello del commit) |
+| Objetos | `git rev-list --objects origin/master..HEAD \| wc -l` | **78** |
+| Carga | `git diff --shortstat origin/master..HEAD` | 56 archivos, **+3670/−69** |
+| Binarios | `git diff --numstat` con columna de líneas `-` | **ningún binario** según git |
+| Blobs grandes | cuatro archivos superan 200 KB: `CHANGELOG.md` 431.356 B, `docs/contributing/REGISTRY.md` 352.567 B, `.opencode/lecciones_index.json` 328.364 B, `docs/GUIA_TECNICA.md` 213.722 B | **los cuatro ya estaban versionados** en `origin/master` y crecieron **+8.110, +1.185, +2.138 y +914 bytes**; la lista los muestra porque `rev-list --objects` reporta el blob nuevo del delta, no un archivo nuevo |
+
+### El push
+
+`git push origin HEAD:master` → `PUSH_EXIT=0`, salida `ced8715..6a8be5c  HEAD -> master`. Verificación
+**contra el servidor** y no contra el ref local (crudo `37-`):
+
+| Control | Valor |
+|---|---|
+| `git ls-remote origin refs/heads/master` | `6a8be5c797613a731c9791f7eb5d3a94a32c8472` |
+| `git rev-parse HEAD` | el mismo |
+| `git rev-list --left-right --count origin/master...HEAD` | **0 0** |
+| `git rev-list --count ced8715..HEAD` | **2** |
+| Rango sin L3 | `0c79e9c..HEAD` = **17** |
+| Árbol al medir | `?? …/FASE-RELEASE/37-verificacion-del-push.txt` y esta hoja estaban sucios al redactar el sello; la instrucción siguiente («estampa el sello, commitea y envía de nuevo») los estampó. El commit del sello es **posterior** a esta tabla y por eso **no se auto-describe**: su propio rango se verifica con `git log --oneline 6a8be5c..HEAD` y `git rev-list --count 6a8be5c..HEAD`, y su sha vive en `git ls-remote`, no en esta prosa |
+
+### La L3, y qué cubrió exactamente
+
+Se corrió **antes** de empujar, siguiendo el precedente de la casa (`FASE-B` nota de ronda: «L3 deep se corrió
+**antes** de empujar, por decisión del operador, y no devolvió hallazgos»), sobre la capa profunda de los
+commits aún no revisados desde su baseline. **Resultado: sin hallazgos de seguridad** (`findings_count = 0`),
+medido el 2026-10-05. Lo que esa corrida cubrió: `39717b1` y `6a8be5c`.
+
+Lo que **no** cubre, y por eso se enuncia acá y no se esconde bajo el «0 hallazgos»: esta hoja de sello es un
+commit **nuevo** y el commit de sello del push que la estampa también, así que cualquier L3 futura tendrá por
+baseline un rango que los incluye. El «sin hallazgos» de esta corrida **no** es una garantía sobre el rango
+completo `0c79e9c..HEAD` (17 commits), sino sobre los dos que se revisaron. Tampoco reemplaza el escaneo de
+dependencias: REL-1 y REL-5 siguen siendo deuda de instrumento con dueño, no hallazgo de seguridad.
+
+### Lo que este push y esta L3 vencen, medido por asunto y no por literal
+
+- **§12, «Permisos al cerrar este sello»**: «Push: **sin ejecutar** (no autorizado). L3: **sin ejecutar**
+  (no autorizada; la pedí en §10.4 y la instrucción respondió solo el commit)». Ambas quedaron vencidas por
+  la instrucción siguiente. Se conservan como foto del momento de estampar y se anotan acá, que es la
+  convención de la casa.
+- **§11, cláusula de write-back**: sigue vigente — `--upload` **no** se ejecutó, y el `10-analisis` continúa
+  con su vencido real declarado en §9.1.
+- **El mensaje publicado de `6a8be5c`** cierra con «Sin push, sin L3, sin write-back». Dos de las tres
+  quedaron vencidas por el acto que este párrafo estampa. **No se hace `reword`**: reescribir un commit ya
+  empujado exigiría `push --force` sobre una rama compartida, y esa no es la vía de la casa. La errata vive
+  aquí y `git log` sigue siendo la autoridad de lo que el mensaje dice.
+- **`33-registro-unificado`, fila 16** (documento del hermano): su recuento del rango sin L3 y su cláusula
+  «sin commitear» quedan más vencidos todavía. **No se toca** — AC-R7 y cero línea literal.
+- Las menciones «sin push» de `FASE-B2/`, `FASE-C/`, `DEUDA-FASE-B-2026-10-04/`,
+  `PREFLIGHT-FASE-C-2026-10-04/` y `docs/cobertura-historia.md` hablan de **otros** rangos y de otras tandas:
+  **no se barren**, porque contar el literal y barrerlo convierte una prohibición ajena en rojo propio.
+
+### Permisos al cerrar este sello
+
+Push: **ejecutado**, con paridad re-medida contra el servidor. L3: **ejecutada antes del push, sin
+hallazgos**, cubriendo `39717b1` y `6a8be5c`. Commit del sello que estampa el push: **esta misma hoja viaja en él**, autorizado por la instrucción
+«estampa el sello, commitea y envía de nuevo». El push de ese commit es **posterior a esta línea** y por eso
+**no se auto-describe acá**: la promesa que esta página sí puede cumplir es la de dar el comando, no la de
+perseguir al puntero. Regla de la casa, enunciada en vez de aplicarse en silencio: **un segundo push deja
+incompleto el sello del primero**. Quiera uno el rango exacto del segundo empujón, lo obtiene con
+`git log --oneline 6a8be5c..HEAD`, `git rev-list --count 6a8be5c..HEAD`, `git ls-remote origin refs/heads/master`
+y `git rev-list --left-right --count origin/master...HEAD`; su autoridad es `git log` y el servidor, no una
+nota que se re-escriba cada vez que el ref se mueve. Write-back, etiqueta de adopción, D7/D6 y las decisiones de REL-1/REL-2/REL-5: **sin ejecutar y sin
+ofrecer**. Sin tocar el hermano, `scripts/`, `tests/`, `config/`, `VERSION.yaml`, `AGENTS.md`,
+`muestra.json`, `protocolo.json`, `etiquetas.json` ni `FASE-C/`. Sin ofrecer la fase siguiente ni re-abrir C.

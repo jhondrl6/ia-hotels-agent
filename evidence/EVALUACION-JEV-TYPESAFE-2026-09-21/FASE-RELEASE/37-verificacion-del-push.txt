@@ -1,0 +1,20 @@
+== sello del push: verificacion CONTRA EL SERVIDOR, no contra el ref local ==
+-- comando: git ls-remote origin refs/heads/master
+6a8be5c797613a731c9791f7eb5d3a94a32c8472	refs/heads/master
+-- comando: git rev-parse HEAD
+6a8be5c797613a731c9791f7eb5d3a94a32c8472
+-- paridad origin/master...HEAD
+0	0
+-- rango empujado, contado desde el tip remoto previo (ced8715)
+2
+6a8be5c docs(jev): sello del commit 39717b1 - el commiteado se verifica en su propio arbol y el derivado vuelve a publicarse
+39717b1 docs(jev): SESION 4 (FASE-RELEASE) - la re-emision reproduce a C y el congelado de C no habia llegado a la matriz
+-- ancestria: el tip empujado es el HEAD local
+   IGUAL
+-- arbol
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/37-verificacion-del-push.txt
+   (lineas de arriba = trabajo del sello aun sin commitear)
+-- rango sin L3 re-medido tras el push
+17
+-- fetch idempotente: no hay nada que reconciliar
+0	0
