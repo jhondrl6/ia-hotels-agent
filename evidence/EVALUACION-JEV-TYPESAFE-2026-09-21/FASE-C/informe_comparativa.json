@@ -1,0 +1,366 @@
+{
+  "schema": "jev-pilot-informe-comparativa/v1",
+  "fase": "FASE-C",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "generado_sin_red": true,
+  "regenerable_desde": [
+    "FASE-C/ledger.jsonl",
+    "FASE-C/ledger-deepseek.jsonl",
+    "FASE-C/registro_deepseek.json",
+    "FASE-C/respuestas.jsonl",
+    ".opencode/lecciones_index.json",
+    "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/{muestra,etiquetas,protocolo}.json"
+  ],
+  "comando": "venv/Scripts/python.exe temp/fasec-2026-10-04/proyectar_comparativa.py",
+  "protocolo": {
+    "status": "CONGELADA",
+    "congelado": {
+      "revisado_por": "jhon",
+      "fecha": "2026-10-04"
+    },
+    "k": 8,
+    "sufficiency": 0.5,
+    "cobertura_min": 0.95,
+    "margen_vs_deepseek": 0.25,
+    "latencia_max_ms": 30000,
+    "tratamiento_abstenciones": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte"
+  },
+  "conjunto_elegible": {
+    "denominador_pares_total": 4,
+    "pares_en_eval": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "pertinentes_importantes_en_eval": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "muestra_chica_declarada": true,
+    "nota": "los 4 pares estan congelados y el plan prohibe re-etiquetarlos; 2 pertinentes-importantes caen en eval, y ese es el denominador de la metrica 1"
+  },
+  "por_brazo": {
+    "capa_fria": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "recall_importante_candidatos": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "extremo_a_extremo": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      }
+    },
+    "deepseek": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "recall_importante_candidatos": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "extremo_a_extremo": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      }
+    },
+    "jev": {
+      "recuperacion": {
+        "value": 0.5,
+        "numerator": 1,
+        "denominator": 2,
+        "motivo": "",
+        "presentes": [
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "elegibles": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "medidos": [
+          "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+        ],
+        "sin_medir": []
+      },
+      "precision_entre_propuestas": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "recall_importante_candidatos": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      },
+      "extremo_a_extremo": {
+        "value": null,
+        "numerator": null,
+        "denominator": null,
+        "motivo": "instrumento_no_implementado",
+        "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+        "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+      }
+    }
+  },
+  "abstenciones_denominador_aparte": {
+    "criterio_congelado": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte",
+    "recuento_publicado_como_hecho_del_registro_no_como_cociente": {
+      "jev": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "propuesta": null,
+          "abstencion": null
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "propuesta": "D-AJUST.4",
+          "abstencion": false
+        }
+      ],
+      "deepseek": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "propuesta": "ninguna-aplica",
+          "abstencion": true
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "propuesta": "D-AJUST.4",
+          "abstencion": false
+        }
+      ]
+    },
+    "cociente_de_abstencion": {
+      "value": null,
+      "numerator": null,
+      "denominator": null,
+      "motivo": "instrumento_no_implementado",
+      "por_que_no_se_rellena": "publisharlo a mano seria un numero nacido de logica nueva sin test (AC10). `metrics()` envuelve conteos que nadie construye desde respuestas reales.",
+      "prueba_de_la_ausencia": "grep -rn 'prec_num' scripts/ -> solo evaluate_jev_pilot.py:191-192 (los LEE); el unico que los alimenta es un fixture: tests/quality_gates/jev_pilot/test_jev_pilot_offline.py:113-115"
+    }
+  },
+  "costo_y_cuentas_tres_monedas": {
+    "usage_observed": {
+      "capa_fria": [],
+      "deepseek": [
+        {
+          "input_tokens": 1054,
+          "output_tokens": 149,
+          "total": 1203,
+          "estado": "observado",
+          "libera_reserva_como_cero": false
+        },
+        {
+          "input_tokens": 932,
+          "output_tokens": 158,
+          "total": 1090,
+          "estado": "observado",
+          "libera_reserva_como_cero": false
+        }
+      ],
+      "jev": [
+        {
+          "input_tokens": null,
+          "output_tokens": null,
+          "total": null,
+          "estado": "no_intentada",
+          "libera_reserva_como_cero": false
+        },
+        {
+          "input_tokens": 1778,
+          "output_tokens": 145,
+          "total": 1923,
+          "estado": "observado",
+          "libera_reserva_como_cero": false
+        }
+      ]
+    },
+    "cost_calculated": null,
+    "cost_billed": null,
+    "motivo_coste": "usd sigue null en el protocolo congelado, fuera de gobernanza por decision del operador del 2026-10-03: no hay decision de coste sin coste en gobernanza (COSTE-NO-PAGADO queda bloqueado)",
+    "cuenta_de_etapa": {
+      "jev_desde_consumo_json_del_runner": {
+        "llamadas_usadas": 2,
+        "intentos": 2,
+        "usage_estados": [
+          "no_intentada"
+        ],
+        "tokens_in_max": 1778,
+        "tokens_out_max": 145
+      },
+      "etapa_completa_desde_registro_deepseek": {
+        "llamadas_usadas": 4,
+        "intentos": 4,
+        "usage_estados": [
+          "no_intentada"
+        ],
+        "tokens_in_max": 1778,
+        "tokens_out_max": 158
+      },
+      "techo_llamadas": 12,
+      "techo_tokens_in_congelado": 1834,
+      "techo_tokens_out_congelado": 139,
+      "token_out_max_observado_en_la_etapa": 158,
+      "token_in_max_observado_en_la_etapa": 1778,
+      "regla_del_max": "max() sobre las dos cuentas de la etapa, que es la misma regla que aplica `run` en scripts/evaluate_jev_pilot.py:676-678; no es un conteo nuevo ni un promedio",
+      "envios_de_inferencia_de_la_sesion": 4,
+      "envios_de_conectividad_de_la_sesion": 0
+    },
+    "latencia_ms_por_intento": {
+      "jev": [
+        48.478,
+        395.794
+      ],
+      "deepseek": [
+        1392.648,
+        1133.547
+      ]
+    },
+    "attempts_por_fila": {
+      "jev": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "attempts": 1
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "attempts": 1
+        }
+      ],
+      "deepseek": [
+        {
+          "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "attempts": 1
+        },
+        {
+          "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "attempts": 1
+        }
+      ]
+    }
+  },
+  "hallazgos": [
+    {
+      "id": "H1",
+      "hallazgo": "la recuperacion es identica en los tres brazos por construccion (1/2 = 0.5): la capa fria es comun, asi que la metrica 1 NO diferencia brazos y no puede sostener la decision",
+      "consecuencia": "la comparacion decidible depende de los cocientes que requieren el contador no implementado"
+    },
+    {
+      "id": "H2",
+      "hallazgo": "el par pertinente-importante de importancia ALTA (REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1) no tiene su leccion D-AJUST.1 entre los 8 candidatos frios",
+      "consecuencia": "cobertura_min 0.95 no se alcanza con 0.5; la colision entre el umbral congelado y el denominador real se publica, no se resuelve re-leyendo el criterio"
+    },
+    {
+      "id": "H3",
+      "hallazgo": "el techo congelado de tokens_out (139) fue vencido por la observacion en la misma etapa del congelado: 145 (jev) y 158 (deepseek)",
+      "consecuencia": "se publica como hallazgo y NO se sube: subirlo despues de abrir eval seria protocolo nuevo"
+    },
+    {
+      "id": "H4",
+      "hallazgo": "el brazo Jev fallo por conexion en 1 de sus 2 envios (TypeSafeAPIConnectionError, 48 ms, request_id null, usage no_intentada) y NO se reintento: max_retries=0 y el mandato autoriza 4 envios de inferencia",
+      "consecuencia": "AC12: la indisponibilidad detiene o aplaza, no elimina el brazo; la comparacion queda incompleta y declarada"
+    },
+    {
+      "id": "H5",
+      "hallazgo": "el CLI `run` no propaga `etiquetas` y `main()` no carga `.env`: por la via de CLI el brazo Jev muere en TypeSafeError('No API key was provided') y run_resumen.json saldria con recuperacion null",
+      "consecuencia": "cambio requerido CR-3; la corrida de esta fase uso el mismo arnes in-process que el corredor antecedente de FASE-B"
+    },
+    {
+      "id": "H6",
+      "hallazgo": "colision entre un umbral congelado y el denominador real: margen_vs_deepseek = 0.25 sobre un denominador de eval de 2 pares. La resolucion del cociente extremo_a_extremo es 1/2 = 0.5 por par, o sea CUALQUIER diferencia no nula supera el margen y la unica alternativa es 0.0: el umbral no discrimina en este denominador. La `nota` congelada del protocolo lo calculaba contra el denominador 4 de la muestra completa, no contra el 2 de eval",
+      "consecuencia": "se publica como hallazgo y NO se re-lee el criterio, que es lo que el mandato 3.5 prohibe. Sumado al fallo de Jev, el numero de pares donde los dos brazos tienen una eleccion utilizable es 1"
+    }
+  ],
+  "cambios_requeridos": [
+    {
+      "id": "CR-1",
+      "cambio": "implementar el contador de clasificacion (prec_num, rec_num) y el cociente extremo a extremo desde las respuestas persistidas, como instrumento testado, offline y regenerable desde registros",
+      "diente": "test que lo ejercite sobre ledger.jsonl + ledger-deepseek.jsonl de esta fase"
+    },
+    {
+      "id": "CR-2",
+      "cambio": "implementar `report` (hoy fuera del parser: EXIT 2) y `decide` (hoy _refuse con EXIT 2) para emision mecanica de decision.json",
+      "diente": "contract test sin red"
+    },
+    {
+      "id": "CR-3",
+      "cambio": "propagar `--etiquetas` en el parser de `run` y resolver la credencial del SDK sin exigir que el llamador cargue .env",
+      "diente": "correr el CLI de punta a punta sobre un ledger persistido"
+    },
+    {
+      "id": "CR-4",
+      "cambio": "re-anclar la asercion de tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py:43 al estado CONGELADA, que es el aviso que la propia asercion anunciaba para FASE-C",
+      "diente": "la bateria del protocolo debe volver a 24 verdes sin re-bajar ninguna asercion"
+    }
+  ]
+}

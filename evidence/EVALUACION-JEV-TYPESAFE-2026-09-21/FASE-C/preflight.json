@@ -1,0 +1,49 @@
+{
+  "schema": "jev-pilot-preflight/v1",
+  "artefacto": "preflight.json",
+  "fase": "FASE-C",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha_medicion": "2026-10-04",
+  "credenciales": "sin valores en este archivo ni en ningun artefacto de la evidencia: se registra presencia por nombre y el resultado de autenticar, jamas la clave ni su longitud ni un prefijo (regla de la casa, FASE-B/preflight.json:29)",
+  "envio_de_conectividad_de_la_sesion": 0,
+  "politica_de_conectividad": "el mandato de FASE-C (3.4a) hace PREFERENTE citar el antecedente y solo autoriza un envio por brazo si hay que re-ejercitar la autenticacion. No hay que re-ejercitarla: los cuatro estados de cada brazo tienen medicion propia con fecha, que se cita abajo con su archivo. Por eso esta sesion no gasta ningun envio de conectividad y los 12 del protocolo quedan para los 4 de inferencia de 3.4b.",
+  "proveedores": {
+    "jev": {
+      "habilitacion_declarada": true,
+      "fuente_habilitacion": "protocolo.json:modelos.jev_pin = jev-1.13.0, congelada el 2026-10-04 (sha del congelado en 00-registro-de-fase.md); la decision operatoria de referencia vive en PREPARACION-DECISION-2026-10-02/",
+      "sdk_instalado": true,
+      "sdk_resolucion_efectiva": "typesafe-sdk 0.7.0 / pydantic 2.12.5 / httpx2 2.13.0, medida el 2026-10-03 con la ruta duradera del site-packages del SDK anadida AL FINAL de sys.path (FASE-B/preflight.json:proveedores.jev.sdk_resolucion_efectiva). No se re-mide en esta sesion: es antecedente citado.",
+      "autenticacion_real": "AUTENTICADA",
+      "autenticacion_antecedente": "2 envios HTTP 200 del corredor dev k=8 del 2026-10-03, modelo efectivo jev-1.13.0 devuelto por el servicio, attempts 1 por llamada, request_ids req_01a103822ba877bcb93788106884130b y req_01a103822c9f723594c8714f3c2b4196. Crudo transcrito en FASE-B/corrida_k8_2026-10-03.txt (ledger, lineas 32-33). El literal AUTENTICADA que exige el gate de `run` (ESTADOS_PREFLIGHT_OBLIGATORIOS, scripts/evaluate_jev_pilot.py:334-335) viene de esa medicion, no de una inferencia del entorno.",
+      "autenticacion_detalle": "401 medido el 2026-10-03 con la credencial vencida que habia en .env (request_id req_01a10301e779743e971a4cb20bf5fceb); AUTENTICADA tras el reemplazo por el operador, Models.list() respondio 2 modelos con cero reintentos. Ambas cosas quedan registradas en FASE-B/preflight.json:proveedores.jev.autenticacion_detalle y no se reescriben.",
+      "cuota_o_saldo": "DECLARADA-POR-CONSOLA: $10.00 USD al 2026-10-03",
+      "cuota_o_saldo_motivo": "el SDK 0.7.0 no expone superficie de saldo/cuota: dir(TypeSafeClient) = {close, models, system_one}, buscado en {quota, balance, credit, usage, billing}, medido el 2026-10-03 (FASE-B/preflight.json:cuota_o_saldo_superficie_leida). Exigir un numero medido aqui forzaria a fingirlo, y `revisar_preflight` NO exige esta clave por esa razon (scripts/evaluate_jev_pilot.py:352-358). Es antecedente citado, no lectura de esta sesion.",
+      "modelo_pedido": "jev-1.13.0",
+      "modelo_devuelto": "jev-1.13.0",
+      "contraste_del_pin": "pedido = devuelto en los 2 envios del antecedente, y el pin no esta entre los 2 modelos que `Models.list()` lista: el servicio lo acepta sin listarlo (FASE-B/preflight.json:proveedores.jev.contraste_del_pin)"
+    },
+    "deepseek": {
+      "habilitacion_declarada": true,
+      "fuente_habilitacion": "protocolo.json:modelos.comparador = DeepSeek, congelada el 2026-10-04; el brazo vive en scripts/proveedores/deepseek.py y se despacha por la costura con IAH_DECISION_PROVIDER = deepseek-comparador",
+      "sdk_instalado": "NO-APLICA: el comparador es un API HTTP, no un SDK; el contrato del brazo es `evaluar(state, preguntas)` de scripts/proveedores/deepseek.py, cargado por scripts/decision_client.py:resolver_proveedor",
+      "autenticacion_real": "AUTENTICADA",
+      "autenticacion_antecedente": "6 envios del 2026-10-04, todos HTTP 200, medidos en la deuda de FASE-B: 1 sonda de preflight (DEUDA-FASE-B-2026-10-04/04-deepseek-crudo.json, autenticacion_real AUTENTICADA), 3 sondas de estabilidad del alias (09-deepseek-estabilidad-crudo.json, ok=true las 3) y 2 envios de direccionabilidad (10-deepseek-flash-direccionable-crudo.json, http=200 los 2). De esos 6, los 4 que pidieron `deepseek-chat` echaron `deepseek-flash`. Es antecedente citado; esta sesion no re-ejercito la autenticacion de este brazo.",
+      "cura_del_id_recortado_sin_trafico_real": "la cura de `scripts/proveedores/deepseek.py` del 2026-10-04 no se re-probo con trafico real porque V5 nego el segundo envio. Por eso el primer envio de eval de este brazo es el PRIMER EJERCICIO REAL del camino emparejado (`_emparejar_respuestas` con ids `pair_id` que no llevan prefijo): si se rompe ahi, la salida prevista es FALLIDO con el cambio requerido, no un parche dentro de la fase (rol 'Prohibido reparar').",
+      "cuota_o_saldo": "MEDIDO-POR-API: USD 4.94 de saldo total (granted 0.00, topped_up 4.94), is_available true, leido el 2026-10-04 con GET https://api.deepseek.com/user/balance, HTTP 200, un envio y cero reintentos",
+      "cuota_o_saldo_procedencia": "crudo en PREFLIGHT-FASE-C-2026-10-04/07-saldo-crudo.json y en FASE-B/preflight.json:proveedores.deepseek.cuota_o_saldo. Es antecedente del 2026-10-04, no lectura de esta sesion: el saldo no se vuelve a consultar porque el mandato prohibe re-inferir del estado de una cuenta, y el presupuesto se goberna en llamadas 12 y timeout 30 s.",
+      "modelo_pedido": "deepseek-chat",
+      "modelo_devuelto": "deepseek-flash",
+      "alias_movil_declado": true,
+      "no_fallback": "el brazo no mira ANTHROPIC_API_KEY, OPENROUTER_API_KEY ni TYPESAFE_API_KEY (CREDENCIALES_NO_MIRADAS, scripts/proveedores/deepseek.py:41); si falta DEEPSEEK_API_KEY se lanza CredencialAusente antes de tocar el transporte, y Anthropic sigue excluido por el protocolo"
+    },
+    "anthropic": {
+      "habilitacion_declarada": false,
+      "motivo": "excluido por protocolo.json:modelos.excluido = Anthropic. No se habilita en esta fase ni en ninguna de este plan."
+    }
+  },
+  "instrumento": "lectura de antecedentes versionados + `revisar_preflight` del instrumento sobre este mismo archivo (sin red). No hay sonda de red de esta sesion: envio_de_conectividad_de_la_sesion = 0.",
+  "comando_de_verificacion": "venv/Scripts/python.exe -c \"import importlib.util as u; s=u.spec_from_file_location('i','scripts/evaluate_jev_pilot.py'); m=u.module_from_spec(s); s.loader.exec_module(m); print(m.revisar_preflight(__import__('pathlib').Path('evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/preflight.json'),'jev')['ok'])\"",
+  "comandos_de_reproduccion": [
+    "venv/Scripts/python.exe scripts/evaluate_jev_pilot.py run --proveedor jev --splits eval --k 8 --muestra evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/muestra.json --protocolo evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/protocolo.json --indice .opencode/lecciones_index.json --preflight evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/preflight.json --out-dir evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C"
+  ]
+}

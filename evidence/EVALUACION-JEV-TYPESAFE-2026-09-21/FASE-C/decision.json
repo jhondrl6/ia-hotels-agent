@@ -1,0 +1,107 @@
+{
+  "schema": "jev-pilot-decision/v1",
+  "fase": "FASE-C",
+  "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+  "fecha": "2026-10-04",
+  "instrumento_de_emision": "ninguno: `decide` se niega con EXIT 2 (scripts/evaluate_jev_pilot.py:828 -> _refuse) y `report` ni siquiera esta en el parser (modos medidos: prepare, check, run, protocolo-check, decide). Este archivo lo escribe la sesion como registro, no lo imprime un instrumento testado.",
+  "run_status": "INCOMPLETO",
+  "decision": null,
+  "motivo_decision_null": [
+    "tres de los cuatro cocientes que pide la condicion de cierre (precision entre propuestas, recall importante dentro de candidatos, extremo a extremo) no tienen instrumento testado que los construya desde respuestas reales, y el mandato prohibe rellenarlos a mano (AC10). Sin el cociente extremo_a_extremo no existe la magnitud sobre la que esta definido `margen_vs_deepseek`.",
+    "el brazo Jev quedo incompleto por un fallo de transporte en 1 de sus 2 envios (H4). Por AC12 la indisponibilidad detiene o aplaza y NO elimina un brazo, asi que la comparacion se declara incompleta en vez de correrse 'con dos'.",
+    "un fallo operativo nunca es RECHAZAR (rol 'Arbitro que puede perder'), y la ausencia de instrumento tampoco es un vacio que se rellene con un numero."
+  ],
+  "criterios_congelados_aplicados_sin_releerlos": {
+    "cobertura_min": {
+      "umbral": 0.95,
+      "medido": {"capa_fria": 0.5, "deepseek": 0.5, "jev": 0.5},
+      "numerator_denominator": "1/2 por brazo",
+      "instrumento": "recuperacion_medida (scripts/evaluate_jev_pilot.py:700), testado en tests/quality_gates/jev_pilot/test_jev_pilot_offline.py",
+      "veredicto": "NO CUMPLE en los tres brazos, por la misma causa: la leccion D-AJUST.1 no esta entre los 8 candidatos frios del par de importancia ALTA. Es la unica condicion de adopcion que si se midio hasta el fondo en esta fase.",
+      "comando": "venv/Scripts/python.exe temp/fasec-2026-10-04/proyectar_comparativa.py"
+    },
+    "margen_vs_deepseek": {
+      "umbral": 0.25,
+      "medido": null,
+      "veredicto": "NO-EVALUABLE, no 0.0: la magnitud (diferencia absoluta del cociente extremo_a_extremo) no la produce ningun instrumento existente.",
+      "hallazgo_asociado": "H6: con denominador de eval = 2 la resolucion del cociente es 0.5 por par, o sea cualquier diferencia no nula pasa el umbral de 0.25 y la unica alternativa es 0.0. El umbral no discrimina en este denominador; la nota congelada lo razonaba contra el denominador 4 de la muestra completa."
+    },
+    "suficiencia_minima": {
+      "umbral": 0.5,
+      "medido": 0.5,
+      "lectura_congelada": "2 de 4 pares pertinentes (nota del protocolo versionado)",
+      "veredicto": "CUMPLE en el termino congelado. La muestra NO es insuficiente por ese criterio; lo que le falta a la fase es instrumento y un brazo completo, no etiquetas."
+    },
+    "latencia_max": {
+      "umbral_ms": 30000,
+      "medido_ms": {"jev": [48.478, 395.794], "deepseek": [1392.648, 1133.547]},
+      "veredicto": "CUMPLE en los 4 intentos. El 48.478 de Jev es el intento que fallo por conexion: su duracion no es una latencia de respuesta y se publica etiquetada como tal."
+    },
+    "tratamiento_abstenciones": {
+      "criterio": "contadas como fallo de recuperacion, no como insuficiente; publicadas en denominador aparte",
+      "denominador_aparte": {"jev": {"con_eleccion": 1, "abstenciones": 0, "sin_eleccion_por_fallo": 1},
+                             "deepseek": {"con_eleccion": 2, "abstenciones": 1,
+                                          "abstencion_valor": "ninguna-aplica en REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+                                          "sin_eleccion_por_fallo": 0}},
+      "lectura": "la unica abstencion de la corrida es correcta dado el candidato set: el target no estaba entre los 8, y 'ninguna-aplica' existia precisamente para eso. El COCIENTE de abstencion tampoco esta instrumentado (CR-1); aqui se publica el conteo crudo del registro, no un score."
+    }
+  },
+  "literales_y_su_estado": {
+    "ACTIVAR": "EXCLUIDO por medicion, no por criterio: `cobertura_min` 0.95 contra 0.5 medido en los tres brazos con el unico instrumento testado que existe para esa condicion.",
+    "RECHAZAR": "NO EMITIDA por la sesion. Seria la salida natural de ese 0.5, pero el literal que gobierna la adopcion de Jev es el margen extremo_a_extremo, que esta NO-EVALUABLE, y en la pata Jev hubo un fallo operativo. El prompt reserva RECHAZAR para un veredicto sobre magnitud medida; el operador si puede emitirlo leyendo este registro.",
+    "MUESTRA-INSUFICIENTE": "PONIBLE por el operador con base publicada: `suficiencia_minima` se cumple (0.5), pero el denominador efectivo de la comparacion es 1 par (el unico donde los dos brazos dejaron una eleccion utilizable), y 1 par no discrimina el margen congelado. Si el operador lee eso como muestra insuficiente, la salida es muestra nueva, nunca re-etiquetar la congelada.",
+    "COSTE-NO-PAGADO": "BLOQUEADO: `usd` sigue null y fuera de gobernanza en el protocolo congelado. No hay decision de coste sin coste en gobernanza."
+  },
+  "jev_recommendation": {
+    "valor": "NO ADOPTAR; MANTENER COMO BRAZO MEDIBLE",
+    "base_medida": [
+      "el brazo funciono de punta a punta donde la red respondio: preflight AC12 OK, reserva AC8 antes de cada envio, attempts 1 con max_retries 0, usage observado (1778/145), modelo_efectivo jev-1.13.0 devuelto por el servicio, request_id req_01a10952459e7afa89006e00420e36a8, 395.794 ms",
+      "en el unico par donde tenia respuesta, eligio la leccion correcta (D-AJUST.4, confidence 0.90, probabilidad 0.91 sobre el target)",
+      "1 de 2 envios fallo por transporte (TypeSafeAPIConnectionError, 48 ms, request_id null, usage no_intentada, reserva NO liberada como cero)",
+      "su recuperacion no se distingue de la de DeepSeek ni de la de la capa fria porque las tres son la misma capa fria (H1)"
+    ],
+    "no_significa": [
+      "no es un cambio de default: `modules/providers/llm_provider.py` no se toco en esta fase",
+      "no es deuda cerrada de ningun plan",
+      "no es un veredicto de calidad sobre Jev: con 1 par utilizable no hay base para afirmar ni negar superioridad"
+    ]
+  },
+  "d6_eligibility": {
+    "valor": "NO ELEGIBLE EN ESTA FASE",
+    "disparador_del_plan": "D6 exige pertinencia aceptable y candidatos nuevos; NO exige que gane Jev (01-plan-maestro.md:15 y 10-analisis-post-implementacion.md:116)",
+    "por_cada_pata": {
+      "pertinencia_aceptable": "NO CUMPLE: recuperacion 0.5 contra el umbral congelado 0.95, medido con el instrumento testado.",
+      "candidatos_nuevos": "CUMPLE: 9 candidatos de pertinencia pendientes para el plan (medido con `candidatos_de_pertinencia` del triaje versionado sobre indice en estado FRESCO, sin red): D-B, D-D, DA-C3, L-D5, L-ENT.9, L-P6.3, L-SR3, L-SR4, L-T2B.1"
+    },
+    "independencia": "la pata que falla es una propiedad de la capa fria, comun a los tres brazos: no se arregla cambiando de proveedor, se arregla con candidatos y muestra nuevos.",
+    "comando": "venv/Scripts/python.exe -c '...' con m.leer_suelo + m.filas_ancladas + m.candidatos_de_pertinencia(indice, 'EVALUACION-JEV-TYPESAFE-2026-09-21', ancladas) (transcrito en 00-registro-de-fase.md)"
+  },
+  "transfer_status": "PENDIENTE",
+  "motivo_transferencia": "la deuda del hermano (D7/D6 en VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20) solo se mueve con instrucion literal que nombre archivos y alcance, tras re-leer su estado. Esta pegada no la contiene: prohibe tocar el hermano y cualquier plan archivado. Ningun documento hermano fue editado.",
+  "incertidumbre": [
+    "n=2 pares en eval y n=1 par con eleccion utilizable en ambos brazos: cualquier cociente de clasificacion que se implemente despues tendra una resolucion de 0.5, o sea un par entero.",
+    "alias_movil: DeepSeek pidio `deepseek-chat` y el servicio devolvio `deepseek-flash` en los 2 envios, igual que en las 4 sondas del 2026-10-04. El brazo comparador no es estrictamente reproducible y no se presento como version fijada.",
+    "los dos brazos no reciben literalmente los mismos bytes: Jev ve los enunciados de los candidatos en `criteria` de la pregunta; DeepSeek los ve en el CONTEXTO y la pregunta solo lista los ids. La informacion es la misma, el canal no, y eso es un limite de comparabilidad declarado.",
+    "coste: las tres monedas siguen separadas y `cost_calculated` / `cost_billed` son null por `usd` fuera de gobernanza. La cuenta de la etapa es 4 llamadas de 12; proveniencia declarada en 00-registro-de-fase.md."
+  ],
+  "limites": [
+    "ningun numero de este registro nace de logica nueva sin test (AC10). Los unicos conteos que no vienen de un instrumento testado son lecturas crudas del ledger, etiquetadas como tales.",
+    "la condicion de cierre de la fase (que el operador pueda emitir sin interpretar) se persigue por la via de la imposibilidad declarada: decision=null, los cuatro literales con su estado y su base, y los cambios requeridos enumerados.",
+    "esta fase no cierra la adopcion del piloto: cierra el capitulo tecnico del plan (AC7)."
+  ],
+  "cambios_requeridos": [
+    {"id": "CR-1", "texto": "contador de clasificacion (prec_num, rec_num) y cociente extremo a extremo como instrumento testado, offline y regenerable desde los registros persistidos"},
+    {"id": "CR-2", "texto": "`report` y `decide` implementados, para emision mecanica de decision.json y del informe sin red"},
+    {"id": "CR-3", "texto": "propagar `--etiquetas` en el parser de `run` y resolver la credencial del SDK sin exigir que el llamador cargue `.env`"},
+    {"id": "CR-4", "texto": "re-anclar test_jev_pilot_protocolo_check.py:43 al estado CONGELADA: es el aviso que la propia asercion anuncio para FASE-C, y esta fase tiene prohibido editar tests/"}
+  ],
+  "lo_que_no_hizo_esta_sesion": {
+    "commit": false, "push": false, "revision_L3": false,
+    "write_back_qmind": false, "edicion_de_plan_hermano": false,
+    "ofrecimiento_de_fase_siguiente": false,
+    "credenciales_impresas": false,
+    "reintentos_no_contados": 0,
+    "envios_de_inferencia": 4,
+    "envios_de_conectividad": 0
+  }
+}

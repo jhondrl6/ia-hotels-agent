@@ -1,0 +1,25 @@
+.................................F...................................... [ 20%]
+........................................................................ [ 40%]
+........................................................................ [ 60%]
+........................................................................ [ 80%]
+......................................................................   [100%]
+================================== FAILURES ===================================
+E   AssertionError: el congelado del protocolo es FASE-C: si alguien lo congelo aqui, esto es el aviso
+    assert 'CONGELADA' == 'BORRADOR'
+      
+      - BORRADOR
+      + CONGELADA
+C:\Users\Jhond\Github\iah-cli\tests\quality_gates\jev_pilot\test_jev_pilot_protocolo_check.py:43: AssertionError: el congelado del protocolo es FASE-C: si alguien lo congelo aqui, esto es el aviso
+============================== warnings summary ===============================
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:111: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py::test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado
+1 failed, 357 passed, 2 warnings in 68.25s (0:01:08)

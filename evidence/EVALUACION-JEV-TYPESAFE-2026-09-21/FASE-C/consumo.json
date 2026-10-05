@@ -1,0 +1,9 @@
+{
+  "llamadas_usadas": 2,
+  "intentos": 2,
+  "usage_estados": [
+    "no_intentada"
+  ],
+  "tokens_in_max": 1778,
+  "tokens_out_max": 145
+}

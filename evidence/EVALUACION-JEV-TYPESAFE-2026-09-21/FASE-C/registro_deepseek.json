@@ -1,0 +1,190 @@
+{
+  "brazo": "deepseek",
+  "k": 8,
+  "modelo_pedido": "deepseek-chat",
+  "timeout_s": 30,
+  "max_reintentos": 0,
+  "cuenta_al_entrar": {
+    "llamadas_usadas": 2,
+    "intentos": 2,
+    "usage_estados": [
+      "no_intentada"
+    ],
+    "tokens_in_max": 1778,
+    "tokens_out_max": 145
+  },
+  "resoluciones": [
+    {
+      "clave": "DEEPSEEK_API_KEY",
+      "presente": true
+    }
+  ],
+  "filas": [
+    {
+      "proveedor": "deepseek",
+      "modelo_solicitado": "deepseek-chat",
+      "modelo_efectivo": "deepseek-flash",
+      "attempts": 1,
+      "intentos": [
+        {
+          "n": 1,
+          "resultado": "exito",
+          "duracion_ms": 1392.648
+        }
+      ],
+      "error_kind": null,
+      "usage_normalized": {
+        "input_tokens": 1054,
+        "output_tokens": 149,
+        "total": 1203,
+        "estado": "observado",
+        "libera_reserva_como_cero": false
+      },
+      "coste_calculado": null,
+      "cargo_facturado": null,
+      "estado": "EJERCITADO",
+      "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "split": "eval",
+      "candidatos_frios": [
+        "D-V.3",
+        "DA-F1",
+        "L-NC8",
+        "L-P5.3",
+        "S-I1",
+        "D-T4B-A1",
+        "DA-G1",
+        "DA-G3"
+      ],
+      "leccion_target_en_candidatos": false,
+      "n_preguntas": 1,
+      "tipo_pregunta": "choice",
+      "opciones": [
+        "D-V.3",
+        "DA-F1",
+        "L-NC8",
+        "L-P5.3",
+        "S-I1",
+        "D-T4B-A1",
+        "DA-G1",
+        "DA-G3",
+        "ninguna-aplica"
+      ],
+      "reserva_previa": {
+        "reservado": true,
+        "llamadas_restantes": 10
+      },
+      "answers": {
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1": {
+          "tipo": "choice",
+          "pregunta_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+          "eleccion": "ninguna-aplica",
+          "probabilidades": {
+            "D-V.3": 0.05,
+            "DA-F1": 0.05,
+            "L-NC8": 0.05,
+            "L-P5.3": 0.1,
+            "S-I1": 0.05,
+            "D-T4B-A1": 0.1,
+            "DA-G1": 0.05,
+            "DA-G3": 0.05,
+            "ninguna-aplica": 0.5
+          },
+          "confidence": 0.55
+        }
+      },
+      "request_id": "fe14a140-7a64-4b56-9509-beacded8ab16",
+      "proveedor_resuelto": "deepseek-comparador",
+      "provider_status": "RESUELTO",
+      "modelo_pedido_por_la_costura": "deepseek-chat",
+      "alias_movil": true
+    },
+    {
+      "proveedor": "deepseek",
+      "modelo_solicitado": "deepseek-chat",
+      "modelo_efectivo": "deepseek-flash",
+      "attempts": 1,
+      "intentos": [
+        {
+          "n": 1,
+          "resultado": "exito",
+          "duracion_ms": 1133.547
+        }
+      ],
+      "error_kind": null,
+      "usage_normalized": {
+        "input_tokens": 932,
+        "output_tokens": 158,
+        "total": 1090,
+        "estado": "observado",
+        "libera_reserva_como_cero": false
+      },
+      "coste_calculado": null,
+      "cargo_facturado": null,
+      "estado": "EJERCITADO",
+      "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+      "split": "eval",
+      "candidatos_frios": [
+        "L-H3",
+        "D-AJUST.4",
+        "D-VUP-A6",
+        "D-VUP-B2",
+        "DA-F2",
+        "L-E2E.4",
+        "L-ENT.12",
+        "L-P6.4"
+      ],
+      "leccion_target_en_candidatos": true,
+      "n_preguntas": 1,
+      "tipo_pregunta": "choice",
+      "opciones": [
+        "L-H3",
+        "D-AJUST.4",
+        "D-VUP-A6",
+        "D-VUP-B2",
+        "DA-F2",
+        "L-E2E.4",
+        "L-ENT.12",
+        "L-P6.4",
+        "ninguna-aplica"
+      ],
+      "reserva_previa": {
+        "reservado": true,
+        "llamadas_restantes": 9
+      },
+      "answers": {
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4": {
+          "tipo": "choice",
+          "pregunta_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+          "eleccion": "D-AJUST.4",
+          "probabilidades": {
+            "L-H3": 0.02,
+            "D-AJUST.4": 0.9,
+            "D-VUP-A6": 0.01,
+            "D-VUP-B2": 0.01,
+            "DA-F2": 0.01,
+            "L-E2E.4": 0.01,
+            "L-ENT.12": 0.01,
+            "L-P6.4": 0.01,
+            "ninguna-aplica": 0.02
+          },
+          "confidence": 0.95
+        }
+      },
+      "request_id": "f8a93413-e09c-47d3-a423-6cbd7cbfbac9",
+      "proveedor_resuelto": "deepseek-comparador",
+      "provider_status": "RESUELTO",
+      "modelo_pedido_por_la_costura": "deepseek-chat",
+      "alias_movil": true
+    }
+  ],
+  "cuenta_al_salir": {
+    "llamadas_usadas": 4,
+    "intentos": 4,
+    "usage_estados": [
+      "no_intentada"
+    ],
+    "tokens_in_max": 1778,
+    "tokens_out_max": 158
+  },
+  "hora_cierre_utc": "2026-10-04T23:52:26Z"
+}

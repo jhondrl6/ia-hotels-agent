@@ -1,0 +1,45 @@
+{
+  "status": "OK",
+  "envios": 2,
+  "cuenta": {
+    "llamadas_usadas": 2,
+    "intentos": 2,
+    "usage_estados": [
+      "no_intentada"
+    ],
+    "tokens_in_max": 1778,
+    "tokens_out_max": 145
+  },
+  "preflight": "OK",
+  "ledger": "C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/ledger.jsonl",
+  "pares": 2,
+  "split": "eval",
+  "modelo_solicitado": "jev-1.13.0",
+  "k": 8,
+  "resolucion_sdk": {
+    "typesafe-sdk": "0.7.0",
+    "pydantic": "2.12.5",
+    "httpx2": "2.13.0"
+  },
+  "recuperacion": {
+    "value": 0.5,
+    "numerator": 1,
+    "denominator": 2,
+    "motivo": "",
+    "presentes": [
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "elegibles": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "medidos": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "sin_medir": []
+  },
+  "modelos_efectivos": [
+    "jev-1.13.0"
+  ]
+}

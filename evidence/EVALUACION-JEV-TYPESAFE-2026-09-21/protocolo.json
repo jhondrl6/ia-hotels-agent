@@ -1,6 +1,10 @@
 {
   "schema": "jev-pilot-protocolo/v1",
-  "status": "BORRADOR",
+  "status": "CONGELADA",
+  "congelado": {
+    "revisado_por": "jhon",
+    "fecha": "2026-10-04"
+  },
   "reglas_recuperacion": "top-8 por consulta fria sobre lecciones_index, mismo conjunto elegible para los tres brazos",
   "rubrica": {
     "valores": [

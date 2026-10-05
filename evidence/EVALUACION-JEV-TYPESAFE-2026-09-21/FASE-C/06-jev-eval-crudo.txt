@@ -1,0 +1,59 @@
+{
+ "status": "OK",
+ "envios": 2,
+ "cuenta": {
+  "llamadas_usadas": 2,
+  "intentos": 2,
+  "usage_estados": [
+   "no_intentada"
+  ],
+  "tokens_in_max": 1778,
+  "tokens_out_max": 145
+ },
+ "preflight": "OK",
+ "ledger": "C:/Users/Jhond/Github/iah-cli/evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-C/ledger.jsonl",
+ "pares": 2,
+ "split": "eval",
+ "modelo_solicitado": "jev-1.13.0",
+ "k": 8,
+ "resolucion_sdk": {
+  "typesafe-sdk": "0.7.0",
+  "pydantic": "2.12.5",
+  "httpx2": "2.13.0"
+ },
+ "recuperacion": {
+  "value": 0.5,
+  "numerator": 1,
+  "denominator": 2,
+  "motivo": "",
+  "presentes": [
+   "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+  ],
+  "elegibles": [
+   "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+   "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+  ],
+  "medidos": [
+   "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+   "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+  ],
+  "sin_medir": []
+ },
+ "modelos_efectivos": [
+  "jev-1.13.0"
+ ]
+}
+--- LEDGER (una linea por llamada) ---
+{"pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1", "split": "eval", "attempts": 1, "estado": "FALLO", "error_kind": "conexion", "modelo_solicitado": "jev-1.13.0", "modelo_efectivo": null, "usage_normalized": {"input_tokens": null, "output_tokens": null, "total": null, "estado": "no_intentada", "libera_reserva_como_cero": false}, "candidatos_frios": ["D-V.3", "DA-F1", "L-NC8", "L-P5.3", "S-I1", "D-T4B-A1", "DA-G1", "DA-G3"], "leccion_target_en_candidatos": false, "answers": null, "request_id": null, "intentos": [{"n": 1, "resultado": "fallo", "duracion_ms": 48.478, "error_kind": "conexion", "clase": "TypeSafeAPIConnectionError", "status": null}]}
+{"pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4", "split": "eval", "attempts": 1, "estado": "EJERCITADO", "error_kind": null, "modelo_solicitado": "jev-1.13.0", "modelo_efectivo": "jev-1.13.0", "usage_normalized": {"input_tokens": 1778, "output_tokens": 145, "total": 1923, "estado": "observado", "libera_reserva_como_cero": false}, "candidatos_frios": ["L-H3", "D-AJUST.4", "D-VUP-A6", "D-VUP-B2", "DA-F2", "L-E2E.4", "L-ENT.12", "L-P6.4"], "leccion_target_en_candidatos": true, "answers": {"EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4": {"tipo": "choice", "choice": "D-AJUST.4", "confidence": 0.9, "probabilities": {"D-VUP-A6": 0.0, "D-VUP-B2": 0.0, "L-E2E.4": 0.0, "D-AJUST.4": 0.91, "DA-F2": 0.0, "L-ENT.12": 0.0, "L-H3": 0.02, "L-P6.4": 0.0, "ninguna-aplica": 0.07}}}, "request_id": "req_01a10952459e7afa89006e00420e36a8", "intentos": [{"n": 1, "resultado": "exito", "duracion_ms": 395.794}]}
+--- CONSUMO ---
+{
+  "llamadas_usadas": 2,
+  "intentos": 2,
+  "usage_estados": [
+    "no_intentada"
+  ],
+  "tokens_in_max": 1778,
+  "tokens_out_max": 145
+}
+

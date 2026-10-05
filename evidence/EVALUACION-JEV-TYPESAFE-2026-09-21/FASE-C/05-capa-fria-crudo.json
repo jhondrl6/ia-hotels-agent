@@ -1,0 +1,148 @@
+{
+  "instrumento": "scripts/evaluate_jev_pilot.py::recuperacion_fria",
+  "k": 8,
+  "k_desde": "validar_protocolo(protocolo.json)['k'] - no se fija a mano en este arnes",
+  "protocolo_status": "CONGELADA",
+  "protocolo_check": "OK",
+  "poblacion_lecciones": 340,
+  "splits": {
+    "eval": [
+      "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+    ],
+    "dev": [
+      "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2",
+      "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2"
+    ]
+  },
+  "pares": [
+    {
+      "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+      "split": "eval",
+      "lesson_id_target": "D-AJUST.1",
+      "input_fragment": "Al cerrar FASE-B separar la division en subfases cuando un gate depende de otro.",
+      "candidatos_frios": [
+        "D-V.3",
+        "DA-F1",
+        "L-NC8",
+        "L-P5.3",
+        "S-I1",
+        "D-T4B-A1",
+        "DA-G1",
+        "DA-G3"
+      ],
+      "n_candidatos": 8,
+      "leccion_target_en_candidatos": false,
+      "puesto_del_target": null,
+      "poblacion": 340,
+      "desempate": "similitud desc, id asc",
+      "etiqueta_humana": "pertinente",
+      "importancia_humana": "alta"
+    },
+    {
+      "pair_id": "VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20::D-AJUST.2",
+      "split": "dev",
+      "lesson_id_target": "D-AJUST.2",
+      "input_fragment": "Una fase condicionada por evidencia no se declara decidida en la preparacion.",
+      "candidatos_frios": [
+        "D-AJUST.2",
+        "DA-V5",
+        "DA-V6",
+        "L-B4",
+        "L-C1",
+        "L-D2",
+        "L-E2E.4",
+        "L-E3"
+      ],
+      "n_candidatos": 8,
+      "leccion_target_en_candidatos": true,
+      "puesto_del_target": 1,
+      "poblacion": 340,
+      "desempate": "similitud desc, id asc",
+      "etiqueta_humana": "no_pertinente",
+      "importancia_humana": null
+    },
+    {
+      "pair_id": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20::D-NC2",
+      "split": "dev",
+      "lesson_id_target": "D-NC2",
+      "input_fragment": "En templates conservar el intro y mover solo contadores dinamicos (diff minimo).",
+      "candidatos_frios": [
+        "D-NC2",
+        "L-NC11",
+        "L-NC12",
+        "L-NC2",
+        "L-P4.4",
+        "L-V.4",
+        "D-NC1",
+        "D-PF4"
+      ],
+      "n_candidatos": 8,
+      "leccion_target_en_candidatos": true,
+      "puesto_del_target": 1,
+      "poblacion": 340,
+      "desempate": "similitud desc, id asc",
+      "etiqueta_humana": "insuficiente",
+      "importancia_humana": null
+    },
+    {
+      "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+      "split": "eval",
+      "lesson_id_target": "D-AJUST.4",
+      "input_fragment": "La reapertura de una fase de verificacion ocurre en sesion de decision, no dentro de la fase.",
+      "candidatos_frios": [
+        "L-H3",
+        "D-AJUST.4",
+        "D-VUP-A6",
+        "D-VUP-B2",
+        "DA-F2",
+        "L-E2E.4",
+        "L-ENT.12",
+        "L-P6.4"
+      ],
+      "n_candidatos": 8,
+      "leccion_target_en_candidatos": true,
+      "puesto_del_target": 2,
+      "poblacion": 340,
+      "desempate": "similitud desc, id asc",
+      "etiqueta_humana": "pertinente",
+      "importancia_humana": "media"
+    }
+  ],
+  "recuperacion_por_split": {
+    "eval": {
+      "value": 0.5,
+      "numerator": 1,
+      "denominator": 2,
+      "motivo": "",
+      "presentes": [
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+      ],
+      "elegibles": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+      ],
+      "medidos": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+      ],
+      "sin_medir": []
+    },
+    "dev": {
+      "value": null,
+      "numerator": 0,
+      "denominator": 0,
+      "motivo": "denominador_cero; 2 elegible(s) sin fila en el ledger: no medidos, no fallados",
+      "presentes": [],
+      "elegibles": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+      ],
+      "medidos": [],
+      "sin_medir": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+        "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+      ]
+    }
+  }
+}

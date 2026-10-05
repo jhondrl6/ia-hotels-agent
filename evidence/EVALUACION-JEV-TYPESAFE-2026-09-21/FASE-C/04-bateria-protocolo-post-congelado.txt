@@ -1,0 +1,27 @@
+F.......................                                                 [100%]
+================================== FAILURES ===================================
+_______ test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado _______
+
+runner = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+real = {'congelado': {'fecha': '2026-10-04', 'revisado_por': 'jhon'}, 'criterios_adopcion': {'cobertura_min': 0.95, 'latencia... 'tokens_out': 139, ...}, 'modelos': {'comparador': 'DeepSeek', 'excluido': 'Anthropic', 'jev_pin': 'jev-1.13.0'}, ...}
+
+    def test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado(runner, real):
+        """Estado del protocolo al 2026-10-03: los dos techos ya estan escritos y `usd` sigue null.
+    
+        Antes de la corrida k=8 este control afirmaba TRES null; la tanda los redujo a uno. La asercion
+        se ancla a lo que el artefacto dice hoy, con el numero junto al comando que lo midio.
+        """
+        resultado = runner.validar_protocolo(real)
+        assert resultado["check_status"] == "OK", resultado["hallazgos"]
+>       assert resultado["protocolo_status"] == "BORRADOR", (
+            "el congelado del protocolo es FASE-C: si alguien lo congelo aqui, esto es el aviso")
+E       AssertionError: el congelado del protocolo es FASE-C: si alguien lo congelo aqui, esto es el aviso
+E       assert 'CONGELADA' == 'BORRADOR'
+E         
+E         - BORRADOR
+E         + CONGELADA
+
+tests\quality_gates\jev_pilot\test_jev_pilot_protocolo_check.py:43: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_protocolo_check.py::test_el_protocolo_versionado_pasa_y_deja_un_solo_nulo_declarado
+1 failed, 23 passed in 0.17s

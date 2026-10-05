@@ -1,0 +1,10 @@
+{
+  "check_status": "OK",
+  "protocolo_status": "CONGELADA",
+  "k": 8,
+  "umbrales_gobernados": 8,
+  "nulos": [
+    "limites_gasto.usd"
+  ],
+  "hallazgos": []
+}

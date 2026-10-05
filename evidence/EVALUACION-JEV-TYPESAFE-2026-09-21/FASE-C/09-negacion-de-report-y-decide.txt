@@ -1,0 +1,3 @@
+usage: evaluate_jev_pilot.py [-h]
+                             {prepare,check,run,protocolo-check,decide} ...
+evaluate_jev_pilot.py: error: argument mode: invalid choice: 'report' (choose from prepare, check, run, protocolo-check, decide)

@@ -1,0 +1,67 @@
+{
+ "filas_respuestas": 6,
+ "recuperacion_por_brazo": {
+  "capa_fria": {
+   "value": 0.5,
+   "numerator": 1,
+   "denominator": 2,
+   "motivo": "",
+   "presentes": [
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "elegibles": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "medidos": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "sin_medir": []
+  },
+  "deepseek": {
+   "value": 0.5,
+   "numerator": 1,
+   "denominator": 2,
+   "motivo": "",
+   "presentes": [
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "elegibles": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "medidos": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "sin_medir": []
+  },
+  "jev": {
+   "value": 0.5,
+   "numerator": 1,
+   "denominator": 2,
+   "motivo": "",
+   "presentes": [
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "elegibles": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "medidos": [
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4"
+   ],
+   "sin_medir": []
+  }
+ },
+ "hallazgos": [
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "H6"
+ ]
+}

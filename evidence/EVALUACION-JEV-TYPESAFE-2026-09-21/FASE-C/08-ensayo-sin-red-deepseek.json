@@ -1,0 +1,106 @@
+{
+ "sintaxis_de_los_arneses": {
+  "correr_deepseek_eval.py": "AST-OK",
+  "correr_jev_eval.py": "AST-OK",
+  "capa_fria.py": "AST-OK"
+ },
+ "estado_proveedor_sin_llamar": {
+  "provider_status": "RESUELTO",
+  "proveedor": "deepseek-comparador",
+  "archivo": "C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\proveedores\\deepseek.py",
+  "credencial": {
+   "env_var": "DEEPSEEK_API_KEY",
+   "presente": true,
+   "motivo": "bool por entorno; el valor nunca se lee ni se imprime desde esta costura"
+  },
+  "declara": {
+   "nombre": "deepseek-comparador",
+   "falso": false,
+   "credencial_env": "DEEPSEEK_API_KEY",
+   "modelo": "deepseek-chat",
+   "alias_movil": true,
+   "sin_fallback": true,
+   "brazo_excluido": "anthropic",
+   "endpoint": "https://api.deepseek.com/v1/chat/completions"
+  },
+  "motivo_clase": null
+ },
+ "enviado": false,
+ "pares": [
+  {
+   "pair_id": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1",
+   "n_opciones": 9,
+   "opciones": [
+    "D-V.3",
+    "DA-F1",
+    "L-NC8",
+    "L-P5.3",
+    "S-I1",
+    "D-T4B-A1",
+    "DA-G1",
+    "DA-G3",
+    "ninguna-aplica"
+   ],
+   "validar_pregunta": [],
+   "instrucciones_len": 179,
+   "suma_probabilidades_del_falso": 0.72,
+   "forma_aceptada": false,
+   "excepcion": "RespuestaIlegible: respuesta de 'deepseek-comparador' fuera de forma (2 motivo(s))",
+   "motivos": [
+    "forma-choice: REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1: eleccion 'D-AJUST.1' no esta entre las opciones",
+    "forma-choice: REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1: las probabilidades suman 0.7200, no 1 (tolerancia 0.02)"
+   ]
+  },
+  {
+   "pair_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+   "n_opciones": 9,
+   "opciones": [
+    "L-H3",
+    "D-AJUST.4",
+    "D-VUP-A6",
+    "D-VUP-B2",
+    "DA-F2",
+    "L-E2E.4",
+    "L-ENT.12",
+    "L-P6.4",
+    "ninguna-aplica"
+   ],
+   "validar_pregunta": [],
+   "instrucciones_len": 179,
+   "suma_probabilidades_del_falso": 1.0,
+   "forma_aceptada": true,
+   "answers_proyectadas": {
+    "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4": {
+     "tipo": "choice",
+     "pregunta_id": "EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4",
+     "eleccion": "D-AJUST.4",
+     "probabilidades": {
+      "L-H3": 0.08,
+      "D-AJUST.4": 0.36,
+      "D-VUP-A6": 0.08,
+      "D-VUP-B2": 0.08,
+      "DA-F2": 0.08,
+      "L-E2E.4": 0.08,
+      "L-ENT.12": 0.08,
+      "L-P6.4": 0.08,
+      "ninguna-aplica": 0.08
+     },
+     "confidence": 0.9
+    }
+   },
+   "usage_proyectado": {
+    "input_tokens": 1700,
+    "output_tokens": 120
+   },
+   "modelo_efectivo_proyectado": "deepseek-flash",
+   "request_id_proyectado": "ensayo-sin-red",
+   "usage_normalized_del_instrumento": {
+    "input_tokens": 1700,
+    "output_tokens": 120,
+    "total": 1820,
+    "estado": "observado",
+    "libera_reserva_como_cero": false
+   }
+  }
+ ]
+}
