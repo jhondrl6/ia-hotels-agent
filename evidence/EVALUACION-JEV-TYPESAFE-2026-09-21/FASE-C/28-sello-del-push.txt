@@ -1,0 +1,41 @@
+# Sello del push d3ab12a..efbd6b5 - FASE-C del piloto JEV
+# medicion: 2026-10-05T00:54:59Z
+
+## 1. alcance y pre-flight (medidos ANTES de empujar)
+commits del rango d3ab12a..HEAD = 2 (el pre-flight midio 2 por adelantar; el conteo con origin/master..HEAD
+    ya dio 0 porque se tomo despues del push, y esa es la lectura correcta de la linea de abajo); lista:
+    efbd6b5 docs(jev): sello del commit 8c79b60 - el commit vence la fila final que decia "sin commit"
+    8c79b60 feat(jev): SESION 3 (FASE-C) - protocolo CONGELADA, los tres brazos en eval y registro INCOMPLETO con decision=null
+forma: FAST-FORWARD confirmado
+objetos alcanzables nuevos: 53
+archivo mas grande del rango: 119826 bytes
+
+## 2. dry-run (autenticacion y ref sin tocar el remoto)
+    (verificado en la corrida: 'd3ab12a..efbd6b5  HEAD -> master')
+
+## 3. push y paridad contra el SERVIDOR
+    ls-remote  efbd6b5039471bbd7e730e2eedecf6cb741bfe92	refs/heads/master
+    rev-parse HEAD  efbd6b5039471bbd7e730e2eedecf6cb741bfe92
+    left-right count origin/master...HEAD: 0	0
+    arbol de trabajo inmediatamente despues del push: LIMPIO (git status --porcelain no imprimo nada)
+    arbol de trabajo AHORA (ya con las ediciones de este sello): ' M evidence/.../00-registro-de-fase.md'
+    Las dos lineas se conservan separadas a proposito: la paridad 0/0 se afirmo sobre el arbol limpio de arriba,
+    no sobre este, que es el que va en el tercer commit.
+
+## 4. credenciales: la pasada propia, porque el gate salta evidence/
+    rango YA publicado d3ab12a..efbd6b5: 3368 lineas anadidas | hits de valor: 0
+    contenido QUE ESTE SELLO publica (lineas anadidas): 95
+
+## 5. barrido de valor sobre lo que ESTE sello publica (95 lineas anadidas)
+    hits de valor: 0
+    menciones por nombre de variable: 0
+
+## 6. gates sobre el arbol final del sello
+    run_all_validations.py --quick: EXIT=0 TOTAL: 13/13 STATUS: ALL VALIDATIONS PASSED
+    validate_wiring.py --check: EXIT=0
+    verify_packs_in_committed_tree.py (lee HEAD, aun sin el 3er commit): EXIT=0
+    build_lesson_index.py --check: EXIT=0
+
+## 7. conteo final del expediente (medido en el momento de escribir esta linea)
+    ls -1 FASE-C | wc -l = 42
+    excluyendo el portador 00-registro-de-fase.md = 41

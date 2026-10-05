@@ -435,6 +435,11 @@ de autorización del operador**; el `git commit` es un acto posterior, separado 
 push y sin L3 sigue vigente; el commit ya no. La frase se conserva porque describia el estado al cierre
 de la fase de ejecucion, que es lo que esta hoja registra.⟧
 
+⟦Y vencida a su vez por §14, en su segunda mitad: **el push se ejecuto** (`d3ab12a..efbd6b5`), asi que
+de las tres cosas que la anotacion de arriba declaraba vigentes, dos quedan ya sin ejecutar (L3 y
+write-back) y una no. Esa anotacion se escribio veinte minutos antes que el acto que la refute, que es
+el costo de sellar un commit mientras quedan permisos abiertos en la misma sesion.⟧
+
 ---
 
 ## 10. Estado terminal
@@ -538,6 +543,14 @@ salidas reales y no transcrito de memoria: **`26-sello-del-commit-8c79b60.txt`**
 | L3 | **no corrio**, por indicacion expresa | — |
 | Escrituras del sello | `00-registro-de-fase.md` (las tres anotaciones ⟦⟧ de §9/§12 y esta seccion), `25-…post-commit.txt` y `26-…sello….txt` | `git status --porcelain` antes de stagear |
 
+⟦Dos filas de esta tabla quedaron vencidas por §14 y se anotan aqui mismo en vez de reescribirse: la de
+**Paridad**, que decia `0 1 / SIN PUSH` y era verdadera al medir —el `0 1` es justamente el estado que
+habia que registrar para poder afirmar despues que se cerro—, y la de **Escrituras del sello**, que
+enumera `00-registro`, `25-` y `26-` y **omitio `27-`**, que si viajo en `efbd6b5` (el `--quick` previo al
+sello, 13/13 EXIT 0). La omision se declara y no se enmienda: cambiar `efbd6b5` moveria su sha, y ese sha
+ya esta citado dentro de su propio mensaje de commit y en §14, asi que un `--amend` re-anclaria tres citas
+para arreglar una enumeracion. El crudo `27-` esta commiteado y publicado; lo que falto fue su mencion.⟧
+
 Lo que el sello **no** toca: `protocolo.json` (ya esta en `8c79b60` con el sha de §2 casando en el blob),
 `muestra.json` y `etiquetas.json` (blob **identico** entre `HEAD` y `HEAD~1`, verificado por `git show` y
 no por suposicion), `scripts/`, `tests/`, AGENTS.md y el hermano.
@@ -575,10 +588,68 @@ conteo real dio 40, y al generar el crudo de la verificación pasó a 41). Por e
 `00-registro-de-fase.md`**, y ese número sí queda cerrado porque después de este párrafo no se escribe
 nada más aquí.
 
+⟦La última cláusula la refuta §14: si hubo otra escritura, y con otro crudo (`28-`), o sea el conteo de
+arriba pasó a **42** y el de la población estable a **41**. La afirmación "queda cerrado porque después no
+se escribe nada" es justo la forma que tiene este documento de equivocarse: su propio texto es parte del
+universo que cuenta. El numero vigente es el que estampa §14, medido despues de la ultima escritura.⟧
+
 ### Estado de los permisos despues del sello
 
 Ejecutado: **commit**. Sin ejecutar y sin ofrecer: **push**, **revision L3**, **write-back en QMind**,
 edicion del hermano o de su deuda (`transfer_status` sigue `PENDIENTE`), y cualquier cambio en `scripts/`
 o `tests/` que cerraria CR-1 a CR-4.
+
+⟦Vencida en su segunda mitad por §14: el **push se ejecuto** y su rango es `d3ab12a..efbd6b5`. De la lista
+siguen sin ejecutar L3, write-back, edicion del hermano y los cambios de codigo de CR-1 a CR-4. Lo de
+"sin ofrecer" tampoco: el operador pidio la secuencia (a), que era estampa-el-sello-y-empuja.⟧
+
+---
+
+## 14. Sello del push `d3ab12a..efbd6b5`
+
+El operador autorizo la secuencia (a): estampar el sello del push y volver a empujar. Crudo de esta
+seccion, generado con las salidas reales: **`28-sello-del-push.txt`** (paridad, barrido de credenciales
+sobre lo publicado, `--quick`, `--check` del derivado y packs sobre el HEAD nuevo, todo en un solo
+archivo para no mover el conteo del expediente dos veces).
+
+### Lo que se empujo y como se midio antes
+
+| Paso | Valor medido | Comando |
+|---|---|---|
+| Alcance del push | `8c79b60` y `efbd6b5`, dos commits | `git log --oneline origin/master..HEAD` |
+| Forma del push | **fast-forward confirmado** | `git merge-base --is-ancestor origin/master HEAD` |
+| Volumen | **53 objetos** alcanzables nuevos; el archivo mas grande del rango 119.826 B | `git rev-list --objects origin/master..HEAD \| wc -l` |
+| Prueba sin escribir | `d3ab12a..efbd6b5 HEAD -> master`, autenticacion OK | `git push --dry-run --verbose origin HEAD:master` |
+| Push | `d3ab12a..efbd6b5`, EXIT 0 | `git push origin HEAD:master` |
+| **Paridad contra el servidor** | `ls-remote` = `efbd6b5039471bbd7e730e2eedecf6cb741bfe92` = `git rev-parse HEAD`; conteo **`0 0`**; arbol limpio | `git ls-remote origin refs/heads/master` |
+
+### Credenciales: la garantia no la dio el gate, la dio esta pasada
+
+Como el `Secrets Check` salta `evidence/` por ruta (§13, correccion 2), el barrido se corrio sobre **las
+lineas que iban a hacerse publicas** y no sobre los archivos ya versionados: `git diff origin/master..HEAD`
+→ **3.368 lineas anadidas**, y de esas **0** con forma de valor de credencial (`sk-…`, `ghp_…`, `AKIA…`,
+`-----BEGIN … PRIVATE KEY`, `Bearer …`). Las 5 apariciones de `.env` en el rango son prosa que lo nombra y
+una linea de codigo `for clave, valor in dotenv_values(ROOT / ".env").items():`, que lee por nombre y no
+imprime valor. Distingo el instrumento del resultado: `26-` y `27-` registran que el `13/13` verde, pero
+ese `13/13` **no miraba** los 41 archivos de este directorio.
+
+### Conteo del expediente, medido despues de la ultima escritura
+
+`ls -1 FASE-C | wc -l` = **42**; excluyendo al portador `00-registro-de-fase.md`, **41**. Quinta cifra
+movida del documento que la estampa (36 → 38 → 40 → 41 → 42). El convenio de §11 y §13 sigue siendo el
+unico que no se mueve solo: **publicar la poblacion que excluye al documento que la cuenta**.
+
+### Estado de los permisos, re-escrito desde cero
+
+| Permiso | Estado |
+|---|---|
+| commit | **ejecutado** — `8c79b60` (trabajo) y `efbd6b5` (sello del commit); este sello sera un tercero |
+| push | **ejecutado** — `d3ab12a..efbd6b5`; el tercero (`…efbd6b5..NUEVO`) queda pendiente de este mismo commit |
+| revision L3 | **no ejecutada**. No arrastro la decision de los dos turnos anteriores: alli dijiste "sin L3" explicitamente y en el pedido de push no la nombraste, asi que qued6 abierta y ahi sigue. Su baseline ahora es el tip publicado |
+| write-back en QMind | no ejecutado |
+| hermano y su deuda | intactos; `transfer_status` `PENDIENTE` |
+| `scripts/` y `tests/` | sin tocar; **CR-1 a CR-4 siguen abiertos**, incluido el rojo por diseno de `test_jev_pilot_protocolo_check.py:43` |
+
+Y sigue vigente lo que esta hoja no hace: no abre FASE-RELEASE.
 
 
