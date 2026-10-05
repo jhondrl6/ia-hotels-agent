@@ -1,0 +1,61 @@
+== write-back del 10-analisis del plan JEV, por el CLI de QMind y verificado por descarga+sha256 ==
+orden del operador: «Hacer el write-back del 10-analisis con titulo nuevo», 2026-10-05
+
+-- por que NO el escritor del flujo: validate_qmind_writeback.py --upload fija el titulo antiguo en su codigo
+   e is_ingested() decide por nombre del plan, o sea responderia SKIP y dejaria la version vieja como verdad
+   publicada. El limite esta escrito en el propio 10-analisis desde el cierre del 2026-09-27 y hoy se comprueba:
+   corrido despues de la publicacion, ese mismo writer sigue diciendo [PASS] 13/13 (EXIT 0) con el contenido ya
+   republicado, porque su criterio es el titulo. El control fuerte es la frescura por descarga, no el --strict.
+
+== PRE: lo publicado antes de este acto
+   fuente 01a10853-6da2-7820-b2a3-fa1cb5ccb4ba  'cierre FASE-B, lecciones finales 2026-10-04'
+   descargada: 21249 bytes, sha256 424b5828e34145fbaff7e72bf117d4b25a777c8f4f9e30156229aaa0ace81f90
+   disco ese momento: 30655 bytes, sha256 d1b8ff00b51144ad092d633fc0122d4b7c0fd5b91e6b3eabbc2879ff5ed0fc48
+   => la publicada NO era la version vigente (precisamente el vencido real declarado en 9.1)
+   nota de deriva: 9.1 publico sha_disco=f05d7eab20d2; era el estado tras las primeras ediciones y quedo
+   superado por las anotaciones del sello; la cifra que gobierna este acto es la medida aqui, d1b8ff00b51144ad...
+
+== Publicacion
+   comando: qmind source upload --nb 01a04d98-b7bd-778c-8441-26fdc7e35f45 \
+              --file .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md \
+              --title "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)" --non-interactive --format json
+   exit 0 al primer intento
+   id: 01a10e39-1625-71b1-8ca6-73cbdb1c6a94
+   title: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)
+   sourceType: markdown
+   status: pending
+   metadata.fileSha256: d1b8ff00b51144ad092d633fc0122d4b7c0fd5b91e6b3eabbc2879ff5ed0fc48  (= sha256 del disco, verificado)
+   metadata.fileSize:   30655  (= bytes del disco)
+   originUrl / uri / originalFileUri: REDACTADOS (enlaces firmados no se persisten)
+
+== POST: verificacion por descarga + sha256, no por titulo
+   descarga de 01a10e39-1625-71b1-8ca6-73cbdb1c6a94: 30655 bytes, sha256 d1b8ff00b51144ad092d633fc0122d4b7c0fd5b91e6b3eabbc2879ff5ed0fc48
+   identidad con el disco: crudo IGUAL | normalizado a LF IGUAL
+   el archivo esta LF (CR 0 / LF 256), asi que crudo y normalizado coinciden y no hay artefacto CRLF que declarar
+
+== Poblacion del notebook (fuente: qmind source list --format json)
+   01a10e39-1625-71b1-8ca6-73cbdb1c6a94 | ready | fileSha256 d1b8ff00b511 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)
+   01a10853-6da2-7820-b2a3-fa1cb5ccb4ba | ready | fileSha256 424b5828e341 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)
+   01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5 | ready | fileSha256 34e2a95195b2 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)
+   57 fuentes antes -> **58 fuentes ahora**; las dos anteriores quedan intactas (no se borra: la convencion
+   del cierre del 2026-09-27 es titulo nuevo SIN eliminar la previa, y QMind no deduplica por titulo).
+
+== Verificadores despues del acto
+   scripts/verify_qmind_context_freshness.py --strict  ->  EXIT 0, '2 fresco(s), 0 problema(s)',
+     [FRESCO] 10-analisis por la fuente nueva 01a10e39-1625 y [FRESCO] CONTEXT por 01a0efcc-3297;
+     **0 [SIN-DESCARGA]** en esta corrida (crudo 38-).
+   scripts/validate_qmind_writeback.py --strict        ->  EXIT 0, [PASS] 13/13 (decide por titulo)
+
+== Flakiness medida en numeros, no como anecdota
+   descarga PRE: intento 1 EXIT 1 ('QMind network request failed'), intento 2 EXIT 0
+   upload:       intento 1 EXIT 0
+   descarga POST: intento 1 EXIT 1, intento 2 EXIT 0
+   O sea la B2-4 es real tambien para el CLI suelto: la misma operacion cae y pasa entre reintentos, y por eso
+   un [VENCIDO] de este instrumento exige contar [SIN-DESCARGA] antes de creerlo.
+
+== Premisa que esta sesion NO verifico y queda marcada
+   El executor y el contrato dicen que QMind no tiene delete_source (por eso el SKIP del writer es
+   permanente). El CLI SI expone `qmind source delete <source_id>`. No se invoco: borrar es irreversible y
+   fuera de la autorizacion. Dueño de la premisa: quien goberna la politica de write-back; criterio: R2.10
+   del executor y la nota del 2026-09-27. Si la politica cambiara, la decision de 'titulo nuevo sin borrar'
+   se re-abre con evidencia, no por esta hoja.

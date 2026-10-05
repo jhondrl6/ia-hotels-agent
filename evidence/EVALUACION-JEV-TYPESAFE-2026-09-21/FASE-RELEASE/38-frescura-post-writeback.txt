@@ -1,0 +1,12 @@
+== frescura QMind DESPUES del write-back (verificador --strict, solo lectura) ==
+comando: ./venv/Scripts/python.exe scripts/verify_qmind_context_freshness.py --strict
+FRESH_POST_EXIT=0
+poblacion: 1 CONTEXT gobernado(s) (CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md) | 19 excluido(s)
+poblacion declarada: 1 gobernado(s) (10-analisis-post-implementacion.md) | 0 fuera de alcance
+notebook iah-cli-lecciones: 58 fuente(s) publicada(s)
+  [FRESCO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 1 fuente(s) que casan por descarga+sha256 (01a0efcc-3297…coincide)
+  [FRESCO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) que casan por descarga+sha256 (01a10e39-1625…coincide)
+[OK] frescura de CONTEXT/10-analisis declarados: 2 fresco(s), 0 problema(s)
+
+== conteo de [SIN-DESCARGA] en esta corrida ==
+0

@@ -326,7 +326,7 @@ Medición fuerte, con el sha del archivo como testigo:
 
 | Artefacto | sha de disco antes de editar | sha de disco después | Veredicto del verificador | Lectura correcta |
 |---|---|---|---|---|
-| `10-analisis-post-implementacion.md` | `424b5828e341…` | `f05d7eab20d2…` | `[VENCIDO]` | **Vencido real**: la fuente publicada del notebook (`01a10853-6da2…`) casa con los bytes **anteriores** a este cierre. Necesita write-back con título nuevo, verificado por descarga+sha256 |
+| `10-analisis-post-implementacion.md` | `424b5828e341…` | `f05d7eab20d2…` | `[VENCIDO]` | **Vencido real** ⟦**cerrado el mismo día por el write-back de §14**: la fuente publicada pasó a ser `01a10e39-1625…` y la cifra final del disco es `d1b8ff00b511…` — el `f05d7eab20d2…` de esta celda era un estado intermedio, ya superado⟧: la fuente publicada del notebook (`01a10853-6da2…`) casa con los bytes **anteriores** a este cierre. Necesita write-back con título nuevo, verificado por descarga+sha256 |
 | `CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md` | `5587f27ddd5a…` | `5587f27ddd5a…` (sin cambio) | `[VENCIDO]` | **Falso vencido**: su sha no se movió y en la corrida 3 del mismo día casó con la fuente `01a0efcc-3297…`; hoy esa descarga falló |
 
 `validate_qmind_writeback.py --strict` sigue diciendo `[PASS] 13/13` **justo por el límite que se declara**:
@@ -681,3 +681,45 @@ y `git rev-list --left-right --count origin/master...HEAD`; su autoridad es `git
 nota que se re-escriba cada vez que el ref se mueve. Write-back, etiqueta de adopción, D7/D6 y las decisiones de REL-1/REL-2/REL-5: **sin ejecutar y sin
 ofrecer**. Sin tocar el hermano, `scripts/`, `tests/`, `config/`, `VERSION.yaml`, `AGENTS.md`,
 `muestra.json`, `protocolo.json`, `etiquetas.json` ni `FASE-C/`. Sin ofrecer la fase siguiente ni re-abrir C.
+
+---
+
+## 14. Write-back del `10-analisis` (2026-10-05, orden expresa)
+
+El operador autorizó «Hacer el write-back del 10-analisis con titulo nuevo». Se ejecutó **por el CLI de QMind**
+y se verificó **por descarga + sha256**, no por título — la misma vía del cierre del 2026-09-27, por la misma
+razón documentada. Crudos `38-` (frescura) y `39-` (publicación).
+
+| Paso | Valor medido |
+|---|---|
+| PRE — qué estaba publicado | fuente `01a10853-6da2…`, título «cierre FASE-B, lecciones finales 2026-10-04», **21.249 B, sha256 `424b5828e341…`** — exactamente el `sha_disco` que el verificador imprimió **antes** de las ediciones de este cierre |
+| Disco al publicar | **30.655 B, sha256 `d1b8ff00b511…`**, LF puro (CR 0 / LF 256), así que crudo y normalizado coinciden y no hay artefacto CRLF que declarar |
+| Deriva declarada | §9.1 publicó `f05d7eab20d2…` como sha del disco; era el estado tras las primeras ediciones y quedó superado por las anotaciones del sello. La cifra que gobierna este acto es la re-medida acá |
+| Publicación | `qmind source upload --nb 01a04d98… --file <10-analisis> --title "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)" --non-interactive` → EXIT 0 al primer intento; fuente nueva **`01a10e39-1625-71b1-8ca6-73cbdb1c6a94`**, `sourceType: markdown`, `metadata.fileSha256` = `d1b8ff00b511…` y `fileSize` 30.655, ambos iguales al disco. Enlaces firmados (`originUrl`, `uri`, `originalFileUri`) **redactados** del crudo |
+| POST — verificación fuerte | descarga de la fuente nueva: **30.655 B, sha256 `d1b8ff00b511…`** → **IGUAL** al disco por crudo y por forma normalizada. La publicación no se creyó por el título |
+| Población | **57 → 58 fuentes**. Las dos anteriores (`01a10853-6da2…` y `01a0e4d9-b252…`) quedan **intactas y `ready`**: título nuevo **sin borrar**, que es la convención del 2026-09-27 |
+| Frescura después | `verify_qmind_context_freshness.py --strict` → **EXIT 0**, `2 fresco(s), 0 problema(s)`: el `10-analisis` casa con la fuente nueva `01a10e39-1625…` y el `CONTEXT` con `01a0efcc-3297…`. **0 `[SIN-DESCARGA]`** en esta corrida |
+| El writer del flujo, re-corrido | `validate_qmind_writeback.py --strict` → `[PASS] 13/13`, EXIT 0 **antes y después** de la publicación. No se movió: su criterio es el título, así que nunca vería el contenido cambiado. Compra de una vez las dos cosas que esta hoja venía declarando |
+| Flakiness en números | descarga PRE: 1 er intento EXIT 1 (`QMind network request failed`), 2º EXIT 0; upload: 1er intento EXIT 0; descarga POST: 1 er intento EXIT 1, 2º EXIT 0. La B2-4 también aplica al CLI suelto |
+
+**Qué cierra y qué no cierra este acto.** Cierra el **vencido real** de §9.1: lo publicado ya no son los bytes
+posteriores al cierre de FASE-B, sino los del cierre de FASE-RELEASE, probado por descarga. **No** convierte
+AC-R6 en pleno: el literal del mandato pedía `validate_qmind_writeback.py --upload`, y ese comando **sigue sin
+ejecutarse** — con la razón ya no alegada sino medida: si se corriera, `is_ingested()` decide por nombre del
+plan y respondería SKIP, dejando la versión vieja como verdad publicada. AC-R6 queda entonces **PARCIAL en su
+literal y CUMPLIDA en su sustancia**, que es lo que hay que leer de la casilla.
+
+**Lo que se abrió y no se verificó (declarado, no curado).** El CLI expone `qmind source delete <source_id>`,
+mientras el executor y el contrato afirman que QMind no tiene borrado — premisa sobre la que descansa que el
+SKIP del writer sea permanente. **No se invocó**: borrar es irreversible, no estaba autorizado, y la política de
+«título nuevo sin eliminar la anterior» sigue siendo la vigente. Queda como premisa a reabrir por su dueño con
+evidencia, no por esta hoja.
+
+### Anotaciones que este acto vence
+
+- **§11, cláusula de write-back**: «Write-back: sin ejecutar» quedó vencida por esta sección. Las demás
+  cláusulas de ese párrafo (cero inferencias, cero credenciales impresas) siguen vigentes.
+- **§9.1**: la fila del `10-analisis` marcada «vencido real» está cerrada; la del `CONTEXT` ya era falsa y sigue
+  siendo fresca. Ninguna de las dos casillas gobernadas queda hoy vencida.
+- **§13 (permisos)**: «Write-back, etiqueta de adopción, D7/D6 y las decisiones de REL-1/REL-2/REL-5: sin
+  ejecutar y sin ofrecer» — la primera parte se cumplió por instrucción separada; las otras tres siguen igual.
