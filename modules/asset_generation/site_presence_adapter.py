@@ -110,36 +110,74 @@ def _presence_result_to_canonical(presence_result: Any) -> Dict[str, Any]:
     Handles:
       - PresenceCheckResult dataclass (has .status as PresenceStatus enum, .confidence, etc.)
       - dict from asdict(PresenceCheckResult) (has "status" as enum or string)
+
+    FASE-C (AC19a, aditivo): conserva `details` —el lector extrae
+    `whatsapp_href_number` y se descartaba aqui— y publica las tres claves nuevas
+    (`observation_scope`, `read_status`, `presence_evidence_kind`) cuando el
+    lector las trajo. Las claves existentes no cambian de forma ni de valor.
     """
     if hasattr(presence_result, "status"):
         # Dataclass instance
         status = getattr(presence_result, "status", None)
         status_str = _status_to_string(status)
         confidence = float(getattr(presence_result, "confidence", 1.0))
-        return {
+        canonical = {
             "status": status_str,
             "site_verified": status_str in ("exists", "exists_with_issues", "redundant"),
             "confidence": confidence,
         }
+        _add_observacion(canonical, {
+            "details": getattr(presence_result, "details", None),
+            "observation_scope": getattr(presence_result, "observation_scope", None),
+            "read_status": getattr(presence_result, "read_status", None),
+            "presence_evidence_kind": getattr(presence_result, "presence_evidence_kind", None),
+        })
+        return canonical
     elif isinstance(presence_result, dict):
         return _asset_data_to_canonical(presence_result)
     else:
         return {"status": "not_checked", "site_verified": False, "confidence": 0.0}
 
 
+def _add_observacion(canonical: Dict[str, Any], source: Dict[str, Any]) -> None:
+    """Añade solo las claves nuevas que el lector realmente trajó.
+
+    Aditivo por construcción: un lector que no observó nada no publica claves
+    vacías, así la forma canónica de un reporte sin observación sigue siendo
+    exactamente `status/site_verified/confidence` (los cuatro asserts de
+    igualdad exacta del plan siguen midiendo lo mismo).
+    """
+    for clave, valor in source.items():
+        if valor is None:
+            continue
+        if isinstance(valor, (dict, list)) and not valor:
+            continue
+        canonical[clave] = valor
+
+
 def _asset_data_to_canonical(asset_data: Dict[str, Any]) -> Dict[str, Any]:
     """Convert a dict-representation of an asset's presence to canonical form.
 
     Handles enum values from asdict() and ensures string status.
+
+    FASE-C (AC19a): las claves nuevas viajan también por esta rama, para que un
+    snapshot releído desde disco conserve la observación que publicó el lector.
     """
     status = asset_data.get("status", "")
     status_str = _status_to_string(status)
     confidence = float(asset_data.get("confidence", 1.0))
-    return {
+    canonical = {
         "status": status_str,
         "site_verified": status_str in ("exists", "exists_with_issues", "redundant"),
         "confidence": confidence,
     }
+    _add_observacion(canonical, {
+        "details": asset_data.get("details"),
+        "observation_scope": asset_data.get("observation_scope"),
+        "read_status": asset_data.get("read_status"),
+        "presence_evidence_kind": asset_data.get("presence_evidence_kind"),
+    })
+    return canonical
 
 
 def _status_to_string(status: Any) -> str:

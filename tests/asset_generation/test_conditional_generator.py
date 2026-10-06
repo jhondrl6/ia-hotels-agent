@@ -98,12 +98,18 @@ class TestConditionalGeneratorGenerate:
         assert result["success"] is True
 
     def test_generate_with_blocked_returns_error(self, tmp_path):
-        """Test generate with BLOCKED returns error - NEVER_BLOCK: now returns success with warning."""
+        """Test generate with BLOCKED returns error.
+
+        RE-ANCLADO en FASE-C (AC3/AC6). Decia "NEVER_BLOCK: ahora retorna success
+        con warning" y ese era el camino del `wa.me` vacio. Para el destino de
+        WhatsApp el plan exige error bloqueante cuando el numero no es utilizable
+        (AC3), y NEVER_BLOCK sigue gobernarndo los demas assets y la confianza
+        baja: el preflight de este asset continua con `block_on_failure=False`.
+        """
         generator = ConditionalGenerator(output_dir=str(tmp_path))
-        # Empty DataPoint should give low confidence
-        # NEVER_BLOCK: Even with low confidence, generate succeeds with warning
-        dp = DataPoint("whatsapp")
-        validated_data = {"whatsapp": dp}
+        # Empty DataPoint: sin valor, sin fuente
+        dp = DataPoint("whatsapp_number")
+        validated_data = {"whatsapp_number": dp}
         
         result = generator.generate(
             asset_type="whatsapp_button",
@@ -111,12 +117,11 @@ class TestConditionalGeneratorGenerate:
             hotel_name="Test Hotel",
             hotel_id="hotel_123"
         )
-        # NEVER_BLOCK: Nunca retorna error por confianza baja - usa fallback
-        assert result["success"] is True
-        assert result["status"] in ("warning", "success")  # NUNCA "blocked"
-        # El asset se genera igual con disclaimer
-        assert "can_use" in result
-        assert result["can_use"] is True
+        # FASE-C: un boton prometido con destino inutilizable es error, no warning
+        assert result["success"] is False
+        assert result["status"] == "blocked"
+        assert result["can_use"] is False
+        assert result["reason_code"] == "whatsapp_number_no_utilizable"
 
 
 class TestConditionalGeneratorNamingStrategy:

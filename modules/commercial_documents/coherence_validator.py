@@ -145,8 +145,9 @@ class CoherenceValidator:
             generated_assets: Dict of generated assets with confidence scores (post-gen only)
             site_presence_report: Canonical dict from normalize_site_presence() —
                 carries site_verified and confidence per asset type. Used by
-                _check_whatsapp_verified() to boost confidence when
-                SitePresenceChecker confirmed WhatsApp exists on the real site.
+                _check_whatsapp_verified() — desde FASE-C la presencia en el
+                sitio NO interviene en esta barra: evita duplicación, no
+                verifica el número (AC3).
 
         Returns:
             CoherenceReport with all validation results
@@ -404,15 +405,11 @@ class CoherenceValidator:
 
         Score: 1.0 if passes, 0.0 if fails
         Failure (blocking): If confidence < threshold (configurable, default 0.9)
-        """
-        # FASE-0 (DT-4): Boost confidence if SitePresenceChecker confirmed WhatsApp exists
-        site_whatsapp_exists = False
-        if site_presence_report:
-            whatsapp_presence = site_presence_report.get("whatsapp_button", {})
-            if isinstance(whatsapp_presence, dict):
-                presence_status = whatsapp_presence.get("presence_status") or whatsapp_presence.get("status", "")
-                site_whatsapp_exists = presence_status == "exists"
 
+        FASE-C: `site_presence_report` se sigue recibiendo (los llamadores la
+        propagan desde FASE-0) pero YA no interviene en esta barra: la presencia
+        no verifica números. Retirar el boost es el producto de AC3.
+        """
         threshold = self.config.get_threshold('whatsapp_verified')
         is_blocking = self.config.is_blocking('whatsapp_verified')
         
@@ -454,10 +451,12 @@ class CoherenceValidator:
         
         confidence_score = self._confidence_level_to_score(whatsapp_field.confidence)
 
-        # FASE-0 (DT-4): If site confirms WhatsApp exists, boost confidence
-        if site_whatsapp_exists:
-            confidence_score = max(confidence_score, 0.95)
-
+        # FASE-C (AC3): se RETIRA el boost a 0.95 por `exists`. La presencia en el
+        # sitio evita duplicación (ese es su trabajo en el ledger y en la matriz
+        # de alignment); no verifica un número. Con el boost vigente, una huella
+        # de plugin —`exists` 0.85 medido en Don Alfonso el 2026-09-19— promocionaba
+        # a VERIFIED un campo que no es teléfono, y un botón forzado con CONFLICT
+        # o UNKNOWN pasaba la barra de 0.9 sin que nadie la bajara.
         if confidence_score >= threshold:
             return CoherenceCheck(
                 name="whatsapp_verified",

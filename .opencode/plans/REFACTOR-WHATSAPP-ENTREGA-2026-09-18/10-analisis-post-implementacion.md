@@ -1,6 +1,6 @@
 # Análisis post-implementación — REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
-Estado al 2026-09-24: **análisis vivo, cuatro fases cerradas con su fila y su evidencia** (A, G, 0 y B; B con deuda AC5 → dueño C-D) y **punto de reanudación en FASE-C**. ⟦Reconciliado por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`; la línea anterior describía la concepción («PREPARACIÓN; no hay resultados post-implementación») y quedó vencida por esas cuatro filas⟧. Versión base 4.77.0; versión objetivo propuesta 4.78.0, sujeta a confirmación al iniciar RELEASE.
+Estado al 2026-09-24: **análisis vivo, cuatro fases cerradas con su fila y su evidencia** (A, G, 0 y B; B con deuda AC5 → dueño C-D) y **punto de reanudación en FASE-C**. ⟦Reconciliado por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`; la línea anterior describía la concepción («PREPARACIÓN; no hay resultados post-implementación») y quedó vencida por esas cuatro filas⟧. Versión base 4.77.0; versión objetivo propuesta 4.78.0, sujeta a confirmación al iniciar RELEASE. ⟦Puesta al día 2026-10-06: **4.78.0 quedó liberada** el 2026-09-25 por `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`VERSION.yaml` `version: "4.78.0"`, `release_date: "2026-09-25"`; medido con `grep -nE "version|release_date" VERSION.yaml`), así que la propuesta de esta fila está vencida. La versión de este plan la decide el mandato de su FASE-RELEASE con el operador y se invoca como `--release "$VERSION_AUTORIZADA"`⟧.
 
 **Revisión 2 (2026-09-19, HEAD `938f59f`).** Re-medición del diseño contra código vivo y contra la corrida real archivada en `output/TAREA7-2026-09-19/`. Consecuencias para este archivo: `L-ENT.1` y `L-ENT.2` quedan **rectificadas** (se conservan con la corrección a la vista), se definen `L-ENT.10` y `L-ENT.11`, y la tabla de seguimientos incorpora la causa de supresión que ninguna fase cubría.
 
@@ -120,7 +120,7 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 
 | **Nueva (FASE-G): los dos escritores de `REGISTRY.md` divergen** | **RESUELTO POR EL BLOQUE B DE LA ORDEN DE CALIDAD, y barrido como seguimiento vencido el 2026-09-25 por su conciliación final — la cura no es de esta sesión ni de FASE-G: la produjo el bloque B (`sync_config.yaml` + sus tests) y la orden la acepta en §6 casilla 3 con su matriz en §13 de la fuente única de B.** Antecedente tal como se midió en G (y **así ya no es**): `log_phase_completion.py` estampaba la fecha del día mientras `sync_versions.py`, con la regla `registry_last_update`, comparaba esa cabecera contra `VERSION.yaml` → quick rojo al día siguiente de loguear una fase. Hoy **no hay dos escritores**: `scripts/sync_config.yaml` lleva la sección explícita «**REGISTRY.md — SIN REGLA DE FECHA (a proposito)**» y su único escritor es `scripts/log_phase_completion.py`, que estampa la fecha de la **última entrada documental** (distinta de la fecha de release, que viaja por CHANGELOG/README). **La acción que esta fila ordenaba quedó imposible por diseño**: `sync_versions.py --rule registry_last_update` ya no tiene objeto —`tests/test_registry_fecha_documental.py` aserta que ninguna regla apunte a `REGISTRY.md` y que el id `registry_last_update` **no** esté en el config. Cabecera vigente en disco al medir: `> **Ultima actualizacion:** 2026-09-24` | ~~**FASE-RELEASE / operador**~~ → **cerrado por el bloque B de la orden** | Nada pendiente **de este plan**. Cada fase intermedia **ya no** re-abre ese rojo: el conflicto que G describía desapareció al retirarse la regla, no al reconciliarse dos fechas. Si algún día reaparece, el guard lo imprime ese test, no una lectura manual |
 | **Nueva (FASE-G): deuda de política del verificador** | `CoherenceValidator.validate` también defaultea `site_presence_report=None`, y G **no** la exigió: gobernarla habría añadido un requisito que ninguna AC aprobó y dos hallazgos sin dueño | FASE-C / V-1 (maestro §2) | Al tocar el boost de presencia, decidir si entra en la política; si entra, con su AC y sus excepciones |
-| **Nueva (FASE-G): `validate_qmind_writeback.py` no puede publicar un cierre actualizado** | El writer fija el título `10-analisis: <PLAN> (lecciones aprendidas y decisiones)` y **no expone `--title` ni `--file`** (medido en su `main()` el 2026-09-20). Como `is_ingested()` responde por título, la segunda ingesta del mismo plan devuelve **SKIP**: la misma idempotencia que evita duplicados deja la primera versión como verdad publicada y el contenido nuevo, obsoleto **sin señal**. Agrava: el check [15/15] de la validación completa sí lo invoca, pero solo en modo completo (ni en `--quick` ni en un hook), escanea solo `Archives/`, degrada a exit 0 sin CLI y decide por título | ABIERTO CON DUEÑO Y PLAN PROPIO | Mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`, creado el 2026-09-20 para ejecutarlo **antes** de FASE-RELEASE; operador si se decide no ejecutarlo | Ampliar el writer con `--title` y un saneador, y verificar por **descarga + sha256** en lugar de por título. Mientras no exista, la ingesta final se hace con `qmind source upload` directo y así debe decirse en el prompt de RELEASE (así lo hizo G: copia saneada + título canónico, `evidence/…/FASE-G/qmind-writeback-G.md`) |
+| **Nueva (FASE-G): `validate_qmind_writeback.py` no puede publicar un cierre actualizado** | El writer fija el título `10-analisis: <PLAN> (lecciones aprendidas y decisiones)` y **no expone `--title` ni `--file`** (medido en su `main()` el 2026-09-20). Como `is_ingested()` responde por título, la segunda ingesta del mismo plan devuelve **SKIP**: la misma idempotencia que evita duplicados deja la primera versión como verdad publicada y el contenido nuevo, obsoleto **sin señal**. Agrava: el check [17/18] de la validación completa sí lo invoca, pero solo en modo completo (ni en `--quick` ni en un hook), escanea solo `Archives/`, degrada a exit 0 sin CLI y decide por título ⟦re-anclado el 2026-10-06: la fila se escribió con la etiqueta `[15/15]`, la que le correspondía cuando el modo completo llegaba a 15; el denominador hoy es 18 porque nació el hermano `[18/18]` de frescura `CONTEXT` (`verify_qmind_context_freshness.py`), que tampoco corre en `--quick`⟧ | ABIERTO CON DUEÑO Y PLAN PROPIO | Mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`, creado el 2026-09-20 para ejecutarlo **antes** de FASE-RELEASE; operador si se decide no ejecutarlo | Ampliar el writer con `--title` y un saneador, y verificar por **descarga + sha256** en lugar de por título. Mientras no exista, la ingesta final se hace con `qmind source upload` directo y así debe decirse en el prompt de RELEASE (así lo hizo G: copia saneada + título canónico, `evidence/…/FASE-G/qmind-writeback-G.md`) |
 | **Nueva (FASE-0): DEUDA-0.1 aliasing del assessment con el objeto del auditor** | `AssessmentBuilder.with_audit` asigna la **misma lista** de `audit_result.critical_issues` y `with_geo_flow` hace `.append` sobre ella: el geo-flow muta el objeto del auditor. Medido como O2 en `evidence/…/FASE-0/resultados-y-observaciones.md` (apareció porque el propio delta de la medición salía 0) | **FASE-E** (dueño del adaptador y de las rutas de artefactos) | Copia defensiva en el adaptador + assertions de identidad (`assessment["critical_issues"] is not audit_result.critical_issues`) y re-lectura del audit tras `with_geo_flow`. **No es un AC**: FASE-0 no lo gobierna porque es cambio de adaptación, no de serialización de evidencia, y abrir un AC en una fase ajena era reinterpretar el alcance |
 | DomainGate de WhatsApp (`CommercialGate._check_whatsapp_verified`, `DomainGatesOrchestrator`, `quick_check_commercial`) | Fuera de la ruta del fix. **Corrección de nombre:** la fila anterior citaba `DomainGateEngine`, símbolo que **no existe** en el repo — nadie podía localizar la deuda | Quality gates | Conservar documentado como legado mientras existan tests; su severidad de fallo es `warning`, nunca `error`, así que no puede usarse como certificación de producción. No archivarlo sin autorización |
 | **Nueva (revisión 2): serialización de evidencia del veredicto (`VACUOUS_RECALL`)** | **CERRADA POR FASE-0 el 2026-09-20 (offline, con su par medido)** y en cumplimiento de lo que `L-E2E.2`/`L-V.3` dejaron como "fix candidato sin fila". Los tres puntos están en el productor, en el DTO del acta y en las dos ramas de publish. **Reapertura honesta:** la supresión deja de estar causada por este hueco, pero eso no certifica que una corrida real publique — lo demuestra E2E | Quality gates/tribunal; FASE-0 cerró; **E2E/VERIFY** contrastan en flujo real | Cerrado con AC20 y su contrafactual; la no-regresión la sostienen M1–M4 del `mutation_report.json` y las 21 pruebas de `test_fase_0_ac20_evidencia_veredicto.py` |
@@ -182,6 +182,54 @@ casos). Regresión completa tras A4: `FASE-B/tests_a4_postfull.txt`.
   **no** es una alternativa viable: medido, obligaba a entregar la guía en hoteles sin la
   brecha y produjo 15 rojos. Registrar un servicio condicional exige la separación
   resolución/conteo que quedó en `proposal_asset_alignment.py`.
+
+## FASE-C (2026-10-06) — ACs, lo medido y seguimientos
+
+**Estado: COMPLETADA, sin commit** (mandato sin autorización de commit; HEAD de partida `5398a3a`,
+contador v4complete 0/1). Cada cifra vive en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-C/` con su
+instrumento; aqui se referencia el comando, no se re-transcribe el número.
+
+| AC | Veredicto de C | Instrumento que lo imprime |
+|---|---|---|
+| AC3 | **VERIFICADO OFFLINE**: boost a 0.95 por mero `exists` retirado; bloqueo con y sin presencia sobre CONFLICT/UNKNOWN/ESTIMATED; VERIFIED válido pasa; umbral 0.9 y `blocking=True` intactos | `tests/asset_generation/test_fase_c_boton_seguro.py` (parametrizado, 6 corridas) + mutante **M4** |
+| AC5 | **PARCIAL, dueño C-D**: seis barras leídas del código y ninguna bajada; el rojo de `NEW_HOTEL_THRESHOLDS=0.3` se gobernó anclando el **destino**, no la barra | `build_thresholds.py` → `thresholds.json`; test `test_cada_barra_con_su_valor_y_su_dueno` |
+| AC6 | **VERIFICADO OFFLINE**: contrato de forma en el límite de emisión, campo validado exclusivo, `phone_web` fuera de la clave del botón, centinela no-utilizable **con lector**, href leído del HTML escrito por el writer real | batería nueva + mutantes **M1, M2, M3, M5** |
+| AC19a | **COMPLETADA en modo aditivo**: tres claves nuevas + `details` conservado; forma exacta intacta cuando no hay observación; `READ_ERROR` nunca es ausencia; claves verificadas releyendo el snapshot del writer | batería nueva + mutantes **M6, M7, M8, M9** |
+| AC15 | PRE/POST de la misma selección y entorno, delta explicado por adiciones de C, mutantes con restauración por sha256 | `tests_baseline_pre.txt`, `tests_baseline_post.txt`, `run_mutations.py` → `mutation_report.json` |
+| AC19b | **NO INTENTADA** (deuda §6 del maestro, dueño quality gates/delivery/narrativa). No se declara hecha | — |
+
+**Re-anclajes (nueve, cada uno con su justificación escrita dentro del test):**
+`test_site_presence_adapter.py::test_whatsapp_exists_boost` (invertido y renombrado),
+`test_whatsapp_button.py` (dos), `test_conditional_generator.py::test_generate_with_blocked_returns_error`,
+`test_never_block_architecture/test_phase5_integration.py` (cuatro) y
+`tests/asset_generation/test_datasource_gap.py::test_validated_data_has_phone_web_key` (reforzada: ahora
+afirma que `whatsapp` **no** es `phone_web`). Ninguna aserción se afeitó; NEVER_BLOCK sigue rigiendo los
+demás assets y la confianza baja.
+
+**Seguimientos abiertos por C:**
+
+- **S-C1 (dueño catálogo / RELEASE):** `ASSET_CATALOG["whatsapp_button"].fallback = "generate_basic_whatsapp"`
+  sigue publicado sin implementador. Ninguna ruta lo ejecuta hoy, pero es una promesa de catálogo sin ruta.
+- **S-C2 (dueño VERIFY):** `reason_code`/`rejection`/`destino` viajan en el resultado del generador y por
+  `FailedAsset.reason`; si VERIFY exige el `rejection` completo en el JSON final, falta una pata de writer.
+- **S-C3 (dueño C-D, es AC5):** gobernar la ruta que planifica el botón con barra 0.3 contra la exigencia 0.9
+  de coherencia. C ancló el destino; la divergencia de barras sigue existiendo por diseño.
+- **S-C4 (dueño AC19b):** migración de los 8 consumidores al tri-estado (`observation_scope`/`read_status`/
+  `presence_evidence_kind` ya se publican; nadie los consume todavía para decidir ausencia/presencia).
+- **S-C5 (desviación declarada, dueño maestro §2 AC19):** `presence_evidence_kind` se publicó con **cuatro**
+  valores, no tres: la sonda de texto visible ya existía y produce `found=True`; reducirla a `plugin_fingerprint`
+  la mal-atribuiría y a `ninguna` la contradiría. El literal del plan no se reescribió: se declara acá.
+
+**R2:** métrica **FUERA DE SERVICIO (R2.1)** — `measure_iterations.py` pide el transcript del cliente y su
+acceso se deniega. Auto-reporte con unidad declarada (tool_use hasta el corte «listo para revisión», commit no
+autorizado): **≈150 contra un presupuesto de referencia de 60 → exceso medido**. No se estimó cumplimiento. **Lección de
+proceso de la fase (orden del derivado):** se editó corpus del plan *después* de regenerar el índice de
+lecciones y el triaje pasó a `SueloNoLeible: VENCIDO` con `build_lesson_index.py --check` dando **[OK] fresco**
+— el check se corrió antes de las últimas ediciones. Los 18 rojos y 27 errores de dos corridas completas fueron
+de ese orden, no del cambio; cure con los writers en el orden canónico (packs → índice → `--check` → refs →
+citas → wiring) y verificación: 77 passed en la superficie afectada y regresión final **1 failed / 4.951
+passed**, con el único rojo atribuido al plan hermano (su directorio aislado pasa 141/141). Detalle en
+`evidence/…/FASE-C/resultados-y-observaciones.md §8`.
 
 ## Métricas de ejecución
 

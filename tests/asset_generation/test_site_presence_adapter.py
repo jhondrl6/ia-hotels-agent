@@ -86,7 +86,7 @@ class TestNormalizeSitePresence:
 
     # ─── Test 5: WhatsApp exists boost ─────────────────────────────────────
 
-    def test_whatsapp_exists_boost(self):
+    def test_whatsapp_exists_no_promociona_a_verified(self):
         """CoherenceValidator receives site_whatsapp_exists=True when presence=exists."""
         from unittest.mock import MagicMock
         from modules.commercial_documents.data_structures import ValidationSummary
@@ -115,12 +115,17 @@ class TestNormalizeSitePresence:
             site_presence_report=canonical,
         )
 
-        # With site_presence boost, confidence_score should be >= 0.95
-        # (the boost sets max(0.25, 0.95) = 0.95)
-        assert check.score >= 0.95, (
-            f"Expected score >= 0.95 with site_presence boost, "
-            f"got {check.score:.2f}"
+        # FASE-C (AC3): se RETIRA el boost. Una presencia `exists` en el sitio
+        # ya no promociona a VERIFIED un campo que no es numero: sin el boost
+        # retiro, confidence 0.25 (score 0.0) queda por debajo de la barra 0.9 y
+        # el check es error bloqueante. Este test era el diente del boost; ahora
+        # es el diente de su retiro.
+        assert check.score < 0.9, (
+            f"La presencia no debe promocionar a VERIFIED: "
+            f"score {check.score:.2f} >= 0.9"
         )
+        assert check.passed is False
+        assert check.severity == "error"
 
     def test_whatsapp_not_exists_no_boost(self):
         """CoherenceValidator does NOT boost when presence=not_exists."""

@@ -893,8 +893,13 @@ class V4AssetOrchestrator:
             validated_data["phone_web"] = getattr(audit_result.validation, 'phone_web', None)
             validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
             validated_data["whatsapp_href_number"] = getattr(audit_result.validation, 'whatsapp_href_number', None)
-            # FIX-A2: Propagate phone_web to whatsapp key for whatsapp_button handler
-            validated_data["whatsapp"] = validated_data.get("phone_web", "")
+            # FIX-A2 (curado en FASE-C, AC6): la clave `whatsapp` del botón pasa a
+            # ser el MISMO campo validado, no `phone_web`. Antes el teléfono web
+            # se escribía aquí y ganaba por precedencia en
+            # `ConditionalGenerator._generate_content`, así que el botón podía
+            # apuntar a un número que nunca fue validado como canal de WhatsApp
+            # (L-NC6: usar el campo validado, no mantener un número paralelo).
+            validated_data["whatsapp"] = validated_data.get("whatsapp_number", "")
             # FASE-1-DATASOURCE-GAP FIX: Propagar phone_web a hotel_data si gbp.phone fue None
             if not validated_data["hotel_data"].get("telephone"):
                 phone_web = validated_data.get("phone_web")

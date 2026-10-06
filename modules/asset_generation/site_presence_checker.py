@@ -50,6 +50,33 @@ from modules.data_validation.external_apis.rich_results_client import (
     RichResultsTestClient,
     SchemaType
 )
+# FASE-C (AC19a): vocabulario y estados compartidos con el otro lector de WhatsApp.
+from modules.data_validation.whatsapp_contract import (
+    EVIDENCE_NONE,
+    EVIDENCE_PLUGIN_FINGERPRINT,
+    EVIDENCE_TEXT,
+    EVIDENCE_WA_ME_HREF,
+    PLUGIN_FINGERPRINT_TOKENS,
+    WA_HREF_TOKENS,
+    READ_ERROR,
+    READ_NO_APLICABLE,
+    READ_OK,
+    clasificar_evidencia,
+    extract_wa_me_number,
+)
+
+
+def _observation_scope(site_url: str) -> Dict[str, Any]:
+    """FASE-C (AC19a): qué se inspeccionó. Declara el alcance, no lo sugiere.
+
+    El lector mira la RAÍZ y no gatea rutas internas; mientras eso sea así, la
+    afirmación máxima permitida es "no observado en la ruta inspeccionada".
+    """
+    return {
+        "routes_inspected": [site_url],
+        "crawl": False,
+        "nivel": "raiz",
+    }
 
 
 # FASE-SR-E (H7, L-SR3): criterio ÚNICO de "presente en producción".
@@ -99,6 +126,14 @@ class PresenceCheckResult:
     details: Dict[str, Any] = field(default_factory=dict)
     recommendations: List[str] = field(default_factory=list)
     confidence: float = 1.0  # 0.0-1.0 en la verificación
+    # FASE-C (AC19a, ADITIVO): tres claves nuevas del contrato de observación.
+    # No redefinen status/site_verified/confidence ni se usan para decidir
+    # presencia; declaran QUÉ se miró, CÓMO terminó la lectura y QUÉ tipo de
+    # evidencia hay detrás de un `exists`. `presence_evidence_kind` distingue
+    # la huella de plugin (presencia, jamás número) del `href` wa.me.
+    observation_scope: Optional[Dict[str, Any]] = None
+    read_status: Optional[str] = None
+    presence_evidence_kind: Optional[str] = None
     
     @property
     def should_generate(self) -> bool:
@@ -340,7 +375,25 @@ class SitePresenceChecker:
         
         # MÉTODO 3: Verificación HTML directa (WhatsApp, widgets)
         if "html" in check_methods:
-            html_result = self._check_html_element(site_url, config.get("fallback_text", []))
+            html_result = self._check_html_element(
+                site_url, config.get("fallback_text", []), asset_type=asset_type
+            )
+            # FASE-C (AC19a): un fallo de transporte es estado DESCONOCIDO. No
+            # puede caer en NOT_EXISTS: eso sería afirmar "no tiene el canal"
+            # desde una lectura que no ocurrió (L-PF6).
+            if html_result.get("read_status") == READ_ERROR:
+                return PresenceCheckResult(
+                    asset_type=asset_type,
+                    status=PresenceStatus.VERIFICATION_FAILED,
+                    verified_at=datetime.now(),
+                    site_url=site_url,
+                    details=html_result,
+                    recommendations=["Revisar lectura del sitio: la sonda HTML no pudo leer"],
+                    confidence=0.3,
+                    read_status=READ_ERROR,
+                    presence_evidence_kind=EVIDENCE_NONE,
+                    observation_scope=_observation_scope(site_url)
+                )
             if html_result["found"]:
                 return PresenceCheckResult(
                     asset_type=asset_type,
@@ -348,7 +401,12 @@ class SitePresenceChecker:
                     verified_at=datetime.now(),
                     site_url=site_url,
                     details=html_result,
-                    confidence=0.85
+                    confidence=0.85,
+                    read_status=html_result.get("read_status", READ_OK),
+                    presence_evidence_kind=html_result.get(
+                        "presence_evidence_kind", EVIDENCE_NONE
+                    ),
+                    observation_scope=_observation_scope(site_url)
                 )
         
         # MÉTODO 4: Fetch directo (llms.txt)
@@ -374,6 +432,17 @@ class SitePresenceChecker:
                 confidence = 0.3
                 recommendations.append("Sitio no accesible o error en verificación")
         
+        # FASE-C (AC19a): la ausencia que se declara aquí es "no observado en la
+        # ruta inspeccionada". Si la sonda HTML corrío y no encontró nada, la
+        # lectura fue OK y la evidencia es `ninguna`; si el asset no tiene sonda
+        # HTML, el estado de lectura es NO-APLICABLE.
+        if "html" in check_methods:
+            read_status = READ_OK
+        elif "direct_fetch" in check_methods:
+            read_status = READ_OK
+        else:
+            read_status = READ_NO_APLICABLE
+        
         return PresenceCheckResult(
             asset_type=asset_type,
             status=status,
@@ -381,7 +450,10 @@ class SitePresenceChecker:
             site_url=site_url,
             details=details,
             recommendations=recommendations,
-            confidence=confidence
+            confidence=confidence,
+            read_status=read_status,
+            presence_evidence_kind=EVIDENCE_NONE,
+            observation_scope=_observation_scope(site_url)
         )
     
     def _check_schema_exists(
@@ -447,12 +519,19 @@ class SitePresenceChecker:
     def _check_html_element(
         self, 
         site_url: str, 
-        search_texts: List[str]
+        search_texts: List[str],
+        asset_type: Optional[str] = None
     ) -> Dict[str, Any]:
         """Verifica presencia de elemento/botón en HTML (texto + atributos href + clases CSS).
         
         PATCH-5: Ampliado para buscar en href attributes y CSS classes.
         Returns also whatsapp_href_number extracted from wa.me links.
+
+        FASE-C (AC19a): la excepción de transporte deja de colapsar a
+        `found=False`. Devuelve `read_status=READ_ERROR`, que aguas arriba se
+        lee como estado desconocido y no como ausencia. La evidencia se
+        clasifica con el vocabulario compartido (`whatsapp_contract`): una
+        huella de plugin declara presencia, jamás un número.
         """
         try:
             import requests
@@ -474,32 +553,42 @@ class SitePresenceChecker:
             # 2. PATCH-5: Buscar en atributos href de enlaces
             for link in soup.find_all('a', href=True):
                 href = link.get('href', '')
-                if any(pattern in href.lower() for pattern in ['wa.me', 'api.whatsapp.com', 'whatsapp']):
+                if any(pattern in href.lower() for pattern in WA_HREF_TOKENS) or "whatsapp" in href.lower():
                     found_texts.append(f"whatsapp_link:{href}")
                     # Extract phone number from wa.me link
-                    if 'wa.me/' in href.lower():
-                        match = re.search(r'wa\.me/(\d+)', href, re.IGNORECASE)
-                        if match:
-                            whatsapp_href_number = match.group(1)
+                    whatsapp_href_number = extract_wa_me_number(href)
                     break
             
             # 3. PATCH-5: Buscar en clases CSS
             for element in soup.find_all(class_=True):
                 classes = ' '.join(element.get('class', []))
-                if any(pattern in classes.lower() for pattern in ['whatsapp', 'joinchat']):
+                if any(pattern in classes.lower() for pattern in PLUGIN_FINGERPRINT_TOKENS):
                     found_texts.append(f"css_class:{classes}")
                     break
             
             result = {
                 "found": len(found_texts) > 0,
-                "matched_texts": found_texts
+                "matched_texts": found_texts,
+                "read_status": READ_OK,
+                "presence_evidence_kind": clasificar_evidencia(
+                    found_texts, whatsapp_href_number
+                ),
             }
             if whatsapp_href_number:
                 result["whatsapp_href_number"] = whatsapp_href_number
             
             return result
-        except Exception:
-            return {"found": False}
+        except Exception as exc:
+            # FASE-C: el fallo se REGISTRA como fallo de lectura. No se informa
+            # ausencia y no se imprime la respuesta ni la URL con credenciales.
+            return {
+                "found": False,
+                "matched_texts": [],
+                "read_status": READ_ERROR,
+                "presence_evidence_kind": EVIDENCE_NONE,
+                "error_tipo": type(exc).__name__,
+                "asset_type": asset_type,
+            }
     
     def _check_direct_resource(
         self, 

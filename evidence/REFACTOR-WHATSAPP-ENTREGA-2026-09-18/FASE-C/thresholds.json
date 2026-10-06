@@ -1,0 +1,105 @@
+{
+  "archivos_con_diferencia_contra_HEAD": {
+    "main.py": "6\t1\tmain.py",
+    "modules/asset_generation/conditional_generator.py": "92\t10\tmodules/asset_generation/conditional_generator.py",
+    "modules/asset_generation/site_presence_adapter.py": "40\t2\tmodules/asset_generation/site_presence_adapter.py",
+    "modules/asset_generation/site_presence_checker.py": "102\t13\tmodules/asset_generation/site_presence_checker.py",
+    "modules/asset_generation/v4_asset_orchestrator.py": "7\t2\tmodules/asset_generation/v4_asset_orchestrator.py",
+    "modules/auditors/v4_comprehensive.py": "11\t27\tmodules/auditors/v4_comprehensive.py",
+    "modules/commercial_documents/coherence_validator.py": "13\t14\tmodules/commercial_documents/coherence_validator.py",
+    "modules/data_validation/whatsapp_contract.py": "identico a HEAD"
+  },
+  "barras_de_whatsapp": {
+    "catalogo_boton": {
+      "block_on_failure": false,
+      "cambio_en_fase_c": "no (block_on_failure=False intacto: el preflight sigue sin bloquear; quien bloquea es el limite de generacion)",
+      "consumidor": "PreflightChecker.ASSET_REQUIREMENTS / get_effective_threshold",
+      "fuente": "ASSET_CATALOG['whatsapp_button']",
+      "valor": 0.7
+    },
+    "coherencia_whatsapp_verified": {
+      "blocking": true,
+      "cambio_en_fase_c": "no (valor y flag intactos; lo que se retiro fue el boost que la saltaba)",
+      "consumidor": "CoherenceValidator._check_whatsapp_verified",
+      "fuente": "CoherenceConfig.DEFAULT_RULES['whatsapp_verified']",
+      "valor": 0.9
+    },
+    "dolor_no_whatsapp_visible": {
+      "cambio_en_fase_c": "no",
+      "consumidor": "PainSolutionMapper.get_assets_for_pain",
+      "fuente": "PAIN_SOLUTION_MAP['no_whatsapp_visible'].confidence_required",
+      "valor": 0.9
+    },
+    "dolor_whatsapp_conflict": {
+      "cambio_en_fase_c": "no",
+      "consumidor": "PainSolutionMapper.get_assets_for_pain (unica via que planifica el boton tras B)",
+      "fuente": "PAIN_SOLUTION_MAP['whatsapp_conflict'].confidence_required",
+      "valor": 0.5
+    },
+    "gate_comercial_legado": {
+      "cambio_en_fase_c": "no",
+      "consumidor": "modules/quality_gates/domain_gates.py",
+      "fuente": "CommercialGate.__init__ (default de 'whatsapp_confidence_threshold')",
+      "valor": 0.9
+    },
+    "hotel_nuevo_boton": {
+      "cambio_en_fase_c": "no — y su rojo sigue vigente: 0.3 planifica el boton aunque la coherencia exija 0.9; C lo goberno anclando el DESTINO, no la barra (AC5, dueno C-D)",
+      "consumidor": "PreflightChecker.get_effective_threshold(is_new_hotel=True)",
+      "fuente": "preflight_checks.NEW_HOTEL_THRESHOLDS['whatsapp_button']",
+      "valor": 0.3
+    }
+  },
+  "fase": "FASE-C",
+  "head": "5398a3a",
+  "leer_como": "Valores leidos del codigo vivo el dia de la fase. `cambio_en_fase_c: no` = congelado por el plan y verificado intacto. La barra vigente NO es una: son cinco midiendo el mismo hecho, cada una con su consumidor.",
+  "medido_el": "2026-10-06",
+  "nuevo_por_fase_c": {
+    "boost_retirado": {
+      "diente": "mutante M4 del run_mutations.py de esta fase",
+      "estado": "RETIRADO en FASE-C por AC3",
+      "que_era": "confidence_score = max(confidence_score, 0.95) cuando presence.status == 'exists'"
+    },
+    "claves_aditivas_del_reporte": [
+      "observation_scope",
+      "read_status",
+      "presence_evidence_kind",
+      "details"
+    ],
+    "contrato_de_forma_del_numero": {
+      "centinelas_rechazados": [
+        "detectado_via_html",
+        "detected_via_html",
+        "n/a",
+        "na",
+        "no_detectado",
+        "none",
+        "null",
+        "sin_dato"
+      ],
+      "digitos_aceptados": "ASCII 0-9 (no str.isdigit(): acepta digitos Unicode)",
+      "fuente_longitud": "ITU-T E.164 (max 15); minimo 8 fijado por C y documentado en whatsapp_contract.py",
+      "longitud_max_digitos": 15,
+      "longitud_min_digitos": 8,
+      "normalizador_no_reutilizado": "modules/data_validation/cross_validator.normalize_phone_number (muta 57/60/0: valido para comparar, no para un destino)",
+      "separadores_permitidos": [
+        "\t",
+        " ",
+        "(",
+        ")",
+        "+",
+        "-",
+        ".",
+        "/"
+      ],
+      "sin_inferir_pais_ni_completar_partes": true
+    },
+    "marcas_congeladas": {
+      "confidence": "sin redefinir",
+      "site_verified": "sin redefinir",
+      "status": "sin redefinir (los cinco valores de PresenceStatus son los mismos)"
+    },
+    "presence_confidence_sonda_html": 0.85,
+    "presencia_no_promociona_a_verified": true
+  },
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+}

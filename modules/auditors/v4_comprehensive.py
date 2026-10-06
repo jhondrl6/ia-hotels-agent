@@ -1563,8 +1563,15 @@ class V4ComprehensiveAuditor:
     def _detect_whatsapp_from_html(self, html: str) -> bool:
         """Detect WhatsApp button/link presence in raw HTML.
 
-        Searches for common WhatsApp patterns: wa.me, api.whatsapp.com,
-        web.whatsapp.com, whatsapp:// protocol, and floating button classes.
+        LECTOR DE DOLOR (FASE-C, prerrequisito de AC19a): produce
+        `whatsapp_html_detected`, que gobierna el pain `no_whatsapp_visible` y la
+        coherencia. Su hermano, `SitePresenceChecker._check_html_element`, es el
+        LECTOR DE PRESENCIA canonica. Los dos se designan en
+        `modules/data_validation/whatsapp_contract.py` y comparten de alli el
+        vocabulario de patrones (`WHATSAPP_HTML_PATTERNS`), para que la misma
+        huella no pueda llamarse "numero" en una ruta y "canal" en la otra. El
+        vocabulario se copia-identico: ninguna de las dos rutas cambia su
+        decision por esta unificacion.
 
         Args:
             html: Raw HTML content of the page.
@@ -1572,31 +1579,8 @@ class V4ComprehensiveAuditor:
         Returns:
             True if WhatsApp link/button detected in HTML.
         """
-        if not html:
-            return False
-        import re
-        whatsapp_patterns = [
-            # Direct WhatsApp links
-            r'wa\.me/',
-            r'api\.whatsapp\.com',
-            r'web\.whatsapp\.com',
-            r'whatsapp://',
-            r'whatsapp\.com/send',
-            r'class="[^"]*whatsapp[^"]*"',  # CSS classes like "whatsapp-button"
-            r'id="[^"]*whatsapp[^"]*"',      # IDs like "whatsapp-float"
-            # WordPress WhatsApp plugins (top 3: 1M+ combined installs)
-            r'joinchat',                      # Joinchat/creame-whatsapp-me (500K+)
-            r'creame-whatsapp-me',           # Plugin path variant
-            r'ht-ctc',                        # Click to Chat for WhatsApp (200K+)
-            r'click-to-chat',                 # Click to Chat variant
-            r'wa-chat',                       # WA Chat widgets
-            r'data-settings.*telephone',      # Joinchat stores number in data-settings JSON
-        ]
-        html_lower = html.lower()
-        for pattern in whatsapp_patterns:
-            if re.search(pattern, html_lower):
-                return True
-        return False
+        from modules.data_validation.whatsapp_contract import detect_whatsapp_in_html
+        return detect_whatsapp_in_html(html)
 
     def _resolve_regional_adr(self, gbp_address: Optional[str]) -> Optional[float]:
         """Resolve regional ADR benchmark from GBP address (FASE-7).

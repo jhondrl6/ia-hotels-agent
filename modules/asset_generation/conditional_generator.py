@@ -22,6 +22,16 @@ from .asset_metadata import AssetMetadata, AssetMetadataEnforcer, AssetStatus
 from .asset_catalog import ASSET_CATALOG
 from .data_assessment import DataAssessment, DataClassification
 from .site_presence_checker import SitePresenceChecker, PresenceStatus
+# FASE-C (AC6): contrato de forma y rechazo del número en el límite de generación.
+from ..data_validation.whatsapp_contract import (
+    NumeroWhatsAppNoUtilizable,
+    rechazo_numero_whatsapp,
+)
+# FASE-C (AC6): contrato de forma del número y causa de rechazo.
+from ..data_validation.whatsapp_contract import (
+    NumeroWhatsAppNoUtilizable,
+    rechazo_numero_whatsapp,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -146,6 +156,27 @@ class ConditionalGenerator:
         
         try:
             content = self._generate_content(asset_type, validated_data, hotel_name, hotel_id)
+        except NumeroWhatsAppNoUtilizable as e:
+            # FASE-C (AC3/AC6): un botón que entró al plan es un botón prometido,
+            # así que su número inutilizable es ERROR BLOQUEANTE y no se disfraza
+            # de guía de setup. La guía se recomienda, no se emite en su lugar.
+            logger.error(
+                "[ConditionalGenerator] whatsapp_button rechazado: %s (origen=%s)",
+                e.causa, e.origen,
+            )
+            return {
+                "success": False,
+                "status": "blocked",
+                "error": f"Generation failed: {str(e)}",
+                "reason_code": "whatsapp_number_no_utilizable",
+                "rejection": e.a_dict(),
+                "asset_type": asset_type,
+                "hotel_id": hotel_id,
+                "can_use": False,
+                "preflight_status": PreflightStatus.BLOCKED.value,
+                "destino": "bloqueo_boton_prometido",
+                "setup_alternativo": "whatsapp_setup_guide (validacion humana del numero)",
+            }
         except Exception as e:
             return {
                 "success": False,
@@ -427,12 +458,20 @@ class ConditionalGenerator:
         content = ""
         
         if asset_type == "whatsapp_button":
-            # FASE-H-02 FIX: Accept both "whatsapp" and "whatsapp_number" field names
-            # The field is stored as "whatsapp_number" in ValidationSummary but
-            # some code paths use "whatsapp". Check both for compatibility.
-            phone_data = validated_data.get("whatsapp") or validated_data.get("whatsapp_number", {})
-            phone = getattr(phone_data, 'value', str(phone_data)) if not isinstance(phone_data, str) else phone_data
-            content = self._generate_whatsapp_button(phone, hotel_name)
+            # FASE-C (AC6): el botón recibe EXCLUSIVAMENTE el campo validado de
+            # WhatsApp. Antes ganaba `whatsapp` —que el orquestador escribía con
+            # `phone_web` (FIX-A2)— por precedencia, y un teléfono web o el
+            # centinela `detected_via_html` viajaban como número. La forma se
+            # exige en `_generate_whatsapp_button`, que es el límite donde se
+            # construye el href.
+            valor, origen, puede_usar = self._campo_whatsapp_validado(validated_data)
+            if not puede_usar:
+                raise NumeroWhatsAppNoUtilizable(
+                    "CAMPO_NO_UTILIZABLE" if origen != "ninguno" else "SIN_CAMPO_VALIDADO",
+                    valor,
+                    origen=origen,
+                )
+            content = self._generate_whatsapp_button(valor, hotel_name, origen=origen)
 
         elif asset_type == "whatsapp_setup_guide":
             # FASE-B (REFACTOR-WHATSAPP, AC2): guia de preparacion/validacion, sin
@@ -718,18 +757,61 @@ class ConditionalGenerator:
         
         return filename
 
-    def _generate_whatsapp_button(self, phone_number: str, hotel_name: str) -> str:
+    @staticmethod
+    def _campo_whatsapp_validado(validated_data: Dict[str, Any]):
+        """(valor, origen, puede_usar) del campo validado de WhatsApp.
+
+        FASE-C (AC6). El orden es por NOMBRE, no por disponibilidad:
+        `whatsapp_number` es el campo del ValidationSummary. La clave legada
+        `whatsapp` solo vale si trae un campo validado (con `value` o dict
+        equivalente); un teléfono web suelto ya no puede entrar por aquí.
+        Un campo marcado `can_use_in_assets=False` (el centinela
+        `detected_via_html` desde FASE-C) nunca es utilizable.
+        """
+        for nombre in ("whatsapp_number", "whatsapp"):
+            campo = validated_data.get(nombre)
+            if campo is None or campo == "" or campo == {}:
+                continue
+            if isinstance(campo, str):
+                return campo, nombre, True
+            if isinstance(campo, dict):
+                return (
+                    campo.get("value"),
+                    nombre,
+                    bool(campo.get("can_use_in_assets", True)),
+                )
+            if hasattr(campo, "value"):
+                return (
+                    getattr(campo, "value"),
+                    nombre,
+                    bool(getattr(campo, "can_use_in_assets", True)),
+                )
+            return campo, nombre, True
+        return None, "ninguno", False
+
+    def _generate_whatsapp_button(self, phone_number: Any, hotel_name: str,
+                                  origen: str = "desconocido") -> str:
         """Generate HTML for WhatsApp button.
         
         Args:
-            phone_number: WhatsApp phone number
+            phone_number: WhatsApp phone number (campo validado, sin normalizar)
             hotel_name: Name of the hotel
+            origen: nombre del campo de donde vino el valor (trazabilidad del rechazo)
             
         Returns:
             HTML string with WhatsApp button
+
+        FASE-C (AC6): el href se construye SOLO con un número de forma válida.
+        Antes `''.join(c for c in str(phone) if c.isdigit())` convertía cualquier
+        basura en vacío o en un resto: el centinela `detected_via_html` producía
+        `https://wa.me/` sin destino. Ahora se exige el contrato de forma
+        (dígitos ASCII, longitud internacional, sin inferir país ni completar
+        partes) y una entrada inválida se rechaza ANTES de emitir href.
         """
-        # FIX-C1: Clean phone number for wa.me URL (digits only, no + or spaces)
-        clean_phone = ''.join(c for c in str(phone_number) if c.isdigit())
+        digitos, causa = rechazo_numero_whatsapp(phone_number)
+        if causa:
+            raise NumeroWhatsAppNoUtilizable(causa, phone_number, origen=origen)
+        clean_phone = digitos
         tracking_code = f"wa_{hotel_name.lower().replace(' ', '_')}_{datetime.now().strftime('%Y%m')}"
         
         html = f"""<!-- WhatsApp Button for {hotel_name} -->

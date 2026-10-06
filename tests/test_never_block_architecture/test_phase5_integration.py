@@ -220,9 +220,11 @@ class TestConditionalGeneratorIntegration:
             hotel_context=hotel_context
         )
         
-        # NEVER_BLOCK: deve gerar mesmo sem dados
-        assert result["success"] is True
-        assert result["can_use"] is True
+        # FASE-C (AC3): ver `test_full_flow_with_no_data_still_produces_output`.
+        assert result["success"] is False
+        assert result["status"] == "blocked"
+        assert result["can_use"] is False
+        assert result["reason_code"] == "whatsapp_number_no_utilizable"
 
 
 class TestPlaceholderPreventionIntegration:
@@ -296,13 +298,18 @@ class TestFullFlowIntegration:
         # 3. Preflight check
         # 4. Generation
         
-        dp = DataPoint("whatsapp")
+        dp = DataPoint("whatsapp_number")
+        # FASE-C (AC6): el fixture guarda un DICT (`{"phone": ...}`) como valor del
+        # DataPoint. El renderer viejo hacìa `''.join(c if c.isdigit())` sobre el
+        # repr del dict y fabricaba `wa.me/573001234567` de una estructura que nunca
+        # fue un número. El contrato de forma lo rechaza (TIPO_NO_TEXTO), así que el
+        # fixture se pone en la forma que el campo validado realmente tiene.
         dp.add_source(DataSource(
             "google_places",
-            {"phone": "+57 300 123 4567"},
+            "+57 300 123 4567",
             datetime.now().isoformat()
         ))
-        validated_data = {"whatsapp": dp}
+        validated_data = {"whatsapp_number": dp}
         
         # Hotel context (simula datos de hotel)
         hotel_context = {
@@ -342,10 +349,14 @@ class TestFullFlowIntegration:
             hotel_context=hotel_context
         )
         
-        # NEVER_BLOCK: siempre produce output
-        assert result["success"] is True
-        assert "can_use" in result
-        assert result["can_use"] is True
+        # FASE-C (AC3): para el DESTINO de WhatsApp la expectativa se invierte por
+        # mandato del plan — un botón planificado sin número utilizable es ERROR
+        # BLOQUEANTE, no output. NEVER_BLOCK sigue rigiendo los demás assets y la
+        # confianza baja (el preflight de este asset conserva block_on_failure=False).
+        assert result["success"] is False
+        assert result["status"] == "blocked"
+        assert result["can_use"] is False
+        assert result["reason_code"] == "whatsapp_number_no_utilizable"
 
     def test_full_flow_with_benchmark_deviation_warns(self, tmp_path):
         """Test flujo com desviación de benchmark genera warning."""
@@ -390,9 +401,12 @@ class TestNeverBlockPrincipleIntegration:
             hotel_id="test_hotel"
         )
         
-        # NEVER_BLOCK: nunca falha
-        assert result["success"] is True
-        assert result["can_use"] is True
+        # FASE-C (AC3): ver `test_full_flow_with_no_data_still_produces_output`.
+        # El bloqueo aquí no es por confianza baja sino por destino inutilizable.
+        assert result["success"] is False
+        assert result["status"] == "blocked"
+        assert result["can_use"] is False
+        assert result["reason_code"] == "whatsapp_number_no_utilizable"
 
     def test_never_blocks_on_placeholder_detection(self, tmp_path):
         """El sistema nunca deve bloquear por placeholders (si los detecta, limpia)."""

@@ -1,0 +1,16 @@
+tests/asset_generation/test_conditional_generator.py
+tests/asset_generation/test_conditional_new_assets.py
+tests/asset_generation/test_fase_sr_e_presence_accounting.py
+tests/asset_generation/test_preflight_checks.py
+tests/asset_generation/test_preflight_missing_field.py
+tests/asset_generation/test_site_presence_adapter.py
+tests/asset_generation/test_site_presence_checker.py
+tests/asset_generation/test_site_presence_hardening.py
+tests/asset_generation/test_whatsapp_button.py
+tests/commercial_documents/test_coherence_generated_assets.py
+tests/commercial_documents/test_fase_b_promesa_whatsapp.py
+tests/commercial_documents/test_template_conditionals.py
+tests/quality_gates/test_domain_gates.py
+tests/quality_gates/test_gate_presence.py
+tests/regression/test_whatsapp_conflicts.py
+tests/test_site_presence_persistence.py

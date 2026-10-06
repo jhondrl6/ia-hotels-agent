@@ -2607,3 +2607,35 @@ un rojo falso en esta selección): selección del piloto, del protocolo y del gu
 `decision_client.py --scan-imports` en `[SIN-HALLAZGOS]`; y la cifra canónica commiteada contra la del árbol de
 trabajo. La matriz de AC con su artefacto vive en `06-checklist-implementacion.md` y en el §6 del registro de la
 fase.
+
+## Nota Técnica — FASE-C del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-06)
+
+**Patrón: un valor derivado puede ser a la vez un destino.** El botón de WhatsApp tomaba su `href` de
+`validated_data["whatsapp"]`, clave que el orquestador escribía con `phone_web` —un teléfono web del schema,
+no un número validado como canal— y que además ganaba por precedencia al campo validado
+(`get("whatsapp") or get("whatsapp_number")`). El defecto no era de confianza sino de **identidad del dato**:
+por eso la cura no fue subir un umbral ni bajar otro, sino (i) quitar la fuente paralela en el *caller*,
+(ii) exigir la forma en el límite donde se construye el href y (iii) retirar el boost que convertía una
+huella de plugin en VERIFIED.
+
+**Dónde se corta la cadena.** `modules/data_validation/whatsapp_contract.py` es el punto único: designa a los
+dos lectores de WhatsApp (el de **presencia**, `SitePresenceChecker._check_html_element`, y el de **dolor**,
+`V4ComprehensiveAuditor._detect_whatsapp_from_html`), presta el vocabulario de patrones a ambos, clasifica la
+evidencia (`wa.me_href` / `plugin_fingerprint` / `texto_visible` / `ninguna`) y define el contrato de forma
+(`rechazo_numero_whatsapp`): dígitos ASCII explícitos, banda 8–15, separadores permitidos, centinelas
+rechazados, sin inferir país ni completar partes.
+
+**Por qué no se reutilizó `normalize_phone_number`.** El normalizador de `cross_validator` retira `57`, `60` y
+el cero inicial: es correcto para *comparar* dos fuentes, y falso para *firmar un destino*, donde completar
+partes es inventar. La lección operativa: un normalizador de comparación no es un validador de emisión.
+
+**Aditivo con dientes.** AC19a publicó `observation_scope`, `read_status` y `presence_evidence_kind` sin tocar
+`status`/`site_verified`/`confidence`, y `_add_observacion` omite las claves que el lector no trajo: así la
+forma de un reporte sin observación sigue siendo exactamente la que los cuatro asserts de igualdad exacta
+comparaban. El fallo de transporte pasó de `found=False` (ausencia) a `READ_ERROR` + `VERIFICATION_FAILED`
+(desconocido).
+
+**Nunca bloquear ≠ no poder rechazar.** NEVER_BLOCK sigue rigiendo la generación: el preflight de
+`whatsapp_button` conserva `block_on_failure=False`. Lo que cambió es que el rechazo vive por debajo del
+preflight, en el límite de emisión, y reporta `reason_code` + `causa` + `destino`. Los nueve tests
+re-anclados llevan su justificación escrita dentro del test.

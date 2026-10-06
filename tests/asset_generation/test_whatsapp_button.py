@@ -63,14 +63,24 @@ class TestWhatsAppButtonGeneration:
         assert "whatsapp_button" in gen._standard_assets
 
     def test_whatsapp_generates_with_data(self, tmp_path):
-        """Test generation with WhatsApp phone data."""
+        """Test generation with WhatsApp phone data.
+
+        FASE-C (AC6): el fixture llevaba un numero sintetico ENMASCARADO
+        ("+573****4567"). Con el guard de forma ese valor se rechaza, y con
+        razon: los asteriscos son digitos perdidos. Antes el generador los
+        borraba en silencio y emitia `wa.me/5734567` — siete digitos fabricados
+        por recorte, que es el defecto que AC6 nombra "sin completar partes".
+        El fixture pasa a ser sintetico pero de forma valida; la asercion de
+        exito no cambió. La clave es `whatsapp_number`, el nombre del campo
+        validado del ValidationSummary (AC6: el boton lee ese campo).
+        """
         from modules.data_validation import DataPoint, DataSource
         from datetime import datetime
 
         gen = ConditionalGenerator(output_dir=str(tmp_path))
-        dp = DataPoint("whatsapp")
-        dp.add_source(DataSource("test", "+573****4567", datetime.now().isoformat()))
-        validated_data = {"whatsapp": dp}
+        dp = DataPoint("whatsapp_number")
+        dp.add_source(DataSource("test", "+57 310 401 9049", datetime.now().isoformat()))
+        validated_data = {"whatsapp_number": dp}
 
         result = gen.generate(
             asset_type="whatsapp_button",
@@ -81,8 +91,18 @@ class TestWhatsAppButtonGeneration:
         assert result["success"] is True
         assert result["status"] in ("success", "warning")
 
-    def test_whatsapp_generates_without_data(self, tmp_path):
-        """whatsapp_button should generate even without WhatsApp data (fallback)."""
+    def test_whatsapp_sin_numero_utilizable_bloquea_sin_producir_href(self, tmp_path):
+        """FASE-C (AC3/AC6): sin numero utilizable NO se produce el boton.
+
+        RE-ANCLADO, no afeitado. Este test afirmaba antes que whatsapp_button se
+        generaba incluso sin datos (NEVER_BLOCK → exito con warning). Esa es la
+        ruta que producía `https://wa.me/` vacio. NEVER_BLOCK sigue vigente para
+        los demas assets y para la confianza baja (el preflight sigue
+        advirtiendo, no bloqueando: `block_on_failure=False` intacto); lo que
+        cambia es que un boton con destino inhabilitado queda en ERROR BLOQUEANTE
+        por mandato expreso de AC3. La expectativa se invierte porque el plan la
+        define al reves, y el destino se reporta (no basta la ausencia de archivo).
+        """
         gen = ConditionalGenerator(output_dir=str(tmp_path))
         result = gen.generate(
             asset_type="whatsapp_button",
@@ -90,9 +110,12 @@ class TestWhatsAppButtonGeneration:
             hotel_name="Test Hotel",
             hotel_id="test_hotel",
         )
-        # NEVER_BLOCK: should succeed with warning, not blocked
-        assert result["success"] is True
-        assert result["status"] in ("success", "warning")
+        assert result["success"] is False
+        assert result["status"] == "blocked"
+        assert result["can_use"] is False
+        assert result["reason_code"] == "whatsapp_number_no_utilizable"
+        assert result["rejection"]["causa"] == "SIN_CAMPO_VALIDADO"
+        assert "file_path" not in result
 
     def test_whatsapp_in_generation_strategies(self):
         """whatsapp_button must be in GENERATION_STRATEGIES."""

@@ -1,8 +1,8 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 699,
-    "archivos_excluidos_por_rol": 8501,
-    "archivos_excluidos_por_rol_versionado": 149,
+    "archivos_en_alcance": 701,
+    "archivos_excluidos_por_rol": 8503,
+    "archivos_excluidos_por_rol_versionado": 151,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -44,7 +44,7 @@
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
-      "cantidad_versionada": 137,
+      "cantidad_versionada": 139,
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-06T01:25:29+00:00",
-  "git_sha": "e6a0c9e",
+  "generado": "2026-10-06T16:47:51+00:00",
+  "git_sha": "5398a3a",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -118,7 +118,7 @@
       "kwargs_presentes": [
         "whatsapp_html_detected"
       ],
-      "linea": 2445,
+      "linea": 2450,
       "metodo": "detect_pains",
       "posicionales": 3,
       "prohibidos_presentes": [],
@@ -141,7 +141,7 @@
         "site_presence_report",
         "whatsapp_html_detected"
       ],
-      "linea": 2539,
+      "linea": 2544,
       "metodo": "validate",
       "posicionales": 4,
       "prohibidos_presentes": [],
@@ -160,7 +160,7 @@
       "gobernado": true,
       "hay_kwargs_opacos": false,
       "kwargs_presentes": [],
-      "linea": 2943,
+      "linea": 2948,
       "metodo": "with_validation",
       "posicionales": 1,
       "prohibidos_presentes": [],

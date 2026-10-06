@@ -2265,13 +2265,18 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         ))
     elif getattr(audit_result.validation, 'whatsapp_html_detected', False):
         # WhatsApp boton existe en HTML pero no hay telefono en Schema
+        # FASE-C (AC6): el centinela se marca NO UTILIZABLE. Era `True` y asi
+        # viajaba como telefono: `str.isdigit()` sobre "detected_via_html" no
+        # da digitos y el href salia como `https://wa.me/` vacio. La presencia
+        # observada en HTML sigue divulgandose (confidence/ESTIMATED intactos);
+        # lo que se quita es la autorización para usar el valor como destino.
         validated_fields.append(ValidatedField(
             field_name="whatsapp_number",
             value="detected_via_html",
             confidence=ConfidenceLevel.ESTIMATED,
             sources=["HTML"],
             match_percentage=0.6,
-            can_use_in_assets=True
+            can_use_in_assets=False
         ))
 
     # Rooms field (del onboarding o audit o schema)

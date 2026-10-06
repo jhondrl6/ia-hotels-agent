@@ -1,6 +1,8 @@
 # FASE-C — Número utilizable y botón seguro
 
-**Estado:** PENDIENTE. **Dependencias:** B completo (y, por la cadena A → G → 0 → B, el verificador de cableado de G ya está en su sitio: corre antes que B). **Complejidad técnica:** ALTA: confianza, presencia, identidad y precedencia del dato no son intercambiables, y el blast radius medido del reporte canónico es grande — 8 consumidores de ese reporte, 816 funciones de test (método canónico) que tocan `whatsapp_button`/`site_presence_report` y cuatro aserciones de igualdad exacta de forma, en `TestNormalizeSitePresence.test_normalize_from_none` (`tests/asset_generation/test_site_presence_adapter.py`) y en `test_ruta_fallo_checker_snapshot_vacio_canonico` (en `tests/test_site_presence_persistence.py`, que vive en la raíz de `tests/`, no bajo `tests/asset_generation/`)—: C publica claves nuevas, pero su presupuesto **no** cubre la migración de esos consumidores (AC19b). **Modo:** DIRECTO; no delegate_task para este cambio de política. **R3:** 4 tareas, 0 comandos largos externos.
+**Estado: COMPLETADA el 2026-10-06, sin commit** (mandato sin autorización de commit: los cinco cortes se sostienen sin él). AC3, AC6 y AC19a-cierre-aditivo verificados offline; AC5 con su deuda C-D vigente y declarada; AC15 con PRE/POST y mutantes. Lo medido, los cuatro re-anclajes y las cinco observaciones con dueño viven en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-C/resultados-y-observaciones.md` — aqui no se re-transcriben.
+
+**Dependencias:** B completo (y, por la cadena A → G → 0 → B, el verificador de cableado de G ya está en su sitio: corre antes que B). **Complejidad técnica:** ALTA: confianza, presencia, identidad y precedencia del dato no son intercambiables, y el blast radius medido del reporte canónico es grande — 8 consumidores de ese reporte, 816 funciones de test (método canónico) que tocan `whatsapp_button`/`site_presence_report` y cuatro aserciones de igualdad exacta de forma, en `TestNormalizeSitePresence.test_normalize_from_none` (`tests/asset_generation/test_site_presence_adapter.py`) y en `test_ruta_fallo_checker_snapshot_vacio_canonico` (en `tests/test_site_presence_persistence.py`, que vive en la raíz de `tests/`, no bajo `tests/asset_generation/`)—: C publica claves nuevas, pero su presupuesto **no** cubre la migración de esos consumidores (AC19b). **Modo:** DIRECTO; no delegate_task para este cambio de política. **R3:** 4 tareas, 0 comandos largos externos.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`
 
@@ -38,24 +40,37 @@ Evidence C: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-C/`. Reporte de 
 
 ## Post-ejecución
 
-Aplicar cierre completo del contrato y registrar datos medidos:
+Aplicar cierre completo del contrato y registrar datos medidos; sustituir las variables por la fecha, los archivos y los tests realmente medidos:
 
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-C --desc "REFACTOR-WHATSAPP-ENTREGA: destino seguro y confianza no suplantada" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-C --desc "REFACTOR-WHATSAPP-ENTREGA: destino seguro y confianza no suplantada" --fecha "$FECHA_CIERRE" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ```
 
+`--fecha` = fecha real de cierre; si el registro es tardío, `--nota` con el motivo. `log_phase_completion.py::parse_args` la declara obligatoria junto con `--fase` y `--desc` y la valida como fecha de calendario, así que `$FECHA_CIERRE` es variable a sustituir — el comando sin la bandera se niega en lugar de estampar la fecha del reloj. ⟦Puesta al día 2026-10-06: este bloque se escribió antes de esa obligatoriedad y rompía al ejecutarse tal cual; la regla canónica vive en `docs/CONTRIBUTING.md` y en el executor §4.5.1, y no se re-transcribe aquí⟧.
+
+**DOMAIN_PRIMER (regla canónica en `04-contrato-ejecucion.md` paso 4).** Al cerrar esta fase de implementación corresponde **regenerar con su writer** (`doctor.py --regenerate-domain-primer`), **solo si el mandato de la fase autoriza escribir** `.agent/knowledge/DOMAIN_PRIMER.md` — está versionado, cada regeneración ensucia el árbol y exige esa autorización; si no la hay, se declara el checkpoint y no se toca el archivo. **Verificar** con `doctor.py --context`/`--status` es operación de FASE-RELEASE, no de esta fase.
+
+**Derivados vencidos: un rojo del quick al cerrar puede no ser del cambio.** Si la fase añadió evidencia `.py` o editó documentos del plan, correr el fixer del derivado que cayó y **re-correr el quick**:
+
+- `[8/13]` OpenCode References → `./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix`
+- `[9/13]` Plan Citations → `./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline` (acto visible: lo hace quien documenta; no silencia un rojo)
+- `[11/13]` Wiring → `./venv/Scripts/python.exe scripts/validate_wiring.py --write-report`
+- `[13/13]` Packs → `./venv/Scripts/python.exe scripts/build_phase_briefing.py`
+
+Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo completo solo sus cinco checks exclusivos se etiquetan con denominador 18. El número lo imprime la corrida: no se copia a ningún documento.
+
 ## Completitud y restricciones
 
-- [ ] AC3/AC5/AC6/AC19a cumplen; test rojo del producto significa protección viva, no test fallido.
-- [ ] AC19a cerró en modo aditivo: los 8 consumidores del reporte canónico, las 816 funciones de test (método canónico) que tocan `whatsapp_button`/`site_presence_report` y las cuatro aserciones de igualdad exacta (`TestNormalizeSitePresence.test_normalize_from_none`, `test_ruta_fallo_checker_snapshot_vacio_canonico`) siguen verdes. La migración al tri-estado es AC19b (deuda del §6 del maestro) y el presupuesto de C **no** la cubre: no se intentó ni se declara hecha.
-- [ ] Los dos lectores de WhatsApp fueron unificados o designados expresamente antes de publicar las claves nuevas.
-- [ ] Ninguna ruta del lector afirma "no tiene WhatsApp" desde un fallo de fetch o una página no inspeccionada.
-- [ ] Ningún wa.me vacío o destino tomado de un teléfono no validado en HTML/ZIP.
-- [ ] El boost por presencia no neutraliza conflictos ni baja confianza requerida.
-- [ ] PRE/POST, mutaciones y cierre incremental completos.
-- Presupuesto referencia 60 tool_use; instrumento `measure_iterations.py`. El corte es el que la sesión tenga autorizado: con el commit de código autorizado, «hasta el commit»; sin él, «hasta listo para revisión», y se declara cuál de los dos se usó — **los cinco cortes se sostienen sin commit**. Retirar la métrica si no es medible; nunca estimar cumplimiento.
-- No archivar domain_gates ni implementar F-B/F-E. No v4complete. D se ejecuta en nueva sesión.
+- [x] AC3/AC5/AC6/AC19a cumplen; test rojo del producto significa protección viva, no test fallido. **AC3, AC6 y AC19a cumplen. AC5 es PARCIAL con dueño C-D**: las barras quedan leídas y sin bajar (`thresholds.json`), y el rojo de la ruta de 0.3 se gobernó anclando el **destino**, no la barra (seguimiento S-C3).
+- [x] AC19a cerró en modo aditivo: los 8 consumidores del reporte canónico, las 816 funciones de test (método canónico) que tocan `whatsapp_button`/`site_presence_report` y las cuatro aserciones de igualdad exacta (`TestNormalizeSitePresence.test_normalize_from_none`, `test_ruta_fallo_checker_snapshot_vacio_canonico`) siguen verdes. La migración al tri-estado es AC19b (deuda del §6 del maestro) y el presupuesto de C **no** la cubre: no se intentó ni se declara hecha. **Medido, no asumido**: `_add_observacion` no publica claves cuando el lector no trajo observación, y `test_reporte_sin_observacion_conserva_la_forma_exacta` fija la forma de tres claves. AC19b queda abierta como S-C4 con dueño.
+- [x] Los dos lectores de WhatsApp fueron **designados** expresamente antes de publicar las claves nuevas (`modules/data_validation/whatsapp_contract.py`: presencia = `SitePresenceChecker._check_html_element`, dolor = `V4ComprehensiveAuditor._detect_whatsapp_from_html`), con vocabulario de patrones compartido (copia idéntica de los 13 históricos, caracterizada por test) y clasificación de evidencia única. No se fundieron en un solo lector: siguen decidiendo cosas distintas, y ahora se lee cuál.
+- [x] Ninguna ruta del lector afirma "no tiene WhatsApp" desde un fallo de fetch o una página no inspeccionada: excepción de transporte → `read_status=READ_ERROR` + `VERIFICATION_FAILED` (nunca `NOT_EXISTS`); la ausencia observada se publica con `observation_scope` (`nivel: raiz`, `crawl: False`).
+- [x] Ningún wa.me vacío o destino tomado de un teléfono no validado en HTML/ZIP. **Medido en el HTML que escribió el writer real** (`https://wa.me/573104019049?` presente, `wa.me/?text=` ausente). El **ZIP** no se abrió: la ruta de entrega pertenece a D/E2E y el rechazo ya viaja como `status=blocked` + `reason_code` antes de que exista archivo (observación S-C2).
+- [x] El boost por presencia no neutraliza conflictos ni baja confianza requerida: el `max(confidence, 0.95)` fue **retirado**, no reducido; umbral 0.9, coherencia 0.8 y `blocking=True` intactos (assertionado). Mutante M4 lo demuestra.
+- [x] PRE/POST, mutaciones y cierre incremental completos (ver §2 y §7 del informe de la fase).
+- Presupuesto referencia 60 tool_use; instrumento `measure_iterations.py`. El corte es el que la sesión tenga autorizado: con el commit de código autorizado, «hasta el commit»; sin él, «hasta listo para revisión», y se declara cuál de los dos se usó — **los cinco cortes se sostienen sin commit**. Retirar la métrica si no es medible; nunca estimar cumplimiento. **Medido y declarado**: corte **«hasta listo para revisión»** (commit no autorizado); métrica **FUERA DE SERVICIO (R2.1)** porque el instrumento pide el transcript del cliente y su acceso se denegó. Auto-reporte con su unidad: **≈120 tool_use contra 60 de referencia → exceso medido**, no cumplimiento estimado.
+- No archivar domain_gates ni implementar F-B/F-E. No v4complete. D se ejecuta en nueva sesión. **Cumplido**: `domain_gates.py` no se archivó ni se editó (solo se leyó su umbral), no se corrió `v4complete` (contador 0/1), y no se abrió D. `DOMAIN_PRIMER` **no se regeneró**: el mandato de esta sesión no autoriza escribir `.agent/knowledge/DOMAIN_PRIMER.md`; se declara el checkpoint.
 
 Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/REVISION-2/anclajes_medidos.json`

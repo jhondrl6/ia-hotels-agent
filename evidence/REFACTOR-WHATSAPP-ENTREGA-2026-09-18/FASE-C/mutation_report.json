@@ -1,0 +1,173 @@
+{
+  "fase": "FASE-C",
+  "instrumento": "run_mutations.py",
+  "mutantes": [
+    {
+      "ancla_unica": true,
+      "archivo": "modules/data_validation/whatsapp_contract.py",
+      "causa_esperada": "DIGITOS_NO_ASCII",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M1",
+      "nombre": "guard DIGITOS_NO_ASCII apagado",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC6FormaEnElLimite::test_entradas_no_utilizables_con_causa_nombrada[300\\uff11234567-DIGITOS_NO_ASCII]"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "1 failed, 38 passed, 8 warnings in 1.72s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "5058aeb2ada013f873c9062733291972131b2407ee4bf0fedc14007240db587a",
+      "sha_despues": "5058aeb2ada013f873c9062733291972131b2407ee4bf0fedc14007240db587a"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/data_validation/whatsapp_contract.py",
+      "causa_esperada": "LONGITUD_INVALIDA",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M2",
+      "nombre": "banda de longitud internacional apagada",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC6FormaEnElLimite::test_entradas_no_utilizables_con_causa_nombrada[573104-LONGITUD_INVALIDA]",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC6FormaEnElLimite::test_entradas_no_utilizables_con_causa_nombrada[5731040190491234567-LONGITUD_INVALIDA]"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "2 failed, 37 passed, 8 warnings in 3.05s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "5058aeb2ada013f873c9062733291972131b2407ee4bf0fedc14007240db587a",
+      "sha_despues": "5058aeb2ada013f873c9062733291972131b2407ee4bf0fedc14007240db587a"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/conditional_generator.py",
+      "causa_esperada": "VACIO",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M3",
+      "nombre": "retorno al recorte silencioso del renderer (''.join isdigit)",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC5BarrasInvariantes::test_la_barra_baja_de_un_hotel_nuevo_no_autoriza_un_destino_inventado"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "1 failed, 49 passed, 8 warnings in 2.71s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "a2be9b6d3281abe5badefb80ad74579a2e8eec3a47c9b09f045bf1eccfbe489c",
+      "sha_despues": "a2be9b6d3281abe5badefb80ad74579a2e8eec3a47c9b09f045bf1eccfbe489c"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/commercial_documents/coherence_validator.py",
+      "causa_esperada": "score >= 0.9 con CONFLICT/UNKNOWN/ESTIMATED",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M4",
+      "nombre": "boost a 0.95 por mere `exists` restaurado",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC3PresenciaNoPromociona::test_boton_forzado_bloquea_con_y_sin_presencia[CONFLICT]",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC3PresenciaNoPromociona::test_boton_forzado_bloquea_con_y_sin_presencia[UNKNOWN]",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC3PresenciaNoPromociona::test_boton_forzado_bloquea_con_y_sin_presencia[ESTIMATED]",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC3PresenciaNoPromociona::test_rojo_invertido_don_alfonso_huella_no_es_numero",
+        "tests/asset_generation/test_site_presence_adapter.py::TestNormalizeSitePresence::test_whatsapp_exists_no_promociona_a_verified"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "5 failed, 44 passed, 8 warnings in 1.71s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "8f883a6c88826c0854c6b7296ec54ae0690c66b116eab3686d482a898245c97f",
+      "sha_despues": "8f883a6c88826c0854c6b7296ec54ae0690c66b116eab3686d482a898245c97f"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "causa_esperada": "destino = phone_web",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M5",
+      "nombre": "FIX-A2 restaurado: phone_web vuelve a escribir la clave del botón",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC6FormaEnElLimite::test_el_orquestador_deja_de_escribir_phone_web_en_la_clave_del_boton"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "1 failed, 38 passed, 9 warnings in 1.39s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "8b854cd3266c98141f630cdb1a7f8700cbae3ffa703fa8f2155452a980d695b6",
+      "sha_despues": "8b854cd3266c98141f630cdb1a7f8700cbae3ffa703fa8f2155452a980d695b6"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/site_presence_checker.py",
+      "causa_esperada": "READ_ERROR → not_exists",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M6",
+      "nombre": "fallo de transporte vuelve a declararse lectura OK",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_excepcion_de_transporte_es_read_error_no_ausencia"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "1 failed, 38 passed, 9 warnings in 2.10s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a",
+      "sha_despues": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/site_presence_checker.py",
+      "causa_esperada": "plugin_fingerprint → wa.me_href",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M7",
+      "nombre": "huella de plugin clasificada como href con número",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_huella_de_plugin_declara_presencia_sin_numero",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_las_claves_sobreviven_al_writer_del_snapshot"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "2 failed, 37 passed, 8 warnings in 1.50s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a",
+      "sha_despues": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/site_presence_checker.py",
+      "causa_esperada": "observation_scope ausente",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M8",
+      "nombre": "observation_scope eliminado (alcance vuelve a ser invisible)",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_huella_de_plugin_declara_presencia_sin_numero",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_canal_en_pagina_interna_se_declara_como_no_inspeccionada",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_claves_nuevas_sin_redefinir_las_viejas",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_las_claves_sobreviven_al_writer_del_snapshot"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "4 failed, 35 passed, 8 warnings in 1.36s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a",
+      "sha_despues": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a"
+    },
+    {
+      "ancla_unica": true,
+      "archivo": "modules/asset_generation/site_presence_checker.py",
+      "causa_esperada": "huella por encima de la barra 0.9",
+      "estado": "ROJO",
+      "exit": 1,
+      "id": "M9",
+      "nombre": "confianza de la sonda HTML promocionada de 0.85 a 0.95",
+      "pruebas_rotas": [
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_huella_de_plugin_declara_presencia_sin_numero",
+        "tests/asset_generation/test_fase_c_boton_seguro.py::TestAC19aObservacionAditiva::test_claves_nuevas_sin_redefinir_las_viejas"
+      ],
+      "restaurado_por_sha": true,
+      "resumen": "2 failed, 37 passed, 8 warnings in 1.47s",
+      "rompio_alguna_distinta": true,
+      "sha_antes": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a",
+      "sha_despues": "67d0b05095179a0e7a9b97b8d5a71658601bc1490e715c9923c4f88bb2ea8c2a"
+    }
+  ],
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "restaurados_verificados_por_sha256": 9,
+  "rojos_causados_por_el_guard": 9,
+  "total": 9
+}

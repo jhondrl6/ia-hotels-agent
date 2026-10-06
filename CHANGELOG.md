@@ -1,5 +1,64 @@
 # Changelog
 
+## [Sin publicar] - FASE-C del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+
+> **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a
+> FASE-RELEASE (`04-contrato-ejecucion.md`, paso 3, re-anclado el 2026-10-06). La fase quedó **completada
+> sin commit**: el mandato no autorizó commit ni push, y los cinco cortes se sostienen sin ellos.
+
+### FASE-C — Número utilizable y botón seguro (AC3, AC6, AC19a-aditivo; AC5 parcial con deuda C-D)
+
+El botón de WhatsApp podía apuntar a un destino que nunca fue un número verificado, y la presencia en el
+sitio podía promocionarlo a VERIFIED. Medido y gobernado:
+
+- **Boost retirado (AC3).** `CoherenceValidator._check_whatsapp_verified` hacía `max(confidence, 0.95)`
+  cuando el reporte de presencia decía `exists`. Una huella de plugin —el caso real de Don Alfonso,
+  `exists` 0.85 el 2026-09-19— alcanzaba así la barra de 0.9 sin que nadie la bajara. La presencia evita
+  duplicación; no verifica números. Umbral 0.9 y `blocking=True` intactos.
+- **Contrato de forma en el límite de generación (AC6).** Nuevo `modules/data_validation/whatsapp_contract.py`:
+  dígitos ASCII explícitos (no `str.isdigit()`, que acepta dígitos Unicode), banda 8–15 (E.164 arriba; el
+  suelo de 8 lo fija C y queda documentado), separadores permitidos y centinelas rechazados, **sin inferir
+  país ni completar partes**. No se reutilizó `normalize_phone_number` porque ese normalizador muta 57/60/0
+  en servicio de la comparación, y un destino no admite recomposición.
+- **Fin de la precedencia de `phone_web` (AC6, L-NC6).** `V4AssetOrchestrator` escribía `phone_web` en
+  `validated_data["whatsapp"]` y `ConditionalGenerator` leía esa clave primero. Hoy la clave es alias del
+  campo validado y el botón lee `whatsapp_number`; el centinela `detected_via_html` pasó a
+  `can_use_in_assets=False` en `main.py` y ese flag tiene lector (`_campo_whatsapp_validado`).
+- **Rechazo con causa y destino (AC3/AC6).** Un número inutilizable no produce href: el generador devuelve
+  `status="blocked"`, `reason_code="whatsapp_number_no_utilizable"`, `rejection{causa, origen}` y
+  `destino="bloqueo_boton_prometido"` — un botón que entró al plan es prometido, así que no se disfraza de
+  guía de setup; la guía se recomienda.
+- **AC19a en modo aditivo.** El reporte publica `observation_scope` (raíz, `crawl: False`), `read_status`
+  (`OK`/`READ_ERROR`/`NO-APLICABLE`) y `presence_evidence_kind` (`wa.me_href`/`plugin_fingerprint`/
+  `texto_visible`/`ninguna`) como claves **nuevas**, y el adaptador **conserva `details`** — donde viajaba el
+  `whatsapp_href_number` que se descartaba. `status`/`site_verified`/`confidence` no se redefinen y un
+  resultado sin observación conserva la forma exacta de tres claves, así que los cuatro asserts de igualdad
+  exacta del plan siguen verdes. Una excepción de transporte ahora es estado desconocido
+  (`READ_ERROR` + `VERIFICATION_FAILED`), nunca `NOT_EXISTS`.
+- **Prerrequisito de lectores: designados, no fusionados.** La sonda de `SitePresenceChecker._check_html_element`
+  gobierna presencia canónica; `V4ComprehensiveAuditor._detect_whatsapp_from_html` gobierna el pain. Ambos
+  comparten ahora el vocabulario de patrones (`WHATSAPP_HTML_PATTERNS`, copia idéntica de los 13 históricos) y
+  la clasificación de evidencia, con test de caracterización que rompe si la delegación pierde un patrón.
+- **Cuatro aserciones re-ancladas** (`test_whatsapp_exists_boost`, dos de `test_whatsapp_button.py`,
+  `test_generate_with_blocked_returns_error`) y **cinco más** en `test_phase5_integration.py` y
+  `test_datasource_gap.py`: cada una legitimaba el fallback que emitía `wa.me` vacío o derivado de un `repr`.
+  La expectativa se invirtió porque AC3/AC6 la definen al revés; la justificación quedó escrita dentro de
+  cada test y NEVER_BLOCK sigue rigiendo los demás assets y la confianza baja.
+
+**AC5 parcial, dueño C-D:** `thresholds.json` lee del código **seis** barras (0.9 coherencia con
+`blocking=True` · 0.9 `no_whatsapp_visible` · 0.5 `whatsapp_conflict` · 0.7 catálogo con
+`block_on_failure=False` · 0.3 `NEW_HOTEL_THRESHOLDS` · 0.9 `CommercialGate`); ninguna se bajó. El rojo
+medible —0.3 planifica el botón en hotel nuevo aunque la coherencia exija 0.9— se gobernó anclando el
+**destino**, no la barra. **AC19b (tri-estado en los 8 consumidores) no se intentó**: es deuda del §6 del
+maestro y quedó declarada como tal.
+
+**Medición:** PRE 201 passed / 1 skipped (16 archivos) · POST 238 passed / 1 skipped (misma selección + 24
+funciones nuevas, 39 casos) · funciones canónicas 4.850 → 4.873 · mutantes 9/9 rojos causados por el guard,
+9/9 restaurados y verificados por sha256 · contador v4complete 0/1 (ninguna corrida; el intento sigue
+reservado a E2E) · R2 **fuera de servicio (R2.1)** con auto-reporte: ≈100 tool_use hasta «listo para
+revisión» contra un presupuesto de referencia de 60 — exceso medido, no cumplimiento estimado.
+Evidencia: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-C/`.
+
 ## [Sin publicar] - FASE-RELEASE del plan EVALUACION-JEV-TYPESAFE-2026-09-21 - 2026-10-05
 
 > **No es una release.** `VERSION.yaml` sigue en **4.78.0** (la release del hermano

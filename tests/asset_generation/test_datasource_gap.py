@@ -327,7 +327,14 @@ class TestDiagnosticLogging:
         # phone_web and phone_gbp should be at validated_data level (not hotel_data)
         assert result.get("phone_web") == "+57 3104019049"
         assert result.get("phone_gbp") == "310 4019049"
-        assert result.get("whatsapp") == "+57 3104019049"
+        # FASE-C (AC6): FIX-A2 dejó de escribir `phone_web` en la clave del botón.
+        # Esta aserción (`result.get("whatsapp") == "+57 3104019049"`) era el
+        # contrato del teléfono web ganando por precedencia; ahora `whatsapp` es
+        # alias del campo validado `whatsapp_number` y, con un summary vacío, no
+        # hay número que aliase. La aserción se **refuerza**: declara que el
+        # teléfono web ya no puede viajar como destino de WhatsApp.
+        assert result.get("whatsapp") == ""
+        assert result.get("whatsapp") != result.get("phone_web")
 
     def test_gbp_rating_propagated_to_validated_data(self):
         orch = _create_orchestrator()
