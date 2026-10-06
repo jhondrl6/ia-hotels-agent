@@ -134,7 +134,12 @@ re-anclaje del CHANGELOG bajo `## [Sin publicar]`): esa procedencia se declara e
 Tampoco se versiona `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/`: los packs de este plan
 nunca estuvieron en el árbol commiteado (solo los del plan archivado), y versionarlos ampliaría el gate
 `[8/8]` más allá del mandato de C. Se declara como decisión de alcance, no como olvido.
-**Push: no autorizado** (el operador pidió commit y L3).
+**Push — estampado después, y la frase anterior queda vencida.** Este párrafo decía «Push: no autorizado»,
+que era cierto al momento de medir. El operador lo autorizó en el turno siguiente («Git Push»): se corrió la L3
+de nuevo sobre el mismo conjunto (0 hallazgos) y se empujó **`5398a3a..8bdee6f`** (2 commits, fast-forward);
+`git ls-remote origin refs/heads/master` → `8bdee6fe4ff90c07a403fb1434dc409ec8bebe5b`. **No se reescriben los
+mensajes de `67aa889` y `8bdee6f`**, que siguen diciendo «sin push»: ya están publicados, y un reword/amend
+reescribiría historia remota. La corrección es esta nota, que añade el rango en vez de reescribir la sede.
 
 **Procedencia de esta cifra:** medida sobre el árbol con el código y los tests de C ya re-anclados, **antes** de
 la edición documental del §8 y de su re-generación de derivados. Después de esa edición la superficie afectada
