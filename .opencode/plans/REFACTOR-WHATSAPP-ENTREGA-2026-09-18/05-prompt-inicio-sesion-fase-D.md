@@ -1,6 +1,6 @@
 # FASE-D — Veredicto canónico y causa legible del bloqueo
 
-**Estado:** PENDIENTE. **Dependencias:** A, B y C completas. **Complejidad técnica:** ALTA: el mismo resultado cruza pre-gate, assessment, publication gates y archivos serializados. **Ejecución:** DIRECTA, sin delegate_task para diseño cross-module. **Scope R3:** 4 tareas, 0 comandos largos externos.
+**Estado:** COMPLETADA 2026-10-06 y **commiteada + empujada en la misma sesión por orden literal del operador («Commit + L3 + Push»)**. Durante la implementación el mandato no autorizaba el commit —el corte medido de R2 fue «hasta listo para revisión»— y el commit llegó después, como acción separada y autorizada. **El sha y el rango empujado no se estampan acá**: quedan para el sello documental de FASE-RELEASE, por la decisión registrada al cerrar C (un sello que documenta una acción git es otra acción git y re-abre la L3; la recursividad se cobra en RELEASE añadiendo el rango, sin reescribir la sede). **Dependencias:** A, B y C completas. **Complejidad técnica:** ALTA: el mismo resultado cruza pre-gate, assessment, publication gates y archivos serializados. **Ejecución:** DIRECTA, sin delegate_task para diseño cross-module. **Scope R3:** 4 tareas, 0 comandos largos externos. **Evidencia y mediciones:** `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-D/`.
 
 ## Contexto e inicio
 
@@ -52,9 +52,9 @@ Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo complet
 
 ## Completitud y restricciones
 
-- [ ] AC4/AC8/AC9 medidos en disco; mutantes rojos por causa correcta.
-- [ ] No se generaron assets tras error del pre-gate.
-- [ ] AC5 intacto y PRE/POST conciliado.
-- [ ] Cierre incremental completo, sin regresiones ni GAP.
+- [x] AC4/AC8/AC9 medidos en disco; mutantes rojos por causa correcta.
+- [x] No se generaron assets tras error del pre-gate.
+- [x] AC5 intacto y PRE/POST conciliado.
+- [x] Cierre incremental completo, sin regresiones propias ni GAP. **Un rojo declarado con dueño ajeno** (piloto JEV, §7 del informe de fase: pasa 15/15 aislada y cae por contaminación de entorno en corrida completa) y un rojo propio resuelto **regenerando el derivado** (`validate_wiring.py --write-report`), no recortando la aserción. Quick final 13/13 con las 13 etiquetas casando contra el TOTAL dinámico; `log_phase_completion.py` registró FASE-D sin gaps documentales. Commit, `DOMAIN_PRIMER` y la fila de `AGENTS.md` quedan como checkpoints por falta de autorización (no son condiciones del cierre).
 - Presupuesto: referencia 60 tool_use; instrumento `measure_iterations.py`. El corte es el que la sesión tenga autorizado — «hasta el commit» solo si el commit lo está; si no, «hasta listo para revisión», declarando cuál se usó (**los cinco cortes se sostienen sin commit**). Si no puede medirse, FUERA DE SERVICIO conforme al contrato; nunca cumplimiento estimado.
 - No ejecutar E2E, cambiar umbrales, relajar Juez ni corregir hallazgos ajenos. Finalizar la sesión; E será otra sesión.

@@ -1,0 +1,6 @@
+🔒 Gate de Coherencia: score 0.88 (umbral 0.8), status FAILED, is_coherent=False
+     - whatsapp_verified: WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573****
+     - assets_are_justified: 3/4 assets justificados por problemas del diagnostico
+   [SKIP] FASE 4 omitida: el veredicto de coherencia declaro checks en error
+   asset_result = None
+   generate_assets invocado: False

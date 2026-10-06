@@ -1,5 +1,64 @@
 # Changelog
 
+## [Sin publicar] - FASE-D del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+
+> **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a
+> FASE-RELEASE (`04-contrato-ejecucion.md`, paso 3). La fase se cerró **sin commit durante la
+> implementación** —los cinco cortes se sostienen sin él y ese fue el corte que midió R2—; el commit y el
+> push llegaron al final de la sesión, por orden literal del operador, como acción separada y autorizada.
+> El sha del commit y el rango empujado se estampan en el sello documental de FASE-RELEASE (decisión
+> registrada al cerrar C: no abrir sellos recursivos por acciones git).
+
+### FASE-D — Veredicto canónico y causa legible del bloqueo (AC4, AC8, AC9; AC5 intacto)
+
+El mismo hecho —si la coherencia autoriza o no generar— se decidía en tres sitios con dos criterios, y
+cuando fallaba no decía por qué. Medido y gobernado:
+
+- **Unificación del veredicto (AC8).** El pre-gate de `run_v4_complete_mode` comparaba
+  `pre_coherence_score >= threshold` y **no leía** `is_coherent`: un paquete con score 0.88 y veredicto
+  `False` (el caso SalentoReal, cuatro artefactos declarándolo) entraba a generar assets. La decisión vive
+  ahora en `main._coherence_pre_gate_decision`, que llama a `coherence_verdict_passes` —la única
+  definición, umbral 0.8 intacto— y publica `passed`, `status`, los culpables y las consecuencias. Un
+  veredicto **ausente** (`None`, artefactos legacy) conserva el comportamiento histórico por score y no se
+  trata como `False`.
+- **Fail-fast con causa persistida (AC8).** `main._persist_coherence_pre_gate` escribe
+  `v4_audit/coherence_pre_gate_<ts>.json` (serialización canónica del reporte + decisión +
+  `failed_error_check_names`) **antes** de las consecuencias, y `main._run_asset_generation` es la única
+  entrada a FASE 4: con un check de severidad error sin resolver no invoca `orchestrator.generate_assets`
+  y no genera propuesta. El score bajo **sin** errores conserva el régimen documentado de
+  `overall_coherence` (`blocking=False`): D no subió ese flag ni bajó ninguna barra —eso es AC5, dueño
+  C-D—; el corte nuevo viene de los culpables, no del flag.
+- **Entrada directa del orquestador (AC8).** `v4_asset_orchestrator.py` cortaba con
+  `not is_coherent and overall_score < 0.5`, que deja pasar el 0.88 con veredicto `False`. Ahora llama a
+  `assert_pre_generation_coherence`: conserva el suelo 0.5 y añade el corte por culpables, con los nombres
+  en el mensaje del `CoherenceError`.
+- **El cable perdido estaba en el caller (AC4).** `AssessmentBuilder.with_coherence` **recibía** el reporte
+  del pre-gate y nunca lo leía: si el orquestador no dejaba reporte, publicaba `coherence_score = 0.0` e
+  `is_coherent = None`. Ahora score, veredicto y causas salen del **mismo** reporte
+  (`final_coherence_report` → `coherence_report` → `pre_coherence_report`), con el campo nuevo
+  `coherence_failed_checks` donde `None` (fuente ausente) y `[]` (reporte sin errores declarados) son
+  estados distintos.
+- **Causas serializadas sin whitelist (AC4).** `PublicationGatesOrchestrator._coherence_gate` publica
+  `details.failed_check_names` y `details.failed_check_messages` en sus cuatro ramas; el writer
+  `_build_gate_report_payload` ya serializaba `details` entero. Si el assessment no trae reporte, la clave
+  **no aparece**: no se disfraza la ausencia con una lista vacía.
+- **Saneado en la boca que produce el dato.** `failed_error_checks` enmascara el mensaje
+  (`mask_telephone_digits`) antes de que la causa viaje a la consola, al artefacto del pre-gate y al
+  `gate_report_*.json`. Puesto el mask en cada salida, la tercera (la que AC4 exigía abrir) seguía
+  llevando el número completo.
+- **Lector con estados visibles (AC9).** Nuevo `coherence_validator.read_coherence_report`: `READ_OK`
+  (incluye `checks: []`), `ABSENT` y `READ_ERROR` con causa, sin default favorable; el vocabulario se
+  amplió en `modules/data_validation/whatsapp_contract.py` (`READ_ABSENT`) en vez de crear un enum propio.
+
+**Tests:** `tests/quality_gates/test_fase_d_veredicto_canonico.py` (33 funciones canónicas, 0 re-anclajes —
+las 241 del PRE siguieron verdes—). **Mutantes:** 6/6 rojos por su aserción (M1 solo-score, M2 no propagar,
+M3 no publicar, M4 guard fuera, M5 guard neutro, M6 artefacto sin firma) con restauración por sha256 y
+árbol intacto. **Mediciones:** la cifra la imprime la corrida; selección, PRE/POST, regresión y evidencia en
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-D/`. **Rojo ajeno declarado:** una prueba del piloto JEV
+falla en corrida completa y pasa aislada (contaminación de entorno; dueño el piloto), y el rojo del derivado
+de wiring se resolvió regenerando con su writer, no recortando la aserción. **Pendientes de autorización:**
+commit, `DOMAIN_PRIMER` (checkpoint) y la fila de cobertura de `AGENTS.md` (configuración central protegida).
+
 ## [Sin publicar] - FASE-C del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 
 > **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a

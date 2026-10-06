@@ -289,5 +289,6 @@
   "scripts/evaluate_jev_pilot.py": "FASE-B",
   "scripts/validate_wiring.py": "FASE-B",
   "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py": "FASE-B",
-  "30": "FASE-C"
+  "30": "FASE-C",
+  "35": "FASE-D"
 }

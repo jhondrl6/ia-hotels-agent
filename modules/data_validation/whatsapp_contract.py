@@ -88,6 +88,13 @@ EVIDENCE_NONE = "ninguna"
 READ_OK = "OK"
 READ_ERROR = "READ_ERROR"
 READ_NO_APLICABLE = "NO-APLICABLE"
+# FASE-D (AC9): ABSENT es el cuarto estado y completa la tri-ada que exige el
+# plan (READ_OK incluido vacío, ABSENT, READ_ERROR). Sin el no se podia
+# distinguir "el artefacto no esta" de "nadie lo quiso leer". Se anade aqui, no
+# en un enum propio del lector: FASE-C designo este archivo como vocabulario
+# unico de read_status, y una segunda lista del mismo hecho es el defecto que
+# esa designacion vino a evitar.
+READ_ABSENT = "ABSENT"
 
 
 def detect_whatsapp_in_html(html: Any) -> bool:

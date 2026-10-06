@@ -588,6 +588,12 @@ class PublicationGatesOrchestrator:
         """
         gate_name = "coherence"
         
+        # FASE-D (AC4): los culpables viajan en el assessment y se publican en
+        # `details` del gate, en cualquier rama. Sin lista blanca de nombres:
+        # gobernar el veredicto es gobernar los checks que el validador declaro
+        # en error, se llamen como se llamen.
+        cause_details = self._coherence_cause_details(assessment)
+        
         # Extract coherence score from assessment
         coherence_score = self._extract_coherence_score(assessment)
         
@@ -598,7 +604,8 @@ class PublicationGatesOrchestrator:
                 status=GateStatus.BLOCKED,
                 message="Coherence score not found in assessment",
                 value=None,
-                suggestion="Run coherence validation to generate coherence score"
+                suggestion="Run coherence validation to generate coherence score",
+                details=cause_details
             )
         
         passed = coherence_verdict_passes(
@@ -614,7 +621,8 @@ class PublicationGatesOrchestrator:
                 status=GateStatus.PASSED,
                 message=f"Coherence score {coherence_score:.2f} meets threshold {self.config.coherence_threshold}",
                 value=coherence_score,
-                suggestion=""
+                suggestion="",
+                details=cause_details
             )
         # FASE-F (N11/P9): score sobre el umbral pero veredicto binario
         # negativo del validador (checks error-severity abiertos). Los cuatro
@@ -645,6 +653,7 @@ class PublicationGatesOrchestrator:
                     "coherence_score": coherence_score,
                     "threshold": self.config.coherence_threshold,
                     "is_coherent": False,
+                    **cause_details,
                 }
             )
         # Score bajo el umbral (veredicto legacy por score)
@@ -663,9 +672,30 @@ class PublicationGatesOrchestrator:
             details={
                 "coherence_score": coherence_score,
                 "threshold": self.config.coherence_threshold,
-                "gap": self.config.coherence_threshold - coherence_score
+                "gap": self.config.coherence_threshold - coherence_score,
+                **cause_details
             }
         )
+
+    def _coherence_cause_details(self, assessment: Dict[str, Any]) -> Dict[str, Any]:
+        """FASE-D (AC4): bloque `details` con los checks culpables del veredicto.
+
+        Se publican solo cuando el assessment trae reporte que los declare:
+        `coherence_failed_checks` ausente (None) no se disfraza de lista vacia
+        (L-PF10), y una lista vacia se publica como lista vacia — declara "el
+        reporte no tiene checks en error", que es un resultado, no un hueco.
+
+        Nombres y mensajes salen del assessment, reconstruidos por el writer del
+        gate report (`_build_gate_report_payload` ya serializa `details` entero);
+        no hay aca una whitelist ni una segunda fuente del hecho.
+        """
+        failed = assessment.get("coherence_failed_checks")
+        if not isinstance(failed, list):
+            return {}
+        return {
+            "failed_check_names": [c.get("name") for c in failed],
+            "failed_check_messages": [c.get("message") for c in failed],
+        }
     
     def _critical_recall_gate(self, assessment: Dict[str, Any]) -> PublicationGateResult:
         """

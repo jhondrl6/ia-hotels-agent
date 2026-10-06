@@ -1,0 +1,79 @@
+{
+  "is_coherent": false,
+  "overall_score": 0.88,
+  "checks": [
+    {
+      "name": "whatsapp_verified",
+      "passed": false,
+      "score": 0.0,
+      "message": "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573001234567",
+      "severity": "error"
+    },
+    {
+      "name": "assets_are_justified",
+      "passed": false,
+      "score": 0.75,
+      "message": "3/4 assets justificados por problemas del diagnostico",
+      "severity": "error"
+    },
+    {
+      "name": "problems_have_solutions",
+      "passed": true,
+      "score": 0.9,
+      "message": "90% de problemas tienen solucion",
+      "severity": "warning"
+    },
+    {
+      "name": "financial_data_validated",
+      "passed": true,
+      "score": 0.8,
+      "message": "Datos financieros validados",
+      "severity": "info"
+    },
+    {
+      "name": "price_matches_pain",
+      "passed": true,
+      "score": 0.9,
+      "message": "Precio dentro de rango",
+      "severity": "warning"
+    },
+    {
+      "name": "promised_assets_exist",
+      "passed": true,
+      "score": 1.0,
+      "message": "Todos los assets prometidos estan implementados",
+      "severity": "info"
+    }
+  ],
+  "errors": [
+    "[whatsapp_verified] WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573001234567",
+    "[assets_are_justified] 3/4 assets justificados por problemas del diagnostico"
+  ],
+  "warnings": [],
+  "timestamp": "2026-10-06T13:37:41.508405",
+  "version": "4.2.0",
+  "hotel_url": "https://ejemplo-hotelsintetico.test",
+  "gate": {
+    "stage": "pre-gate",
+    "threshold": 0.8,
+    "passed": false,
+    "status": "FAILED",
+    "blocks_asset_generation": true
+  },
+  "failed_error_check_names": [
+    "whatsapp_verified",
+    "assets_are_justified"
+  ],
+  "failed_error_checks": [
+    {
+      "name": "whatsapp_verified",
+      "message": "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573****",
+      "score": 0.0
+    },
+    {
+      "name": "assets_are_justified",
+      "message": "3/4 assets justificados por problemas del diagnostico",
+      "score": 0.75
+    }
+  ]
+}

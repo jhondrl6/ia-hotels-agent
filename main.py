@@ -2540,6 +2540,9 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     )
     
     # Usar CoherenceValidator para cálculo real (no simple)
+    # FASE-D (AC4/AC8): la decisión del pre-gate sale de
+    # `_coherence_pre_gate_decision` (veredicto canónico + culpables + bloqueos);
+    # las causas ya llegan saneadas desde `failed_error_checks`.
     coherence_validator = CoherenceValidator()
     pre_coherence_report = coherence_validator.validate(
         temp_diagnostic,
@@ -2559,28 +2562,67 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     threshold = config.get_threshold('overall_coherence')
     is_blocking = config.is_blocking('overall_coherence')
 
+    # FASE-D (AC8): el pre-gate decide con el VEREDICTO canónico, no con el score
+    # comparado a mano. `_coherence_pre_gate_decision` es la única llamada que
+    # produce esa decisión en la ruta de producción (umbral 0.8 intacto — AC5):
+    # un `is_coherent=False` declarado por el validador baja el gate aunque el
+    # score compile el umbral, y un veredicto AUSENTE (None, artefactos legacy)
+    # conserva el comportamiento histórico por score sin tratarse como False.
+    pre_gate = _coherence_pre_gate_decision(
+        report=pre_coherence_report,
+        threshold=threshold,
+        is_blocking=is_blocking,
+    )
+    pre_gate_passed = pre_gate["passed"]
+    pre_error_checks = pre_gate["guilty_checks"]
+
     # FASE-PROP-A: Compute gate status for diagnostic template
-    pre_gate_status = "PASSED" if pre_coherence_score >= threshold else "FAILED"
+    pre_gate_status = pre_gate["status"]
 
     print(f"🔒 Gate de Coherencia:")
     print(f"   Score calculado: {pre_coherence_score:.2f} (umbral: {threshold})")
+    print(f"   Veredicto del validador: is_coherent={pre_coherence_report.is_coherent}")
     print(f"   Checks: {len([c for c in pre_coherence_report.checks if c.passed])}/{len(pre_coherence_report.checks)} pasados")
+    if pre_error_checks:
+        print(f"   Causas (severity error, sin pasar): {len(pre_error_checks)}")
+        for _guilty in pre_error_checks:
+            print(f"     - {_guilty['name']}: {_guilty['message']}")
     if pre_coherence_report.warnings:
         print(f"   Advertencias: {len(pre_coherence_report.warnings)}")
-    
-    if pre_coherence_score < threshold:
+
+    # AC8: el reporte del pre-gate y sus culpables quedan escritos ANTES de
+    # decidir el resto del flujo, para que el bloqueo sea legible desde el
+    # artefacto y no solo desde la consola de una corrida que ya terminó.
+    pre_gate_report_path = _persist_coherence_pre_gate(
+        output_dir=output_dir,
+        hotel_id=hotel_id,
+        report=pre_coherence_report,
+        decision=pre_gate,
+        hotel_url=args.url,
+    )
+    print(f"   📄 Reporte pre-gate: {pre_gate_report_path}")
+
+    # FASE-D (AC8): un check de severidad error sin resolver IMPIDE entrar a la
+    # generación de assets y a la propuesta. Que el score esté por encima del
+    # umbral no compra ese paso: es exactamente el hueco de SalentoReal (score
+    # 0.88, veredicto False, paquete saliendo READY). El score bajo SIN errores
+    # sigue el régimen documentado de `overall_coherence` (blocking=False en
+    # CoherenceConfig), que esta fase no cambia — gobernar esa barra es AC5.
+    generate_proposal = pre_gate["generate_proposal"]
+
+    if pre_gate["blocks_asset_generation"]:
+        print(f"   ❌ BLOQUEADO por veredicto: {len(pre_error_checks)} check(s) en error sin resolver")
+        print("   No se generan assets ni propuesta comercial (solo diagnóstico).")
+    elif not pre_gate_passed:
         warning_msg = f"Coherencia insuficiente ({pre_coherence_score:.2f} < {threshold})"
         if is_blocking:
             print(f"   ❌ BLOQUEADO: {warning_msg}")
             print("   Se generará solo diagnóstico, NO propuesta comercial.")
-            generate_proposal = False
         else:
             print(f"   ⚠️  ADVERTENCIA: {warning_msg}")
             print("   Continuando con generación de propuesta (modo no-bloqueante)")
-            generate_proposal = True
     else:
         print(f"   [OK] Coherencia aceptable - Generando propuesta completa")
-        generate_proposal = True
 
 
     # T4 FIX: El bloque de regeneración del diagnóstico se movió a DESPUÉS de FASE 4
@@ -2622,28 +2664,18 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
     asset_result = None
     try:
-        if audit_result is None:
-            print("   [SKIP] Sin audit_result - generacion de assets omitida")
-        else:
-            asset_result = orchestrator.generate_assets(
-                audit_result=audit_result,
-                validation_summary=validation_summary,
-                diagnostic_doc=diagnostic_doc,
-                proposal_doc=proposal_doc,
-                hotel_name=hotel_name,
-                hotel_url=args.url,
-                analytics_data=analytics_data,  # ANALYTICS-FIX-01: activar pains de analytics
-                site_presence_report=site_presence_snapshot,  # FASE-2 (DT4-R2): canonical snapshot
-            )
-
-        print(f"[OK] Assets generados: {len(asset_result.generated_assets)}")
-        print(f"   Fallidos: {len(asset_result.failed_assets)}")
-        print(f"   Coherencia: {asset_result.coherence_report.overall_score:.2f}")
-
-        for asset in asset_result.generated_assets:
-            icon = "✅" if Path(asset.path).exists() else "❌"
-            print(f"   {icon} {asset.asset_type}: {asset.preflight_status}")
-
+        asset_result = _run_asset_generation(
+            orchestrator=orchestrator,
+            pre_gate_blocked=pre_gate["blocks_asset_generation"],
+            audit_result=audit_result,
+            validation_summary=validation_summary,
+            diagnostic_doc=diagnostic_doc,
+            proposal_doc=proposal_doc,
+            hotel_name=hotel_name,
+            hotel_url=args.url,
+            analytics_data=analytics_data,  # ANALYTICS-FIX-01: activar pains de analytics
+            site_presence_report=site_presence_snapshot,  # FASE-2 (DT4-R2): canonical snapshot
+        )
     except Exception as e:
         print(f"⚠️  Generación de assets falló: {e}")
         asset_result = None
@@ -4060,6 +4092,125 @@ def _make_evidence_path(output_dir: Path, hotel_id: str, basename: str, timestam
     if timestamp is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     return evidence_dir / f"{basename}_{timestamp}.json"
+
+
+def _coherence_pre_gate_decision(
+    *,
+    report,
+    threshold: float,
+    is_blocking: bool,
+) -> dict:
+    """FASE-D (AC8): unica decision del pre-gate de coherencia en la ruta de produccion.
+
+    El veredicto canónico (`coherence_verdict_passes`) manda sobre el score: un
+    `is_coherent=False` declarado baja el gate aunque el score compile el umbral,
+    y un veredicto ausente (None) conserva el comportamiento histórico por score —
+    no se trata como False.
+
+    Las consecuencias salen de aca y no se re-deciden aguas abajo (L-NC6):
+
+    * `blocks_asset_generation` — True solo cuando el gate cayó PORQUE hay checks
+      de severidad error sin resolver. Gobernar el score bajo sin errores sigue
+      en `is_blocking` de `overall_coherence` (AC5: la barra y el flag no los
+      mueve esta fase).
+    * `guilty_checks` — los culpables tal como los declaro el reporte, sin
+      whitelist de nombres.
+    * `generate_proposal` — el regimen de "solo diagnóstico".
+    """
+    from modules.commercial_documents.coherence_validator import failed_error_checks
+    from modules.quality_gates.coherence_gate import coherence_verdict_passes
+
+    guilty = failed_error_checks(report)
+    passed = coherence_verdict_passes(report.overall_score, threshold, report.is_coherent)
+    blocks_generation = (not passed) and bool(guilty)
+
+    return {
+        "score": report.overall_score,
+        "threshold": threshold,
+        "verdict": report.is_coherent,
+        "passed": passed,
+        "status": "PASSED" if passed else "FAILED",
+        "guilty_checks": guilty,
+        "guilty_check_names": [c["name"] for c in guilty],
+        "blocks_asset_generation": blocks_generation,
+        "generate_proposal": (not blocks_generation) and (passed or not is_blocking),
+    }
+
+
+def _persist_coherence_pre_gate(
+    *,
+    output_dir: Path,
+    hotel_id: str,
+    report,
+    decision: dict,
+    hotel_url: str = "",
+) -> str:
+    """FASE-D (AC8): persiste el reporte del pre-gate con sus checks culpables.
+
+    El artefacto sale de la serialización canónica del reporte
+    (`CoherenceReport.to_dict`, el mismo writer de `coherence_validation.json`) y
+    le agrega la decisión ya tomada por `_coherence_pre_gate_decision` — no una
+    segunda comparación del mismo hecho — y la lista de culpables saneada.
+
+    `failed_error_check_names` es la firma del bloqueo. Una lista vacía declara
+    "el reporte no tiene checks en error"; si el reporte no existe, el llamador no
+    llega aquí (L-PF10: vacío válido ≠ fuente ausente).
+    """
+    payload = report.to_dict()
+    payload["hotel_url"] = hotel_url
+    payload["gate"] = {
+        "stage": "pre-gate",
+        "threshold": decision["threshold"],
+        "passed": decision["passed"],
+        "status": decision["status"],
+        "blocks_asset_generation": decision["blocks_asset_generation"],
+    }
+    guilty = decision["guilty_checks"]
+    payload["failed_error_check_names"] = [c["name"] for c in guilty]
+    payload["failed_error_checks"] = [
+        {"name": c["name"], "message": c["message"], "score": c["score"]}
+        for c in guilty
+    ]
+
+    path = _make_evidence_path(output_dir, hotel_id, "coherence_pre_gate")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+    return str(path)
+
+
+def _run_asset_generation(
+    *,
+    orchestrator,
+    pre_gate_blocked: bool,
+    audit_result,
+    **generation_kwargs,
+):
+    """FASE-D (AC8): unica entrada a FASE 4 de la ruta de produccion.
+
+    El guard recibe la decision ya tomada aguas arriba (`pre_gate_blocked`), no
+    un score que volver a comparar aqu: dos criterios del mismo hecho es el
+    defecto que L-NC6 vino a quitar. Un veredicto con checks en error sin
+    resolver no genera archivos; la ausencia de audit_result sigue siendo el
+    otro skip, con su propio mensaje.
+    """
+    if pre_gate_blocked:
+        print("   [SKIP] FASE 4 omitida: el veredicto de coherencia declaro checks en error")
+        return None
+    if audit_result is None:
+        print("   [SKIP] Sin audit_result - generacion de assets omitida")
+        return None
+
+    asset_result = orchestrator.generate_assets(audit_result=audit_result, **generation_kwargs)
+
+    print(f"[OK] Assets generados: {len(asset_result.generated_assets)}")
+    print(f"   Fallidos: {len(asset_result.failed_assets)}")
+    print(f"   Coherencia: {asset_result.coherence_report.overall_score:.2f}")
+
+    for asset in asset_result.generated_assets:
+        icon = "✅" if Path(asset.path).exists() else "❌"
+        print(f"   {icon} {asset.asset_type}: {asset.preflight_status}")
+
+    return asset_result
 
 
 def _build_gate_report_payload(

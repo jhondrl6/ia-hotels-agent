@@ -1,0 +1,132 @@
+........................................................................ [  1%]
+................................................................s....... [  2%]
+........................................................................ [  4%]
+........................................................................ [  5%]
+........................................................................ [  7%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 11%]
+........................................................................ [ 12%]
+.................s...................................................... [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 21%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+.................................................................s...... [ 25%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+........................................................................ [ 30%]
+........................................................................ [ 31%]
+..........s.sss......................................................... [ 32%]
+........................................................................ [ 34%]
+........................x............................................... [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 38%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 42%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................................................................ [ 47%]
+........................................................................ [ 48%]
+........................................................................ [ 50%]
+........................................................................ [ 51%]
+.......................F................................................ [ 52%]
+........................................................................ [ 54%]
+........................................................................ [ 55%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+...........................s............................................ [ 67%]
+............................................sssssss..................... [ 68%]
+....................................ss.................................. [ 70%]
+........................................................................ [ 71%]
+s.....s.............ss.................................................. [ 73%]
+........................................................................ [ 74%]
+..........................s............................................. [ 75%]
+................................................................x....... [ 77%]
+........................................................................ [ 78%]
+......................................................sssss..s.......... [ 80%]
+......................sss.s........s.................................s.. [ 81%]
+........................................................................ [ 83%]
+..............................................................ss........ [ 84%]
+........................................................................ [ 85%]
+........................................................................ [ 87%]
+........................................sss............................. [ 88%]
+........................................................................ [ 90%]
+....................................s................................... [ 91%]
+........................................................................ [ 93%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+...............................................................F........ [ 97%]
+........................................................................ [ 98%]
+..........................................................xx             [100%]
+================================== FAILURES ===================================
+_ test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic _
+
+dc = <module 'decision_client_bajo_prueba_jev' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\decision_client.py'>
+proveedor = <module 'iah_decision_provider__deepseek' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\proveedores\\deepseek.py'>
+entorno_brazo = {'IAH_DECISION_PROVIDER': 'deepseek-comparador', 'IAH_DECISION_PROVIDERS_DIR': 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\proveedores'}
+excpcion_de_red = <class 'quality_gates.jev_pilot.conftest.RedProhibida'>
+
+    def test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic(
+            dc, proveedor, entorno_brazo, excpcion_de_red):
+        """AC2/AC12: el brazo se detiene por su propia credencial y no se deriva a Anthropic.
+    
+        Que la excepcion sea `CredencialAusente` y no `RedProhibida` es la mitad del control: el guard
+        de red esta armado, asi que cualquier intento de envio habria saltado antes. La clave Anthropic
+        sintetica esta puesta a proposito: si alguien programara un fallback, aqui se veria.
+        """
+        entorno = {**entorno_brazo, "ANTHROPIC_API_KEY": CLAVE_SINTETICA}
+        with pytest.raises(Exception) as vio:
+            dc.evaluar("estado del plan", [dc.Pregunta("n1", "noul", "¿Sigues vigente?")],
+                       entorno=entorno)
+>       assert type(vio.value).__name__ == "CredencialAusente", (
+            f"esperaba CredencialAusente y hubo {type(vio.value).__name__}: hubo un intento de envio")
+E       AssertionError: esperaba CredencialAusente y hubo RedProhibida: hubo un intento de envio
+E       assert 'RedProhibida' == 'CredencialAusente'
+E         
+E         - CredencialAusente
+E         + RedProhibida
+
+tests\quality_gates\jev_pilot\test_jev_pilot_deepseek_brazo.py:87: AssertionError
+__________ test_el_derivado_versionado_del_repo_pasa_su_propio_check __________
+
+    def test_el_derivado_versionado_del_repo_pasa_su_propio_check():
+        """El estado que la orden deja como condicion de cierre: el artefacto publicado cuadra.
+    
+        Antes de la cura este CLI ni siquiera conocia la bandera y salia 2 por argparse; con el
+        artefacto del 2026-09-20 todavia en disco tiene que salir 3.
+        """
+        corrido = _correr(BANDERA)
+>       assert corrido.returncode == 0, (
+            f"EXIT {corrido.returncode}\n{corrido.stdout}\n{corrido.stderr}")
+E       AssertionError: EXIT 3
+E         [FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest ef6218c80f25)
+E           - cobertura.archivos_en_alcance: publicado 701 | fresco 702
+E           - cobertura.archivos_excluidos_por_rol_versionado: publicado 151 | fresco 153
+E           - exclusiones_por_rol.evidence.cantidad_versionada: publicado 139 | fresco 141
+E           - poblacion.3.linea: publicado 2544 | fresco 2548
+E           - poblacion.4.linea: publicado 2948 | fresco 2981
+E           - poblacion.5.linea: publicado 299 | fresco 321
+E           - poblacion.6.linea: publicado 327 | fresco 349
+E           - poblacion.7.linea: publicado 466 | fresco 489
+E           (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)
+E         
+E         
+E       assert 3 == 0
+E        +  where 3 = CompletedProcess(args=['C:\\Users\\Jhond\\Github\\iah-cli\\venv\\Scripts\\python.exe', 'C:\\Users\\Jhond\\Github\\iah-...o 489\n  (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)\n', stderr='').returncode
+
+tests\test_validate_wiring_check_derivado_versionado.py:156: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+FAILED tests/test_validate_wiring_check_derivado_versionado.py::test_el_derivado_versionado_del_repo_pasa_su_propio_check
+2 failed, 4982 passed, 41 skipped, 4 xfailed in 362.12s (0:06:02)
+EXIT=1

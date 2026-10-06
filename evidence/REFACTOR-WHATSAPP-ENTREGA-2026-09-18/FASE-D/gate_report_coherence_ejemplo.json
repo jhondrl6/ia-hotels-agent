@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-10-06T13:37:41.517259",
+  "hotel_url": "https://ejemplo-hotelsintetico.test",
+  "gate_results": [
+    {
+      "gate_name": "coherence",
+      "severity": "blocking",
+      "blocks_publication": true,
+      "passed": false,
+      "status": "BLOCKED",
+      "message": "Coherence score 0.88 meets threshold 0.8 but validator declared is_coherent=False (error-severity checks unresolved)",
+      "value": 0.88,
+      "suggestion": "Resolve the coherence validator errors before publication: a passing score with is_coherent=False means open error-severity checks (see coherence_validation.json). The validator verdict is authoritative over the score.",
+      "details": {
+        "coherence_score": 0.88,
+        "threshold": 0.8,
+        "is_coherent": false,
+        "failed_check_names": [
+          "whatsapp_verified",
+          "assets_are_justified"
+        ],
+        "failed_check_messages": [
+          "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573****",
+          "3/4 assets justificados por problemas del diagnostico"
+        ]
+      }
+    }
+  ],
+  "readiness": {
+    "status": "NOT_READY",
+    "ready": false,
+    "blocking_issues": [
+      {
+        "gate": "coherence",
+        "message": "Coherence score 0.88 meets threshold 0.8 but validator declared is_coherent=False (error-severity checks unresolved)",
+        "suggestion": "Resolve the coherence validator errors before publication: a passing score with is_coherent=False means open error-severity checks (see coherence_validation.json). The validator verdict is authoritative over the score.",
+        "value": 0.88
+      }
+    ],
+    "warnings": []
+  },
+  "financial_sources": {}
+}

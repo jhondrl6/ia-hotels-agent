@@ -1,0 +1,50 @@
+{
+  "aplicados": 6,
+  "rojos_por_causa_correcta": 6,
+  "arbol_intacto_por_sha": true,
+  "detalle": [
+    {
+      "id": "M1",
+      "exit": 1,
+      "caidas": 3,
+      "causa_correcta": true,
+      "restaurado": true
+    },
+    {
+      "id": "M2",
+      "exit": 1,
+      "caidas": 5,
+      "causa_correcta": true,
+      "restaurado": true
+    },
+    {
+      "id": "M3",
+      "exit": 1,
+      "caidas": 4,
+      "causa_correcta": true,
+      "restaurado": true
+    },
+    {
+      "id": "M4",
+      "exit": 1,
+      "caidas": 1,
+      "causa_correcta": true,
+      "restaurado": true
+    },
+    {
+      "id": "M5",
+      "exit": 1,
+      "caidas": 1,
+      "causa_correcta": true,
+      "restaurado": true
+    },
+    {
+      "id": "M6",
+      "exit": 1,
+      "caidas": 2,
+      "causa_correcta": true,
+      "restaurado": true
+    }
+  ]
+}
+EXIT=0

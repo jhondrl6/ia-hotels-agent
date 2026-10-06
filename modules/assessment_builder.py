@@ -32,6 +32,8 @@ T1 VERIFICATION TABLE (claims vs live code):
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+from modules.commercial_documents.coherence_validator import failed_error_checks
+
 
 @dataclass
 class AssessmentPayload:
@@ -60,6 +62,10 @@ class AssessmentPayload:
     # FASE-F (N11/P9): veredicto binario del CoherenceValidator. None =
     # campo ausente (assessments legacy sin reporte) — vacío ≠ ausente.
     is_coherent: Optional[bool] = None
+    # FASE-D (AC4): los checks de severidad error sin resolver, tal como los
+    # declaro el MISMO reporte del que salen score y veredicto. None = no hay
+    # reporte que leer; [] = hay reporte y no declaro errores (vacio valido).
+    coherence_failed_checks: Optional[List[Dict[str, Any]]] = None
 
     # Pain Ledger / FASE-0
     pain_ledger: List[Dict] = field(default_factory=list)
@@ -157,6 +163,13 @@ class AssessmentBuilder:
         # FASE-F (N11/P9): extraer score Y veredicto de la MISMA fuente
         # canónica (final_coherence_report preferred, DT4-N4). El veredicto
         # binario viaja al assessment para que _coherence_gate lo respete.
+        #
+        # FASE-D (AC4/AC8): de ese MISMO reporte salen los checks culpables.
+        # Score, veredicto y causas son un trío indivisible: tomar el score
+        # post-gen y las causas del pre-gate publicaría culpas ya cerradas (o
+        # taparía una abierta). Y el camino que no tiene reporte del
+        # orquestador no fabrica un 0.0: su reporte propio es el del pre-gate,
+        # que es lo que el pipeline efectivamente midió antes de generar.
         source = None
         if asset_result:
             if (
@@ -164,20 +177,33 @@ class AssessmentBuilder:
                 and asset_result.final_coherence_report
             ):
                 source = asset_result.final_coherence_report
-                self._payload.coherence_score = source.overall_score
             elif (
                 hasattr(asset_result, "coherence_report")
                 and asset_result.coherence_report
             ):
                 source = asset_result.coherence_report
-                self._payload.coherence_score = source.overall_score
-            else:
-                self._payload.coherence_score = 0.0
-        else:
+        if source is None:
+            source = pre_coherence_report
+
+        if source is None:
+            # Ningún camino dejó reporte: no hay score medido ni causas que
+            # transportar. El gate lo ve como fuente ausente (None), no como
+            # veredicto False.
             self._payload.coherence_score = 0.0
-        verdict = getattr(source, "is_coherent", None) if source is not None else None
+            self._payload.is_coherent = None
+            self._payload.coherence_failed_checks = None
+            return self
+
+        self._payload.coherence_score = source.overall_score
+        verdict = getattr(source, "is_coherent", None)
         self._payload.is_coherent = None if verdict is None else bool(verdict)
-        # NO setear coherence_report en el payload (0 consumidores post-simplificación)
+        self._payload.coherence_failed_checks = (
+            failed_error_checks(source) if hasattr(source, "checks") else None
+        )
+        # Retención deliberada (AC9): sigue sin viajar el objeto
+        # `coherence_report` completo al payload — el contrato entre el builder
+        # y los gates es score + veredicto + causas, no el artefacto entero.
+        # Se registra aquí porque D abrió una pata de ese contrato.
         return self
 
     def with_pain_ledger(

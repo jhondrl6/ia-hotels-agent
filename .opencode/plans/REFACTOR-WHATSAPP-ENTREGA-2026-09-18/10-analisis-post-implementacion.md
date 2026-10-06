@@ -231,6 +231,61 @@ citas → wiring) y verificación: 77 passed en la superficie afectada y regresi
 passed**, con el único rojo atribuido al plan hermano (su directorio aislado pasa 141/141). Detalle en
 `evidence/…/FASE-C/resultados-y-observaciones.md §8`.
 
+## FASE-D (2026-10-06) — ACs, lo medido y seguimientos
+
+**Estado: COMPLETADA y commiteada/empujada en la misma sesión por orden literal del operador** (HEAD de partida `ea37732`,
+contador v4complete 0/1). Cada cifra vive en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-D/`
+con su instrumento; acá se referencia el comando, no se re-transcribe el número.
+
+| AC | Veredicto de D | Instrumento que lo imprime |
+|---|---|---|
+| AC4 | **VERIFICADO OFFLINE**: los dos checks en error conservan nombre y mensaje en el JSON del writer real; sin whitelist (provocada con un nombre inexistente); `[]` publicado cuando el reporte está sano y **clave ausente** cuando el assessment legacy no trae reporte | `tests/quality_gates/test_fase_d_veredicto_canonico.py` + `build_evidencia_pre_gate.py` → `gate_report_coherence_ejemplo.json`; mutantes **M2, M3** |
+| AC8 | **VERIFICADO OFFLINE**: el pre-gate decide por veredicto canónico, persiste `coherence_pre_gate_<ts>.json` antes de las consecuencias y **no entra a generar** con culpables en error aunque el score sea 0.88; cubierta la entrada directa del orquestador y el log con el número enmascarado | batería nueva (spy de `generate_assets`, verde complementario, None/True/False, score insuficiente, reporte ausente, lista vacía) + mutantes **M1, M4, M5, M6** |
+| AC9 | **VERIFICADO OFFLINE para el lector nuevo de D**: `READ_OK` (incluye `checks: []`), `ABSENT` y `READ_ERROR` con causa, sobre el baseline real de la corrida 2026-09-19 con skip visible; la retención deliberada queda registrada en `with_coherence` | `read_coherence_report` + cinco pruebas; vocabulario en `whatsapp_contract` (`READ_ABSENT` nuevo) |
+| AC5 | **INTACTO, deuda C-D abierta**: D no movió ninguna barra ni el flag `is_blocking("overall_coherence")`, que sigue **False**; el corte nuevo viene de los culpables de severidad error | `test_umbral_de_coherencia_intacto` (0.80 pasa / 0.79 no) y `test_score_insuficiente_sin_errores_respeta_el_flag_documentado` |
+| AC15 | PRE/POST de la misma selección y entorno, delta explicado por las 33 funciones nuevas, mutantes con restauración por sha256 y árbol intacto | `tests_baseline_pre.txt`, `tests_baseline_post.txt`, `run_mutations.py` → `mutation_report.json`, `mutaciones_crudo.txt` |
+
+**Cuatro defectos medidos antes de curar (no uno):** el pre-gate comparaba solo el score en dos
+lugares; el reporte del pre-gate no se persistía por ninguna ruta; `with_coherence` recibía ese
+reporte y no lo leía; y `v4_asset_orchestrator.py` cortaba la entrada directa con
+`not is_coherent and score < 0.5`, que deja pasar el 0.88 con veredicto False. Los cuatro se
+gobernaron en el caller y en la boca única de las causas, sin crear una segunda fuente del hecho.
+
+**Símbolos del prompt revalidados:** `PublicationGateEngine` y su `_check_coherence` no existen en
+el repo; la gate es `PublicationGatesOrchestrator._coherence_gate`, que ya consumía
+`coherence_verdict_passes` desde FASE-F. La unificación pendiente estaba aguas arriba.
+
+**Seguimientos abiertos por D:**
+
+- **S-D1 (dueño piloto JEV, declarado fuera de alcance):**
+  `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic`
+  falló en la corrida completa (`RedProhibida` en vez de `CredencialAusente`) y **pasa aislada**:
+  contaminación de entorno entre tests, sin ruta por ningún símbolo que tocó D. No se curó
+  (restricción: no corregir hallazgos ajenos).
+- **S-D2 (dueño configuración central):** `AGENTS.md §Cobertura por Modulo` sigue con la cifra
+  canónica vencida (4.850 publicados contra 4.875 en HEAD y 4.908 en el árbol tras D). Editar
+  AGENTS.md pide instrucción literal expresa; se declara, no se toca.
+- **S-D3 (dueño DOMAIN_PRIMER):** no se regeneró. Está versionado y el contrato condiciona la
+  regeneración a autorización de escritura; checkpoint declarado.
+- **S-D4 (dueño AC5, sigue de C):** gobernar la ruta `NEW_HOTEL_THRESHOLDS = 0.3` contra la barra
+  0.9 de coherencia. D conservó el régimen no-bloqueante del score bajo sin errores; si se decide
+  gobernarla, el flag `blocking` de `overall_coherence` es la palanca y **no** la barra.
+- **S-D5 (dueño E/H):** AC9 declara lectores pendientes en su propio alcance (acta del tribunal,
+  ZIP y snapshot del loader). Lo que D certificó es su lector; la fila AC9 no se cierra con D.
+
+**R2:** métrica **FUERA DE SERVICIO (R2.1)** — `measure_iterations.py` pide el transcript del
+cliente y su acceso se deniega. Auto-reporte con unidad declarada (llamadas de herramienta hasta
+el corte **«listo para revisión»**, que es el que el mandato autoriza porque el commit no lo está):
+**≈88 contra un presupuesto de referencia de 60 → exceso medido**, consecuencia de re-verificar
+símbolos y de cuatro iteraciones de arnés propio (el fixture de `build()` sin `url`, el regex del
+repórt de fallidos, el CRLF que introdujo el arnés de mutaciones y el rojo del AST pineado a
+literales). No se estimó cumplimiento.
+
+**Orden del derivado (lección de C aplicada en D):** las ediciones de corpus se hicieron **antes**
+de correr los writers, y la verificación final se publicó sobre el árbol ya regenerado
+(pack → índice → refs → citas → wiring → quick), no sobre un verde previo.
+
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.

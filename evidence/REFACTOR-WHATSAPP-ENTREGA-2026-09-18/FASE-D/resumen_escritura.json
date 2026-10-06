@@ -1,0 +1,27 @@
+{
+  "score": 0.88,
+  "umbral": 0.8,
+  "veredicto_del_validador": false,
+  "passed": false,
+  "status": "FAILED",
+  "blocks_asset_generation": true,
+  "generate_proposal": false,
+  "culpables_del_pre_gate": [
+    "whatsapp_verified",
+    "assets_are_justified"
+  ],
+  "failed_check_names_en_el_gate_report": [
+    "whatsapp_verified",
+    "assets_are_justified"
+  ],
+  "failed_check_messages_en_el_gate_report": [
+    "WhatsApp con confidence insuficiente (0.30) - requiere >= 0.9 | destino +573****",
+    "3/4 assets justificados por problemas del diagnostico"
+  ],
+  "numero_completo_en_el_log": false,
+  "artefactos": [
+    "coherence_pre_gate_ejemplo.json",
+    "gate_report_coherence_ejemplo.json",
+    "log_saneado_pre_gate.txt"
+  ]
+}

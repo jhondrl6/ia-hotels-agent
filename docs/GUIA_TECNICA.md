@@ -2639,3 +2639,41 @@ comparaban. El fallo de transporte pasó de `found=False` (ausencia) a `READ_ERR
 `whatsapp_button` conserva `block_on_failure=False`. Lo que cambió es que el rechazo vive por debajo del
 preflight, en el límite de emisión, y reporta `reason_code` + `causa` + `destino`. Los nueve tests
 re-anclados llevan su justificación escrita dentro del test.
+
+---
+
+## Nota Técnica — FASE-D del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-06)
+
+**Qué gobierna**: el veredicto de coherencia aguas arriba (`main.py`), el transporte de sus causas al
+assessment y su serialización en `gate_report_*.json`.
+
+**Regla operativa nueva — un hecho, una decisión.** El veredicto de coherencia se toma en
+`main._coherence_pre_gate_decision`, que delega en `coherence_gate.coherence_verdict_passes(score,
+threshold, is_coherent)`. Nadie más compara el score contra el umbral en la ruta de producción: ni el
+aviso del pre-gate, ni la entrada directa del orquestador (`assert_pre_generation_coherence`), ni los
+gates. Si se añade un consumidor, recibe la decisión, no el flotante.
+
+**Consecuencias por severidad, no por flag.** Con algún check `severity="error"` sin pasar, el pre-gate
+pone `blocks_asset_generation=True`: `_run_asset_generation` no invoca `generate_assets` y no se genera
+propuesta. Un score bajo **sin** errores sigue el régimen de `CoherenceConfig`
+(`overall_coherence.blocking=False`), que esta fase no modificó: gobernar esa barra es AC5 (dueño C-D) y
+su palanca es el flag, no el umbral.
+
+**Cómo se lee un bloqueo.** Tres artefactos, siempre del writer real:
+`v4_audit/coherence_pre_gate_<ts>.json` (reporte + `gate` + `failed_error_check_names`),
+`v4_audit/gate_report_<ts>.json` → `gate_results[coherence].details.failed_check_names` y
+`.failed_check_messages`, y `coherence_validation.json` (serialización canónica del reporte). Si el
+assessment no trae reporte, la clave `failed_check_names` **no aparece**: la ausencia no se disfraza de
+lista vacía. El lector programático es `coherence_validator.read_coherence_report`, que publica
+`read_status` (`OK` / `ABSENT` / `READ_ERROR`) y `cause`.
+
+**Saneado.** Las causas se enmascaran en `failed_error_checks`, la boca que las produce, no en cada
+salida: consola, artefacto del pre-gate y `details` del gate report reciben el mismo texto ya filtrado
+(`+573****`). El `to_dict()` del reporte (preexistente) conserva el mensaje crudo.
+
+**Símbolos que ya no existen**: `PublicationGateEngine` y su `_check_coherence` aparecen en prompts
+antiguos del plan; los vivos son `PublicationGatesOrchestrator` y `_coherence_gate`.
+
+**Instrumentos**: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-D/run_mutations.py` (6 mutantes,
+ancla única, restauración por sha256) y `build_evidencia_pre_gate.py` (los artefactos los escriben los
+writers de producción, nunca el test a mano).

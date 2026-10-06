@@ -1,0 +1,123 @@
+{
+  "generado": "2026-10-06T13:37:29.483169",
+  "seleccion": [
+    "tests/quality_gates/test_fase_d_veredicto_canonico.py"
+  ],
+  "mutantes": [
+    {
+      "id": "M1",
+      "que": "restaurar la decision por score solo en el pre-gate",
+      "archivo": "main.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "3 failed, 30 passed in 1.32s",
+      "pruebas_caidas": [
+        "test_artefacto_conserva_los_dos_culpables_y_la_causa",
+        "test_culpable_fuera_del_vocabulario_whatsapp_tambien_bloquea",
+        "test_veredicto_falso_con_score_alto_bloca_antes_de_generar"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    },
+    {
+      "id": "M2",
+      "que": "omitir la propagacion de los checks culpables al assessment",
+      "archivo": "modules/assessment_builder.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "5 failed, 28 passed in 1.29s",
+      "pruebas_caidas": [
+        "test_dos_errores_conservan_ambos_nombres_en_el_json_real",
+        "test_el_mensaje_que_baja_al_gate_report_sale_saneado_desde_el_reporte",
+        "test_fallback_sin_reporte_del_orquestador_usa_el_del_pre_gate",
+        "test_ninguna_whitelist_de_whatsapp_filtra_los_nombres",
+        "test_un_reporte_no_puede_dejar_verdict_y_causas_divorciadas"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    },
+    {
+      "id": "M3",
+      "que": "no publicar los culpables en details del gate de coherencia",
+      "archivo": "modules/quality_gates/publication_gates.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "4 failed, 29 passed in 1.30s",
+      "pruebas_caidas": [
+        "test_dos_errores_conservan_ambos_nombres_en_el_json_real",
+        "test_el_mensaje_que_baja_al_gate_report_sale_saneado_desde_el_reporte",
+        "test_gate_pasado_con_reporte_sano_publica_lista_vacia",
+        "test_ninguna_whitelist_de_whatsapp_filtra_los_nombres"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    },
+    {
+      "id": "M4",
+      "que": "quitar el guard de entrada a FASE 4 (generar aunque el veredicto corte)",
+      "archivo": "main.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "1 failed, 32 passed in 1.36s",
+      "pruebas_caidas": [
+        "test_score_alto_con_veredicto_falso_no_invoca_al_generador"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    },
+    {
+      "id": "M5",
+      "que": "dejar neutro el guard de la entrada directa del orquestador",
+      "archivo": "modules/asset_generation/v4_asset_orchestrator.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "1 failed, 32 passed in 1.31s",
+      "pruebas_caidas": [
+        "test_suelo_de_score_bajo_sigue_vigente"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    },
+    {
+      "id": "M6",
+      "que": "no escribir la firma de culpables en el artefacto del pre-gate",
+      "archivo": "main.py",
+      "ancla_unica": true,
+      "ocurrencias": 1,
+      "exit": 1,
+      "resumen": "2 failed, 31 passed in 1.32s",
+      "pruebas_caidas": [
+        "test_artefacto_conserva_los_dos_culpables_y_la_causa",
+        "test_veredicto_verde_persiste_lista_vacia_no_un_hueco"
+      ],
+      "coleccion_vacia": false,
+      "restaurado": true,
+      "esperada_cayo": true,
+      "rojo_por_causa_correcta": true
+    }
+  ],
+  "aplicados": 6,
+  "rojos_por_causa_correcta": 6,
+  "arbol_intacto_por_sha": true,
+  "shas": {
+    "main.py": "c60d839aad0435b11146cbe022f9dcd5e8ae133e34134019481608cc2e814328",
+    "modules/assessment_builder.py": "dadd1b04ab50317b6d3f4073d27dac4802a1048c0abd821b5de56b9672a7b62d",
+    "modules/asset_generation/v4_asset_orchestrator.py": "cd12d005f5cf4608f121437f44de4c2cd884e065d869683c098f6999b215dd5a",
+    "modules/quality_gates/publication_gates.py": "52b7c5d945aa6431822f2e8485c0cbb3d911cb0d2a1f656c405bfcfef12968be"
+  }
+}

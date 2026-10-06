@@ -6,6 +6,7 @@ and coherent with each other.
 """
 
 import json
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -19,6 +20,11 @@ from .data_structures import (
     ConfidenceLevel
 )
 from .coherence_config import CoherenceConfig, CoherenceRule, get_coherence_config
+from modules.data_validation.whatsapp_contract import (
+    READ_ABSENT,
+    READ_ERROR,
+    READ_OK,
+)
 
 
 @dataclass
@@ -83,6 +89,87 @@ class CoherenceReport:
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
         return str(path)
+
+
+def failed_error_checks(report: "CoherenceReport") -> List[Dict[str, Any]]:
+    """Checks de severidad error que NO pasaron, tal como los declaro el validator.
+
+    FASE-D (AC4/AC8): unica fuente de las causas del bloqueo. Se leen del reporte
+    real y se transportan como estan: sin reconstruir nombres por lista fija
+    (una whitelist no gobernaría un check que se añada despues) y sin re-inventar
+    el mensaje.
+
+    Una lista vacia es un resultado valido y significa "el reporte no declaro
+    errores"; no equivale a reporte ausente (L-PF10). El llamador que no tiene
+    reporte no debe llamar: deja el campo en None.
+
+    El mensaje sale ya saneado (`mask_telephone_digits`): estas causas viajan al
+    assessment, al `gate_report_*.json` y a la consola, y AC4 las publica tal
+    cual. Sanear en la unica boca de produccion de las causas es lo que hace que
+    las tres salidas sean saneadas a la vez, sin una segunda regla aguas abajo.
+    """
+    return [
+        {
+            "name": check.name,
+            "message": mask_telephone_digits(check.message),
+            "score": round(check.score, 2),
+        }
+        for check in report.checks
+        if check.severity == "error" and not check.passed
+    ]
+
+
+PHONE_RUN_RE = re.compile(r"\d{3}[\s+-]?(?:\d[\s+-]?){4,12}\d")
+
+
+def mask_telephone_digits(text: Any) -> str:
+    """FASE-D (AC8): la causa de un bloqueo se imprime y puede citar datos del
+    hotel. La consola y el artefacto nuevo del pre-gate llevan el numero
+    enmascarado: queda el frente legible, no el destino.
+
+    Recorta corridas de 8 a 16 digitos (la forma de un telefono o de un `wa.me`);
+    deja intactos los numeros pequenos con que los mensajes escriben scores y
+    conteos, que son la causa legible que AC4 pide publicar.
+    """
+    if not text:
+        return ""
+    return PHONE_RUN_RE.sub(lambda m: m.group(0)[:3] + "****", str(text))
+
+
+def read_coherence_report(path: Any) -> Dict[str, Any]:
+    """FASE-D (AC9): lector de un `coherence_validation*.json` escrito por `save()`.
+
+    Publica el estado de la lectura en el vocabulario compartido de `read_status`
+    y su causa. No devuelve un dict favorable cuando el artefacto falta o la
+    lectura falla: el llamador decide por el estado, no por un default. El
+    `checks: []` de un reporte valido es READ_OK, no ABSENT ni READ_ERROR.
+
+    Returns:
+        ``{"read_status": str, "report": dict | None, "cause": str}``
+    """
+    target = Path(path)
+    if not target.exists():
+        return {
+            "read_status": READ_ABSENT,
+            "report": None,
+            "cause": f"no existe {target.name}",
+        }
+    try:
+        with open(target, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        return {
+            "read_status": READ_ERROR,
+            "report": None,
+            "cause": f"{type(exc).__name__} al leer {target.name}",
+        }
+    if not isinstance(data, dict):
+        return {
+            "read_status": READ_ERROR,
+            "report": None,
+            "cause": f"raiz de {target.name} es {type(data).__name__}, no objeto",
+        }
+    return {"read_status": READ_OK, "report": data, "cause": ""}
 
 
 class CoherenceValidator:

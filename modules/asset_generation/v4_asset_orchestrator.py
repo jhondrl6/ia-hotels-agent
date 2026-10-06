@@ -27,7 +27,11 @@ from ..commercial_documents.data_structures import (
     ValidatedField
 )
 from ..commercial_documents.pain_solution_mapper import PainSolutionMapper, Pain
-from ..commercial_documents.coherence_validator import CoherenceValidator, CoherenceReport
+from ..commercial_documents.coherence_validator import (
+    CoherenceValidator,
+    CoherenceReport,
+    failed_error_checks,
+)
 from .conditional_generator import ConditionalGenerator
 from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
@@ -225,6 +229,24 @@ class CoherenceError(Exception):
     pass
 
 
+def assert_pre_generation_coherence(coherence: CoherenceReport) -> None:
+    """FASE-D (AC8): corte de la ENTRADA DIRECTA a `generate_assets`.
+
+    El suelo por score < 0.5 es el que estaba vigente (no se sube ni se baja). Lo
+    que se suma: un check de severidad error sin resolver corta tambien cuando el
+    score compila el umbral — el mismo corte que el pre-gate de `main.py` aplica,
+    para que quien llame al orquestador por su cuenta no se compre la excepcion
+    llevando un 0.88 con el veredicto en False.
+    """
+    guilty = failed_error_checks(coherence)
+    if (not coherence.is_coherent and coherence.overall_score < 0.5) or guilty:
+        causas = ", ".join(c["name"] for c in guilty)
+        raise CoherenceError(
+            f"Coherencia insuficiente: {coherence.overall_score}"
+            + (f" | checks en error sin resolver: {causas}" if causas else "")
+        )
+
+
 class V4AssetOrchestrator:
     """
     Orquesta la generación de assets conectando:
@@ -330,8 +352,9 @@ class V4AssetOrchestrator:
             site_presence_report=site_presence_report,  # FASE-2 (DT4-R2)
         )
         
-        if not coherence.is_coherent and coherence.overall_score < 0.5:
-            raise CoherenceError(f"Coherencia insuficiente: {coherence.overall_score}")
+        # FASE-D (AC8): el corte vive en `assert_pre_generation_coherence` (unica
+        # decision de esta entrada), no re-comparado aqui.
+        assert_pre_generation_coherence(coherence)
         
         # 5. Extraer datos validados (FASE 12: ahora incluye hotel_data del audit)
         # FASE-0H-G8: pasa audit_report_raw para derivación de campos faltantes

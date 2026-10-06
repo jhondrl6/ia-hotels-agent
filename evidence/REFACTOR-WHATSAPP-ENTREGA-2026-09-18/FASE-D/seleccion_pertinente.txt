@@ -1,0 +1,11 @@
+tests/quality_gates/test_coherence_gate.py
+tests/quality_gates/test_publication_gates.py
+tests/commercial_documents/test_coherence_generated_assets.py
+tests/commercial_documents/test_promised_assets_production.py
+tests/asset_generation/test_coherence_post_generation.py
+tests/test_assessment_builder.py
+tests/test_asset_write_validation_order.py
+tests/test_main_static_guards.py
+tests/test_pipeline_fix_assessment.py
+tests/test_canonical_assessment.py
+tests/regression/
