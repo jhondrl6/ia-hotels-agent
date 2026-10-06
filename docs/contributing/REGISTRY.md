@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-06
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 508
+> **Total fases completadas:** 509
 
 ---
 
@@ -11830,6 +11830,26 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 33 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-E - 2026-10-06
+**Descripcion:** REFACTOR-WHATSAPP-ENTREGA: entrega real revalidada y revision con snapshot interno
+**Nota:** unidad de --archivos-mod: 11 de producto y tests (9 modificados + 2 nuevos) mas 6 documentos (05/06/09/10 del plan, CHANGELOG, GUIA_TECNICA); la evidencia de E vive en evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E/ y no se cuenta aqui. Cierre sin commit: el mandato no lo autorizo. R2 FUERA DE SERVICIO (R2.1): measure_iterations.py pide el transcript y su acceso sigue denegado; auto-reporte ~105 tool_use al corte 'listo para revision', por encima de la referencia de 60, declarado como checkpoint sin partir la fase.
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `17` | 17 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 31 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

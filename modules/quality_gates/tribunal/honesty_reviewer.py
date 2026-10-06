@@ -92,6 +92,9 @@ DISCLOSURE_PHRASES_BY_GATE = {
 }
 
 
+from modules.quality_gates.tribunal.review_inputs import KIND_PROPUESTA, ReviewInputs
+
+
 class HonestyReviewer:
     """Revisor híbrido de honestidad comercial (Bot 4).
 
@@ -100,16 +103,29 @@ class HonestyReviewer:
     de sobre-presentación (LLM), verifica contra tier labels y CG-*.
     """
 
-    def __init__(self, v4_audit_dir: str | Path, deliveries_dir: Optional[str | Path] = None):
+    def __init__(
+        self,
+        v4_audit_dir: str | Path,
+        deliveries_dir: Optional[str | Path] = None,
+        review_inputs=None,
+    ):
         """Inicializa el revisor.
 
         Args:
             v4_audit_dir: Directorio v4_audit con artefactos del pipeline.
             deliveries_dir: Directorio deliveries con MANIFEST.json (si es None,
                            busca en v4_audit_dir/../deliveries).
+            review_inputs: resolvedor unico de insumos (FASE-E / AC11). Si es None,
+                           se construye desde ``v4_audit_dir`` y carga el manifiesto
+                           del run cuando existe.
         """
         self.v4_audit_dir = Path(v4_audit_dir)
         self.deliveries_dir = Path(deliveries_dir) if deliveries_dir else self._resolve_deliveries_dir()
+        self._inputs = review_inputs if review_inputs is not None else ReviewInputs.for_run(
+            self.v4_audit_dir, deliveries_dir=self.deliveries_dir
+        )
+        self._proposal_read = None
+        self._manifest_read = None
 
     def _resolve_deliveries_dir(self) -> Path:
         """Resuelve deliveries_dir como v4_audit_dir/../deliveries."""
@@ -124,12 +140,20 @@ class HonestyReviewer:
                 usa; no existe un default que instancie el LLM real.
         """
         paths = self._resolve_artifact_paths()
-        proposal_text = read_text(paths["proposal"])
+        proposal_text = self._load_proposal_input()
         financial_scenarios = load_json(paths["scenarios"])
-        manifest = load_json(paths["manifest"])
+        manifest_read = self._inputs.read_manifest_json()
+        self._manifest_read = manifest_read
+        manifest = manifest_read.content if manifest_read.ok else None
 
         if proposal_text is None:
-            return self._error_report("No se encontró 02_PROPUESTA_COMERCIAL*.md")
+            read = self._proposal_read
+            return self._error_report(
+                "No se pudo leer 02_PROPUESTA_COMERCIAL*.md "
+                f"(read_status={getattr(read, 'read_status', 'sin intento')}, "
+                f"source={getattr(read, 'source', None) or 'ninguna'}): "
+                f"{getattr(read, 'cause', None) or 'sin causa declarada'}"
+            )
         if financial_scenarios is None:
             return self._error_report("No se encontró financial_scenarios_*.json")
 
@@ -176,6 +200,7 @@ class HonestyReviewer:
             "verdict_recommendation": verdict,
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def write_report(self, extractor: PromiseExtractor, output_path: Optional[Path] = None) -> Path:
@@ -203,6 +228,12 @@ class HonestyReviewer:
         if not self.deliveries_dir.exists():
             return None
         return pick_most_recent(self.deliveries_dir.glob("*/MANIFEST.json"))
+
+    def _load_proposal_input(self) -> Optional[str]:
+        """Propuesta del run por el resolvedor unico (AC11), con su estado de lectura."""
+        read = self._inputs.read_document(KIND_PROPUESTA)
+        self._proposal_read = read
+        return read.content if read.ok else None
 
     def _load_proposal(self) -> Optional[str]:
         """Carga 02_PROPUESTA_COMERCIAL*.md (más reciente)."""
@@ -481,6 +512,7 @@ class HonestyReviewer:
             "verdict_recommendation": VERDICT_BLOQUEAR,
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def _list_artifacts_read(self) -> list:

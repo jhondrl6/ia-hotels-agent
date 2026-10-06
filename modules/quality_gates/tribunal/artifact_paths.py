@@ -32,13 +32,23 @@ def pick_most_recent(paths: Iterable[Path]) -> Optional[Path]:
 
 
 def resolve_latest(pattern: str, v4_audit_dir: Path, deliveries_dir: Optional[Path] = None,
-                   ancestor_levels: int = ANCESTOR_LEVELS) -> Optional[Path]:
+                   ancestor_levels: int = ANCESTOR_LEVELS,
+                   explicit: Optional[Path] = None) -> Optional[Path]:
     """Resuelve el artefacto timestamped más reciente buscándose en ``v4_audit_dir``
     y en sus ascendientes, y recursivamente en ``deliveries_dir`` si se informa.
 
     El candidato se elige por mtime entre todos los directorios recorridos, no por el
     primer glob que dé un golpe.
+
+    ``explicit`` (FASE-E / AC11) es la ruta anclada al run que ya resolvió
+    ``review_inputs``: si existe, es LA respuesta, sin recorrer ascendientes; si está
+    declarada y no existe, retorna ``None`` en vez de caer al glob. La subida
+    ascendente comparte ``output/`` entre hoteles, así que "el más reciente" podía ser
+    el documento de otra corrida — exactamente lo que una ruta explícita impide.
     """
+    if explicit is not None:
+        return Path(explicit) if Path(explicit).is_file() else None
+
     candidates: list[Path] = []
     current = Path(v4_audit_dir)
     for _ in range(ancestor_levels + 1):

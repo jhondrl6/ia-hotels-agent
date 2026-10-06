@@ -286,6 +286,44 @@ de correr los writers, y la verificación final se publicó sobre el árbol ya r
 (pack → índice → refs → citas → wiring → quick), no sobre un verde previo.
 
 
+## FASE-E (2026-10-06) — ACs, lo medido y seguimientos
+
+**AC9 VERIFICADO OFFLINE.** El lector nuevo publica READ_OK (con vacio valido), ABSENT, READ_ERROR y
+NO_LEIDO siempre con `cause`; un paquete ilegable no devuelve favorable. Sobre baseline real
+(`output/TAREA7-2026-09-19/`) con skip visible si falta.
+
+**AC10 VERIFICADO OFFLINE.** `IMPLEMENTATION_ORDER.md` leido del ZIP que escribio `DeliveryPackager.write()`:
+tareas con `### N.`, rutas `ASSETS/` que existen como miembros, manifiesto igual al `namelist()` y el asset
+nuevo de B (`whatsapp_setup_guide.md`) con su ruta real. Estado de F-P4.1 revalidado con mutacion (M5): la
+derivacion por `dest` sigue vigente y **no** es cierto que el writer entregue siempre un stub — pero tampoco
+siempre un orden: sin assets planificados el miembro no existe (medido). El rojo extra de F-P4.9 tambien:
+despues de `suppress()` el hash y el conteo vuelven None con error declarado.
+
+**AC11 VERIFICADO OFFLINE.** `review_input_manifest.json` con run_id, fuente original, sha256, tamano,
+momento, `read_status` y `disposition=retained_by_gate`; Juez y cuatro Bots consumen el resolvedor (AST en
+la ruta de produccion); la retencion leida no suma hallazgo; lo nunca generado sigue ABSENT; documento
+declarado e inalcanzable es NO_LEIDO, jamas lista vacia. Snapshot y manifiesto fuera del paquete:
+comprobado con el writer real y con dos mutantes de guard (M6, M7).
+
+**AC12 VERIFICADO OFFLINE.** Par permitir/bloquear sobre acta real (`ActaWriter` + `publish`/`suppress`):
+`enforcement` y `package_evidence` (sha256 + member_count) en las dos ramas. `_compute_verdict` y los
+contratos de cuarentena intactos, con prueba de paridad.
+
+**Lecciones aplicadas (efectivas, no declarativas).** L-VUP-5: el writer ya verde se revalido por mutacion y
+no se reimplemento. L-V.1: contenido y layout se midieron en el ZIP del writer, no en un MD fabricado.
+L-NC10: el orden publicado se cotejo miembro por miembro contra el manifiesto y el `namelist()`. L-PF6:
+`NO_LEIDO` existe precisamente porque "no lo alcance" no es "no existe".
+
+**Leccion nueva (L-E-ESC, formulada al medir).** *Un guard de exclusion no se prueba contra la ruta que el
+mismo construye.* El primer verde de la no-filtracion cotejaba el nombre del archivo contra la ruta dentro
+del ZIP (`ASSETS/v4_audit/review_input_manifest.json`), y pasaba con el guard apagado: la exclusion funciona
+por `Path.name`, asi que la asercion debia comparar `Path(miembro).name`. Un mutante lo demostro (M7 paso de
+EXIT=0 a EXIT=1 solo al corregir el test, no el producto).
+
+**Seguimientos abiertos por E.** (1) anclar por run_id los JSON timestamped — dueno FASE-H, contraste
+VERIFY; (2) decidir si ABSENT de un insumo obligatorio debe subir de INFO — dueno VERIFY; (3) el fallback
+`legacy-ancestor-walk` debe retirarse cuando H/E2E garanticen manifiesto en toda corrida — dueno H/E2E.
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.

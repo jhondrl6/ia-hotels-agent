@@ -2677,3 +2677,33 @@ antiguos del plan; los vivos son `PublicationGatesOrchestrator` y `_coherence_ga
 **Instrumentos**: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-D/run_mutations.py` (6 mutantes,
 ancla única, restauración por sha256) y `build_evidencia_pre_gate.py` (los artefactos los escriben los
 writers de producción, nunca el test a mano).
+
+## Nota Técnica — FASE-E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-06)
+
+**Capa afectada:** `modules/quality_gates/tribunal/` (nuevo `review_inputs.py`, los cuatro revisores,
+`judge.py`, `artifact_paths.py`), `modules/delivery/delivery_packager.py`, `main.py` (rama de gate blocking)
+y `modules/data_validation/whatsapp_contract.py`.
+
+**Regla operativa nueva.** Los insumos que el Tribunal necesita leer se congelan **antes** de cualquier
+borrado del gate y se referencian por `run_id`. Quien agregue un documento revisable debe:
+
+1. registrarlo en `review_inputs.KIND_PATTERNS` y `KIND_ORDER`, no abrir un glob propio en el revisor;
+2. consumir `ReviewInputs.read_document(kind)` y su `read_status` — `READ_OK`/`ABSENT`/`READ_ERROR`/
+   `NO_LEIDO`, con `cause` obligatoria;
+3. si el pipeline retira el documento del arbol cliente, estampar `disposition=retained_by_gate` y NO
+   contarlo como hallazgo nuevo; lo nunca generado queda `ABSENT`.
+
+**Límite interno/cliente.** El snapshot vive en `output/<corrida>/_review_inputs/<run_id>/`, hermano del
+directorio del hotel y por tanto fuera del `rglob` que empaqueta `DeliveryPackager`. La exclusion tiene dos
+cortes (nombre de archivo `review_input_manifest*` y segmento de directorio `_review_inputs`) y **se prueba
+con el writer real**, leyendo `namelist()`; el guard por nombre se coteja contra `Path(miembro).name`, no
+contra la ruta dentro del ZIP.
+
+**Lo que no se toco.** `TribunalJudge._compute_verdict`, la tabla de cláusulas, `blocks_delivery_zip` y los
+contratos `write`/`publish`/`suppress`. Hay una prueba de paridad que lo verifica.
+
+**Instrumento.** `./venv/Scripts/python.exe -m pytest tests/delivery tests/quality_gates/tribunal
+tests/test_p6r_full_flow_matrix.py tests/test_ac_g1_implementation_order.py
+tests/quality_gates/test_fase_d_veredicto_canonico.py -q` y
+`./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E/run_mutations.py`.
+

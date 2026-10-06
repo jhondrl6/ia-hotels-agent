@@ -1,6 +1,6 @@
 # FASE-E — Entrega real y revisión sin filtración
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-D completa; verificar cierre real de A–D antes de editar.
+**Estado:** COMPLETADA 2026-10-06, **sin commit ni push** (el mandato no los autorizaba; los cinco cortes se sostienen sin commit). AC9/AC10/AC11/AC12 **VERIFICADAS OFFLINE** con el writer real y 8/8 mutantes cayendo por su guard. PRE 290 passed / 9 skipped / EXIT 0 y POST 321 passed / 9 skipped / EXIT 0 en la misma seleccion; canonicas 4.908 en HEAD y 4.939 en el arbol (+31, todas del archivo nuevo). Quick 12/13 al abrir el cierre por el derivado de wiring vencido y 13/13 tras regenerarlo con `validate_wiring.py --write-report`. Contador v4complete 0/1. R2 **FUERA DE SERVICIO (R2.1)**: auto-reporte ~105 tool_use al corte 'listo para revision', por encima de la referencia de 60, declarado como checkpoint y sin partir la fase. Detalle: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E/resultados-y-observaciones.md`. **Dependencia inmediata:** FASE-D completa; verificar cierre real de A-D antes de editar.
 **Complejidad técnica:** ALTA: límite interno/cliente, orden temporal entre borrado y Tribunal, y dos ejes del contrato (contenido y layout).
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para E, sin v4complete real.
 
@@ -74,9 +74,9 @@ Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo complet
 
 Referencia **60 tool_use hasta el corte que la sesión tenga autorizado**; instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`, duración de pared aparte. Con el commit de código autorizado el corte es «hasta el commit»; sin él es «hasta listo para revisión», y se declara cuál se usó. Sin transcript o con acceso denegado: **FUERA DE SERVICIO (R2.1)**, retirar la comparación y emitir auto-reporte con su unidad; nunca cumplimiento estimado. **La ausencia de commit no deja ningún corte «no consumado»**: los cinco cortes se declaran y verifican sin commit, y el commit es una acción posterior, separada y opcional con autorización explícita.
 
-- [ ] D cerrada; PRE tomado antes de editar y POST conciliado en el mismo entorno.
-- [ ] Estado real de F-P4.1 documentado con mutación, no con la cita del contexto.
-- [ ] Snapshot interno no exportable, con run_id/hash y rutas explícitas a revisores.
-- [ ] AC9/AC10/AC11/AC12 medidos en disco desde writer, ZIP y acta reales.
-- [ ] O1, Juez, `write/publish/suppress` y umbrales intactos; sin evidencia histórica alterada.
-- [ ] Cierre incremental completo y R2 medido o retirado; F será otra sesión.
+- [x] D cerrada; PRE tomado antes de editar y POST conciliado en el mismo entorno.
+- [x] Estado real de F-P4.1 documentado con mutación, no con la cita del contexto.
+- [x] Snapshot interno no exportable, con run_id/hash y rutas explícitas a revisores.
+- [x] AC9/AC10/AC11/AC12 medidos en disco desde writer, ZIP y acta reales.
+- [x] O1, Juez, `write/publish/suppress` y umbrales intactos; sin evidencia histórica alterada.
+- [x] Cierre incremental completo y R2 medido o retirado; F será otra sesión.

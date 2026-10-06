@@ -394,6 +394,15 @@ class DeliveryPackager:
                     # Determine destination path within ZIP
                     rel_path = file_path.relative_to(source_dir)
 
+                    # FASE-E (AC11): ningun miembro bajo el directorio del snapshot
+                    # interno de insumos sale del arbol recursivo hacia el ZIP.
+                    if any(part in self._INTERNAL_DIR_NAMES for part in rel_path.parts):
+                        logger.info(
+                            f"[DeliveryPackager] Excluding internal review-input "
+                            f"snapshot: {rel_path}"
+                        )
+                        continue
+
                     # Skip manifest files
                     if file_path.name == "manifest.json":
                         continue
@@ -439,7 +448,14 @@ class DeliveryPackager:
     # fijaría el acta pre-veredicto dentro del paquete que ese acta decide — el
     # acto de fe circular que DA-P1.4 prohíbe. El acta vive en v4_audit/, que es
     # la ruta que se le muestra al operador.
-    _INTERNAL_DOC_PREFIXES = ("acta_revision",)
+    _INTERNAL_DOC_PREFIXES = ("acta_revision", "review_input_manifest")
+    # FASE-E (AC11/AC12): el snapshot interno de insumos del Tribunal NO viaja al
+    # paquete. Su dueño de ruta es review_inputs.SNAPSHOT_DIRNAME; se repite el literal
+    # aqui porque modules.delivery no debe importar modules.quality_gates.tribunal para
+    # conocer un nombre de directorio. El guard de abajo lo atrapa SIEMPRE que aparezca
+    # dentro del arbol recursivo, aunque quien invoque apunte source_dir a la raiz de
+    # la corrida en vez del directorio del hotel.
+    _INTERNAL_DIR_NAMES = ("_review_inputs",)
 
     @staticmethod
     def _is_excluded_from_zip(filename: str) -> bool:

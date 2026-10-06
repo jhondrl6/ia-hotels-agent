@@ -51,6 +51,9 @@ def blocks_delivery_zip(acta: Optional[dict]) -> bool:
     return acta is not None and acta.get("verdict") in BLOCKING_VERDICTS
 
 
+from modules.quality_gates.tribunal.review_inputs import ReviewInputs
+
+
 class TribunalJudge:
     """Juez determinista que certifica las 6 cláusulas P6 + P7.
 
@@ -63,10 +66,14 @@ class TribunalJudge:
         v4_audit_dir: str | Path,
         deliveries_dir: str | Path,
         hotel_id: str = "",
+        review_inputs=None,
     ):
         self.v4_audit_dir = Path(v4_audit_dir)
         self.deliveries_dir = Path(deliveries_dir)
         self.hotel_id = hotel_id
+        self._inputs = review_inputs if review_inputs is not None else ReviewInputs.for_run(
+            self.v4_audit_dir, deliveries_dir=self.deliveries_dir
+        )
         self._manifest_cache: Optional[dict] = None
         self._evidence_tier_source: str = "sin lectura de tier"
 
@@ -139,8 +146,18 @@ class TribunalJudge:
         return outcome
 
     def _resolve_manifest(self) -> Optional[dict]:
-        """Resuelve MANIFEST.json por glob en deliveries_dir (más reciente)."""
+        """MANIFEST.json por el resolvedor único del run y, si no aporta, por glob del hotel.
+
+        El glob `{hotel_id}_*/MANIFEST.json` buscaba un directorio descomprimido que el
+        régimen ZIP-only nunca crea (L-E2E.1), así que el Juez obtenía `None` sin decir
+        por qué. La ruta explícita del paquete del run va primero.
+        """
         if self._manifest_cache is not None:
+            return self._manifest_cache
+
+        read = self._inputs.read_manifest_json()
+        if read.ok and isinstance(read.content, dict):
+            self._manifest_cache = read.content
             return self._manifest_cache
 
         if not self.deliveries_dir.exists():

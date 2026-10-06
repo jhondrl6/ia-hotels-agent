@@ -1,5 +1,37 @@
 # Changelog
 
+## [Sin publicar] - FASE-E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+
+### Entrega real revalidada y revision con snapshot interno (AC9-AC12)
+
+**Que cambio.** Nuevo `modules/quality_gates/tribunal/review_inputs.py`: copia interna **no exportable** de
+diagnostico y propuesta tomada **antes** de que `run_v4_complete_mode` las borre, manifiesto
+`review_input_manifest.json` (run_id, ruta original, ruta interna, sha256, tamano, momento, `read_status`,
+`disposition`) y el **resolvedor unico** que ahora consultan el Juez y los cuatro Bots.
+`whatsapp_contract.py` sumo `READ_NOT_READ = "NO_LEIDO"` al vocabulario designado.
+`artifact_paths.resolve_latest` acepta `explicit=`: si la ruta del run esta declarada y no existe, devuelve
+None en vez de elegir el mtime de otro hotel. `delivery_packager.py` excluye `review_input_manifest*` por
+nombre y corta `_review_inputs` por nombre de directorio; `write`/`publish`/`suppress` quedan intactos.
+`main.py` congela los insumos antes del borrado (gobierno por AST) y pasa el resolvedor al Juez y a los
+cuatro Bots; el borrado dejo de resolver rutas por `locals()`.
+
+**Por que.** F-P4.2 medida: el verdadero defecto no era el borrado sino que `DiagnosisReviewer` y
+`AssetReviewer` resolvian con globs propios y, ante insumo no alcanzado, `_check_pain_traceability`
+devolvia la lista vacia: verde silencioso mientras `artifacts_read` declaraba el patron. Y en regimen
+ZIP-only nadie leia `MANIFEST.json` (L-E2E.1), porque se buscaba en un directorio descomprimido que el
+flujo ya no produce.
+
+**Evidencia.** `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E/`: `resultados-y-observaciones.md`,
+`tests_baseline_pre.txt` (290 passed / 9 skipped / EXIT 0), `tests_baseline_post.txt` (321 passed /
+9 skipped / EXIT 0), `mutation_report.json` (8/8 rojos por su guard, arbol intacto por sha256),
+`mutaciones_crudo.txt`, `quick_pre.txt` (12/13, rojo de derivado) y `quick_final.txt` (13/13). 31 funciones
+nuevas en `tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py`. Ninguna prueba corrio
+`main.py v4complete`; contador 0/1.
+
+**Veredicto.** AC9/AC10/AC11/AC12 VERIFICADO OFFLINE. Deuda declarada con dueno: anclar por run_id los
+JSON timestamped del resto de insumos (FASE-H), severidad de `REVIEW_INPUT_ABSENT` (VERIFY) y retiro del
+fallback `legacy-ancestor-walk` (H/E2E). Sin commit, sin push, sin DOMAIN_PRIMER (checkpoint).
+
 ## [Sin publicar] - FASE-D del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 
 > **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a

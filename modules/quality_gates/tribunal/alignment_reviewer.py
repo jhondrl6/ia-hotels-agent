@@ -19,11 +19,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from modules.quality_gates.tribunal.artifact_paths import (
-    PROPOSAL_PATTERN,
-    read_text,
-    resolve_latest,
-)
+from modules.quality_gates.tribunal.review_inputs import KIND_PROPUESTA, ReviewInputs
 from modules.quality_gates.tribunal.llm_extractor import (
     LLMPromiseExtractor,
     PromiseExtractor,
@@ -47,8 +43,12 @@ class AlignmentReviewer:
     Lee propuesta + matriz, extrae promesas verbales (LLM), verifica contra matriz.
     """
 
-    def __init__(self, v4_audit_dir: str | Path):
+    def __init__(self, v4_audit_dir: str | Path, review_inputs=None):
         self.v4_audit_dir = Path(v4_audit_dir)
+        self._inputs = review_inputs if review_inputs is not None else ReviewInputs.for_run(
+            self.v4_audit_dir
+        )
+        self._proposal_read = None
 
     def review(self, extractor: Optional[PromiseExtractor] = None) -> dict:
         """Retorna revision_alineacion.json con service_matrix y findings.
@@ -61,7 +61,13 @@ class AlignmentReviewer:
         pain_ledger_resolved = self._load_pain_ledger_resolved()
 
         if proposal_text is None:
-            return self._error_report("No se encontró 02_PROPUESTA_COMERCIAL*.md")
+            read = self._proposal_read
+            return self._error_report(
+                "No se pudo leer 02_PROPUESTA_COMERCIAL*.md "
+                f"(read_status={getattr(read, 'read_status', 'sin intento')}, "
+                f"source={getattr(read, 'source', None) or 'ninguna'}): "
+                f"{getattr(read, 'cause', None) or 'sin causa declarada'}"
+            )
         if matrix is None:
             return self._error_report("No se encontró proposal_asset_matrix.json")
 
@@ -116,6 +122,7 @@ class AlignmentReviewer:
             "info": {"brechas_en_ledger": self._count_ledger_brechas(pain_ledger_resolved)},
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def write_report(self, extractor: Optional[PromiseExtractor] = None, output_path: Optional[Path] = None) -> Path:
@@ -129,8 +136,10 @@ class AlignmentReviewer:
         return output_path
 
     def _load_proposal(self) -> Optional[str]:
-        """Carga 02_PROPUESTA_COMERCIAL*.md (más reciente, buscándose en los ascendientes)."""
-        return read_text(resolve_latest(PROPOSAL_PATTERN, self.v4_audit_dir))
+        """Carga la propuesta por el resolvedor unico (AC11), con su estado de lectura."""
+        read = self._inputs.read_document(KIND_PROPUESTA)
+        self._proposal_read = read
+        return read.content if read.ok else None
 
     def _load_proposal_matrix(self) -> Optional[dict]:
         """Carga proposal_asset_matrix.json."""
@@ -382,6 +391,7 @@ class AlignmentReviewer:
             "info": {"brechas_en_ledger": 0},
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def _list_artifacts_read(self) -> list:

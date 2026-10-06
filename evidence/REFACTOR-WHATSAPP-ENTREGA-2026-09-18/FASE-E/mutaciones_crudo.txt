@@ -1,0 +1,58 @@
+=== M1 · main.py · test_main_congela_los_insumos_antes_de_borrar_los_documentos
+EXIT=1
+E   AssertionError: main.py ya no congela los insumos del Tribunal antes del borrado
+E   assert []
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_main_congela_los_insumos_antes_de_borrar_los_documentos
+1 failed, 8 warnings in 1.53s
+
+=== M2 · main.py · test_main_pasa_el_resolvedor_al_juez_y_a_los_cuatro_bots
+EXIT=1
+E   AssertionError: DiagnosisReviewer recibe rutas propias: perdio el resolvedor
+E   assert 'review_inputs' in set()
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_main_pasa_el_resolvedor_al_juez_y_a_los_cuatro_bots
+1 failed, 8 warnings in 1.52s
+
+=== M3 · modules/quality_gates/tribunal/diagnosis_reviewer.py · test_bot1_insumo_no_leido_no_es_lista_vacia
+EXIT=1
+E   AssertionError: assert 0 == 1
+E    +  where 0 = <built-in method count of list object at 0x000001970C3BFAC0>('REVIEW_INPUT_UNREAD')
+E    +    where <built-in method count of list object at 0x000001970C3BFAC0> = [].count
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_bot1_insumo_no_leido_no_es_lista_vacia
+1 failed, 8 warnings in 1.53s
+
+=== M4 · modules/quality_gates/tribunal/review_inputs.py · test_borrado_sin_copia_interna_es_NO_LEIDO_y_no_OK_vacio
+EXIT=1
+E   AssertionError: assert 'READ_ERROR' == 'NO_LEIDO'
+E     
+E     - NO_LEIDO
+E     + READ_ERROR
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_borrado_sin_copia_interna_es_NO_LEIDO_y_no_OK_vacio
+1 failed, 8 warnings in 1.30s
+
+=== M5 · modules/geo_enrichment/asset_responsibility_contract.py · test_el_asset_nuevo_de_b_viaja_con_su_ruta_real_y_su_orden
+EXIT=1
+E   AssertionError: el orden publica el basename: la derivacion por dest real (P6-R/R6) se perdio
+E   assert 'ASSETS/whatsapp_setup_guide.md' in '# \U0001f4e6 Delivery Package - Hotel X\\n\\n**Fecha:** 2026-10-06 17:31\\n**Score GEO:** 50 (OBLIGATORIO)\\n\\n---\\n\\n## \u26a0\ufe0f REGLA ... \u2705 CHECKLIST DE IMPLEMENTACI\xd3N\\n\\n\\n---\\n\\n*Generado por IA Hoteles Agent v4.0 - FASE-5 Asset Responsibility Contract*'
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_el_asset_nuevo_de_b_viaja_con_su_ruta_real_y_su_orden
+1 failed, 8 warnings in 1.52s
+
+=== M6 · modules/delivery/delivery_packager.py · test_el_snapshot_y_su_manifiesto_no_saluden_al_cliente
+EXIT=1
+E   AssertionError: ['ASSETS/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261006.md', 'ASSETS/02_PROPUESTA_COMERCIAL_20261006.md', 'ASSETS/hotel_x/whats...0261006T120000/propuesta/02_PROPUESTA_COMERCIAL_20261006.md', 'ASSETS/hotel_x/v4_audit/coherence_validation.json', ...]
+E   assert not ['ASSETS/_review_inputs/run_20261006T120000/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261006.md', 'ASSETS/_review_inputs/run_20261006T120000/propuesta/02_PROPUESTA_COMERCIAL_20261006.md']
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_el_snapshot_y_su_manifiesto_no_saluden_al_cliente
+1 failed, 8 warnings in 2.35s
+
+=== M7 · modules/delivery/delivery_packager.py · test_el_snapshot_y_su_manifiesto_no_saluden_al_cliente
+EXIT=1
+E   AssertionError: ['ASSETS/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261006.md', 'ASSETS/02_PROPUESTA_COMERCIAL_20261006.md', 'ASSETS/hotel_x/whats...SETS/hotel_x/v4_audit/financial_scenarios_2026100612.json', 'ASSETS/hotel_x/v4_audit/gate_report_2026100612.json', ...]
+E   assert not ['ASSETS/hotel_x/v4_audit/review_input_manifest.json']
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_el_snapshot_y_su_manifiesto_no_saluden_al_cliente
+1 failed, 8 warnings in 2.31s
+
+=== M8 · modules/quality_gates/tribunal/artifact_paths.py · test_ruta_explitica_gana_a_un_archivo_mas_reciente_de_otro_hotel
+EXIT=1
+E   AssertionError: assert WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1307/test_ruta_explitica_gana_a_un_0/output/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261006.md') is None
+E    +  where WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1307/test_ruta_explitica_gana_a_un_0/output/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261006.md') = resolve_latest('01_DIAGNOSTICO_Y_OPORTUNIDAD*.md', WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1307/test_ruta_explitica_gana_a_un_0/output/hotel_x/v4_audit'), explicit=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1307/test_ruta_explitica_gana_a_un_0/output/01_DIAGNOSTICO_Y_OPORTUNIDAD_NOESTA.md'))
+FAILED tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py::test_ruta_explitica_gana_a_un_archivo_mas_reciente_de_otro_hotel
+1 failed, 8 warnings in 2.55s

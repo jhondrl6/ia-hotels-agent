@@ -1,0 +1,8 @@
+# FASE-E POST (re-medido tras la ultima edicion de producto) - HEAD 38073a7 + arbol de trabajo - 2026-10-06T17:45:16-05:00
+# python: Python 3.13.3
+# misma seleccion y entorno que PRE: tests/delivery tests/quality_gates/tribunal tests/test_p6r_full_flow_matrix.py tests/test_ac_g1_implementation_order.py tests/quality_gates/test_fase_d_veredicto_canonico.py
+  <unknown>:115: SyntaxWarning: invalid escape sequence '\)'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+321 passed, 9 skipped, 9 warnings in 7.39s
+EXIT_SEL=0

@@ -1,0 +1,10 @@
+# FASE-E — seleccion pertinente de pruebas (misma unidad en PRE y POST)
+# Comando canonico:
+#   ./venv/Scripts/python.exe -m pytest <estas cinco rutas> -q
+# Entorno: Python 3.13 del venv del repo, cwd = raiz del repo, Git Bash bajo Windows.
+# Funciones canonicas de la seleccion en el PRE: 293 (299 casos collectados; 6 de parametrizacion).
+tests/delivery
+tests/quality_gates/tribunal
+tests/test_p6r_full_flow_matrix.py
+tests/test_ac_g1_implementation_order.py
+tests/quality_gates/test_fase_d_veredicto_canonico.py

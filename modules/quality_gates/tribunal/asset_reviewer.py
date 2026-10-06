@@ -56,6 +56,9 @@ _IMPL_ORDER_BOILERPLATE = [
 ]
 
 
+from modules.quality_gates.tribunal.review_inputs import ReviewInputs
+
+
 class AssetReviewer:
     """Revisor determinista de completitud de assets (Bot 3).
 
@@ -63,9 +66,12 @@ class AssetReviewer:
     ``deliveries_dir`` se resuelve por glob del ``<hotel_id>_*`` más reciente.
     """
 
-    def __init__(self, v4_audit_dir: str | Path, deliveries_dir: str | Path):
+    def __init__(self, v4_audit_dir: str | Path, deliveries_dir: str | Path, review_inputs=None):
         self.v4_audit_dir = Path(v4_audit_dir)
         self.deliveries_dir = Path(deliveries_dir)
+        self._inputs = review_inputs if review_inputs is not None else ReviewInputs.for_run(
+            self.v4_audit_dir, deliveries_dir=self.deliveries_dir
+        )
         self._resolved_delivery_dir: Optional[Path] = None
         self._resolved_delivery_zip: Optional[Path] = None
         self._impl_order_check: dict = {
@@ -106,6 +112,7 @@ class AssetReviewer:
             "verdict_recommendation": verdict,
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def write_report(self, output_path: Optional[Path] = None) -> Path:
@@ -152,11 +159,13 @@ class AssetReviewer:
         return self._load_json(path)
 
     def _load_manifest(self) -> Optional[dict]:
-        delivery_dir = self._resolve_delivery_dir()
-        if delivery_dir is None:
-            return None
-        manifest_path = delivery_dir / "MANIFEST.json"
-        return self._load_json(manifest_path if manifest_path.exists() else None)
+        """MANIFEST.json del paquete, leido por el resolvedor unico (L-E2E.1, AC11).
+
+        Antes solo existia el camino `deliveries/<hotel>/MANIFEST.json`, que en regimen
+        ZIP-only nunca se crea: el revisor obtenia None y callaba el motivo.
+        """
+        read = self._inputs.read_manifest_json()
+        return read.content if read.ok else None
 
     def _resolve_delivery_dir(self) -> Optional[Path]:
         """Resuelve el directorio de entrega más reciente por glob.
@@ -196,6 +205,10 @@ class AssetReviewer:
         mira ``*.zip`` reportaría como ausente el artefacto que sí está en disco.
         """
         if self._resolved_delivery_zip is not None:
+            return self._resolved_delivery_zip
+
+        if self._inputs.package_zip_path is not None and self._inputs.package_zip_path.is_file():
+            self._resolved_delivery_zip = self._inputs.package_zip_path
             return self._resolved_delivery_zip
 
         if not self.deliveries_dir.exists():

@@ -95,6 +95,13 @@ READ_NO_APLICABLE = "NO-APLICABLE"
 # unico de read_status, y una segunda lista del mismo hecho es el defecto que
 # esa designacion vino a evitar.
 READ_ABSENT = "ABSENT"
+# FASE-E (AC11): NO_LEIDO es el quinto estado y cubre el hueco que deja ABSENT.
+# ABSENT dice "nunca existio"; NO_LEIDO dice "el run lo declaro, pero este resolvedor
+# ya no lo alcanza" (documento retirado del arbol cliente sin copia interna). Sin este
+# estado, la retencion por gate se confunde con la ausencia original y el revisor
+# puede render como OK una lista vacia que en realidad nunca tuvo insumo que leer.
+# Vive aqui, junto a los otros cuatro, por la misma designacion de FASE-C.
+READ_NOT_READ = "NO_LEIDO"
 
 
 def detect_whatsapp_in_html(html: Any) -> bool:

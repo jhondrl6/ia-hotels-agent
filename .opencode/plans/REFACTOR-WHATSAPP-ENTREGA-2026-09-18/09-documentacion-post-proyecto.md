@@ -128,3 +128,30 @@ FUERA DE SERVICIO (R2.1).
 ## Rojo documental del PRE, cerrado por re-medición
 
 `run_all_validations.py --quick` dio 9/10 el 2026-09-18 y **10/10** al re-medirlo el 2026-09-19. La causa medida del rojo: `AGENTS.md`, `VERSION.yaml`, `docs/GUIA_TECNICA.md` y `REGISTRY.md` estaban modificados en el árbol y hoy son idénticos a HEAD tras una reversión ajena a esta sesión. Se retracta la explicación previa por cuatro segmentos: `_check_version_sync` solo ejecuta `sync_versions.py --check`. Regla conservada: re-medir el quick al abrir cada fase y no modificar hooks, baselines de citas ni configuración para forzar un verde.
+
+## Cierre incremental de FASE-E (2026-10-06)
+
+**Que se cerro.** Un resolvedor unico de insumos (`modules/quality_gates/tribunal/review_inputs.py`) con
+copia interna **no exportable** antes del borrado del gate, y sus cinco consumidores: los cuatro Bots del
+Tribunal y el Juez. El vocabulario `read_status` gano `NO_LEIDO` en `whatsapp_contract.py`, que es donde
+FASE-C lo designo; `artifact_paths.resolve_latest` acepta la ruta `explicit` del run y **no** cae al
+ascendiente compartido entre hoteles cuando esa ruta esta declarada y no existe.
+
+**Metricas de la fase (medidas, no previstas).**
+
+| Concepto | Valor |
+|---|---|
+| Funciones de test nuevas | 31 en `tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py` |
+| Canonicas | 4.908 en HEAD -> 4.939 en el arbol (+31) |
+| PRE / POST (misma seleccion) | 290 passed + 9 skipped / 321 passed + 9 skipped, ambos EXIT 0 |
+| Mutantes | 8/8 caen por la asercion de su guard; 8/8 restaurados por sha256 |
+| Quick | 12/13 con rojo de derivado (Wiring) y 13/13 tras regenerar con su writer |
+| Archivos tocados | 9 modificados + 2 nuevos de producto/tests, mas la evidencia |
+| Contador v4complete | 0/1 |
+
+**Deuda que deja E (con dueno, en `resultados-y-observaciones.md` §7):** el resolvedor no ancla todavia los
+JSON timestamped (`pain_ledger`, `gate_report_*`, `delivery_quality_report`, `proposal_asset_matrix`,
+`financial_scenarios`), que siguen con glob local del directorio del hotel; `REVIEW_INPUT_ABSENT` es INFO
+por decision escrita; y el fallback `legacy-ancestor-walk` sigue vivo donde no hay manifiesto, declarado en
+el reporte en vez de silencioso.
+

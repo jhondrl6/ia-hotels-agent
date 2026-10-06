@@ -3049,26 +3049,48 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     # Controlled via GATE_BLOCKING_ENABLED env var (default: on, set to "false" for CI/tests)
     import os as _os_gate_block
     _gate_blocking_enabled = _os_gate_block.getenv("GATE_BLOCKING_ENABLED", "true").lower() in ("1", "true", "yes")
-    if _gate_blocking_enabled and (
+
+    # FASE-E (AC11): copia interna NO exportable de los insumos del Tribunal, tomada
+    # ANTES de cualquier borrado. Vive en output_dir/_review_inputs/<run_id>, hermano
+    # del directorio del hotel y por tanto fuera del rglob que empaqueta DeliveryPackager.
+    # El manifiesto describe kind, ruta original, sha256, momento, read_status y
+    # disposition. Si la captura falla, el borrado ocurre igual: el enforcement no se
+    # negocia con la evidencia, y los revisores reportaran NO_LEIDO en vez de callar.
+    _v4_audit_dir_inputs = output_dir / hotel_id / "v4_audit"
+    _run_id = f"run_{datetime.now().strftime('%Y%m%dT%H%M%S')}"
+    _retained_by_gate = _gate_blocking_enabled and (
         readiness_report["status"] == "NOT_READY" or _claim_escalated
-    ):
+    )
+    try:
+        from modules.quality_gates.tribunal.review_inputs import capture_review_inputs
+
+        capture_review_inputs(
+            run_root=output_dir,
+            run_id=_run_id,
+            v4_audit_dir=_v4_audit_dir_inputs,
+            documents={"diagnostico": diagnostic_path, "propuesta": proposal_path},
+            retained_by_gate=_retained_by_gate,
+        )
+        print(f"   [OK] Insumos de revision congelados: {_run_id} (no exportable)")
+    except Exception as e:
+        print(f"   [WARN] Snapshot interno de insumos FALLÓ (never-block): {e}")
+
+    if _retained_by_gate:
         print("\n🚫 GATE BLOCKING ACTIVE — Publication gates NOT_READY")
         print("   Eliminando documentos cliente y generando BLOCKED_BY_GATES.md")
         if _claim_escalated:
             print("   🚨 Causa adicional: CG-CLAIM-VS-EVIDENCE persistente (self-healing agotado)")
         
         # Remove diagnostic file if it was generated
-        _diag_var = "diagnostic_path"
-        if _diag_var in locals() and locals()[_diag_var]:
-            _diag_path = Path(str(locals()[_diag_var]))
+        if diagnostic_path:
+            _diag_path = Path(str(diagnostic_path))
             if _diag_path.exists():
                 _diag_path.unlink()
                 print(f"   ❌ Eliminado: {_diag_path}")
         
         # Remove proposal file if it was generated
-        _prop_var = "proposal_path"
-        if _prop_var in locals() and locals()[_prop_var]:
-            _prop_path = Path(str(locals()[_prop_var]))
+        if proposal_path:
+            _prop_path = Path(str(proposal_path))
             if _prop_path.exists():
                 _prop_path.unlink()
                 print(f"   ❌ Eliminado: {_prop_path}")
@@ -3274,6 +3296,12 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
     tribunal_acta = None
     tribunal_judge = None
     deliveries_dir = output_dir / "deliveries"
+    # FASE-E (AC11): un solo resolvedor de insumos para el Juez y los cuatro Bots,
+    # anclado al manifiesto del run escrito antes del borrado.
+    from modules.quality_gates.tribunal.review_inputs import ReviewInputs as _ReviewInputs
+    _review_inputs = _ReviewInputs.for_run(
+        v4_audit_dir, deliveries_dir=deliveries_dir, run_id=_run_id
+    )
     try:
         from modules.quality_gates.tribunal import TribunalJudge
 
@@ -3281,6 +3309,7 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             v4_audit_dir=v4_audit_dir,
             deliveries_dir=deliveries_dir,
             hotel_id=hotel_id,
+            review_inputs=_review_inputs,
         )
         tribunal_acta = tribunal_judge.evaluate()
         print(f"   Verdict (pre-revision): {tribunal_acta['verdict']}")
@@ -3397,11 +3426,21 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
 
         _extractor = LLMPromiseExtractor()
 
+        # FASE-E (AC11): los Bots reciben ADEMAS la ruta explicita del paquete del run,
+        # que aun no tenia nombre definitivo (cuarentena). Sin ella, MANIFEST.json se
+        # buscaba en un directorio descomprimido que el regimen ZIP-only nunca crea.
+        _review_inputs_bots = _ReviewInputs.for_run(
+            v4_audit_dir,
+            deliveries_dir=deliveries_dir,
+            run_id=_run_id,
+            package_zip_path=quarantine_tmp_path,
+        )
+        _ri = _review_inputs_bots
         _reviewers = [
-            ("Bot 1 Diagnóstico", "diagnosis_reviewer", lambda: DiagnosisReviewer(v4_audit_dir).write_report()),
-            ("Bot 3 Assets", "asset_reviewer", lambda: AssetReviewer(v4_audit_dir, deliveries_dir).write_report()),
-            ("Bot 2 Alineación", "alignment_reviewer", lambda: AlignmentReviewer(v4_audit_dir).write_report(_extractor)),
-            ("Bot 4 Honestidad", "honesty_reviewer", lambda: HonestyReviewer(v4_audit_dir, deliveries_dir).write_report(_extractor)),
+            ("Bot 1 Diagnóstico", "diagnosis_reviewer", lambda: DiagnosisReviewer(v4_audit_dir, review_inputs=_ri).write_report()),
+            ("Bot 3 Assets", "asset_reviewer", lambda: AssetReviewer(v4_audit_dir, deliveries_dir, review_inputs=_ri).write_report()),
+            ("Bot 2 Alineación", "alignment_reviewer", lambda: AlignmentReviewer(v4_audit_dir, review_inputs=_ri).write_report(_extractor)),
+            ("Bot 4 Honestidad", "honesty_reviewer", lambda: HonestyReviewer(v4_audit_dir, deliveries_dir, review_inputs=_ri).write_report(_extractor)),
         ]
         for _name, _key, _run in _reviewers:
             try:

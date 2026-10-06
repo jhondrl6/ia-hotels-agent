@@ -13,6 +13,14 @@ from pathlib import Path
 from typing import Any, Optional
 
 
+from modules.data_validation.whatsapp_contract import (
+    READ_ABSENT,
+    READ_ERROR,
+    READ_NOT_READ,
+    READ_OK,
+)
+from modules.quality_gates.tribunal.review_inputs import KIND_DIAGNOSTICO, ReviewInputs
+
 SEVERITY_CRITICAL = "CRITICAL"
 SEVERITY_WARNING = "WARNING"
 SEVERITY_INFO = "INFO"
@@ -21,6 +29,10 @@ FINDING_UNTRACEABLE_PAIN = "UNTRACEABLE_PAIN"
 FINDING_UNDECLARED_SOURCE = "UNDECLARED_SOURCE"
 FINDING_VACUOUS_RECALL = "VACUOUS_RECALL"
 FINDING_UNSUPPORTED_CLAIM = "UNSUPPORTED_CLAIM"
+# FASE-E (AC11): el insumo no llego al revisor. NO_LEIDO/READ_ERROR son hallazgos;
+# ABSENT (nunca generado) se declara como INFO para no inflar severidades ajenas.
+FINDING_REVIEW_INPUT_UNREAD = "REVIEW_INPUT_UNREAD"
+FINDING_REVIEW_INPUT_ABSENT = "REVIEW_INPUT_ABSENT"
 
 VERDICT_APROBADO = "APROBADO"
 VERDICT_DEVOLVER = "DEVOLVER-PRUEBAS"
@@ -30,12 +42,21 @@ VERDICT_BLOQUEAR = "BLOQUEAR"
 class DiagnosisReviewer:
     """Revisor determinista del diagnóstico (Bot 1).
 
-    Constructor: ``DiagnosisReviewer(v4_audit_dir)``.
+    Constructor: ``DiagnosisReviewer(v4_audit_dir, review_inputs=None)``.
     Lee 5 artefactos y produce hallazgos por severidad.
+
+    FASE-E (AC11): el insumo del cliente (01_DIAGNOSTICO*) llega por el resolvedor
+    único ``review_inputs``, anotado con su run_id y su ``read_status``. Sin él, el
+    revisor leía ``None`` y ``_check_pain_traceability`` devolvía la lista vacía:
+    verde silencioso sobre un documento que el gate había borrado.
     """
 
-    def __init__(self, v4_audit_dir: str | Path):
+    def __init__(self, v4_audit_dir: str | Path, review_inputs=None):
         self.v4_audit_dir = Path(v4_audit_dir)
+        self._inputs = review_inputs if review_inputs is not None else ReviewInputs.for_run(
+            self.v4_audit_dir
+        )
+        self._diagnostic_read = None
 
     def review(self) -> dict:
         """Retorna revision_diagnostico.json con hallazgos y veredicto."""
@@ -66,6 +87,7 @@ class DiagnosisReviewer:
             "verdict_recommendation": verdict,
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
+            "review_inputs": self._inputs.reads_report(),
         }
 
     def write_report(self, output_path: Optional[Path] = None) -> Path:
@@ -118,20 +140,30 @@ class DiagnosisReviewer:
         return self._load_json(path)
 
     def _load_diagnostic_md(self) -> Optional[str]:
-        """Carga 01_DIAGNOSTICO_Y_OPORTUNIDAD_*.md como texto."""
-        path = self._resolve_artifact("01_DIAGNOSTICO_Y_OPORTUNIDAD*.md")
-        if path is None or not path.exists():
-            return None
-        try:
-            return path.read_text(encoding="utf-8")
-        except OSError:
-            return None
+        """Carga el diagnostico por el resolvedor unico de insumos (AC11).
+
+        El estado de la lectura queda en ``self._diagnostic_read`` para que
+        ``_check_pain_traceability`` pueda distinguir ausencia, retencion y error en
+        vez de decidir por ``is None``.
+        """
+        read = self._inputs.read_document(KIND_DIAGNOSTICO)
+        self._diagnostic_read = read
+        return read.content if read.ok else None
 
     def _check_pain_traceability(
         self, pain_ledger: Optional[dict], diagnostic_md: Optional[str]
     ) -> list:
-        """Verifica que brechas diagnosticadas tienen pain_id trazable en ledger."""
+        """Verifica que brechas diagnosticadas tienen pain_id trazable en ledger.
+
+        FASE-E: la ausencia del diagnostico ya no es un retorno silencioso. Si el
+        ledger tiene entradas y el insumo no se leyo, el vacio se reporta con su
+        causa (AC9/AC11). La retencion deliberada ya leida desde la copia interna no
+        produce ningun hallazgo nuevo.
+        """
         findings = []
+
+        if diagnostic_md is None:
+            findings.extend(self._check_diagnostic_input())
 
         if pain_ledger is None or diagnostic_md is None:
             return findings
@@ -151,6 +183,37 @@ class DiagnosisReviewer:
                 ))
 
         return findings
+
+    def _check_diagnostic_input(self) -> list:
+        """Un insumo no leido no puede quedarse en verde vacuo (AC11)."""
+        read = self._diagnostic_read
+        if read is None or read.read_status == READ_OK:
+            return []
+
+        if read.read_status in (READ_NOT_READ, READ_ERROR):
+            severity = SEVERITY_WARNING
+            finding_type = FINDING_REVIEW_INPUT_UNREAD
+            pain_id = "review_input_diagnostico"
+        elif read.read_status == READ_ABSENT:
+            severity = SEVERITY_INFO
+            finding_type = FINDING_REVIEW_INPUT_ABSENT
+            pain_id = "review_input_diagnostico"
+        else:
+            return []
+
+        description = (
+            f"Diagnostico no disponible para la trazabilidad "
+            f"(read_status={read.read_status}, source={read.source or 'ninguna'}): "
+            f"{read.cause or 'sin causa declarada'}"
+        )
+        return [self._make_finding(
+            severity=severity,
+            clause="P6.1",
+            finding_type=finding_type,
+            source_artifact="01_DIAGNOSTICO_Y_OPORTUNIDAD*.md",
+            description=description,
+            pain_id=pain_id,
+        )]
 
     def _check_declared_sources(self, pain_ledger: Optional[dict]) -> list:
         """Verifica que cada entrada del ledger tiene fuente declarada."""
