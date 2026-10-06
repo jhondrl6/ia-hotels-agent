@@ -1,7 +1,6 @@
 # FASE-E — Entrega real revalidada y revisión con snapshot interno (2026-10-06)
 
-**Estado:** COMPLETADA, **sin commit** (el mandato no autorizaba el commit; los cinco cortes se
-sostienen sin él y ese es el corte que midió R2). **Contador v4complete: 0/1** — ninguna prueba
+**Estado:** COMPLETADA y **commiteada + empujada por orden literal del operador al cierre de la sesión** (el mandato de implementación no autorizaba el commit: los cinco cortes se sostuvieron sin él y ese fue el corte que midió R2). El sha y el rango empujado se estampan en el sello documental de FASE-RELEASE. La orden cubrió commit + L3 + push; la revisión L3 del cierre no arrojó hallazgos. **Contador v4complete: 0/1** — ninguna prueba
 ejecutó `main.py v4complete`; el cable de producción se gobierna por AST sobre `main.py`.
 
 **ACs gobernadas:** AC9, AC10, AC11, AC12 (todas **VERIFICADO OFFLINE**, con mutantes del símbolo real).
@@ -126,7 +125,7 @@ apagado. Se re-escribió para comparar `Path(miembro).name`, y ahí el mutante c
 
 ## 8. Checkpoints pendientes de autorización ajena
 
-1. **Commit** (producto + tests + evidencia) y **push**: no autorizados por el mandato.
+1. ~~**Commit** (producto + tests + evidencia) y **push**: no autorizados por el mandato.~~ **CERRADO en la misma sesión**: orden literal del operador «Git Commit + L3 + Push». El sha y el rango empujado se estampan en el sello documental de FASE-RELEASE (decisión de C: no abrir sellos recursivos por acciones git). La revisión L3 corrió sobre los commits de la fase y no arrojó hallazgos.
 2. **DOMAIN_PRIMER**: no se regeneró. Está versionado y el contrato (§paso 4) exige autorización explícita
    para escribirlo; se declara el checkpoint. Su **verificación** (`doctor.py --context`) es de FASE-RELEASE.
 3. **AGENTS.md §Cobertura por Modulo** (+31 en `quality_gates`) y la fila `Estado Actual`: configuración
