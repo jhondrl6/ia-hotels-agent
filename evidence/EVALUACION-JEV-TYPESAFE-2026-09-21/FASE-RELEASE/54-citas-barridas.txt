@@ -1,0 +1,63 @@
+# Crudo del corte 7 (b) - barrido de citas vencidas por el push de esta tanda - 2026-10-05
+
+El censo lo produjo un `Explore` de solo lectura (autorizado por el sect. 4 del mandato) y **cada mencion
+se re-verifico en disco** antes de usarse, con su asunto: el mismo literal puede ser de otra tanda, de un
+comando citado o de un asunto que no es Git. Las cuatro poblaciones se midieron con el mismo predicado:
+
+    grep -nEi "sin push|sin commitear|sin empujar|no empujado|sin ejecutar|sin revisar" <poblacion>
+
+| Poblacion | Medido | Que goberna |
+|---|---|---|
+| A `FASE-RELEASE/00-registro-de-fase.md` | 16 lineas | editable por el sect. 5 del mandato (es el registro donde D3 manda anotar) |
+| B resto de `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/` y su plan archivado | 18 archivos | **fuera de la superficie autorizada**; su disposicion es la fila REL-3/REL-4 de la TAT |
+| C `docs/cobertura-historia.md` | 9 lineas | el sect. 5 autoriza **"solo la nota"** de esta ronda; tocar las otras nueve seria escribir fuera del alcance |
+| D `10-analisis-post-implementacion.md` | 3 lineas (:152, :254, :278) | editable, PERO su re-edicion invalidaria los bytes recien publicados (crudo `50b-`) |
+
+## A. Las 16 lineas del registro, con asunto y disposicion
+
+Clasificacion despues de leer el entorno de cada una (una prohibicion, un comando entre backticks o una
+cita del mensaje publicado de un commit **no** son una afirmacion de estado pendiente):
+
+- **Vencidas por esta tanda** (se declaran en la seccion 17, no se reescriben):
+  - :508 "Push, L3 y write-back siguen sin ejecutar" → push EJECUTADO `e6a0c9e..ccda4ce`, write-back
+    EJECUTADO (fuente `01a10ec9-8113…`); **L3 sigue sin correr, y esa mitad de la frase sigue siendo
+    verdad** (dictado D7).
+  - :516 "deja el rango sin publicar y sin revisar donde estaba" → el rango queda publicado; "sin revisar"
+    (L3) sigue vigente y se re-mide en 21 commits.
+  - :586 "Push: **sin ejecutar** (no autorizado)" y :588 "Write-back: **sin ejecutar**" → ambas vencidas;
+    :587 "L3: sin ejecutar" sigue vigente.
+  - :592 "Write-back: sigue sin ejecutar" → vencida (la seccion 14 la vancio ya y esta tanda la re-publica).
+  - :682 "Write-back, etiqueta de adopcion, D7/D6 y las decisiones de REL-1/REL-2/REL-5: **sin ejecutar y
+    sin ofrecer**" → vencida en cuatro de sus cinco partes: write-back (hecho), etiqueta (dictada D3 y
+    anotada), REL-1 (curada D4) y REL-2 (registrada D1). **D7/D6 y REL-5 siguen abiertas, ahora con
+    disposicion terminal DIFERIDO-CON-DUEÑO en la TAT.**
+- **Historicas con sello propio** (la convencion de la casa es no reescribir el pasado: la linea 592 del
+  propio registro lo dice: "las frases se conservan porque describen el estado al cerrar"): :508, :516,
+  :586-588, :656, :721.
+- **Cita de un mensaje de commit ya publicado**: :662 "El mensaje publicado de `6a8be5c` cierra con «Sin
+  push, sin L3, sin write-back»". No se toca: re-escribir un mensaje publicado re-ancalaria las citas que
+  lo nombran (leccion de la sesson anterior).
+- **Otro asunto, no esta tanda**: :182 y :183 (la fila 16 del `33-registro` **del hermano**), :565 (misma
+  fila del hermano), :667 y :668 (menciones en `FASE-B2/`, `FASE-C/`, `DEUDA-FASE-B-2026-10-04/`, que son
+  registros de sus propias tandas), :465 (la L3 de la sesion anterior, con su numero de entonces).
+
+## D. La residual que aparece y entra a la TAT con disposicion (regla sect. 0)
+
+El `10-analisis` publicado conserva en su pagina la frase "Push, L3 y write-back siguen sin ejecutar"
+(linea 254 del archivo, dentro del bloque ⟦⟧ del sello anterior). Su mitad de write-back esta vencedida
+por el parrafo que esta tanda anadio (linea 278, que ademas dice que la evidencia de publicacion vive
+fuera del documento). Su mitad de **push** queda falsa en la copia publicada, y arreglarla cuesta una
+re-edicion mas otra re-publicacion (59 a 60 fuentes).
+
+No se hace aqui y no se deja "para la siguiente": la fila `vintage-del-10-analisis` de la TAT la cierra
+como **DIFERIDO-CON-DUEÑO**, con dueno (el operador, dueno de la hoja y de su publicacion), criterio (no
+se re-edita una hoja publicada por cosmetica: cada edicion obliga a verificar de nuevo por descarga y
+sha256) y disparador (la proxima edicion de contenido real de la hoja, que ya pagaria la re-publicacion).
+
+## Nota de metodo
+
+- El conteo se hizo por **linea** y cada linea se clasifico por su entorno; contar menciones sin mirar
+  convierte una prohibicion ("no digas sin push") en un rojo falso.
+- Caso concreto en esta tanda: el propio mandato y esta hoja usan los literales para *gobernarlos*, no
+  para afirmarlos.
+- El prefijo `no empujado` aparece en mayusculas y minusculas en el plan; el grep se corrio con `-i`.

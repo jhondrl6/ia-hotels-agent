@@ -801,3 +801,58 @@ secciones dejaron abierto, y cada cambio va con su instrumento.
 **La TAT de la tanda es la fuente única** del estado terminal de los doce seguimientos y de los cinco dictados:
 `41-tat-abanico-terminal.md` en este mismo directorio. Los demás documentos la referencian y no la
 re-transcriben.
+
+---
+
+## 17. Sello del push `e6a0c9e..ccda4ce` y cierre de la TAT (2026-10-05, tanda CIERRE-DE-ABANICO)
+
+Commit: **una ejecución** (`ccda4ce`, 28 archivos, 2.284 inserciones / 34 supresiones) con los **ocho
+hooks activos** — no se usó `--no-verify`. El mensaje se escribió sin acentos y con `commit -F`, como
+mandaba D8.
+
+| Medida | Valor |
+|---|---|
+| Rango empujado | `e6a0c9e..ccda4ce` = **1 commit** (`git rev-list --count`) |
+| Paridad | `git rev-list --left-right --count origin/master...HEAD` = **0 0** |
+| El servidor, no el ref local | `git ls-remote origin refs/heads/master` = `ccda4ce93002…` |
+| Árbol tras el empuje | `git status --porcelain -uall` = **0 entradas** |
+| Canónica **en el árbol del commit** | `git grep -h -c -E "^\s*def test_" HEAD -- tests` sumado = **4.850**, que es la cifra que publican `AGENTS.md` y la nota de `docs/cobertura-historia.md` |
+| Las dos entradas de REL-2 **en HEAD** | `git grep -c` sobre `REGISTRY.md`: FASE-C = 1, FASE-B.2 = 1 |
+| Suite completa, medida **antes** de commitear | `1 failed, 4912 passed, 41 skipped, 4 xfailed` (crudo `52-`): el único rojo es el de REL-5, y 4.889 + 23 = 4.912 cierra con los tests nuevos de esta tanda. **Ningún rojo
+añadido** |
+| L3 | **No corrida** (dictado D7). Commits sin L3 desde la última baseline: `git rev-list --count 0c79e9c..HEAD` = **21** (eran 20 al arrancar, crudo `42-`) |
+
+### Lo que este sello vence (sin reescribir los sellos anteriores)
+
+- **§12 y §13**: «Push: sin ejecutar» y «Write-back: sin ejecutar» quedan vencidas por este párrafo y por
+  §16. «L3: sin ejecutar» **sigue vigente** y no se disfraza: es el dictado D7.
+- **§14, línea final**: «Write-back, etiqueta de adopción, D7/D6 y las decisiones de REL-1/REL-2/REL-5: sin
+  ejecutar y sin ofrecer» — vencida en cuatro de sus cinco partes (write-back hecho, etiqueta dictada y
+  anotada, REL-1 curada, REL-2 registrada). **D7/D6 y REL-5 siguen abiertas**, con disposición terminal
+  DIFERIDO-CON-DUEÑO en la TAT y no con un «para la siguiente».
+- Las frases históricas se conservan porque describen el estado al cerrar su propio sello, que es la
+  convención que la propia hoja declaró en §12 («las frases se conservan porque describen el estado al
+  cerrar»). El barrido completo, con las 16 líneas del registro clasificadas por asunto, está en el crudo
+  `54-citas-barridas.txt`.
+
+### Lo que este sello **no** puede escribir
+
+El rango del segundo empuje —el de esta hoja de sello— no puede consignarse aquí con valor: esta sección
+viaja dentro de ese commit y por lo tanto no puede conocer su propio tip. Queda la receta, no una adivinanza:
+
+    git rev-list --count ccda4ce..origin/master
+
+Re-escribir esta línea después para estampar el número sería exactamente el defecto que esta sesión
+existe para cerrar (cada tarea cerrada genera otra), así que se declara límite y no tarea.
+
+### Atributo de Cierre Verificable
+
+La Tabla de Abanico Terminal es `41-tat-abanico-terminal.md` en este directorio y es la **fuente única**:
+veintiún ítems —doce deudas del registro y nueve de la propia tanda—, cada uno con estado terminal,
+evidencia re-ejecutable, dueño y fecha. Se valida con:
+
+    awk -F'|' 'NR>2 && $2 !~ /CERRADO-CON-EVIDENCIA|DIFERIDO-CON-DUEÑO|ESCALADO-A-DECISIÓN|NO-APLICA/ {n++} END {print n+0}' \
+      evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/41-tat-abanico-terminal.md
+
+**Resultado impreso por esta sesión al cerrar: 0.** El detalle de la corrida, con las cuatro poblaciones
+barridas y la residual del `10-analisis` que entró a la TAT con disposición, está en `54-`.

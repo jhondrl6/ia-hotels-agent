@@ -1,0 +1,80 @@
+# Crudo del corte 7 (a) - commit y push de la tanda, medidos - 2026-10-05
+
+## 1. Antes de commitear
+
+$ git status --porcelain -uall | wc -l
+27            # 10 modificados + 17 nuevos, todos de esta sesion (el arbol estaba limpio al arrancar, crudo 42-)
+
+## 2. Suite completa, leida ANTES del commit para no empujar una regresion propia
+
+$ ./venv/Scripts/python.exe -m pytest tests/ -q -p no:cacheprovider     (segundo plano, EXIT dentro del archivo)
+1 failed, 4912 passed, 41 skipped, 4 xfailed, 234 warnings in 386.28s
+EXIT=1
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+
+Linea base contra la que se juzga (crudo `28-` de la sesion anterior): **1 failed, 4889 passed**.
+La resta cierra con lo que esta tanda sumo: 4.889 + 23 = 4.912, y los 23 son exactamente los tests
+recolectados nuevos (15 en `tests/quality_gates/jev_pilot`, donde 6 funciones sueltas mas un
+parametrizado de 9 casos suman 15; y 8 en `tests/test_verify_qmind_context_freshness.py`). El rojo es
+**el mismo test, la misma causa y en la misma seleccion**: es la fila REL-5 de la TAT, diferida por
+dictado D5. No se abrio rojo nuevo.
+
+## 3. Commit
+
+$ git add <28 caminos, por nombre>
+$ git commit -F C:/Users/Jhond/AppData/Local/Temp/mensaje-commit-abanico.txt
+COMMIT_EXIT=0
+  ... [8/8] OK: Briefing packs in committed tree PASSED
+  All checks PASSED - Commit allowed
+[master ccda4ce] fix(jev): cierra REL-1 y REL-6 del abanico y estampa en REGISTRY lo que FASE-C y FASE-B.2 debian
+ 28 files changed, 2284 insertions(+), 34 deletions(-)
+
+Hooks **activos**: no se uso `--no-verify` (dictado D8). El mensaje esta escrito sin acentos y con
+`commit -F` (dictado D8); el unico par de bytes no-ASCII que traia el borrador (la enie de
+DIFERIDO-CON-DUENO) se quito y se verifico por conteo de bytes > 127 = 0.
+
+## 4. Verificacion en el arbol del commit, no en el de trabajo
+
+$ git grep -h -c -E "^\s*def test_" HEAD -- tests | awk -F: '{s+=$NF} END {print s}'
+4850
+$ git grep -c -E "^## FASE-C - 2026-10-04" HEAD -- docs/contributing/REGISTRY.md
+HEAD:docs/contributing/REGISTRY.md:1
+$ git grep -c -E "^## FASE-B\.2 - 2026-10-04" HEAD -- docs/contributing/REGISTRY.md
+HEAD:docs/contributing/REGISTRY.md:1
+
+La cifra que publican `AGENTS.md` y `docs/cobertura-historia.md` (4.850) es la del arbol de trabajo y
+**converge** con la del arbol commiteado: medida aqui, no inferida.
+
+## 5. Push
+
+$ git push origin master
+To https://github.com/jhondrl6/ia-hotels-agent.git
+   e6a0c9e..ccda4ce  master -> master
+PUSH_EXIT=0
+
+$ git rev-parse --short HEAD                  -> ccda4ce
+$ git rev-parse --short refs/remotes/origin/master -> ccda4ce
+$ git ls-remote origin refs/heads/master      -> ccda4ce93002   (el servidor, no solo el ref local)
+$ git rev-list --left-right --count origin/master...HEAD -> 0  0
+$ git rev-list --count e6a0c9e..ccda4ce       -> 1              (el rango empujado)
+$ git status --porcelain -uall | wc -l        -> 0              (arbol limpio tras el empuje)
+
+## 6. L3: NO corrida, y su rango queda medido (dictado D7)
+
+$ git rev-list --count 0c79e9c..HEAD
+21
+
+`0c79e9c` es la baseline de la ultima L3 efectivamente corrida (heredada de la sesion anterior, donde
+se empujo una tanda y la L3 retroactiva solo cubrio los dos primeros commits). Con este empuje la
+cantidad de commits **sin L3** paso de 20 (medido al arrancar, crudo `42-`) a **21**. La opcion de
+correrla sobre ese rango es del operador; esta sesion no la ejecuto ni la ofrece.
+
+## 7. Lo que este crudo no puede decir
+
+El sello que estampa este push es un commit **posterior**, asi que el rango del segundo empuje
+(`ccda4ce..<tip>`) no puede escribirse aqui con valor: se re-mide despues con
+
+    git rev-list --count ccda4ce..origin/master
+
+y queda declarado en la seccion 17 del registro en lugar de adivinarse. Es la misma razon por la que
+un documento publicado no aloja la evidencia de su propia publicacion (crudo `49-`, sect. 5).

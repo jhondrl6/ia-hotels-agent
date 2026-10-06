@@ -1,0 +1,69 @@
+# Crudo del cierre - contador del ACV, frescura bajo flake y gates finales - 2026-10-05
+
+## 1. Atributo de Cierre Verificable, impreso sobre la TAT del expediente
+
+$ awk -F'|' 'NR>2 && $2 !~ /CERRADO-CON-EVIDENCIA|DIFERIDO-CON-DUEÑO|ESCALADO-A-DECISIÓN|NO-APLICA/ {n++} END {print "abiertas="n+0}' \
+    evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/41-tat-abanico-terminal.md
+abiertas=0
+
+$ awk 'END{print NR-2}' 41-tat-abanico-terminal.md
+21
+
+$ awk -F'|' 'NR>2 {gsub(/^ +| +$/,"",$2); c[$2]++; t++} END {for (k in c) printf "%-24s %d\n", k, c[k]; printf "TOTAL_FILAS %d\n", t}' 41-tat-abanico-terminal.md
+   NO-APLICA                1
+   DIFERIDO-CON-DUEÑO       9
+   CERRADO-CON-EVIDENCIA    11
+   TOTAL_FILAS 21
+
+Composicion medida de las 21: **doce** deudas del registro del plan (B2-1, B2-1c, B2-2, B2-3, B2-4, B2-5,
+REL-1 a REL-6) mas **nueve** items de la propia tanda (AC-4, etiqueta D3, write-back D3, cifra canonica,
+liquidacion de derivados, cola de sellos, D8 commit y push, D7 L3 y la residual del `10-analisis`).
+
+_Declaracion de correccion: la primera version de esta linea invertia los conteos (decia 9 CERRADO y 11
+DIFERIDO). Se corrigio corriendo el desglose por estado, no re-contando a mano._
+
+## 2. Trampa del propio instrumento, declarada
+
+El contador usa `-F'|'`, asi que `$2` es la **segunda** columna. La TAT se escribe sin tuberia inicial y
+con `Estado terminal` en la segunda columna, y no lleva prosa dentro del archivo: un parrafo suelto
+contaria como fila abierta. Comprobado con una sonda antes de estampar: `DIFERIDO-CON-DUENO` (sin enie) y
+`ESCALADO-A-DECISION` (sin tilde) **cuentan como abiertas** con el regex literal del mandato, o sea los
+cuatro estados se escriben exactamente con su acentuacion. Locale de la shell: `C.UTF-8`.
+
+## 3. Frescura final: el contrato nuevo funcionando bajo el flake real
+
+Tres corridas de `verify_qmind_context_freshness.py --strict` sobre el arbol ya sellado:
+
+| Corrida | EXIT | Veredicto impreso | Causa |
+|---|---|---|---|
+| 1 | 2 | `[NO-EVALUABLE] CONTEXT-JEV…: 1 fuente(s) cuyo metadata casa con el disco (01a0efcc-3297…) no bajaron` | el borde de QMind respondio `QMind network request failed` |
+| 2 | 0 | `[OK] … 2 fresco(s), 0 problema(s)` | el borde respondio |
+| 3 | 0 | `[OK] … 2 fresco(s), 0 problema(s)` | idem |
+
+Racha de corridas: **2-0-0**. Es la prueba en vivo de REL-6: con el contrato viejo, la corrida 1 habria
+pintado `[VENCIDO]` sobre un `CONTEXT` fresco y habria cortado el gate con un rojo falso (eso es exactamente
+lo que estampó el crudo `12-` de la sesion anterior). Con el contrato nuevo la abstencion se declara con su
+motivo y el rojo no se fabrica.
+
+## 4. Gates finales, despues de escribir el sello 17 y los crudos 52- a 55-
+
+$ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+TOTAL: 13/13 validations passed          QUICK_EXIT=0
+$ ./venv/Scripts/python.exe scripts/validate_wiring.py --check
+derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest e7a789195b58)   WIRING_EXIT=0
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (344 IDs)                                                 LECCIONES_EXIT=0
+$ ./venv/Scripts/python.exe scripts/validate_agents_md.py                                VAMD_EXIT=0
+
+Nota: los crudos nuevos son `.txt` y `.md`, y el scanner goberna `.py` por rol; o sea el derivado **no**
+volvio a vencer con el sello, a diferencia de los cinco arneses `.py` de la primera tanda (crudo `51-`).
+
+## 5. Lo que queda dicho y no hecho, para que no se lea como hecho
+
+- **L3 no corrida** (dictado D7). Commits sin L3 desde `0c79e9c`: 21 al primer empuje. El segundo empuje
+  (esta hoja) suma uno mas y su rango se re-mide con la receta escrita en el sello 17.
+- **Suite completa**: 1 failed / 4912 passed. El rojo es REL-5, diferido con dueño; no se abrio aqui.
+- **La transferencia D7/D6 al hermano**: cero escrituras en su arbol, `transfer_status = PENDIENTE`.
+- **El `10-analisis` publicado** conserva en su copia la frase «Push… siguen sin ejecutar» en su bloque
+  historico. Entra a la TAT como fila `vintage del 10-analisis publicado` con disposicion
+  DIFERIDO-CON-DUEÑO, no como tarea suelta.
