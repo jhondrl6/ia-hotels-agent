@@ -856,3 +856,26 @@ evidencia re-ejecutable, dueño y fecha. Se valida con:
 
 **Resultado impreso por esta sesión al cerrar: 0.** El detalle de la corrida, con las cuatro poblaciones
 barridas y la residual del `10-analisis` que entró a la TAT con disposición, está en `54-`.
+
+### ⟦Anotación posterior (2026-10-05, 21:11 local): la L3 **sí** se corrió, después de esta hoja⟧
+
+El operador dio la orden expresa «Ejecuta L3» cerrada y empujada la tanda, y esa instrucción **sustituye el
+dictado D7** del mandato. Resultado medido: revisión profunda sobre `0c79e9c..1255a72` — **22 commits, sin
+hallazgos de seguridad**.
+
+Por tanto, y sin reescribir lo estampado porque cada frase describe el estado al medirse:
+
+- La fila **L3 de la tabla de §17** («No corrida (dictado D7)… 21») queda vencida; eran 21 al escribir la
+  hoja y 22 al cerrarse la tanda, y 22 cubrió la revisión.
+- La fila **L3 de §16** («NO-APLICA por dictado D7: no corrida en esta sesión») queda vencida por el mismo
+  acto.
+- La **TAT** —que es la fuente única— se actualizó: su fila `D7 escaneo L3` pasó de `NO-APLICA` a
+  `CERRADO-CON-EVIDENCIA` con el crudo `56-l3-resultado.txt` como evidencia. El contador sigue dando
+  **0 abiertas** (12 CERRADO, 9 DIFERIDO, 0 NO-APLICA, 21 filas).
+
+**El límite que esta anotación declara, para no perseguirlo:** el commit que la carga es posterior a
+`1255a72`, así que **no puede** estar cubierto por la medición que describe. Su delta se re-mide con
+`git rev-list --count 1255a72..HEAD` —que al estampar esta hoja vale **1**, un commit de solo Markdown— y
+no se abre otro sello para corregirlo: la autoridad es el comando, y la próxima revisión de tanda barre
+este commit junto con los que le sigan. Es el mismo corte de bucle que la casa aplicó el 2026-10-02 y el
+2026-10-04.

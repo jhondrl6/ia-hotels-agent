@@ -1,0 +1,69 @@
+# Crudo 56 - revision de seguridad L3 ejecutada DESPUES del cierre de la tanda - 2026-10-05
+
+## Que se corrio, y por orden de quien
+
+El operador dio la instrucción explícita «Ejecuta L3» después de cerrada y empujada la tanda
+CIERRE-DE-ABANICO. Esa instrucción **supersede el dictado D7 de la pegada** («no correr L3 en esta
+sesión»), que es lo que estaba estampado en el registro y en la TAT. Modo: revisión de seguridad
+profunda (capa L3) de Qoder Security sobre los commits pendientes de revisión.
+
+## Cobertura y resultado, medidos
+
+| Campo | Valor |
+|---|---|
+| Baseline de la revisión | `0c79e9c` (la última desde la que quedó sin cubrir; heredada de las tandas previas) |
+| Punta cubierta | `1255a72` (la hoja de sello de la tanda) |
+| Commits cubiertos | **22** — `$ git rev-list --count 0c79e9c..1255a72` → 22 |
+| Resultado | **Sin hallazgos de seguridad** |
+| Momento | 2026-10-05 21:11 hora local (`2026-10-06T02:11:43Z`) |
+| Estado del repo al medir | `git status --porcelain -uall` = 0 entradas; paridad `0 0` contra `origin/master` |
+
+No hay nada que remedia: la revisión no produjo hallazgos. Este crudo no interpreta ni agrega; registra
+el veredicto tal como se reportó.
+
+## Que tres afirmaciones vence, y donde estaban
+
+1. **TAT, fila `D7 escaneo L3`**: estaba en `NO-APLICA` con «no correr L3 en esta sesión». Pasa a
+   `CERRADO-CON-EVIDENCIA` apuntando a este crudo, porque la TAT es la fuente única declarada.
+2. **Sello 17 del registro, fila L3 de la tabla**: decía «**No corrida** (dictado D7)» con rango medido en
+   21. Vencida por este crudo; se anota aditivamente, no se reescribe (la hoja describe el estado al
+   estamparse).
+3. **Sección 16 del registro, fila `L3`**: decía «NO-APLICA por dictado D7: no corrida en esta sesión».
+   Vencida por la misma vía.
+
+El sello 17 decía ademas «Commits sin L3 = 21». Cerrada la tanda eran 22 y **22 cubrió la revisión**; el
+numero de la hoja estaba medido un commit antes, que es su propio commit de trabajo. Se declara para que
+nadie lo lea como descuadre.
+
+## El limite que este acto deja escrito, a proposito
+
+Esta nota viaja dentro de un commit que **no puede estar cubierto por la medicion que describe**: la
+revision se corrio hasta `1255a72` y el commit que carga este archivo es posterior. Es el bucle que la
+casa ya corto dos veces cambiando el contrato de la fila en vez de perseguir la cifra, asi que queda:
+
+- **Lo que se afirma con valor**: la cobertura es `0c79e9c..1255a72`, 22 commits, sin hallazgos.
+- **Lo que se afirma como receta**: lo que hay despues de esa punta se re-mide con
+  `git rev-list --count 1255a72..HEAD`. Al estampar esta hoja ese conteo es **1** (este commit
+  documental, sin codigo), y se declara deliberadamente fuera de la medicion en vez de abrir otro
+  commit que volveria a quedar atras.
+- **La autoridad es el comando**, no la cifra copiada.
+
+No se volvio a correr la revision sobre este commit: un commit de solo Markdown re-abre el porton pero no
+le da nada nuevo que revisar, y cerrarlo con otro sello seria el defecto que esta sesion existe para
+terminar. Cuando toque la proxima tanda, su revision barre este commit junto con los demas pendientes.
+
+## La TAT despues de este acto, re-medida
+
+El crudo `55-` estampó un desglose (11 CERRADO / 9 DIFERIDO / 1 NO-APLICA) que era cierto al cerrar la
+tanda y que **este acto mueve**. No se reescribe `55-`: es crudo de su momento. La medida nueva:
+
+$ awk -F'|' 'NR>2 {gsub(/^ +| +$/,"",$2); c[$2]++; t++} END {for (k in c) printf "%-24s %d\n", k, c[k]; printf "TOTAL %d\n", t}' 41-tat-abanico-terminal.md
+   DIFERIDO-CON-DUEÑO       9
+   CERRADO-CON-EVIDENCIA    12
+   TOTAL 21
+
+$ awk -F'|' 'NR>2 && $2 !~ /CERRADO-CON-EVIDENCIA|DIFERIDO-CON-DUEÑO|ESCALADO-A-DECISIÓN|NO-APLICA/ {n++} END {print "abiertas="n+0}' 41-tat-abanico-terminal.md
+abiertas=0
+
+Sigue en **0 abiertas**: la fila del L3 pasa de NO-APLICA a CERRADO-CON-EVIDENCIA, que tambien es estado
+terminal. Ningun item se abrió con este acto.
