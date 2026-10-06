@@ -30,6 +30,7 @@ Tests: nuevo `tests/asset_generation/test_fase_c_boton_seguro.py` (24 funciones 
 | POST (misma selección + batería nueva) | igual que PRE, más `test_fase_c_boton_seguro.py` | **238 passed / 1 skipped**, EXIT 0 → `tests_baseline_post.txt`. Delta **+37 casos**: 24 funciones nuevas con 3 parametrizaciones (9+5+3). Ninguna selección previa cambió de resultado |
 | Rojo intermedio medido tras el blindaje y antes de re-anclar | misma selección | **4 failed / 197 passed** — los cuatro son las aserciones que legitimaban el defecto (§4) |
 | Regresión completa | `pytest tests/ -q -p no:randomly` | **1 failed / 4.951 passed / 41 skipped / 4 xfailed** en 406,62 s → `tests_postfull_regresion.txt`. El único rojo es `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic`, del **plan hermano JEV**: en la corrida aislada de su directorio pasan **141/141**, así que es dependencia de orden/estado entre pruebas y no un rojo de C (dueño: piloto JEV; ver §5.6). Los 5 rojos que C sí produjo (4 de `test_phase5_integration.py` y 1 de `test_datasource_gap.py`) quedaron re-anclados y verdes en esta corrida |
+| Regresión completa **de confirmación** (árbol commiteado `67aa889`, derivados frescos) | `pytest tests/ -q -p no:randomly` | **1 failed / 4.951 passed / 41 skipped / 4 xfailed** en 438,08 s — idéntica a la fila anterior, con el mismo único rojo ajeno → `tests_postfull_sello.txt` |
 | Funciones canónicas | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` | **4.873** (4.850 antes de C → **+23**) |
 | Barras de WhatsApp | `build_thresholds.py` → `thresholds.json` | 0.9 coherencia (blocking=True) · 0.9 `no_whatsapp_visible` · 0.5 `whatsapp_conflict` · 0.7 catálogo (`block_on_failure=False`) · 0.3 `NEW_HOTEL_THRESHOLDS` · 0.9 `CommercialGate` |
 | Mutantes | `run_mutations.py` → `mutation_report.json` | **9/9 rojos causados por el guard** (M1 1 prueba, M2 2, M3 1, M4 5, M5 1, M6 1, M7 2, M8 4, M9 2 — cada mutante rompe un grupo distinto, ningún verde persistente), **9/9 restaurados y verificados por sha256** |
@@ -108,12 +109,17 @@ Cure ejecutada con los writers, en el orden canónico y sin volver a editar el c
 final → **1 failed / 4.951 passed** con el único rojo ya atribuido a la hermana.
 
 **Errata del registro.** `log_phase_completion.py` se corrió con `--archivos-mod 30`, cifra redactada antes de
-finalizar documentos y derivados. El conteo **medido** de esta fase es **40 archivos**: 8 de producto (1
-nuevo), 6 de tests (1 nuevo), 10 documentales (`CHANGELOG.md`, `docs/GUIA_TECNICA.md`,
-`docs/contributing/REGISTRY.md`, `docs/contributing/.last_doc_phase.json` y cinco documentos del plan: §00,
-§05-C, §06, §09, §10 y `dependencias-fases.md`), 4 derivados regenerados por su writer
+finalizar documentos y derivados. La cifra **medida por el emisor** es **39 archivos**:
+`git show --numstat --format="" 67aa889 | wc -l` → 39, y el desglose que lo compone suma
+39: 8 de producto (1 nuevo) + 6 de tests (1 nuevo) + 10 documentales (`CHANGELOG.md`,
+`docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`,
+`docs/contributing/.last_doc_phase.json` y **seis** documentos del plan: §00, §05-C, §06,
+§09, §10 y `dependencias-fases.md`) + 4 derivados regenerados por su writer
 (`.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json`,
-`.opencode/plans/plan_citations_baseline.json`, `.opencode/wiring_report.json`) y 11 artefactos de evidencia.
+`.opencode/plans/plan_citations_baseline.json`, `.opencode/wiring_report.json`) +
+11 artefactos de evidencia. **Esta errata corrige dos números**: el 30 del registro y el
+**40 que esta misma fila publicaba antes** — un desglose mal sumado por mi propio conteo a
+mano; el denominador vive en el emisor (`git show`), no en quien lo transcribe.
 La fila de `REGISTRY.md` **no se re-escribe**: el escritor es aditivo y volver a correrlo apilaría una entrada
 duplicada (§4.5.1 del executor). Queda esta errata como fuente de la cifra corregida.
 
@@ -133,8 +139,12 @@ nunca estuvieron en el árbol commiteado (solo los del plan archivado), y versio
 **Procedencia de esta cifra:** medida sobre el árbol con el código y los tests de C ya re-anclados, **antes** de
 la edición documental del §8 y de su re-generación de derivados. Después de esa edición la superficie afectada
 se re-midió directamente — `tests/quality_gates/lesson_relevance/` + `tests/quality_gates/jev_pilot/` →
-**203 passed** — y los derivados se regeneraron en el orden canónico; la corrida completa sobre el árbol final
-se re-estampa en el commit de sello si difiere de esta fila.
+**203 passed** — y los derivados se regeneraron en el orden canónico. **Confirmación estampada:** la corrida
+completa se repitió sobre el árbol ya commiteado (`67aa889`) y reprodujo la misma fila — **1 failed / 4.951
+passed / 41 skipped / 4 xfailed** en 438,08 s, crudo en `tests_postfull_sello.txt`. La cifra de esta fila no
+necesita re-estampa: es el árbol final. El árbol de la corrida incluye la suciedad ajena preexistente que no
+se stageó (once documentos de plan y un directorio de evidencia del otro trabajo), que es el estado real del
+worktree y afecta a `lesson_relevance` igual que en las corridas anteriores.
 
 ## 9. Cortes con su medición
 
