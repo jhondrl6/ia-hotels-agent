@@ -1,0 +1,16 @@
+ .../01-plan-maestro.md                             |  2 +-
+ .../04-contrato-ejecucion.md                       |  4 ++--
+ .../05-prompt-inicio-sesion-fase-C.md              | 17 ++++++++++++--
+ .../05-prompt-inicio-sesion-fase-D.md              | 15 +++++++++++-
+ .../05-prompt-inicio-sesion-fase-E.md              | 17 +++++++++++---
+ .../05-prompt-inicio-sesion-fase-E2E.md            | 15 ++++++++++--
+ .../05-prompt-inicio-sesion-fase-F.md              | 17 +++++++++++---
+ .../05-prompt-inicio-sesion-fase-H.md              | 17 +++++++++++---
+ .../05-prompt-inicio-sesion-fase-RELEASE.md        | 27 +++++++++++++++-------
+ .../05-prompt-inicio-sesion-fase-VERIFY.md         | 15 ++++++++++--
+ .../10-analisis-post-implementacion.md             |  4 ++--
+ .../dependencias-fases.md                          |  2 +-
+ .../01-plan-maestro.md                             | 24 +++++++++++++++----
+ .../05-prompt-inicio-sesion.md                     | 18 +++++++++++----
+ .../README.md                                      | 16 +++++++++----
+ 15 files changed, 167 insertions(+), 43 deletions(-)

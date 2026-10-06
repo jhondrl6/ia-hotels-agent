@@ -83,19 +83,30 @@ Brief: objetivo, allowlist de código/tests, prohibidos datos sensibles/imports/
 
 ## Post-ejecución
 
-Actualizar prompt, checklist, dependencias, índice, 00/09/10, ACs y las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas**; CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`.
+Actualizar prompt, checklist, dependencias, índice, 00/09/10, ACs y las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas**; CHANGELOG **bajo `## [Sin publicar]`**, no bajo número de versión —fechar una release es acto de RELEASE (`04-contrato-ejecucion.md` paso 3)— y nota en `docs/GUIA_TECNICA.md`.
 Sustituir variables por archivos/tests medidos; registro propio sin `--release`:
 
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-H --desc "REFACTOR-WHATSAPP-ENTREGA: integración offline, onboarding trazable y runner único preparado" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-H --desc "REFACTOR-WHATSAPP-ENTREGA: integración offline, onboarding trazable y runner único preparado" --fecha "$FECHA_CIERRE" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ./venv/Scripts/python.exe scripts/validate_document_integration.py
 ```
 
+`--fecha` = fecha real de cierre; si el registro es tardío, `--nota` con el motivo. `log_phase_completion.py::parse_args` la declara obligatoria junto con `--fase` y `--desc` y la valida como fecha de calendario, así que `$FECHA_CIERRE` es variable a sustituir — el comando sin la bandera se niega en lugar de estampar la fecha del reloj. ⟦Puesta al día 2026-10-06: este bloque se escribió antes de esa obligatoriedad y rompía al ejecutarse tal cual; la regla canónica vive en `docs/CONTRIBUTING.md` y en el executor §4.5.1, y no se re-transcribe aquí⟧.
+
 Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; rojos o permisos faltantes implican checkpoint, no cambiar baselines/configuración para cerrar.
-DOMAIN_PRIMER **regenerado** solo por su writer según la resolución de A (regenerar cierra esta fase; **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas); write-back durable **solo con su autorización literal propia** y saneado, con la frescura comprobada por descarga y sha —no por título—, o checkpoint explícito con `PENDIENTE-AUTORIZACION`. No VERSION, commit, push ni release implícitos.
+DOMAIN_PRIMER **regenerado** solo por su writer según la resolución de A (regenerar cierra esta fase; **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas), **y solo si el mandato de la fase autoriza escribir** `.agent/knowledge/DOMAIN_PRIMER.md`: está versionado, cada regeneración ensucia el árbol, y sin esa autorización se declara el checkpoint en vez de tocarlo (regla canónica en `04-contrato-ejecucion.md` paso 4). Write-back durable **solo con su autorización literal propia** y saneado, con la frescura comprobada por descarga y sha —no por título—, o checkpoint explícito con `PENDIENTE-AUTORIZACION`. No VERSION, commit, push ni release implícitos.
+
+**Derivados vencidos: un rojo del quick al cerrar puede no ser del cambio.** Si la fase añadió evidencia `.py` o editó documentos del plan, correr el fixer del derivado que cayó y **re-correr el quick**:
+
+- `[8/13]` OpenCode References → `./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix`
+- `[9/13]` Plan Citations → `./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline` (acto visible: lo hace quien documenta; no silencia un rojo)
+- `[11/13]` Wiring → `./venv/Scripts/python.exe scripts/validate_wiring.py --write-report`
+- `[13/13]` Packs → `./venv/Scripts/python.exe scripts/build_phase_briefing.py`
+
+Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo completo solo sus cinco checks exclusivos se etiquetan con denominador 18. El número lo imprime la corrida: no se copia a ningún documento.
 
 ## Presupuesto y checklist
 

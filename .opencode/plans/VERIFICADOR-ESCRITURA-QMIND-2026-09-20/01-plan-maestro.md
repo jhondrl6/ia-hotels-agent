@@ -4,13 +4,21 @@
 (§6).** Ningún AC de este documento está implementado. ⟦Re-medido el 2026-09-24 contra el árbol vigente,
 sigue siendo cierto: el writer no expone `--title` ni `--file`, `is_ingested()` decide por título y la
 indisponibilidad del CLI devuelve `exit 0`; el check [15/15] no corre en `--quick` ni en el hook⟧.
+⟦Puesta al día del paquete, 2026-10-06: la etiqueta vigente de ese check es **[17/18]**, no `[15/15]` —
+nació cuando el modo completo llegaba a 15 y el denominador hoy es 18 porque se añadió el hermano
+**[18/18]** de frescura `CONTEXT` (`verify_qmind_context_freshness.py`). Lo demás de esa re-medición sigue
+en pie, vuelto a medir el 2026-10-06 en el propio script: `validate_qmind_writeback.py::main()` solo expone
+`--nb`, `--strict` y `--upload` (los `--title`/`--file` que aparecen en el archivo son los que
+`upload_source()` pasa al CLI `qmind`, no banderas del writer), `is_ingested()` decide por título, y
+`run_all_validations.py::_check_qmind_writeback()` lo invoca **sin** `--strict`. Esta sesión re-mide el
+denominador al abrir⟧.
 Versión base del repo al concebir el plan: `4.77.3`, HEAD `7296732` (este mini-plan no cambia `VERSION.yaml`).
 
 ## 1. Premisas medidas (no heredadas)
 
 | # | Premisa | Cómo se midió el 2026-09-20 | Consecuencia |
 |---|---|---|---|
-| P1 | El validador de write-back **sí** está conectado al sistema de validaciones | `grep -rln "validate_qmind_writeback" scripts/` → 2 archivos; en `run_all_validations.py`, método `run()`, rama `if not self.quick:`, el check **[15/15]** lo ejecuta | Una afirmación anterior de esta sesión («no está en `run_all_validations.py`») era falsa y se retractó en cinco documentos. Nace `L-ENT.14` en el plan padre |
+| P1 | El validador de write-back **sí** está conectado al sistema de validaciones | `grep -rln "validate_qmind_writeback" scripts/` → 2 archivos; en `run_all_validations.py`, método `run()`, rama `if not self.quick:`, el check **[17/18]** lo ejecuta ⟦re-etiquetado el 2026-10-06; se midió como `[15/15]` el 2026-09-20⟧ | Una afirmación anterior de esta sesión («no está en `run_all_validations.py`») era falsa y se retractó en cinco documentos. Nace `L-ENT.14` en el plan padre |
 | P2 | …pero solo en el modo completo, y degrada a verde sin instrumento | `_check_qmind_writeback()` invoca el script **sin** `--strict`; el propio validador documenta en su docstring que la indisponibilidad del CLI devuelve 0 | Ninguna fase intermedia (`--quick`) ve este check, y con el CLI ausente el PASS significa «no se pudo medir» |
 | P3 | La comprobación es de **título**, no de contenido | `is_ingested()` en `validate_qmind_writeback.py` compara el título de la fuente contra el nombre del plan; `do_upload()` construye el título fijo `10-analisis: <PLAN> (lecciones aprendidas y decisiones)` | Una fuente publicada a mitad de plan satisface el check para siempre: el contenido viejo pasa por cierre |
 | P4 | El writer no admite actualización | `main()` del validador solo define `--nb`, `--strict` y `--upload`; `upload_source()` pasa `--file` y `--title` al CLI, que no sobrescribe | La única vía de publicar el cierre es un título nuevo, y eso **crea** una fuente duplicada |
@@ -22,11 +30,11 @@ Versión base del repo al concebir el plan: `4.77.3`, HEAD `7296732` (este mini-
 | AC | Criterio | Instrumento esperado |
 |---|---|---|
 | AC1 | El writer permite publicar con **título y archivo explícitos** (`--title`, `--file`), sin cambiar el comportamiento por defecto de `--upload <PLAN>` | tests propios sobre el parser y sobre `do_upload()` con un directorio temporal |
-| AC2 | La verificación es **por contenido**: [15/15] exige que la fuente ingerida case con una instantánea versionada en el repo (sha de la copia + prueba de sha inverso del saneado). Título coincidente con contenido distinto ⇒ **rojo** | **offline:** mutación M1 sobre la instantánea versionada — editarla sin re-subir → rojo; re-subir → verde. La comparación de contenido **no** necesita tocar el servicio: lo que se coteja es el sha de la copia del repo. **El verde definitivo de esta AC contra el servicio real pertenece a la aceptación remota (§6), no a esta fase** |
+| AC2 | La verificación es **por contenido**: [17/18] exige que la fuente ingerida case con una instantánea versionada en el repo (sha de la copia + prueba de sha inverso del saneado). Título coincidente con contenido distinto ⇒ **rojo**. ⟦Puesta al día 2026-10-06: el criterio de contenido **reutiliza el contrato D2** que ya está vigente en el hermano `verify_qmind_context_freshness.py` — `metadata.fileSha256`/`fileSize` del `source list` como **primera vía** y la **descarga + sha256** como verificación de esa promesa; sin observación posible, `NO-EVALUABLE`, nunca `VENCIDO` ni verde. No se abre un segundo dialecto de frescura⟧ | **offline:** mutación M1 sobre la instantánea versionada — editarla sin re-subir → rojo; re-subir → verde. La comparación de contenido **no** necesita tocar el servicio: lo que se coteja es el sha de la copia del repo. **El verde definitivo de esta AC contra el servicio real pertenece a la aceptación remota (§6), no a esta fase** |
 | AC3 | La indisponibilidad del CLI deja de ser PASS silencioso: el check lo invoca con `--strict` o el resumen distingue un tercer estado explícito | mutación M2: PATH sin `qmind` → FAIL o WARN declarado, nunca PASS. **Medible íntegramente offline**, y es la AC que hace que lo demás sea creíble: sin ella, la ausencia del instrumento se reporta como éxito |
-| AC4 | Un plan no puede tener **dos fuentes vigentes**: tras publicar con título nuevo, la anterior queda retirada o marcada, y la verificación lo comprueba | **offline:** mutación M3 sobre el conjunto de fuentes esperado — dos fuentes del mismo plan sin marca de reemplazo → rojo. **Remoto:** comprobar que el marcado llegó al notebook, con su evidencia (§6) |
+| AC4 | Un plan no puede tener **dos fuentes vigentes**: tras publicar con título nuevo, la anterior queda retirada o marcada, y la verificación lo comprueba **con el mismo contrato D2 de AC2** (primera vía `metadata.fileSha256`, descarga que verifica la promesa, `NO-EVALUABLE` sin observación; ⟦alineado el 2026-10-06⟧) | **offline:** mutación M3 sobre el conjunto de fuentes esperado — dos fuentes del mismo plan sin marca de reemplazo → rojo. **Remoto:** comprobar que el marcado llegó al notebook, con su evidencia (§6) |
 | AC5 | Los tres rojos se demuestran **por el guard**, no por error de sintaxis ni de import, y el árbol se restaura por sha256 | `mutation_report.json` del mini-plan, con la misma forma que el de FASE-G |
-| AC6 | ⟦Desdoblada el 2026-09-24 por el bloque C de la orden de calidad: esta fila era la circular⟧ | **AC6-entrega (offline, es de esta fase):** el prompt de FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` pasa a mandar el writer con `--title`, y su texto deja de depender de que alguien recuerde el título pre-acordado. Instrumento: `diff` del prompt + tests del parser de AC1. **AC6-aceptación (remota, NO es condición de esta fase):** `[15/15]` verde sobre el plan padre **tras su ingesta de cierre**, que es un evento que ocurre **después** del disparador de esta sesión. Dueño y disparador: §6 |
+| AC6 | ⟦Desdoblada el 2026-09-24 por el bloque C de la orden de calidad: esta fila era la circular⟧ | **AC6-entrega (offline, es de esta fase):** el prompt de FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` pasa a mandar el writer con `--title`, y su texto deja de depender de que alguien recuerde el título pre-acordado. Instrumento: `diff` del prompt + tests del parser de AC1. **AC6-aceptación (remota, NO es condición de esta fase):** `[17/18]` verde sobre el plan padre **tras su ingesta de cierre** ⟦re-anclado el 2026-10-06; la fila se escribió con la etiqueta `[15/15]`⟧, que es un evento que ocurre **después** del disparador de esta sesión. Dueño y disparador: §6 |
 
 ## 3. Alcance y no-alcance
 
@@ -38,7 +46,13 @@ código (con instrucción explícita para editar el workflow, que hoy está proh
 **Fuera:** Tribunal (`_compute_verdict`, flags, umbrales), `write/publish/suppress`, gates, hooks,
 `VERSION.yaml`, `AGENTS.md`, `main.py v4complete`, red, scraping, y la limpieza retroactiva de las dos
 fuentes de `TRIBUNAL-OFFLINE-2026-09-09` — eso último requiere decisión escrita del operador porque toca
-contenido ya publicado fuera del repo.
+contenido ya publicado fuera del repo. Declarado el 2026-10-06, para que no se descubra dos veces: **el
+mismo patrón de verde por ausencia que AC3 caza en `[17/18]` vive en el check hermano `[18/18]`** —
+`run_all_validations.py::_check_context_freshness()` también invoca `verify_qmind_context_freshness.py` sin
+el modo estricto, así que la degradación por CLI ausente queda en `WARN` + exit 0 dentro de ese check.
+**Ese hueco no es de este mini-plan**: su alcance es el write-back de `10-analisis`, y gobernar `[18/18]`
+sería una AC nueva con su propio disparador. Queda registrado con dueño (operador / siguiente mandato sobre
+los verificadores QMind) y no se cierra por omisión.
 
 ## 4. Riesgos y decisiones pendientes
 

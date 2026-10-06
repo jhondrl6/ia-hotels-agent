@@ -1,0 +1,8 @@
+archivo                                          HEAD tot/fuera    disco tot/fuera
+05-prompt-inicio-sesion-fase-RELEASE.md              1 / 1               1 / 0      
+dependencias-fases.md                                1 / 1               1 / 0      
+10-analisis-post-implementacion.md                   1 / 1               1 / 0      
+09-documentacion-post-proyecto.md                    1 / 1               1 / 1      
+README.md                                            3 / 3               3 / 1      
+01-plan-maestro.md                                   4 / 3               4 / 0      
+05-prompt-inicio-sesion.md                           1 / 1               1 / 0      

@@ -7,7 +7,8 @@ FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`**; si ese RELEASE llega p
 maestro y dejar AC2–AC4 abiertos con dueño.
 **AC6 se desdobla (⟦orden de calidad §4.C, fila `ESCRITURA-QMIND`⟧):** **AC6-entrega** — dejar el writer
 capaz de publicar con `--title` y actualizar el prompt del padre — **sí cierra en esta fase**;
-**AC6-aceptación** — `[15/15]` verde sobre el padre tras su ingesta de cierre — **no puede cerrar aquí por
+**AC6-aceptación** — `[17/18]` verde sobre el padre tras su ingesta de cierre ⟦re-anclado el 2026-10-06; se
+escribió `[15/15]`, la etiqueta del check cuando el modo completo llegaba a 15⟧ — **no puede cerrar aquí por
 construcción**, porque el evento que la produce es posterior a este disparador. Se hereda al momento B de
 §6 con dueño y disparador, y esa pendencia **no** convierte la fase en incompleta.
 **Complejidad técnica:** MEDIA: un writer, un verificador conectado al modo completo y tests con mutación.
@@ -51,7 +52,12 @@ premisa se declara **no comprobada**, no se copia el 49.
 2. **Frescura por contenido (AC2, AC4).** Guardar junto a la subida una **instantánea versionada** en el
    repo y hacer que la verificación compare el contenido ingerido contra esa instantánea —con la prueba de
    sha inverso del saneado, que ya existe en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-G/`—, y
-   exigir que un plan no tenga dos fuentes vigentes sin marca de reemplazo. Decisión abierta que hay que
+   exigir que un plan no tenga dos fuentes vigentes sin marca de reemplazo. **El dialecto de frescura ya
+   existe y se reutiliza, no se reinventa**: es el contrato D2 del hermano
+   `scripts/verify_qmind_context_freshness.py` — `metadata.fileSha256`/`fileSize` que publica el propio
+   `source list` como **primera vía**, y la **descarga + sha256** queda como verificación de esa promesa del
+   servidor; si no se pudo observar, `NO-EVALUABLE` (nunca `VENCIDO`), y si la descarga desmiente al índice
+   eso es `PROMESA-ROTA` y corta rojo. ⟦Alineado el 2026-10-06 en la puesta al día del paquete⟧. Decisión abierta que hay que
    tomar en voz alta: marcar la anterior o borrarla (borrar es irreversible sobre contenido publicado).
 3. **Fin del verde por ausencia (AC3).** Que `_check_qmind_writeback()` invoque el script con `--strict` o
    distinga un tercer estado; el resumen no puede contar como PASS una medición que no ocurrió.
@@ -63,8 +69,12 @@ premisa se declara **no comprobada**, no se copia el 49.
    instantánea versionada, y eso es justo lo que AC2/AC4 prometen. Actualizar el prompt de FASE-RELEASE del
    plan padre para que mande el writer en lugar de depender de que alguien recuerde el título pre-acordado
    — eso **es** AC6-entrega, y cierra en esta fase. Cierre incremental con la regla de siempre:
-   `log_phase_completion.py` sin `--release`, `build_lesson_index.py` y su `--check`, quick y
-   `validate_document_integration`.
+   `log_phase_completion.py` con `--fase`, `--desc` y `--fecha` y **sin** `--release`, `build_lesson_index.py`
+   y su `--check`, quick y `validate_document_integration`. ⟦Puesta al día 2026-10-06: `--fecha` es
+   obligatoria (`log_phase_completion.py::parse_args`, con `fecha_iso_estricta` validándola como
+   fecha de calendario): es la
+   fecha **real** de cierre, variable a sustituir, y si el registro fuera tardío se documenta con `--nota`
+   y su motivo; el canon está en `docs/CONTRIBUTING.md` y en el executor §4.5.1⟧.
 
 ## Reglas
 

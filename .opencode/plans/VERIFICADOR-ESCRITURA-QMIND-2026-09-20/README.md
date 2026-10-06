@@ -4,7 +4,11 @@
 FASE ÚNICA NO EJECUTADA, con su contrato ahora dividido en dos momentos.** Ninguna línea de este plan
 está implementada: `scripts/validate_qmind_writeback.py` sigue sin `--title` ni `--file`, sigue decidiendo
 **por título** y sigue degradando a `exit 0` cuando falta el CLI (medido otra vez el 2026-09-24 con
-`grep` sobre su `main()` y su `_check_qmind_writeback`). Lo que cambió no es el estado de la fase sino su
+`grep` sobre su `main()` y su `_check_qmind_writeback`). ⟦Re-medido el 2026-10-06: **sigue vigente**, y queda
+aquí como dato para no re-descubrirlo — las banderas propias del writer son `--nb`, `--strict` y `--upload`;
+los `--title`/`--file` que aparecen en el archivo son los que `upload_source()` pasa al CLI `qmind`, no del
+writer. `is_ingested()` decide por título, y `run_all_validations.py::_check_qmind_writeback()` lo invoca
+**sin** `--strict`. La etiqueta vigente del check es `[17/18]`⟧. Lo que cambió no es el estado de la fase sino su
 **estructura de aceptación**: **entrega offline verificable** (maestro §6) frente a **aceptación remota**,
 que es la que necesita red, autorización y presupuesto propios. Este mini-plan **no consume ni toca el
 presupuesto `v4complete` de ningún otro plan.**
@@ -23,7 +27,9 @@ de reparación». Si el disparador vence sin ejecutarse, aplica el *fallback* de
 > defecto no era de cronología sino de **una sola AC con dos momentos mezclados**. Se separan (maestro §2 y
 > §6): **AC6-entrega** — cambiar el prompt de RELEASE del padre para que mande el writer con `--title`, y
 > dejar el instrumento capaz de hacerlo — se prueba **offline, en esta sesión, con `diff` y tests**;
-> **AC6-aceptación** — que `[15/15]` dé verde sobre el padre **después** de su ingesta de cierre — se
+> **AC6-aceptación** — que `[17/18]` dé verde sobre el padre **después** de su ingesta de cierre ⟦re-anclado
+> el 2026-10-06; en el bloque de arriba se cita `[15/15]` porque así estaba escrito cuando se resolvió la
+> circularidad⟧ — se
 > declara **diferida con dueño y disparador**, y **no** es condición para cerrar esta fase. Una fase
 > entregada con AC6-aceptación pendiente es un resultado **parcial explícito**, no un fracaso ni un éxito.
 
@@ -42,9 +48,11 @@ vía de actualización; el corpus lo documenta desde el 2026-09-11 y nadie lo ce
 
 Medido el 2026-09-20, tres hechos que el plan padre no puede arreglar sin romperse:
 
-1. `scripts/run_all_validations.py` invoca el validador como check **[15/15]**, pero solo en el modo
+1. `scripts/run_all_validations.py` invoca el validador como check **[17/18]**, pero solo en el modo
    completo (cola del método `run()`, dentro de `if not self.quick:`); no corre con `--quick` ni en
-   `scripts/git_hooks/pre-commit`. Ninguna fase intermedia lo ve.
+   `scripts/git_hooks/pre-commit`. Ninguna fase intermedia lo ve. ⟦Re-anclado el 2026-10-06: se publicó como
+   `[15/15]`, etiqueta que le correspondía cuando el modo completo llegaba a 15 checks; hoy el denominador
+   es 18 porque nació el hermano `[18/18]` de frescura `CONTEXT`⟧.
 2. `_check_qmind_writeback()` lo lanza **sin `--strict`**: si el CLI `qmind` no está disponible, el
    validador degrada a exit 0 y el resumen muestra PASS. Es un verde producido por la ausencia del
    instrumento.

@@ -62,19 +62,30 @@ El principal revisa el inventario, decide los cambios mínimos y verifica diff, 
 
 Actualizar estado de este prompt, `06-checklist-implementacion.md`, `dependencias-fases.md` e índice del plan con resultados reales, sin marcar completos requisitos pendientes.
 Actualizar `00-lecciones-capitalizadas.md`, `09-documentacion-post-proyecto.md` y `10-analisis-post-implementacion.md`: AC13, delta, límites y las observaciones medidas que realmente existan — **sin cuota de lecciones nuevas** (una fase puede declarar «sin lecciones nuevas»).
-Añadir subsección F a CHANGELOG bajo versión vigente y nota en `docs/GUIA_TECNICA.md`; no cambiar VERSION ni anticipar release.
+Añadir subsección F a CHANGELOG **bajo `## [Sin publicar]`**, no bajo número de versión — fechar una release es acto de RELEASE (`04-contrato-ejecucion.md` paso 3)— y nota en `docs/GUIA_TECNICA.md`; no cambiar VERSION ni anticipar release.
 Sustituir variables por archivos y tests realmente medidos antes de ejecutar el registro propio, sin `--release`:
 
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-F --desc "REFACTOR-WHATSAPP-ENTREGA: sanitización calificada y estado operativo de credencial" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-F --desc "REFACTOR-WHATSAPP-ENTREGA: sanitización calificada y estado operativo de credencial" --fecha "$FECHA_CIERRE" --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 ./venv/Scripts/python.exe scripts/validate_document_integration.py
 ```
 
+`--fecha` = fecha real de cierre; si el registro es tardío, `--nota` con el motivo. `log_phase_completion.py::parse_args` la declara obligatoria junto con `--fase` y `--desc` y la valida como fecha de calendario, así que `$FECHA_CIERRE` es variable a sustituir — el comando sin la bandera se niega en lugar de estampar la fecha del reloj. ⟦Puesta al día 2026-10-06: este bloque se escribió antes de esa obligatoriedad y rompía al ejecutarse tal cual; la regla canónica vive en `docs/CONTRIBUTING.md` y en el executor §4.5.1, y no se re-transcribe aquí⟧.
+
 Confirmar REGISTRY sin GAP y TOTAL PASS dinámico; si hay rojos fuera de alcance, checkpoint INCOMPLETA, sin modificar baselines ni permisos.
-DOMAIN_PRIMER **regenerado** solo mediante su writer, según la resolución documentada en A y en `04-contrato-ejecucion.md` paso 4: regenerar es operación de este cierre de fase y **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas. No editar manualmente ni resolver la divergencia cambiando el contexto global.
+DOMAIN_PRIMER **regenerado** solo mediante su writer, según la resolución documentada en A y en `04-contrato-ejecucion.md` paso 4, **y solo si el mandato de la fase autoriza escribir** `.agent/knowledge/DOMAIN_PRIMER.md` — está versionado, cada regeneración ensucia el árbol, y sin esa autorización se declara el checkpoint en vez de tocarlo. Regenerar es operación de este cierre de fase y **verificar** con `doctor.py --context` es operación de RELEASE — dos operaciones distintas. No editar manualmente ni resolver la divergencia cambiando el contexto global.
+
+**Derivados vencidos: un rojo del quick al cerrar puede no ser del cambio.** Si la fase añadió evidencia `.py` o editó documentos del plan, correr el fixer del derivado que cayó y **re-correr el quick**:
+
+- `[8/13]` OpenCode References → `./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix`
+- `[9/13]` Plan Citations → `./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline` (acto visible: lo hace quien documenta; no silencia un rojo)
+- `[11/13]` Wiring → `./venv/Scripts/python.exe scripts/validate_wiring.py --write-report`
+- `[13/13]` Packs → `./venv/Scripts/python.exe scripts/build_phase_briefing.py`
+
+Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo completo solo sus cinco checks exclusivos se etiquetan con denominador 18. El número lo imprime la corrida: no se copia a ningún documento.
 Write-back durable solo con autorización y contenido saneado; ausencia de permiso/acceso implica checkpoint del cierre. SKIP por título no prueba frescura.
 No commit, push, tag, rotación ni cambios centrales sin autorización expresa; el registro documental no declara revocación que el operador no haya acreditado.
 
