@@ -1,0 +1,100 @@
+== BASELINE (arbol curado) rc=0 fracasos=0
+   cola: 141 passed in 1.20s
+== M1 (la excusa NO-APLICA existe): rc=1 fracasos=4 cayeron 3/3 esperados
+     - test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada
+     - test_el_guard_no_corta_el_run_cuando_el_brazo_declara_no_aplica_con_motivo
+     - test_la_excusa_no_cubre_un_estado_que_si_corta
+     - test_el_preflight_versionado_de_fase_c_ya_no_corta_el_comparador
+== M2 (la comparacion es de tipo y valor): rc=1 fracasos=1 cayeron 1/1 esperados
+     - test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[1-un entero que se parece a True]
+== M3 (el motivo tiene que estar escrito): rc=1 fracasos=5 cayeron 3/3 esperados
+     - test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada
+     - test_no_aplica_sin_motivo_corta_el_run_y_no_envia_nada
+     - test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA-el literal sin motivo]
+     - test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA:-el separador sin motivo]
+     - test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA   -solo espacios despues]
+== M4 (NO-APLICA es un literal, no un prefijo de cualquiera): rc=1 fracasos=1 cayeron 1/1 esperados
+     - test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICABLE: el brazo no usa SDK-otra palabra que empieza igual]
+== SHA256 del script
+   previo     = 137e626cf7f3a5ac8dbf76ca0c8c77fcb098660cbc5940c457335cb15b9c99bd
+   posterior  = 137e626cf7f3a5ac8dbf76ca0c8c77fcb098660cbc5940c457335cb15b9c99bd
+   IDENTICO   = True
+{
+ "baseline_fracasos": 0,
+ "mutantes": [
+  {
+   "id": "M1",
+   "clausula": "la excusa NO-APLICA existe",
+   "ancla_unica": true,
+   "rc": 1,
+   "n_fracasos": 4,
+   "fracasos": [
+    "test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada",
+    "test_el_guard_no_corta_el_run_cuando_el_brazo_declara_no_aplica_con_motivo",
+    "test_la_excusa_no_cubre_un_estado_que_si_corta",
+    "test_el_preflight_versionado_de_fase_c_ya_no_corta_el_comparador"
+   ],
+   "esperados_que_cayeron": [
+    "test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada",
+    "test_el_guard_no_corta_el_run_cuando_el_brazo_declara_no_aplica_con_motivo",
+    "test_el_preflight_versionado_de_fase_c_ya_no_corta_el_comparador"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "M2",
+   "clausula": "la comparacion es de tipo y valor",
+   "ancla_unica": true,
+   "rc": 1,
+   "n_fracasos": 1,
+   "fracasos": [
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[1-un entero que se parece a True]"
+   ],
+   "esperados_que_cayeron": [
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[1-un entero que se parece a True]"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "M3",
+   "clausula": "el motivo tiene que estar escrito",
+   "ancla_unica": true,
+   "rc": 1,
+   "n_fracasos": 5,
+   "fracasos": [
+    "test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada",
+    "test_no_aplica_sin_motivo_corta_el_run_y_no_envia_nada",
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA-el literal sin motivo]",
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA:-el separador sin motivo]",
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA   -solo espacios despues]"
+   ],
+   "esperados_que_cayeron": [
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA-el literal sin motivo]",
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICA:-el separador sin motivo]",
+    "test_no_aplica_sin_motivo_corta_el_run_y_no_envia_nada"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "M4",
+   "clausula": "NO-APLICA es un literal, no un prefijo de cualquiera",
+   "ancla_unica": true,
+   "rc": 1,
+   "n_fracasos": 1,
+   "fracasos": [
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICABLE: el brazo no usa SDK-otra palabra que empieza igual]"
+   ],
+   "esperados_que_cayeron": [
+    "test_cada_forma_que_no_es_declaracion_valida_sigue_cortando[NO-APLICABLE: el brazo no usa SDK-otra palabra que empieza igual]"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  }
+ ],
+ "sha_previo": "137e626cf7f3a5ac8dbf76ca0c8c77fcb098660cbc5940c457335cb15b9c99bd",
+ "sha_posterior": "137e626cf7f3a5ac8dbf76ca0c8c77fcb098660cbc5940c457335cb15b9c99bd",
+ "arbol_intacto": true
+}

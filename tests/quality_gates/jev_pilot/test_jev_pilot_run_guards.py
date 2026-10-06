@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import builtins
 import json
+from pathlib import Path
+
 import pytest
 
 PIN = "jev-1.13.0"
@@ -134,6 +136,137 @@ def test_preflight_de_otro_proveedor_no_autoriza_este(tmp_path, runner):
     resultado = runner.run(**kwargs, enviar=enviar,
                            autorizacion_de_null={"declarada": True, "motivo": "medicion"})
     assert any("jev" in m for m in resultado["motivos"]) and vistos["llamadas"] == []
+
+
+# ------------------------------------------- REL-1 (dictado D4, 2026-10-05): la declaracion NO-APLICA
+
+NO_APLICA_HONESTO = ("NO-APLICA: el comparador es un API HTTP, no un SDK; el contrato del brazo es "
+                     "`evaluar(state, preguntas)` de scripts/proveedores/deepseek.py")
+
+# Formas que NO excuses nada: el literal pelado, el literal con separador y nada despues, otra palabra
+# que empieza igual y las minusculas. Los tres estados que el dictado manda seguir cortando (ausente,
+# None, cualquier otro valor) van a parte.
+NO_APLICA_INVALIDOS = [
+    ("NO-APLICA", "el literal sin motivo"),
+    ("NO-APLICA:", "el separador sin motivo"),
+    ("NO-APLICA   ", "solo espacios despues"),
+    ("NO-APLICABLE: el brazo no usa SDK", "otra palabra que empieza igual"),
+    ("no-aplica: el brazo no usa SDK", "minusculas: el literal es NO-APLICA"),
+    ("NO", "otro literal"),
+    (1, "un entero que se parece a True"),
+    (0, "cero"),
+    ("True", "el booleano escrito como texto"),
+]
+
+
+def _preflight_de(proveedor, valor, *, omitir=False):
+    """El registro de UN proveedor con `sdk_instalado` puesto (o quitado); el otro queda intacto."""
+    datos = _preflight()
+    registro = datos["proveedores"][proveedor]
+    if omitir:
+        registro.pop("sdk_instalado")
+    else:
+        registro["sdk_instalado"] = valor
+    return datos
+
+
+def _preflight_de_deepseek(sdk_instalado=None, **otros):
+    datos = _preflight()
+    datos["proveedores"]["deepseek"]["sdk_instalado"] = sdk_instalado
+    datos["proveedores"]["deepseek"].update(otros)
+    return datos
+
+
+def _escribir_preflight(tmp_path, datos):
+    ruta = tmp_path / "preflight.json"
+    ruta.write_text(json.dumps(datos), encoding="utf-8")
+    return ruta
+
+
+def test_no_aplica_con_motivo_escusa_el_estado_y_la_excusa_queda_publicada(tmp_path, runner):
+    """VERDE de D4: el brazo que escribe su motivo pasa, y la excusa no es silenciosa."""
+    ruta = _escribir_preflight(tmp_path, _preflight_de("deepseek", NO_APLICA_HONESTO))
+    res = runner.revisar_preflight(ruta, "deepseek")
+    assert res["ok"] is True and res["motivos"] == [], res["motivos"]
+    assert res["no_aplica_declarados"]["sdk_instalado"].startswith(
+        "el comparador es un API HTTP"), res["no_aplica_declarados"]
+
+
+def test_el_guard_no_corta_el_run_cuando_el_brazo_declara_no_aplica_con_motivo(tmp_path, runner):
+    """El brazo se corta o no se corta **en el `run`**: aca no se corta y hay un envio."""
+    kwargs = _armar(tmp_path, runner, preflight=_preflight_de("jev", NO_APLICA_HONESTO))
+    enviar, vistos = _enviador()
+    resultado = runner.run(**kwargs, enviar=enviar,
+                           autorizacion_de_null={"declarada": True, "motivo": "medicion"})
+    assert resultado["status"] == "OK" and resultado["envios"] == 1
+    assert len(vistos["llamadas"]) == 1
+
+
+def test_no_aplica_sin_motivo_corta_el_run_y_no_envia_nada(tmp_path, runner):
+    """ROJO de D4 con la causa nombrada: `NO-APLICA` pelado es la ausencia con mejor cara."""
+    kwargs = _armar(tmp_path, runner, preflight=_preflight_de("jev", "NO-APLICA"))
+    enviar, vistos = _enviador()
+    resultado = runner.run(**kwargs, enviar=enviar,
+                           autorizacion_de_null={"declarada": True, "motivo": "medicion"})
+    assert resultado["status"] == "NEGADO" and vistos["llamadas"] == []
+    assert any("sdk_instalado='NO-APLICA'" in m for m in resultado["motivos"]), resultado["motivos"]
+
+
+@pytest.mark.parametrize("valor, porque", NO_APLICA_INVALIDOS)
+def test_cada_forma_que_no_es_declaracion_valida_sigue_cortando(tmp_path, runner, valor, porque):
+    """D4 por el lado contrario: solo se excusa el literal del brazo, con su motivo escrito."""
+    ruta = _escribir_preflight(tmp_path, _preflight_de("deepseek", valor))
+    res = runner.revisar_preflight(ruta, "deepseek")
+    assert res["ok"] is False, f"se colo una excusa invalida ({porque}): {res}"
+    assert any("sdk_instalado" in m for m in res["motivos"]), (porque, res["motivos"])
+    assert res.get("no_aplica_declarados", {}) == {}, (porque, res["no_aplica_declarados"])
+
+
+def test_estado_ausente_del_registro_sigue_cortando(tmp_path, runner):
+    """D4 nombra el valor ausente: quitar la clave no es declararla inaplicable."""
+    ruta = _escribir_preflight(tmp_path, _preflight_de("deepseek", None, omitir=True))
+    res = runner.revisar_preflight(ruta, "deepseek")
+    assert res["ok"] is False
+    assert "preflight-sdk_instalado=None" in res["motivos"], res["motivos"]
+    assert res["no_aplica_declarados"] == {}
+
+
+def test_la_excusa_no_cubre_un_estado_que_si_corta(tmp_path, runner):
+    """La excusa es por estado: un `NO-APLICA` valido no salva la habilitacion que falta."""
+    ruta = _escribir_preflight(tmp_path, _preflight_de_deepseek(NO_APLICA_HONESTO,
+                                                                habilitacion_declarada=False))
+    res = runner.revisar_preflight(ruta, "deepseek")
+    assert res["ok"] is False
+    assert res["motivos"] == ["preflight-habilitacion_declarada=False"], res["motivos"]
+    assert "sdk_instalado" in res["no_aplica_declarados"], res["no_aplica_declarados"]
+
+
+def test_el_preflight_versionado_de_fase_c_ya_no_corta_el_comparador(tmp_path, runner):
+    """H14 medido sobre el artefacto que lo produjo, no sobre un fixture que lo imita.
+
+    El crudo `FASE-RELEASE/19-ac12-revisar-preflight-y-ac6-guard-real.txt` estampó
+    `deepseek -> ok: false` con el motivo `preflight-sdk_instalado='NO-APLICA: ...'`. Ese valor es
+    declaracion valida, asi que el brazo pasa; `jev` pasa como siempre y `anthropic` sigue cortado por
+    sus tres estados ausentes, que son la exclusion declarada del plan, no una inaplicacion.
+    """
+    raiz = Path(__file__).resolve().parents[3]
+    ruta = (raiz / "evidence" / "EVALUACION-JEV-TYPESAFE-2026-09-21"
+            / "FASE-C" / "preflight.json")
+    assert ruta.exists(), f"el artefacto ancla se movio: {ruta}"
+
+    jev = runner.revisar_preflight(ruta, "jev")
+    assert jev["ok"] is True and jev["no_aplica_declarados"] == {}, jev["motivos"]
+
+    dee = runner.revisar_preflight(ruta, "deepseek")
+    assert dee["ok"] is True, dee["motivos"]
+    assert set(dee["no_aplica_declarados"]) == {"sdk_instalado"}, dee["no_aplica_declarados"]
+
+    anth = runner.revisar_preflight(ruta, "anthropic")
+    assert anth["ok"] is False
+    assert anth["motivos"] == ["preflight-habilitacion_declarada=False",
+                               "preflight-sdk_instalado=None",
+                               "preflight-autenticacion_real=None"], anth["motivos"]
+    assert anth["no_aplica_declarados"] == {}
 
 
 def test_presupuesto_agotado_no_envia_y_el_ledger_no_aparece(tmp_path, runner):

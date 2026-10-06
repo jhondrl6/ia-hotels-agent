@@ -7,10 +7,20 @@ verificador de la casa (`validate_qmind_writeback.py`) no los mira — su poblac
 archivados y decide por **titulo**. Por eso el verde `13/13` convivio nueve dias con un `CONTEXT` vencido
 sin decir nada.
 
-**Criterio: DESCARGA + sha256 contra el archivo gobernado. Nunca por titulo.** `metadata.fileSha256` que
-publica el listado es **corroboracion**: se compara y se declara su desacuerdo, pero ninguna decision sale
-de el (medido el 2026-09-29: la fuente vencida y la fresca tienen titulos que conservan el stem, y la
-forma «original + cierre» es legal — hay dos fuentes del mismo CONTEXT y solo una casa por bytes).
+**Criterio: los BYTES del archivo gobernado. Nunca el titulo.** Desde D2 (2026-10-05) la primera via es
+`metadata.fileSha256`/`fileSize` que el propio servidor publica en `source list` —es su declaracion sobre
+lo que guarda—, y la **descarga + sha256 queda como verificacion de esa promesa**: ningun verde sale de la
+metadata sin haber bajado la fuente que la declara (medido el 2026-10-05, crudo `FASE-RELEASE/40-`:
+`fileSha256` de `01a0efcc-3297…` iguala el sha de lo que baja y los 17272 bytes del disco, y `46-` de esta
+tanda lo re-mide sobre el arbol curado). Cuando el servidor no declara ninguna fuente que case se baja
+igual: primero las que nombran el stem y, si ninguna casa, el barrido completo de todas las fuentes
+(medido el 2026-09-29: la fuente vencida y la fresca tienen titulos que conservan el stem, y la forma
+«original + cierre» es legal — hay dos fuentes del mismo CONTEXT y solo una casa por bytes).
+
+Lo que no se observo no se pinta de vencido (deuda B2-4, hallazgo H15, corridas `12-` y su apendice en
+`40-`): una fuente cuyo metadata casa y no baja, o un barrido del que no baja **nada**, sale
+`NO-EVALUABLE` con su motivo y no `VENCIDO`. Y si la descarga desmiente al indice del servidor, eso es
+`PROMESA-ROTA` y corta: ahi el rojo no es del artefacto, es de la promesa.
 
 Poblacion (se publica en la salida, con sus exclusiones y su razon):
   1. `CONTEXT-*.md` de la raiz de `--context-dir` **que autodeclaren** una leccion durable. El detector
@@ -34,10 +44,15 @@ npm y desde `subprocess` de Python con el nombre resuelto falla con `FileNotFoun
 (medido 2026-09-29). Los ids que entran al comando estan validados por patron, no interpolados crudos.
 
 Salidas (tri-estado, R2.9):
-  0 — todos los gobernados tienen al menos una fuente publicada que casa byte a byte.
-  1 — al menos uno esta VENCIDO (hay fuentes que lo nombran y ninguna casa), o `--strict` sin `qmind`.
+  0 — todos los gobernados tienen al menos una fuente publicada que casa byte a byte, con la promesa del
+      servidor verificada por descarga.
+  1 — al menos uno esta VENCIDO (hubo observacion y ningun byte casa), o `PROMESA-ROTA` (el indice del
+      servidor y lo que entrega no casan entre si), o `--strict` sin `qmind`.
   2 — NO-EVALUABLE: un gobernado desaparecio del disco entre el censo y la corrida, o la poblacion quedo
-      vacia habiendo ficheros `CONTEXT-*` (un verde sin candidatos no es un verde).
+      vacia habiendo ficheros `CONTEXT-*` (un verde sin candidatos no es un verde), o **no bajo nada** de
+      lo que hacia falta bajar para decidir (D2: sin observacion no se pinta VENCIDO).
+El rojo manda sobre la abstencion: si un gobernado esta VENCIDO y otro no se pudo observar, la corrida
+sale 1 y las dos lineas se imprimen.
 Sin `qmind` disponible y sin `--strict`: WARN + 0, el mismo fallback del executor (:468) que usa el
 verificador hermano.
 """
@@ -179,7 +194,8 @@ def listar_fuentes(nb: str) -> list[dict]:
     if isinstance(datos, list):
         fuentes = datos
     return [{"id": f.get("id", ""), "title": f.get("title", ""),
-             "sha_metadata": (f.get("metadata") or {}).get("fileSha256", "")}
+             "sha_metadata": (f.get("metadata") or {}).get("fileSha256", ""),
+             "tam_metadata": (f.get("metadata") or {}).get("fileSize", "")}
             for f in fuentes if f.get("id")]
 
 
@@ -261,9 +277,28 @@ def poblacion_declorada(plans_dir: Path) -> tuple[list[dict], list[tuple[str, st
     return resueltos, fuera
 
 
+def _corroboracion(fuente: dict, sha_disco: str, tam_disco: int) -> str:
+    """Lo que el servidor dice de sus bytes, contra lo que se observo. Nunca es el veredicto solo."""
+    if fuente["sha_metadata"] != sha_disco:
+        return f"DESACUERDO metadata={fuente['sha_metadata'][:12] or '(ausente)'}"
+    tam = fuente.get("tam_metadata", "")
+    if isinstance(tam, int) and tam != tam_disco:
+        return f"DESACUERDO tam={tam}"
+    return "coincide"
+
+
 def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Path,
                        tope_barrido: int = 0) -> tuple[int, list[str]]:
-    """Cada gobernado necesita una fuente publicada cuyos bytes descargados casen con el disco."""
+    """Cada gobernado necesita una fuente publicada cuyos bytes casen con el disco.
+
+    D2 (2026-10-05) re-escribe el orden de la prueba, no el criterio: **la primera vía es la
+    declaración del servidor sobre sus propios bytes** (`metadata.fileSha256` y `fileSize` del
+    `source list`), y la **descarga queda como verificación de esa promesa**. Se decide por bytes en
+    los dos caminos; el titulo nunca decide, solo recorta a quien se le exige el favor.
+
+    Lo que no se puede observar no se pinta de vencido: una fuente cuyo metadata casa y no baja es
+    `NO-EVALUABLE`, y un barrido del que no bajo nada tampoco da `VENCIDO`.
+    """
     ctx_gobernados, excluidos = poblacion_del_context(context_dir, plans_dir)
     declarados, fuera_de_alcance = poblacion_declorada(plans_dir)
 
@@ -298,6 +333,7 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
     lineas.append(f"notebook {NOTEBOOK_TITULO}: {len(fuentes)} fuente(s) publicada(s)")
 
     salio = 0
+    abstenido = 0
     for g in gobernados:
         ruta, etiqueta = g["ruta"], g["etiqueta"]
         if not ruta.is_file():
@@ -306,7 +342,49 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
                           f"{ruta} (¿movido, borrado o aun no regenerate?)")
             return 2, lineas
         sha_disco = sha256_de(ruta)
+        tam_disco = ruta.stat().st_size
         candidatas = [f for f in fuentes if g["criterio"] in (f["title"] or "")]
+
+        # -------------------------------------------------- primera via: la promesa del servidor
+        prometidas = [f for f in fuentes
+                      if f.get("sha_metadata") and f["sha_metadata"] == sha_disco]
+        if prometidas:
+            verificadas, rotas, sin_bajar = [], [], []
+            for fuente in prometidas:
+                descargado = _hash_bajado(nb, fuente["id"], scratch, ruta.stem)
+                if descargado is None:
+                    sin_bajar.append(fuente)
+                elif descargado == sha_disco:
+                    verificadas.append(dict(fuente, _descarga=descargado))
+                else:
+                    rotas.append((fuente, descargado))
+            if verificadas:
+                if rotas:
+                    for fuente, descargado in rotas:
+                        lineas.append(f"  [AVISO] {etiqueta}: {fuente['id'][:13]}… promete "
+                                      f"{fuente['sha_metadata'][:12]}… y entrega {descargado[:12]}…; "
+                                      "la promesa de ESA fuente no se cumple (otra si casa)")
+                lineas.append(f"  [FRESCO] {etiqueta}: {len(verificadas)} fuente(s) que casan por "
+                              f"metadata del servidor, verificada la promesa por descarga+sha256 "
+                              f"({', '.join(c['id'][:13] + '…' + _corroboracion(c, sha_disco, tam_disco) for c in verificadas)})")
+                continue
+            if rotas:
+                salio = 1
+                for fuente, descargado in rotas:
+                    lineas.append(f"  [PROMESA-ROTA] {etiqueta}: {fuente['id'][:13]}… declara "
+                                  f"fileSha256={fuente['sha_metadata'][:12]}… = sha_disco, pero su "
+                                  f"descarga dio {descargado[:12]}… El indice y los bytes del servidor "
+                                  f"no casan entre si, asi que no hay promesa verificada.")
+                continue
+            abstenido = 2
+            lineas.append(f"  [NO-EVALUABLE] {etiqueta}: {len(sin_bajar)} fuente(s) cuyo "
+                          f"metadata casa con el disco ({', '.join(f['id'][:13] + '…' for f in sin_bajar)}) "
+                          f"no bajaron; el servidor promete unos bytes y la verificacion de esa promesa "
+                          f"no se pudo hacer. No es VENCIDO: nunca se pinta de vencido lo que no se "
+                          f"observo.")
+            continue
+
+        # ------------------------------------------- segunda via: el servidor no promete este sha
         bajadas = list(candidatas)
         barrido_completo = False
         if not any(sha_disco == _hash_bajado(nb, f["id"], scratch, ruta.stem) for f in bajadas):
@@ -314,23 +392,30 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
             # porque el criterio es byte a byte y un titulo puede no conservar el stem.
             bajadas = list(fuentes)
             barrido_completo = True
-        casadas = []
+        casadas: list[dict] = []
+        sin_descarga = 0
         for fuente in bajadas:
             if fuente["id"] in [c["id"] for c in casadas]:
                 continue
             descargado = _hash_bajado(nb, fuente["id"], scratch, ruta.stem)
             if descargado is None:
-                salio = max(salio, 1)
+                sin_descarga += 1
                 lineas.append(f"  [SIN-DESCARGA] {fuente['id']} no bajable para {etiqueta}")
                 continue
             if descargado == sha_disco:
-                corrobora = "coincide" if fuente["sha_metadata"] == sha_disco else (
-                    f"DESACUERDO metadata={fuente['sha_metadata'][:12] or '(ausente)'}")
-                casadas.append(dict(fuente, corroboracion=corrobora))
+                casadas.append(dict(fuente, corroboracion=_corroboracion(fuente, sha_disco, tam_disco)))
         if casadas:
             lineas.append(f"  [FRESCO] {etiqueta}: {len(casadas)} fuente(s) que casan por "
                           f"descarga+sha256 "
                           f"({', '.join(c['id'][:13] + '…' + c['corroboracion'] for c in casadas)})"
+                          + (" [barrido completo]" if barrido_completo else ""))
+            continue
+        if sin_descarga == len(bajadas) and bajadas:
+            # Cero observaciones: el barrido entero fallo, o sea la corrida no vio NINGUN byte.
+            abstenido = 2
+            lineas.append(f"  [NO-EVALUABLE] {etiqueta}: no bajo ninguna de "
+                          f"{len(bajadas)} fuente(s) examinada(s); sin observacion no hay VENCIDO "
+                          f"({len(candidatas)} la nombran por titulo)"
                           + (" [barrido completo]" if barrido_completo else ""))
             continue
         salio = 1
@@ -338,7 +423,7 @@ def verificar_frescura(context_dir: Path, plans_dir: Path, nb: str, scratch: Pat
                       f"{len(bajadas)} fuente(s) examinada(s) casa "
                       f"({len(candidatas)} la nombran por titulo)"
                       + (" [barrido completo]" if barrido_completo else ""))
-    return salio, lineas
+    return (salio or abstenido), lineas
 
 
 _CACHE_BAJADAS: dict[tuple[str, str], str] = {}

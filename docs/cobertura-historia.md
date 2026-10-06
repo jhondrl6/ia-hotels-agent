@@ -15,6 +15,44 @@
 
 ---
 
+> **Ronda del 2026-10-05 — CIERRE-DE-ABANICO (REL-1 y REL-6 del piloto JEV; la cifra sube a 4,850).**
+> Medido con el metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py`
+> = **4,850**) y contrastado con el arbol versionado del tip previo (`git grep -h -c -E "^\s*def test_"
+> HEAD -- tests` sumado = **4,835**, o sea el delta de esta ronda es +15 y nada viene heredado). Dos
+> baterias, cada una con su causa en un dictado del mandato:
+>
+> * **+7 en `tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py` (16 a 23)** — D4 sobre
+>   `revisar_preflight` de `scripts/evaluate_jev_pilot.py`. El VERDE: el brazo que declara `NO-APLICA` con
+>   su motivo en el mismo valor pasa, y la excusa se publica en `no_aplica_declarados` (dos formas: la
+>   guarda aislada y el `run` completo con transporte inyectado, para que el verde signifique "no se corto
+>   el brazo" y no "no se disparo la guarda"). El ROJO, ocho casos parametrizados mas tres sueltos: el
+>   literal pelado, el separador sin motivo, `NO-APLICABLE` (otra palabra que empieza igual), las
+>   minusculas, el estado ausente, `None`, `0`, `1` y `"True"`. Un diente va anclado al **artefacto que
+>   produjo el hallazgo**: `FASE-C/preflight.json` lee `deepseek -> ok=true` y `anthropic -> ok=false` con
+>   sus tres motivos, sobre el archivo versionado y no sobre un fixture que lo imite.
+> * **Hallazgo anexo, curado con el dictado:** la guarda comparaba con `!=`, y en Python `1 == True`, asi
+>   que un `1` en el preflight pasaba por "SDK instalado". La comparacion ahora es de tipo **y** valor
+>   (`_casado`). No era una grieta nueva: estaba desde FASE-B y la destapo el parametrizado que preguntaba
+>   por `1`.
+> * **+8 en `tests/test_verify_qmind_context_freshness.py` (28 a 36)** — D2 re-escribe el contrato de
+>   frescura: `metadata.fileSha256`/`fileSize` del `source list` deciden primero, y la descarga+sha256
+>   queda como **verificacion de la promesa del servidor** (ningun `[FRESCO]` sale del indice sin bajar la
+>   fuente que lo declara). `NO-EVALUABLE` cuando la fuente que casa por metadata no baja, `PROMESA-ROTA`
+>   cuando el indice desmiente a lo que baja, y el rojo manda sobre la abstencion para que la prudencia de
+>   un gobernado no tape el vencido de otro.
+> * **Dos aserciones re-ancladas, no aflojadas.** `test_la_forma_original_mas_cierre_es_legal` pasaba por
+>   `descargas == 2`: bajo el contrato nuevo la fuente vencida queda descartada por SU PROPIO metadata (un
+>   sha de bytes, no un titulo) y la bajada se concentra en la promesa que hay que verificar, o sea 1.
+>   `test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes` perdia el literal `barrido completo`: la ruta
+>   cambio, el veredicto no. La cobertura de la ruta vieja no se jubila: la toma
+>   `test_sin_metadata_publicada_el_camino_de_descarga_sigue_vivo`, y
+>   `test_vencido_cuando_ninguna_bajada_casa_y_el_barrido_es_completo` sigue exigiendo el barrido entero.
+> * **Instrumento:** los diez mutantes (M1-M4 en
+>   `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE/44-mutantes-guard-preflight-crudo.txt` y F1-F6
+>   en `47-mutantes-contrato-frescura-crudo.txt`) se corrieron sobre el arbol de trabajo con restauracion
+>   verificada por sha256, no por promesa. En los dos casos el FASE-RELEASE/`19-` re-emitido y la racha
+>   `1-1-0` re-medida con crudo quedan en `45-` y `46-` del mismo directorio.
+
 > **Ronda del 2026-10-04 — SESION 3.5 / FASE-B.2 del piloto JEV (la cifra sube a 4,835).** Medido con el
 > metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py` = **4,835**) y
 > contrastado con el arbol versionado (`git grep -h -c -E "^\s*def test_" HEAD -- tests/*.py` sumado =

@@ -1,0 +1,56 @@
+== 0. el disco que se va a publicar
+   32551 B | sha256 ee40f5ee52ffd6a27ccce262509b235495cbf4feedc03e676cd968c7ace67755
+   CR=0 LF=281  (CR 0 o sea crudo == normalizado, sin artefacto CRLF que declarar)
+   titulo nuevo: '10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)'
+-- 1. PRE, el verificador curado sobre el arbol vencido: FRESHNESS_EXIT=1
+     [AVISO] descarga 01a0efcc-3297-7782-9467-757fe81018fc salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9f-56cd-793d-a9d9-6e3d9269bc71 salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9f-3af7-719c-85a3-a8348a4ced99 salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9b-acf4-7dde-9083-7a1d8fcc154f salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9b-8373-70d4-b839-5fabc968fee8 salio 1: error: QMind network request failed
+     [AVISO] descarga 01a04d9b-6d62-790e-a52c-09575fadfcda salio 1: error: QMind network request failed
+     [EXCLUIDO] CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md: no autodeclara una leccion durable: la politica del write-back es por aporte declarado, no por existencia 
+     [EXCLUIDO] CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la n
+     [EXCLUIDO] CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind 
+     [EXCLUIDO] CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y ar
+     [EXCLUIDO] CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind 
+     [EXCLUIDO] CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind 
+     [EXCLUIDO] CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota
+     [EXCLUIDO] CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archiva
+     [EXCLUIDO] CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y
+     [EXCLUIDO] CONTEXT-DT-3-TECH-DEBT-POST-DT2.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del 
+     [EXCLUIDO] CONTEXT-DT-4.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+     [EXCLUIDO] CONTEXT-DT4-RESIDUAL-FIXES.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del execu
+     [EXCLUIDO] CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «Q
+     [EXCLUIDO] CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y arch
+     [EXCLUIDO] CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y arc
+     [EXCLUIDO] CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y 
+     [EXCLUIDO] CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMi
+     [EXCLUIDO] CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «Q
+     [EXCLUIDO] CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMi
+   notebook iah-cli-lecciones: 58 fuente(s) publicada(s)
+     [NO-EVALUABLE] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 1 fuente(s) cuyo metadata casa con el disco (01a0efcc-3297…) no bajaron; el servidor promete unos bytes y la verif
+     [SIN-DESCARGA] 01a0efcc-3297-7782-9467-757fe81018fc no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [SIN-DESCARGA] 01a04d9f-56cd-793d-a9d9-6e3d9269bc71 no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [SIN-DESCARGA] 01a04d9f-3af7-719c-85a3-a8348a4ced99 no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [SIN-DESCARGA] 01a04d9b-acf4-7dde-9083-7a1d8fcc154f no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [SIN-DESCARGA] 01a04d9b-8373-70d4-b839-5fabc968fee8 no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [SIN-DESCARGA] 01a04d9b-6d62-790e-a52c-09575fadfcda no bajable para 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacio
+     [VENCIDO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): sha_disco=ee40f5ee52ff… y ninguna de 58 fuente(s) e
+   [FAIL] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 7 problema(s)
+== 2. poblacion ANTES de publicar
+   rc=0 | fuentes = 58
+   previa 01a10e39-1625-71b1-8ca… status=ready sha=d1b8ff00b511… size=30655 titulo='10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE'
+   previa 01a10853-6da2-7820-b2a… status=ready sha=424b5828e341… size=21249 titulo='10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE'
+   previa 01a0e4d9-e442-7d1b-bde… status=ready sha=04242f497c1b… size=17263 titulo='CONTEXT: CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21'
+   previa 01a0e4d9-b252-7ca0-bf4… status=ready sha=34e2a95195b2… size=15144 titulo='10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offl'
+== 3. publicacion por CLI (upload, titulo nuevo, sin borrar ninguna)
+   UPLOAD_EXIT=0
+   ID:          01a10ec9-8113-7875-a806-2eec6521d37a
+   NotebookID:  01a04d98-b7bd-778c-8441-26fdc7e35f45
+   Title:       10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)
+   Type:        markdown
+   Status:      pending
+   URI:         notebook/sources/01a04d98-b7bd-778c-8441-26fdc7e35f45/f2f7fb04-996f-460a-abaa-80b696a3ed8f/10-analisis-post-implementacion.md
+   UpdatedAt:   2026-10-06T01:17:29Z
+   ABORTO: sin id de la fuente nueva no hay verificacion posible

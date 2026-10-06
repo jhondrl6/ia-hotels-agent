@@ -777,3 +777,27 @@ ese costo. Vive en el registro de la fase, que no es fuente gobernada.
 **EXIT 0**, `2 fresco(s), 0 problema(s)`, **0 `[SIN-DESCARGA]`** — el `CONTEXT` casa con `01a0efcc-3297…` y
 el `10-analisis` con `01a10e39-1625…`. El rojo de las dos corridas anteriores del tip no queda «curado» por
 esta línea: queda **reproducido y explicado**, con la fuente, los números y la cura propuesta.
+
+---
+
+## 16. Tanda CIERRE-DE-ABANICO (2026-10-05, sesión siguiente): las cuatro decisiones pendientes se dictan y se ejecutan
+
+Mandato: la pegada «CIERRE-DE-ABANICO», que trae dictados D1 a D8. Esta sección es **aditiva**: no reescribe
+§8, §13 ni §15, que quedan como foto del cierre de esta hoja. Lo que cambia es el estado de lo que esas
+secciones dejaron abierto, y cada cambio va con su instrumento.
+
+| Lo que §8/§13/§15 dejaron abierto | Estado después de la tanda | Dónde se mide |
+|---|---|---|
+| **REL-2**: FASE-C y FASE-B.2 sin entrada en `REGISTRY.md` | **CERRADO**. Dos corridas de `scripts/log_phase_completion.py`, una por fase, `--fecha 2026-10-04`, `--plan` nombrado, `--tests` con el **delta** de cada fase (0 y 35, lectura dictada por el operador porque la pegada admitía dos), sin `--archivos-mod`. El control negativo está **ejecutado**: re-llamar al escritor responde `COLISION DE ENCABEZADO` + EXIT 1, o sea «exactamente una vez» es re-ejecutable y no prosa | `43-rel2-registry-corridas.txt`; `git diff --numstat docs/contributing/REGISTRY.md` = 38/2 |
+| **REL-1**: el preflight cortaba el brazo comparador | **CERRADO**. `revisar_preflight` acepta el `NO-APLICA` que el propio brazo declara **con su motivo** y lo publica en `no_aplica_declarados`; sigue cortando con valor ausente, `None` o cualquier otro literal. Hallazgo anexo curado con el dictado: el guard comparaba con `!=` y en Python `1 == True`, así que un `1` pasaba por SDK instalado; ahora compara tipo **y** valor. Sobre el artefacto real: `deepseek -> ok=true`, `jev -> ok=true`, `anthropic -> ok=false` con sus tres motivos | `44-mutantes-guard-preflight-crudo.txt` (M1-M4), `45-ac12-re-emitido-post-rel1.txt`, 141 verdes en `tests/quality_gates/jev_pilot` |
+| **REL-6 / B2-4**: la frescura pintaba `VENCIDO` un fresco | **CERRADO con el contrato re-escrito**, que era la decisión que §15 dejaba a su dueño: metadata del servidor como primera vía, descarga+sha256 como **verificación de la promesa**, `NO-EVALUABLE` cuando la fuente que casa no baja, `PROMESA-ROTA` cuando el índice desmiente a lo que baja, y el rojo mandando sobre la abstención. Dos aserciones re-ancladas por el contrato nuevo, con su justificación dentro del test y la ruta de barrido cubierta por un test nuevo | `47-mutantes-contrato-frescura-crudo.txt` (F1-F6), 36 verdes en `tests/test_verify_qmind_context_freshness.py` |
+| **AC-4 / la racha sin crudo** de `01a0efcc-3297…` | **CERRADO**. Re-medida tres veces sobre el borde real y **con el crudo en disco**: `1-1-0` (intento 1 exit 1, intento 2 exit 1, intento 3 exit 0 con 17.272 B y sha `5587f27ddd5a…` igual al del disco). El `source list` ya declaraba ese sha y ese tamaño antes de bajar nada | `46-racha-y-promesa-re-medida-crudo.txt` |
+| **Etiqueta de adopción (AC5)** | **EMITIDA por el operador: MUESTRA-INSUFICIENTE**, anotada con fecha en el `10-analisis` sobre la base que publica `decision.json` (denominador efectivo 1 par utilizable; 4 pares, 2 pertinentes, 2 importantes elegibles). La salida que manda la regla congelada es **muestra nueva**, nunca re-etiquetar la congelada: `protocolo.json`, `muestra.json`, `etiquetas.json` y el `decision.json` de C no se tocaron | párrafo final del `10-analisis` de esta hoja; `49-` de la tanda |
+| **Write-back del `10-analisis`** | **EJECUTADO** por CLI con título nuevo que conserva el stem, verificado por descarga+sha256 y con las fuentes previas intactas. **Revoca expresamente la cláusula de §15** que decía «no se anota en el `10-analisis`: escribirlo ahí volvería a vencer el archivo…»: el vencimiento es ahora el precio de lo que el operador mandó, y se paga publicando | `50-writeback-qmind.txt` |
+| **REL-5** (rojo dependiente del orden de colección) | **DIFERIDO-CON-DUEÑO por dictado D5**: sesión propia de bisect de colección, dueño `tests/quality_gates/jev_pilot/` con su conftest, criterio «suite completa en verde sin rebajar aserciones». No se abrió aquí | `41-tat-abanico-terminal.md` |
+| **D7/D6 / B2-5** (transferencia al hermano) | **DIFERIDO-CON-DUEÑO por dictado D6**: `transfer_status = PENDIENTE`, cero escrituras en el hermano, disparador = línea literal futura que nombre archivos y alcance | `41-tat-abanico-terminal.md` |
+| **L3** | **NO-APLICA por dictado D7**: no corrida en esta sesión; la opción queda en el operador sobre el rango que se empuje | §17 y `53-` de la tanda |
+
+**La TAT de la tanda es la fuente única** del estado terminal de los doce seguimientos y de los cinco dictados:
+`41-tat-abanico-terminal.md` en este mismo directorio. Los demás documentos la referencian y no la
+re-transcriben.

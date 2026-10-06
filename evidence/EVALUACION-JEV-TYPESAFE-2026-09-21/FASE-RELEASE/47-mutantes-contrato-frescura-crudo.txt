@@ -1,0 +1,155 @@
+== BASELINE (arbol curado) rc=0 fracasos=0 :: ['36 passed in 0.68s']
+== F1 (la descarga verifica la promesa del servidor): rc=1 fracasos=9 cayeron 2/2 restaurado=True
+     - test_fresco_cuando_una_bajada_casa_aunque_el_titulo_no_lo_nomvre
+     - test_la_forma_original_mas_cierre_es_legal
+     - test_metadata_no_es_el_criterio
+     - test_fresco_cuando_la_fuente_declorada_casa_y_no_hace_falta_barrer
+     - test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido
+     - test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa
+     - test_descarga_que_desmiente_al_indice_del_servidor_es_promesa_rota
+     - test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa
+     - test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro
+== F2 (la fuente que casa por metadata y no baja es NO-EVALUABLE): rc=1 fracasos=2 cayeron 1/1 restaurado=True
+     - test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido
+     - test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro
+== F3 (la primera via es la metadata): rc=1 fracasos=6 cayeron 2/2 restaurado=True
+     - test_la_forma_original_mas_cierre_es_legal
+     - test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes
+     - test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa
+     - test_descarga_que_desmiente_al_indice_del_servidor_es_promesa_rota
+     - test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa
+     - test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro
+== F4 (cero observaciones en el barrido no es VENCIDO): rc=1 fracasos=1 cayeron 1/1 restaurado=True
+     - test_barrido_del_que_no_baja_nada_sale_no_evaluable_y_declara_su_causa
+== F5 (fileSize se lee del listado y se corrobora): rc=1 fracasos=1 cayeron 1/1 restaurado=True
+     - test_el_fileSize_del_servidor_tambien_se_corrobora_y_se_declara
+== F6 (el rojo manda sobre la abstencion): rc=1 fracasos=1 cayeron 1/1 restaurado=True
+     - test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro
+== SHA256 previo=23ff637c87ffa9c2998b547dde38390b6de78f3d1effe3f287b4597f235ba520
+== SHA256 posterior=23ff637c87ffa9c2998b547dde38390b6de78f3d1effe3f287b4597f235ba520  IDENTICO=True
+{
+ "baseline_rc": 0,
+ "mutantes": [
+  {
+   "id": "F1",
+   "clausula": "la descarga verifica la promesa del servidor",
+   "rc": 1,
+   "n_fracasos": 9,
+   "fracasos": [
+    "test_fresco_cuando_una_bajada_casa_aunque_el_titulo_no_lo_nomvre",
+    "test_la_forma_original_mas_cierre_es_legal",
+    "test_metadata_no_es_el_criterio",
+    "test_fresco_cuando_la_fuente_declorada_casa_y_no_hace_falta_barrer",
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido",
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa",
+    "test_descarga_que_desmiente_al_indice_del_servidor_es_promesa_rota",
+    "test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa",
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "esperados": [
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa",
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido"
+   ],
+   "cayeron": [
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa",
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "F2",
+   "clausula": "la fuente que casa por metadata y no baja es NO-EVALUABLE",
+   "rc": 1,
+   "n_fracasos": 2,
+   "fracasos": [
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido",
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "esperados": [
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido"
+   ],
+   "cayeron": [
+    "test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "F3",
+   "clausula": "la primera via es la metadata",
+   "rc": 1,
+   "n_fracasos": 6,
+   "fracasos": [
+    "test_la_forma_original_mas_cierre_es_legal",
+    "test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes",
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa",
+    "test_descarga_que_desmiente_al_indice_del_servidor_es_promesa_rota",
+    "test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa",
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "esperados": [
+    "test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa",
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa"
+   ],
+   "cayeron": [
+    "test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa",
+    "test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "F4",
+   "clausula": "cero observaciones en el barrido no es VENCIDO",
+   "rc": 1,
+   "n_fracasos": 1,
+   "fracasos": [
+    "test_barrido_del_que_no_baja_nada_sale_no_evaluable_y_declara_su_causa"
+   ],
+   "esperados": [
+    "test_barrido_del_que_no_baja_nada_sale_no_evaluable_y_declara_su_causa"
+   ],
+   "cayeron": [
+    "test_barrido_del_que_no_baja_nada_sale_no_evaluable_y_declara_su_causa"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "F5",
+   "clausula": "fileSize se lee del listado y se corrobora",
+   "rc": 1,
+   "n_fracasos": 1,
+   "fracasos": [
+    "test_el_fileSize_del_servidor_tambien_se_corrobora_y_se_declara"
+   ],
+   "esperados": [
+    "test_el_fileSize_del_servidor_tambien_se_corrobora_y_se_declara"
+   ],
+   "cayeron": [
+    "test_el_fileSize_del_servidor_tambien_se_corrobora_y_se_declara"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  },
+  {
+   "id": "F6",
+   "clausula": "el rojo manda sobre la abstencion",
+   "rc": 1,
+   "n_fracasos": 1,
+   "fracasos": [
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "esperados": [
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "cayeron": [
+    "test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro"
+   ],
+   "todos_los_esperados_cayeron": true,
+   "arbol_restaurado_por_sha": true
+  }
+ ],
+ "arbol_intacto": true
+}

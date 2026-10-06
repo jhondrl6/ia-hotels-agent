@@ -1,0 +1,86 @@
+# Crudo del corte 6 - liquidacion de derivados - 2026-10-05
+
+## 1. Orden ejecutado (el de la casa: escritor primero, check despues)
+
+$ ./venv/Scripts/python.exe scripts/build_lesson_index.py --check
+[OK] Índice de lecciones fresco (344 IDs)
+[fechas] nombre=333 commit=11 sin_fuente=0
+LECCIONES_EXIT=0
+
+$ ./venv/Scripts/python.exe scripts/validate_wiring.py --check
+[FAIL] Derivado: .opencode/wiring_report.json DIVERGE del calculo en memoria (digest e7a789195b58)
+  - cobertura.archivos_excluidos_por_rol_versionado: publicado 144 | fresco 149
+  - exclusiones_por_rol.evidence.cantidad_versionada: publicado 132 | fresco 137
+  (reparar: python scripts/validate_wiring.py --write-report y commitear el artefacto regenerado)
+WIRING_CHECK_EXIT=3
+
+$ ./venv/Scripts/python.exe scripts/validate_wiring.py --write-report        # el writer del derivado
+[OK] Wiring: ... exclusiones_por_rol: ... evidence bruto=137 versionada=137 ...
+WRITE_EXIT=0
+
+$ ./venv/Scripts/python.exe scripts/validate_wiring.py --check               # re-medido
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest e7a789195b58)
+RECHECK_EXIT=0
+
+## 2. Por que el derivado venco, explicado y no solo reparado
+
+Los cinco archivos que suben son **los arneses `.py` de esta sesion** bajo `evidence/`
+(`44-`, `46-`, `47-`, `50-`, `50b-`). El scanner goberna fuentes por rol y el rol `evidence` cuenta los
+`.py` versionables; `cantidad_versionada` suma los que **no** estan gitignorados (`scripts/validate_wiring.py:321`
+y `:789-803`), y en `evidence/` no hay ni un archivo ignorado:
+
+$ find evidence -type f -not -path "*__pycache__*" -exec git check-ignore --stdin {} + | wc -l
+0
+
+Medida de conciliacion: 132 + 5 = 137 (evidence) y 144 + 5 = 149 (total por rol). Ningun otro rol se movio
+(`archives 12/12`, `temp bruto=146 versionada=0`, `.venv-wsl 0`, `venv 0`). El rojo era EXIT 3 = **derive
+vencido**, no violacion de cableado: `gobernadas 75`, `omisiones 0`, `violaciones 0` en las dos corridas.
+
+## 3. Que publico el writer y como se lee su `git_sha`
+
+$ git diff --numstat .opencode/wiring_report.json
+5	5	.opencode/wiring_report.json
+
+Los cinco renglones: `archivos_excluidos_por_rol` 8496 a 8501, `archivos_excluidos_por_rol_versionado` 144
+a 149, `exclusiones_por_rol.evidence.cantidad_versionada` 132 a 137, `generado` y `git_sha` 39717b1 a
+**e6a0c9e**. Se declara a proposito: `git_sha` es el tip que habia **al generar**, no el commit que va a
+contener el archivo. Despues del sello de esta tanda el tip sera otro y esa linea no se puede arreglar
+regenerando (seria volver a vencer el derivado); si alguien la lee como "el commit que lleva este reporte",
+la lectura es falsa y por eso queda escrita aca.
+
+## 4. El contrato de versiones: check primero, escritor solo si hace falta
+
+$ ./venv/Scripts/python.exe scripts/sync_versions.py --check
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+Result: All files in sync
+SYNC_EXIT=0
+
+El escritor **no se corrio**: nada estaba desfasado, y esta sesion no subio version (VERSION.yaml queda
+intacto, `git status` no lo lista). La edicion de `AGENTS.md` movio la fila de cobertura, no la version.
+
+## 5. Gate rapido de la casa
+
+$ ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
+  [+] Residual Files | Plan Maestro Sync | Version Sync | Secrets Check (SIN_HALLAZGOS 1381 tracked)
+  [+] Client Material (SIN_HALLAZGOS 3429 rutas) | Document Integration | Prompts No Release
+  [+] OpenCode References | Plan Citations (743 historicas, 0 nuevas, 0 crecimientos)
+  [+] Lesson Capitalization | Wiring | Governance Numbers (SIN-HALLAZGOS) | Briefing Packs (5/5)
+  TOTAL: 13/13 validations passed
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+QUICK_EXIT=0
+
+## 6. Mediciones de bateria de esta ronda
+
+$ ./venv/Scripts/python.exe -m pytest tests/test_verify_qmind_context_freshness.py tests/quality_gates/jev_pilot -q
+177 passed in 1.99s          # 36 + 141
+
+$ ./venv/Scripts/python.exe -m pytest tests/test_registry_fecha_documental.py -q
+31 passed in 1.80s
+
+La suite **completa** no se corrio en esta sesion. Se declara como regresion no ejecutada, con su causa:
+la fila REL-5 de la TAT dice que la suite completa tiene un rojo dependiente del orden de coleccion, y D5
+dicto diferirlo con dueno. Correrla aqui no agregaria informacion y si ruido.

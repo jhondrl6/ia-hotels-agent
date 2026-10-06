@@ -1,0 +1,65 @@
+# Crudo del corte 5 (a) - etiqueta de adopcion AC5 dictada por D3 - 2026-10-05
+
+## 1. La etiqueta, y quien la dicta
+
+Mandato CIERRE-DE-ABANICO, punto D3: **MUESTRA-INSUFICIENTE**. No la inventa esta hoja: el propio
+instrumento la tenia reservada. Medido ahora sobre el artefacto versionado:
+
+$ ./venv/Scripts/python.exe -c "... decision.json literales_y_su_estado ..."
+"MUESTRA-INSUFICIENTE": {
+  "estado": "EXCLUIDA por la regla congelada; ponible por el operador",
+  "base": "suficiencia_minima se cumple (0.5 >= 0.5) en el denominador congelado, pero el denominador
+           efectivo de la comparacion es 1 par(es) con eleccion utilizable en los dos brazos",
+  "nota": "si el operador la emite aun asi, la salida es muestra nueva y nunca re-etiquetar la congelada"
+}
+
+## 2. La base numerica, leida del informe de la re-emision (no de la memoria de sesion)
+
+$ ./venv/Scripts/python.exe -c "... informe_comparativa.json ..."
+conjunto_elegible: {"denominador_pares_total": 4, "pertinentes": 2,
+                    "importantes_elegibles": [2 ids], "brazos_en_registros": ["capa_fria","jev","deepseek"]}
+senales_mecanicas S3: {"denominador": 2, ...}
+ACTIVAR: "cobertura_min 0.95 contra 0.5 medido en el brazo sujeto"
+
+O sea: 4 pares congelados, 2 pertinentes, 2 importantes elegibles, denominador de resolucion 2 y
+denominador efectivo 1 par utilizable en los dos brazos. Con un par el umbral no discrimina.
+
+## 3. Donde se anoto y donde NO
+
+- ANOTADO con fecha en `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md`,
+  parrafo final aditivo (tras el sello del commit `39717b1`), citando la base de arriba y la salida que
+  manda la regla congelada.
+- ANOTADO con fecha en `evidence/.../FASE-RELEASE/00-registro-de-fase.md`, seccion 16 (aditiva).
+- **NO anotado en los artefactos de `FASE-C/`**, segun vedaba el mandato. Verificado con el instrumento
+  que manda, no con `sha256sum` a secas:
+
+$ git diff --numstat -- evidence/.../protocolo.json .../muestra.json .../etiquetas.json
+(vacio)
+
+## 4. El falso positivo que hay que declarar: sha de disco != sha de blob en los congelados
+
+$ sha256sum del disco vs `git show HEAD:<ruta>`
+protocolo.json   disco=140577a06b23 HEAD=7caed9dc959c
+muestra.json     disco=0107a386ae57 HEAD=4a8b30c85a88
+etiquetas.json   disco=4ffbb120ef94 HEAD=5da5e8a42393
+
+Ninguno se toco. La diferencia es EOL: el disco lleva CRLF (escrito por una herramienta de Windows) y el
+blob lleva LF, y con `core.autocrlf = input` — medido con `git config --get core.autocrlf` — Git normaliza
+al comparar, por eso el status los declara intactos. Confirmado con el instrumento limpio:
+
+$ tr -dc '\r' < disco | wc -c   ->  CR presentes en disco
+$ git cat-file blob HEAD:<ruta> | tr -dc '\r' | wc -c   ->  0
+$ sha256(tr -d '\r' disco) == sha256(blob)   ->  IGUAL en los tres archivos
+
+Se consigna porque la comprobacion "los congelados estan intactos" hecha por sha crudo da rojo falso, que
+es la familia de defectos que este plan ya registro dos veces.
+
+## 5. Que NO hizo esta etiqueta
+
+- No re-etiqueto nada congelado: `protocolo.json`, `muestra.json`, `etiquetas.json` y el `decision.json`
+  de FASE-C quedan intactos (sect. 3 y 4).
+- No declaro AC5 plena: el literal dictado es MUESTRA-INSUFICIENTE, que es el estado honesto con un par
+  utilizable. La salida es muestra nueva (fila B2-3 de la tabla de seguimientos, dueño: re-apertura de C
+  con decision del operador), y queda DIFERIDO-CON-DUEÑO en la TAT.
+- No toco el `run_status` ni el `decision = null` del cierre: esa emision es del instrumento, no del
+  operador.

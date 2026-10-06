@@ -1,0 +1,97 @@
+# Crudo del corte 2 - REL-2 (D1): las dos entradas de REGISTRY las escribe su escritor - 2026-10-05
+
+## 1. Precondicion medida ANTES de escribir (la entrada no existia)
+
+$ grep -cE "^## FASE-C .*(EVALUACION-JEV|2026-10)" docs/contributing/REGISTRY.md
+0
+$ grep -cE "^## FASE-B\.2" docs/contributing/REGISTRY.md
+0
+
+Los 28 encabezados `## FASE-C` que ya habia en el registro son de otros planes y otras fechas; el predicado
+los excluye por el sufijo del plan y por la fecha del cierre.
+
+## 2. Corrida 1 - FASE-C (una sola vez)
+
+$ ./venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-C --fecha 2026-10-04 --plan EVALUACION-JEV-TYPESAFE-2026-09-21 \
+    --tests 0 --check-manual-docs \
+    --desc "Piloto JEV FASE-C (Comparacion decidible): congelado del protocolo, capa fria offline y corrida comparativa JEV/DeepSeek con su ledger y consumo; cerro INCOMPLETO con decision=null y cuatro cambios requeridos CR-1 a CR-4, que abrieron FASE-B.2" \
+    --nota "registrada en tardanza el 2026-10-05: ..."
+...
+(R) Fase registrada exitosamente
+EXIT=0
+
+## 3. Corrida 2 - FASE-B.2 (una sola vez)
+
+$ ./venv/Scripts/python.exe scripts/log_phase_completion.py \
+    --fase FASE-B.2 --fecha 2026-10-04 --plan EVALUACION-JEV-TYPESAFE-2026-09-21 \
+    --tests 35 --check-manual-docs --desc "..." --nota "registrada en tardanza el 2026-10-05: ..."
+(R) Fase registrada exitosamente
+EXIT=0
+
+## 4. Semantica de --tests, dictada por el operador en esta sesion
+
+La pegada decia "la cifra que imprima el comando canonico de cada fase", que admite dos lecturas: el delta
+de la fase o el total del repo. Se escalo y el operador dicto **delta por fase**: FASE-C 0, FASE-B.2 35.
+Base medida de la lectura: la ayuda del propio escritor (`scripts/log_phase_completion.py:169`) define
+`--tests` como "Numero de tests agregados o modificados", y las dos entradas previas del mismo plan usan
+esa convencion (FASE-B estampo 70, FASE-RELEASE estampo 0; ninguno es total del repo). El total canonico
+de cada cierre (4.800 y 4.835) queda dicho en la nota de cada entrada.
+
+## 5. Postcondicion: cada cabecera existe exactamente una vez
+
+$ grep -cE "^## FASE-C - 2026-10-04 \(EVALUACION-JEV-TYPESAFE-2026-09-21\)$" docs/contributing/REGISTRY.md
+1
+$ grep -cE "^## FASE-B\.2 - 2026-10-04 \(EVALUACION-JEV-TYPESAFE-2026-09-21\)$" docs/contributing/REGISTRY.md
+1
+
+## 6. Control negativo EJECUTADO sobre el escritor versionado (no reimplementado en el test)
+
+Se volvio a llamar al escritor con los mismos argumentos de cada fase. La guarda de la fila 15 se nego
+antes de tocar el expediente:
+
+$ ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-C --fecha 2026-10-04 \
+    --plan EVALUACION-JEV-TYPESAFE-2026-09-21 --tests 0 --check-manual-docs --desc "..." --nota "..."
+COLISION DE ENCABEZADO: el registro se niega a escribir
+  Encabezado: ## FASE-C - 2026-10-04 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+  Ya existe en: 1 lugar(es) de REGISTRY.md
+Saliendo con exit code 1 sin escribir REGISTRY.md.
+EXIT=1
+
+$ ./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-B.2 --fecha 2026-10-04 \
+    --plan EVALUACION-JEV-TYPESAFE-2026-09-21 --tests 35 --check-manual-docs --desc "..." --nota "..."
+COLISION DE ENCABEZADO: el registro se niega a escribir
+  Ya existe en: 1 lugar(es) de REGISTRY.md
+Saliendo con exit code 1 sin escribir REGISTRY.md.
+EXIT=1
+
+Este es el diente que un tercero puede re-ejecutar: la negacion reproduce el "exactamente una vez" sin
+fiarse de la prosa de este archivo.
+
+$ git diff --numstat docs/contributing/REGISTRY.md   # invariante tras los dos controles
+38	2	docs/contributing/REGISTRY.md
+
+## 7. Efecto colateral declarado del mandato --fecha 2026-10-04
+
+El escritor es el unico escritor de la cabecera `> **Ultima actualizacion:**` y estampa `--fecha`, asi que
+al registrar en tardanza con la fecha real del cierre esa linea retrocedio:
+
+-> **Ultima actualizacion:** 2026-10-05
++> **Ultima actualizacion:** 2026-10-04
+-> **Total fases completadas:** 504
++> **Total fases completadas:** 506
+
+No es un dano: es la semantica del instrumento (la fecha de la ultima entrada documental, no la del reloj).
+Se declara porque D1 fijaba `--fecha 2026-10-04` y nadie puede deducir el retroceso sin leer el diff. El
+registro no se edita a mano, asi que no se "corrige".
+
+## 8. Batterias que tocan el REGISTRY, corridas despues de escribir
+
+$ ./venv/Scripts/python.exe -m pytest tests/test_registry_fecha_documental.py -q
+31 passed in 1.80s
+EXIT=0
+
+$ ./venv/Scripts/python.exe scripts/validate_governance_numbers.py
+[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 9 | historica-congelada 10 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 5 (total 18) | hook 8 pasos || familias no cubiertas: 4
+EXIT=0

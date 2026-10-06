@@ -1,0 +1,45 @@
+== 1. el disco gobernado (no se toco en esta sesion)
+   CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 17272 B | sha256 5587f27ddd5a52de…
+   10-analisis-post-implementacion.md: 30655 B | sha256 d1b8ff00b51144ad…
+== 2. lo que el SERVIDOR declara, sin descargar (source list, campos redactados)
+   rc=0
+   fuentes publicadas: 58
+   01a0efcc-3297-7782-9467-757fe81018fc | status=ready | fileSha256=5587f27ddd5a52de… | fileSize=17272
+   fuentes cuyo metadata casa con el CONTEXT en disco: 1 (01a0efcc-3297…)
+== 3. racha de 3 descargas directas de 01a0efcc-3297… (la medida del 1-1-0)
+   intento 1: exit=1 | dejo archivo=False | error: QMind network request failed
+   intento 2: exit=1 | dejo archivo=False | error: QMind network request failed
+   intento 3: exit=0 | 17272 B | sha 5587f27ddd5a52de… | casa_con_disco=True
+   RACHA (codigo de cada intento) = 1-1-0
+   exitosas = 1 | fallidas = 2
+== 4. el verificador curado, sobre el mismo arbol (--strict)
+     [EXCLUIDO] CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md: no autodeclara una leccion durable: la politica del write-back es por aporte declarado, no por e
+     [EXCLUIDO] CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R
+     [EXCLUIDO] CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la no
+     [EXCLUIDO] CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «
+     [EXCLUIDO] CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la no
+     [EXCLUIDO] CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la no
+     [EXCLUIDO] CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5
+     [EXCLUIDO] CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind
+     [EXCLUIDO] CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la not
+     [EXCLUIDO] CONTEXT-DT-3-TECH-DEBT-POST-DT2.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archi
+     [EXCLUIDO] CONTEXT-DT-4.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+     [EXCLUIDO] CONTEXT-DT4-RESIDUAL-FIXES.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado»
+     [EXCLUIDO] CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y 
+     [EXCLUIDO] CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QM
+     [EXCLUIDO] CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «Q
+     [EXCLUIDO] CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimient
+     [EXCLUIDO] CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la
+     [EXCLUIDO] CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y 
+     [EXCLUIDO] CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la
+   notebook iah-cli-lecciones: 58 fuente(s) publicada(s)
+     [FRESCO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: 1 fuente(s) que casan por metadata del servidor, verificada la promesa por descarga+sha256 (01a0efcc-3297…coin
+     [FRESCO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) que casan por metadata del ser
+   [OK] frescura de CONTEXT/10-analisis declarados: 2 fresco(s), 0 problema(s)
+   conteo [FRESCO] = 2
+   conteo [VENCIDO] = 0
+   conteo [SIN-DESCARGA] = 0
+   conteo [NO-EVALUABLE] = 0
+   conteo [PROMESA-ROTA] = 0
+   conteo [AVISO] = 0
+   FRESHNESS_EXIT=0

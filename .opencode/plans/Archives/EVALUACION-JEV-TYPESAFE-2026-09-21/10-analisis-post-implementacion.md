@@ -254,3 +254,28 @@ siguiente ni re-abre C.
 commiteado en `39717b1`, verificado en su propio árbol con un clon limpio. **Push, L3 y write-back siguen sin
 ejecutar**, así que el resto del párrafo sigue vigente. El detalle medido vive en el §12 del registro de
 FASE-RELEASE.⟧
+
+---
+
+⟦**Anotación dictada por el operador el 2026-10-05 (mandato CIERRE-DE-ABANICO, punto D3): la etiqueta de
+adopción de AC5 se emite y es MUESTRA-INSUFICIENTE.**
+
+La base no es una opinión nueva: es la que publica el propio instrumento. `FASE-RELEASE/decision.json`, en
+`literales_y_su_estado`, tiene ese literal con estado «EXCLUIDA por la regla congelada; ponible por el
+operador» y base «suficiencia_minima se cumple (0.5 >= 0.5) en el denominador congelado, pero el denominador
+efectivo de la comparación es 1 par con elección utilizable en los dos brazos». El `informe_comparativa.json`
+de la misma hoja mide el conjunto: 4 pares, 2 pertinentes, 2 importantes elegibles y denominador 2 en la
+señal S3. Con un par utilizable el umbral no discrimina, que es exactamente lo que registra la fila B2-3 de
+la tabla de arriba.
+
+**La salida que manda la regla congelada está escrita en su propia nota:** «si el operador la emite aun así,
+la salida es muestra nueva y nunca re-etiquetar la congelada». Por eso esta anotación no toca
+`protocolo.json`, `muestra.json`, `etiquetas.json` ni el `decision.json` de FASE-C, ni re-indexa nada: lo que
+queda abierto es la muestra, con su dueño ya declarado (re-apertura de C con decisión del operador antes de
+correr). Ninguna recomposición de los pares publicados convierte 1 par utilizable en 2.
+
+**Qué cambia en esta hoja y qué no.** La tabla de seguimientos queda intacta. Este párrafo sí vence la frase
+«write-back sigue sin ejecutar» del párrafo anterior: la publicación de esta hoja por CLI está autorizada por
+el mismo mandato (punto D3), y su verificación —descarga y sha256 de la fuente nueva, con las fuentes previas
+intactas— queda consignada en el registro de FASE-RELEASE y en los crudos de la tanda CIERRE-DE-ABANICO,
+porque un documento publicado no puede alojar la evidencia de su propia publicación.⟧

@@ -278,16 +278,25 @@ def test_la_forma_original_mas_cierre_es_legal(vq, monkeypatch, tmp_path):
     assert "[FRESCO]" in salida and "1 fuente(s) que casan" in salida, salida
     assert "barrido completo" not in salida, (
         "corrio barrido completo teniendo dos fuentes que nombran al stem: " + salida)
-    assert falso.descargas == 2, (
-        f"bajo {falso.descargas} fuentes: se esperaban las dos que nombran al CONTEXT (la vencida y la "
-        "de cierre), ni una mas (barrido) ni una menos (decision por titulo)")
+    assert falso.descargas == 1, (
+        f"bajo {falso.descargas} fuentes: D2 (2026-10-05) concentra la bajada en la fuente cuya promesa "
+        "hay que verificar. La vencida queda descartada por SU PROPIO metadata, que es un sha de bytes y "
+        "no un titulo; la mitad que se conserva del contrato viejo es que sigue habiendo UNA bajada real "
+        "(la de arriba: '1 fuente(s) que casan' sale de la verificacion, no del indice). Que se siga "
+        "examinando el barrido cuando ninguna metadata casa lo goberna "
+        "test_sin_metadata_publicada_el_camino_de_descarga_sigue_vivo y "
+        "test_vencido_cuando_ninguna_bajada_casa_y_el_barrido_es_completo")
 
 
 def test_metadata_no_es_el_criterio(vq, monkeypatch, tmp_path):
-    """`metadata.fileSha256` que casa con el disco pero cuya descarga NO: sigue VENCIDO.
+    """`metadata.fileSha256` que casa con el disco pero cuya descarga NO: sigue cortando.
 
     Si el verificador admitiera el metadata como prueba, el `--upload` que responde `[SKIP]` por titulo
     volveria a dejar la version vieja como verdad publicada sin decir nada (RI §13).
+
+    Desde D2 (2026-10-05) la etiqueta de este rojo es `[PROMESA-ROTA]` y no `[VENCIDO]`, y la asercion
+    sigue siendo la misma: `salio == 1` con al menos una descarga real. Lo que se prueba aqui no es el
+    nombre del rojo sino que **la metadata sola nunca aprueba**.
     """
     contexto, plans = _contexto(tmp_path)
     disco = (contexto / UNO).read_bytes()
@@ -577,7 +586,12 @@ def test_fresco_cuando_la_fuente_declorada_casa_y_no_hace_falta_barrer(vq, monke
 
 
 def test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes(vq, monkeypatch, tmp_path):
-    """El prefijo recorta, nunca decide: titulo irreconocible + bytes que casan = FRESCO."""
+    """El prefijo recorta, nunca decide: titulo irreconocible + bytes que casan = FRESCO.
+
+    Re-anclado por D2 (2026-10-05): la ruta cambio (la declaracion del servidor concentra la bajada), el
+    veredicto no. La ruta de barrido sigue gobernada por
+    `test_sin_metadata_publicada_el_camino_de_descarga_sigue_vivo`.
+    """
     contexto, plans = _contexto_vacio(tmp_path), _plans_con_declorado(tmp_path, CUERPO_DECLORADO)
     sid = "01a0ffff-0000-7000-8000-000000000103"
     salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
@@ -585,7 +599,9 @@ def test_un_titulo_sin_prefijo_tambien_se_examina_por_bytes(vq, monkeypatch, tmp
                                          CUERPO_DECLORADO)],
                                 {sid: CUERPO_DECLORADO})
     assert salio == 0, salida
-    assert "[FRESCO]" in salida and "barrido completo" in salida, salida
+    assert "[FRESCO]" in salida, salida
+    assert "metadata del servidor" in salida, (
+        "el titulo irreconocible dejo de resolverse por bytes: " + salida)
 
 
 def test_el_declorado_vencido_corta_rojo_aunque_el_context_este_fresco(vq, monkeypatch, tmp_path):
@@ -702,3 +718,134 @@ def test_control_negativo_el_diente_versionado_era_verde_con_el_cuerpo_vencido(t
     assert "[FRESCO] CONTEXT-UNO" in salida_nueva, (
         "el CONTEXT del diferencial dejo de estar fresco: el rojo vendria de otra causa")
 
+
+
+# =================================================== el contrato re-escrito por D2 (2026-10-05, REL-6)
+
+#   La fila anterior del contrato decia "metadata es corroboracion, ninguna decision sale de el". D2
+#   invierte el ORDEN de la prueba sin tocar el criterio: la primera via es lo que el servidor declara de
+#   sus propios bytes y la descarga queda como verificacion de esa promesa. Los dientes de abajo van por
+#   las dos mitades: que la metadata decida, y que **siga haciendo falta la descarga** para decir FRESCO.
+
+def test_fuente_que_casa_por_metadata_y_no_baja_es_no_evaluable_no_vencido(vq, monkeypatch, tmp_path):
+    """H15 / B2-4 con la causa nombrada: la promesa que no se pudo verificar no pinta VENCIDO.
+
+    Es exactamente la corrida `FASE-RELEASE/12-` y su apendice `40-`: la unica fuente cuyo
+    `fileSha256` iguala el disco (`01a0efcc-3297…`) no bajo por un `QMind network request failed` y el
+    verificador dijo `[VENCIDO]` sobre un fresco.
+    """
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000200"
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                    [_fuente(sid, f"CONTEXT: {UNO[:-3]}", disco)], {})
+    assert salio == 2, salida
+    assert "[NO-EVALUABLE]" in salida and sid in salida, salida
+    assert "[VENCIDO]" not in salida, "la abstencion volvio a pintarse de vencido: " + salida
+    assert "[OK]" not in salida, salida
+    assert falso.descargas == 1, "se conto una bajada que no produjo archivo: " + salida
+
+
+def test_el_verde_nuevo_sigue_exigiendo_la_descarga_que_verifica_la_promesa(vq, monkeypatch, tmp_path):
+    """AC-3 del lado viejo: metadata que casa NO aprueba por si sola, aprueba la promesa verificada."""
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000201"
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                    [_fuente(sid, f"CONTEXT: {UNO[:-3]}", disco)], {sid: disco})
+    assert salio == 0, salida
+    assert "[FRESCO]" in salida and "metadata del servidor" in salida, salida
+    assert "descarga+sha256" in salida, (
+        "el FRESCO salio de la metadata sin verificar la promesa: " + salida)
+    assert falso.descargas == 1, (
+        f"la promesa se verifico con {falso.descargas} bajadas: o no se bajo nada o se bajo de mas")
+
+
+def test_descarga_que_desmiente_al_indice_del_servidor_es_promesa_rota(vq, monkeypatch, tmp_path):
+    """El servidor declara el sha del disco y entrega otros bytes: rojo, pero rojo de la promesa."""
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000202"
+    fuentes = [{"id": sid, "title": f"CONTEXT: {UNO[:-3]}", "status": "ready",
+                "metadata": {"fileSha256": hashlib.sha256(disco).hexdigest(),
+                             "fileSize": len(disco)}}]
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans, fuentes,
+                                    {sid: b"el notebook guarda otros bytes"})
+    assert salio == 1, salida
+    assert "[PROMESA-ROTA]" in salida and "[FRESCO]" not in salida, salida
+    assert falso.descargas >= 1, salida
+
+
+def test_barrido_del_que_no_baja_nada_sale_no_evaluable_y_declara_su_causa(vq, monkeypatch, tmp_path):
+    """La misma regla generalizada al camino viejo: cero observaciones no es un VENCIDO."""
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    a = "01a0ffff-0000-7000-8000-000000000203"
+    b = "01a0ffff-0000-7000-8000-000000000204"
+    fuentes = [_fuente(a, f"CONTEXT: {UNO[:-3]}", disco, metadata=False),
+               _fuente(b, "otra fuente", b"nada que ver", metadata=False)]
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans, fuentes, {})
+    assert salio == 2, salida
+    assert "[VENCIDO]" not in salida, salida
+    assert "[SIN-DESCARGA]" in salida, "la bajada que fallo se callo: " + salida
+    assert "no bajo ninguna" in salida, salida
+
+
+def test_la_primera_via_no_mira_el_titulo_basta_la_metadata_que_casa(vq, monkeypatch, tmp_path):
+    """El nuevo camino recorta el costo: titulo irreconocible + metadata que casa = FRESCO con UNA bajada.
+
+    Antes este caso pagaba el barrido completo de las 57 fuentes; ahora la declaracion del servidor
+    concentra la bajada en la fuente que promete, y el titulo sigue sin decidir nada.
+    """
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000205"
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                    [_fuente(sid, "Apunte suelto sin el stem", disco)], {sid: disco})
+    assert salio == 0 and "[FRESCO]" in salida, salida
+    assert "barrido completo" not in salida, salida
+    assert falso.descargas == 1, f"se bajo {falso.descargas} veces donde la promesa concentraba en 1"
+
+
+def test_sin_metadata_publicada_el_camino_de_descarga_sigue_vivo(vq, monkeypatch, tmp_path):
+    """El diente viejo no se jubila: fuente SIN `fileSha256` se decide bajando y barrviendo."""
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000206"
+    salio, falso, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans,
+                                    [_fuente(sid, "Apunte suelto sin el stem", disco,
+                                             metadata=False)], {sid: disco})
+    assert salio == 0 and "[FRESCO]" in salida, salida
+    assert "barrido completo" in salida, "el camino de bytes sin metadata perdio su ruta: " + salida
+    assert "por descarga+sha256" in salida, salida
+    assert falso.descargas == 1, salida
+
+
+def test_el_fileSize_del_servidor_tambien_se_corrobora_y_se_declara(vq, monkeypatch, tmp_path):
+    """`fileSize` que no casa con el disco se escribe en la linea: corroboracion, no veredicto."""
+    contexto, plans = _contexto(tmp_path)
+    disco = (contexto / UNO).read_bytes()
+    sid = "01a0ffff-0000-7000-8000-000000000207"
+    fuentes = [{"id": sid, "title": f"CONTEXT: {UNO[:-3]}", "status": "ready",
+                "metadata": {"fileSha256": hashlib.sha256(disco).hexdigest(),
+                             "fileSize": len(disco) + 7}}]
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans, fuentes, {sid: disco})
+    assert salio == 0, salida
+    assert "DESACUERDO tam=" in salida, (
+        "el tamano declarado se callo en vez de declararse: " + salida)
+
+
+def test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro(vq, monkeypatch, tmp_path):
+    """La abstencion no puede tapar un vencido: si algo se observo y no casa, la corrida corta."""
+    contexto, plans = _contexto(tmp_path, dos=True)
+    disco_uno = (contexto / UNO).read_bytes()
+    disco_dos = (contexto / DOS).read_bytes()
+    vencido = "01a0ffff-0000-7000-8000-000000000208"
+    no_bajable = "01a0ffff-0000-7000-8000-000000000209"
+    fuentes = [_fuente(vencido, f"CONTEXT: {UNO[:-3]}", disco_uno + b"\notra version\n"),
+               _fuente(no_bajable, f"CONTEXT: {DOS[:-3]}", disco_dos)]
+    salio, _, salida = _corrida(vq, monkeypatch, tmp_path, contexto, plans, fuentes,
+                                {vencido: disco_uno + b"\notra version\n"})
+    assert "[NO-EVALUABLE]" in salida, salida
+    assert "[VENCIDO]" in salida, salida
+    assert salio == 1, f"la abstencion tapo al vencido (salio {salio}): " + salida

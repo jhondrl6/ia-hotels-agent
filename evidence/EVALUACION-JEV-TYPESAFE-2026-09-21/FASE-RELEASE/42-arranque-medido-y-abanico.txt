@@ -1,0 +1,59 @@
+# Crudo del corte 1 (arranque) y del censo del abanico - CIERRE-DE-ABANICO 2026-10-05
+# Todos los valores de este archivo se midieron en esta sesion, ninguno se heredo (AC-1).
+
+## 1. Fila de arranque, comando por comando (antes de cualquier escritura)
+
+$ git rev-parse HEAD
+e6a0c9e981732082b6e589206e76b88b9dbd84cc
+
+$ git status --porcelain
+(vacio)
+
+$ git status --porcelain -uno
+(vacio)   # medido con y sin -uno: el arbol estaba limpio tambien contando no-versionados
+
+$ git rev-list --left-right --count origin/master...HEAD
+0	0
+
+$ git rev-list --count 0c79e9c..HEAD
+20
+
+$ ls -1 evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/FASE-RELEASE | wc -l
+47
+
+$ ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -q
+126 passed in 1.49s
+EXIT=0
+
+## 2. Desviacion declarada respecto de la memoria de sesion
+
+La memoria del proyecto dice que la bateria del piloto con el interprete del venv da 247 passed. Medido
+ahora sobre `tests/quality_gates/jev_pilot`: **126 passed**. El 247 corresponde a una seleccion mas ancha
+(el crudo historico `PREFLIGHT-FASE-C-2026-10-04/06-post-bateria-brazo-247.txt` es de otra seleccion). No
+se corrige nada: se declara que la cifra de arranque de esta sesion es 126 y que 247 no es comparable.
+
+## 3. Cifra canonica al arrancar
+
+$ grep -rE "^[[:space:]]*def test_" tests --include=*.py | wc -l
+4835
+
+$ git grep -h -c -E "^[[:space:]]*def test_" HEAD -- tests | awk -F: '{s+=$NF} END {print s}'
+4835
+
+Ambas convergen: el arbol de trabajo y el arbol versionado del tip e6a0c9e dan el mismo total.
+
+## 4. Censo del abanico (fuente: 10-analisis-post-implementacion.md sect. "Seguimientos abiertos al cerrar" + REL-6 del registro de FASE-RELEASE sect.15)
+
+Doce deudas nombradas, cada una con su dueno ya registrado:
+B2-1, B2-1c, B2-2, B2-3, B2-4, B2-5, REL-1, REL-2, REL-3, REL-4, REL-5, REL-6.
+A las doce se suman los cinco dictados de la pegada que no son deuda del registro: D3 (etiqueta AC5),
+D7 (L3), D8 (commit y push), AC-4 (racha 1-1-0) y el barrido de citas vencidas que exige la regla
+"el push vence citas en la misma sesion".
+
+## 5. Traza del instrumento de conteo
+
+El contador del ACV es `awk -F'|' 'NR>2 && $2 !~ /CERRADO-CON-EVIDENCIA|DIFERIDO-CON-DUEÑO|ESCALADO-A-DECISION|NO-APLICA/ {n++} END {print n+0}'`.
+Con `-F'|'` el campo `$2` es la SEGUNDA columna, no la primera: la TAT se escribe sin tuberia inicial y con
+`Estado terminal` en la segunda columna. Por eso `41-tat-abanico-terminal.md` es tabla pura (linea 1
+cabecera, linea 2 separador, linea 3 en adelante filas) y esta prosa vive en un crudo aparte: metida en el
+mismo archivo, la prosa contaria como fila abierta y el contador no daria 0.

@@ -1,0 +1,7 @@
+== AC12: revisar_preflight sobre FASE-C/preflight.json, re-emitido 2026-10-05 tras la cura de REL-1 ==
+   comando: venv/Scripts/python.exe -c "...revisar_preflight(preflight, proveedor)..."
+   jev -> ok = True | motivos = [] | no_aplica_declarados = {}
+   deepseek -> ok = True | motivos = [] | no_aplica_declarados = {"sdk_instalado": "el comparador es un API HTTP, no un SDK; el contrato del brazo es `evaluar(state, preguntas)` de scripts/proveedores/deepseek.py, c
+   anthropic -> ok = False | motivos = ['preflight-habilitacion_declarada=False', 'preflight-sdk_instalado=None', 'preflight-autenticacion_real=None'] | no_aplica_declarados = {}
+== ESTADOS_PREFLIGHT_OBLIGATORIOS (la regla, intacta en sus tres valores) ==
+{"habilitacion_declarada": true, "sdk_instalado": true, "autenticacion_real": "AUTENTICADA"}

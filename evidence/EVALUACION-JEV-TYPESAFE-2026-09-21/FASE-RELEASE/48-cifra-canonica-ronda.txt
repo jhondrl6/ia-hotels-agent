@@ -1,0 +1,61 @@
+# Crudo del corte 4 - cifra canonica de la ronda CIERRE-DE-ABANICO (2026-10-05)
+
+## 1. Medida, con su comando
+
+$ grep -rE "^[[:space:]]*def test_" tests --include=*.py | wc -l
+4850
+
+$ git grep -h -c -E "^[[:space:]]*def test_" HEAD -- tests | awk -F: '{s+=$NF} END {print s}'
+4835
+
+Delta de la ronda = **+15** (el arbol versionado del tip e6a0c9e todavia no lleva nada de esta sesion).
+
+## 2. Desglose por archivo tocado (los dos unicos que suman)
+
+$ grep -cE "^[[:space:]]*def test_" tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py tests/test_verify_qmind_context_freshness.py
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py:23
+tests/test_verify_qmind_context_freshness.py:36
+
+$ git grep -h -c -E "^[[:space:]]*def test_" HEAD -- tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py tests/test_verify_qmind_context_freshness.py
+16
+28
+
+O sea +7 (quality_gates) y +8 (root test files). 7 + 8 = 15, que es el delta de la cabecera. Nada se
+reparte a mano: cada sumando sale del mismo instrumento.
+
+## 3. Lo que se movio (una sola movida, tres coordenadas)
+
+- `AGENTS.md:407` cabecera: `### Cobertura por Modulo (4,835 funciones totales)` -> `(4,850 funciones totales)`
+- `AGENTS.md` fila `quality_gates`: `986` -> `993`, con su clausula de ronda al final de la celda
+- `AGENTS.md` fila `root test files`: `1078` -> `1086`, con su clausula de ronda y las dos aserciones
+  re-ancladas nombradas en la misma fila
+- `docs/cobertura-historia.md`: la nota fechada arriba del todo, orden cronologico descendente
+
+## 4. Cuadratura de la tabla (el instrumento de cierre suma la tercera columna desde la cabecera)
+
+$ python (script ad-hoc de esta sesion)
+cabecera: ### Cobertura por Modulo (4,850 funciones totales)
+filas con 3 celdas: 22 | SUMA columna 2 = 4850
+filas con celdas de mas (tabla rota): []
+lineas que empiezan por | en la tabla: 24        # cabecera + separador + 22 filas
+
+La suma de la tabla iguala a la cabecera. El defecto que esto previene es propio: la primera redaccion de
+la clausula de calidad quedo partida en seis lineas fisicas dentro de la celda, o sea la tabla dejo de
+parsearse por lineas y el instrumento de cierre habria sumado mal. Se corrigio a una linea y se verifico
+contando celdas por fila, no leyendo el render.
+
+## 5. Gates
+
+$ ./venv/Scripts/python.exe scripts/validate_agents_md.py       (exit leido sin tuberia)
+EXIT_VALIDATE_AGENTS=0
+  "test_count": {"status": "PASS", "pytest_count": 4957, ...}
+
+$ ./venv/Scripts/python.exe -m pytest tests/test_verify_qmind_context_freshness.py tests/quality_gates/jev_pilot -q
+177 passed in 1.99s          # 36 + 141
+
+## 6. Declaracion de metodo
+
+La cifra `pytest_count = 4957` del validador no es la canonica (4850) y no se intentaron casar: cuentan
+cosas distintas (uno recoge tests recolectados por pytest, otro funciones `def test_` en el arbol). El
+validador tiene su propia tolerancia y pasa. Se declara para que nadie lea el 4957 como la cifra de la
+cabecera.

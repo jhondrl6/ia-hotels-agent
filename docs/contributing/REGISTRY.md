@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-05
+> **Ultima actualizacion:** 2026-10-04
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 504
+> **Total fases completadas:** 506
 
 ---
 
@@ -11755,6 +11755,42 @@ _Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que e
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-C - 2026-10-04 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+**Descripcion:** Piloto JEV FASE-C (Comparacion decidible): congelado del protocolo, capa fria offline y corrida comparativa JEV/DeepSeek con su ledger y consumo; cerro INCOMPLETO con decision=null y cuatro cambios requeridos CR-1 a CR-4, que abrieron FASE-B.2
+**Nota:** registrada en tardanza el 2026-10-05: FASE-C cerro el 2026-10-04 sin entrada en REGISTRY y la declara la deuda REL-2 de la nota de FASE-RELEASE. Tests: 0 agregados o modificados, que es lo que pide la ayuda del escritor, porque FASE-C no toco tests/ (su sect.5) y la canonica quedo en 4.800; delta por fase dictado por el operador el 2026-10-05
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B.2 - 2026-10-04 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+**Descripcion:** Piloto JEV FASE-B.2 (el instrumento que faltaba): report y decide en scripts/evaluate_jev_pilot.py, los cuatro cocientes con denominadores separados, la columna propia de abstenciones, el CLI del run con --etiquetas y el re-anclaje de CR-4 a CONGELADA; cierra CR-1 a CR-4 dejados abiertos por FASE-C
+**Nota:** registrada en tardanza el 2026-10-05: FASE-B.2 cerro el 2026-10-04 sin entrada en REGISTRY y la declara la deuda REL-2 de la nota de FASE-RELEASE. Tests: 35 agregados, delta medido con el comando canonico (grep -rE def test_ tests) 4.800 a 4.835; delta por fase dictado por el operador el 2026-10-05
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 35 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

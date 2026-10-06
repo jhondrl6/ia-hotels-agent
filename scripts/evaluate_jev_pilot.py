@@ -343,6 +343,11 @@ def _refuse(name: str, faltan: list) -> int:
 PREFLIGHT_SCHEMA = "jev-pilot-preflight/v1"
 ESTADOS_PREFLIGHT_OBLIGATORIOS = {"habilitacion_declarada": True, "sdk_instalado": True,
                                   "autenticacion_real": "AUTENTICADA"}
+# REL-1 (H14 de FASE-C, dictado D4 del 2026-10-05): un brazo puede declarar que un estado material no
+# le aplica, pero solo se lo excusa si el motivo viene escrito en el mismo valor. Un `NO-APLICA` a secas
+# no es una declaracion, es la ausencia del estado con mejor cara.
+PREFLIGHT_NO_APLICA = "NO-APLICA"
+_SEPARADORES_NO_APLICA = ":\u00a0 \t-–—"
 PROVEEDOR_JEV = "jev"
 CAMPOS_CANDIDATO_PERMITIDOS = ("id", "enunciado")
 # `planes_que_lo_citan` y las fechas de aceptacion quedan fuera por el maestro §Corpus: metadatos
@@ -359,12 +364,44 @@ def _puerta():
     return mod
 
 
+def _casado(valor, esperado) -> bool:
+    """El estado casa con lo que se exige, por tipo y por valor.
+
+    `1 == True` en Python, asi que el guard historico aceptaba un `1` en el preflight como si
+    declarara el SDK instalado. D4 (2026-10-05) manda cortar con cualquier otro literal, y un entero
+    —o un `"True"` escrito como texto— es otro literal, no la declaracion pedida.
+    """
+    return type(valor) is type(esperado) and valor == esperado
+
+
+def _no_aplica_con_motivo(valor) -> str:
+    """El motivo que el brazo escribio junto a su `NO-APLICA`, o cadena vacia si no excusa nada.
+
+    Medido en `FASE-C/preflight.json` (deepseek, `sdk_instalado`): el valor real es
+    `"NO-APLICA: el comparador es un API HTTP, no un SDK; el contrato del brazo es ..."`. Se excusa
+    solo esa forma. Un `NO-APLICA` pelado, uno sin texto despues del separador, `NO-APLICABLE` (que
+    es otra palabra), las minusculas o un valor que no sea texto cortan igual que antes.
+    """
+    if not isinstance(valor, str):
+        return ""
+    texto = valor.strip()
+    if not texto.startswith(PREFLIGHT_NO_APLICA):
+        return ""
+    resto = texto[len(PREFLIGHT_NO_APLICA):]
+    if resto and resto[0] not in _SEPARADORES_NO_APLICA:
+        return ""
+    return resto.strip(_SEPARADORES_NO_APLICA).strip()
+
+
 def revisar_preflight(ruta_preflight: Path, proveedor: str) -> dict:
     """AC12 como precondicion de AC8: los cuatro estados por proveedor, y tres se exigen.
 
     `cuota_o_saldo` se **declara** pero no se exige: medido el 2026-10-03, `typesafe_sdk` 0.7.0 no
     expone superficie de saldo, asi que exigirla forzaria a fingirla. Lo que no esta se estampa con
     su motivo, no con un valor que parezca favorable.
+
+    REL-1: un estado exigido tambien se satisface cuando el propio preflight del brazo declara
+    `NO-APLICA` con su motivo. La excusa nunca es silenciosa: sale en `no_aplica_declarados`.
     """
     ruta = Path(ruta_preflight)
     if not ruta.exists():
@@ -375,10 +412,19 @@ def revisar_preflight(ruta_preflight: Path, proveedor: str) -> dict:
     registro = (datos.get("proveedores") or {}).get(proveedor)
     if not isinstance(registro, dict):
         return {"ok": False, "motivos": [f"preflight-sin-proveedor:{proveedor}"]}
-    motivos = [f"preflight-{clave}={registro.get(clave)!r}"
-               for clave, esperado in ESTADOS_PREFLIGHT_OBLIGATORIOS.items()
-               if registro.get(clave) != esperado]
+    motivos = []
+    no_aplica = {}
+    for clave, esperado in ESTADOS_PREFLIGHT_OBLIGATORIOS.items():
+        valor = registro.get(clave)
+        if _casado(valor, esperado):
+            continue
+        motivo = _no_aplica_con_motivo(valor)
+        if motivo:
+            no_aplica[clave] = motivo
+            continue
+        motivos.append(f"preflight-{clave}={valor!r}")
     return {"ok": not motivos, "motivos": motivos, "registro": registro,
+            "no_aplica_declarados": no_aplica,
             "cuota_o_saldo": registro.get("cuota_o_saldo"),
             "modelo_efectivo_preflight": registro.get("modelo_efectivo_preflight")}
 
