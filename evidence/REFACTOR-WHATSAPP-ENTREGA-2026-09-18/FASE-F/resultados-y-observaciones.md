@@ -4,6 +4,12 @@ Fecha: 2026-10-06. HEAD de partida: `9127735` (punta de `origin/master`, FASE-E 
 Mandato ejecutado: `05-prompt-inicio-sesion-fase-F.md`. **Sin commit, sin push, sin tag, sin QMind**: el mandato
 de ejecución no los autorizaba y los cinco cortes se sostuvieron sin ellos (contrato §Límites y precedencias).
 
+⟦**Rectificación por la orden posterior «Git Commit + L3 + Push» (2026-10-06):** commit único **`20a07ae`**
+(39 archivos, +2.342/−81, 8/8 checks del pre-commit), **L3 sobre `9127735..20a07ae` con 0 hallazgos**, push del
+mismo rango con paridad **0/0** verificada por `git ls-remote`. Lo de arriba fue el estado bajo el mandato de
+ejecución y se conserva como histórico; lo que sigue vigente sin autorización: **tag, QMind, rotación,
+`DOMAIN_PRIMER` y la errata S-F7**.⟧
+
 ## Cortes consumados (los cinco, sin commit)
 
 | Corte | Estado | Como se midió |
@@ -12,7 +18,7 @@ de ejecución no los autorizaba y los cinco cortes se sostuvieron sin ellos (con
 | Verificación terminada | HECHO | PRE 372 passed / 10 skipped → POST par 373 / 10 (misma selección de 6 rutas, mismo entorno, ambos EXIT 0); POST extendido 419 / 10; **9/9 mutantes rojos por fuga detectada**, 9/9 restaurados por sha256, 9/9 verdes tras restaurar. **Sello de regresión completa sobre el árbol definitivo: 1 failed / 5.064 passed / 41 skipped / 4 xfailed en 390,64 s (EXIT 1)** — `regresion_completa.txt`. El único rojo es ajeno y orden-dependiente: `jev_pilot/test_jev_pilot_deepseek_brazo.py`, que en su archivo aislado pasa **15/15** (mismo rojo que declararon C y D). Quick final **13/13, EXIT 0** (`quick_final.txt`), con el Secrets Check leyendo **1.057 salidas** bajo `output/` y `logs/` (16 más que las 1.041 del PRE: las corridas de pytest de esta propia sesión escribieron logs; 0 hallazgos en ambas mediciones) |
 | Cierre documental | HECHO | prompt F, checklist (fila F + fila AC13 + el checkbox de revocación), `dependencias-fases.md`, 00 (§Aplicación efectiva F + `L-F-RED`), 09 (§Cierre FASE-F), 10 (§FASE-F), CHANGELOG bajo `## [Sin publicar]`, `docs/GUIA_TECNICA.md`; `log_phase_completion.py` sin GAP; derivados regenerados con su escritor |
 | Listo para revisión | HECHO | Quick 13/13 (lo imprime la corrida), `validate_document_integration.py` all checks passed, SHA del árbol sin promesa (no hay commit que pinear) |
-| Espera de autorización | ABIERTA a propósito | commit/push/tag/rotación/QMind piden instrucción literal propia |
+| Espera de autorización | CONSUMIDA PARCIALMENTE | commit, L3 y push ejecutados por orden literal (`20a07ae`, rango `9127735..20a07ae`, 0 hallazgos, paridad 0/0). Quedan pendientes de instrucción propia: **tag, write-back a QMind, rotación de credenciales y `DOMAIN_PRIMER`** |
 
 ## R2 — presupuesto e instrumento
 
@@ -49,6 +55,16 @@ No comparable con tramos medidos por el instrumento.
    global inexistente desde AC-S2: inexecutable porque ningún archivo versionado llega al umbral (el mayor,
    780.700 bytes). Dos dientes nuevos la ejecutan en `tmp_repo`.
 
+6. **El verde de un árbol no avala lo que se está preparando para publicar.** Al commitear (orden posterior), la
+   pata `staged` de `_check_no_secrets` **cortó el commit**: leyó las líneas `+` del diff y encontró literales con
+   forma de credencial que el escaneo de archivos versionados nunca había visto, porque **esa pata no aplica la
+   exclusión de cuarentena** (`archives`, `evidence`, `.opencode`), tal como lo declara su propio docstring desde
+   P5. Los tres literales eran de esta propia fase: el id parametrizado del mutante M9 en `mutantes_crudo.txt` y en
+   `run_mutations.py`, y la cita del fixture viejo en `00-…` y `10-…`. Es la verificación que faltaba: 13/13 con
+   1.041 salidas leídas y 0 hallazgos **no** probaba que el contenido staged fuera limpio. Saneado sin tocar la
+   regla — ids de parametrización descriptivos (`caza-sk-or`, `forma-openrouter`, …), arnés regenerado y prosa que
+   describe el prefijo sin reproducir el valor — y el hook volvió a pasar 8/8.
+
 ## Deuda declarada con dueño
 
 | ID | Qué | Dueño | Condición para cerrarla |
@@ -56,7 +72,7 @@ No comparable con tramos medidos por el instrumento.
 | S-F1 | `scripts/preload_prospects_gbp.py` persiste `PlaceData.error_message` en markdown y JSON; llega redactado desde el cliente pero el script no se tocó (fuera de allowlist) | H / VERIFY | un diente sobre el script o decisión escrita de que la redacción en la fuente basta |
 | S-F2 | `_query_perplexity` no tiene `try/except` propio; depende del de `_query_provider`, y su rama de consola no tiene diente propio | VERIFY | prueba de consola sobre esa ruta o exclusión declarada |
 | S-F3 | la pata nueva lee el instante de la validación; un archivo que aparezca después queda fuera hasta la siguiente corrida. Los 8 checks del pre-commit leen HEAD y `output/`/`logs/` nunca entran al index, así que el hook no puede cubrirlo | RELEASE o deuda permanente | watch/hook con alcance a rutas gitignored, o aceptar el límite escrito |
-| S-F4 | allowlist de cuarentena (`archives`, `evidence`, `.opencode`) de P5 sin cambios: `L-F-RED` muestra que un corpus excluido puede contener literales con forma de credencial | operador | decisión expresa de auditar esas tres rutas con un modo aparte |
+| S-F4 | allowlist de cuarentena (`archives`, `evidence`, `.opencode`) de P5 sin ampliar ni reducir. **Medido al commitear:** la asimetría es real y tiene consecuencia — el escaneo de archivos versionados excluye esas rutas, la pata `staged` **no** (decisión declarada en el docstring de P5), así que un literal con forma de credencial dentro de la propia evidencia pasa el quick pero corta el commit | operador | decisión expresa: unificar criterios o documentar la asimetría como política (con su fila en `10-analisis`) |
 | S-F5 | AC13 quedó verificado **offline**: la integración con captura/snapshot del runner (stdout/stderr reales) es prueba de H | H | la batería de H sobre el runner |
 | S-F6 | `credential_status.json` acredita la rotación de 2026-09-18 como afirmación del operador; OpenRouter/Perplexity/PageSpeed/DeepSeek quedan `PENDIENTE-SIN-EVIDENCIA-OPERATIVA` | operador | evidencia operativa sin secreto, o mantener la fila pendiente |
 | S-F7 | `log_phase_completion.py` publicó `--archivos-mod 32` y el conteo final medido es **39** (23 modificados + 2 nuevos de producto/tests + 14 de evidencia). El escritor no tiene bandera de corrección y re-correrlo duplica la fila | RELEASE | rectificación en el sello documental del release, no en REGISTRY (precedente: la errata de C, misma causa) |

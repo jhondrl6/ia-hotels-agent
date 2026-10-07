@@ -5479,6 +5479,14 @@
       ]
     },
     {
+      "id": "S-F7",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "D-D",
       "familia": "D",
       "total_citas": 3,
@@ -5818,14 +5826,6 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-F7",
-      "familia": "S",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {

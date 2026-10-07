@@ -131,4 +131,16 @@ en unidad propia y corte «hasta listo para revisión» (sin commit autorizado).
 **H no se inició** (así lo exige R1) y su arista queda habilitada: F definió el contrato que H consume sin
 construir su runner.
 
+⟦**Commit, L3 y push de F ejecutados el 2026-10-06** por orden literal «Git Commit + L3 + Push»: commit único
+**`20a07ae`** (39 archivos, +2.342/−81; los **8/8** checks del pre-commit sin saltar), **L3 sobre
+`9127735..20a07ae`: 0 hallazgos**, push de ese rango con paridad **0/0** verificada por `git ls-remote` (remoto en
+`20a07ae`). El «SIN COMMIT» del párrafo anterior describe el mandato de ejecución y se conserva como histórico; el
+sello se **añade** por la regla que dejó C. Un hecho nuevo que esta orden midió sobre el propio instrumento: la pata
+`staged` de `_check_no_secrets` **no aplica la exclusión de cuarentena** (decisión declarada de P5 en su docstring),
+así que cortó el commit porque la evidencia y los docs de la fase citaban literales con forma de credencial — el
+nodo parametrizado del mutante M9 y la cita del fixture viejo en 00 y 10. Se sanearon los tres (ids descriptivos,
+arnés regenerado, prosa que describe el prefijo sin reproducir el valor) y el commit pasó. Sigue sin autorización:
+tag, write-back a QMind, `DOMAIN_PRIMER` y la corrección de `--archivos-mod` en REGISTRY (S-F7), que se cobra en
+el sello de RELEASE.⟧
+
 Estado actual de validación y medición (reconciliado el 2026-09-24 por el bloque C de la orden de calidad, leyendo los cierres y sus commits, no esta cabecera): **A CERRADA (documental, commit `3e97d95` empujado); G CERRADA y empujada 2026-09-20 (commit `66e17bd`); 0 CERRADA, commiteada y empujada el 2026-09-20 (`7c6e75f`, paridad 0/0); B CERRADA CON DEUDA y empujada (`473ed0f` + `05d0cc6` + `7553f51`); C–RELEASE PENDIENTES, con C como punto de reanudación.** El contador v4complete sigue en **0/1**. Lo ya ejecutado y publicado en `origin/master` es la medición y el cierre documental de la preparación y de la revisión 2, y además el código de G; los cierres de A y de G quedaron **commiteados y empujados** (`3e97d95` y `66e17bd`, paridad 0/0 en ambos casos) dentro de su misma sesión. Sigue sin autorización e implícitamente no hecho: el release operativo, cualquier auditoría externa preliminar y toda salida de material del cliente que no sea la ya hecha. Única subida ejecutada: la copia **saneada** del `10-analisis` de G a QMind (2026-09-20, verificada por descarga + sha256, `evidence/…/FASE-G/qmind-writeback-G.md`); para publicar el cierre hará falta **título nuevo**, porque el de G ya existe y `--upload` respondería SKIP.

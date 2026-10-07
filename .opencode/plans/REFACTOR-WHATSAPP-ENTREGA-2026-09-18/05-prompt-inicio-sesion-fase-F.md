@@ -10,6 +10,18 @@ decisión de D y E: no abrir sellos intermedios por acciones git. Detalle medido
 `tests_post_extended.txt`) y en `09-documentacion-post-proyecto.md` §Cierre incremental de FASE-F.
 **Siguiente fase: H, en sesión nueva** (H integra el runner con lo que F definió; no lo construyó aquí).
 **Dependencia inmediata:** FASE-E completa; verificar cierre de la cadena anterior.
+
+⟦**Commit, L3 y push EJECUTADOS el 2026-10-06 por orden literal «Git Commit + L3 + Push».** El párrafo de arriba
+dice «SIN COMMIT» porque se escribió bajo el mandato de ejecución: esa afirmación fue vera en su momento y queda
+como histórico; esto se **añade**, no se re-escribe (la regla que dejó C). Commit único **`20a07ae`** (39 archivos,
++2.342/−81, los **8/8** checks del pre-commit sin saltar; el hook cortó primero el commit porque la pata staged del
+`_check_no_secrets`, que por decisión declarada de P5 no aplica la exclusión de cuarentena, encontró literales con
+forma de credencial en la evidencia y en los docs de la propia fase: se sanearon los tres y se re-generó el arnés).
+**L3 sobre `9127735..20a07ae`: 0 hallazgos.** Push `9127735..20a07ae` con paridad **0/0** verificada por
+`git ls-remote` (remoto en `20a07ae`). Quick **13/13** sobre el árbol commiteado y 13/13 con el contenido staged
+antes de commitear. **Sigue sin autorización y no hecho: tag, write-back a QMind, `DOMAIN_PRIMER`, y la corrección
+de `--archivos-mod` en REGISTRY (S-F7), que se cobra en el sello de RELEASE.** El sha de este sello documental no se
+estampa aquí: sería el tercer acto git de la misma orden, que es la recursividad que el plan aplazó a RELEASE.⟧
 **Complejidad técnica:** MEDIA-ALTA: límites de salida, prevención parcial existente y revocación externa no inferible del código.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para F.
 
