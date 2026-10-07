@@ -63,7 +63,9 @@ de AC6-entrega).
 referencia de 60 **no se compara y no se estima**: aquí no se publica ninguna cifra de `tool_use`, ni medida ni
 aproximada. **Se retira la estimación («~62 invocaciones») que esta sesión declaró en su mensaje de cierre**: un
 número aproximado dentro de un reporte que se declara fuera de servicio es una medición falsa, y R2.1 manda no
-estimar. Corte usado: **«listo para revisión»** (commit no autorizado).
+estimar. Corte usado para el recuento: **«listo para revisión»**, que es el que estaba autorizado cuando se
+declaró; la orden de commit y push llegó después, y ese trabajo (hook, L3, pre-vuelo, empuje y el sello) queda
+**fuera** del recuento de arriba.
 
 Matiz para no agrandar la leyenda: en esta sesión el instrumento **no falló ni se le denegó el insumo — no se
 intentó**. D-V2.1 queda **en observación**, no confirmada por esta fase (a diferencia de P3-A/P3-B, donde el
@@ -160,20 +162,45 @@ enumerable. Las dos formas conviven en el corpus; la de esta fase es la más est
 | S-4 | Limpieza retroactiva de las dos fuentes vigentes de `TRIBUNAL-OFFLINE-2026-09-09` en el notebook | operador (decisión escrita: tocar contenido publicado) | mandato expreso |
 | S-5 | `04-contrato-ejecucion.md` del padre, paso 5, sigue diciendo «acordar título nuevo antes de subir»; con el writer actualizado el título se **pasa** por bandera, no se acuerda en prosa | FASE-RELEASE del padre | su edición del contrato |
 | S-6 | `DOMAIN_PRIMER` no se regeneró: esta fase no aporta contenido del dominio hotelero y el mandato de cierre del mini-plan no lo lista | FASE-RELEASE (que lo **verifica** con `doctor.py --context`) | esa fase, con instrucción expresa si quiere regenerarlo |
-| S-7 | Los packs de briefing se reproducen contra el árbol de **HEAD** y esta entrega no los toca: medido, el escritor de packs **no nombra** `run_all_validations.py`, y la fuente que sí proyecta —el workflow canónico— no se editó en esta fase (prohibido sin instrucción expresa). El check `[13/13]` reproduce 5/5 con la entrega sin commitear. Al commitear, esa es la comprobación que se re-corre, no una regeneración preventiva | quien ejecute el commit de esta entrega | el commit |
+| S-7 | Los packs de briefing se reproducen contra el árbol de **HEAD** y esta entrega no los toca: medido, el escritor de packs **no nombra** `run_all_validations.py`, y la fuente que sí proyecta —el workflow canónico— no se editó en esta fase. **CERRADO por medición en el commit `b66d6a1`: el hook `[8/8]` reprodujo 5/5 packs contra el árbol commiteado, sin regeneración preventiva** | — (se cerró al commitear) | cumplido 2026-10-07 |
 
-## G. Permisos pendientes (checkpoint, no éxito simulado)
+## G. Estado git de la entrega (y lo que sigue pendiente)
 
-Sin autorización literal en este turno **no se ejecutaron**: `git commit`, `git push`, tag, y cualquier
-operación remota a QMind (momento B). Los cinco cortes se sostienen sin commit: implementación, verificación,
-cierre documental, listo-para-revisión y espera de autorización están consumados; el commit es posterior,
-opcional y pide instrucción aparte.
+**Ejecutado por orden literal del operador el 2026-10-07** («Git Commit con L3 + Push»):
 
-El árbol ya estaba sucio con trabajo ajeno al abrir (36 entradas del cierre de FASE-VERIFY del padre). Lo que
-**viaja en un commit de esta fase**: `scripts/validate_qmind_writeback.py`, `scripts/run_all_validations.py`,
-`.opencode/qmind-writeback/`, `tests/test_validate_qmind_writeback_escritura.py`,
-`evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/`, y el prompt de FASE-RELEASE del padre. Lo demás son
-archivos ajenos ya modificados (`CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md`,
-los documentos del padre y código de producto de `asset_generation`/`data_validation`/`tribunal`): esta fase
-añadió encima de ellos la subsección de CHANGELOG, la nota de GUIA_TECNICA y la entrada de REGISTRY exigidas
-por el cierre, y **un commit limpio debe declararlos y ofrecer commit aparte**, no absorberlos.
+- **Commit `b66d6a1`** — *feat(qmind): FASE-UNICA - write-back por contenido, no por titulo*: 21 archivos,
+  1.710 inserciones y 232 borrados. Los ocho checks de `.git/hooks/pre-commit` pasaron, incluido `[8/8]` (packs
+  5/5 reproducidos contra el árbol commiteado) y `[6/8]` (índice de lecciones al día). Comprobación:
+  `git show --stat b66d6a1`.
+- **Alcance aprobado = letra A**: instrumento, batería de tests, evidencia, `.opencode/qmind-writeback/`, los
+  cinco documentos de este mini-plan, el prompt de FASE-RELEASE del padre, y los derivados reescritos por su
+  propio escritor (REGISTRY, `.last_doc_phase.json`, LECCIONES-INDEX con su JSON, wiring_report) con frase de
+  procedencia en el mensaje.
+- **Excluido por decisión del operador:** `CHANGELOG.md` y `docs/GUIA_TECNICA.md`. La subsección y la nota
+  técnica de esta fase existen en disco pero **no en HEAD**: el binomio CHANGELOG↔REGISTRY queda incompleto en
+  el commit y se resuelve en el commit aparte que se ofrece abajo. Quedaron fuera también los 9 archivos de
+  producto y 5 de tests de la recuperación AC6/AC10, los siete documentos del plan padre y sus directorios de
+  evidencia y briefing, porque no son trabajo de esta sesión.
+- **L3 corrida antes del push: sin hallazgos** (`findings_count: 0` sobre los commits desde su baseline, que
+  eran exactamente `21ade6c..b66d6a1`).
+- **Empujado `21ade6c..b66d6a1`** a `origin/master`. Pre-vuelo medido antes de empujar: upstream
+  `origin/master`, fast-forward confirmado con `git merge-base --is-ancestor origin/master HEAD`, 35 objetos
+  nuevos en el rango y `git push --dry-run` con esa misma línea. Paridad después: `git status -sb` sin
+  adelantamiento ni retraso.
+
+**Sigue pendiente, con la misma regla de pedirlo por separado y con autorización literal:** el **tag** —esta
+fase no libera versión: `--release` es exclusivo del RELEASE del padre y `VERSION.yaml` no se tocó— y
+**cualquier operación remota a QMind**, que es el momento B (maestro §6). Los cinco cortes se sostuvieron sin
+commit durante toda la sesión y el commit llegó después, por orden: ninguno quedó «no consumado».
+
+**Ofrecido, no ejecutado:** commit aparte de `CHANGELOG.md` y `docs/GUIA_TECNICA.md`, que cargan además la prosa
+ya cerrada de FASE-VERIFY de otra sesión. Mientras ese commit no exista, la clausura documental de esta fase
+está completa en disco e incompleta en el histórico.
+
+La apertura de esta sesión ya encontraba el árbol sucio con **36 entradas ajenas** (el cierre documental de
+FASE-VERIFY del padre y la recuperación AC6/AC10 en curso). Esa es la razón del recorte A: lo ajeno se describió
+en el mensaje del commit y se quedó en el árbol, no se absorbió. Lo que sí viaja publicado es el contenido
+ajeno que es **derivado de un escritor**: `REGISTRY.md` y `.last_doc_phase.json` traen entradas de FASE-VERIFY y
+FASE-E2E, y el par del índice de lecciones más `wiring_report.json` re-cuentan el corpus completo —texto ajeno
+incluido, todavía sin commitear—. No es una elección de estilo: un derivado partialmente regenerado dejaría al
+commit con un estado que su propio verificador no reproduce.
