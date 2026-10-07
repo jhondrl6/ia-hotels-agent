@@ -639,6 +639,78 @@ def test_fecha_de_captura_ilegible_no_produce_edad(fecha):
 
 
 # ---------------------------------------------------------------------------
+# b1-bis: el spawn revalida el reloj, no el documento congelado
+# ---------------------------------------------------------------------------
+def _guardado_favorable() -> dict:
+    return json.loads((DIR_FASE / "preflight.json").read_text(encoding="utf-8"))
+
+
+def test_la_revalidacion_del_spawn_rechaza_por_edad_aunque_el_guardado_siga_favorable():
+    """El diente de b1-bis: el preflight favorable del 6 de octubre no autoriza un spawn en noviembre."""
+    guardado = _guardado_favorable()
+    assert guardado["spawn_autorizado"] is True, "precondition: el arbol tiene el consentimiento del operador"
+
+    with pytest.raises(run_once.PreflightNoFavorable) as exc:
+        run_once.revalidar_contra_la_fecha(guardado, hoy=datetime(2026, 11, 1, tzinfo=timezone.utc))
+    cause = str(exc.value)
+    assert "102" in cause, "la edad rechazada debe ser la del dia del spawn, no la guardada"
+    assert "el preflight guardado declaraba" in cause, (
+        "el rechazo tiene que venir del guard de edad; el del consentimiento tambien cae en 102 y la causa"
+        " comun no prueba que el primero exista"
+    )
+
+
+def test_la_revalidacion_del_spawn_acepta_el_ultimo_dia_de_la_ventana_y_declara_el_drift():
+    guardado = _guardado_favorable()
+    dato = run_once.revalidar_contra_la_fecha(
+        guardado, hoy=datetime(2026, 10, 20, tzinfo=timezone.utc)
+    )
+    assert dato["edad_dias"] == 90
+    assert dato["techo_de_dias"] == 90
+    assert dato["limite_del_consentimiento"] == 90
+    assert dato["declarado_por"], "la revalidacion consigna quien autorizo"
+    assert "edad_dias_del_preacto" in dato, "la edad del preflight guardado se declara, no se oculta"
+
+
+def test_la_revalidacion_sin_documento_del_operador_se_niega_antes_de_reservar(tmp_path):
+    fase = tmp_path / DIR_FASE.relative_to(RAIZ)
+    fase.mkdir(parents=True)
+    (fase / "onboarding_provenance.json").write_text(
+        (DIR_FASE / "onboarding_provenance.json").read_text(encoding="utf-8"),
+        encoding="utf-8",
+        newline="\n",
+    )
+    with pytest.raises(run_once.PreflightNoFavorable) as exc:
+        run_once.revalidar_contra_la_fecha(
+            {"requisitos": {}}, raiz=tmp_path, hoy=datetime(2026, 10, 7, tzinfo=timezone.utc)
+        )
+    assert "consentimiento" in str(exc.value).lower()
+
+
+def test_la_rama_del_spawn_revalida_antes_de_llamar_al_lanzador():
+    """El guard no existe si nadie lo dispara: la rama del spawn se goberna por AST, no por lectura de prosa."""
+    arbol = ast.parse(RUTA_RUNNER.read_text(encoding="utf-8"))
+    main = next(n for n in arbol.body if isinstance(n, ast.FunctionDef) and n.name == "main")
+    rama = next(
+        (n for n in main.body if isinstance(n, ast.If) and "--spawn" in ast.dump(n.test)), None
+    )
+    assert rama is not None, "main() perdio su rama --spawn"
+
+    llamadas: list[str] = []
+    for sentencia in rama.body:
+        for nodo in ast.walk(sentencia):
+            if isinstance(nodo, ast.Call) and isinstance(nodo.func, ast.Name):
+                llamadas.append(nodo.func.id)
+
+    assert "revalidar_contra_la_fecha" in llamadas, (
+        "el --spawn productivo no revalida la edad ni el consentimiento contra la fecha del dia"
+    )
+    assert llamadas.index("revalidar_contra_la_fecha") < llamadas.index("lanzar_unico"), (
+        "revalidar despues de lanzar no protege la reserva"
+    )
+
+
+# ---------------------------------------------------------------------------
 # La reserva productiva sigue virgen
 # ---------------------------------------------------------------------------
 def test_ningun_test_de_esta_bateria_toco_el_control_productivo():

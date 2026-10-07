@@ -786,6 +786,55 @@ def verificar_preflight(preflight: dict, *, argv: list[str], raiz: Path = RAIZ) 
         raise DivergenciaDeHash("divergencia contra el preflight en: " + ", ".join(divergentes))
 
 
+def revalidar_contra_la_fecha(preflight: dict, *, raiz: Path = RAIZ, hoy: datetime | None = None) -> dict:
+    """b1-bis: los requisitos que dependen del reloj se re-evaluan en el dia del spawn.
+
+    `verificar_preflight` lee el documento guardado, y guardado significa congelado: un spawn dias
+    despues de la emision pasaria con la edad del dia de la emision, que es justo lo que la ventana
+    de `EDAD_MAXIMA_DIAS` promete impedir. Este guard recalcula la edad contra la fecha real y
+    relee el consentimiento del operador; rechaza **antes** de tocar la reserva. No re-evalua los
+    requisitos que no decaen con el reloj (identidades, rama del loader, hashes): esos los gobierna
+    la divergencia de `verificar_preflight`.
+    """
+    referencia = hoy or datetime.now(timezone.utc)
+    ruta_proveniencia = raiz / DIR_FASE.relative_to(RAIZ) / "onboarding_provenance.json"
+    if not ruta_proveniencia.is_file():
+        raise PreflightNoFavorable(
+            f"no hay procedencia legible en {ruta_proveniencia.name}: la revalidacion no puede computar la edad"
+        )
+    fecha_captura = str(
+        json.loads(ruta_proveniencia.read_text(encoding="utf-8"))[
+            "valores_declarados_por_el_operador"
+        ]["fecha_captura"]
+    )
+    edad = edad_contra_la_emision(fecha_captura, referencia)
+    guardada = ((preflight.get("requisitos") or {}).get("frescura_fail_closed") or {}).get("edad_dias")
+    if edad is None or edad > EDAD_MAXIMA_DIAS:
+        raise PreflightNoFavorable(
+            f"el dato tiene {edad} dias contra el techo de H ({EDAD_MAXIMA_DIAS}) en la fecha del spawn"
+            f" [el preflight guardado declaraba {guardada}]: se niega sin consumir la reserva"
+        )
+    consentimiento = evaluar_consentimiento(
+        raiz / CONSENTIMIENTO_RUTA.relative_to(RAIZ),
+        fecha_captura=fecha_captura,
+        edad_dias=edad,
+    )
+    if not consentimiento["autoriza_entrega"]:
+        raise PreflightNoFavorable(
+            "el consentimiento del operador no ampara el spawn en la fecha de hoy: "
+            + str(consentimiento["causa"])
+        )
+    return {
+        "revalidado_el": referencia.isoformat(),
+        "fecha_captura": fecha_captura,
+        "edad_dias": edad,
+        "edad_dias_del_preacto": guardada,
+        "techo_de_dias": EDAD_MAXIMA_DIAS,
+        "limite_del_consentimiento": consentimiento["limite_dias"],
+        "declarado_por": consentimiento["declarado_por"],
+    }
+
+
 # ---------------------------------------------------------------------------
 # El unico spawn
 # ---------------------------------------------------------------------------
@@ -978,6 +1027,8 @@ def main(argv: list[str]) -> int:
         return 0
     if argv[:1] == ["--spawn"]:
         preflight = leer_preflight(DIR_FASE / "preflight.json")
+        revalidacion = revalidar_contra_la_fecha(preflight)
+        print(json.dumps({"revalidacion_del_spawn": revalidacion}, indent=2, ensure_ascii=False))
         resultado = lanzar_unico(
             control_path=DIR_EVIDENCIA_PRODUCTIVA / "run_control.json",
             preflight=preflight,

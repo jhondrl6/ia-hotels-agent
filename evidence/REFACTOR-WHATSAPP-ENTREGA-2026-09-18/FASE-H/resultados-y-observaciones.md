@@ -54,6 +54,34 @@ en el sello de RELEASE, por la decisión vigente de no abrir sellos recursivos (
 Scratch en `evidence/`) y su resultado está en el párrafo de arriba. Dueño: la sesión que re-ejecute la batería de
 mutantes de H, o el sello de RELEASE.⟧
 
+⟦**b1-bis añadido el 2026-10-07 (la ventana ya se fuerza en el propio spawn).** Medido antes de escribir código:
+`verificar_preflight` (`run_once.py:767-786`) comprueba el preflight **guardado** — `cumple` de cada requisito,
+`intentos=0`, `argv_congelado` y los 10 hashes — y **no recomputa la edad ni relee el consentimiento**. Con b1 solo,
+un spawn posterior al 2026-10-20 se autorizaba con la edad congelada del día de la emisión: la barrera vivía en
+`--emitir-preflight`, no en el camino que consume el intento. Se añadió `revalidar_contra_la_fecha(preflight, raiz,
+hoy)`, que computa la edad contra la fecha real, relee el documento del operador y rechaza con
+`PreflightNoFavorable` **antes** de reservar; la rama `--spawn` la invoca antes de `lanzar_unico` y consigna su
+salida (`revalidacion_del_spawn`: edad de hoy, edad del preflight, límite del consentimiento y quién lo emitió). No
+re-evalúa los requisitos que no decaen con el reloj: esos los sigue gobernando la divergencia de hashes.
+
+Cuatro dientes nuevos en `tests/test_fase_h_intento_unico.py`: rechazo por edad en noviembre con su causa
+distintiva, aceptación en el último día de la ventana (edad 90) con el drift declarado, rechazo con el documento del
+operador ausente en `tmp_path`, y un control AST de que la rama `--spawn` revalida **antes** de llamar a
+`lanzar_unico`. Mutantes medidos en memoria, sin dejar scratch en el árbol: **(1)** quitar la llamada del spawn cae
+por el control AST; **(2)** apagar el guard de edad **no** cae por esta vía, porque el consentimiento (límite 90 ≤
+techo 90) rechaza igual a 102 días — el guard de edad es redundante con la relectura y se conserva por claridad del
+mensaje—; **(3)** apagar la relectura del consentimiento cae por el diente del documento ausente (falla con
+`KeyError` antes de devolver, camino feo pero suficiente para que el test lo vea). **70 passed** en las dos baterías
+de H (antes 66).
+
+**Enmienda al prompt de E2E** (`05-prompt-inicio-sesion-fase-E2E.md`), cuatro ajustes verificados contra el runner:
+**(i) bloqueante** — el «comando largo único» estaba sin flag: `run_once.py` sin argumentos imprime el uso y sale con
+EXIT 2, sin spawnear; ahora es `--spawn`. **(ii) bloqueante** — la dependencia declara S-H1 cumplido y el hard stop
+del 2026-10-20, y Tarea 1 dice que no hace falta re-emitir a mano porque el spawn se revalida. **(iii)** el argv
+citado omitía `--permission-mode auto`, que sí está en `argv_congelado` y en el argv que el runner lanza; ahora se
+referencia ese campo. **(iv)** Tarea 1 pedía verificar «`run_control.json` con `attempts=0`» cuando ese archivo no
+existe hasta el spawn: se reemplazó por la ausencia de la reserva, que es lo que el preflight declara intacto.⟧
+
 **Lectura declarada de Tarea 4.** El prompt dice «dejar H INCOMPLETA si algún prerrequisito no pasa». Medido y
 por escrito: los prerrequisitos técnicos de H (identidad, rama del loader, frescura fail-closed, runner,
 reserva, aislamiento de memoria) están verificados; el que no pasa es un acto del operador que el propio plan
@@ -282,4 +310,7 @@ alcance. No comparable con tramos medidos por el instrumento.
 * `scripts/validate_wiring.py --write-report` escribió `.opencode/wiring_report.json` con CRLF y `core.autocrlf` lo normaliza al indexar: el aviso de `git add` es esperable y el blob será LF (precedente medido por FASE-F; si se promete un sha del archivo, prometer el del objeto, no el del disco).
 * El sha de los commits de H y su rango van al **sello documental de RELEASE**, como los de C, D, E y F.
 * **No autoriza E2E**: primero S-H1 (consentimiento del operador), luego `--emitir-preflight` y su verificación
-  en la sesión de E2E, que es la única que puede lanzar el proceso.
+  en la sesión de E2E, que es la única que puede lanzar el proceso. ⟦**Rectificado el 2026-10-07**: S-H1 quedó
+  cerrado por el operador, el preflight es 12/12 favorable y H quedó **CERRADA**, así que E2E está autorizada a
+  entrar. Y con b1-bis ya no depende de que la sesión re-emita: `--spawn` revalida edad y consentimiento contra la
+  fecha del día. Re-emitir sigue siendo opcional y libre —no consume la reserva— pero no es condición.⟧
