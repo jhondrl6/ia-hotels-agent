@@ -1,7 +1,16 @@
 # Plan maestro — VERIFICADOR-ESCRITURA-QMIND-2026-09-20
 
-**Estado: PENDIENTE de ejecución. Una fase, una sesión, y —desde el 2026-09-24— dos momentos de aceptación
-(§6).** Ningún AC de este documento está implementado. ⟦Re-medido el 2026-09-24 contra el árbol vigente,
+**Estado: FASE-UNICA EJECUTADA el 2026-10-07 (momento A), con el momento B pendiente de autorización.** Una
+fase, una sesión, y —desde el 2026-09-24— dos momentos de aceptación (§6). ⟦Antes de esta fecha el estado era
+«PENDIENTE de ejecución: ningún AC de este documento está implementado», y era cierto⟧.
+⟦**EJECUTADO el momento A el 2026-10-07.** AC1/AC3/AC5 y la parte offline de AC2/AC4 cerrados con
+mutación; AC6-entrega cerrado (el prompt de RELEASE del padre manda el writer con `--title`/`--file` y corrige
+la errata `run()`→`run_all()`); AC6-aceptación y la parte remota de AC2/AC4 **vivas en el momento B** con dueño
+y disparador. Premisas: P1 y P2 verificadas y P2 curada (el check ahora corre `--strict` y el código 2 es estado
+propio, nunca PASS); P3 y P4 curadas (`verificar_contenido()` + `--title`/`--file`); P5 se cierra por el lado del
+repo (toda fuente que nombra al plan debe estar contable en el registro, si no `[DUPLICADO-VIGENTE]`), su
+limpieza retroactiva sigue fuera de alcance; P6 vigente y respetada: el writer no sanea y en esta sesión no se
+subió nada.⟧ Ningún AC de este documento está implementado. ⟦Re-medido el 2026-09-24 contra el árbol vigente,
 sigue siendo cierto: el writer no expone `--title` ni `--file`, `is_ingested()` decide por título y la
 indisponibilidad del CLI devuelve `exit 0`; el check [15/15] no corre en `--quick` ni en el hook⟧.
 ⟦Puesta al día del paquete, 2026-10-06: la etiqueta vigente de ese check es **[17/18]**, no `[15/15]` —
@@ -18,7 +27,7 @@ Versión base del repo al concebir el plan: `4.77.3`, HEAD `7296732` (este mini-
 
 | # | Premisa | Cómo se midió el 2026-09-20 | Consecuencia |
 |---|---|---|---|
-| P1 | El validador de write-back **sí** está conectado al sistema de validaciones | `grep -rln "validate_qmind_writeback" scripts/` → 2 archivos; en `run_all_validations.py`, método `run()`, rama `if not self.quick:`, el check **[17/18]** lo ejecuta ⟦re-etiquetado el 2026-10-06; se midió como `[15/15]` el 2026-09-20⟧ | Una afirmación anterior de esta sesión («no está en `run_all_validations.py`») era falsa y se retractó en cinco documentos. Nace `L-ENT.14` en el plan padre |
+| P1 | El validador de write-back **sí** está conectado al sistema de validaciones | `grep -rln "validate_qmind_writeback" scripts/` → 2 archivos; en `run_all_validations.py`, método `run_all()`, rama `if not self.quick:`, el check **[17/18]** lo ejecuta ⟦re-etiquetado el 2026-10-06; se midió como `[15/15]` el 2026-09-20⟧ | Una afirmación anterior de esta sesión («no está en `run_all_validations.py`») era falsa y se retractó en cinco documentos. Nace `L-ENT.14` en el plan padre |
 | P2 | …pero solo en el modo completo, y degrada a verde sin instrumento | `_check_qmind_writeback()` invoca el script **sin** `--strict`; el propio validador documenta en su docstring que la indisponibilidad del CLI devuelve 0 | Ninguna fase intermedia (`--quick`) ve este check, y con el CLI ausente el PASS significa «no se pudo medir» |
 | P3 | La comprobación es de **título**, no de contenido | `is_ingested()` en `validate_qmind_writeback.py` compara el título de la fuente contra el nombre del plan; `do_upload()` construye el título fijo `10-analisis: <PLAN> (lecciones aprendidas y decisiones)` | Una fuente publicada a mitad de plan satisface el check para siempre: el contenido viejo pasa por cierre |
 | P4 | El writer no admite actualización | `main()` del validador solo define `--nb`, `--strict` y `--upload`; `upload_source()` pasa `--file` y `--title` al CLI, que no sobrescribe | La única vía de publicar el cierre es un título nuevo, y eso **crea** una fuente duplicada |

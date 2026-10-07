@@ -2,13 +2,13 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 16,
+    "archivos_analysis_escaneados": 17,
     "archivos_contexto_escaneados": 39,
-    "archivos_md_escaneados": 434,
-    "ids_con_definicion": 344,
-    "ids_citados_sin_definicion": 84,
+    "archivos_md_escaneados": 435,
+    "ids_con_definicion": 348,
+    "ids_citados_sin_definicion": 80,
     "fechas_por_fuente": {
-      "nombre": 333,
+      "nombre": 337,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -390,10 +390,11 @@
       "seccion": "5. Seguimientos abiertos detectados",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 188,
+      "total_citas": 191,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
       "redefiniciones": []
@@ -1676,7 +1677,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1805,7 +1806,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 7,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1863,7 +1864,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 7,
       "planes_que_lo_citan": [
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -2816,7 +2817,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 100,
+      "total_citas": 101,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -2919,6 +2920,66 @@
       "redefiniciones": []
     },
     {
+      "id": "L-QW.1",
+      "familia": "L",
+      "enunciado": "Un verificador que comprueba la *clave* de una operación no puede detectar que el contenido",
+      "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-QW.2",
+      "familia": "L",
+      "enunciado": "Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la",
+      "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-QW.3",
+      "familia": "L",
+      "enunciado": "Un verde producido por la ausencia del instrumento es un rojo disfrazado. El exit 0 por CLI",
+      "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-QW.4",
+      "familia": "L",
+      "enunciado": "Un límite conocido y escrito no se cierra solo: la restricción estaba documentada en el corpus",
+      "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
+      "fecha_plan": "2026-09-20",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
+      "redefiniciones": []
+    },
+    {
       "id": "L-R.1",
       "familia": "L",
       "enunciado": "R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py <transcript.jsonl> <corte-ISO-8601> → 31 ids / 43 tool_use al corte 6bbdba7. El ⚠️ sin medir (R2.1) sistemático del plan no fue una imposibilidad técnica: fue la ausencia de una fila de checklist que exigiera el número con su unidad. Una regla que vive solo en el workflow y no en el artefacto que la fase rellena se cumple por coincidencia. — Medición propia de RELEASE vs 8 filas ⚠️ sin medir en §Resumen de Ejecución",
@@ -2982,7 +3043,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 83,
+      "total_citas": 85,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3363,7 +3424,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 87,
+      "total_citas": 92,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -3667,11 +3728,11 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 34,
+      "total_citas": 40,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -4286,7 +4347,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -4312,7 +4373,8 @@
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4334,7 +4396,8 @@
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4356,7 +4419,8 @@
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4377,7 +4441,8 @@
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4398,7 +4463,8 @@
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4419,7 +4485,8 @@
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4440,7 +4507,8 @@
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": [
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -4738,11 +4806,11 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
       ],
       "redefiniciones": []
@@ -4887,7 +4955,7 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 4,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -5400,7 +5468,7 @@
     {
       "id": "S-F7",
       "familia": "S",
-      "total_citas": 8,
+      "total_citas": 9,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
@@ -5411,6 +5479,14 @@
       "total_citas": 7,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+      ]
+    },
+    {
+      "id": "S-E2E-1",
+      "familia": "S",
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5443,6 +5519,22 @@
       "total_citas": 6,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "S-E2E-4",
+      "familia": "S",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-6",
+      "familia": "S",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5482,15 +5574,7 @@
       ]
     },
     {
-      "id": "S-E2E-1",
-      "familia": "S",
-      "total_citas": 5,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-6",
+      "id": "S-F6",
       "familia": "S",
       "total_citas": 5,
       "planes_que_lo_citan": [
@@ -5520,6 +5604,14 @@
       "total_citas": 4,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-2",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
@@ -5564,24 +5656,6 @@
       ]
     },
     {
-      "id": "L-QW.1",
-      "familia": "L",
-      "total_citas": 3,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "L-QW.4",
-      "familia": "L",
-      "total_citas": 3,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
       "id": "S-B3",
       "familia": "S",
       "total_citas": 3,
@@ -5600,7 +5674,7 @@
       ]
     },
     {
-      "id": "S-E2E-2",
+      "id": "S-E2E-3",
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
@@ -5617,6 +5691,14 @@
     },
     {
       "id": "S-E2E-8",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-11",
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
@@ -5713,6 +5795,14 @@
       ]
     },
     {
+      "id": "L-QW",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
+      ]
+    },
+    {
       "id": "L-VUP-n",
       "familia": "L",
       "total_citas": 2,
@@ -5738,7 +5828,7 @@
       ]
     },
     {
-      "id": "S-E2E-3",
+      "id": "S-D4",
       "familia": "S",
       "total_citas": 2,
       "planes_que_lo_citan": [
@@ -5747,14 +5837,6 @@
     },
     {
       "id": "S-E2E-9",
-      "familia": "S",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-F6",
       "familia": "S",
       "total_citas": 2,
       "planes_que_lo_citan": [
@@ -5834,30 +5916,6 @@
       ]
     },
     {
-      "id": "L-QW",
-      "familia": "L",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
-      ]
-    },
-    {
-      "id": "L-QW.2",
-      "familia": "L",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
-      ]
-    },
-    {
-      "id": "L-QW.3",
-      "familia": "L",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
-      ]
-    },
-    {
       "id": "L-R2.4",
       "familia": "L",
       "total_citas": 1,
@@ -5930,14 +5988,6 @@
       ]
     },
     {
-      "id": "S-D4",
-      "familia": "S",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
       "id": "S-D5",
       "familia": "S",
       "total_citas": 1,
@@ -5962,23 +6012,7 @@
       ]
     },
     {
-      "id": "S-E2E-4",
-      "familia": "S",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
       "id": "S-E2E-5",
-      "familia": "S",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-11",
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [

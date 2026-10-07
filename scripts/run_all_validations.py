@@ -980,11 +980,13 @@ class ValidationRunner:
             ))
     
     def _check_qmind_writeback(self) -> None:
-        """Check archived plans have their 10-analisis ingested into QMind.
+        """Check archived plans have their 10-analisis ingested into QMind AND still current.
 
-        Materializes the executor write-back contract (:572-574, :588) via the
-        `qmind` CLI. If the CLI is unavailable the validator itself degrades to
-        WARN + exit 0 (fallback :468); only a real missing ingestion fails.
+        Materializes the executor write-back contract (:572-574, :588) via the `qmind` CLI.
+        AC3 de `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`: la corrida se pide con `--strict` y el
+        codigo 2 (NO-EVALUABLE) es un estado propio del resumen. Antes el validador degradaba a
+        exit 0 cuando el CLI faltaba y aqui eso se publicaba como PASS: verde por ausencia del
+        instrumento. Ahora la ausencia corta rojo y se nombra.
         """
         print("[17/18] Checking QMind write-back (planes archivados)...")
 
@@ -997,24 +999,40 @@ class ValidationRunner:
             ))
             return
 
-        exit_code, output = self._run_command([sys.executable, str(script_path)])
+        exit_code, output = self._run_command([sys.executable, str(script_path), "--strict"])
+        lineas = [l for l in output.splitlines() if l.strip()]
+        resumen = next((l for l in reversed(lineas) if "qmind write-back" in l),
+                       lineas[-1] if lineas else "")
 
         if exit_code == 0:
             self.results.append(ValidationResult(
                 name="QMind Write-back",
                 passed=True,
-                message=(output.strip().splitlines() or ["OK"])[-1]
+                message=resumen or "OK"
             ))
-        else:
-            lines = output.split('\n')
-            issues = [l.strip()[2:] for l in lines if l.strip().startswith('- ')][:5]
+            return
+
+        if exit_code == 2:
+            # No es el rojo del plan: es la abstencion del instrumento. Se nombra y no cuenta como PASS.
             self.results.append(ValidationResult(
                 name="QMind Write-back",
                 passed=False,
-                message="Archived plans missing QMind write-back "
-                        "(fix: python scripts/validate_qmind_writeback.py --upload <PLAN>)",
-                details=issues
+                message=f"NO-EVALUABLE: la medicion no ocurrio - {resumen} "
+                        "(instrumento ausente, registro sin publicaciones o cuerpo inaccesible)",
+                details=lineas[:5]
             ))
+            return
+
+        lines = output.split('\n')
+        issues = [l.strip()[2:] for l in lines if l.strip().startswith('- ')][:5]
+        self.results.append(ValidationResult(
+            name="QMind Write-back",
+            passed=False,
+            message=f"VENCIDO o duplicado: {resumen} "
+                    "(fix: python scripts/validate_qmind_writeback.py --upload <PLAN> "
+                    "--file <copia saneada> --title <titulo nuevo>)",
+            details=issues or lineas[:3]
+        ))
 
     def _check_context_freshness(self) -> None:
         """Los `CONTEXT` gobernados tienen una fuente publicada que casa por descarga + sha256 (S34).

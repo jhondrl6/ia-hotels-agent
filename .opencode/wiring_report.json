@@ -1,8 +1,8 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 708,
-    "archivos_excluidos_por_rol": 8517,
-    "archivos_excluidos_por_rol_versionado": 162,
+    "archivos_en_alcance": 713,
+    "archivos_excluidos_por_rol": 8521,
+    "archivos_excluidos_por_rol_versionado": 165,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -44,7 +44,7 @@
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
-      "cantidad_versionada": 150,
+      "cantidad_versionada": 153,
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-07T02:28:37+00:00",
-  "git_sha": "ec8a272",
+  "generado": "2026-10-07T22:07:51+00:00",
+  "git_sha": "21ade6c",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -181,7 +181,7 @@
       "kwargs_presentes": [
         "whatsapp_html_detected"
       ],
-      "linea": 321,
+      "linea": 322,
       "metodo": "detect_pains",
       "posicionales": 3,
       "prohibidos_presentes": [],
@@ -203,7 +203,7 @@
         "site_presence_report",
         "whatsapp_html_detected"
       ],
-      "linea": 349,
+      "linea": 350,
       "metodo": "validate",
       "posicionales": 4,
       "prohibidos_presentes": [],
@@ -226,7 +226,7 @@
         "site_presence_report",
         "whatsapp_html_detected"
       ],
-      "linea": 489,
+      "linea": 499,
       "metodo": "validate",
       "posicionales": 4,
       "prohibidos_presentes": [],
@@ -299,7 +299,7 @@
         "site_presence_report",
         "whatsapp_conflict"
       ],
-      "linea": 1061,
+      "linea": 1058,
       "metodo": "_generate_dynamic_services_table",
       "posicionales": 0,
       "prohibidos_presentes": [],

@@ -20,7 +20,7 @@ plan se ha implementado.
 | ID | Enunciado | Definida en (ruta) | Qué cambia en ESTE plan | Dónde se aplica |
 |---|---|---|---|---|
 | L-D5 | Un instrumento de medición sin verificar devolvió 0 y casi lo reporto como resultado. | `.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md` §8 | **AC3**: la ausencia del CLI `qmind` no puede seguir produciendo PASS; el modo completo tiene que distinguir «medido en verde» de «no medible» | `_check_qmind_writeback()` y el resumen de `run_all_validations.py` |
-| L-V3.1 | El pre-commit no invoca `run_all_validations.py`, así que un guard declarado «conectado» puede no correr nunca en el ciclo real. | `.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md` §2 | **AC2** y **AC3**: este verificador vive solo en el modo completo; el plan debe decir dónde corre y qué lo invoca, no solo que existe | la cola de `run()`, rama `if not self.quick:` |
+| L-V3.1 | El pre-commit no invoca `run_all_validations.py`, así que un guard declarado «conectado» puede no correr nunca en el ciclo real. | `.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md` §2 | **AC2** y **AC3**: este verificador vive solo en el modo completo; el plan debe decir dónde corre y qué lo invoca, no solo que existe | la cola de `run_all()`, rama `if not self.quick:` |
 | L-ENT.9 | Un proveedor configurado no es un proveedor ejercitado: la métrica agregada verde oculta qué rama corrió. | `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md`, «Lecciones nuevas de este plan» | **AC2**: el verde agregado «hay fuente con ese título» oculta qué contenido se ingirió; la verificación pasa a por contenido | `is_ingested()` → comparación de contenido |
 | L-ENT.12 | El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor, y lo delató una cuenta que no cuadra. | `.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md`, «Lecciones nuevas de este plan» | **AC5**: los tres rojos nuevos se demuestran por mutación del guard, no por un test que confirme lo que ya pasaba | `mutation_report.json` del mini-plan |
 | L-AJUST.1 | Un plan citaba como viva una verdad que un rebase y un push posteriores invalidaron; las citas de estado se escribieron en presente y nadie las contra-verifica. | `.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md`, «Lecciones Aprendidas» | **AC4** y **AC6-entrega** ⟦re-anclado el 2026-09-24 por el bloque C de la orden de calidad: esta fila decía «AC4 y AC6» a secas, y AC6 era la AC circular que quedó desdoblada en **entrega offline** y **aceptación remota** — maestro §6⟧: el «título pre-acordado» es un estado en prosa que caduca; tiene que vivir en el writer y en el check, no en un párrafo que RELEASE memorice | prompt de FASE-RELEASE del plan padre |
@@ -39,8 +39,10 @@ plan se ha implementado.
 ## 3bis. Lecciones definidas por este plan
 
 Serie reservada con Q4 (0 coincidencias en el índice al momento de la reserva). Se definen aquí y quedarán
-redactadas en el `10-analisis-post-implementacion.md` de este plan al cerrar su fase, que es donde el índice
-las cuenta como definición.
+redactadas en el `10-analisis-post-implementacion.md` de este plan, que es donde el índice las cuenta como
+definición. ⟦**Aplicación efectiva, 2026-10-07:** las cuatro quedaron redactadas en el §E de ese análisis y
+`build_lesson_index.py` las cuenta: el corpus de definiciones pasó de 344 a 348 IDs con `--check` en fresco.
+La serie ya no está reservada — está definida, citada y con dueño.⟧
 
 | ID | Enunciado provisional | Qué previene |
 |---|---|---|

@@ -1,6 +1,9 @@
 # FASE-UNICA — Verificador de escritura y frescura del write-back a QMind
 
-**Estado:** PENDIENTE. ⟦Desde el 2026-09-24 su aceptación está dividida en dos momentos (maestro §6):
+**Estado:** PENDIENTE. ⟦**EJECUTADA el 2026-10-07** — momento A (entrega offline). Lo que esta sesión podía
+cerrar está cerrado y medido; lo remoto quedó `PENDIENTE-AUTORIZACION` con dueño y disparador, no omitido.
+Dictamen AC por AC, decisiones en voz alta y deuda: `10-analisis-post-implementacion.md` de este plan.⟧
+⟦Desde el 2026-09-24 su aceptación está dividida en dos momentos (maestro §6):
 **entrega offline**, que es lo que esta sesión puede cerrar, y **aceptación remota**, que no⟧.
 **Dependencia inmediata:** ninguna técnica. **Disparador:** sesión propia **antes de
 FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`**; si ese RELEASE llega primero, aplicar el §5 del
@@ -68,7 +71,12 @@ premisa se declara **no comprobada**, no se copia el 49.
    instrucción que anulaba la regla. Lo verificable sin red es el **predicado del verificador** contra la
    instantánea versionada, y eso es justo lo que AC2/AC4 prometen. Actualizar el prompt de FASE-RELEASE del
    plan padre para que mande el writer en lugar de depender de que alguien recuerde el título pre-acordado
-   — eso **es** AC6-entrega, y cierra en esta fase. Cierre incremental con la regla de siempre:
+   — eso **es** AC6-entrega, y cierra en esta fase. ⟦Errata re-medida el 2026-10-07: ese prompt del padre
+   cita el método del runner con un símbolo que ya no existe; el vigente es `run_all()`. Corrígelo dentro
+   del mismo diff de AC6-entrega. La misma cita vive también en el `10-analisis` del padre (fila L-ENT.14),
+   archivo hoy sucio por el cierre de VERIFY: esa errata queda **declarada con dueño** —el RELEASE del
+   padre al tocar su 10-analisis— y no es carga de esta fase. Las tres ocurrencias de los documentos de
+   este mini-plan se corrigieron el 2026-10-07⟧. Cierre incremental con la regla de siempre:
    `log_phase_completion.py` con `--fase`, `--desc` y `--fecha` y **sin** `--release`, `build_lesson_index.py`
    y su `--check`, quick y `validate_document_integration`. ⟦Puesta al día 2026-10-06: `--fecha` es
    obligatoria (`log_phase_completion.py::parse_args`, con `fecha_iso_estricta` validándola como
@@ -102,19 +110,28 @@ del contrato (`evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`).
 denegado: **FUERA DE SERVICIO (R2.1)**, auto-reporte con **unidad contable declarada** (rutas tocadas,
 corridas de baseline, mutaciones) y **sin comparar** con la referencia; no estimar.
 
-- [ ] Premisas P1–P6 re-medidas al abrir, **con sus comandos y sin llamadas de red** (tabla de arriba).
-- [ ] AC1: `--title`/`--file` con sus tests, sin cambiar el default de `--upload <PLAN>`.
-- [ ] AC2 y AC4, **parte offline**: verificación por contenido contra la **instantánea versionada**, regla de
+- [x] Premisas P1–P6 re-medidas al abrir, **con sus comandos y sin llamadas de red** (tabla de arriba). Medido
+      el 2026-10-07: HEAD `21ade6c`, árbol sucio con 36 entradas ajenas, quick 13/13, citas 745/0/0, índice
+      fresco 344 IDs, `--help` del writer con solo `--nb`/`--strict`/`--upload`, y `_check_qmind_writeback()`
+      invocando sin `--strict`. Todo lo que la tabla prometía como vigente se encontró vigente.
+- [x] AC1: `--title`/`--file` con sus tests, sin cambiar el default de `--upload <PLAN>`. Control negativo
+      ejercitado sobre el blob de `21ade6c`.
+- [x] AC2 y AC4, **parte offline**: verificación por contenido contra la **instantánea versionada**, regla de
       una sola fuente vigente, y mutaciones M1/M3 rojas por el guard. Su **parte remota** queda en el
       momento B con dueño y disparador (maestro §6), declarada pendiente y no cerrada por omisión.
-- [ ] AC3: sin PASS por ausencia de instrumento; el estado «no medible» se ve en el resumen. **Es la AC que
+- [x] AC3: sin PASS por ausencia de instrumento; el estado «no medible» se ve en el resumen. **Es la AC que
       sostiene la credibilidad de las demás y se comprueba íntegramente sin red.**
-- [ ] AC5: 3/3 mutaciones en rojo por el guard, 0 por sintaxis o import, árbol restaurado por sha256.
-- [ ] **AC6-entrega**: prompt de FASE-RELEASE del plan padre actualizado para mandar el writer con `--title`
-      (`git diff` del prompt como evidencia). Cierra en esta fase.
+- [x] AC5: 3/3 mutaciones en rojo por el guard, 0 por sintaxis o import, árbol restaurado por sha256
+      (`evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/mutation_report.json`).
+- [x] **AC6-entrega**: prompt de FASE-RELEASE del plan padre actualizado para mandar el writer con `--title`
+      (`git diff` del prompt como evidencia). Cierra en esta fase. Incluye la errata `run()` → `run_all()`.
 - [ ] **AC6-aceptación**: **no** es casilla de esta fase. Se registra en el cierre como heredada al momento B
-      (RELEASE del padre, tras su ingesta de cierre, verificada por descarga + sha256).
-- [ ] Cierre documental completo, índice regenerado y `--check` fresco, quick TOTAL PASS.
+      (RELEASE del padre, tras su ingesta de cierre, verificada por descarga + sha256). **Así queda a propósito:**
+      marcarla sería el verde hueco que esta fase vino a cerrar.
+- [x] Cierre documental completo, índice regenerado y `--check` fresco, quick TOTAL PASS. ⟦La tabla de
+      «Archivos Nuevos» de REGISTRY lista 7 porque `log_phase_completion.py` es aditivo y volver a ejecutarlo
+      apilaría una entrada duplicada: la entrega real tiene 9 archivos nuevos (faltan dos que nacieron *después*
+      del registro —`instantaneas/README.md` y el crudo del quick de cierre— y viajan con esta nota).⟧
 
 ## Inicio de la sesión
 

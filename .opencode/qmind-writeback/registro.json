@@ -1,0 +1,6 @@
+{
+  "schema_version": "1.0",
+  "creado": "2026-10-07",
+  "nota": "Registro versionado de las publicaciones del write-back a QMind. Unico escritor: scripts/validate_qmind_writeback.py con --upload. Vacio al cerrar la FASE-UNICA de VERIFICADOR-ESCRITURA-QMIND-2026-09-20: la primera entrada la produce el momento B (maestro §6), que necesita autorizacion literal y presupuesto propios. Mientras este registro no tenga entradas, la capa de contenido del check [17/18] declara NO-EVALUABLE y no PASS.",
+  "entradas": []
+}

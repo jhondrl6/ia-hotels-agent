@@ -1,0 +1,90 @@
+pre-imagen sha256 scripts/validate_qmind_writeback.py: 50d1a7f870134d96e9ae6fcf1f094524bba2396a855c09301118ca015f7a43cf
+
+===== M1 :: tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido =====
+-- verde antes de mutar (exit 0) --
+.                                                                        [100%]
+1 passed in 0.08s
+-- rojo tras la mutacion (exit 1) --
+x000001E2A8C36C40>
+
+    def test_instanea_editada_sin_re_subir_es_vencido(vw, montaje, monkeypatch):
+        """M1: mover la instantanea versionada sin volver a publicar corta rojo por el guard de contenido.
+    
+        La razon se nombra y se exige: sin ella, una segunda guarda de contenido (registro vs instantanea)
+        daria tambien `[VENCIDO]` y el mutante M1 passaria desapercibido. Se pide ademas que el rojo corte
+        ANTES de bajar nada: la comprobacion local no depende del servicio.
+        """
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        datos = vw.cargar_registro(m["registro"])
+        instanea = vw.directorio_de_instantaneas(m["registro"]) / datos["entradas"][0]["instanea"]
+        instanea.write_bytes(CUERPO + b"\nreedactada en el disco\n")
+        fuente = _fuente(_id(9), TITULO_CIERRE, CUERPO)
+        salio, falso, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: CUERPO})
+        assert salio == 1
+>       assert "la instantanea publicada" in salida
+E       assert 'la instantanea publicada' in "[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\n  [VENCIDO] PLAN-A-2026-09-01 :: 1...28a0a367... y la instantanea en disco tiene 83b065273b0a...\n[FAIL] qmind write-back: titulo OK | contenido: VENCIDO\n"
+
+tests\test_validate_qmind_writeback_escritura.py:294: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido
+1 failed in 0.14s
+
+===== M2 :: tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass =====
+-- verde antes de mutar (exit 0) --
+.                                                                        [100%]
+1 passed in 0.07s
+-- rojo tras la mutacion (exit 1) --
+                        [100%]
+================================== FAILURES ===================================
+___________ test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass ____________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1598/test_sin_qmind_sin_strict_es_n0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1598/test_sin_qmind_sin_strict_es_n0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000296F5706C40>
+
+    def test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass(vw, montaje, monkeypatch):
+        """M2: la ausencia del instrumento era exit 0 y el runner la pintaba de PASS. Ahora es estado propio."""
+        m = montaje
+        falso = QmindFalso([], {}, motivo="CLI 'qmind' no esta instalado ni en PATH",
+                           excepcion=vw.QmindUnavailable)
+        monkeypatch.setattr(vw, "_run_qmind", falso)
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            salio = vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"])])
+>       assert salio == 2
+E       assert 0 == 2
+
+tests\test_validate_qmind_writeback_escritura.py:423: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass
+1 failed in 0.14s
+
+===== M3 :: tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan =====
+-- verde antes de mutar (exit 0) --
+.                                                                        [100%]
+1 passed in 0.10s
+-- rojo tras la mutacion (exit 1) --
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan ___________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1600/test_dos_fuentes_vigentes_sin_0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1600/test_dos_fuentes_vigentes_sin_0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000160D0BC6C40>
+
+    def test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan(vw, montaje, monkeypatch):
+        """M3: la fuente que nombra al plan y no esta contable en el registro es el duplicado de P5."""
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        vigente = _fuente(_id(15), TITULO_CIERRE, CUERPO)
+        huesped = _fuente(_id(16), TITULO_HISTORICO, CUERPO)
+        salio, _, salida = _corrida(vw, monkeypatch, m, [vigente, huesped],
+                                    {vigente["id"]: CUERPO, huesped["id"]: CUERPO})
+>       assert salio == 1
+E       assert 0 == 1
+
+tests\test_validate_qmind_writeback_escritura.py:358: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan
+1 failed in 0.15s

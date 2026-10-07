@@ -1,0 +1,84 @@
+{
+  "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+  "fase": "FASE-UNICA",
+  "instrumento": "temp/mutaciones_writeback_fase_unica.py (R2.8: sin el rojo no hay verde)",
+  "arbol_bajo_mutacion": "scripts/validate_qmind_writeback.py (mutacion in-place con restauracion por sha256; el resto del arbol no se toca)",
+  "reglas": [
+    "cada mutacion debilita el GUARD real del writer, no la asercion del test",
+    "un rojo por SyntaxError/ImportError no cuenta como guard funcionando",
+    "la pre-imagen y la restauracion se verifican por sha256 sobre el archivo mutado",
+    "el verde antes de mutar se mide en la misma corrida: un test que ya estaba rojo no prueba nada"
+  ],
+  "pre_imagen_sha256": "50d1a7f870134d96e9ae6fcf1f094524bba2396a855c09301118ca015f7a43cf",
+  "mutaciones": [
+    {
+      "id": "M1",
+      "ac": "AC2",
+      "aplicable": true,
+      "guard": "comparacion sha(instantanea) vs sha(cuerpo del plan) en verificar_contenido()",
+      "que_se_debilta": "la guarda local de contenido se apaga: una instantanea re-editada sin re-subir deja de ser VENCIDO-CUERPO",
+      "test_objetivo": "tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido",
+      "verde_antes": true,
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "arbol_restaurado_por_sha256": true,
+      "extracto_ultima_linea": [
+        "        assert salio == 1",
+        ">       assert \"la instantanea publicada\" in salida",
+        "E       assert 'la instantanea publicada' in \"[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\\n  [VENCIDO] PLAN-A-2026-09-01 :: 1...28a0a367... y la instantanea en disco tiene 83b065273b0a...\\n[FAIL] qmind write-back: titulo OK | contenido: VENCIDO\\n\"",
+        "tests\\test_validate_qmind_writeback_escritura.py:294: AssertionError",
+        "FAILED tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido"
+      ]
+    },
+    {
+      "id": "M2",
+      "ac": "AC3",
+      "aplicable": true,
+      "guard": "degradacion por CLI `qmind` ausente en main(): WARN + estado NO-EVALUABLE",
+      "que_se_debilta": "vuelve al defecto historico: exit 0 cuando el instrumento falta, que el runner publicaba como PASS",
+      "test_objetivo": "tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass",
+      "verde_antes": true,
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "arbol_restaurado_por_sha256": true,
+      "extracto_ultima_linea": [
+        ">       assert salio == 2",
+        "E       assert 0 == 2",
+        "tests\\test_validate_qmind_writeback_escritura.py:423: AssertionError",
+        "FAILED tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass"
+      ]
+    },
+    {
+      "id": "M3",
+      "ac": "AC4",
+      "aplicable": true,
+      "guard": "una sola fuente vigente por plan (las fuentes que nombran al plan y no estan contables en el registro)",
+      "que_se_debilta": "el duplicado del mismo plan sin marca de reemplazo deja de cortar: es el residuo que P5 documenta desde 2026-09-11",
+      "test_objetivo": "tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan",
+      "verde_antes": true,
+      "exit_code": 1,
+      "rompio": true,
+      "rojo_por_el_guard": true,
+      "vio_la_asercion_esperada": true,
+      "invalida_por_syntax_o_import": false,
+      "arbol_restaurado_por_sha256": true,
+      "extracto_ultima_linea": [
+        ">       assert salio == 1",
+        "E       assert 0 == 1",
+        "tests\\test_validate_qmind_writeback_escritura.py:358: AssertionError",
+        "FAILED tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan"
+      ]
+    }
+  ],
+  "aplicadas": 3,
+  "con_rojo_del_guard": 3,
+  "asercion_esperada_en_el_rojo": 3,
+  "arbol_restaurado_sin_pendencias": true,
+  "problemas_de_restauracion": []
+}

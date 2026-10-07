@@ -1,7 +1,14 @@
 # VERIFICADOR-ESCRITURA-QMIND-2026-09-20
 
 **Estado (reconciliado el 2026-09-24 por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`):
-FASE ÚNICA NO EJECUTADA, con su contrato ahora dividido en dos momentos.** Ninguna línea de este plan
+FASE ÚNICA NO EJECUTADA, con su contrato ahora dividido en dos momentos.** ⟦**FASE-UNICA EJECUTADA el
+2026-10-07 (momento A — entrega offline): AC1, AC3, AC5 y la parte offline de AC2/AC4 cerrados, AC6-entrega
+cerrado con el prompt del padre mandando el writer, y AC6-aceptación diferida con dueño y disparador al
+RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (maestro §6). Evidencia y dictamen AC por AC en el
+`10-analisis-post-implementacion.md` de este plan. Cero red ejecutada: el registro
+`.opencode/qmind-writeback/registro.json` nace con cero entradas porque poblarlo es el momento B, y por eso
+el modo completo corta `[17/18]` en NO-EVALUABLE hasta la primera publicación por `--upload`.**⟧ Ninguna línea
+de este plan
 está implementada: `scripts/validate_qmind_writeback.py` sigue sin `--title` ni `--file`, sigue decidiendo
 **por título** y sigue degradando a `exit 0` cuando falta el CLI (medido otra vez el 2026-09-24 con
 `grep` sobre su `main()` y su `_check_qmind_writeback`). ⟦Re-medido el 2026-10-06: **sigue vigente**, y queda
@@ -49,7 +56,7 @@ vía de actualización; el corpus lo documenta desde el 2026-09-11 y nadie lo ce
 Medido el 2026-09-20, tres hechos que el plan padre no puede arreglar sin romperse:
 
 1. `scripts/run_all_validations.py` invoca el validador como check **[17/18]**, pero solo en el modo
-   completo (cola del método `run()`, dentro de `if not self.quick:`); no corre con `--quick` ni en
+   completo (cola del método `run_all()`, dentro de `if not self.quick:`); no corre con `--quick` ni en
    `scripts/git_hooks/pre-commit`. Ninguna fase intermedia lo ve. ⟦Re-anclado el 2026-10-06: se publicó como
    `[15/15]`, etiqueta que le correspondía cuando el modo completo llegaba a 15 checks; hoy el denominador
    es 18 porque nació el hermano `[18/18]` de frescura `CONTEXT`⟧.
