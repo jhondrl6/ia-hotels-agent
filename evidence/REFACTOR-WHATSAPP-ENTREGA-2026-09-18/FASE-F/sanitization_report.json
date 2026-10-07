@@ -1,0 +1,160 @@
+{
+  "artefacto": "sanitization_report",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "fase": "FASE-F",
+  "ac": "AC13",
+  "fecha": "2026-10-06",
+  "contenido": "Este informe registra ruta/canal, mecanismo, casos, resultado y limites. No contiene valores capturados ni fragmentos de credencial: lo que se redacta no se copia aqui.",
+  "sumidero": {
+    "modulo": "modules/utils/redaction.py",
+    "simbolos": ["redact_secrets", "redact_values", "contains_secret_shape", "assert_redacted", "redact_and_clip", "redact_payload"],
+    "decision": "Un unico punto define las formas de credencial. Los sanitizadores preexistentes delegan en el; no se reemplazaron ni se reimplementaron providers.",
+    "detalles_de_disenio": [
+      "El Bearer se redacta ANTES que la cabecera authorization: si no, la cabecera se traga la palabra 'Bearer' y el token sobrevive suelto (diente M7).",
+      "contains_secret_shape admite la marca '***' como valor completo: un texto ya redactado ('?key=***') no puede contar como leak, porque entonces el guard ciega al llamador que redacta y despues verifica. Borrar la marca del texto tampoco vale: dejaba la palabra siguiente como si fuera el valor (diente propio en TestSumideroUnico).",
+      "redact_and_clip aplica la redaccion y despues el recorte: el orden inverso dejaba el prefijo de una key larga visible dentro de los primeros 100 caracteres de HttpClient.",
+      "assert_redacted es el seam que F define para el runner de H (captura de stdout/stderr y snapshot): en F no tiene llamador en el producto porque F no construye ese runner, y esa es la razon por la que se declara en la deuda (S-F8) y no se borra."
+    ]
+  },
+  "rutas": [
+    {
+      "ruta": "modules/auditors/llm_mention_checker.py::_sanitize_text",
+      "canal": "log (stderr) y texto devuelto al llamador",
+      "mecanismo_antes": "sustitucion literal por igualdad de las 3 keys de la instancia",
+      "brecha_demostrada": "con las 3 keys ausentes el metodo era noop; una credencial de OTRO proveedor (registry, config, otro auditor) salia cruda",
+      "mecanismo_despues": "redact_values (literales de instancia) + redact_secrets (formas)",
+      "casos": ["tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeText", "tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_sanitize_text_redacta_una_forma_ajena_sin_keys_cargadas"],
+      "resultado": "SIN REDACCION → rojo (mutante M2)",
+      "reanclaje": "test_none_keys_is_noop re-anclado: su intencion era la ausencia de sustitucion literal, hoy el noop se mide con texto sin forma de credencial"
+    },
+    {
+      "ruta": "modules/auditors/llm_mention_checker.py::_sanitize_error",
+      "canal": "texto de excepcion antes del log",
+      "mecanismo_antes": "regex que exigia [?&] antes de key= (URLs de requests)",
+      "brecha_demostrada": "'key=<valor>' suelto en un mensaje de error de un SDK, cabeceras reproducidas en el texto y formas de credencial no sobrevivientes del URL",
+      "mecanismo_despues": "redact_secrets sobre str(error)",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_sanitize_error_redacta_formas_y_params"],
+      "resultado": "SIN REDACCION → rojo (mutante M1)"
+    },
+    {
+      "ruta": "modules/auditors/llm_mention_checker.py::_query_gemini",
+      "canal": "logger.warning (las tres ramas de error y la de agotamiento de modelos)",
+      "mecanismo_antes": "pasaba por _sanitize_text/_sanitize_error con las limitaciones de arriba",
+      "brecha_demostrada": "la rama final (:448) y una credencial ajena a la instancia no estaban ejercidas por ningun test",
+      "mecanismo_despues": "identico; la redaccion se fortalecio en el sumidero comun",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_query_gemini_no_filtra_una_key_que_no_es_suya", "tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_ruta_todos_los_modelos_fallaron_tambien_sanea"],
+      "resultado": "OFFLINE con transporte sustituido (requests.post parcheado); cero red, cero credencial real"
+    },
+    {
+      "ruta": "modules/utils/http_client.py::_log_ssl_bypass",
+      "canal": "print a consola y entrega a SSLLogger (disco)",
+      "mecanismo_antes": "ninguno: imprimia y delegaba el texto crudo",
+      "brecha_demostrada": "impresion sin redaccion antes de cualquier filtro",
+      "mecanismo_despues": "redact_secrets antes del print y antes de entregar al logger",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestConsolaSinMarcadores"],
+      "resultado": "SIN REDACCION → rojo (mutante M3)"
+    },
+    {
+      "ruta": "modules/utils/http_client.py::_sanitize_error y fallback_info['error']",
+      "canal": "estructura que viaja a consumidores de reporte (schema_finder, web_scraper, seo_accelerator_pro)",
+      "mecanismo_antes": "solo recorte a 100 caracteres",
+      "brecha_demostrada": "el recorte dejaba el prefijo de una credencial larga; el campo 'error' llevaba str(error) sin redactar",
+      "mecanismo_despues": "redact_and_clip (redacta y despues recorta) y redact_secrets sobre el campo 'error'",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestConsolaSinMarcadores::test_sanitize_error_de_http_client_redacta_y_mantiene_el_limite", "tests/utils/test_fase_f_sumidero_redaccion.py::TestConsolaSinMarcadores::test_el_error_del_fallback_sale_redactado"],
+      "resultado": "diente de orden documentado en test_redact_and_clip_redacta_antes_de_recortar"
+    },
+    {
+      "ruta": "modules/utils/ssl_logger.py::_sanitize_for_log",
+      "canal": "logs/ssl_fallback.log (disco, gitignored)",
+      "mecanismo_antes": "quitar saltos y recortar a 200",
+      "brecha_demostrada": "unica escritura real bajo logs/: el verificador de secretos nunca la veia porque logs/ esta en .gitignore",
+      "mecanismo_despues": "redact_secrets antes de normalizar y recortar",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoLogs"],
+      "resultado": "SIN REDACCION → rojo (mutante M4); el test lee el archivo que escribe el writer real bajo logs/"
+    },
+    {
+      "ruta": "modules/data_validation/external_apis/pagespeed_client.py::_make_request",
+      "canal": "excepcion que sube al auditor y de ahi a log",
+      "mecanismo_antes": "cuerpo de respuesta y str(excepcion) crudos; la key viaja en los params de la peticion",
+      "brecha_demostrada": "la excepcion es el vehiculo que despues imprime v4_comprehensive y persiste main.py",
+      "mecanismo_despues": "redact_secrets en el cuerpo 5xx, en el message 400 y en el RequestException",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestWritersDeProveedor"],
+      "resultado": "SIN REDACCION → rojo (mutante M8)"
+    },
+    {
+      "ruta": "modules/auditors/v4_comprehensive.py (log de PageSpeed ERROR)",
+      "canal": "logger.warning a consola",
+      "mecanismo_antes": "imprimia mobile_result.message crudo mientras el documento ya se redactaba con sanitize_pagespeed_message",
+      "brecha_demostrada": "redactar solo el documento dejaba la consola sin cubrir (AC13: sanear despues no cumple)",
+      "mecanismo_despues": "redact_secrets en el log; el documento conserva su redactor propio de FASE-H",
+      "casos": ["tests/auditors/test_v4_comprehensive.py (ruta existente del redactor de documento)"],
+      "resultado": "PREEXISTENTE calificado: el camino del documento ya tenia diente; se anadio el de consola en la fuente"
+    },
+    {
+      "ruta": "modules/scrapers/google_places_client.py (3 ramas de error_message)",
+      "canal": "PlaceData.error_message, que scripts/preload_prospects_gbp.py persiste en markdown y JSON",
+      "mecanismo_antes": "str(e) crudo",
+      "brecha_demostrada": "persistencia en archivo sin redaccion, identificada en el inventario gobernable de AC13",
+      "mecanismo_despues": "redact_secrets en las tres ramas (Request error x3, Unexpected error x3)",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestWritersDeProveedor::test_places_error_message_sale_redactado"],
+      "resultado": "certificado sobre el writer, no sobre el script de precarga (fuera de allowlist)"
+    },
+    {
+      "ruta": "main.py::_persist_coherence_pre_gate (artefacto nuevo de D bajo output/)",
+      "canal": "coherence_pre_gate_<ts>.json",
+      "mecanismo_antes": "payload = report.to_dict() con checks[].message/errors/warnings crudos, junto al bloque ya enmascarado failed_error_checks",
+      "brecha_demostrada": "el mismo artefacto llevaba dos versiones del mismo mensaje; el enmascarado de D cubria telefonos de 8-16 digitos, no credenciales",
+      "mecanismo_despues": "redact_payload sobre la serializacion canonica y redact_secrets sobre el message de los culpables",
+      "casos": ["tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoOutput"],
+      "resultado": "SIN REDACCION → rojo (mutante M5); el contrato de forma de D (gate, nombres, scores) sigue intacto y esa es la asercion de no-regresion"
+    },
+    {
+      "ruta": "main.py (print del fallo del snapshot interno de E)",
+      "canal": "consola",
+      "mecanismo_antes": "print con {e} crudo en la rama never-block",
+      "brecha_demostrada": "texto de excepcion del writer de insumos llegando a consola",
+      "mecanismo_despues": "redact_secrets(str(e))",
+      "casos": ["cubierto por el mismo mecanismo del sumidero; la rama se ejercita en la bateria de E (test_fase_e_snapshot_resolvedor) sin marcadores"],
+      "resultado": "PREVENCION LOCAL; no se certifica por un rojo propio"
+    }
+  ],
+  "verificador": {
+    "ruta": "scripts/run_all_validations.py::ValidationRunner._check_no_secrets",
+    "brechas_demostradas": [
+      "cubria solo git ls-files + staged; output/ (linea 54 de .gitignore) y logs/ (linea 18) nunca se leian: git ls-files output logs = 0 rutas",
+      "el patron sk-[A-Za-z0-9]{20,} no caza sk-or-v1-... ni sk-ant-... porque el guion rompe la clase: las dos credenciales que usa este repo",
+      "la rama de archivo >5 MB citaba un global inexistente (_MAX_SCAN_BYTES en el f-string, cuando la constante es de clase): NameError en lugar de NO_CUBIERTO"
+    ],
+    "cambios": [
+      "nueva pata 3: escaneo de salidas bajo output/ y logs/ con la misma clasificacion (binario por NUL, tamano, legibilidad) y estado 'salida sin versionar' en el hallazgo",
+      "nuevo patron sk-(or|ant)-[A-Za-z0-9\\-]{16,}",
+      "fix del NameError: self._MAX_SCAN_BYTES en las dos ramas de tamano",
+      "el mensaje SIN_HALLAZGOS declara cuantas salidas se leyeron, para que un verde no se lea como ausencia"
+    ],
+    "medicion_preexistente": {
+      "archivos_bajo_output_y_logs": 1041,
+      "hallazgos_con_los_patrones_reales": 0,
+      "binarios_omitidos": 0,
+      "demasiado_grandes": 0,
+      "crudo": "temp/fase_f_scan_precheck_out.txt (scratch, no versionado) — reproductible con el instrumento de esta fase",
+      "consecuencia": "la pata nueva no hered6 ningun rojo historico: 0 hallazgos medidos antes de activarla"
+    },
+    "independencia_del_instrumento": "los patrones del verificador NO se importan del sumidero: el instrumento que fiscaliza no se audita con el codigo fiscalizado. La bateria prueba que los dos cazan el mismo marcador."
+  },
+  "mutantes": {
+    "total": 9,
+    "caidos_por_fuga_detectada": 9,
+    "restaurados_verificados_por_sha256": 9,
+    "verdes_tras_restauracion": 9,
+    "crudo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-F/mutantes_crudo.txt",
+    "no_aplica": "ningun mutante qued6 NO-APLICA: los 9 anclajes casaron exactamente una vez"
+  },
+  "limites": [
+    "AC13 se verifica OFFLINE en F: con transporte sustituido y marcadores sinteticos. La captura real del runner de H y su snapshot siguen siendo prueba de H.",
+    "No se certifica revocacion de credencial alguna: ver credential_status.json.",
+    "El snapshot interno de insumos (review_inputs.py) copia los documentos cliente bit a bit por diseno y queda excluido del ZIP; no se redacta porque es el limite interno/cliente que definio E, no una fuga. Sus campos 'cause' transportan texto del sistema de archivos (rutas), no texto de proveedor.",
+    "logger.exception conserva el traceback: desde esta fase el mensaje que se levanta ya sale redactado en la fuente, asi que el traceback no arrastra la credencial.",
+    "El escaneo de output/ y logs/ lee lo que hay en el momento de la validacion; un archivo que aparezca despues no esta cubierto hasta la siguiente corrida.",
+    "scripts/preload_prospects_gbp.py persiste PlaceData.error_message en markdown y JSON: su contenido llega ya redactado desde el cliente, pero el script no se modific6 (fuera de allowlist)."
+  ]
+}

@@ -15,6 +15,7 @@ Usage:
 
 import json
 import logging
+from modules.utils.redaction import redact_secrets
 from typing import Dict, List, Optional, Any
 from urllib.parse import urlparse
 from dataclasses import dataclass, field
@@ -1532,7 +1533,7 @@ class V4ComprehensiveAuditor:
             client_message = mobile_result.message
             if client_status == "ERROR":
                 logger.warning(
-                    "PageSpeed ERROR para %s: %s", url, mobile_result.message
+                    "PageSpeed ERROR para %s: %s", url, redact_secrets(mobile_result.message)
                 )
                 client_message = sanitize_pagespeed_message(mobile_result.message)
 

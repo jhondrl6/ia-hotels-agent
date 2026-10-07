@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 434,
     "ids_con_definicion": 344,
-    "ids_citados_sin_definicion": 62,
+    "ids_citados_sin_definicion": 66,
     "fechas_por_fuente": {
       "nombre": 333,
       "commit": 11,
@@ -2982,7 +2982,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 81,
+      "total_citas": 82,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3363,7 +3363,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 86,
+      "total_citas": 87,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -4092,7 +4092,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 72,
+      "total_citas": 73,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -4690,8 +4690,10 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -4704,8 +4706,10 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
-      "planes_que_lo_citan": [],
+      "total_citas": 14,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -5527,6 +5531,22 @@
       ]
     },
     {
+      "id": "S-F3",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-F4",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "D-2",
       "familia": "D",
       "total_citas": 2,
@@ -5552,6 +5572,14 @@
     },
     {
       "id": "L-E-ESC",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "L-F-RED",
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
@@ -5790,6 +5818,14 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "S-F7",
+      "familia": "S",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {

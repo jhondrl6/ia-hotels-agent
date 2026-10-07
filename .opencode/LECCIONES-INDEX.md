@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `16` análisis de plan + `39` archivos de `.opencode/context/`. `434` `.md` en total como corpus de **citas**.
-- 344 IDs con definición detectada; 62 IDs citados sin definición (ver última sección).
+- 344 IDs con definición detectada; 66 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -34,7 +34,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-*` | Decisiones / reglas de alineación | 43 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
-| — | Citados sin definición | 62 |
+| — | Citados sin definición | 66 |
 
 ## `L-*` — Lecciones aprendidas (200)
 
@@ -155,7 +155,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-R.1` | R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 61 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.2` | Hay campos que ningún writer escribe y ningún reader valida. docs/contributing/REGISTRY.md seguía publicando > Version actual: v4.66.0 con VERSION.yaml = 4.76.0. Medido: grep -rln "Version actual"… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 4 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-R.3` | El gate anti-contradicción de R2.5 tiene cobertura medida del 12,5 %. validate_plan_closure.py dispara solo si el 10-analisis-post-implementacion.md de un plan vivo tiene a la vez un heading que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 62 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/EVALUACION-JEV-TYPESAFE-2026-09-21, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
-| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 81 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 82 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-SR1` | Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes. / Qué pasó: el fallback FASE-D S7 con logger inexistente convivió con el código desde su fase sin detonar hasta una prueba… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 24 en Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-SR2` | La identidad de memoria debe derivarse de la URL canónica, no de la raw. / Qué pasó: los UTM params llegaron íntegros al target_id, fragmentando la memoria del mismo hotel en N identidades según cómo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 17 en Archives/SR-PIPELINE-FIXES-2026-08-27 |
 | `L-SR3` | Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio. / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 69 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -179,7 +179,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-T4A.2` | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable. El código inicial lines[1:-1] fallaba cuando el bloque iniciaba con json indentado o cuando el cierre no estaba en… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 1 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4A.3` | La cache SHA256 de extracciones LLM debe usar tmp_path en tests para evitar colisiones entre corridas. Los tests compartían el directorio .cache/tribunal/ y hits de cache de pruebas anteriores… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 0 (solo el plan dueño) |
 | `L-T4A.4` | La clasificación de promesas verbales contra la matriz requiere matching difuso por service_hint. El LLM puede generar hints como "Optimización para asistentes de voz" mientras la matriz usa… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 1 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-T4A.5` | Un test puede pasar sin ejecutar la rama que dice certificar: el test_no_breach_not_a_finding original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 86 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-T4A.5` | Un test puede pasar sin ejecutar la rama que dice certificar: el test_no_breach_not_a_finding original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 87 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4B.1` | Los commercial gates están split en DOS archivos: commercial_gates_report.json (3 gates: CG-ROI-NEGATIVE BLOCKING, CG-OTA-NARRATIVE WARNING, CG-TECH-JARGON WARNING) y… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 2 (solo el plan dueño) |
 | `L-T4B.2` | Los patrones regex de detección de sobre-presentación deben manejar variaciones de género y número en español. El patrón inicial r"\b(verificado — confirmado | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 0 (solo el plan dueño) |
 | `L-T4B.3` | La detección de CG warnings no divulgados no puede decidirse con palabras sueltas ni con el gate_id literal. Tokens como whatsapp/número/mensaje aparecen en menciones legítimas de contacto (la… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 1 (solo el plan dueño) |
@@ -227,7 +227,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-VUP-2` | El archivo de eventos --force es append-only y NO está en .gitignore: los tests lo contaminarían — MemoryManager.save_state tiene semántica REPLACE (memory.py:303-318) y main.py:1411 la llama después… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 0 (solo el plan dueño) |
 | `L-VUP-3` | Matching de dominios por substring produce falsos positivos (bookingbogota.com) y el patrón X.* mal anclado produce falsos negativos/positivos — Los dominios son secuencias de etiquetas; la identidad… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 2 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-VUP-4` | Reusar _normalize_url() desde un módulo exige import lazy dentro de la función — main.py importa los módulos; un import top-level en own_site_guard ciclaría cuando FASE-B cablee el guard en el… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 0 (solo el plan dueño) |
-| `L-VUP-5` | Los 16 contratos T1 del track main.py salieron VERDES a la primera (cero rojos): una fase "de extensión" que no produce rojo es un falso verde potencial — FASE-A ya ordenaba ensure_url() (L1428)… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 72 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-VUP-5` | Los 16 contratos T1 del track main.py salieron VERDES a la primera (cero rojos): una fase "de extensión" que no produce rojo es un falso verde potencial — FASE-A ya ordenaba ensure_url() (L1428)… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 73 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-VUP-6` | La delegación funcionó en ejecución y falló en cobertura de diseño: 0 colisiones de archivo, 0 decisiones inventadas por los subagentes, pero el conflicto --force vs capa de datos NO estaba en el… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 10 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-VUP-7` | UrlNoPropiaError lanzado por scraper/auditor sería tragado por los except Exception de sus callers en main.py (L568/592/865/1371/1760/1981) y convertiría el rechazo en warning — Los modos de main.py… | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 3 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-VUP-8` | FORZADAS_PROCESO es estado mutable de módulo y pytest puede alterar resultados según el orden de recolección — Un bypass registrado por un test contaminaría el rechazo que otro test espera | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | Lecciones nuevas de este plan (numeración L-VUP-n) | 0 (solo el plan dueño) |
@@ -358,8 +358,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-C8` | NO_ASSET_MAPPED se satisfizo en otra forma: el dossier y el ROADMAP lo exigían verbatim como estado de AlignmentStatus; C no lo añadió — el descarte vive como side-list not_promised + warning +… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 2 (solo el plan dueño) |
 | `S-E1` | ✅ Resuelto en la fase — Desviación de §4: E1/E2 no eran paralelizables. §4 y el prompt de E declaraban dos subagentes que «no comparten archivo», pero ambos tracks editan main.py (E1 persiste en FASE… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 12 (solo el plan dueño) |
 | `S-E2` | Defectos latentes preexistentes registrados, NO curados (fuera del perímetro de E): (a) NameError latente de site_presence_report — se asigna solo dentro de if generate_proposal: (main.py:2791 →… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 56 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
-| `S-F1` | Reconciliación del corpus medido: C2 contó 27 corridas sobre output/; el barrido F4 midió 28 primarias + 4 copias de delivery sobre output/ + archives/outputs/, con ~11 ESTIMADAS (~10 en el dossier)… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
-| `S-F2` | Residual G6-delivery: el check de coherencia del reporte de entrega sigue leyendo solo score (delivery_quality_report.py G6 lee coherence_validation.json con fallback post-gen, umbral ≥ 0.8; no… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 11 (solo el plan dueño) |
+| `S-F1` | Reconciliación del corpus medido: C2 contó 27 corridas sobre output/; el barrido F4 midió 28 primarias + 4 copias de delivery sobre output/ + archives/outputs/, con ~11 ESTIMADAS (~10 en el dossier)… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 6 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-F2` | Residual G6-delivery: el check de coherencia del reporte de entrega sigue leyendo solo score (delivery_quality_report.py G6 lee coherence_validation.json con fallback post-gen, umbral ≥ 0.8; no… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-H1` | La premisa de las brechas analytics es nuestra, no del hotel: no_analytics_configured y low_organic_visibility derivan de que falte nuestra credencial GA4, no de una medición del sitio del hotel —… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 7 (solo el plan dueño) |
 | `S-H2` | Punto (a) de V11 — la capa de pain descarta el ERROR de PageSpeed sin pain ni justificación: poor_performance exige mobile_score is not None (pain_solution_mapper.py:410-419), así que un eje caído… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `S-H3` | Punto (d) residual: corregida la contradicción executed ∩ skipped, pero el predicado de skip sigue siendo not has_field_data, que confunde «la API no devolvió datos de campo» con «no se llamó a la… (+1 redefiniciones) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 4 (solo el plan dueño) |
@@ -400,7 +400,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (62)
+## Citados sin definición (66)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -435,10 +435,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-QW.4` | 3 | VERIFICADOR-ESCRITURA-QMIND-2026-09-20, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-B3` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B4` | 3 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-F3` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-F4` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-2` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `D-3` | 2 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `DA-T4B.3` | 2 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `L-E-ESC` | 2 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-F-RED` | 2 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-P4` | 2 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-PF` | 2 | Archives/SR-PIPELINE-FIXES-2026-08-27, context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29 |
 | `L-VUP-n` | 2 | Archives/VALIDADOR-URL-PROPIA-2026-08-30, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -464,7 +467,4 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-16` | 1 | Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-D1` | 1 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-D2` | 1 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-D3` | 1 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-D4` | 1 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-D5` | 1 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| … | +2 más en el JSON | |
+| … | +6 más en el JSON | |

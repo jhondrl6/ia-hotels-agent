@@ -291,5 +291,6 @@
   "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py": "FASE-B",
   "30": "FASE-C",
   "35": "FASE-D",
-  "17": "FASE-E"
+  "17": "FASE-E",
+  "32": "FASE-F"
 }

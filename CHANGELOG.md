@@ -1,5 +1,60 @@
 # Changelog
 
+## [Sin publicar] - FASE-F del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+
+### Sumidero único de redacción y AC13 verificado offline (sanitización de salidas)
+
+**Qué cambió.** Nuevo `modules/utils/redaction.py`: un solo punto define las formas de credencial
+(`AIzaSy…`, `sk-or-`/`sk-ant-`/`sk-…`, `ghp_`, `pplx-`), los parámetros `key=` en cualquier
+separador, las cabeceras `x-goog-api-key`/`api-key`/`authorization` y los tokens `Bearer`. Expone
+`redact_secrets`, `redact_values`, `contains_secret_shape`, `assert_redacted` (guard fail-closed que **no**
+repite el valor en el mensaje), `redact_and_clip` (redacta **antes** de recortar) y `redact_payload`
+(estructuras serializables conservando la forma). Nueve rutas de salida quedan calificadas o cerradas sobre él:
+`LLMMentionChecker._sanitize_text` (antes noop si la instancia no cargaba keys: una credencial de *otro*
+proveedor salía cruda), `_sanitize_error` (antes solo `?key=`/`&key=`), la rama de agotamiento de modelos de
+`_query_gemini`, `HttpClient._sanitize_error` (recortaba a 100 y dejaba el prefijo de la key),
+`HttpClient._log_ssl_bypass` (imprimía crudo a consola y lo entregaba al logger de disco),
+`fallback_info['error']`, `SSLLogger._sanitize_for_log` —la única escritura real bajo `logs/`, ruta que ningún
+check leía—, `PageSpeedClient._make_request` (la key viaja en los params de la petición), tres ramas de
+`GooglePlacesClient`, el artefacto nuevo de FASE-D `coherence_pre_gate_<*.json` bajo `output/` (guardaba
+`report.to_dict()` con `checks[].message`/`errors`/`warnings` crudos junto al bloque ya enmascarado) y el `print`
+del fallo del snapshot interno que añadió FASE-E. No se reimplementó ningún provider; no se cambiaron
+autenticación, modelos, configuración central ni política de reintentos.
+
+**El verificador también dejó de mirar hacia otro lado.** `ValidationRunner._check_no_secrets` recorría solo
+`git ls-files` + staged, así que `output/**` y `logs/**` (líneas 54 y 18 de `.gitignore`) nunca se leían: un
+secreto podía vivir ahí para siempre. Ahora tiene una pata que escanea esas dos rutas con la misma
+clasificación (binario por NUL, tamaño, legibilidad) y declara **cuántas salidas leyó** en el verde, para que un
+`SIN_HALLAZGOS` no se lea como ausencia. Se sumó el patrón `sk-(or|ant)-…`, que el `sk-[A-Za-z0-9]{20,}` perdía
+porque el guion rompe la clase —las dos credenciales que usa este repo—, y se corrigió el `NameError` de la rama
+de archivo >5 MB, que citaba un global inexistente en lugar del atributo de clase.
+
+**Por qué.** AC13 exige redacción antes de consola y disco, y su columna de verificación pide el rojo también en
+un archivo escrito bajo `output/` o `logs/`, no solo en árbol versionado. `sanitization_report.json` registra
+ruta/canal, mecanismo, casos, resultado y límites sin valores capturados; `credential_status.json` registra la
+revocación como **afirmación del operador** (rotación del 2026-09-18, referencia no secreta a
+`evidence/FASE-P5/AC-S3-S4-inventario-superficie.md`) y deja el resto `PENDIENTE-SIN-EVIDENCIA-OPERATIVA` con
+dueño: ningún test verde acredita que una credencial anterior fue revocada.
+
+**Medido.** Par con la misma selección literal de 6 rutas: PRE **372 passed / 10 skipped** → POST **373 passed /
+10 skipped**, ambos EXIT 0 (+1 = la función nueva del re-anclaje de AC-S1); POST extendido con la batería nueva
+**419 passed / 10 skipped**. Funciones canónicas **4.939 → 4.980 (+41)**: 40 en
+`tests/utils/test_fase_f_sumidero_redaccion.py` (47 casos con parametrización) y 1 en
+`tests/auditors/test_p5_ac_s1_secret_sanitization.py`. **9/9 mutantes caen por fuga detectada** (ninguno por
+syntax ni import), 9/9 restaurados y verificados por sha256, 9/9 verdes tras la restauración. Antes de activar la
+pata nueva del verificador se midió la exposición preexistente con sus patrones reales: **1.041 archivos bajo
+`output/` y `logs/`, 0 hallazgos** — el rojo no se heredó del historial. Dos rojos que la fase produjo y resolvió
+sin rebajar la regla: el fixture `SYNTHETIC_OPENROUTER_KEY` de AC-S1 empezaba con el prefijo `sk-or-` y
+continuaba con un cuerpo legible, que es justo lo que el patrón nuevo rechaza en un archivo versionado, y se
+re-ancló **por construcción** (prefijo y cuerpo concatenados, como ya hace `test_p5_ac_s2_remediacion.py`);
+también se re-ancló `test_none_keys_is_noop`, que pineaba la noop de `_sanitize_text` en lugar de su contrato. Contador `v4complete`: **0/1**.
+
+**Límites.** AC13 se certificó **offline** con transporte sustituido; la integración con captura/snapshot del
+runner es prueba de FASE-H. Los informes de esta fase no contienen valores ni fragmentos. Deuda declarada con
+dueño: S-F1 `scripts/preload_prospects_gbp.py` persiste `PlaceData.error_message` (fuera de allowlist), S-F2
+`_query_perplexity` sin `try/except` propio, S-F3 el escaneo nuevo cubre el instante de la validación, S-F4 la
+allowlist de cuarentena de P5 queda intacta.
+
 ## [Sin publicar] - FASE-E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 
 ### Entrega real revalidada y revision con snapshot interno (AC9-AC12)

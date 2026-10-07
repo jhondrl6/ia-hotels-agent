@@ -20,6 +20,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from datetime import datetime
 from typing import Optional
+from modules.utils.redaction import redact_secrets
 
 
 class SSLLogger:
@@ -151,6 +152,10 @@ class SSLLogger:
         """
         if not text:
             return "unknown"
+
+        # FASE-F (AC13): esta linea escribe en logs/, que esta en .gitignore y por
+        # eso el verificador de secretos nunca la ve. Se redacta antes de truncar.
+        text = redact_secrets(text)
         
         # Remover saltos de línea
         text = text.replace('\n', ' ').replace('\r', '')

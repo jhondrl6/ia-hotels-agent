@@ -2707,3 +2707,30 @@ tests/test_p6r_full_flow_matrix.py tests/test_ac_g1_implementation_order.py
 tests/quality_gates/test_fase_d_veredicto_canonico.py -q` y
 `./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E/run_mutations.py`.
 
+## Nota Técnica — FASE-F del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-06)
+
+**Qué resolvió.** AC13 pedía redacción de credenciales *antes* de consola y de disco, y la medición inicial
+encontró tres cosas distintas: un sanitizador que solo conocía las 3 keys de su propia instancia
+(`LLMMentionChecker._sanitize_text`), un escritor que dejaba el prefijo de la key al recortar a 100 caracteres
+(`HttpClient._sanitize_error`) y una escritura real bajo `logs/` que **ningún verificador leía** porque
+`_check_no_secrets` recorre `git ls-files` + staged mientras `output/**` y `logs/**` están en `.gitignore`.
+La cura no es un parche por sitio: es un sumidero único, `modules/utils/redaction.py`, que define las formas de
+credencial una sola vez y al que delegan los sanitizadores preexistentes.
+
+**Cómo se gobierna.** `redact_secrets` (formas + `key=` + cabeceras + Bearer), `redact_values` (igualdad literal
+de las keys de la instancia), `redact_and_clip` (redacta antes de recortar: el orden inverso deja el prefijo al
+descubierto), `redact_payload` (estructuras serializables, usado en el artefacto `coherence_pre_gate_*.json` de
+FASE-D) y `assert_redacted(texto, channel=...)`, guard fail-closed para informes que **no repite el valor** en el
+mensaje: un informe de redacción que filtra es peor que el leak que denuncia. El Bearer se aplica antes que la
+cabecera `authorization`; si no, el token sobrevive suelto después de redactar la cabecera.
+
+**Instrumento y diente.** El verificador ahora lee las salidas gitignored y lo declara en su verde
+(`... + N salidas en output/ y logs/`), para que un `SIN_HALLAZGOS` no se confunda con ausencia. Antes de
+activarlo se midió la exposición preexistente con sus patrones reales: 1.041 archivos, 0 hallazgos. Los 9
+mutantes de la fase desactivan un guard real y caen por fuga detectada, no por syntax ni import; el arnés queda
+versionado con la evidencia.
+
+**Frontera con H.** Lo de F es prevención local verificada offline con marcadores sintéticos y transporte
+sustituido. La captura real del runner, su stdout/stderr y el snapshot se prueban en H, y la revocación de una
+credencial no es resultado de ningún test: vive en `credential_status.json` como afirmación del operador.
+

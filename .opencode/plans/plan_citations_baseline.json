@@ -1,6 +1,6 @@
 {
   "comando_de_medicion": "grep -rEoh \"[A-Za-z0-9_/]+\\\\.py:[0-9]+\" .opencode/plans --include=*.md | wc -l",
-  "created_at": "2026-10-06T15:02:36",
+  "created_at": "2026-10-06T19:44:01",
   "files": {
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md": 11,
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md": 3,
@@ -80,7 +80,9 @@
     "Archives/VALIDADOR-URL-PROPIA-2026-08-30/09-documentacion-post-proyecto.md": 2,
     "Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md": 8,
     "Archives/VALIDADOR-URL-PROPIA-2026-08-30/README.md": 16,
-    "Archives/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md": 1
+    "Archives/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md": 1,
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md": 1,
+    "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md": 1
   },
   "plans_dir": "plans",
   "schema_version": "1.0"

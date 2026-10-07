@@ -1,0 +1,188 @@
+{
+ "mutantes": [
+  {
+   "id": "M1",
+   "archivo": "modules/auditors/llm_mention_checker.py",
+   "guard": "LLMMentionChecker._sanitize_error",
+   "nodo": "tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeError::test_redacts_key_param",
+   "causa_esperada": "el mensaje crudo del proveedor sale a consola",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/auditors/test_p5_ac_s1_secret_sanitization.py::TestSanitizeError::test_redacts_key_param",
+   "restaurado": true,
+   "sha256": "29baf7c2cca6122e"
+  },
+  {
+   "id": "M2",
+   "archivo": "modules/auditors/llm_mention_checker.py",
+   "guard": "LLMMentionChecker._sanitize_text",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_sanitize_text_redacta_una_forma_ajena_sin_keys_cargadas",
+   "causa_esperada": "una credencial de otro proveedor sobrevive al log",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestCalificacionSanitizadoresExistentes::test_sanitize_text_redacta_una_forma_ajena_sin_keys_cargadas",
+   "restaurado": true,
+   "sha256": "29baf7c2cca6122e"
+  },
+  {
+   "id": "M3",
+   "archivo": "modules/utils/http_client.py",
+   "guard": "HttpClient._log_ssl_bypass",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestConsolaSinMarcadores::test_log_ssl_bypass_imprime_redactado",
+   "causa_esperada": "la consola imprime el texto sin redactar",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestConsolaSinMarcadores::test_log_ssl_bypass_imprime_redactado",
+   "restaurado": true,
+   "sha256": "56a480b16deb3963"
+  },
+  {
+   "id": "M4",
+   "archivo": "modules/utils/ssl_logger.py",
+   "guard": "SSLLogger._sanitize_for_log",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoLogs::test_ssl_logger_escribe_el_archivo_sin_el_marcador",
+   "causa_esperada": "el marcador queda persistido en logs/ssl_fallback.log",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoLogs::test_ssl_logger_escribe_el_archivo_sin_el_marcador",
+   "restaurado": true,
+   "sha256": "db73ef25e15ccaaa"
+  },
+  {
+   "id": "M5",
+   "archivo": "main.py",
+   "guard": "_persist_coherence_pre_gate (artefacto de D bajo output/)",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoOutput::test_pre_gate_persiste_el_mensaje_redactado",
+   "causa_esperada": "el artefacto escribe el mensaje crudo bajo output/",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestEscrituraBajoOutput::test_pre_gate_persiste_el_mensaje_redactado",
+   "restaurado": true,
+   "sha256": "ee59b81583abaf46"
+  },
+  {
+   "id": "M6",
+   "archivo": "scripts/run_all_validations.py",
+   "guard": "ValidationRunner._check_no_secrets sobre output/ y logs/",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestVerificadorCubreSalidas::test_un_marcador_en_la_salida_sin_versionar_es_blocking[logs]",
+   "causa_esperada": "la ruta gitignored vuelve a quedar sin lector",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestVerificadorCubreSalidas::test_un_marcador_en_la_salida_sin_versionar_es_blocking[logs]",
+   "restaurado": true,
+   "sha256": "d2db44373a94f235"
+  },
+  {
+   "id": "M7",
+   "archivo": "modules/utils/redaction.py",
+   "guard": "orden Bearer-cabecera en redact_secrets",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestSumideroUnico::test_bearer_separado_de_la_forma_sk_tambien_se_redacta",
+   "causa_esperada": "el token sobrevive suelto tras redactar la cabecera",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestSumideroUnico::test_bearer_separado_de_la_forma_sk_tambien_se_redacta",
+   "restaurado": true,
+   "sha256": "4dff37537a6da33d"
+  },
+  {
+   "id": "M8",
+   "archivo": "modules/data_validation/external_apis/pagespeed_client.py",
+   "guard": "PageSpeedClient._make_request",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestWritersDeProveedor::test_pagespeed_request_exception_sale_redactado",
+   "causa_esperada": "la excepcion lleva la URL con la key de los params",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestWritersDeProveedor::test_pagespeed_request_exception_sale_redactado",
+   "restaurado": true,
+   "sha256": "823b5cab0ad8aafb"
+  },
+  {
+   "id": "M9",
+   "archivo": "scripts/run_all_validations.py",
+   "guard": "patron nuevo de _secret_patterns",
+   "nodo": "tests/utils/test_fase_f_sumidero_redaccion.py::TestVerificadorCubreSalidas::test_patron_nuevo_caza_las_formas_que_el_viejo_perdia[caza-sk-or]",
+   "causa_esperada": "sk-or-v1 vuelve a quedar fuera del verificador",
+   "anclas": 1,
+   "exit_con_mutante": 1,
+   "rojo_por_fuga": true,
+   "resumen": "FAILED tests/utils/test_fase_f_sumidero_redaccion.py::TestVerificadorCubreSalidas::test_patron_nuevo_caza_las_formas_que_el_viejo_perdia[caza-sk-or]",
+   "restaurado": true,
+   "sha256": "d2db44373a94f235"
+  }
+ ],
+ "verdes_post_restauracion": [
+  [
+   "M1",
+   0,
+   [
+    "1 passed in 1.15s"
+   ]
+  ],
+  [
+   "M2",
+   0,
+   [
+    "1 passed in 1.26s"
+   ]
+  ],
+  [
+   "M3",
+   0,
+   [
+    "1 passed in 1.14s"
+   ]
+  ],
+  [
+   "M4",
+   0,
+   [
+    "1 passed in 1.11s"
+   ]
+  ],
+  [
+   "M5",
+   0,
+   [
+    "1 passed in 1.12s"
+   ]
+  ],
+  [
+   "M6",
+   0,
+   [
+    "1 passed in 1.36s"
+   ]
+  ],
+  [
+   "M7",
+   0,
+   [
+    "1 passed in 1.11s"
+   ]
+  ],
+  [
+   "M8",
+   0,
+   [
+    "1 passed in 1.09s"
+   ]
+  ],
+  [
+   "M9",
+   0,
+   [
+    "1 passed in 1.41s"
+   ]
+  ]
+ ]
+}
+TOTAL 9 CAIDOS 9 RESTAURADOS 9
+EXIT=0

@@ -155,3 +155,42 @@ JSON timestamped (`pain_ledger`, `gate_report_*`, `delivery_quality_report`, `pr
 por decision escrita; y el fallback `legacy-ancestor-walk` sigue vivo donde no hay manifiesto, declarado en
 el reporte en vez de silencioso.
 
+## Cierre incremental de FASE-F (2026-10-06)
+
+**Que se cerro.** Sumidero unico de redaccion nuevo (`modules/utils/redaction.py`): define una sola vez las
+formas de credencial, los params `key=`, las cabeceras `x-goog-api-key`/`api-key`/`authorization` y los tokens
+`Bearer`, redacta **antes** de consola y de disco, y recorta **despues** de redactar. Nueve rutas de salida
+quedan calificadas o cerradas sobre el: `LLMMentionChecker._sanitize_text`/`_sanitize_error` y la rama de
+agotamiento de `_query_gemini` (AC13 nombra los tres simbolos), `HttpClient._sanitize_error`,
+`HttpClient._log_ssl_bypass` y `fallback_info['error']`, `SSLLogger._sanitize_for_log` (la unica escritura real
+bajo `logs/`, ruta que ningun check leia), `PageSpeedClient._make_request` (la key viaja en los params), tres
+ramas de `GooglePlacesClient`, el artefacto nuevo de D `coherence_pre_gate_<ts>.json` bajo `output/` y el print
+nuevo de E en la rama `never-block`. `ValidationRunner._check_no_secrets` ahora lee `output/` y `logs/`, caza
+`sk-or-`/`sk-ant-` y su rama de >5 MB dej6 de reventar en NameError. No se reimplement6 ningun provider, no se
+cambi6 autenticacion, modelos, configuracion central ni politica de reintentos, y no se roto nada.
+
+**Metricas de la fase (medidas, no previstas).**
+
+| Concepto | Valor |
+|---|---|
+| Funciones de test nuevas | 40 en `tests/utils/test_fase_f_sumidero_redaccion.py` (47 casos con parametrizacion) + 1 en AC-S1 = 41 |
+| Canonicas | 4.939 en HEAD -> **4.980** en el arbol (+41) |
+| PRE / POST (misma seleccion de 6 rutas) | 372 passed + 10 skipped / 373 passed + 10 skipped, ambos EXIT 0; POST extendido 419 passed + 10 skipped |
+| Mutantes | 9/9 caen por fuga detectada; 9/9 restaurados por sha256; 9/9 verdes tras restaurar |
+| Re-anclajes | 1 asercion de AC-S1 (`test_none_keys_is_noop` pineaba la noop de `_sanitize_text`) y 2 literales de fixture re-anclados por concatenacion |
+| Medicion antes de activar la pata nueva del verificador | 1.041 archivos bajo `output/` y `logs/`, 0 hallazgos (el rojo no se heredo del historial) |
+| Quick y REGISTRY | quick final 13/13 con EXIT 0 sobre el arbol definitivo (`quick_final.txt`); REGISTRY sin GAP por el propio escritor; el denominador lo imprime la corrida y no se copia aqui |
+| Sello de regresion completa | **1 failed / 5.064 passed / 41 skipped / 4 xfailed en 390,64 s (EXIT 1)** sobre el arbol definitivo. El unico rojo es ajeno y orden-dependiente: `jev_pilot/test_jev_pilot_deepseek_brazo.py`, que en su archivo aislado pasa 15/15 (el mismo rojo que declararon C y D). Existio una primera corrida (1 failed / 5.062 passed) declarada **vencida por edicion propia** a mitad de la fase: ver `regresion_1_vencida_por_edicion_propia.txt` |
+| Contador v4complete | 0/1 (AC13 verificado offline, con transporte sustituido) |
+| Archivos tocados | **39 medidos** con `git status --porcelain` (excluyendo `briefing/`, que por decision del plan no se versiona): 23 modificados (9 de producto, 1 de tests, 8 de docs del plan, CHANGELOG, GUIA_TECNICA y 4 derivados regenerados por su escritor) + 2 nuevos de producto/tests + 14 de evidencia. El registro publico `--archivos-mod 32` porque el escritor corrio a mitad del cierre y no tiene bandera de correccion: la errata va en el sello de RELEASE (S-F7, mismo caso que C) |
+
+**Revocacion: no es un resultado de test.** `credential_status.json` registra la rotacion de 2026-09-18 como
+**afirmacion del operador** con su referencia no secreta (`evidence/FASE-P5/AC-S3-S4-inventario-superficie.md`)
+y deja el resto de proveedores en `PENDIENTE-SIN-EVIDENCIA-OPERATIVA` con dueño. La redaccion perfecta no retira
+acceso a una credencial filtrada: esa es la pata que AC13 no deja certificar por esta fase.
+
+**Deuda que deja F (con dueño, en `10-analisis-post-implementacion.md` §Seguimientos abiertos por F).** S-F1
+`scripts/preload_prospects_gbp.py` persiste `PlaceData.error_message` (fuera de allowlist); S-F2
+`_query_perplexity` sin `try/except` propio ni diente de consola; S-F3 el escaneo nuevo cubre el instante de la
+validacion, no un watch; S-F4 la allowlist de cuarentena de P5 queda intacta. Y una separacion que sigue
+vigente: la integracion con captura/snapshot del runner es prueba de **H**.

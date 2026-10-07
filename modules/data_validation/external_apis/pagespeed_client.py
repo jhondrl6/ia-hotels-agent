@@ -1,5 +1,6 @@
 import os
 import requests
+from modules.utils.redaction import redact_secrets
 from typing import Dict, Optional, Any
 from dataclasses import dataclass
 from datetime import datetime
@@ -45,12 +46,19 @@ class PageSpeedClient:
                 raise Exception("PageSpeed API rate limit exceeded. Please try again later.")
             elif response.status_code == 400:
                 error_data = response.json()
-                error_msg = error_data.get("error", {}).get("message", "Invalid request")
+                error_msg = redact_secrets(
+                    error_data.get("error", {}).get("message", "Invalid request")
+                )
                 raise ValueError(f"Invalid URL or request: {error_msg}")
             elif response.status_code == 403:
                 raise Exception("Invalid API key or API key has exceeded quota.")
             elif response.status_code != 200:
-                raise Exception(f"API request failed with status {response.status_code}: {response.text}")
+                # FASE-F (AC13): la key viaja en los params de esta peticion, asi
+                # que ni el cuerpo del fallo ni el texto de la excepcion salen crudos.
+                raise Exception(
+                    f"API request failed with status {response.status_code}: "
+                    f"{redact_secrets(response.text)}"
+                )
 
             return response.json()
 
@@ -59,7 +67,7 @@ class PageSpeedClient:
         except requests.exceptions.ConnectionError:
             raise Exception("Network error: Unable to connect to PageSpeed API.")
         except requests.exceptions.RequestException as e:
-            raise Exception(f"Request failed: {str(e)}")
+            raise Exception(f"Request failed: {redact_secrets(str(e))}")
 
     def analyze_url(self, url: str, device: str = "mobile") -> PageSpeedResult:
         try:

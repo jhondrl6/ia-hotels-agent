@@ -14,6 +14,7 @@ import logging
 import os
 import re
 import time
+from modules.utils.redaction import redact_secrets, redact_values
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 
@@ -133,27 +134,29 @@ class LLMMentionChecker:
         return len(self._available_providers) > 0
 
     def _sanitize_text(self, text: str) -> str:
-        """Reemplaza valores de API keys conocidas por *** en texto arbitrario.
+        """Reemplaza credenciales conocidas y formas de credencial por ***.
 
         Defensa en profundidad: si una key llega a un mensaje de error o log,
         el valor real nunca se publica. FASE-P5 AC-S1.
+
+        FASE-F (AC13): ademas de las keys de esta instancia, el sumidero comun
+        redacta las FORMAS de credencial, asi que una key cargada por otra ruta
+        (registry, config de otro auditor) tampoco sobrevive.
         """
-        for key_value in (self._gemini_key, self._openrouter_key, self._perplexity_key):
-            if key_value:
-                text = text.replace(key_value, "***")
-        return text
+        text = redact_values(
+            text, (self._gemini_key, self._openrouter_key, self._perplexity_key)
+        )
+        return redact_secrets(text)
 
     @staticmethod
     def _sanitize_error(error: Exception) -> str:
-        """Sanitiza el mensaje de una excepción: redacta params `key=...` de URLs.
+        """Sanitiza el mensaje de una excepcion por el sumidero comun.
 
-        Captura el patrón `?key=<valor>` o `&key=<valor>` que aparece cuando
-        requests incluye la URL en HTTPError. Defensa en profundidad junto a
-        _sanitize_text. FASE-P5 AC-S1.
+        Captura params `key=<valor>` en cualquier separador y las formas de
+        credencial, no solo las que requests incluye en HTTPError. Defensa en
+        profundidad junto a _sanitize_text. FASE-P5 AC-S1, calificada en FASE-F.
         """
-        msg = str(error)
-        msg = re.sub(r'([?&]key=)[^&\s"\']+', r'\1***', msg)
-        return msg
+        return redact_secrets(str(error))
 
     def check_mentions(self, hotel_name: str, hotel_url: str,
                        location: str, landmark: str = "") -> LLMReport:

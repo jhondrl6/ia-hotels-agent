@@ -19,6 +19,7 @@ import json
 import time
 import logging
 import requests
+from modules.utils.redaction import redact_secrets
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Any
@@ -353,13 +354,13 @@ class GooglePlacesClient:
         except requests.RequestException as e:
             return self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Request error: {str(e)}",
+                error_message=f"Request error: {redact_secrets(str(e))}",
                 search_query=search_query
             )
         except Exception as e:
             return self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Unexpected error: {str(e)}",
+                error_message=f"Unexpected error: {redact_secrets(str(e))}",
                 search_query=search_query
             )
 
@@ -476,14 +477,14 @@ class GooglePlacesClient:
             logger.error(f"Request error in nearby search: {e}")
             return [self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Request error: {str(e)}",
+                error_message=f"Request error: {redact_secrets(str(e))}",
                 search_query=f"lat:{lat}, lng:{lng}, radius:{radius_km}km"
             )]
         except Exception as e:
             logger.error(f"Error in nearby search: {e}")
             return [self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Unexpected error: {str(e)}",
+                error_message=f"Unexpected error: {redact_secrets(str(e))}",
                 search_query=f"lat:{lat}, lng:{lng}, radius:{radius_km}km"
             )]
     
@@ -584,14 +585,14 @@ class GooglePlacesClient:
             logger.error(f"Request error getting place details for {place_id}: {e}")
             return self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Request error: {str(e)}",
+                error_message=f"Request error: {redact_secrets(str(e))}",
                 place_id=place_id
             )
         except Exception as e:
             logger.error(f"Error getting place details for {place_id}: {e}")
             return self._create_error_place(
                 error_type="API_ERROR",
-                error_message=f"Unexpected error: {str(e)}",
+                error_message=f"Unexpected error: {redact_secrets(str(e))}",
                 place_id=place_id
             )
     

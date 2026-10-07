@@ -25,6 +25,7 @@ from requests.exceptions import SSLError, RequestException, Timeout
 from typing import Tuple, Dict, Any, Optional
 from urllib.parse import urlparse, urlunparse
 import warnings
+from modules.utils.redaction import redact_and_clip, redact_secrets
 
 
 class HttpClient:
@@ -148,7 +149,7 @@ class HttpClient:
         
         if not is_ssl_error:
             # Error no relacionado con SSL, no intentar fallback
-            fallback_info['error'] = str(error)
+            fallback_info['error'] = redact_secrets(str(error))
             return None, fallback_info
         
         # Nivel 2: HTTPS sin verificación SSL (si habilitado)
@@ -197,7 +198,7 @@ class HttpClient:
             fallback_info['fallback_chain'].append(f'http_fallback_failed:{self._sanitize_error(error3)}')
         
         # Todos los intentos fallaron
-        fallback_info['error'] = str(error)
+        fallback_info['error'] = redact_secrets(str(error))
         return None, fallback_info
     
     def _try_request(
@@ -257,14 +258,15 @@ class HttpClient:
         return any(kw in error_str for kw in ssl_keywords)
     
     def _sanitize_error(self, error: Optional[Exception]) -> str:
-        """Extrae mensaje de error corto para logging."""
+        """Extrae mensaje de error corto para logging, redactado por el sumidero.
+
+        FASE-F (AC13): antes solo recortaba, asi que un prefijo de credencial
+        sobrevivia al texto. Se redacta y despues se recorta; el orden inverso
+        puede cortar el marcador y dejar el valor por delante.
+        """
         if error is None:
             return 'unknown'
-        error_str = str(error)
-        # Truncar errores largos
-        if len(error_str) > 100:
-            return error_str[:97] + '...'
-        return error_str
+        return redact_and_clip(str(error), 100)
     
     def _downgrade_to_http(self, url: str) -> str:
         """Convierte URL HTTPS a HTTP."""
@@ -274,12 +276,17 @@ class HttpClient:
         return url
     
     def _log_ssl_bypass(self, url: str, error: str):
-        """Registra evento de SSL bypass."""
-        message = f"SSL bypass activado para {url}: {error}"
+        """Registra evento de SSL bypass.
+
+        FASE-F (AC13): la redaccion ocurre antes de la consola y antes de entregar
+        el texto al logger de disco, no despues.
+        """
+        safe_error = redact_secrets(error)
+        message = f"SSL bypass activado para {url}: {safe_error}"
         print(f"[WARN] {message}")
         
         if self.logger:
-            self.logger.log_ssl_bypass(url, error)
+            self.logger.log_ssl_bypass(url, safe_error)
     
     def _log_http_downgrade(self, original_url: str, http_url: str):
         """Registra evento de downgrade a HTTP."""

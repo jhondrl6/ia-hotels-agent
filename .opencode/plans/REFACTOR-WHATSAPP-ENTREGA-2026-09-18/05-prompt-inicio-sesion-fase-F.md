@@ -1,6 +1,15 @@
 # FASE-F — Sanitización de salidas y acreditación operativa
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-E completa; verificar cierre de la cadena anterior.
+**Estado:** **EJECUTADA el 2026-10-06, SIN COMMIT** (el mandato de ejecución no autorizaba el commit; los cinco
+cortes se sostuvieron sin él). AC13 **VERIFICADO OFFLINE con su par de rojos y 9/9 mutantes cayendo por fuga
+detectada**; la pata de revocación queda como **afirmación del operador** (registro en `credential_status.json`),
+no como certificación de esta fase. sha y rango de commits van al sello documental de RELEASE, cobrando la misma
+decisión de D y E: no abrir sellos intermedios por acciones git. Detalle medido en
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-F/` (`inventario-salidas.md`, `sanitization_report.json`,
+`credential_status.json`, `mutantes_crudo.txt`, `tests_baseline_pre.txt`, `tests_baseline_post.txt`,
+`tests_post_extended.txt`) y en `09-documentacion-post-proyecto.md` §Cierre incremental de FASE-F.
+**Siguiente fase: H, en sesión nueva** (H integra el runner con lo que F definió; no lo construyó aquí).
+**Dependencia inmediata:** FASE-E completa; verificar cierre de la cadena anterior.
 **Complejidad técnica:** MEDIA-ALTA: límites de salida, prevención parcial existente y revocación externa no inferible del código.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Una sesión exclusivamente para F.
 
@@ -97,9 +106,9 @@ Auto-reporte separado con su unidad; si hay medición válida, recalibrar según
 
 ## Checklist de completitud
 
-- [ ] E cerrada; PRE tomado antes de cambios y POST conciliado en el mismo entorno.
-- [ ] Sanitización existente calificada; solo brechas concretas modificadas, sin reconstrucción general de providers.
-- [ ] AC13 cubre consola, archivos y nuevas salidas; mutantes fallan por fuga sintética real.
-- [ ] Informes sin secretos; revocación acreditada por operador o F explícitamente INCOMPLETA/PENDIENTE.
-- [ ] Evidencia propia, las observaciones medidas que existan (**sin cuota de lecciones nuevas**) y cierre incremental sin GAP ni regresiones ocultas.
-- [ ] R2 medido o retirado explícitamente; ninguna ejecución externa ni siguiente fase iniciada.
+- [x] E cerrada; PRE tomado antes de cambios y POST conciliado en el mismo entorno.
+- [x] Sanitización existente calificada; solo brechas concretas modificadas, sin reconstrucción general de providers.
+- [x] AC13 cubre consola, archivos y nuevas salidas; mutantes fallan por fuga sintética real.
+- [x] Informes sin secretos; revocación acreditada por operador o F explícitamente INCOMPLETA/PENDIENTE.
+- [x] Evidencia propia, las observaciones medidas que existan (**sin cuota de lecciones nuevas**) y cierre incremental sin GAP ni regresiones ocultas.
+- [x] R2 medido o retirado explícitamente; ninguna ejecución externa ni siguiente fase iniciada.

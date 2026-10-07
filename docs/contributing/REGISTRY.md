@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-06
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 509
+> **Total fases completadas:** 510
 
 ---
 
@@ -11850,6 +11850,25 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 31 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-F - 2026-10-06
+**Descripcion:** REFACTOR-WHATSAPP-ENTREGA: sanitización calificada y estado operativo de credencial
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `32` | 32 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 41 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

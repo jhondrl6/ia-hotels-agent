@@ -115,3 +115,35 @@ ZIP** (`ASSETS/v4_audit/review_input_manifest.json`), y quedaba verde con el gua
 por `Path.name`. Corregido el test a comparar `Path(miembro).name`, el mutante M7 pasó de EXIT 0 a EXIT 1.
 Un verde que no puede perder no es un diente, aunque el producto esté bien — y aquí el producto sí lo estaba;
 lo que estaba roto era el instrumento. Formulada al medir, no al cerrar.
+
+## Aplicación efectiva medida — FASE-F (2026-10-06)
+
+**Aplicación efectiva de §2 medida por FASE-F (2026-10-06).** Las tres filas que el prompt de F declaraba
+aplicables se midieron contra el artefacto y las tres cambiaron el trabajo:
+
+- `L-VUP-5` —*un contrato ya verde exige mutación para demostrar sensibilidad*— rigirió la calificación antes que
+  el reemplazo: `_sanitize_text` y `_sanitize_error` siguen existiendo, con la misma firma y los mismos tests de
+  FASE-P5 AC-S1, y se mutan (M1 y M2) para probar que tienen dientes. La mutación midió lo contrario del título:
+  con `_sanitize_text` apagado cae el test de la **forma ajena**, no el de la key propia — el contrato viejo de
+  P5 verificaba una fracción de lo que su nombre alegaba.
+- `L-T4A.5` —*un test verde puede no alcanzar la rama que dice certificar*— cazó dos ramas que nadie ejercitaba:
+  la de agotamiento de modelos de `_query_gemini` (el texto que se loggea al rendirse, no solo el del `except`) y
+  la rama de archivo >5 MB del verificador, viva desde AC-S2 sin un solo rojo porque ningún archivo versionado
+  llegaba al umbral (el mayor mide 780.700 bytes) y porque citaba un global inexistente. Sus dos dientes nuevos
+  fabrican el archivo en `tmp_repo`.
+- `L-R.4` —*una regla sin verificador declara expresamente su límite*— rigibió la separación entre prevención
+  local y revocación: `credential_status.json` registra la rotación de 2026-09-18 como **afirmación del
+  operador** con referencia no secreta y deja el resto `PENDIENTE-SIN-EVIDENCIA-OPERATIVA` con dueño. Ningún
+  verde de F se presentó como prueba de revocación, y el prompt lo exigía literalmente.
+
+**Lección nueva (L-F-RED).** *Un detector ampliado no choca con el producto: choca con el fixture del corpus
+viejo, y el destino es el fixture.* Al sumar el patrón `sk-or-/sk-ant-` a `_check_no_secrets`, el quick puso rojo
+un archivo de tests de 2026-09: su `SYNTHETIC_OPENROUTER_KEY` empezaba con el prefijo `sk-or-` y seguía con un
+cuerpo legible de 26 caracteres, que es literal con forma
+de credencial en un archivo versionado. Los patrones viejos lo esquivaban **por azar** (la clase `[A-Za-z0-9]` no
+tragaba guiones), no por diseño: el verde del corpus descansaba en que el detector no supiera mirar. La tentación
+barata era estrechar el patrón; se hizo al revés — el fixture se re-ancló por **construcción** (prefijo y cuerpo
+concatenados, el recurso que ya usa `test_p5_ac_s2_remediacion.py`), el valor en memoria conserva la forma y ahí
+es donde los tests la prueban, y la regla quedó intacta. Es la segunda vez que este plan tropieza con el mismo
+mecanismo, y en las dos el rojo era información sobre el *instrumento*, no sobre el producto: un detector que
+nunca miró los fixtures no había probado nunca que los rechazaría. Formulada al medir, no al cerrar.

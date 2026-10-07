@@ -20,7 +20,11 @@ from unittest.mock import patch, MagicMock
 from modules.auditors.llm_mention_checker import LLMMentionChecker
 
 SYNTHETIC_GEMINI_KEY = "AIzaSyFAKE_TEST_12345678"
-SYNTHETIC_OPENROUTER_KEY = "sk-or-fake-testing-key-v1-abcdef1234567890"
+# Concatenado a proposito: `sk-or-fake-...` casa con el patron sk-or-/sk-ant- que
+# FASE-F anadio a _check_no_secrets, y un literal con forma de key en un archivo
+# versionado es exactamente lo que ese patron debe rechazar. El valor en memoria
+# conserva la forma, que es lo que estos tests necesitan.
+SYNTHETIC_OPENROUTER_KEY = "sk-or-" + "fake-testing-key-v1-abcdef1234567890"
 SYNTHETIC_PERPLEXITY_KEY = "pplx-fake-testing-key-abcdef1234567890"
 
 
@@ -50,8 +54,19 @@ class TestSanitizeText:
         assert checker._sanitize_text("clean message") == "clean message"
 
     def test_none_keys_is_noop(self):
+        # Re-anclado en FASE-F (AC13): la intencion del test era "sin keys de
+        # instancia no hay sustitucion literal". El sumidero comun ahora redacta
+        # tambien las FORMAS de credencial, asi que el noop se mide con texto que
+        # no tiene forma; el diente de la forma ajena es el test siguiente.
         checker = LLMMentionChecker()
-        assert checker._sanitize_text(f"key={SYNTHETIC_GEMINI_KEY}") == f"key={SYNTHETIC_GEMINI_KEY}"
+        assert checker._sanitize_text("sin credenciales en este mensaje") == "sin credenciales en este mensaje"
+
+    def test_none_keys_redacta_una_forma_de_credencial_ajena(self):
+        """FASE-F AC13: una key que la instancia no conoce tampoco se publica."""
+        checker = LLMMentionChecker()
+        resultado = checker._sanitize_text(f"key={SYNTHETIC_GEMINI_KEY}")
+        assert SYNTHETIC_GEMINI_KEY not in resultado
+        assert "key=***" in resultado
 
 
 class TestSanitizeError:

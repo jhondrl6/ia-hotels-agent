@@ -237,6 +237,9 @@ class ValidationRunner:
             (r'GOOGLEMAPS_API_KEY\s*=\s*["\'][^"\']+["\']', "GOOGLEMAPS_API_KEY assignment"),
             (r'AIzaSy[A-Za-z0-9_\-]{30,}', "Google API key (AIzaSy...)"),
             (r'sk-[A-Za-z0-9]{20,}', "OpenAI/secret key (sk-...)"),
+            # sk-<alnum>{20,} no caza sk-or-v1-... ni sk-ant-...: el guion rompe la
+            # clase y esos prefijos son exactamente los proveedores que usa este repo.
+            (r'sk-(?:or|ant)-[A-Za-z0-9\-]{16,}', "OpenRouter/Anthropic key (sk-or-/sk-ant-)"),
             (r'ghp_[A-Za-z0-9]{30,}', "GitHub PAT (ghp_...)"),
             (r'pplx-[A-Za-z0-9]{20,}', "Perplexity key (pplx-...)"),
         ]
@@ -267,6 +270,26 @@ class ValidationRunner:
             pass
         return []
 
+    # Rutas gitignored donde escriben los writers de salidas. No aparecen en
+    # `git ls-files`, por eso el escaneo tracked no las cubria (FASE-F, AC13).
+    _OUTPUT_DIR_NAMES = ("output", "logs")
+
+    def _untracked_output_files(self) -> list:
+        """Archivos bajo output/ y logs/: las salidas que el arbol versionado no ve.
+
+        Ausencia de la ruta no es hallazgo ni cubierto: devuelve lista vacia y el
+        llamador lo declara como cero leido, no como cero secreto.
+        """
+        found = []
+        for base in self._OUTPUT_DIR_NAMES:
+            root_dir = self.repo_root / base
+            if not root_dir.is_dir():
+                continue
+            for path in sorted(root_dir.rglob("*")):
+                if path.is_file() and not path.is_symlink():
+                    found.append(path)
+        return found
+
     def _check_no_secrets(self) -> None:
         """Check for hardcoded secrets — FASE-P5 AC-S2 (remendada 2026-09-15).
 
@@ -277,7 +300,7 @@ class ValidationRunner:
         (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
         NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
         """
-        print("[4/13] Checking for hardcoded secrets (tracked + staged)...")
+        print("[4/13] Checking for hardcoded secrets (tracked + staged + salidas en output/ y logs/)...")
 
         patterns = self._secret_patterns()
 
@@ -291,6 +314,7 @@ class ValidationRunner:
         non_readable = []
         non_covered = []
         scanned_count = 0
+        untracked_scanned = 0
         binaries_excluded = 0
         symlinks_excluded = 0
 
@@ -309,7 +333,7 @@ class ValidationRunner:
                     binaries_excluded += 1
                     continue
                 if path.stat().st_size > self._MAX_SCAN_BYTES:
-                    non_covered.append(f"{rel_path} (supera {_MAX_SCAN_BYTES} bytes)")
+                    non_covered.append(f"{rel_path} (supera {self._MAX_SCAN_BYTES} bytes)")
                     continue
                 raw = path.read_bytes()
             except (PermissionError, OSError):
@@ -328,7 +352,34 @@ class ValidationRunner:
         # 2. Escanear contenido staged (git diff --cached)
         violations.extend(self._check_staged_content(patterns))
 
-        # 3. Reportar con estados NR8
+        # 3. Escanear las salidas que el arbol versionado no ve (FASE-F, AC13):
+        #    output/ y logs/ estan en .gitignore y alli escriben HttpClient/SSLLimiter
+        #    y los artefactos de D/E. Sin esta pata, un secreto podia vivir para
+        #    siempre en un log sin que ningun check lo leyera.
+        for path in self._untracked_output_files():
+            rel_path = path.relative_to(self.repo_root)
+            try:
+                if path.suffix.lower() in self._KNOWN_BINARY_EXTS:
+                    binaries_excluded += 1
+                    continue
+                if path.stat().st_size > self._MAX_SCAN_BYTES:
+                    non_covered.append(f"{rel_path} (salida, supera {self._MAX_SCAN_BYTES} bytes)")
+                    continue
+                raw = path.read_bytes()
+            except (PermissionError, OSError):
+                non_readable.append(str(rel_path))
+                continue
+            if b"\x00" in raw[:8192]:
+                non_covered.append(str(rel_path))
+                continue
+            untracked_scanned += 1
+            content = raw.decode("utf-8", errors="ignore")
+            for pattern, description in patterns:
+                if re.search(pattern, content):
+                    violations.append(f"{rel_path} ({description}, salida sin versionar)")
+                    break  # Un archivo = una violacion max
+
+        # 4. Reportar con estados NR8
         if violations:
             self.results.append(ValidationResult(
                 name="Secrets Check",
@@ -355,6 +406,7 @@ class ValidationRunner:
                 name="Secrets Check",
                 passed=True,
                 message=(f"SIN_HALLAZGOS: {scanned_count} tracked files + staged "
+                         f"+ {untracked_scanned} salidas en output/ y logs/ "
                          f"(excluidos declarados: {binaries_excluded} binarios conocidos, "
                          f"{symlinks_excluded} symlinks)")
             ))

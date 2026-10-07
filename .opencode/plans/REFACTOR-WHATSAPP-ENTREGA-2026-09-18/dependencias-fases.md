@@ -102,4 +102,33 @@ R2 conserva la referencia de **60 tool_use hasta el corte que la sesión tenga a
 
 **Cierre de FASE-0 (2026-09-20, HEAD de partida `ad0cc84`, con código de producto).** AC20 **VERIFICADO OFFLINE**: los tres cambios aditivos están y ninguno roza la regla de decisión. PRE/POST con la misma selección literal (12 archivos): 189 passed / 1 skipped → 189 passed / 1 skipped, **delta 0**; con el suite nuevo 210 passed / 1 skipped exit 0; la suite nueva sobre `git archive HEAD` rompe 16 (13 por aserción, 3 por `ImportError` del helper nuevo, declarados como tales). Funciones canónicas **4.264 → 4.285 (+21)**. Regresión completa POST: **3 failed, 4.247 passed, 41 skipped, 4 xfailed** en 232 s — los tres rojos son preexistentes y con dueño (dos ya registrados en `AGENTS.md`, uno heredado de G). Quick **11/11**. Contrafactual y crecimiento del acta medidos: JSON **+1.151 bytes (+84 %)**, MD **+0 bytes**, `revision_*.json` de la corrida 9.155 bytes. **6/6 mutaciones con rojo causado por el guard, todas restauradas y verificadas por sha256.** Dos rojos que FASE-0 encontró y resolvió sin debilitar ninguna aserción: un test pineaba la forma exacta de `reviewer_reports` (`L-V2.3`, mismo mecanismo que en G) y un fixture de revisor emparejaba conteo 3 con la base del camino de cero críticos. **R2: métrica FUERA DE SERVICIO (R2.1)** con auto-reporte en unidad propia. **Commit `7c6e75f` y push a `origin/master` ejecutados el 2026-09-20** con instrucción literal del operador (paridad 0/0 verificada por `git ls-remote`; los 7 checks del pre-commit pasaron sin saltarlos). Contador v4complete **0/1**.
 
+**Cierre de FASE-F (2026-10-06, HEAD de partida `9127735`, con código de producto, SIN COMMIT).** AC13
+**VERIFICADO OFFLINE**: sumidero único nuevo en `modules/utils/redaction.py` (redacta formas de credencial,
+params `key=`, cabeceras y Bearer; guarda el orden redactar-antes-de-recortar; `assert_redacted` falla sin
+repetir el valor). Nueve rutas calificadas o cerradas — `LLMMentionChecker._sanitize_text`/`_sanitize_error`,
+la rama de agotamiento de `_query_gemini`, `HttpClient._sanitize_error`/`_log_ssl_bypass`/`fallback_info['error']`,
+`SSLLogger._sanitize_for_log` (única escritura real bajo `logs/`), `PageSpeedClient._make_request` (key en params),
+tres ramas de `GooglePlacesClient`, el artefacto nuevo de D bajo `output/` y el print nuevo de E. **Par PRE/POST
+con la misma selección literal (6 rutas): 372 passed / 10 skipped → 373 passed / 10 skipped, ambos EXIT 0** (+1
+explicado por la función nueva del re-anclaje de AC-S1); POST extendido con la batería nueva 419 passed /
+10 skipped. **9/9 mutantes caen por fuga detectada** (ninguno por syntax ni import), 9/9 restaurados y
+verificados por sha256, 9/9 verdes tras la restauración. Funciones canónicas **4.939 → 4.980 (+41)**.
+El verificador `_check_no_secrets` ahora **lee `output/` y `logs/`** (gitignored, nunca leídos: `git ls-files
+output logs` = 0 rutas), caza `sk-or-`/`sk-ant-` (el `sk-[A-Za-z0-9]{20,}` las perdía) y su rama de >5 MB
+dejó de reventar en NameError por un global inexistente. **Medición previa a la activación: 1041 archivos bajo
+esas dos rutas, 0 hallazgos** — el rojo no se heredó del historial. Dos rojos que la propia fase encontró y
+resolvió sin rebajar la regla: un fixture viejo de AC-S1 (`sk-or-fake-…`) pasó a casar con el patrón nuevo y se
+re-ancló **por construcción** (concatenación, el mismo recurso de `test_p5_ac_s2_remediacion.py:33`), y el
+contador del wiring subió con los archivos nuevos. **Revocación: no certificada por tests.**
+`credential_status.json` registra como **afirmación del operador** la rotación de 2026-09-18 y deja el resto
+`PENDIENTE-SIN-EVIDENCIA-OPERATIVA` con dueño. Deuda declarada: **S-F1** `scripts/preload_prospects_gbp.py`
+(fuera de allowlist), **S-F2** `_query_perplexity` sin `try/except` propio, **S-F3** la pata nueva lee el
+instante de la validación (un archivo posterior queda fuera hasta la siguiente corrida; los 8 checks del
+pre-commit leen HEAD y `output/`/`logs/` nunca entran al index), **S-F4** la allowlist de cuarentena de P5 no
+se amplió ni se redujo. Quick y REGISTRY: lo imprime la corrida (§Registro documental). **R2: métrica
+FUERA DE SERVICIO (R2.1)** — el instrumento pide el transcript y su acceso no está disponible; auto-reporte
+en unidad propia y corte «hasta listo para revisión» (sin commit autorizado). **Contador v4complete: 0/1.**
+**H no se inició** (así lo exige R1) y su arista queda habilitada: F definió el contrato que H consume sin
+construir su runner.
+
 Estado actual de validación y medición (reconciliado el 2026-09-24 por el bloque C de la orden de calidad, leyendo los cierres y sus commits, no esta cabecera): **A CERRADA (documental, commit `3e97d95` empujado); G CERRADA y empujada 2026-09-20 (commit `66e17bd`); 0 CERRADA, commiteada y empujada el 2026-09-20 (`7c6e75f`, paridad 0/0); B CERRADA CON DEUDA y empujada (`473ed0f` + `05d0cc6` + `7553f51`); C–RELEASE PENDIENTES, con C como punto de reanudación.** El contador v4complete sigue en **0/1**. Lo ya ejecutado y publicado en `origin/master` es la medición y el cierre documental de la preparación y de la revisión 2, y además el código de G; los cierres de A y de G quedaron **commiteados y empujados** (`3e97d95` y `66e17bd`, paridad 0/0 en ambos casos) dentro de su misma sesión. Sigue sin autorización e implícitamente no hecho: el release operativo, cualquier auditoría externa preliminar y toda salida de material del cliente que no sea la ya hecha. Única subida ejecutada: la copia **saneada** del `10-analisis` de G a QMind (2026-09-20, verificada por descarga + sha256, `evidence/…/FASE-G/qmind-writeback-G.md`); para publicar el cierre hará falta **título nuevo**, porque el de G ya existe y `--upload` respondería SKIP.

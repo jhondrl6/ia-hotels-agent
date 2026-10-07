@@ -324,6 +324,57 @@ EXIT=0 a EXIT=1 solo al corregir el test, no el producto).
 VERIFY; (2) decidir si ABSENT de un insumo obligatorio debe subir de INFO — dueno VERIFY; (3) el fallback
 `legacy-ancestor-walk` debe retirarse cuando H/E2E garanticen manifiesto en toda corrida — dueno H/E2E.
 
+## FASE-F (2026-10-06) — AC13, lo medido y seguimientos
+
+**Que se cerro.** Un sumidero unico de redaccion (`modules/utils/redaction.py`) y nueve rutas de salida
+calificadas o cerradas contra el: consola, excepciones, `logs/`, `output/` y el artefacto nuevo de D. No se
+reimplemento ningun provider y no se toco autenticacion, modelos, configuracion central ni politica de
+reintentos. La pata de revocacion no es un test: es la afirmacion del operador, registrada con su referencia
+no secreta.
+
+**Lo que la fase midio, no preveio.**
+
+| Concepto | Valor medido |
+|---|---|
+| Par PRE/POST (misma seleccion literal de 6 rutas) | 372 passed / 10 skipped → **373 passed / 10 skipped**, ambos EXIT 0; +1 = la funcion nueva del re-anclaje de AC-S1 |
+| POST extendido (con `tests/utils/test_fase_f_sumidero_redaccion.py`) | 419 passed / 10 skipped, EXIT 0 |
+| Funciones de test nuevas | 40 en el archivo de F (47 casos con parametrizacion) + 1 en AC-S1 = **41** |
+| Funciones canonicas | 4.939 en HEAD → **4.980** en el arbol (+41) |
+| Mutantes | **9/9 caen por fuga detectada** (ninguno por syntax/import), 9/9 restaurados y verificados por sha256, 9/9 verdes tras restaurar |
+| Re-anclajes | 1 asercion (`test_none_keys_is_noop`, que pineaba la debilidad de `_sanitize_text`) y 2 literales de fixture re-anclados **por concatenacion**, no rebajando la regla |
+| Brecha del verificador | `output/**` y `logs/**` nunca se leian (`git ls-files output logs` = 0 rutas); `sk-[A-Za-z0-9]{20,}` no cazaba `sk-or-v1-…` ni `sk-ant-…`; la rama de >5 MB citaba un global inexistente (NameError) |
+| Medicion antes de activar la pata nueva | 1.041 archivos bajo `output/` y `logs/`, **0 hallazgos**; mayor archivo versionado 780.700 bytes (rama del NameError inexecutable hoy) |
+| Contador v4complete | 0/1 (ninguna corrida; AC13 se verifico offline con transporte sustituido) |
+| Sello de regresion completa (arbol definitivo) | **1 failed / 5.064 passed / 41 skipped / 4 xfailed en 390,64 s, EXIT 1**. El unico rojo es el ajeno y orden-dependiente del piloto JEV (`test_jev_pilot_deepseek_brazo.py`), que en aislado pasa **15/15**; C y D declararon el mismo. Una primera corrida (1 failed / 5.062 passed) quedo **vencida por edicion propia** a mitad de fase y se archiva como tal, no se reutiliza |
+| Quick final | 13/13 con EXIT 0 sobre el arbol definitivo; el Secrets Check leyo **1.057 salidas** bajo `output/` y `logs/`, 0 hallazgos |
+
+**Tres observaciones de instrumento (de la fase sobre su propio trabajo, no del producto).**
+(1) **Leccion nueva (L-F-RED, formulada al medir): un detector ampliado choca con el corpus viejo por via del
+fixture, no del producto.** Al anadir el
+patrón `sk-or-/sk-ant-`, el quick puso rojo `tests/auditors/test_p5_ac_s1_secret_sanitization.py`: su
+`SYNTHETIC_OPENROUTER_KEY` (prefijo `sk-or-` mas 26 caracteres legibles) es literal con forma de credencial en un archivo
+versionado. Los patrones viejos los esquivaban por azar (la clase `[A-Za-z0-9]` no tragaba guiones), no por
+diseno. Se resolvio por construccion —concatenar prefijo y cuerpo, el recurso que ya usa
+`test_p5_ac_s2_remediacion.py:33`— y **no** rebajando el patron: el valor en memoria conserva la forma y ahi
+es donde los tests la prueban. Un verde que depende de que el detector no sepa mirar es un verde prestado.
+(2) **La rama que nadie ejercita puede estar rota desde su escritura.** El `f"{_MAX_SCAN_BYTES}"` de
+`_check_no_secrets` citaba un global inexistente desde AC-S2: con ningun archivo tracked >5 MB en el repo, la
+linea era inexecutable y por eso nunca dio rojo. Sus dos dientes nuevos (`test_archivo_grande_*_sin_name_error`)
+fabrican el archivo en `tmp_repo`: un verde sin oportunidad de perder no certificaba nada.
+(3) **Redactar despues de recortar es la mitad del defecto.** `HttpClient._sanitize_error` recortaba a 100 y
+dejava el prefijo de una key larga al descubierto; el orden correcto se afirma con un test que primero
+demuestra que el recorte a ciegas dejaba `AIzaSy` visible (`largo[:97]`) y despide exige la ausencia.
+
+**Seguimientos abiertos por F.** (1) **S-F1** `scripts/preload_prospects_gbp.py` persiste
+`PlaceData.error_message` en markdown y JSON: llega redactado desde el cliente, pero el script esta fuera de
+la allowlist de F — dueno H/VERIFY. (2) **S-F2** `_query_perplexity` no tiene `try/except` propio y su rama de
+consola no tiene diente propio — dueno VERIFY. (3) **S-F3** la pata nueva del verificador lee el instante de la
+validacion: un archivo que aparezca despues queda fuera hasta la siguiente corrida, y los 8 checks del
+pre-commit leen HEAD mientras `output/`/`logs/` nunca entran al index — dueno RELEASE o deuda declarada.
+(4) **S-F4** la allowlist de cuarentena (`archives`, `evidence`, `.opencode`) de P5 no se amplio ni se redujo —
+dueno operador. (5) La **integracion con captura/snapshot del runner** (consola y stdout/stderr reales) es
+prueba de H, no de F; F definio el contrato que H consume.
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.

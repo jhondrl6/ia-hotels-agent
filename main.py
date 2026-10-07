@@ -3073,7 +3073,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
         )
         print(f"   [OK] Insumos de revision congelados: {_run_id} (no exportable)")
     except Exception as e:
-        print(f"   [WARN] Snapshot interno de insumos FALLÓ (never-block): {e}")
+        # FASE-F (AC13): el texto del fallo es salida; se redacta antes de la consola.
+        from modules.utils.redaction import redact_secrets
+
+        print(f"   [WARN] Snapshot interno de insumos FALLÓ (never-block): {redact_secrets(str(e))}")
 
     if _retained_by_gate:
         print("\n🚫 GATE BLOCKING ACTIVE — Publication gates NOT_READY")
@@ -4195,7 +4198,9 @@ def _persist_coherence_pre_gate(
     "el reporte no tiene checks en error"; si el reporte no existe, el llamador no
     llega aquí (L-PF10: vacío válido ≠ fuente ausente).
     """
-    payload = report.to_dict()
+    from modules.utils.redaction import redact_payload, redact_secrets
+
+    payload = redact_payload(report.to_dict())
     payload["hotel_url"] = hotel_url
     payload["gate"] = {
         "stage": "pre-gate",
@@ -4207,7 +4212,7 @@ def _persist_coherence_pre_gate(
     guilty = decision["guilty_checks"]
     payload["failed_error_check_names"] = [c["name"] for c in guilty]
     payload["failed_error_checks"] = [
-        {"name": c["name"], "message": c["message"], "score": c["score"]}
+        {"name": c["name"], "message": redact_secrets(c["message"]), "score": c["score"]}
         for c in guilty
     ]
 
