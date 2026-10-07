@@ -24,6 +24,7 @@ from .data_assessment import DataAssessment, DataClassification
 from .site_presence_checker import SitePresenceChecker, PresenceStatus
 # FASE-C (AC6): contrato de forma y rechazo del número en el límite de generación.
 from ..data_validation.whatsapp_contract import (
+    CLAVE_CANAL_WHATSAPP,
     NumeroWhatsAppNoUtilizable,
     rechazo_numero_whatsapp,
 )
@@ -666,7 +667,16 @@ class ConditionalGenerator:
             generator = LocalContentGenerator()
             hotel_data = validated_data.get("hotel_data", validated_data)
             data = getattr(hotel_data, 'value', hotel_data) if not isinstance(hotel_data, dict) else hotel_data
-            content_set = generator.generate_content_set(data if isinstance(data, dict) else {})
+            data = dict(data) if isinstance(data, dict) else {}
+            # AC6 (recuperacion 2026-10-07): el generador de texto de reserva
+            # recibe la observacion del canal, no un numero suelto. `phone` sigue
+            # viajando (otros consumidores lo leen) pero ya no decide el enlace.
+            data[CLAVE_CANAL_WHATSAPP] = {
+                "presence_evidence_kind": validated_data.get("whatsapp_presence_evidence_kind"),
+                "whatsapp_status": validated_data.get("whatsapp_status"),
+                "whatsapp_href_number": validated_data.get("whatsapp_href_number"),
+            }
+            content_set = generator.generate_content_set(data)
             # Serialize LocalContentSet to markdown string for pipeline compatibility
             import json
             pages_md = [f"# {p.title}\n\n{p.content_md}\n\n---\n" for p in content_set.pages]

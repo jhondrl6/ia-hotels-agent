@@ -250,7 +250,6 @@ ${closing_pitch}
 **IA Hoteles Agent**  
 *Especialistas en visibilidad digital para hoteles boutique y negocios locales*
 
-WhatsApp: ${hotel_phone}  
 Email: contacto@iahoteles.co
 
 ---

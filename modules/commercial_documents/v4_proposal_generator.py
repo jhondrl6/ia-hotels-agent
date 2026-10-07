@@ -746,12 +746,10 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                         getattr(getattr(audit_result, 'gbp', None), 'address', None) or \
                         hotel_region
         
-        # PATCH-6: Extract hotel phone from GBP data (audit_result.gbp.phone)
-        hotel_phone = ""
-        if audit_result:
-            gbp = getattr(audit_result, 'gbp', None)
-            if gbp:
-                hotel_phone = getattr(gbp, 'phone', '') or ""
+        # AC6 (recuperacion 2026-10-07): PATCH-6 alimentaba la linea `WhatsApp:`
+        # del bloque CONTACTO con el telefono GBP del hotel, publicandolo como
+        # canal de la agencia. La linea se retiro de la plantilla y el dato ya
+        # no tiene lector, asi que tampoco se extrae.
         
         # Main scenario for primary display
         main_scenario = financial_scenarios.get_main_scenario()
@@ -1002,7 +1000,6 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
         # V6 template variables (regional context and investment summary)
         'hotel_location': hotel_location,
         'hotel_region': hotel_region,
-        'hotel_phone': hotel_phone,  # PATCH-6: GBP phone for contact section
 
         # MIN-02: ADR regional benchmark for proposal template
         'adr_display': _adr_display,

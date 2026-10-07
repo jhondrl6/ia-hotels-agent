@@ -1,0 +1,91 @@
+{
+  "schema": "iah-cli/certificacion-recuperacion/1",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "sesion": "RECUPERACION-AC6-AC10",
+  "fecha": "2026-10-07",
+  "regimen": "offline: tests, mutantes y el writer real en harness. Cero ejecuciones de `main.py v4complete`; el contador del contrato sigue en 1/1 (no se tocó).",
+  "por_ac": {
+    "AC6": {
+      "dictamen": "SUPERADO_OFFLINE",
+      "simbolo": [
+        "modules/data_validation/whatsapp_contract.py::destino_whatsapp_verificado (nuevo)",
+        "modules/asset_generation/local_content_generator.py::LocalContentGenerator._conclusion",
+        "modules/asset_generation/local_content_generator.py::LocalContentGenerator._build_internal_links",
+        "modules/asset_generation/local_content_generator.py::LocalContentGenerator._destino_whatsapp (nuevo)",
+        "modules/commercial_documents/templates/propuesta_v6_template.md::bloque CONTACTO",
+        "modules/asset_generation/conditional_generator.py::ConditionalGenerator._generate_content[local_content_page]",
+        "modules/asset_generation/v4_asset_orchestrator.py::V4AssetOrchestrator.generate (presencia) y ._extract_validated_fields (whatsapp_status)",
+        "modules/asset_generation/site_presence_adapter.py::presencia_evidencia_whatsapp (nuevo)"
+      ],
+      "artefacto": "evidence/AC6-AC10-RECUPERACION-2026-10-07/crudos/contrafactual_wa_me.txt (5 -> 0, EXIT 0)",
+      "mutante": ["M1", "M2", "M3", "M4", "M5", "M6"],
+      "criterios_3": {
+        "1_deja_de_construir_desde_phone": "hecho: `_conclusion` y `_build_internal_links` consultan el contrato; el vocabulario (`wa.me_href`, `plugin_fingerprint`) y la forma salen de `whatsapp_contract`, y el estado de `ConfidenceLevel.VERIFIED` se compara por su valor, no por una lista propia",
+        "2_test_caso_real_y_href": "hecho: `test_caso_real_plugin_fingerprint_no_emite_wa_me` (0) y `test_href_verificado_destino_igual_al_canal_normalizado` (destino = numero del canal); discriminantes por guard: `test_estado_estimated_con_numero_casado_rechaza_por_estado` y `test_plugin_fingerprint_con_numero_casado_rechaza_por_clase_de_evidencia`",
+        "3_contrafactual_medido": "PRE 5 lineas (73,147,221,295,369) del miembro certificado; POST 0 lineas por el mismo handler con las mismas entradas",
+        "4_bloque_contacto": "hecho: se retiro la linea `WhatsApp:` y queda el email; en `config/` no existe numero de la agencia (medido: ninguna clave de contacto en config/*.yaml), asi que aplica la rama 'en su defecto'. Se retiro tambien el contexto `hotel_phone` y su extraccion de `gbp.phone`, que eran la unica fuente de esa linea"
+      }
+    },
+    "AC10": {
+      "dictamen": "SUPERADO_OFFLINE",
+      "simbolo": [
+        "modules/geo_enrichment/asset_responsibility_contract.py::despojer_nombre_real (nuevo)",
+        "modules/geo_enrichment/asset_responsibility_contract.py::AssetResponsibilityContract.resolver_nombre_real (nuevo)",
+        "modules/geo_enrichment/asset_responsibility_contract.py::AssetResponsibilityContract.pares_providos (nuevo)",
+        "modules/geo_enrichment/asset_responsibility_contract.py::AssetResponsibilityContract.get_implementation_order",
+        "modules/geo_enrichment/asset_responsibility_contract.py::AssetResponsibilityContract.generate_delivery_template",
+        "modules/geo_enrichment/asset_responsibility_contract.py::AssetResponsibilityContract.get_replacement_rule",
+        "modules/quality_gates/tribunal/asset_reviewer.py::AssetReviewer._medir_orden_implementacion (nuevo) y ._check_implementation_order"
+      ],
+      "llamada_desde_packager": "`DeliveryPackager.write` sigue pasando los basenames reales y su `asset_zip_paths` derivado de los dest; el emparejamiento se resuelve en el contrato (unica representacion del hecho). No hace falta cambiar la firma.",
+      "artefacto": [
+        "evidence/AC6-AC10-RECUPERACION-2026-10-07/crudos/verificacion_externa.txt (testzip None, 1 tarea numerada con miembro existente, 0 wa.me)",
+        "tests/geo_enrichment/test_orden_implementacion_nombres_reales_ac10.py (writer real, 19 tests)"
+      ],
+      "mutante": ["M7", "M8", "M9", "M10"],
+      "criterios_3": {
+        "5_empareja_nombres_reales_sin_fabricar": "de los 13 nombres de la corrida casa UNO (`hotel_schema_20261007_093402.json` -> `hotel_schema.json`, CORE); `ESTIMATED_faqs_...json` NO se empareja con `faq_schema.json`; los doce restantes siguen en ADICIONALES",
+        "6_prueba_con_el_writer_real": "ZIP de prueba con los 13 nombres y sus rutas reales: `testzip() -> None`, 1 tarea numerada cuya ruta `ASSETS/...` existe en `namelist()`, manifiesto 0 ausencias y 0 discrepancias de tamano, y el caso sin assets planificados no emite el archivo",
+        "7_check_deja_de_ser_registro_de_fuente": "contracto declarado: `implementation_order_check` publica `contenido` en {OK, ORDEN_VACIA, NO-EVALUABLE} + `tareas` + `seccion_orden`; cero tareas emite WARNING con tipo propio `IMPLEMENTATION_ORDER_SIN_TAREAS`; fallo de lectura declara NO-EVALUABLE y no afirma verde"
+      }
+    }
+  },
+  "mediciones": {
+    "seleccion_pre": {"comando": "python -m pytest tests/asset_generation/test_local_content_generator.py tests/asset_generation/test_conditional_generator.py tests/geo_enrichment/test_asset_responsibility.py tests/test_ac_g1_implementation_order.py tests/quality_gates/tribunal tests/delivery tests/commercial_documents -q", "resultado": "780 passed, 9 skipped", "exit": 0, "crudo": "crudos/pre_seleccion.txt", "mediado": "antes de editar producto"},
+    "seleccion_post": {"comando": "identico al PRE, mismo entorno", "resultado": "789 passed, 9 skipped", "exit": 0, "crudo": "crudos/post_seleccion.txt", "delta": "+9 (4 tests nuevos en tests/commercial_documents + 5 en tests/quality_gates/tribunal, ambos directorios dentro de la seleccion); 0 bajas", "skipped": "9 -> 9, sin cambios"},
+    "tests_nuevos_de_fuera_de_seleccion": {"comando": "python -m pytest tests/asset_generation/test_reserva_whatsapp_desde_canal_ac6.py tests/geo_enrichment/test_orden_implementacion_nombres_reales_ac10.py -q", "resultado": "42 passed", "crudo": "se reportan en el informe con su conteo por archivo (23 y 19)"},
+    "mutantes": {"total": 10, "rojos_por_su_causa": 10, "restaurados_por_sha256": 10, "arbol_intacto": true, "artefacto": "mutation_report.json", "instrumento": "evidence/AC6-AC10-RECUPERACION-2026-10-07/run_mutations.py"},
+    "contrafactual_wa_me": {"pre": 5, "post": 0, "crudo": "crudos/contrafactual_wa_me.txt", "exit": 0},
+    "regresion_completa": {
+      "comando": "python -m pytest tests/ -q",
+      "resultado": "3 failed, 5182 passed, 42 skipped, 4 xfailed",
+      "exit": 1,
+      "duracion_s": 428,
+      "crudo": "crudos/post_regresion_completa.txt",
+      "desglose_rojos": {
+        "tests/test_validate_wiring_check_derivado_versionado.py::test_el_derivado_versionado_del_repo_pasa_su_propio_check": "PROPIO, curado. `exclusiones_por_rol.evidence.cantidad_versionada` publicado 150 vs fresco 154: la carpeta de evidencia que exige el mandato introduce .py en el alcance. Cura: `python scripts/validate_wiring.py --write-report` (712 archivos) y eliminacion de un scratch propio; verificado verde. El artefacto certificado del plan no se toco",
+        "tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic": "ajeno; PASA en aislado (interferencia de corrida)",
+        "tests/quality_gates/jev_pilot/test_jev_pilot_sdk_ac9.py::test_cargar_sdk_anade_al_final_y_conserva_el_pydantic_del_product": "ajeno; FALLA en aislado por ambiente: `14 > 14`, la ruta durable del SDK resuelve al mismo `tmp_test/venv-jev-sdk/Lib/site-packages` (ignorado por .gitignore) que el test toma por 'el venv'. El archivo no importa nada de `modules.*` (AST: 0 imports del producto). Dueño: piloto JEV"
+      },
+      "rojos_propios_restantes": 0
+    },
+    "quick_al_cierre": {"comando": "python scripts/run_all_validations.py --quick", "resultado": "TOTAL: 13/13 validations passed — STATUS: ALL VALIDATIONS PASSED (corrida final, ultimo paso de la sesion)", "exit": 0, "crudo": "crudos/quick_final.txt"},
+    "indice_lecciones": {"comando": "python scripts/build_lesson_index.py --check", "resultado": "[OK] Índice de lecciones fresco (344 IDs)", "exit": 0, "notas": "regenerado con su escritor tras editar el plan; el indice es derivado, no se edito a mano"}
+  },
+  "test_re_ancado": {
+    "archivo": "tests/asset_generation/test_local_content_generator.py::test_whatsapp_link_in_conclusion",
+    "por_que": "la version original aserta `if \"Para reservar:\" in ...: assert \"wa.me\" in ...` sobre un fixture alimentado solo con `phone`: con el fix el guard no emite enlace y la asercion quedaba verde sin poder perder. Se re-anclo dando el canal verificado y exigiendo el destino del canal, sin afeitar la asercion.",
+    "estatus": "re-anclado y declarado; sigue siendo un test de producto existente, no una baja"
+  },
+  "limites": [
+    "El ZIP entregado el 2026-10-07 (`output/.../hotel_don_alfonso_20261007.zip`, sha 487f5800…9929d) PRECEDE a esta correccion y conserva ambos defectos: 5 lineas `wa.me` y el orden vacio. No esta ejercitado por ninguna corrida y no se reescribe (arbol certificado intocable).",
+    "El rojo del revisor por orden vacio es WARNING, no CRITICAL. Con WARNING el veredicto de Bot 3 no cambia por si solo y el enforcement del Tribunal no se reabre (V-7 y el primer piso tienen su propio dueno). Si se quiere que un orden vacio bloquee publicacion, es otra decision de producto.",
+    "SUPERADO_OFFLINE no es SUPERADO EN E2E: nada aqui se certifica sobre una corrida real (L-VUP-17). La rama de produccion se ejercito por el handler y el writer en harness, no por `v4complete`.",
+    "El par CORE↔GEO de `hotel_schema` se declara 'No generado' aunque `ASSETS/geo_enriched/hotel_schema_rich.json` viaje en el paquete: la poblacion de entrada del emparejamiento son los `generated_assets` del reporte (main.py NF-6), y los artefactos de geo_flow no estan en ella. Dueño: delivery/main.py, no se toco aqui.",
+    "Un asset proveido que no queda empaquetado se lista en ADICIONALES con su nombre crudo (sin prefijo `ASSETS/`): medido con un fixture plano, `llms_*.txt` en la raiz no enruta a `ASSETS/` por la lista de extensiones de `_collect_files`. En la ruta real vive en subdirectorio y si empaqueta; se fixturee el test con las rutas reales. Dueño del hallazgo menor: delivery.",
+    "No hay leccion nueva que capitalizar en esta sesion: los mecanismos usados (guard en el limite de generacion, re-anclaje de un verde vacio, mutante enmascarado por capa) ya estan en el indice. Se declara en vez de fabricar cuota.",
+    "Sin commit, push, L3 ni tag: la sesión termina en 'listo para revisión'."
+  ],
+  "criterios_sin_medicion_pendiente": "ninguno: los 10 criterios de §3 tienen su medicion arriba o en el informe",
+  "cierre": "COMPLETO_EN_REGIMEN_OFFLINE"
+}

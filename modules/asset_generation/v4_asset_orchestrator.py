@@ -33,6 +33,7 @@ from ..commercial_documents.coherence_validator import (
     failed_error_checks,
 )
 from .conditional_generator import ConditionalGenerator
+from .site_presence_adapter import presencia_evidencia_whatsapp
 from .asset_diagnostic_linker import AssetDiagnosticLinker, AssetMetadata
 from .asset_content_validator import AssetContentValidator, ContentStatus
 from .data_assessment import DataAssessment, DataClassification  # FASE-I-01
@@ -364,6 +365,15 @@ class V4AssetOrchestrator:
 
         # PATCH-3: Inyectar output_dir para que MonthlyReportGenerator encuentre asset_generation_report.json
         validated_data["hotel_data"]["output_dir"] = str(output_dir)
+
+        # AC6 (recuperacion 2026-10-07): la clase de evidencia del canal WhatsApp
+        # viaja a los assets. El snapshot de presencia ya la publica
+        # (`presence_evidence_kind`, AC19a); aqui solo se expone, no se deriva:
+        # una huella de plugin y un href verificado dejan de ser indistinguibles
+        # aguas abajo.
+        validated_data["whatsapp_presence_evidence_kind"] = presencia_evidencia_whatsapp(
+            site_presence_report
+        )
 
         # ═══════════════════════════════════════════════════════════════════
         # FASE-I-01: ENRICHMENT CON AUTONOMOUS RESEARCHER
@@ -916,6 +926,11 @@ class V4AssetOrchestrator:
             validated_data["phone_web"] = getattr(audit_result.validation, 'phone_web', None)
             validated_data["phone_gbp"] = getattr(audit_result.validation, 'phone_gbp', None)
             validated_data["whatsapp_href_number"] = getattr(audit_result.validation, 'whatsapp_href_number', None)
+            # AC6 (recuperacion 2026-10-07): el estado validado del canal viaja con
+            # el numero del href. Sin este campo, quien construye texto de reserva
+            # no puede distinguir `verified` de `estimated` y el contrato se
+            # degrada a "hay numero, hay enlace".
+            validated_data["whatsapp_status"] = getattr(audit_result.validation, 'whatsapp_status', None)
             # FIX-A2 (curado en FASE-C, AC6): la clave `whatsapp` del botón pasa a
             # ser el MISMO campo validado, no `phone_web`. Antes el teléfono web
             # se escribía aquí y ganaba por precedencia en

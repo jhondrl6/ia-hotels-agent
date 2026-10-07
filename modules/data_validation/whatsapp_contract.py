@@ -32,6 +32,8 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, Optional
 
+from .confidence_taxonomy import ConfidenceLevel
+
 ASCII_DIGITS = "0123456789"
 SEPARADORES_PERMITIDOS = " +-()./\t"
 
@@ -183,6 +185,45 @@ def rechazo_numero_whatsapp(valor: Any) -> tuple[Optional[str], Optional[str]]:
     if not (LONGITUD_MIN <= len(sin_separadores) <= LONGITUD_MAX):
         return None, "LONGITUD_INVALIDA"
     return sin_separadores, None
+
+
+# ── Destino de un enlace de reserva (AC6) ─────────────────────────────────────
+# Nombre de la clave bajo la cual el pipeline entrega la observacion del canal
+# a quien construye texto de reserva. Una sola clave, tres campos ya existentes
+# en el vocabulario del contrato y del audit.
+CLAVE_CANAL_WHATSAPP = "canal_whatsapp"
+
+
+def destino_whatsapp_verificado(canal: Any, numero_en_uso: Any = None) -> Optional[str]:
+    """Destino para un `wa.me`, SOLO si el canal observado lo trae como href.
+
+    Regla: hay destino cuando (a) la presencia del canal se classifico
+    `wa.me_href`, (b) el estado validado del canal es VERIFIED y (c) el numero
+    del href es utilizable por `normalizar_numero_whatsapp`. Cualquier otro
+    caso no habilita destino: `plugin_fingerprint` sin href, `estimated`,
+    `conflict`, `unknown` o ausencia. La huella de un plugin declara presencia,
+    jamas numero (AC19a), y el telefono de otro canal (GBP o web) nunca es el
+    canal de WhatsApp.
+
+    `numero_en_uso` es el numero que el texto pretendia usar (p. ej. el
+    telefono del hotel). Si se informa y, normalizado, no casa con el del
+    canal, tampoco hay destino: dos numeros distintos detras de un mismo
+    enlace de reserva es la contradiccion que AC6 quiere evitar. Ausente o
+    vacio, no hay nada que contrastar y manda el numero del canal.
+    """
+    if not isinstance(canal, dict):
+        return None
+    if canal.get("presence_evidence_kind") != EVIDENCE_WA_ME_HREF:
+        return None
+    if canal.get("whatsapp_status") != ConfidenceLevel.VERIFIED.value:
+        return None
+    destino = normalizar_numero_whatsapp(canal.get("whatsapp_href_number"))
+    if not destino:
+        return None
+    if numero_en_uso not in (None, ""):
+        if normalizar_numero_whatsapp(numero_en_uso) != destino:
+            return None
+    return destino
 
 
 class NumeroWhatsAppNoUtilizable(ValueError):

@@ -21,11 +21,43 @@ Referencia: FASE-5 prompt, README.md
 """
 
 import logging
+import re
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
 
 logger = logging.getLogger(__name__)
+
+# ── Nombre real de un asset del pipeline (AC10, recuperacion 2026-10-07) ─────
+# El generador de assets escribe `<raiz>_<YYYYMMDD>_<HHMMSS>.<ext>` y le pone
+# `ESTIMATED_` delante cuando el dato no esta verificado. El catalogo de
+# responsabilidad, en cambio, conoce seis nombres canonicos sin marca de
+# tiempo. Casarlos por igualdad exacta dejaba el orden de implementacion vacio
+# en toda corrida real (medido en el paquete del 2026-10-07: 13 basenames,
+# 0 coincidencias). Aqui se quitan el prefijo y la marca; la pertenencia al
+# catalogo la decide el llamante, nunca esta funcion.
+_PREFIJO_ESTIMATED = "ESTIMATED_"
+_SUFIJO_MARCA_TIEMPO = re.compile(r"_\d{8}_\d{6}$")
+
+
+def despojer_nombre_real(nombre: Any) -> Optional[str]:
+    """`ESTIMATED_boton_whatsapp_20261007_093402.html` -> `boton_whatsapp.html`.
+
+    Solo despoja; no adivina. Si la entrada no es una cadena no vacia devuelve
+    None. La marca de tiempo se quita del raiz (antes de la extension) y el
+    prefijo `ESTIMATED_` del principio. Un nombre sin marca ni prefijo sale
+    intacto, asi que un nombre canonico sigue casando consigo mismo.
+    """
+    if not isinstance(nombre, str) or not nombre:
+        return None
+    raiz = nombre
+    if raiz.startswith(_PREFIJO_ESTIMATED):
+        raiz = raiz[len(_PREFIJO_ESTIMATED):]
+    cabeza, punto, extension = raiz.rpartition(".")
+    if not punto:
+        cabeza, extension = raiz, ""
+    cabeza = _SUFIJO_MARCA_TIEMPO.sub("", cabeza)
+    return f"{cabeza}.{extension}" if extension else cabeza
 
 
 class AssetType(Enum):
@@ -171,6 +203,38 @@ class AssetResponsibilityContract:
             ),
         ]
 
+    def resolver_nombre_real(self, nombre: Any) -> Optional[Tuple[str, AssetType]]:
+        """`(canonico, tipo)` si el basename proveido es UN nombre del catalogo.
+
+        AC10: la coincidencia es exacta despues de despojer prefijo y marca de
+        tiempo. `faqs_20261007_093402.json` no es `faq_schema.json` y por lo
+        tanto no se le inventa par: sale None y sigue siendo asset adicional.
+        El tipo lo fija el catalogo (CORE o GEO), no la lista en la que el
+        llamante puso el nombre.
+        """
+        candidato = despojer_nombre_real(nombre)
+        if candidato is None:
+            return None
+        if candidato in self.CORE_TO_GEO_MAP:
+            return candidato, AssetType.CORE
+        if candidato in self.GEO_TO_CORE_MAP:
+            return candidato, AssetType.GEO
+        return None
+
+    def pares_providos(self, core_assets: Optional[List[str]] = None,
+                       geo_assets: Optional[List[str]] = None) -> Dict[str, str]:
+        """`canonico -> nombre proveido` para los nombres que si casan.
+
+        Primero gana si un canonico llega duplicado (p. ej. con y sin prefijo).
+        """
+        pares: Dict[str, str] = {}
+        for nombre in list(core_assets or []) + list(geo_assets or []):
+            resuelto = self.resolver_nombre_real(nombre)
+            if resuelto is None:
+                continue
+            pares.setdefault(resuelto[0], nombre)
+        return pares
+
     def get_implementation_order(
         self,
         core_assets: Optional[List[str]] = None,
@@ -184,20 +248,36 @@ class AssetResponsibilityContract:
             
         Returns:
             Lista ordenada de AssetResponsibility (CORE primero, luego GEO).
+
+        AC10 (recuperacion 2026-10-07): los nombres proveidos se casan contra
+        el catalogo despues de despojer `ESTIMATED_` y la marca de tiempo, asi
+        que un paquete real produce tareas. `None` sigue significando "todos".
         """
         result: List[AssetResponsibility] = []
         seen_filenames = set()
 
+        nucleos_core: set = set()
+        nucleos_geo: set = set()
+        for nombre in list(core_assets or []) + list(geo_assets or []):
+            resuelto = self.resolver_nombre_real(nombre)
+            if resuelto is None:
+                continue
+            canonico, tipo = resuelto
+            if tipo == AssetType.CORE:
+                nucleos_core.add(canonico)
+            else:
+                nucleos_geo.add(canonico)
+
         # Primero: CORE assets
         for resp in self.get_core_responsibilities():
-            if core_assets is None or resp.filename in core_assets:
+            if core_assets is None or resp.filename in nucleos_core:
                 if resp.filename not in seen_filenames:
                     result.append(resp)
                     seen_filenames.add(resp.filename)
 
         # Segundo: GEO assets
         for resp in self.get_geo_responsibilities():
-            if geo_assets is None or resp.filename in geo_assets:
+            if geo_assets is None or resp.filename in nucleos_geo:
                 if resp.filename not in seen_filenames:
                     result.append(resp)
                     seen_filenames.add(resp.filename)
@@ -216,6 +296,13 @@ class AssetResponsibilityContract:
                 - paired_asset: Asset complementario (si existe)
                 - description: Descripción de la regla
         """
+        # AC10 (recuperacion 2026-10-07): la busqueda es por el nombre canonico
+        # del asset real, para que la regla que publica ASSET_RESPONSIBILITY.json
+        # no contradiga el orden ya emparejado en IMPLEMENTATION_ORDER.md.
+        resuelto = self.resolver_nombre_real(asset_type)
+        if resuelto is not None:
+            asset_type = resuelto[0]
+
         # Es un GEO asset
         if asset_type in self.GEO_TO_CORE_MAP:
             core_asset = self.GEO_TO_CORE_MAP[asset_type]
@@ -323,10 +410,13 @@ class AssetResponsibilityContract:
         # Determinar si GEO assets son obligatorios
         geo_mandatory = geo_score < 68
 
-        # AC-G1: Detectar assets fuera del catálogo de 6 nombres
-        known_assets = set(self.CORE_TO_GEO_MAP.keys()) | set(self.GEO_TO_CORE_MAP.keys())
-        all_provided = set(core_assets) | set(geo_assets)
-        unknown_assets = all_provided - known_assets
+        # AC-G1: Detectar assets fuera del catálogo de 6 nombres.
+        # AC10 (recuperacion 2026-10-07): "fuera del catalogo" se decide sobre el
+        # nombre despojado, no sobre el basename crudo — si no, un asset que SI
+        # esta catalogado (`hotel_schema_20261007_093402.json`) se declaraba
+        # "adicional sin par" mientras el orden lo contaba como CORE.
+        pares = self.pares_providos(core_assets, geo_assets)
+        unknown_assets = (set(core_assets) | set(geo_assets)) - set(pares.keys()) - set(pares.values())
 
         lines = [
             f"# 📦 Delivery Package - {hotel_name}",
@@ -352,9 +442,17 @@ class AssetResponsibilityContract:
         for i, resp in enumerate(order, 1):
             mandatory_mark = "✅" if resp.mandatory else "⬜"
             type_mark = "[CORE]" if resp.type == AssetType.CORE else "[GEO]"
-            # AC-G1: Show actual ZIP path if available
-            zip_path = asset_zip_paths.get(resp.filename, resp.filename)
-            display_name = zip_path if zip_path != resp.filename else resp.filename
+            # AC-G1: Show actual ZIP path if available.
+            # AC10: la ruta se busca primero por el nombre que el pipeline
+            # produce de verdad (clave de `asset_zip_paths` en DeliveryPackager)
+            # y luego por el canonico, que es como la pasan los tests legados.
+            proveido = pares.get(resp.filename)
+            zip_path = (
+                asset_zip_paths.get(proveido)
+                if proveido is not None
+                else None
+            ) or asset_zip_paths.get(resp.filename, resp.filename)
+            display_name = zip_path
 
             lines.append(f"### {i}. {display_name} {mandatory_mark} {type_mark}")
             lines.append(f"   - **Descripción:** {resp.description}")
@@ -388,15 +486,20 @@ class AssetResponsibilityContract:
             "",
         ])
 
+        nucleos = set(pares.keys())
         for core_asset in self.CORE_TO_GEO_MAP.keys():
-            if core_asset in core_assets:
+            if core_asset in nucleos:
                 geo_asset = self.CORE_TO_GEO_MAP[core_asset]
-                geo_present = geo_asset in geo_assets
+                geo_present = geo_asset in nucleos
+                # AC10: la guia nombra el archivo que existe en el paquete, no
+                # solo el canonico del catalogo.
+                ruta_core = asset_zip_paths.get(pares.get(core_asset), core_asset)
+                ruta_geo = asset_zip_paths.get(pares.get(geo_asset), geo_asset)
 
                 lines.append(f"### {core_asset} ↔ {geo_asset}")
-                lines.append(f"- **{core_asset}** (CORE): Implementar PRIMERO")
+                lines.append(f"- **{ruta_core}** (CORE): Implementar PRIMERO")
                 if geo_present:
-                    lines.append(f"- **{geo_asset}** (GEO): Implementar DESPUÉS como suma")
+                    lines.append(f"- **{ruta_geo}** (GEO): Implementar DESPUÉS como suma")
                     lines.append(f"  - La regla es **ENRIQUECER, NO REEMPLAZAR**")
                     if geo_mandatory:
                         lines.append(f"  - ⚠️ **OBLIGATORIO** (score GEO {geo_score} < 68)")
@@ -416,7 +519,9 @@ class AssetResponsibilityContract:
 
         for resp in order:
             checked = "x" if resp.mandatory else " "
-            lines.append(f"- [{checked}] {resp.filename}")
+            # AC10: el checkbox marca el archivo real del paquete.
+            ruta = asset_zip_paths.get(pares.get(resp.filename), resp.filename)
+            lines.append(f"- [{checked}] {ruta}")
 
         lines.extend([
             "",

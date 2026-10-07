@@ -30,6 +30,10 @@ FINDING_P12_UNVERIFIABLE = "P12_UNVERIFIABLE"
 FINDING_ORPHAN_ASSET = "ORPHAN_ASSET"
 FINDING_GENERIC_ASSET = "GENERIC_ASSET"
 FINDING_UNLABELED_ESTIMATED = "UNLABELED_ESTIMATED"
+# AC10 (recuperacion 2026-10-07, hallazgo V-2): tipo propio para que el rojo
+# por orden vacio no se confunda con el stub estructural que ya goberna
+# EMPTY_DELIVERY_TEMPLATE.
+FINDING_IMPLEMENTATION_ORDER_SIN_TAREAS = "IMPLEMENTATION_ORDER_SIN_TAREAS"
 
 VERDICT_APROBADO = "APROBADO"
 VERDICT_DEVOLVER = "DEVOLVER-PRUEBAS"
@@ -43,6 +47,25 @@ IMPL_ORDER_OK = "OK"
 IMPL_ORDER_ARTIFACT_MISSING = "ARTIFACT_MISSING"
 IMPL_ORDER_READER_FAILED = "READER_FAILED"
 IMPL_ORDER_NOT_RUN = "NOT_RUN"
+
+# AC10 (recuperacion 2026-10-07): `implementation_order_check` dejo de ser un
+# registro de fuente. Publica tambien el veredicto de contenido del orden:
+# cuantas tareas numeradas tiene la seccion ORDEN y si ese conteo es cero, rojo.
+# Con contrato declarado: el rojo es WARNING — el hallazgo se divulga y pinta de
+# rojo el registro, pero no cambia el veredicto del revisor por si solo
+# (verdict_bloquear exige CRITICAL). NO-EVALUABLE es la abstencion: sin lectura
+# no hay criterio de contenido que afirmar.
+IMPL_CONTENIDO_OK = "OK"
+IMPL_CONTENIDO_VACIO = "ORDEN_VACIA"
+IMPL_CONTENIDO_NO_EVALUABLE = "NO-EVALUABLE"
+
+# La cabecera real lleva un emoji antes del titulo (`## 📋 ORDEN DE
+# IMPLEMENTACION`), por eso el patrón no ancla el titulo justo despues de `##`.
+_SECCION_ORDEN_RE = re.compile(
+    r"^##\s[^\n#]*ORDEN DE IMPLEMENTACI[OÓ]N", re.IGNORECASE | re.MULTILINE
+)
+_SECCION_SIGUIENTE_RE = re.compile(r"^##\s", re.MULTILINE)
+_TAREA_NUMERADA_RE = re.compile(r"^###\s*\d+\.", re.IGNORECASE | re.MULTILINE)
 
 # Líneas que el criterio estructural de _is_template_stub NO cuenta como
 # contenido real por-hotel: separadores, cabecera Fecha/Score, las dos líneas
@@ -525,6 +548,24 @@ class AssetReviewer:
         # 3) Ni directorio ni ZIP → artefacto ausente
         return None, IMPL_ORDER_ARTIFACT_MISSING, None
 
+    def _medir_orden_implementacion(self, content: str) -> dict:
+        """Tareas numeradas DENTRO de la seccion ORDEN DE IMPLEMENTACION.
+
+        AC10 (V-2): la pregunta es "el orden tiene tareas", no "el documento
+        tiene lineas". El paquete del 2026-10-07 tenia 2.586 caracteres con 13
+        assets bajo ADICIONALES y el ORDEN sin una sola tarea: el criterio
+        estructural de stub lo dejaba pasar porque contaba contenido de otra
+        seccion. Se corta por titulo de seccion, no por adyacencia, para que
+        `###` de la GUIA DE RELACIONES no sume como tarea del orden.
+        """
+        encabezado = _SECCION_ORDEN_RE.search(content)
+        if encabezado is None:
+            return {"tareas": 0, "seccion": "AUSENTE"}
+        resto = content[encabezado.end():]
+        siguiente = _SECCION_SIGUIENTE_RE.search(resto)
+        bloque = resto[:siguiente.start()] if siguiente else resto
+        return {"tareas": len(_TAREA_NUMERADA_RE.findall(bloque)), "seccion": "PRESENT"}
+
     def _check_implementation_order(self) -> list:
         """Detecta IMPLEMENTATION_ORDER.md vacío/plantilla (AC-F1, dos capas).
 
@@ -533,13 +574,40 @@ class AssetReviewer:
         Capa 2: criterio estructural en ``_is_template_stub``. Un fallo de
         lectura (ARTIFACT_MISSING/READER_FAILED) NO emite finding ni bloquea —
         solo publica su estado en ``implementation_order_check``.
+
+        Capa 3 (AC10): el mismo registro publica el veredicto de contenido del
+        orden. Con cero tareas numeradas emite WARNING de tipo propio; con
+        lectura fallida declara NO-EVALUABLE en vez de afirmar un verde.
         """
         findings: list = []
         content, status, source = self._read_implementation_order()
-        self._impl_order_check = {"status": status, "source": source}
+        self._impl_order_check = {
+            "status": status,
+            "source": source,
+            "contenido": IMPL_CONTENIDO_NO_EVALUABLE,
+            "tareas": None,
+            "seccion_orden": None,
+        }
 
         if status != IMPL_ORDER_OK or content is None:
             return findings
+
+        medida = self._medir_orden_implementacion(content)
+        self._impl_order_check.update({
+            "tareas": medida["tareas"],
+            "seccion_orden": medida["seccion"],
+            "contenido": IMPL_CONTENIDO_OK if medida["tareas"] > 0 else IMPL_CONTENIDO_VACIO,
+        })
+
+        if medida["tareas"] == 0:
+            findings.append(self._make_finding(
+                severity=SEVERITY_WARNING,
+                finding_type=FINDING_IMPLEMENTATION_ORDER_SIN_TAREAS,
+                description=(
+                    "IMPLEMENTATION_ORDER.md no tiene ninguna tarea numerada en "
+                    f"'ORDEN DE IMPLEMENTACIÓN' (sección: {medida['seccion']})"
+                ),
+            ))
 
         size = len(content.encode("utf-8"))
 

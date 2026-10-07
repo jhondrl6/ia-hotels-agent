@@ -128,13 +128,29 @@ def test_schema_article_has_headline(gen, hotel_visperas):
 
 
 def test_whatsapp_link_in_conclusion(gen, hotel_visperas):
-    """Conclusion incluye link WhatsApp cuando hay telefono."""
-    hotel_with_phone = dict(hotel_visperas, phone="+57 300 123 4567")
+    """Conclusion incluye link WhatsApp CUANDO el canal lo trae verificado (AC6).
+
+    Re-anclado en la recuperacion del 2026-10-07: la version original alimentaba
+    solo `phone` y aserto `if "Para reservar:" in ...: assert "wa.me" in ...`, un
+    verde que ya no podia perder porque el enlace dejo de construirse desde el
+    telefono del hotel. El contrato (AC6) exige el canal `wa.me_href` verificado,
+    asi que aqui se le da ese canal y se exige el destino del canal.
+    """
+    hotel_with_phone = dict(
+        hotel_visperas,
+        phone="+57 300 123 4567",
+        canal_whatsapp={
+            "presence_evidence_kind": "wa.me_href",
+            "whatsapp_status": "verified",
+            "whatsapp_href_number": "573001234567",
+        },
+    )
     result = gen.generate_content_set(hotel_with_phone, hotel_type="boutique")
 
+    assert result.pages, "sin paginas no hay nada que verificar"
     for page in result.pages:
-        if "Para reservar:" in page.content_md:
-            assert "wa.me" in page.content_md
+        assert "Para reservar:" in page.content_md
+        assert "https://wa.me/573001234567" in page.content_md
 
 
 def test_content_no_ai_phrases(gen, hotel_visperas):

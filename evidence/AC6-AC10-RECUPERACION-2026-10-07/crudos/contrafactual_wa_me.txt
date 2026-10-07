@@ -1,0 +1,10 @@
+archivo PRE  : hotel_don_alfonso_20261007.zip :: ASSETS/local_content_page/contenido_local__20261007_093402.md
+lineas wa.me PRE : 5  -> numeros de linea [73, 147, 221, 295, 369]
+ejemplo PRE      : Para reservar: [Hotel Don Alfonso - WhatsApp](https://wa.me/6063146139)
+
+archivo POST : contenido producido offline por el handler de produccion
+lineas wa.me POST: 0  -> []
+pagina(s) en el POST: 36 cabeceras, 0 frases de reserva
+
+CONTRAFACTUAL: 5 -> 0
+EXIT=0

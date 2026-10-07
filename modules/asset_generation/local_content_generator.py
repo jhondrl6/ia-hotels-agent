@@ -7,7 +7,7 @@ Cada pagina:
 - Keyword objetivo de busqueda local
 - Contenido 800-1200 palabras en espanol neutro
 - Schema Article JSON-LD
-- Link a reservas directas (WhatsApp)
+- Link a reservas directas (WhatsApp) SOLO si el canal lo trae verificado (AC6)
 - Mencion natural del hotel (no vendedora)
 
 Uso:
@@ -23,6 +23,11 @@ from typing import Dict, List, Any, Optional
 import re
 from datetime import datetime
 from pathlib import Path
+
+from modules.data_validation.whatsapp_contract import (
+    CLAVE_CANAL_WHATSAPP,
+    destino_whatsapp_verificado,
+)
 
 
 _TEMPLATES_DIR = Path(__file__).resolve().parent.parent.parent / "templates" / "local_content"
@@ -280,7 +285,7 @@ class LocalContentGenerator:
         city = self._resolve_location(hotel_data, fallback="la zona")
         state = hotel_data.get("state", "Colombia")
         region = location_context.get("region", state)
-        phone = hotel_data.get("phone", "")
+        destino_whatsapp = self._destino_whatsapp(hotel_data)
 
         parts = []
         parts.append(self._intro(keyword, city))
@@ -288,7 +293,7 @@ class LocalContentGenerator:
         parts.append(self._section_informacion(keyword, city, region))
         parts.append(self._section_practica(city, region))
         parts.append(self._section_recomendaciones(city, hotel_name, region))
-        parts.append(self._conclusion(keyword, city, phone, hotel_name))
+        parts.append(self._conclusion(keyword, city, destino_whatsapp, hotel_name))
 
         return "\n\n".join(parts)
 
@@ -514,7 +519,21 @@ class LocalContentGenerator:
             f"{region}."
         )
 
-    def _conclusion(self, keyword: str, city: str, phone: str, hotel_name: str) -> str:
+    def _destino_whatsapp(self, hotel_data: Dict[str, Any]) -> Optional[str]:
+        """Destino `wa.me` del canal verificado, o None si no hay canal.
+
+        AC6 (recuperacion 2026-10-07): antes este modulo armaba el enlace con
+        `hotel_data["phone"]`, que el orquestador llena con el telefono GBP o
+        web del hotel. Un numero de otro canal viajaba como destino de
+        WhatsApp; aqui no se decide nada propio: se consulta el contrato.
+        """
+        return destino_whatsapp_verificado(
+            hotel_data.get(CLAVE_CANAL_WHATSAPP),
+            hotel_data.get("phone"),
+        )
+
+    def _conclusion(self, keyword: str, city: str, destino_whatsapp: Optional[str],
+                    hotel_name: str) -> str:
         conclusion = (
             f"## Conclusion\n\n"
             f"{keyword} es un tema que vale la pena conocer antes de "
@@ -525,9 +544,8 @@ class LocalContentGenerator:
             f"Si quieres conocer mas sobre {city} y sus alrededores, "
             f"puedes contactarnos."
         )
-        if phone:
-            phone_clean = re.sub(r'[^\d+]', '', phone).lstrip('+')
-            conclusion += f"\n\nPara reservar: [{hotel_name} - WhatsApp](https://wa.me/{phone_clean})"
+        if destino_whatsapp:
+            conclusion += f"\n\nPara reservar: [{hotel_name} - WhatsApp](https://wa.me/{destino_whatsapp})"
         return conclusion
 
     def _count_words(self, text: str) -> int:
@@ -547,16 +565,15 @@ class LocalContentGenerator:
 
     def _build_internal_links(self, hotel_data: Dict[str, Any]) -> List[str]:
         website = hotel_data.get("website", "")
-        phone = hotel_data.get("phone", "")
         hotel_name = hotel_data.get("name", "Hotel")
+        destino_whatsapp = self._destino_whatsapp(hotel_data)
         links = []
         if website:
             links.append(f"Visita {hotel_name}: {website}")
         else:
             links.append(f"{hotel_name} - Pagina principal")
-        if phone:
-            phone_clean = re.sub(r'[^\d+]', '', phone).lstrip('+')
-            links.append(f"Reservar por WhatsApp: https://wa.me/{phone_clean}")
+        if destino_whatsapp:
+            links.append(f"Reservar por WhatsApp: https://wa.me/{destino_whatsapp}")
         else:
             links.append("Reservar: contactar al hotel")
         return links

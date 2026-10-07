@@ -56,6 +56,32 @@ def normalize_site_presence(
     )
 
 
+def presencia_evidencia_whatsapp(presencia: Any) -> Optional[str]:
+    """`presence_evidence_kind` del canal WhatsApp desde la presencia observada.
+
+    AC6 (recuperacion 2026-10-07): el contrato distingue `wa.me_href` de
+    `plugin_fingerprint`, y esa distincion se perdía si quien escribe texto de
+    reserva solo veía un numero de telefono. Aqui se expone lo que el lector ya
+    publico; no se deriva ni se inventa. `None` = sin observacion (ausencia que
+    el contrato trata como "no hay destino", nunca como "no hay canal").
+    """
+    if presencia is None:
+        return None
+    if not isinstance(presencia, dict):
+        try:
+            presencia = normalize_site_presence(presencia)
+        except (TypeError, ValueError):
+            return None
+    entrada = presencia.get("whatsapp_button")
+    if not isinstance(entrada, dict):
+        resultados = presencia.get("results")
+        entrada = resultados.get("whatsapp_button") if isinstance(resultados, dict) else None
+    if not isinstance(entrada, dict):
+        return None
+    evidencia = entrada.get("presence_evidence_kind")
+    return evidencia if isinstance(evidencia, str) and evidencia else None
+
+
 def _from_dataclass(report: Any) -> Dict[str, Any]:
     """Convert SitePresenceReport dataclass to canonical dict."""
     result: Dict[str, Any] = {
