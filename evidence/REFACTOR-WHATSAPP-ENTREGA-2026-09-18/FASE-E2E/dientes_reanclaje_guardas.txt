@@ -1,0 +1,17 @@
+POSITIVOS (deben quedar verdes):
+  test_ningun_test_de_esta_bateria_toco_el_contr VERDE
+  test_nada_de_esta_fase_creara_el_control_produ VERDE
+
+MUTANTES (deben caer):
+  attempts=2       test_ningun_test_de_esta_bateria_toco_el CAE            el contrato del plan es un solo intento
+  attempts=2       test_nada_de_esta_fase_creara_el_control CAE            el contrato del plan es un solo intento: otro valor no lo escribio este runner
+  argv sin 'auto'  test_ningun_test_de_esta_bateria_toco_el CAE            el argv publicado no es el literal congelado: no lo lanzo este runner
+  argv sin 'auto'  test_nada_de_esta_fase_creara_el_control *** NO CAE *** 
+  schema ajeno     test_ningun_test_de_esta_bateria_toco_el CAE            el control no lo escribio este runner: su schema es otro
+  schema ajeno     test_nada_de_esta_fase_creara_el_control CAE            el control no declara el schema del runner: no lo escribio la rama --spawn
+  argv_sha roto    test_ningun_test_de_esta_bateria_toco_el CAE            el hash del argv no casa con el argv publicado
+  argv_sha roto    test_nada_de_esta_fase_creara_el_control *** NO CAE *** 
+  control ausente  test_ningun_test_de_esta_bateria_toco_el CAE            E2E consumo el intento sin dejar un control legible: la evidencia se perdio
+  control ausente  test_nada_de_esta_fase_creara_el_control CAE            E2E consumo el intento y su control no esta en disco: la evidencia del plan se p
+
+CAEN: 8/10

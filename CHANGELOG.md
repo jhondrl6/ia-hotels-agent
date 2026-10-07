@@ -1,5 +1,64 @@
 # Changelog
 
+## [Sin publicar] - FASE-E2E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-07
+
+### Corrida única de Hotel Don Alfonso: ZIP publicado y AC20 ejercitado en flujo real
+
+**Qué cambió.** **Cero archivos de producto y cero tests.** El producto de esta fase es evidencia: el control
+productivo del único intento del plan y su preservación. `--spawn` se invocó **una vez** y el argv congelado nunca se
+ejecutó a mano.
+
+- `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/run_control.json` — `attempts: 1`, `estado: FINALIZADO`,
+  `exit_code: 0`, `pid: 30576`, 116 s, argv literal de 11 piezas con `--permission-mode auto`, `argv_sha256` y los 10
+  `source_hashes`, más el snapshot de 21 archivos de `.agent/memory`. El contador del plan pasa a **1/1** y no hay
+  segunda corrida posible (L-R.4: lo acredita el archivo, no la narración).
+- `…/FASE-E2E/inventario_post_corrida.json` — 70 archivos con sha256, 0 errores y **0 faltantes declarados**. El
+  paquete figura `PAQUETE_PUBLICADO`: `hotel_don_alfonso_20261007.zip`, 70.191 bytes, sha `487f5800…`, **57 entradas**.
+- `…/FASE-E2E/preflight_verificado_2026-10-07.md` y `resultados-y-observaciones.md` — la Tarea 1 con su hallazgo y las
+  diez deudas con dueño (S-E2E-1 a S-E2E-10).
+
+**Resultado observado: la meta re-anclada se alcanzó.** Veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING` con tier
+**B+** y la regla de primer piso aplicada, 13 gates con **11 PASSED + 2 WARNING y 0 fallidos**, coherencia **0.9172**,
+`readiness: READY_FOR_PUBLICATION` y **ZIP publicado**. En el baseline del 2026-09-19 ese mismo readiness convivió con
+**BLOQUEADO** y ZIP suprimido; la diferencia es la serialización de AC20, que FASE-0 había cerrado offline y que **esta
+corrida ejercitó en sus tres puntos**: `critical_recall` publica su `details` fundado (`critical_issues_count: 3`,
+`recall_basis: all_critical_issues_detected`), los cuatro `reviewer_reports` llegan al acta con causas, y la rama
+publish registra `package_evidence` con hash y conteo.
+
+**Bloqueo hallado antes de lanzar, y lo que revela sobre el instrumento.** El check libre `--preflight` fallaba con
+`DivergenciaDeHash` en **el propio `run_once.py`**: el preflight había congelado el blob de `d571277` y el commit
+`6fd39c2` (b1-bis) enmendó ese mismo archivo. Es una propiedad de diseño — el runner está en `ARCHIVOS_CONGELADOS`,
+así que **editar el instrumento vence el preflight que él exige**, sin verificador que lo advierta. El rechazo caía
+antes de reservar, así que el intento nunca estuvo en riesgo; se preservó el crudo versionado con su sha256 y la
+re-emisión movió **exactamente 2 campos**. Después: `--preflight` EXIT 0 y las baterías de H en 70 passed sin
+re-anclar nada — **pero re-ejecutadas después del spawn dieron 2 failed / 68 passed**: dos guardas asertaban que el
+control productivo no existía y el consumo legítimo del intento las venció (el quick no ejecuta pytest y no las veía).
+**Re-ancladas en esta misma sesión con autorización del operador** — revisión fija `6fd39c2` más caracterización del
+control del runner (`schema`, `attempts`, argv literal y su hash) — y **volvieron a 70 passed**, con los dientes
+medidos contra cinco mutantes del control.
+
+**Lo que la corrida no ejercitó, declarado sin promoverlo a SUPERADO.** La medición IAO del `LLMMentionChecker` cayó
+con un `AttributeError` dentro de `def _parse_mentions` (falta guarda sobre el texto que toma `def check_mentions`)
+y se degradó a advisory;
+por eso el `audit_report` actual no lleva `providers_used`, a diferencia del del baseline. La rama WhatsApp no se
+tocó, exactamente como lo predijo el maestro. Y una premisa del propio prompt cayó contra el artefacto: `providers_used`
+**nunca fue un campo por revisor**, es el agregado de esa única unidad.
+
+**Deuda que esta corrida deja abierta, y visible.** Un ZIP publicado sobre un revisor que recomendaba
+`DEVOLVER-PRUEBAS` (no está en `BLOCKING_VERDICTS`); el `finding_type` que se pierde al proyectar el acta porque
+`honesty_reviewer` escribe `type`; 12 puertas comerciales contra 10 distintas con dos `gate_id` duplicadas;
+`preflight.sha256` nulo dentro del control; y **`captura_stdout.txt` con 4 formas `prefijo…sufijo` de credenciales
+reales** que imprime `config_checker._check_env_variables` y que el sumidero de FASE-F no reconoce. **Resuelto por
+decisión del operador (opción A):** se publicó `captura_stdout_saneada.txt` con cabecera de procedencia —ruta, bytes,
+sha256 del original y los 4 reemplazos declarados—, con diff exacto de 4 líneas sobre 353, y el crudo quedó **intacto
+y sin versionar** para no romper la atadura de sha que sostiene AC17. Sigue abierto el hueco de fondo (S-E2E-11):
+redactar esa forma en el sumidero, o dejar de imprimir fragmentos. Se materializó además la deuda S-H6: `cleanup_old_sessions(20)` borró las 8 sesiones
+de `.agent/memory/sessions/` que el snapshot anunciaba; su inventario con sha256 prueba que existieron, pero la ruta
+está en `.gitignore` y el contenido no es recuperable.
+
+**No se hizo:** commit, push, L3, tag, write-back a QMind, regeneración de `DOMAIN_PRIMER` ni rotación de credenciales.
+**AC18 no se marca en esta fase:** certifica VERIFY en su sesión, con esta corrida como única muestra.
+
 ## [Sin publicar] - FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 
 ### Runner de intento único, onboarding derivado con procedencia y preflight NO FAVORABLE

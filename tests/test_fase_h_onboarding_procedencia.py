@@ -23,6 +23,11 @@ DIR_FASE = RAIZ / "evidence" / PLAN / "FASE-H"
 FUENTE = RAIZ / "data" / "hotel_observations" / "observations.json"
 YAML_PRODUCTIVO = RAIZ / "output" / PLAN / "clientes" / "hotel_don_alfonso_onboarding.yaml"
 CONTROL_PRODUCTIVO = RAIZ / "evidence" / PLAN / "FASE-E2E" / "run_control.json"
+# Ruta productiva por construccion (la pata historica no debe seguir a la constante).
+RUTA_RESERVA_PRODUCTIVA = f"evidence/{PLAN}/FASE-E2E/run_control.json"
+# Revision **fija** (el commit donde H cerro), no HEAD: despues del versionado de E2E la reserva
+# si existe en el arbol y anclarla al tip dejaria la guarda sin nada que perder.
+REV_RESERVA_VIRGEN = "6fd39c2"
 
 sys.path.insert(0, str(RAIZ))
 
@@ -523,6 +528,31 @@ def test_el_preflight_vigente_es_favorable_por_lectura_no_por_endulzamiento():
 
 
 def test_nada_de_esta_fase_creara_el_control_productivo():
-    assert not CONTROL_PRODUCTIVO.exists(), (
-        "el intento unico es de E2E: si run_control.json existe, H lo consumo"
+    """Re-anclada por FASE-E2E (2026-10-07): lo que H garantizaba era **no crear** la reserva.
+
+    La inexistencia del archivo era el proxy; el consumo legitimo del intento unico la vencio, asi
+    que la guarda se apoya ahora en dos patas que siguen perdiendo: en el arbol del commit de H la
+    ruta no existia, y lo que existe hoy es un control con el schema del runner y exactamente un
+    intento.
+    """
+    import subprocess
+
+    en_la_rev_de_h = subprocess.run(
+        ["git", "cat-file", "-e", f"{REV_RESERVA_VIRGEN}::{RUTA_RESERVA_PRODUCTIVA}"],
+        capture_output=True,
+        cwd=str(RAIZ),
+    )
+    assert en_la_rev_de_h.returncode != 0, (
+        f"el arbol de {REV_RESERVA_VIRGEN} ya tenia la reserva productiva: la creo H"
+    )
+
+    assert CONTROL_PRODUCTIVO.is_file(), (
+        "E2E consumo el intento y su control no esta en disco: la evidencia del plan se perdio"
+    )
+    control = json.loads(CONTROL_PRODUCTIVO.read_text(encoding="utf-8"))
+    assert control["schema"] == "iah-run-control/1.0", (
+        "el control no declara el schema del runner: no lo escribio la rama --spawn"
+    )
+    assert control["attempts"] == 1, (
+        "el contrato del plan es un solo intento: otro valor no lo escribio este runner"
     )

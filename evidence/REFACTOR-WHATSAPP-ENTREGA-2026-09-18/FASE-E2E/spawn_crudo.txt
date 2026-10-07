@@ -1,0 +1,23 @@
+{
+  "revalidacion_del_spawn": {
+    "revalidado_el": "2026-10-07T14:32:13.718590+00:00",
+    "fecha_captura": "2026-07-22",
+    "edad_dias": 77,
+    "edad_dias_del_preacto": 77,
+    "techo_de_dias": 90,
+    "limite_del_consentimiento": 90,
+    "declarado_por": "Jhond (operador)"
+  }
+}
+Traceback (most recent call last):
+  File "C:\Users\Jhond\Github\iah-cli\evidence\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\FASE-H\run_once.py", line 1053, in <module>
+    sys.exit(main(sys.argv[1:]))
+             ~~~~^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\Github\iah-cli\evidence\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\FASE-H\run_once.py", line 1040, in main
+    print(captura["texto"])
+    ~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2192' in position 2371: character maps to <undefined>
+EXIT=1

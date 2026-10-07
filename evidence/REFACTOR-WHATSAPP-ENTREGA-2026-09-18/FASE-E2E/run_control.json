@@ -1,0 +1,185 @@
+{
+  "actualizado_en": "2026-10-07T14:34:09.786885+00:00",
+  "argv": [
+    "./venv/Scripts/python.exe",
+    "main.py",
+    "v4complete",
+    "--url",
+    "https://www.donalfonsohotel.com/",
+    "--nombre",
+    "Hotel Don Alfonso",
+    "--output",
+    "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+    "--permission-mode",
+    "auto"
+  ],
+  "argv_sha256": "b57488913134feb23561f05ff3a7dfe5f5b93b1c8c09ca14656ffaddebc07704",
+  "attempts": 1,
+  "capturas": {
+    "stderr": {
+      "bytes": 732,
+      "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\FASE-E2E\\captura_stderr.txt",
+      "sha256": "aeca1ff308f178018b652bb538da142f4df7418dca5ec09926c9c4fc570e0877"
+    },
+    "stdout": {
+      "bytes": 16931,
+      "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\FASE-E2E\\captura_stdout.txt",
+      "sha256": "7dffa6f2c9ce8ef8919ede899328b5aefb5ce4ef1eb3340f301a037a9311ed23"
+    }
+  },
+  "causa_estado": "proceso termino con exit code 0",
+  "creado_en": "2026-10-07T14:32:13.721385+00:00",
+  "cwd": "C:\\Users\\Jhond\\Github\\iah-cli",
+  "estado": "FINALIZADO",
+  "exit_code": 0,
+  "iniciado_en": "2026-10-07T14:32:13.731755+00:00",
+  "pid": 30576,
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "preflight": {
+    "favorable": true,
+    "identidades": {
+      "hotel_id_del_reporte": "hotel_donalfonsohotel.com",
+      "identidad_de_memoria": "donalfonsohotel.com",
+      "nombre_del_paquete": "Hotel Don Alfonso"
+    },
+    "intentos_al_emitir": 0,
+    "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\FASE-H\\preflight.json",
+    "sha256": null,
+    "snapshot_memoria": {
+      "archivos": 21,
+      "borraria_cleanup_20_dias": [
+        ".agent/memory/sessions/2026-08-31_16b8b476.json",
+        ".agent/memory/sessions/2026-08-31_996a1a9b.json",
+        ".agent/memory/sessions/2026-09-04_05929e88.json",
+        ".agent/memory/sessions/2026-09-04_9d9b4f36.json",
+        ".agent/memory/sessions/2026-09-11_87062dc4.json",
+        ".agent/memory/sessions/2026-09-11_9d9a1248.json",
+        ".agent/memory/sessions/2026-09-14_1441d3e1.json",
+        ".agent/memory/sessions/2026-09-14_eee6a379.json"
+      ],
+      "bytes_totales": 53734,
+      "inventario": [
+        {
+          "bytes": 276,
+          "ruta": ".agent/memory/archives/sessions/2026-01-15_8cd64ac1.json",
+          "sha256": "1e90fa9b0ab3f37524d5d7f67660a5b10a5b1a66de0b44eeb6a184eedd255b86"
+        },
+        {
+          "bytes": 721,
+          "ruta": ".agent/memory/archives/sessions/2026-02-19_9ca626af.json",
+          "sha256": "0901c1956549ffffef9bc8bfebb08893ba1b0afc6d5cc96c18d902e1ba392ece"
+        },
+        {
+          "bytes": 571,
+          "ruta": ".agent/memory/archives/sessions/2026-02-20_a01b9738.json",
+          "sha256": "ea0bb89f29ad1daf3e90e22103da6602a6c45b5ae84ab36efd5c01410c856667"
+        },
+        {
+          "bytes": 3112,
+          "ruta": ".agent/memory/archives/sessions/2026-02-20_b435b315.json",
+          "sha256": "455209139d820110d91d5d69bd4692f87eeabeb3457da2c675e766aa1e0c1687"
+        },
+        {
+          "bytes": 7787,
+          "ruta": ".agent/memory/archives/sessions/2026-02-20_consolidated.json",
+          "sha256": "89da8374129cfd5c992322e1aa1955b6434083c208abe7f82aa81728ea7519fe"
+        },
+        {
+          "bytes": 703,
+          "ruta": ".agent/memory/archives/sessions/2026-02-20_f1429339.json",
+          "sha256": "20c873e9a45b5d233149415629a3a2bc5b57ead6d2d3a890592c164d5b4799ef"
+        },
+        {
+          "bytes": 5425,
+          "ruta": ".agent/memory/COMMON_ERRORS.md",
+          "sha256": "f47e6b0764b2a50fe70f04845b012bab5fcb7eaaed07f173b3cace263f2fb265"
+        },
+        {
+          "bytes": 109,
+          "ruta": ".agent/memory/current_state.json",
+          "sha256": "cf1aae29b442890fdc94f954c56daaa360a41efb7adad3ad70b6dabbcebeb13e"
+        },
+        {
+          "bytes": 5117,
+          "ruta": ".agent/memory/error_catalog.json",
+          "sha256": "91c060ca0656e92305c9617e70a38a2ad9f5c0657093195db559745eb211ae4b"
+        },
+        {
+          "bytes": 4886,
+          "ruta": ".agent/memory/sessions/2026-08-31_16b8b476.json",
+          "sha256": "728b4ebd9716116c49a0bca1c234ae8e0332311e7c9c3983552cc39fd933a15b"
+        },
+        {
+          "bytes": 778,
+          "ruta": ".agent/memory/sessions/2026-08-31_996a1a9b.json",
+          "sha256": "3e194e1ec9d1cb6594990d780ec30353d298e896d80bdb67e0eb702166dc42cc"
+        },
+        {
+          "bytes": 778,
+          "ruta": ".agent/memory/sessions/2026-09-04_05929e88.json",
+          "sha256": "ec5fd0d06cdb1ea3e4a6744d09c5804245b620ac104c7e3a03ea66650f79c500"
+        },
+        {
+          "bytes": 5058,
+          "ruta": ".agent/memory/sessions/2026-09-04_9d9b4f36.json",
+          "sha256": "e46fc7adca447a725baf7e10ca2b5f07d40c36d3b65c0ed6bce30c9de03e318b"
+        },
+        {
+          "bytes": 4418,
+          "ruta": ".agent/memory/sessions/2026-09-11_87062dc4.json",
+          "sha256": "506b40f025a45797b54d5fe024ffe8ce42abd1b58b8fc63b7936621b7cf89fb2"
+        },
+        {
+          "bytes": 778,
+          "ruta": ".agent/memory/sessions/2026-09-11_9d9a1248.json",
+          "sha256": "b95a0821b460d46d2d9cc4cef4ff4451856578434d55adb43637121e6951af64"
+        },
+        {
+          "bytes": 4912,
+          "ruta": ".agent/memory/sessions/2026-09-14_1441d3e1.json",
+          "sha256": "3acc0238e456999995ea6bfbcc72fffb27add5699b06dc740cd64f06b2b6c4eb"
+        },
+        {
+          "bytes": 778,
+          "ruta": ".agent/memory/sessions/2026-09-14_eee6a379.json",
+          "sha256": "f8c09a9b8356fdc48e49b0ef641b47ac6d735f7b95fa4608ecefcd4d424afb7b"
+        },
+        {
+          "bytes": 4803,
+          "ruta": ".agent/memory/sessions/2026-09-19_3b0f3a94.json",
+          "sha256": "92d92bc253848b21cbb1c18f2e704dd00ba45033bac9f3e37f1d4852a78d6ced"
+        },
+        {
+          "bytes": 778,
+          "ruta": ".agent/memory/sessions/2026-09-19_dfa27c04.json",
+          "sha256": "e010c72d99771663611026141737b6f360f804879586f16b01f27adc9348ee42"
+        },
+        {
+          "bytes": 1803,
+          "ruta": ".agent/memory/target_index.json",
+          "sha256": "d4743a375781713a9a730a1424dece1a2c65a6ebe76f4ad84284f63251b53bc8"
+        },
+        {
+          "bytes": 143,
+          "ruta": ".agent/memory/url_guard_force_events.json",
+          "sha256": "f30292aeeb74bafdce5769f64bfc2625753e49d288c1474224e6e666f59b3a3b"
+        }
+      ],
+      "sha256_del_inventario": "d65bcf454b6929a0fc61dd89f47293b59f4394b8d258e9fbbbf7d3c87e81ad48"
+    }
+  },
+  "schema": "iah-run-control/1.0",
+  "source_hashes": {
+    "data/hotel_observations/observations.json": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "1efa6cd142b70e3edf91412d2f4cd9d868cb2efc6a797bffcc633920be422f7f",
+    "main.py": "ee59b81583abaf46ecbb187cb6d883071c5cb63476f7d5e1e2f115f1d117bca3",
+    "modules/data_validation/whatsapp_contract.py": "028fbec80e6230fb74d78e6a8ac0dedd30f03c1e3ed1da766027d9ccfac36416",
+    "modules/delivery/delivery_packager.py": "87f218204dfc48c8899bc1afd047084de99ab04b7af0bdf51e0088b3be033e7b",
+    "modules/quality_gates/tribunal/judge.py": "5b3e9bcbf5bf6ab08ca50e0e92c6ac8dc422b468b106cfd658507b45b2cefc35",
+    "modules/quality_gates/tribunal/outcome.py": "bc1078a4a44cc42d06dc5819b14a58d4cfc047dbc778b389c12302847e1299a8",
+    "modules/quality_gates/tribunal/review_inputs.py": "848062a2d4df7b7bc08c93ffdb9f013368d2fbeee6b4fb8a5945f95b934aab2f",
+    "modules/utils/redaction.py": "4dff37537a6da33dcbcb3adebdb7a79209dafb2ee44c4b1afe03e3488a6a9365",
+    "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/clientes/hotel_don_alfonso_onboarding.yaml": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734"
+  },
+  "terminado_en": "2026-10-07T14:34:09.761933+00:00"
+}

@@ -1,0 +1,361 @@
+{
+  "archivos": 70,
+  "directorios_recorridos": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "errores": [],
+  "faltantes_declarados": [],
+  "inventario": [
+    {
+      "bytes": 499,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/clientes/hotel_don_alfonso_onboarding.yaml",
+      "sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734"
+    },
+    {
+      "bytes": 19190,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261007_093402.md",
+      "sha256": "ab1918b0762d03db68242bdf09efa1ce126e31d2d0d945bcdad43fd2756768a5"
+    },
+    {
+      "bytes": 15405,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/02_PROPUESTA_COMERCIAL_20261007_093402.md",
+      "sha256": "442e361c8625737aa9f99f8353cc9067b39c4cd2a831c1051d159cd8df3642c8"
+    },
+    {
+      "bytes": 19190,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/_review_inputs/run_20261007T093402/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261007_093402.md",
+      "sha256": "ab1918b0762d03db68242bdf09efa1ce126e31d2d0d945bcdad43fd2756768a5"
+    },
+    {
+      "bytes": 15405,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/_review_inputs/run_20261007T093402/propuesta/02_PROPUESTA_COMERCIAL_20261007_093402.md",
+      "sha256": "442e361c8625737aa9f99f8353cc9067b39c4cd2a831c1051d159cd8df3642c8"
+    },
+    {
+      "bytes": 70191,
+      "estado_de_entrega": "PAQUETE_PUBLICADO",
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/deliveries/hotel_don_alfonso_20261007.zip",
+      "sha256": "487f5800c1410b167c0338862ec5991c207fac0a418315f62ff5e2dfe409929d"
+    },
+    {
+      "bytes": 14270,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/health_dashboard/health_dashboard.html",
+      "sha256": "e941c409f2e307627fde3a558eaa4ca8f184a074451a8afa5792b20b196adbae"
+    },
+    {
+      "bytes": 1088,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/health_dashboard/health_dashboard_summary.json",
+      "sha256": "5bc6f51e35964d0778d8658f7243078af76dcdf608eb0e74901130bdce585fe9"
+    },
+    {
+      "bytes": 2119,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/alt_text_guide/ESTIMATED_guia_alt_text_20261007_093402.md",
+      "sha256": "154f64c0239920ef61a7ed74dcd1caf45d51960f185d10e94154cb3b359170c5"
+    },
+    {
+      "bytes": 816,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/alt_text_guide/ESTIMATED_guia_alt_text_20261007_093402_metadata.json",
+      "sha256": "f8766fb540c7241e0cf50e37cfb06e43f57edda8fd63fb3b15e5e22fba1c72fe"
+    },
+    {
+      "bytes": 5010,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261007_093402.md",
+      "sha256": "e6aa67b9c67405f7144dd88303b4bb96df2274cf28dfe62bb41ec1115bc3c21c"
+    },
+    {
+      "bytes": 817,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261007_093402_metadata.json",
+      "sha256": "70405e028e82b4b0da14b4cf665f4e7709d103e8c4dac25fbfde94fe79cb2369"
+    },
+    {
+      "bytes": 874,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/faq_page/ESTIMATED_faqs_20261007_093402.json",
+      "sha256": "df1b7289897b0ec3463efd215ba91f9594be708774c11e373fda70b4635eedba"
+    },
+    {
+      "bytes": 826,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/faq_page/ESTIMATED_faqs_20261007_093402_metadata.json",
+      "sha256": "e92d0f4eecb93191aaab8353b8dfa4bfd3e4a5fc957dd7b193324295d61b78bc"
+    },
+    {
+      "bytes": 1689,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/faq_schema.json",
+      "sha256": "36aa325527fa432b5e0a34c71ea7df07ca7626796f813916c76476d4e8f2e861"
+    },
+    {
+      "bytes": 1011,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/geo_badge.md",
+      "sha256": "948847352f59d18eacd4f6270088d175c6213625a5de02ad7d1df58b9ce7cd0a"
+    },
+    {
+      "bytes": 561,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/geo_checklist_min.md",
+      "sha256": "8745900731af13e85f0df243a59105479121a5e5e0de4f1b3a7ee61b5c8c6868"
+    },
+    {
+      "bytes": 2925,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/geo_dashboard.md",
+      "sha256": "3113e8cfe45b3d6e3bf0bcfa426a1e8a33a6e0e017555fcee3a90854f2a68b1c"
+    },
+    {
+      "bytes": 2418,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/geo_fix_kit.md",
+      "sha256": "55fa480e96445d3197173b4b7d30b127c30c4739bf088dba820f229590220587"
+    },
+    {
+      "bytes": 1073,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/hotel_schema_rich.json",
+      "sha256": "7b27aa24abc03ad5278a294e6eb5f5cd5bbc4894cf6475f20898b1639bdc02bf"
+    },
+    {
+      "bytes": 1065,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/llms.txt",
+      "sha256": "b641054c70ac22166fb634c2ccdb452d93f2a1230566c147e819e92b2e6cee0e"
+    },
+    {
+      "bytes": 1823,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/robots_fix.txt",
+      "sha256": "4122d5933a00eff374684d1fc37288c414bba93ddc403f244f39b9eea559ceea"
+    },
+    {
+      "bytes": 847,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/seo_fix_kit.md",
+      "sha256": "abf6f03848405dd48f14ea07101e23e7347f5aadd72760ca17606b9ea8ddecad"
+    },
+    {
+      "bytes": 959,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/geo_enriched/sync_report.md",
+      "sha256": "595906232b128b53ac880549b5b485bb41c99f30c8266664fad0e6a3bc50af1e"
+    },
+    {
+      "bytes": 938,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/hotel_schema/hotel_schema_20261007_093402.json",
+      "sha256": "c91df99855c6cbe0191d6619795aa8d7583f7a4ef6677537e11046f7f7aae981"
+    },
+    {
+      "bytes": 892,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/hotel_schema/hotel_schema_20261007_093402_metadata.json",
+      "sha256": "bc94aa7266a687deb6612f97452b750f98b26647a06034c90a3dd031da42331d"
+    },
+    {
+      "bytes": 5235,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261007_093402.md",
+      "sha256": "53e92a90fd466057ca23383df9a64ad4603e11abe982c1c4f9b9bc55942e385e"
+    },
+    {
+      "bytes": 836,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261007_093402_metadata.json",
+      "sha256": "893d318cb9ef5cf9b3f21f022525a13cb5cda06e0d90ac47092aac9ba013762c"
+    },
+    {
+      "bytes": 769,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/llms_txt/llms_20261007_093402.txt",
+      "sha256": "d87d8ebdeae138d14ffdd92f39a0f4f1a40554747f9a95138a112045e33a3f30"
+    },
+    {
+      "bytes": 889,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/llms_txt/llms_20261007_093402_metadata.json",
+      "sha256": "3f7207a5b27bfcff1c474f8b03e56d837beb1622b9f36a0d65ed15d6758a5328"
+    },
+    {
+      "bytes": 27171,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/local_content_page/contenido_local__20261007_093402.md",
+      "sha256": "a85f2da58a817abb0d4fb59bed111b05a66835690386f536699cf07fde976e4c"
+    },
+    {
+      "bytes": 830,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/local_content_page/contenido_local__20261007_093402_metadata.json",
+      "sha256": "0000c2294857bf4151e0084e888633c31b0a1a079a6f5cf9df44d66d4bc3e9b6"
+    },
+    {
+      "bytes": 5401,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/monthly_report/informe_mensual_20261007_093402.md",
+      "sha256": "031ffcecf27a9483a8a8821fafbf3663f801143e203c690436eff11d22c6700f"
+    },
+    {
+      "bytes": 778,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/monthly_report/informe_mensual_20261007_093402_metadata.json",
+      "sha256": "9468dc11b55fbc879aa13f3b317fe47804f7860db63354691cd0cbe0961ea9d8"
+    },
+    {
+      "bytes": 1630,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/og_tags_guide/ESTIMATED_guia_og_tags_20261007_093402.md",
+      "sha256": "f4aa83bc7154bf565db2209d378d1ef026ea4819c736143928a74ea48e1a8d70"
+    },
+    {
+      "bytes": 811,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/og_tags_guide/ESTIMATED_guia_og_tags_20261007_093402_metadata.json",
+      "sha256": "fe253c9141112e256b4a4960e54974cc3fbefecd8272265bbe14e1645f7d16ad"
+    },
+    {
+      "bytes": 2026,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/open_graph/open_graph_meta_20261007_093402.html",
+      "sha256": "4c3f6d8c41c015b598ee3912aaba2d61a421de2bd94513580ae70ae45019ced7"
+    },
+    {
+      "bytes": 808,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/open_graph/open_graph_meta_20261007_093402_metadata.json",
+      "sha256": "116400c9230a6bac2494134cb240650293fb03163f3bc20cd3fef441be1f242a"
+    },
+    {
+      "bytes": 5360,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/optimization_guide/ESTIMATED_guia_optimizacion_20261007_093402.md",
+      "sha256": "44f2ca809485762d2eb92bc2bded3f9fdac3ca7bf168b275de475e216634bedb"
+    },
+    {
+      "bytes": 946,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/optimization_guide/ESTIMATED_guia_optimizacion_20261007_093402_metadata.json",
+      "sha256": "8f3cd16263fa331f249e449f3b37b251e096e6ced45582a073224c67b8da5547"
+    },
+    {
+      "bytes": 100,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/org_schema/ESTIMATED_org_schema_20261007_093402.json",
+      "sha256": "c428dcc0b03953484eca49dcbc8f05f88ea20e251da087292e69d5bc89c44ca7"
+    },
+    {
+      "bytes": 829,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/org_schema/ESTIMATED_org_schema_20261007_093402_metadata.json",
+      "sha256": "d44a2beb032b690e919dbb4b3eefcc2aae38363466eb2d2ab9db7b8e5e48d631"
+    },
+    {
+      "bytes": 264,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/research_0d5cb24582ce_Hotel_Don_Alfonso.json",
+      "sha256": "f61a6160ae4c0355fb9919c39f5fda93a0e446cc28c4f3429a6dfae1b00222d1"
+    },
+    {
+      "bytes": 479,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/review_plan/ESTIMATED_plan_reviews_20261007_093402.md",
+      "sha256": "261c6edcc471a7c06a2bfef3853db1133f2dda3c7b2544440dd6062bbb31fed0"
+    },
+    {
+      "bytes": 841,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/review_plan/ESTIMATED_plan_reviews_20261007_093402_metadata.json",
+      "sha256": "22517acae38431b4f5d7a708924cd77c088d649017237a75b2caae828b04cd09"
+    },
+    {
+      "bytes": 3837,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/acta_revision.json",
+      "sha256": "773197caa85920bec0ec493f4f8b2f1b734db02abbff762333250c5625c2224b"
+    },
+    {
+      "bytes": 2449,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/acta_revision.md",
+      "sha256": "e531d2ca62be9912abcdd0ed5b3c1bf1ca28cea030e1f17816ae344fca135957"
+    },
+    {
+      "bytes": 12190,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/asset_generation_report.json",
+      "sha256": "8e447005d3a12a4adfb794fb3fb83eabaf23bc9c002f99ec4d5f4f5592ad1f8b"
+    },
+    {
+      "bytes": 10438,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/audit_report_20261007_093348.json",
+      "sha256": "8577ca3991ad31885025050c050ccc4ac28c0a9acd63a7f75afa95e5b9675241"
+    },
+    {
+      "bytes": 1661,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/coherence_pre_gate_20261007_093358.json",
+      "sha256": "aa4829b4d5c6ac68e58a934f7d01d736b684609aea16f88aa740955a0bfad4e0"
+    },
+    {
+      "bytes": 1391,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation.json",
+      "sha256": "a54a67a3574f8b8f02258d4adee355b896eb0fc431e6291b07230e145a15b76f"
+    },
+    {
+      "bytes": 1391,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation_post_gen.json",
+      "sha256": "a54a67a3574f8b8f02258d4adee355b896eb0fc431e6291b07230e145a15b76f"
+    },
+    {
+      "bytes": 890,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/commercial_gates_report.json",
+      "sha256": "31cfe1eea6c5925bd3f2aa0a2749226faabedd67f483f529a1902d5e307398f5"
+    },
+    {
+      "bytes": 3556,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/commercial_gates_report_diagnostic_20261007_093402.json",
+      "sha256": "ad11f30d5c0f8697e6019e98e933a8574709a6103589cf966a0b9d57aae94359"
+    },
+    {
+      "bytes": 1877,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/delivery_quality_report.json",
+      "sha256": "2519b26e6683ae1e644ce42c57ab99d62ed3a76bf68a06d811cd45f8be9c5c41"
+    },
+    {
+      "bytes": 2232,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/financial_scenarios_20261007_093348.json",
+      "sha256": "bf141810b00250ed172d1ae4b47b808f1422057a33568ce392829ce3dfda0c94"
+    },
+    {
+      "bytes": 8141,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/gate_report_20261007_093402.json",
+      "sha256": "8badfb4f2f133d61b3879b96cc8dae224e666d59138c675941d94615141974f2"
+    },
+    {
+      "bytes": 5614,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/geo_flow_result.json",
+      "sha256": "502f735fee9778b122c707d1f71bcce3d2ef5cb2026283c614b764db849399b0"
+    },
+    {
+      "bytes": 688,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/human_checklist.md",
+      "sha256": "b5b754aa3ae956455215f1c9c609e3be4dc41a3489d7b5aa983a6ac6ff4929ec"
+    },
+    {
+      "bytes": 700,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/ia_readiness_report.json",
+      "sha256": "10cd488921d2ca2174551380d496643e2319a8cb514fb40bafc7ed485d9e1586"
+    },
+    {
+      "bytes": 3995,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/pain_ledger.json",
+      "sha256": "7186888af3906406ef5444874e3ce0d326d7d65dc6548a6b7a255fddce7322b8"
+    },
+    {
+      "bytes": 4212,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/pain_ledger_resolved.json",
+      "sha256": "5f80e146824df9da1cb8a6ec6aa98525152091c14fdbc4f3f2ff4b5aa7b9f195"
+    },
+    {
+      "bytes": 3681,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/proposal_asset_matrix.json",
+      "sha256": "172bc3036b28c4e22bbbf4032da1dbb5cb7916efa28d2de5e52f82ec46a771f8"
+    },
+    {
+      "bytes": 1453,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/review_input_manifest.json",
+      "sha256": "7857c8bbbcc982055d90a0472a5f42b25ea084f62819659895fcbd133a267064"
+    },
+    {
+      "bytes": 4387,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/revision_alineacion.json",
+      "sha256": "9e0aa7bfe46b81355759d9b89027161b066029bdc6bd2b4143c65f2da471ec33"
+    },
+    {
+      "bytes": 4581,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/revision_assets.json",
+      "sha256": "a63d70928934cebbfdcadc67a05ca00e92ab738ccdae510d28a2fde8a6e7bac6"
+    },
+    {
+      "bytes": 1319,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/revision_diagnostico.json",
+      "sha256": "585c0d01fe8f05e45de054aadc6446f3fa33bfc0a6bf11edf552138549f79154"
+    },
+    {
+      "bytes": 4613,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/revision_honestidad.json",
+      "sha256": "0f638a342e6f188c5f07fc559bf3d83462af5dfbf22fed48d8a398db516f4cf1"
+    },
+    {
+      "bytes": 5922,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/hotel_don_alfonso/v4_audit/site_presence_snapshot.json",
+      "sha256": "6d8710b43b50d7ebc0b6ac46403668fb3a5266fd8ae58202fa3bb1dd04c234dd"
+    },
+    {
+      "bytes": 23057,
+      "ruta": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/v4_complete_report.json",
+      "sha256": "b1bcba711b32ec275e3fd45dc758487fc50aceb103ed671d680a5acbbca56aaa"
+    }
+  ],
+  "regla": "se preserva el inventario y sus hashes antes de cualquier analisis; un miembro ausente se nombra, no se infiere",
+  "schema": "iah-fase-h-inventario-post/1.0"
+}

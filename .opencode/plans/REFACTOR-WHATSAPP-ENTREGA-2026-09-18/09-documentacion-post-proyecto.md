@@ -56,6 +56,13 @@ Estado al 2026-09-24: **cuatro fases cerradas con su documentación incremental 
 | **FASE-G: rojo preexistente con causa medida** | `test_medido_contra_el_predecesor_entra_en_alcance_y_su_forma_es_conforme[2026-09-11-…]` está rojo desde `9c4a001` (archivó `TRIBUNAL-ENFORCEMENT-OBS-2026-09-11` y `clasificar_planes` solo mira hijos directos de `.opencode/plans/`). G lo conserva igual en PRE y POST, sin excluirlo ni cambiar su expectativa | FASE-G → dueño: deuda del verificador de capitalización ⟦— **cerrada la deuda el 2026-09-27 y con ella esta fila**: `clasificar_planes()` dejó de saltar `Archives/` (decisión (a-prima) de S29, fuente única `…/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md` §S29). El test pasó con su aserción intacta; la medición PRE/POST por población está en `evidence/…/CIERRE-ORDEN-2026-09-25/S29-A-PRIMA-2026-09-27/`⟧ |
 | Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) también en G** (2026-09-20): el instrumento sigue pidiendo el transcript. Auto-reporte en unidad contable (9 rutas tocadas, 2 corridas de baseline + 1 extendida, 7 mutaciones, 2 quicks) con corte de código y corte documental separados; **no se comparó con la referencia de 60 porque esa unidad no era medible** | Todas |
 | Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) en A**: el instrumento pide el transcript y su acceso no está disponible; se declara **corte documental** y auto-reporte con su unidad, sin sumarlo al instrumento | Todas |
+| **FASE-E2E: sello de regresión y denominadores** | Regresión completa **1 failed / 5.134 passed / 41 skipped / 4 xfailed en 392,32 s (EXIT 1)**, crudo con su `EXIT=` dentro del comando; el único rojo es el ajeno y dependiente del orden del piloto JEV, que **pasa 15/15 aislado**. **Reconciliación medida con el método canónico** (`grep -rE "^\s*def test_" tests --include=*.py`): **5.040 en `1c20695` → 5.045 en `d571277` → 5.049 en `6fd39c2` y en el árbol**, o sea **+9 funciones** desde H y no +12: b1 aportó 5 funciones / 8 casos (un `parametrize` suma 3) y b1-bis 4 funciones / 4 casos. Las baterías de H son **67 funciones / 70 casos**, así que el «70 passed» citado es **conteo de casos** | FASE-E2E |
+| **FASE-E2E: corrida única consumida** | **1 de 1**, el 2026-10-07 a las 14:32:13Z. `run_control.json`: `attempts: 1`, `estado: FINALIZADO`, `exit_code: 0`, `pid: 30576`, 116 s, argv literal de 11 piezas con `--permission-mode auto` y `argv_sha256 b5748891…`. Un solo `--spawn`, sin lanzamiento manual del argv y sin segunda corrida | FASE-E2E |
+| **FASE-E2E: coherencia, veredicto y ZIP observados** | Coherencia **0.9172**; veredicto **`APROBADO-CONDICIONAL-PENDING-ONBOARDING`** con tier **B+** y `first_floor_rule` aplicado (evidence_tier B+ capado a condicional); **13 gates = 11 PASSED + 2 WARNING, 0 fallidos, 0 bloqueantes**; `readiness: READY_FOR_PUBLICATION`; **ZIP publicado** `hotel_don_alfonso_20261007.zip`, 70.191 bytes, sha `487f5800…`, **57 entradas**, `package_evidence.suppressed: false`. Diferencia de fondo contra el baseline: allí READY convivió con supresión; aquí convive con entrega | FASE-E2E |
+| **FASE-E2E: AC20 en flujo real** | Los tres puntos sobre artefactos vivos: `critical_recall` con `value: 1.0` **y** `details` fundado (`critical_issues_count: 3`, `recall_basis: all_critical_issues_detected`); `reviewer_reports[].findings` con causas (0 critical); `package_evidence` en la rama publish con hash y conteo. El par del contrafactual de FASE-0 se observó tal cual | FASE-E2E (confirma FASE-0) |
+| **FASE-E2E: lo que NO se ejercitó** | **Medición IAO del `LLMMentionChecker`: NO EJERCITADO** — la unidad cae con un `AttributeError` dentro de `def _parse_mentions`, porque `def check_mentions` toma `result["text"]` sin guarda de None y la rama devolvió nulo; por eso el `audit_report` de hoy **no lleva** `providers_used`, a diferencia del del baseline. **Rama WhatsApp: NO EJERCITADA**, predicho por el maestro y observado (`[RC1] whatsapp_button: ninguna brecha candidata`). **Proveedor de LLM por unidad: no acreditable** — el campo es agregado de una sola unidad, nunca por revisor (premisa falsa del prompt, S-E2E-2) | FASE-E2E → VERIFY |
+| **FASE-E2E: tests, quick y derivados** | **0 funciones de test nuevas** (la fase no edita producto ni tests); quick **13/13** antes del spawn y **13/13** al cerrar, con las baterías de H en **70 passed** tras la re-emisión del preflight — **re-ejecutadas después del spawn dieron 2 failed / 68 passed**: dos guardas asertaban que el control productivo no existía y el consumo legítimo del intento las venció. **Re-ancladas con autorización del operador a revisión fija + caracterización, 70 passed de nuevo, con dientes medidos (5/5 mutantes atrapados)**. El quick **no ejecuta pytest**, así que no veía esos dos rojos. Commit, L3 y push **en la orden literal del operador del 2026-10-07**, con `captura_stdout.txt` excluido del versionado y el sha al sello de RELEASE. **Sin tag, QMind ni `DOMAIN_PRIMER`** | FASE-E2E |
+| Presupuesto de iteraciones | **FUERA DE SERVICIO (R2.1) también en E2E**: el instrumento pide el transcript y su acceso no estuvo disponible. Auto-reporte con unidad propia: 1 spawn, 1 re-emisión de preflight, 2 quicks, 1 batería de H, 1 sonda de conectividad, 7 artefactos de evidencia. El corte de esta fase es **documental**, no de código, y la ausencia de commit no es un corte «no consumado» | FASE-E2E |
 
 ## Sección E: Archivos afiliados actualizados
 
@@ -248,3 +255,43 @@ AC9/AC12/AC13/AC14/AC15/AC17 y cuatro casilleros de prerrequisitos/controles), `
 H y E2E + cierre documental), `09` y `10` (secciones y fila de la fase), `CHANGELOG.md` bajo `## [Sin publicar]`
 y `docs/GUIA_TECNICA.md`. Derivados regenerados con su escritor al cerrar: packs, índice de lecciones + `--check`,
 referencias, citas y `wiring_report.json`.
+
+## Cierre incremental de FASE-E2E (2026-10-07)
+
+**La fase se abrió con un bloqueo medido y se cerró con la corrida hecha.** Antes del spawn, el check libre
+`run_once.py --preflight` fallaba con `DivergenciaDeHash` en **el propio runner**: el preflight había congelado el
+blob de `run_once.py` en `d571277` (`ff114aff…`) y el commit `6fd39c2` (b1-bis) enmendó ese mismo archivo
+(`1efa6cd1…`). Como `ARCHIVOS_CONGELADOS` incluye al runner, **editar el instrumento vence su propio preflight**. El
+rechazo caía antes de `reservar`, así que el intento sobrevivió; la cura fue preservar el crudo versionado
+(`preflight_2026-10-07_emision_b1_hash_vencido.json`, sha `a0947be1…` idéntico en disco y en el blob de HEAD) y
+re-emitir con `--emitir-preflight`. **Medición de la re-emisión: se movieron exactamente 2 campos** — `emitido_el` y
+el hash del runner; argv, identidades, snapshot, los otros 9 hashes y las pruebas de cero lanzamiento quedaron
+idénticos. Después: `--preflight` EXIT 0, baterías de H 70 passed, quick 13/13.
+
+**Sonda de red con hallazgo sobre el propio instrumento.** La resolución DNS local del host destino es inestable: al
+re-medir, **0/5 fetches** resolvieron, y sin embargo la corrida obtuvo datos reales de la página. Dos correcciones
+que se hicieron en camino: una primera sonda usó `pagespeed.googleapis.com`, que no es el host del producto
+(`PageSpeedClient.__init__` usa `www.googleapis.com/pagespeedonline/v5/runPagespeed`, vivo), y se reportó mal el recuento
+de la tanda de la sonda («200 dos veces» cuando la medición sostenible es un 200 observado y una re-medición 0/5).
+**Se retracta y se re-emplace en la evidencia.**
+
+**Resultado observado: la meta de entrega se alcanzó.** Ver §1 a §6 de
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/resultados-y-observaciones.md`. Lo que interesa al acumulado:
+`APROBADO-CONDICIONAL-PENDING-ONBOARDING` con tier B+, 11 PASSED + 2 WARNING y 0 fallidos, y **ZIP publicado con 57
+entradas**. AC20, que FASE-0 había cerrado offline sobre el acta archivada, se ejercitó en el flujo real en sus tres
+puntos; el `VACUOUS_RECALL` que suprimió el baseline no reapareció.
+
+**Deuda abierta por la corrida, con dueño (S-E2E-1 a S-E2E-10 en el informe).** La más cara: el `LLMMentionChecker`
+cayó y se llevó consigo la medición IAO del único intento permitido. Le siguen el `finding_type` que se pierde al
+proyectar el acta (el revisor escribe `type`), un ZIP publicado sobre un revisor que pedía `DEVOLVER-PRUEBAS`,
+`preflight.sha256` nulo en el control, y **material de credencial enmascarado en `captura_stdout.txt`** impreso por
+`config_checker._check_env_variables` que el sumidero de F no reconoce — esa captura no debe comitearse sin decisión del operador.
+Y la deuda heredada que la corrida **materializó**: las 8 sesiones de `.agent/memory/sessions/` que el snapshot
+anunciaba se borraron; el inventario con sha256 prueba que existieron, `.gitignore:38` impide restaurarlas.
+
+**Archivos afiliados tocados por E2E.** Producto: **ninguno** (la fase no diseña ni repara). Tests: **ninguno**.
+Evidencia: 7 artefactos bajo `evidence/…/FASE-E2E/` (informe, preflight verificado, `run_control.json`, inventario
+post-corrida, dos capturas redactadas y crudo del spawn) más `FASE-H/preflight.json` re-emitido y su crudo preservado.
+Docs del plan: `05-prompt-inicio-sesion-fase-E2E.md` (estado y los seis casilleros), `06-checklist-implementacion.md`
+(fila E2E, filas AC12/AC17/AC20 y cuatro casilleros de controles), `dependencias-fases.md` (fila E2E), `09` (Sección D
+y esta sección) y `10` (fila de la fase). Sin write-back a QMind, sin `DOMAIN_PRIMER`, sin tag.

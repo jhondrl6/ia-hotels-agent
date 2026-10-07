@@ -1,0 +1,7 @@
+LLM Mention Checker failed: 'NoneType' object has no attribute 'lower'
+[BookingScraper] HTTP 202 from Booking.com
+[DataAssessment] Research gaps: ['Source not checked: booking']
+[LLMSTXTGenerator] 'region' not found in hotel_data. Geographic context will be limited. Ensure audit_data/hotel_data includes region.
+[LLMSTXTGenerator] 'city' not found in hotel_data. Location context will be limited.
+[LLMSTXTGenerator] Neither 'usp' nor 'description' found in hotel_data. Quote section will use PENDING marker.
+WARNING:modules.commercial_documents.v4_proposal_generator:[RC1] whatsapp_button: ninguna brecha candidata ['whatsapp_conflict'] presente en opportunity_scores — brecha sin costo atribuible (sin cifras inventadas)

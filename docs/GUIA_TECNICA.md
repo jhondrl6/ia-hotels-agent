@@ -2786,3 +2786,69 @@ allowlist de H acotaba el código nuevo al runner. S-H4 es del arnés de tests: 
 stub de `selenium` en `sys.modules` y rompe la colección de las rutas que lo siguen, en cualquier orden de
 argumentos — por eso la selección de H se midió en dos unidades y no en una. S-H6 recuerda que el spawn borra
 memoria compartida (`cleanup_old_sessions(days=20)` alcanzaba 8 de 10 sesiones).
+
+## Nota Técnica — FASE-E2E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-07)
+
+**Qué gobierna esta nota.** El único intento del plan **está consumido**: 1/1, acreditado por
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/run_control.json` (`attempts: 1`, `estado: FINALIZADO`,
+`exit_code: 0`, `pid: 30576`, 116 s). No existe segunda corrida posible: `reservar` usa `O_CREAT|O_EXCL` sobre ese
+mismo archivo y `transicionar` no baja `attempts` ni reabre un estado terminal. Quien necesite otro `v4complete` sobre
+este hotel requiere sesión y alcance autorizados, no un reintento.
+
+**La entrega que produjo.** Veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING` con tier B+ (la regla de primer piso
+capa el máximo por tier), 13 gates con 11 PASSED + 2 WARNING y 0 fallidos, coherencia 0.9172, y **ZIP publicado** en
+`output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/deliveries/hotel_don_alfonso_20261007.zip` — 70.191 bytes,
+sha256 `487f5800…`, 57 entradas, `package_evidence.suppressed: false`. La acta está en
+`…/hotel_don_alfonso/v4_audit/acta_revision.json` con sus cuatro revisores y causas.
+
+**Lo que la nota anterior de H dejaba dicho sobre el argv sigue vigente y se verificó en vivo:** el spawn lanzó las 11
+piezas literales con `--permission-mode auto`, `argv_sha256 b5748891…`. El runner no añadió bandera alguna y el argv
+nunca se ejecutó a mano.
+
+**Propiedad del instrumento que conviene conocer antes de volver a tocarlo.** `run_once.py` está dentro de su propia
+lista `ARCHIVOS_CONGELADOS`, así que **cualquier edición del runner vence el preflight que él mismo exige**. Eso fue
+exactamente lo que pasó: el preflight congeló el blob de `d571277` y el commit `6fd39c2` enmendó ese archivo, y el
+check libre `--preflight` empezó a fallar con `DivergenciaDeHash`. El rechazo cae **antes** de `reservar`, así que la
+reserva sobrevive a la deriva — pero la fase se detiene. La operación correcta es preservar el crudo versionado con su
+sha256 y re-emitar con `--emitir-preflight`, que no consume el intento; después conviene medir **cuántos campos** movió
+la re-emisión (esta vez fueron 2: `emitido_el` y el hash del runner). **La emisión del preflight debe ser el último
+paso tras la última edición de los 10 congelados**, y hoy no hay verificador que lo recuerde.
+
+**Cómo leer la evidencia de la corrida.**
+
+```bash
+# estado del intento (sin relanzar): lea el control, no la narracion
+./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py --watch
+# que se preserv y qu falt (inventario con sha256 por archivo)
+sed -n '1,40p' evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/inventario_post_corrida.json
+```
+
+**Dos trampas medidas esta sesión, para quien repita el procedimiento.** (1) El envoltorio de consola del runner
+muere con cp1252 al imprimir la captura (`UnicodeEncodeError` sobre una flecha), **después** de preservar todo: el
+`EXIT=1` del shell no es el exit code del hijo, que es 0 y está en el control. Imprima con `PYTHONIOENCODING=utf-8`.
+(2) La sonda de conectividad debe ir **por fetch y contra el host real del producto**: `getaddrinfo`/`gethostbyname`
+son poco fiables en esta máquina (la resolución del destino cayó 0/5 al re-medir mientras la corrida obtenía datos
+reales de la página), y `pagespeed.googleapis.com` no es el host que llama `pagespeed_client.py` — el real es
+`www.googleapis.com/pagespeedonline/v5/runPagespeed`.
+
+**Límites que esta nota no cierra.** La medición IAO del `LLMMentionChecker` **no se ejercitó** por un
+`AttributeError` en `llm_mention_checker.py:498` (falta guarda sobre `result["text"]`, `:192`) y con ella se perdió
+`providers_used` en el `audit_report`: en la única muestra disponible, ese campo no está. La rama WhatsApp no la toca
+la ruta viva de este hotel, así que AC1/AC2/AC3/AC6 conservan régimen OFFLINE. `providers_used` **nunca fue un campo
+por revisor** — es agregado de esa unidad (`V4AuditResult.to_dict`), contra lo que pedía el prompt de E2E. El acta
+proyecta `finding_type` pero `honesty_reviewer` serializa `type`, así que su hallazgo llega sin tipo. Y
+`captura_stdout.txt` conservaba 4 formas `prefijo…sufijo` de credenciales que imprime
+`config_checker._check_env_variables` y que el sumidero de FASE-F no reconoce: **resuelto con decisión del operador**
+publicando `captura_stdout_saneada.txt` (cabecera con ruta, bytes y sha256 del original, 4 reemplazos declarados, diff
+exacto de 4 líneas sobre 353) y dejando el crudo intacto y sin versionar, porque su sha es la atadura que sostiene
+AC17. El hueco de fondo sigue abierto (S-E2E-11).
+
+**Si corres las baterías de H, hazlo sabiendo que gobiernan el estado post-corrida.** Las dos guardas de la reserva
+virgen (`test_fase_h_intento_unico.py` y `test_fase_h_onboarding_procedencia.py`) asertaban que
+`evidence/…/FASE-E2E/run_control.json` **no existía**; esa premisa la venció el consumo legítimo del intento, así que
+quedaron rojas hasta re-anclarlas. Ahora prueban dos cosas que sí pueden perder: que en el árbol de la **revisión fija**
+`6fd39c2` esa ruta no existía (o sea que H no la creó), y que el control vivo es del runner — `schema`, `attempts == 1`,
+`estado` del vocabulario, argv igual al congelado y `argv_sha256` recomputado. **Anclaje a revisión fija, nunca a
+HEAD**: HEAD avanza con el propio versionado de E2E y anclarlo al tip dejaría la guarda sin nada que perder.
+Las diez deudas con dueño están
+en `evidence/…/FASE-E2E/resultados-y-observaciones.md` §7; VERIFY certifica la matriz AC1–AC20 en su propia sesión.

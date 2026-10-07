@@ -1,0 +1,369 @@
+# --- saneado de esta captura (S-E2E-6) -------------------------------------------------
+# Original:        evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/captura_stdout.txt
+# Bytes original:  16931
+# sha256 original: 7dffa6f2c9ce8ef8919ede899328b5aefb5ce4ef1eb3340f301a037a9311ed23
+# Productor:       run_once.py (rama --spawn), captura stdout del hijo ya pasada por
+#                  redact_secrets/assert_redacted del contrato de FASE-F.
+# Reemplazos:      4 fragmentos con forma `prefijo...sufijo` producidos por config_checker
+#                  en _check_env_variables (imprime valor[:4]...valor[-4:]). Cada uno se
+#                  sustituyo por la etiqueta literal <CLAVE-CONFIGURADA-FRAGMENTO-RETIRADO-S-E2E-6>.
+# Motivo:          el sumidero de F no reconoce un valor ya enmascarado y el verificador de
+#                  secretos tampoco (sus patrones exigen 30+ y 20+ caracteres tras el prefijo),
+#                  asi que la publicacion del crudo seria silenciosa.
+# El ORIGINAL NO SE TOCO: run_control.json lo referencia por sha256 y esa atadura es prueba
+#                  de AC17. El crudo queda en disco sin versionar (decision del operador
+#                  2026-10-07, opcion A), igual que los packs briefing/ de este plan.
+# Nada mas se altero: lineas, orden y texto identicos al original fuera de los 4 fragmentos.
+# -----------------------------------------------------------------------------------------
+[INFO] Variables cargadas desde: C:\Users\Jhond\Github\iah-cli\.env
+============================================================
+VERIFICANDO CONFIGURACION DEL SISTEMA...
+============================================================
+[INFO] VERIFICANDO CONFIGURACION DEL SISTEMA...
+[INFO] Using DeepSeek as LLM provider
+[INFO] Using DeepSeek as LLM provider
+[INFO] Using DeepSeek as LLM provider
+
+==================================================
+REPORTE DE CONFIGURACION
+==================================================
+  [OK] Python 3.8+
+  [OK] requests
+  [OK] beautifulsoup4
+  [OK] selenium
+  [OK] pandas
+  [OK] openpyxl
+  [OK] reportlab
+  [OK] pillow
+  [OK] playwright (opcional)
+  [OK] lxml (opcional)
+  [OK] DEEPSEEK_API_KEY: <CLAVE-CONFIGURADA-FRAGMENTO-RETIRADO-S-E2E-6>
+  [OK] GOOGLE_API_KEY: <CLAVE-CONFIGURADA-FRAGMENTO-RETIRADO-S-E2E-6>
+  [OK] GOOGLE_MAPS_API_KEY: <CLAVE-CONFIGURADA-FRAGMENTO-RETIRADO-S-E2E-6>
+  [OK] PAGESPEED_API_KEY: <CLAVE-CONFIGURADA-FRAGMENTO-RETIRADO-S-E2E-6>
+  [OK] Permisos: ./output
+  [OK] Permisos: ./modules
+  [OK] Permisos: ./data
+  [OK] Permisos: ./temp
+  [OK] Directorio salida: output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  [OK] Conectividad: api.deepseek.com
+  [OK] Conectividad: api.anthropic.com
+  [OK] DeepSeek provider funcional
+  [OK] DeepSeek configurado correctamente
+  [OK] GapAnalyzer migrado
+  [OK] IATester migrado
+  Google Maps API Key disponible
+  Google Maps API Key formato válido
+  GBP_GEOGRAPHIC_VALIDATION_ENABLED configurado
+  Umbral de validación geográfica: 30.0km
+  googlemaps dependency instalada
+  geopy dependency instalada
+  GeoValidator inicializado correctamente
+
+[WARN]  ADVERTENCIAS (4):
+  -  Variable de entorno opcional no configurada: ANTHROPIC_API_KEY
+  -  OPENAI_API_KEY parece un placeholder (3 chars) - no cuenta como clave configurada
+  -  Variable de entorno opcional no configurada: GOOGLE_PAGESPEED_API_KEY
+  -  Variable de entorno opcional no configurada: WEBDRIVER_PATH
+
+[CHART] RESUMEN: 32 OK, 4 advertencias, 0 errores
+[WARN]  Configuracion aceptable - Puede continuar
+[OK] Configuracion validada - Iniciando analisis...
+
+======================================================================
+V4.0 COMPLETE - Flujo Integral con Módulos Reales
+======================================================================
+[HARNESS] Usando AgentHarness + Módulos v4.0 Python
+[HARNESS] Flujo de dos fases: Hook → Validación → Assets
+======================================================================
+[ROUTER] Loaded 1 skills
+
+📍 FASE 1: Hook Generation (Automático)
+----------------------------------------------------------------------
+🔐 Permission Mode: auto
+🎯 Hotel: Hotel Don Alfonso
+🌍 Región detectada: nacional
+[OK] Phase 1 iniciada: hotel_donalfonsohotel.com
+📊 Progreso: 0%
+
+💬 Hook Message:
+   Hotel Don Alfonso podria estar perdiendo entre **$1.890.000 y $6.300.000 COP mensuales** en comisiones de OTAs y reservas no capturadas por baja visibilidad en Inteligencia Artificial....
+
+📍 FASE 2: Validación Cruzada
+----------------------------------------------------------------------
+📂 Análisis previo encontrado: C:\Users\Jhond\Github\iah-cli\output\TAREA7-2026-09-19\v4_complete
+
+🔍 Ejecutando auditoría v4.0 con APIs...
+
+============================================================
+V4.0 COMPREHENSIVE AUDIT
+============================================================
+URL: https://www.donalfonsohotel.com/
+Timestamp: 2026-10-07T09:32:19.170042
+
+[1/5] Validating structured data schemas...
+      Found 0 schemas
+      Hotel: unknown
+      FAQ: unknown
+
+[1.5/5] Validating metadata (CMS defaults)...
+      CMS Detected: wordpress
+      Default Title: False
+      Default Description: True
+      ⚠️  1 metadata issues
+
+[2/5] Retrieving GBP data via Places API...
+      Found: Hotel Don Alfonso
+      Rating: 4.6/5 (218 reviews)
+      Geo Score: 63/100
+
+[2.5/5] Analyzing nearby competitors...
+   [INFO] Usando GooglePlacesClient con geo_score real
+      Found 5 competitors
+
+[2.7/5] Auditing AI crawler access...
+      Score: 0.50/1.00
+      Robots.txt: Not found
+
+[2.8/5] Analyzing content citability...
+      Score: 60.3/100
+      [ADVISORY] Blocks analyzed: 17
+
+[2.9/5] Detecting SEO elements...
+      Open Graph: True
+      Images with Alt: False
+      Active Social: True
+
+[2.10/5] Checking featured snippets (AEO)... [ADVISORY]
+      Source: stub
+      [STUB] Sin API key SerpAPI - medicion no disponible
+
+[2.11/5] Checking LLM mentions (IAO)... [ADVISORY]
+      [ADVISORY] LLM mention checker no disponible: 'NoneType' object has no attribute 'lower'
+
+[3/5] Checking performance metrics...
+      Status: LAB_DATA_ONLY
+      Lighthouse lab data available. Field data not yet available from Chrome User Experience Report.
+
+[4/5] Running cross-validation...
+      WhatsApp button detected in HTML
+      WhatsApp: estimated
+      ADR: estimated
+
+[5/5] Calculating overall assessment...
+
+[IA Readiness] Status: Critical
+
+============================================================
+AUDIT COMPLETE - Overall Confidence: estimated
+============================================================
+[OK] Auditoría completada
+   - Schema Hotel: unknown
+   - GBP Score: 63/100
+   - WhatsApp: estimated
+
+Report saved to: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\audit_report_20261007_093348.json
+   💾 Guardado: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\audit_report_20261007_093348.json
+   Region inferida desde GBP: eje_cafetero
+
+🔍 Validación Cruzada:
+   WhatsApp: Datos insuficientes para validación
+
+📍 FASE 3: Escenarios Financieros
+----------------------------------------------------------------------
+   ✅ Onboarding data loaded: 4 campos confirmados
+[HARNESS] Usando financial handlers v4.1.0 (regional_adr: active, pricing: active)
+[HARNESS] Contexto inyectado: 1 ejecucion(es) previa(s) encontrada(s).
+[HARNESS] OK Ejecutado en 0.01s - Outcome: success
+[HARNESS] Financial calculation completed via handlers
+
+💰 Pricing (Hybrid Model):
+   Tier: boutique
+   Monthly Price: $400,000 COP
+   Pain Ratio: 15.74%
+   GATE Compliant: ❌
+   Source: hybrid_v410
+[FASE-K] FinancialBreakdown derivado (camino unico):
+   Comision OTA: $6,468,000 COP
+   Evidence tier: B+, disclaimer: Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las proyecciones usan supuestos conservadores (shift 10%, IA boost 5%) no validados con tráfico real. Conecte Google Analytics 4 y Search Console para cifras exactas al peso.
+
+📍 FASE 3.5: Documentos Comerciales v4.0
+----------------------------------------------------------------------
+[OK] ValidationSummary creado con 5 campos:
+   [WARN] whatsapp_number: detected_via_html (estimated)
+   [OK] rooms: 11 (verified)
+   [OK] adr_cop: 330000 (verified)
+   [OK] occupancy_rate: 0.42424242424242425 (verified)
+   [OK] direct_channel_percentage: 0.3 (verified)
+[OK] Escenarios financieros validados:
+   Conservador: $6,176,940 COP/mes
+   Realista: $3,511,200 COP/mes
+   Optimista: $582,120 COP/mes
+[INFO] Diagnóstico se generará después de validación de coherencia...
+
+ Generando plan de assets...
+   Problemas detectados: 13
+   - Sin Schema Hotel: high
+   - Metadatos por Defecto: high
+   - Baja Preparación para IA: high
+   - SEO Local Bajo: high
+   - Sin Schema FAQ: medium
+   Assets planificados: 12
+   - hotel_schema: D-PF3 fallback 'generate_basic_schema': ausencia genuina con fuentes disponibles (confianza media 0.00 < 0.8 requerida por la brecha) (confidence: 0.8)
+   - optimization_guide: Insufficient confidence (0.70 < 0.8) (confidence: 0.8)
+   - faq_page: Insufficient confidence (0.00 < 0.7) (confidence: 0.7)
+   - org_schema: Insufficient confidence (0.00 < 0.7) (confidence: 0.7)
+   - review_plan: Insufficient confidence (0.00 < 0.6) (confidence: 0.6)
+   - llms_txt: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - local_content_page: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - analytics_setup_guide: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - indirect_traffic_optimization: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - og_tags_guide: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - open_graph: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   - alt_text_guide: Confidence 0.00 vs required 0.0 (confidence: 0.0)
+   [SitePresence] Verified 5 asset types on https://www.donalfonsohotel.com/
+   [DEBUG] problems_have_solutions: score=0.769, passed=True
+   [DEBUG] assets_are_justified: score=1.000, passed=True
+   [DEBUG] financial_data_validated: score=0.950, passed=True
+   [DEBUG] whatsapp_verified: score=1.000, passed=True
+   [DEBUG] price_matches_pain: score=0.800, passed=True
+   [DEBUG] promised_assets_exist: score=1.000, passed=True
+🔒 Gate de Coherencia:
+   Score calculado: 0.92 (umbral: 0.8)
+   Veredicto del validador: is_coherent=True
+   Checks: 6/6 pasados
+   📄 Reporte pre-gate: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\coherence_pre_gate_20261007_093358.json
+   [OK] Coherencia aceptable - Generando propuesta completa
+
+📍 FASE 4: Generación de Assets Validados
+----------------------------------------------------------------------
+[OK] Assets generados: 13
+   Fallidos: 0
+   Coherencia: 0.92
+   ✅ hotel_schema: PASSED
+   ✅ optimization_guide: WARNING
+   ✅ llms_txt: PASSED
+   ✅ local_content_page: PASSED
+   ✅ faq_page: WARNING
+   ✅ review_plan: WARNING
+   ✅ analytics_setup_guide: WARNING
+   ✅ indirect_traffic_optimization: WARNING
+   ✅ og_tags_guide: WARNING
+   ✅ open_graph: PASSED
+   ✅ alt_text_guide: WARNING
+   ✅ org_schema: WARNING
+   ✅ monthly_report: PASSED
+
+📍 [T4FIX] Regenerando diagnóstico POST-FASE4 (geo_flow ahora disponible)...
+[OK] Diagnóstico regenerado con coherence_score: 0.92 (gate: PASSED)
+   [SCRUB] Diagnostic (post-T4FIX): 1 fix(es) applied
+      - Moneda: "COP COP" -> "COP"
+   [FASE-6 G1] coherence_validation.json sincronizado con post-gen score=0.92
+
+📍 FASE 3.5: Generación de Propuesta Comercial
+----------------------------------------------------------------------
+   [SCRUB] Proposal (post-gen): 2 fix(es) applied
+[OK] Propuesta generada: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\02_PROPUESTA_COMERCIAL_20261007_093402.md
+   💵 Precio: $400,000 COP/mes | ROI: 8.8x
+
+📍 FASE 4.5: Publication Gates (Quality Checks)
+----------------------------------------------------------------------
+🔒 Publication Gates:
+   ✅ hard_contradictions: No hard contradictions detected (count: 0)
+   ✅ evidence_coverage: Evidence coverage at 95.0% (threshold: 95%)
+   ✅ financial_validity: All financial data validated - no default values detected
+   ✅ coherence: Coherence score 0.92 meets threshold 0.8
+   ✅ critical_recall: Critical recall at 100.0% (threshold: 90%)
+   ✅ ethics: Ethics validation passed
+   ✅ content_quality: Document quality checks passed: no issues detected
+   ✅ asset_confidence: 2 asset(s) below confidence threshold (0.7)
+   ✅ proposal_asset_alignment: 7/7 servicios comprometidos cubiertos (6 generados  + 1 ya en producción )
+   ✅ tier_c_onboarding_required: Tier B+: Datos suficientes para propuesta activa.
+   ✅ coverage_no_silent_drop: Coverage completo: 13 en diagnostico/propuesta, 0 justificadas de 13 detectadas
+   ✅ doc_audit_consistency: Document consistent with audit data — no contradictions detected
+   ✅ pricing_compliance: Pricing compliance PASSED with WARNING: pain_ratio 0.1574 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)
+
+📋 Publication Readiness: READY_FOR_PUBLICATION
+   ✅ Listo para publicación
+   📄 Gate report: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\gate_report_20261007_093402.json
+   [OK] Insumos de revision congelados: run_20261007T093402 (no exportable)
+
+📍 FASE 4.6: Consistency Checker (Validación Cruzada)
+----------------------------------------------------------------------
+🔍 Consistency Report:
+   Estado: CONSISTENTE
+   Conflictos Hard: 0
+   Conflictos Soft: 0
+   Confidence Score: 0.50
+
+📍 FASE 0E: Delivery Quality Report (Pre-ZIP Gate)
+----------------------------------------------------------------------
+   📄 SitePresence snapshot: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\site_presence_snapshot.json
+   Status: WARNING
+   Blocking: False
+   Gates: 4/5 passed
+   ⚠️  Human review items (1):
+      - G8: Asset specificity failed — 2 assets below confidence threshold
+   📋 Human checklist (5 items) → C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\human_checklist.md
+
+📍 FASE-T1: Tribunal Judge (Certificación — primera pasada)
+----------------------------------------------------------------------
+   Verdict (pre-revision): APROBADO-CONDICIONAL-PENDING-ONBOARDING
+   Evidence Tier: B+
+
+📍 FASE 7: Delivery Packaging (Automated — cuarentena)
+----------------------------------------------------------------------
+   [OK] Paquete en cuarentena: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\deliveries\hotel_don_alfonso_20261007.zip.tmp
+
+📍 FASE-T2/T4: Tribunal Reviewers (4 Bots)
+----------------------------------------------------------------------
+   [OK] Bot 1 Diagnóstico: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\revision_diagnostico.json
+   [OK] Bot 3 Assets: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\revision_assets.json
+[INFO] Using DeepSeek as LLM provider
+   [OK] Bot 2 Alineación: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\revision_alineacion.json
+   [OK] Bot 4 Honestidad: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\revision_honestidad.json
+
+📍 FASE-T1b: Tribunal — veredicto enriquecido y entrega
+----------------------------------------------------------------------
+   Verdict: APROBADO-CONDICIONAL-PENDING-ONBOARDING
+   Evidence Tier: B+
+   📄 Acta JSON: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\acta_revision.json
+   📄 Acta MD: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\hotel_don_alfonso\v4_audit\acta_revision.md
+   [OK] Delivery package created: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\deliveries\hotel_don_alfonso_20261007.zip
+
+📍 FASE 10: Health Dashboard (System Health Monitor)
+----------------------------------------------------------------------
+   [OK] Health dashboard generated: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\health_dashboard\health_dashboard.html
+   [OK] Health summary: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\health_dashboard\health_dashboard_summary.json
+
+📍 FASE 5: Generación de Reporte
+----------------------------------------------------------------------
+[OK] Reporte completo guardado: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\v4_complete_report.json
+
+======================================================================
+V4.0 COMPLETE - RESUMEN FINAL
+======================================================================
+
+🏨 Hotel: Hotel Don Alfonso
+🔗 URL: https://www.donalfonsohotel.com/
+🌍 Región: eje_cafetero
+
+💰 Proyección Financiera:
+   Rango: $6,176,940 - $582,120 COP/mes
+   Valor esperado: $3,511,200 COP/mes
+
+📁 Archivos generados en: C:\Users\Jhond\Github\iah-cli\output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete/
+   - 01_DIAGNOSTICO_Y_OPORTUNIDAD.md
+   - 02_PROPUESTA_COMERCIAL.md
+   - v4_complete_report.json
+   - hotel_don_alfonso/v4_audit/audit_report_*.json
+   - hotel_don_alfonso/v4_audit/financial_scenarios_*.json
+   - hotel_don_alfonso/v4_audit/gate_report_*.json
+   - delivery_assets/
+     ├── whatsapp_button/
+     ├── faq_page/
+     └── ...
+
+======================================================================
+✨ Flujo v4.0 completado exitosamente
+======================================================================

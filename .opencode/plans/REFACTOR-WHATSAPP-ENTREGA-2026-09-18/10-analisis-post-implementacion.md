@@ -437,11 +437,70 @@ regenero (checkpoint arrastrado desde C). **S-H10** erratas de registro heredada
 esperando el sello de RELEASE.
 
 **Cierre de la fase con deuda declarada, no con verde agregado.** El contador v4complete sigue en **0/1** y E2E
-no se inicio (asi lo exige R1 y el propio preflight).
+no se inicio (asi lo exige R1 y el propio preflight). ⟦**Vencido por E2E el 2026-10-07:** la arista se habilitó con
+el consentimiento S-H1, el preflight se re-emitó favorable y la corrida única se ejecutó. Contador **1/1**. Se
+conserva la frase como histórico de H⟧.
+
+## FASE-E2E (2026-10-07) — corrida única, lo medido y seguimientos
+
+**La fase no editó producto ni tests.** Su producto es `run_control.json`, el inventario post-corrida y el informe.
+Scope R3: 3 tareas y el único comando largo externo del plan, ejecutado **una vez**.
+
+**Bloqueo hallado antes de lanzar y su cura.** El check libre `--preflight` murió con `DivergenciaDeHash` en
+`run_once.py`: el preflight congeló el blob de `d571277` y `6fd39c2` enmendó ese mismo archivo. Es una propiedad de
+diseño, no un accidente: `run_once.py` está dentro de `ARCHIVOS_CONGELADOS`, así que **toda edición del runner vence
+el preflight que él mismo exige**. El rechazo ocurría antes de `reservar`, por lo que el intento nunca estuvo en
+riesgo. Se preservó el crudo versionado y se re-emitó: **solo 2 campos se movieron** (`emitido_el` y el hash del
+runner). Verificado después: `--preflight` EXIT 0 y las baterías de H en **70 passed**, sin re-anclar nada — medición
+**anterior al spawn**; re-ejecutadas después dieron 2 rojos que se re-anclaron en esta misma sesión (S-E2E-12).
+
+**La corrida.** `--spawn` una sola invocación. `attempts: 1`, `pid: 30576`, `estado: FINALIZADO`, `exit_code: 0`,
+116 s, argv literal de 11 piezas con `--permission-mode auto` y `argv_sha256 b5748891…`. El envoltorio de shell devolvió
+EXIT=1 por un `UnicodeEncodeError` del cp1252 al imprimir la captura, **después** de preservarla: el exit code del hijo
+es el que manda y está consignado (S-E2E-7).
+
+**Resultado observado: la meta de entrega se alcanzó.** Veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING`, tier
+**B+** con la regla de primer piso aplicada, 6 cláusulas, 0 acciones correctivas, 13 gates con **11 PASSED + 2 WARNING
+y 0 fallidos**, coherencia **0.9172**, `readiness: READY_FOR_PUBLICATION` y **ZIP publicado** (70.191 bytes, sha
+`487f5800…`, **57 entradas**) con `package_evidence.suppressed: false`. Inventario: 70 archivos, 0 errores, 0
+faltantes declarados. **El contraste que el plan buscaba:** en el baseline del 2026-09-19 `READY_FOR_PUBLICATION`
+convivió con `BLOQUEADO` y ZIP suprimido; aquí convive con entrega, y la diferencia es la serialización de AC20.
+
+**AC20 ejercitado en flujo real**, en sus tres puntos: `critical_recall` con `value: 1.0` **y** `details` fundado
+(`critical_issues_count: 3`, `recall_basis: all_critical_issues_detected`); `reviewer_reports[].findings` con causas
+legibles y 0 critical; `package_evidence` en la rama publish. El par que FASE-0 midió en contrafactual sobre el acta
+archivada se observó tal cual en la corrida viva.
+
+**Lo que NO se ejercitó, declarado sin promoverlo a SUPERADO (L-VUP-17).** La medición IAO del `LLMMentionChecker`
+cayó (`'NoneType' object has no attribute 'lower'` dentro de `def _parse_mentions`, porque `def check_mentions`
+toma `result["text"]` sin guarda de None) y se degradó a advisory: por eso el `audit_report` de hoy **no lleva** `providers_used`, a diferencia del
+del baseline. La rama WhatsApp no se tocó, exactamente como lo predijo el maestro (`[RC1] whatsapp_button: ninguna
+brecha candidata ['whatsapp_conflict']`), así que AC1/AC2/AC3/AC6 conservan régimen OFFLINE.
+
+**Una premisa del propio prompt cayó contra el artefacto (misma familia que L-V.3).** La Tarea 3 pedía registrar
+`providers_used` «de cada unidad, no el agregado». Medido: ese campo **nunca fue por revisor** — lo produce
+`LLMMentionChecker` (el campo `providers_used` de `LLMReport`) y se escribe una sola vez en el `audit_report`
+(dentro de `V4AuditResult.to_dict`); los cuatro `revision_*.json` no lo tienen hoy ni lo tenían en el baseline. Errata con
+dueño RELEASE (S-E2E-2).
+
+**Deuda con dueño (S-E2E-1 a S-E2E-10, detalle en el informe de la fase).** Además de las dos anteriores: el acta
+proyecta `finding_type` pero `honesty_reviewer` serializa `type`, así que su hallazgo llega **sin tipo** (S-E2E-3);
+el ZIP se publicó con un revisor recomendando `DEVOLVER-PRUEBAS`, que no está en `BLOCKING_VERDICTS` (S-E2E-4,
+dictamina VERIFY); `commercial_gates` con 12 puertas contra 10 distintas y dos `gate_id` duplicadas (S-E2E-5);
+**`captura_stdout.txt` conserva 4 formas `prefijo…sufijo` de claves reales** impresas por `config_checker._check_env_variables`, que
+el sumidero de F no reconoce y por eso `assert_redacted` pasó — no comitear sin decisión del operador (S-E2E-6);
+`run_control.json` deja `preflight.sha256: null` (S-E2E-8); `llms.txt` con marcadores PENDING por `region`/`city`/
+`usp` ausentes en `hotel_data` (S-E2E-10); y la deuda heredada **materializada**: `cleanup_old_sessions(20)` borró las
+8 sesiones que el snapshot anunciaba, gitignored y no restaurables (S-E2E-9, sucesora de S-H6).
+
+**Honestidad de esta sesión sobre su propia medición.** Se reportó en chat que la URL viva respondía «200 dos veces»
+y con eso se declaró la red fuera de riesgo. La frase estaba sobrestimada: lo sostenible es que se observó un 200 con
+redirección al ápice y que, al re-medir con cinco intentos, la resolución local cayó **0/5**. La corrida obtuvo datos
+reales de la página de todos modos. La rectificación está en la evidencia de la fase, no solo aquí.
 
 ## Métricas de ejecución
 
-Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.
+Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: **1 consumido de 1 autorizado**, acreditado por `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/run_control.json` (`attempts: 1`) y no por esta prosa. ⟦La redacción original decía «actualmente 0»; quedó vencida por la corrida del 2026-10-07 y se actualiza aqui porque esta frase es el contador acumulado del plan, no el registro de una fase⟧.
 
 ### FASE-0 (2026-09-20) — medidas, no previstas
 
@@ -490,6 +549,33 @@ Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfa
 | Red | cortada despues de los imports, con prueba de diente (`AssertionError` al conectar) | `integracion_offline.json §red` |
 | Producto modificado | **0 archivos**: el codigo nuevo queda acotado al runner y a la evidencia de la fase | `git diff --name-only HEAD` |
 | Contador v4complete | **0 / 1** | ni el recorrido ni la bateria invocarion `main.py v4complete` |
+
+### FASE-E2E (2026-10-07) — medidas, no previstas
+
+| Medición | Valor | Instrumento |
+|---|---|---|
+| Corrida | **1 de 1**, `--spawn` una sola invocación, sin argv manual | `run_control.json` |
+| Estado y exit code del hijo | `FINALIZADO` / **0** en **116 s** (14:32:13.721Z → 14:34:09.761Z) | `run_control.json` |
+| Exit code del envoltorio | **1** por `UnicodeEncodeError` cp1252 al imprimir la captura, después de preservar (S-E2E-7) | `spawn_crudo.txt` |
+| argv | 11 piezas literales con `--permission-mode auto`, `argv_sha256 b5748891…` | `run_control.json` |
+| Veredicto | **`APROBADO-CONDICIONAL-PENDING-ONBOARDING`**, tier **B+**, 6 cláusulas, 0 acciones correctivas | `acta_revision.json` |
+| Primer piso | aplicado: «evidence_tier B+ → máximo condicional» | `acta_revision.json §first_floor_rule` |
+| Gates | **13 = 11 PASSED + 2 WARNING, 0 fallidos, 0 bloqueantes**; WARNING en `asset_confidence` y `pricing_compliance` | `gate_report_20261007_093402.json` |
+| Readiness | `READY_FOR_PUBLICATION` — y esta vez **con** paquete publicado, no con supresión | ídem |
+| Coherencia | **0.9172** | `v4_complete_report.json` |
+| Entrega | **ZIP publicado** 70.191 bytes, sha `487f5800…`, **57 entradas**, `suppressed: false`; sin `.zip.tmp` residante | `package_evidence` + `inventario_post_corrida.json` |
+| Inventario post-corrida | **70 archivos, 0 errores, `faltantes_declarados: []`** | `preservar_resultado()` |
+| AC20 en vivo | `critical_recall` con `details` fundado (3, `all_critical_issues_detected`); `findings` con causa en los 4 revisores; `package_evidence` en publish | gate, acta e inventario |
+| Revisores | Bot 1 `OK_NO_FINDINGS`; Bot 3 `P12_UNVERIFIABLE` (WARNING); Bot 2 `S_C4_TECHNICAL_ASSETS_TABLE` (INFO); **Bot 4 `DEVOLVER-PRUEBAS`** con `CG_WARNING_UNDISCLOSED` | `revision_*.json` y acta |
+| NO ejercitado | medición IAO del `LLMMentionChecker` (crash, S-E2E-1); rama WhatsApp (predicho); proveedor de LLM por unidad (campo inexistente, S-E2E-2) | stderr del hijo y `audit_report` |
+| Prueba de presencia del sitio | `site_verified: false`, `crawl: false`, `nivel: raiz`, `presence_evidence_kind: "ninguna"` en FAQ/Hotel Schema/llms.txt; `org_schema` **sí** leído de la página viva (0.95) | `site_presence_snapshot.json` |
+| DNS local del destino | **0/5** fetches al re-medir; la corrida igualmente obtuvo datos reales (S-E2E, rectificación de esta sesión) | sondeada con autorización escrita |
+| Producto y tests modificados por la fase | **0 / 0** | `git status --porcelain` |
+| Preflight re-emitido | **2 campos movidos** de 12 requisitos; `--preflight` EXIT 0; baterías de H **70 passed** antes del spawn y **2 failed / 68 passed** después (dos guardas de la reserva virgen, cuya premisa el consumo legítimo venció) → **re-ancladas en esta sesión, 70 passed de nuevo** | `preflight_2026-10-07_emision_b1_hash_vencido.json` contra `preflight.json`; `tests_post_reanclaje.txt` |
+| Dientes del re-anclaje | **5/5 mutantes atrapados** entre las dos guardas (8/10 caídas por guarda individual; la ligera no lleva pata de argv, por diseño); 2 positivos verdes. Instrumento scratch fuera del árbol, borrado; su salida versionada | `dientes_reanclaje_guardas.txt` |
+| Memoria | `cleanup_old_sessions(20)` borró las **8** sesiones del snapshot; quedan 2 de 2026-09-19 y 2 nuevas de hoy (S-E2E-9) | `.agent/memory/sessions/` |
+| Quick | **13/13** antes del spawn y **13/13** al cerrar | `run_all_validations.py --quick` |
+| Contador v4complete | **1 / 1** — sin segunda corrida posible | `run_control.json` |
 
 ## Decisiones arquitectónicas
 

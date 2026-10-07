@@ -26,6 +26,12 @@ PLAN = "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
 DIR_FASE = RAIZ / "evidence" / PLAN / "FASE-H"
 RUTA_RUNNER = DIR_FASE / "run_once.py"
 CONTROL_PRODUCTIVO = RAIZ / "evidence" / PLAN / "FASE-E2E" / "run_control.json"
+# Ruta **productiva** declarada por construccion, no derivada de la constante: la pata historica
+# debe mirar la reserva real aunque el test caracterice una copia.
+RUTA_RESERVA_PRODUCTIVA = f"evidence/{PLAN}/FASE-E2E/run_control.json"
+# Revision **fija**, nunca HEAD: el commit donde H cerro (b1-bis). HEAD avanza con el versionado
+# de E2E y ahi la reserva si existe, asi que anclarla al tip volveria el control vacio.
+REV_RESERVA_VIRGEN = "6fd39c2"
 
 
 def _cargar(nombre: str, ruta: Path):
@@ -714,9 +720,39 @@ def test_la_rama_del_spawn_revalida_antes_de_llamar_al_lanzador():
 # La reserva productiva sigue virgen
 # ---------------------------------------------------------------------------
 def test_ningun_test_de_esta_bateria_toco_el_control_productivo():
-    assert not CONTROL_PRODUCTIVO.exists(), (
-        "FASE-E2E/run_control.json pertenece a la corrida unica: H no puede crearlo"
+    """La reserva virgen era premisa de H; el spawn de E2E la vencio por diseno.
+
+    El invariante que esta guarda protege nunca fue la inexistencia del archivo sino que
+    **esta bateria no lo creo**. Re-anclado por FASE-E2E (2026-10-07) sobre dos patas que siguen
+    perdiendo: (a) en el arbol del commit donde H cerro la ruta no existia, y (b) el control del
+    arbol vivo es el que escribe este runner, caracterizado por su schema, su argv congelado y su
+    intento unico.
+    """
+    import subprocess
+
+    en_la_rev_de_h = subprocess.run(
+        ["git", "cat-file", "-e", f"{REV_RESERVA_VIRGEN}::{RUTA_RESERVA_PRODUCTIVA}"],
+        capture_output=True,
+        cwd=str(RAIZ),
     )
-    assert not (RAIZ / "evidence" / PLAN / "FASE-E2E").exists() or list(
-        (RAIZ / "evidence" / PLAN / "FASE-E2E").glob("run_control*")
-    ) == []
+    assert en_la_rev_de_h.returncode != 0, (
+        f"H si creo la reserva productiva: {RUTA_RESERVA_PRODUCTIVA} existe en el arbol de "
+        f"{REV_RESERVA_VIRGEN}"
+    )
+
+    lectura = run_once.leer_control(CONTROL_PRODUCTIVO)
+    assert lectura["read_status"] == run_once.READ_OK, (
+        "E2E consumo el intento sin dejar un control legible: la evidencia se perdio"
+    )
+    control = lectura["data"]
+    assert control["schema"] == "iah-run-control/1.0", (
+        "el control no lo escribio este runner: su schema es otro"
+    )
+    assert control["attempts"] == 1, "el contrato del plan es un solo intento"
+    assert control["estado"] in run_once.ESTADOS
+    assert control["argv"] == run_once.COMANDO_CONGELADO, (
+        "el argv publicado no es el literal congelado: no lo lanzo este runner"
+    )
+    assert control["argv_sha256"] == run_once.argv_sha256(control["argv"]), (
+        "el hash del argv no casa con el argv publicado"
+    )

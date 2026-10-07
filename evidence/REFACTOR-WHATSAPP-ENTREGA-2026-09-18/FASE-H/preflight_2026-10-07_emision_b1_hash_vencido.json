@@ -13,7 +13,7 @@
     "auto"
   ],
   "argv_sha256": "b57488913134feb23561f05ff3a7dfe5f5b93b1c8c09ca14656ffaddebc07704",
-  "emitido_el": "2026-10-07T14:18:46.435390+00:00",
+  "emitido_el": "2026-10-07T13:11:10.290075+00:00",
   "fase": "FASE-H",
   "identidades": {
     "hotel_id_del_reporte": "hotel_donalfonsohotel.com",
@@ -295,7 +295,7 @@
   },
   "source_hashes": {
     "data/hotel_observations/observations.json": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
-    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "1efa6cd142b70e3edf91412d2f4cd9d868cb2efc6a797bffcc633920be422f7f",
+    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "ff114aff36da6b59301e4b339a05f8ea9d7eaca07829ce6a1441932c7c6a6691",
     "main.py": "ee59b81583abaf46ecbb187cb6d883071c5cb63476f7d5e1e2f115f1d117bca3",
     "modules/data_validation/whatsapp_contract.py": "028fbec80e6230fb74d78e6a8ac0dedd30f03c1e3ed1da766027d9ccfac36416",
     "modules/delivery/delivery_packager.py": "87f218204dfc48c8899bc1afd047084de99ab04b7af0bdf51e0088b3be033e7b",
