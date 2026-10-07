@@ -4722,7 +4722,7 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -4871,7 +4871,7 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 3,
       "planes_que_lo_citan": [
         "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -4887,8 +4887,10 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ],
       "redefiniciones": []
     },
     {
@@ -5396,19 +5398,19 @@
       ]
     },
     {
+      "id": "S-F7",
+      "familia": "S",
+      "total_citas": 8,
+      "planes_que_lo_citan": [
+        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
       "id": "D-B",
       "familia": "D",
       "total_citas": 7,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
-      ]
-    },
-    {
-      "id": "S-F7",
-      "familia": "S",
-      "total_citas": 7,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {

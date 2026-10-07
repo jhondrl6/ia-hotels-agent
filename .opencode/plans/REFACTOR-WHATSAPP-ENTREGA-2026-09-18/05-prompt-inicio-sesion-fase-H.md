@@ -1,7 +1,13 @@
 # FASE-H — Integración offline, onboarding derivado y runner de intento único
 
 **Estado:** **COMPLETADA EN CONTRATOS OFFLINE (2026-10-06) y NO HABILITANTE DE LA ARISTA A E2E**, sin commit
-(mandato de ejecución; los cinco cortes se sostienen sin él). El preflight que la fase emite es **NO FAVORABLE**:
+(mandato de ejecución; los cinco cortes se sostienen sin él). ⟦**Commit + L3 + Push ejecutados el 2026-10-06 por
+orden literal:** commit único **`1c20695`** (40 archivos, +6.780/−92, **8/8** checks del pre-commit sin saltar),
+revisión **L3 sobre `ec8a272..1c20695`: 0 hallazgos**, push con paridad **0/0** verificada por `git ls-remote`
+(remoto en `1c20695`). El sha se estampa aquí porque la propia orden hizo necesario un sello documental; lo anterior
+describe el mandato de ejecución y se conserva como histórico. Sin autorización siguen: tag, QMind, `DOMAIN_PRIMER`,
+rotación de credenciales y las erratas S-H10/S-H11/S-F7, todas al sello de RELEASE. **Nada de esto habilita E2E: el
+veredicto `spawn_autorizado=false` sigue en pie por S-H1**⟧. El preflight que la fase emite es **NO FAVORABLE**:
 12 requisitos favorables y 1 en contra (`consentimiento_datado_sobre_la_url_viva`), que solo emite el operador
 (FASE-A decidió que el agente no puede). Cierre elegido por el operador entre tres opciones; la lectura literal
 de «INCOMPLETA» de la Tarea 4 queda declarada en `evidence/…/FASE-H/resultados-y-observaciones.md` y es de estado

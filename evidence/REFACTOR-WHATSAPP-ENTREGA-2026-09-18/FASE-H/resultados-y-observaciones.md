@@ -7,6 +7,8 @@ se sostienen sin ellos (`04-contrato-ejecucion.md` §Límites y precedencias). E
 sello documental de RELEASE, cobrando la decisión de C/D/E/F de no abrir sellos recursivos por acciones git.
 **Contador v4complete: 0/1** — nada de esta fase ejecutó `main.py v4complete`.
 
+⟦**Commit + L3 + Push EJECUTADOS el 2026-10-06 por orden literal «Git Commit + L3 + Push»:** commit único **`1c20695`** (40 archivos, +6.780/−92, **8/8** checks del pre-commit sin saltar), revisión L3 sobre `ec8a272..1c20695`: **0 hallazgos**, push de ese rango con paridad **0/0** verificada por `git ls-remote` (remoto en `1c20695`). Lo escrito antes describe el mandato de ejecución y se conserva como histórico: la orden no se reescribe sobre él, se **añade** (precedente `ec8a272` de FASE-F). **Sigue sin autorización: tag, write-back a QMind, rotación de credenciales, `DOMAIN_PRIMER` y las erratas S-H10/S-H11/S-F7**, que se cobran en el sello de RELEASE. El stamping del sha se hace aquí porque la propia orden lo hizo necesario; la decisión de no abrir sellos recursivos sigue en pie para sellos que nobody pidió.⟧
+
 **Estado: COMPLETADA EN SUS CONTRATOS OFFLINE y NO HABILITANTE DE LA ARISTA A E2E.** El preflight que la fase
 produce es **NO FAVORABLE**: 12 requisitos favorables y 1 en contra (`consentimiento_datado_sobre_la_url_viva`),
 que FASE-A decidió que no puede emitir el agente. El operador eligió esta lectura entre tres opciones
