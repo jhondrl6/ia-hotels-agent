@@ -16,6 +16,7 @@ import signal
 import subprocess
 import sys
 import threading
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -385,8 +386,13 @@ def test_leer_control_sobre_un_control_real_de_prueba(control):
 
 
 def test_el_preflight_productivo_es_legible_por_el_llector_nuevo():
-    """Baseline real del lector: el preflight que escribio la fase, no un fixture."""
-    ruta = DIR_FASE / "preflight.json"
+    """Baseline real del lector: el preflight que publico `1c20695`, no un fixture.
+
+    Se lee la copia preservada porque el `preflight.json` del arbol ya es favorable (consentimiento
+    del operador emitido el 2026-10-06); su gemelo post-consentimiento lo gobierna
+    `test_el_preflight_vigente_es_favorable_por_lectura_no_por_endulzamiento`.
+    """
+    ruta = DIR_FASE / "preflight_2026-10-06_no_favorable.json"
     if not ruta.is_file():
         pytest.skip("H no emitió preflight: el lector queda sin baseline real")
     lectura = run_once.leer_control(ruta)
@@ -580,6 +586,56 @@ def test_el_spawn_bloqueado_no_llega_al_packager(control):
             popen=lambda *a, **k: pytest.fail("hubo proceso con preflight en contra"),
         )
     assert not control.exists()
+
+
+# ---------------------------------------------------------------------------
+# b1: la edad se computa contra la emision, no contra el artefacto congelado
+# ---------------------------------------------------------------------------
+def test_la_edad_del_preflight_no_hereda_la_del_artefacto_offline():
+    """Caza el mutante de volver el wiring a `integracion["frescura"]["edad_dias"]`.
+
+    El artefacto de H congelo 76 dias medidos el 2026-10-06. Con esa lectura el techo de
+    `EDAD_MAXIMA_DIAS` nunca se alcanzaba: la ventana que `dependencias-fases.md` publica como
+    mecanica era decorativa, y un spawn en noviembre seguia viendo 76.
+    """
+    artefacto = json.loads((DIR_FASE / "integracion_offline.json").read_text(encoding="utf-8"))
+    edad_artefacto = artefacto["frescura"]["edad_dias"]
+
+    pf = run_once.preflight(hoy=datetime(2026, 11, 1, tzinfo=timezone.utc))
+    frescura = pf["requisitos"]["frescura_fail_closed"]
+
+    assert frescura["edad_dias"] == 102, "2026-07-22 a 2026-11-01 hay 102 dias"
+    assert frescura["edad_dias_del_artefacto"] == edad_artefacto, (
+        "el valor del artefacto se declara, no se descarta"
+    )
+    assert frescura["artefacto_vencido"] is True
+    assert frescura["cumple"] is False, "102 excede el techo de 90: no se autoriza el spawn"
+
+
+def test_un_artefacto_vencido_bloquea_el_consentimiento_aunque_el_documento_este_bien():
+    """El consentimiento del operador esta en disco y es valido: la edad real lo deja fuera."""
+    pf = run_once.preflight(hoy=datetime(2026, 11, 1, tzinfo=timezone.utc))
+    consentimiento = pf["requisitos"]["consentimiento_datado_sobre_la_url_viva"]
+
+    assert consentimiento["cumple"] is False
+    assert consentimiento["detalle"]["edad_dias"] == 102
+    assert "limite declarado de 90" in consentimiento["causa"]
+    assert pf["spawn_autorizado"] is False
+
+
+def test_la_edad_es_aritmetica_contra_la_fecha_de_emision():
+    edad = run_once.edad_contra_la_emision
+    assert edad("2026-07-22", datetime(2026, 10, 7, tzinfo=timezone.utc)) == 77
+    assert edad("2026-07-22", datetime(2026, 10, 20, tzinfo=timezone.utc)) == 90
+    assert edad("2026-07-22", datetime(2026, 10, 21, tzinfo=timezone.utc)) == 91
+
+
+@pytest.mark.parametrize("fecha", ["", None, "22-07-2026", "ayer"])
+def test_fecha_de_captura_ilegible_no_produce_edad(fecha):
+    """Fail-closed: sin edad computable el requisito no puede dar verde."""
+    assert (
+        run_once.edad_contra_la_emision(fecha, datetime(2026, 10, 7, tzinfo=timezone.utc)) is None
+    )
 
 
 # ---------------------------------------------------------------------------

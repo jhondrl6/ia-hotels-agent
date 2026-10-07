@@ -532,6 +532,21 @@ def rama_favorable(integracion: dict, proveniencia: dict) -> bool:
     )
 
 
+def edad_contra_la_emision(fecha_captura: str, referencia: datetime) -> int | None:
+    """La edad se computa contra la emision del preflight, no contra el artefacto offline.
+
+    `integracion_offline.json` congela la edad del dia en que se midio. Leerla de alli dejaba el
+    techo de `EDAD_MAXIMA_DIAS` fijo para siempre: la ventana que la fila E2E del plan publica como
+    mecánica seria decorativa y un spawn en noviembre seguiria viendo 76 dias. Ilegible es None y el
+    requisito falla cerrado.
+    """
+    try:
+        captura = datetime.fromisoformat(str(fecha_captura)[:10])
+    except ValueError:
+        return None
+    return (referencia.date() - captura.date()).days
+
+
 def preflight(*, raiz: Path = RAIZ, hoy: datetime | None = None) -> dict:
     """Preflight del unico intento: attempts=0, hashes congelados y requisitos por nombre.
 
@@ -548,7 +563,8 @@ def preflight(*, raiz: Path = RAIZ, hoy: datetime | None = None) -> dict:
     hashes = congelar_hashes(raiz=raiz)
 
     fecha_captura = str(proveniencia["valores_declarados_por_el_operador"]["fecha_captura"])
-    edad_dias = integracion["frescura"]["edad_dias"]
+    edad_dias = edad_contra_la_emision(fecha_captura, referencia)
+    edad_artefacto = integracion["frescura"].get("edad_dias")
     consentimiento = evaluar_consentimiento(
         raiz / CONSENTIMIENTO_RUTA.relative_to(RAIZ),
         fecha_captura=fecha_captura,
@@ -595,8 +611,15 @@ def preflight(*, raiz: Path = RAIZ, hoy: datetime | None = None) -> dict:
         },
         "frescura_fail_closed": {
             "cumple": bool(fecha_captura) and edad_dias is not None and edad_dias <= EDAD_MAXIMA_DIAS,
-            "causa": None if fecha_captura else "sin fecha_captura el bloque del loader ni corre: H rechaza",
+            "causa": (
+                None
+                if fecha_captura and edad_dias is not None
+                else f"fecha_captura {fecha_captura!r} no es legible como fecha: no se computa la edad y H rechaza"
+            ),
             "edad_dias": edad_dias,
+            "edad_fuente": "computada_contra_la_emision",
+            "edad_dias_del_artefacto": edad_artefacto,
+            "artefacto_vencido": edad_artefacto != edad_dias,
             "techo_de_dias": EDAD_MAXIMA_DIAS,
             "variable_del_loader_activa": integracion["frescura"]["variable_en_el_entorno"],
         },

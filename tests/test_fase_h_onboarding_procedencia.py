@@ -440,16 +440,40 @@ def test_las_ram_silenciosas_del_loader_no_son_favorables():
     ), "las dos mediciones tienen que coincidir: una sola no certifica la rama"
 
 
-def test_el_preflight_recalculado_no_inventa_el_consentimiento():
-    """Se re-calcula el preflight en vivo: si el requisito se hardcodeara True, esto cae."""
-    documento = run_once.preflight()
+def test_el_preflight_recalculado_no_inventa_el_consentimiento(tmp_path):
+    """Se re-calcula el preflight en vivo: si el requisito se hardcodeara True, esto cae.
+
+    Las dos ramas hacen falta: sin documento en el arbol el requisito es FALSO (H no puede
+    autosatisfacerlo), y con el documento del operador sobre el arbol real es VERDADERO porque lo lee.
+    """
+    fase_tmp = tmp_path / DIR_FASE.relative_to(RAIZ)
+    fase_tmp.mkdir(parents=True)
+    fase_f_tmp = tmp_path / "evidence" / PLAN / "FASE-F"
+    fase_f_tmp.mkdir(parents=True)
+    for nombre in ("integracion_offline.json", "onboarding_provenance.json"):
+        (fase_tmp / nombre).write_text(
+            (DIR_FASE / nombre).read_text(encoding="utf-8"), encoding="utf-8", newline="\n"
+        )
+    (fase_f_tmp / "credential_status.json").write_text(
+        (RAIZ / "evidence" / PLAN / "FASE-F" / "credential_status.json").read_text(encoding="utf-8"),
+        encoding="utf-8",
+        newline="\n",
+    )
+
+    documento = run_once.preflight(raiz=tmp_path)
     assert documento["intentos"] == 0
     requisito = documento["requisitos"]["consentimiento_datado_sobre_la_url_viva"]
     assert requisito["cumple"] is False, (
         "el consentimiento es acto del operador; H no puede autosatisfacerlo"
     )
+    assert "iah-consentimiento" in requisito["causa"]
     assert documento["spawn_autorizado"] is False
     assert "consentimiento_datado_sobre_la_url_viva" in documento["requisitos_no_favorables"]
+
+    real = run_once.preflight()
+    assert real["requisitos"]["consentimiento_datado_sobre_la_url_viva"]["cumple"] is True, (
+        "el documento del operador esta en el arbol: negarlo tambien seria inventar"
+    )
     assert run_once.rama_favorable(
         json.loads((DIR_FASE / "integracion_offline.json").read_text(encoding="utf-8")),
         json.loads((DIR_FASE / "onboarding_provenance.json").read_text(encoding="utf-8")),
@@ -460,15 +484,42 @@ def test_el_preflight_recalculado_no_inventa_el_consentimiento():
 # El preflight productivo: attempts=0 y requisito de consentimiento en contra
 # ---------------------------------------------------------------------------
 def test_el_preflight_publicado_declara_el_consentimiento_pendiente_y_attempts_cero():
-    ruta = DIR_FASE / "preflight.json"
+    """El preflight que publico `1c20695`: consentimiento pendiente y spawn bloqueado.
+
+    El arbol de trabajo ya lleva el consentimiento del operador y su preflight es favorable, asi
+    que el baseline historico se lee en la copia preservada (sha identico al blob de HEAD), no en
+    el archivo mutable.
+    """
+    ruta = DIR_FASE / "preflight_2026-10-06_no_favorable.json"
     if not ruta.is_file():
-        pytest.skip("H aun no emitió preflight")
+        pytest.skip("no esta la copia preservada del preflight publicado")
     documento = json.loads(ruta.read_text(encoding="utf-8"))
     assert documento["intentos"] == 0
     requisito = documento["requisitos"]["consentimiento_datado_sobre_la_url_viva"]
     assert requisito["cumple"] is False
     assert "iah-consentimiento" in requisito["causa"]
     assert documento["spawn_autorizado"] is False
+
+
+def test_el_preflight_vigente_es_favorable_por_lectura_no_por_endulzamiento():
+    """Lo que autoriza el spawn es el documento del operador, y la edad published casa con su aritmetica."""
+    documento = json.loads((DIR_FASE / "preflight.json").read_text(encoding="utf-8"))
+    assert documento["intentos"] == 0
+    requisito = documento["requisitos"]["consentimiento_datado_sobre_la_url_viva"]
+    assert requisito["cumple"] is True
+    assert requisito["detalle"]["declarado_por"], "la autorizacion declara quien la emite"
+    assert requisito["detalle"]["limite_dias"] == 90
+    assert documento["spawn_autorizado"] is True
+    assert documento["requisitos_no_favorables"] == []
+
+    frescura = documento["requisitos"]["frescura_fail_closed"]
+    fecha_captura = json.loads((DIR_FASE / "onboarding_provenance.json").read_text(encoding="utf-8"))[
+        "valores_declarados_por_el_operador"
+    ]["fecha_captura"]
+    assert frescura["edad_dias"] == run_once.edad_contra_la_emision(
+        fecha_captura, datetime.fromisoformat(documento["emitido_el"])
+    ), "la edad publicada debe ser la aritmetica entre la captura y la emision, no la del artefacto"
+    assert frescura["edad_fuente"] == "computada_contra_la_emision"
 
 
 def test_nada_de_esta_fase_creara_el_control_productivo():

@@ -14,6 +14,46 @@ produce es **NO FAVORABLE**: 12 requisitos favorables y 1 en contra (`consentimi
 que FASE-A decidió que no puede emitir el agente. El operador eligió esta lectura entre tres opciones
 («cerrar H con preflight NO favorable»), no saltarse el requisito.
 
+⟦**Enmienda añadida el 2026-10-07 (S-H1 cerrado y b1 en el runner).** El operador dictó el consentimiento y se
+transcribió literal a `consentimiento-corrida.md`: bloque `iah-consentimiento` con `url_amparada`
+`https://www.donalfonsohotel.com/`, `fecha_captura_aceptada` 2026-07-22, `limite_de_frescura_dias` 90, `autoriza`
+con alcance de entrega, `declarado_por` «Jhond (operador)», `fecha` 2026-10-07. Re-emisión con
+`run_once.py --emitir-preflight`: **12 requisitos, 12 favorables, 0 en contra, `spawn_autorizado=true`,
+`intentos=0`** (la reserva de E2E sigue virgen: `FASE-E2E/` no existe y `--spawn` no se corrió). El crudo anterior
+se preservó en `preflight_2026-10-06_no_favorable.json`, con sha idéntico al blob publicado en `1c20695`.
+
+**Errata del conteo de arriba**: dice «12 requisitos favorables y 1 en contra»; lo medido en el artefacto publicado
+son **12 requisitos en total: 11 favorables y 1 en contra**. El texto original se conserva como histórico.
+
+**b1 (cura mecánica de la edad)**: `preflight()` ya no hereda `edad_dias` de `integracion_offline.json`; la computa
+`run_once.edad_contra_la_emision(fecha_captura, referencia)` y declara junto los dos valores
+(`edad_dias`, `edad_dias_del_artefacto`, `artefacto_vencido`, `edad_fuente`). Publicado el 2026-10-07: edad **77**
+la real de hoy, artefacto **76** el congelado el 2026-10-06, divergencia declarada. Control negativo medido
+sobre el mutante (volver el wiring a leer el artefacto): un preflight con fecha de emisión 2026-11-01 devuelve
+76 y `cumple=true`, y los dos dientes nuevos caen. Con esto la ventana que `dependencias-fases.md` publica
+deja de ser decorativa: el 2026-10-21 la edad real es 91 y el spawn se niega solo.
+
+**Re-anclajes**: tres pinos ataban su baseline al preflight pre-consentimiento.
+`test_el_preflight_productivo_es_legible_por_el_llector_nuevo` y
+`test_el_preflight_publicado_declara_el_consentimiento_pendiente_y_attempts_cero` leen ahora la copia preservada;
+`test_el_preflight_recalculado_no_inventa_el_consentimiento` fuerza la ausencia del documento en `tmp_path` y añade
+la rama real (sí cumple porque lo lee), más
+`test_el_preflight_vigente_es_favorable_por_lectura_no_por_endulzamiento`, que recalcula la aritmética de la edad
+desde `emitido_el`. Baterías:
+**66 passed** en `test_fase_h_intento_unico.py` + `test_fase_h_onboarding_procedencia.py` (crudos
+`tests_b1_dientes.txt` y `tests_b1_bateria_post.txt`).
+
+**Etiqueta**: con el prerrequisito del operador pasado, la duda INCOMPLETA frente a NO HABILITANTE se cierra; H
+queda **CERRADA** y la arista a E2E habilitada. El registro de `docs/contributing/REGISTRY.md` (FASE-H,
+2026-10-06) no se re-ejecuta: el escritor es aditivo y duplicaría la fila. Commit, push y L3 de esta enmienda
+orden literal: el operador ordenó commit, L3 y push de esta enmienda el 2026-10-07. Su sha y su rango se estampan
+en el sello de RELEASE, por la decisión vigente de no abrir sellos recursivos (precedente C, D, E y F).
+
+**Deuda diferida con dueño (S-H12)**: el mutante formal de la línea b1 no se añadió al arnés
+`run_mutations.py`; el control negativo se midió en memoria sobre el archivo mutado (fuera del árbol, sin dejar
+Scratch en `evidence/`) y su resultado está en el párrafo de arriba. Dueño: la sesión que re-ejecute la batería de
+mutantes de H, o el sello de RELEASE.⟧
+
 **Lectura declarada de Tarea 4.** El prompt dice «dejar H INCOMPLETA si algún prerrequisito no pasa». Medido y
 por escrito: los prerrequisitos técnicos de H (identidad, rama del loader, frescura fail-closed, runner,
 reserva, aislamiento de memoria) están verificados; el que no pasa es un acto del operador que el propio plan

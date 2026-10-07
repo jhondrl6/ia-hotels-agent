@@ -13,7 +13,7 @@
     "auto"
   ],
   "argv_sha256": "b57488913134feb23561f05ff3a7dfe5f5b93b1c8c09ca14656ffaddebc07704",
-  "emitido_el": "2026-10-07T13:11:10.290075+00:00",
+  "emitido_el": "2026-10-07T03:08:11.147696+00:00",
   "fase": "FASE-H",
   "identidades": {
     "hotel_id_del_reporte": "hotel_donalfonsohotel.com",
@@ -79,16 +79,13 @@
       }
     },
     "consentimiento_datado_sobre_la_url_viva": {
-      "causa": null,
-      "cumple": true,
+      "causa": "sin consentimiento datado usable: no existe consentimiento-corrida.md: hace falta un bloque 'iah-consentimiento' declarado por el operador sobre la URL viva",
+      "cumple": false,
       "detalle": {
-        "autoriza_entrega": true,
-        "causa": null,
-        "declarado_por": "Jhond (operador)",
-        "edad_dias": 77,
+        "autoriza_entrega": false,
+        "causa": "sin consentimiento datado usable: no existe consentimiento-corrida.md: hace falta un bloque 'iah-consentimiento' declarado por el operador sobre la URL viva",
+        "edad_dias": 76,
         "fecha_captura": "2026-07-22",
-        "fecha_del_consentimiento": "2026-10-07",
-        "limite_dias": 90,
         "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\FASE-H\\consentimiento-corrida.md"
       }
     },
@@ -102,12 +99,9 @@
       "cumple": true
     },
     "frescura_fail_closed": {
-      "artefacto_vencido": true,
       "causa": null,
       "cumple": true,
-      "edad_dias": 77,
-      "edad_dias_del_artefacto": 76,
-      "edad_fuente": "computada_contra_la_emision",
+      "edad_dias": 76,
       "techo_de_dias": 90,
       "variable_del_loader_activa": false
     },
@@ -157,7 +151,6 @@
   "requisitos_favorables": [
     "aislamiento_de_memoria",
     "argv_congelado",
-    "consentimiento_datado_sobre_la_url_viva",
     "control_productivo_intacto",
     "entorno_venv",
     "frescura_fail_closed",
@@ -168,9 +161,11 @@
     "revocacion_de_claves",
     "selector_unico"
   ],
-  "requisitos_no_favorables": [],
+  "requisitos_no_favorables": [
+    "consentimiento_datado_sobre_la_url_viva"
+  ],
   "schema": "iah-run-preflight/1.0",
-  "siguiente_paso": "E2E: correr `run_once.py --spawn`, que vuelve a verificar este preflight y sus hashes",
+  "siguiente_paso": "no se lanza: falta consentimiento_datado_sobre_la_url_viva; el spawn se niega sin consumir la reserva",
   "snapshot_memoria": {
     "archivos": 21,
     "borraria_cleanup_20_dias": [
@@ -295,7 +290,7 @@
   },
   "source_hashes": {
     "data/hotel_observations/observations.json": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
-    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "ff114aff36da6b59301e4b339a05f8ea9d7eaca07829ce6a1441932c7c6a6691",
+    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
     "main.py": "ee59b81583abaf46ecbb187cb6d883071c5cb63476f7d5e1e2f115f1d117bca3",
     "modules/data_validation/whatsapp_contract.py": "028fbec80e6230fb74d78e6a8ac0dedd30f03c1e3ed1da766027d9ccfac36416",
     "modules/delivery/delivery_packager.py": "87f218204dfc48c8899bc1afd047084de99ab04b7af0bdf51e0088b3be033e7b",
@@ -305,5 +300,5 @@
     "modules/utils/redaction.py": "4dff37537a6da33dcbcb3adebdb7a79209dafb2ee44c4b1afe03e3488a6a9365",
     "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/clientes/hotel_don_alfonso_onboarding.yaml": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734"
   },
-  "spawn_autorizado": true
+  "spawn_autorizado": false
 }
