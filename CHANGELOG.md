@@ -56,8 +56,7 @@ redactar esa forma en el sumidero, o dejar de imprimir fragmentos. Se materializ
 de `.agent/memory/sessions/` que el snapshot anunciaba; su inventario con sha256 prueba que existieron, pero la ruta
 está en `.gitignore` y el contenido no es recuperable.
 
-**No se hizo:** commit, push, L3, tag, write-back a QMind, regeneración de `DOMAIN_PRIMER` ni rotación de credenciales.
-**AC18 no se marca en esta fase:** certifica VERIFY en su sesión, con esta corrida como única muestra.
+**No se hizo:** commit, push, L3, tag, write-back a QMind, regeneración de `DOMAIN_PRIMER` ni rotación de credenciales. ⟦**Sello 2026-10-07, añadido sin reescribir la línea de arriba:** el propio push la venció. **Commit, L3 y push sí se hicieron**, por orden literal del operador: commit **`b05e620`** (25 archivos, +2.431/−49, **8/8** checks del pre-commit sin saltar), **revisión profunda L3 sin hallazgos** sobre el commit sin revisar, y push del rango **`6fd39c2..b05e620`** con paridad **0/0** verificada por `git ls-remote`. Lo que **sigue sin hacerse** es tag, write-back a QMind, `DOMAIN_PRIMER` y rotación de credenciales. **`FASE-E2E/captura_stdout.txt` se excluyó del versionado** (S-E2E-6): queda en disco con el sha256 que referencia `run_control.json` y entra `captura_stdout_saneada.txt`⟧. **AC18 no se marca en esta fase:** certifica VERIFY en su sesión, con esta corrida como única muestra.
 
 ## [Sin publicar] - FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 

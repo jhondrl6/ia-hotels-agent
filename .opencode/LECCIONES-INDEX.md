@@ -360,7 +360,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-E2` | Defectos latentes preexistentes registrados, NO curados (fuera del perímetro de E): (a) NameError latente de site_presence_report — se asigna solo dentro de if generate_proposal: (main.py:2791 →… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 56 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `S-F1` | Reconciliación del corpus medido: C2 contó 27 corridas sobre output/; el barrido F4 midió 28 primarias + 4 copias de delivery sobre output/ + archives/outputs/, con ~11 ESTIMADAS (~10 en el dossier)… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 6 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F2` | Residual G6-delivery: el check de coherencia del reporte de entrega sigue leyendo solo score (delivery_quality_report.py G6 lee coherence_validation.json con fallback post-gen, umbral ≥ 0.8; no… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-H1` | La premisa de las brechas analytics es nuestra, no del hotel: no_analytics_configured y low_organic_visibility derivan de que falte nuestra credencial GA4, no de una medición del sitio del hotel —… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 22 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-H1` | La premisa de las brechas analytics es nuestra, no del hotel: no_analytics_configured y low_organic_visibility derivan de que falte nuestra credencial GA4, no de una medición del sitio del hotel —… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 23 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-H2` | Punto (a) de V11 — la capa de pain descarta el ERROR de PageSpeed sin pain ni justificación: poor_performance exige mobile_score is not None (pain_solution_mapper.py:410-419), así que un eje caído… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 15 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-H3` | Punto (d) residual: corregida la contradicción executed ∩ skipped, pero el predicado de skip sigue siendo not has_field_data, que confunde «la API no devolvió datos de campo» con «no se llamó a la… (+1 redefiniciones) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 5 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-H4` | metadata=None cuando el audit crashea — la vía silenciosa real de la caída #7 del dossier §4; no era parte de V13 — FASE-H (V13, al trazar quién consume el validador: el gemelo estaba muerto y el… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 9 en REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -428,6 +428,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-13` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B6` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-E2E-1` | 5 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-E2E-6` | 5 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-1` | 4 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B2` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -441,7 +442,6 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B3` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B4` | 3 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-2` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-E2E-6` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-7` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-8` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F3` | 3 | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |

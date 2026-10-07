@@ -230,6 +230,16 @@ documenta una acción git es a su vez una acción git, y esa recursividad se apl
 **Sigue sin autorización y sin hacer:** tag, write-back a QMind, regeneración de `DOMAIN_PRIMER` y rotación de
 credenciales. **AC18 no se marca en esta fase**: certifica VERIFY en su sesión, con esta corrida como única muestra.
 
+⟦**Sello añadido después del push, 2026-10-07.** La frase de arriba prometía que el sha y el rango no se estampaban
+aquí; el propio operador pidió sellarlos en una tanda posterior, así que quedan consignados y esa promesa se da por
+cumplida en otro documento, no aquí. **Commit `b05e620`** (25 archivos, +2.431/−49, 8/8 checks del pre-commit sin
+saltar, `git commit -F`). **L3 sobre el commit sin revisar: sin hallazgos.** **Push `6fd39c2..b05e620`**, remoto
+verificado en `b05e6201c751386c…` con `git ls-remote` y paridad **0/0** en las dos direcciones. La verificación de la
+exclusión se hizo contra **el árbol del commit** (`git ls-tree -r b05e620`): `captura_stdout.txt` count **0**,
+`captura_stdout_saneada.txt` count **1**, y `git ls-files` confirma que el crudo no se trackea — el primer intento de
+probarlo con `git show --name-only` contó la mención del propio mensaje del commit, no la lista de archivos. Este sello
+no reabre recursividad porque estampa hechos ya publicados⟧.
+
 ## 10. Sello de regresión completa (por haber tocado dos archivos de test)
 
 **1 failed / 5.134 passed / 41 skipped / 4 xfailed en 392,32 s (EXIT 1)** — crudo en
