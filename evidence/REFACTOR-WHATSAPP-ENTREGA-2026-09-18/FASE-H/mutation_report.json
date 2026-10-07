@@ -1,0 +1,331 @@
+{
+  "artefacto": "mutation_report",
+  "fase": "FASE-H",
+  "fecha": "2026-10-06",
+  "instrumento": "run_mutations.py (edicion en el arbol vivo, restauracion por sha256)",
+  "linea_base_verde": {
+    "crudo_ultimas_lineas": [
+      "..........................................................               [100%]",
+      "58 passed in 2.11s"
+    ],
+    "error_de_instrumento": false,
+    "exit_code": 0,
+    "razones": [],
+    "resumen": "58 passed in 2.11s",
+    "rojos": []
+  },
+  "mutantes": [
+    {
+      "ac": "AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:229: AssertionError: los dos lanzadores ganaron: sin O_EXCL la reserva exclusiva no existe"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "reserva por creacion exclusiva (O_EXCL) antes del spawn",
+      "id": "M1",
+      "motivo_esperado": "sin O_EXCL la reserva exclusiva no existe",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 3 passed, 1 warning in 0.79s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_dos_lanzadores_concurrentes_uno_solo_crea_proceso"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC13",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:439: Failed: DID NOT RAISE <class 'run_once_h_ac17.CapturaSinRedactar'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "guard de fuga del control (_serializar_control)",
+      "id": "M2",
+      "motivo_esperado": "CapturaSinRedactar",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.15s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_un_control_con_forma_de_credencial_no_llega_a_disco"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC13",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:455: AssertionError: assert 'assert_redacted' in {'decode', 'encode', 'hexdigest', 'redact_secrets', 'sha256'}",
+        "test_fase_h_intento_unico.py:432: Failed: DID NOT RAISE <class 'run_once_h_ac17.CapturaSinRedactar'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "assert_redacted como llamador del contrato de F (cierra S-F8)",
+      "id": "M3",
+      "motivo_esperado": "assert_redacted",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "2 failed in 0.23s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_assert_redacted_tiene_lamador_en_el_producto",
+        "tests/test_fase_h_intento_unico.py::test_el_guard_de_fuga_operante_cuando_redaccion_se_apaga"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:309: Failed: spawn con arbol divergente"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "cotejo de hashes congelados contra el preflight",
+      "id": "M4",
+      "motivo_esperado": "spawn con arbol divergente",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed in 0.08s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_divergencia_de_hash_contra_el_preflight_detiene_el_spawn"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:321: Failed: spawn con argv no autorizado"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "el argv lanzado debe ser el que autorizo el preflight",
+      "id": "M5",
+      "motivo_esperado": "spawn con argv no autorizado",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed in 0.08s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_un_argv_que_el_preflight_no_autorizo_se_rechaza"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:272: Failed: DID NOT RAISE <class 'run_once_h_ac17.TransicionInvalida'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "attempts no se baja jamas",
+      "id": "M6",
+      "motivo_esperado": "TransicionInvalida",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed in 0.08s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_attempts_no_se_baja_jamas"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_intento_unico.py:265: Failed: DID NOT RAISE <class 'run_once_h_ac17.TransicionInvalida'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "los estados terminales no se reabren (TRANSICIONES)",
+      "id": "M7",
+      "motivo_esperado": "TransicionInvalida",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.16s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_control_dudoso_es_terminal_y_no_se_resea"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC14",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_onboarding_procedencia.py:432: AssertionError: assert True is False"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "rama efectiva del loader: solo YAML_DE_DIR_CLIENTES es aceptable",
+      "id": "M8",
+      "motivo_esperado": "assert True is False",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.25s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_onboarding_procedencia.py::test_las_ram_silenciosas_del_loader_no_son_favorables"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC14/AC17",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "test_fase_h_onboarding_procedencia.py:448: AssertionError: el consentimiento es acto del operador; H no puede autosatisfacerlo"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "el requisito del consentimiento se decide por el documento, no por la fase",
+      "id": "M9",
+      "motivo_esperado": "autosatisfacerlo",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.24s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_onboarding_procedencia.py::test_el_preflight_recalculado_no_inventa_el_consentimiento"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC13",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py",
+      "causas_impresas": [
+        "run_once.py:351: run_once_h_ac17.CapturaSinRedactar: salida sin redactar en el canal 'run_once.stdout'"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "redactar antes de persistir (orden del sumidero de F)",
+      "id": "M10",
+      "motivo_esperado": "salida sin redactar",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.25s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_intento_unico.py::test_la_captura_de_stdout_redacta_antes_de_escribir"
+      ],
+      "sha256_antes": "5b8d246fa95bd3d70ae6b4825d78192fd2012128d69ced69aa750fd56d82f955",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC14",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py",
+      "causas_impresas": [
+        "test_fase_h_onboarding_procedencia.py:127: AssertionError: el derivado de la copia tiene que tomar la rama YAML: si no, la prueba no llega al loader"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "la URL del derivado es la de la corrida (unica edicion del contenido)",
+      "id": "M11",
+      "motivo_esperado": "tomar la rama YAML",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed, 1 passed in 0.25s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_onboarding_procedencia.py::test_la_procedencia_declarar_no_disponible_los_campos_no_transportados"
+      ],
+      "sha256_antes": "eaedb6eb82a4c30fe03e5a473a45624b8e95785e98f535f028809e98d7e97b1f",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC14",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py",
+      "causas_impresas": [
+        "test_fase_h_onboarding_procedencia.py:156: Failed: DID NOT RAISE <class 'ValueError'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "sin fecha_captura no se deriva (fail-closed propio de H)",
+      "id": "M12",
+      "motivo_esperado": "ValueError",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "1 failed in 0.26s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_onboarding_procedencia.py::test_sin_fecha_de_captura_la_derivacion_rechaza_en_lugar_de_seguir"
+      ],
+      "sha256_antes": "eaedb6eb82a4c30fe03e5a473a45624b8e95785e98f535f028809e98d7e97b1f",
+      "verdes_tras_restaurar": true
+    },
+    {
+      "ac": "AC14",
+      "anclaje_unico": true,
+      "archivo": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py",
+      "causas_impresas": [
+        "derivar_onboarding.py:70: IndexError: list index out of range",
+        "test_fase_h_onboarding_procedencia.py:105: Failed: DID NOT RAISE <class 'ValueError'>"
+      ],
+      "estado": "ROJO_POR_EL_GUARD",
+      "exit_con_mutante": 1,
+      "exit_tras_restaurar": 0,
+      "guard": "selector unico: cero o multiples detienen",
+      "id": "M13",
+      "motivo_esperado": "DID NOT RAISE",
+      "motivo_presente_en_el_rojo": true,
+      "restaurado_por_sha256": true,
+      "resumen_con_mutante": "2 failed in 0.23s",
+      "rojo_por_instrumento_roto": false,
+      "rojos": [
+        "tests/test_fase_h_onboarding_procedencia.py::test_cero_coincidencias_detienen_el_preflight",
+        "tests/test_fase_h_onboarding_procedencia.py::test_multiples_coincidencias_detienen_el_preflight"
+      ],
+      "sha256_antes": "eaedb6eb82a4c30fe03e5a473a45624b8e95785e98f535f028809e98d7e97b1f",
+      "verdes_tras_restaurar": true
+    }
+  ],
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "regla": "un rojo deliberado con guard desconectado no es un defecto: se restaura y se verifica por hash. Si el rojo viniera de import/sintaxis, el mutante no conta.",
+  "resumen": {
+    "anclajes_no_unicos": 0,
+    "mutantes": 13,
+    "restaurados_por_sha256": 13,
+    "rojos_por_el_guard": 13,
+    "rojos_por_import_o_sintaxis": 0
+  }
+}

@@ -1,0 +1,21 @@
+M1: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_dos_lanzadores_concurrentes_uno_solo_crea_proceso :: test_fase_h_intento_unico.py:229: AssertionError: los dos lanzadores ganaron: sin O_EXCL la reserva exclusiva 
+M2: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_un_control_con_forma_de_credencial_no_llega_a_disco :: test_fase_h_intento_unico.py:439: Failed: DID NOT RAISE <class 'run_once_h_ac17.CapturaSinRedactar'>
+M3: exit=1 restaurado=True rojos=2 motivo=True | test_fase_h_intento_unico.py::test_assert_redacted_tiene_lamador_en_el_producto, test_fase_h_intento_unico.py::test_el_guard_de_fuga_operante_cuando_redaccion_se_apaga :: test_fase_h_intento_unico.py:455: AssertionError: assert 'assert_redacted' in {'decode', 'encode', 'hexdigest'
+M4: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_divergencia_de_hash_contra_el_preflight_detiene_el_spawn :: test_fase_h_intento_unico.py:309: Failed: spawn con arbol divergente
+M5: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_un_argv_que_el_preflight_no_autorizo_se_rechaza :: test_fase_h_intento_unico.py:321: Failed: spawn con argv no autorizado
+M6: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_attempts_no_se_baja_jamas :: test_fase_h_intento_unico.py:272: Failed: DID NOT RAISE <class 'run_once_h_ac17.TransicionInvalida'>
+M7: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_control_dudoso_es_terminal_y_no_se_resea :: test_fase_h_intento_unico.py:265: Failed: DID NOT RAISE <class 'run_once_h_ac17.TransicionInvalida'>
+M8: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_onboarding_procedencia.py::test_las_ram_silenciosas_del_loader_no_son_favorables :: test_fase_h_onboarding_procedencia.py:432: AssertionError: assert True is False
+M9: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_onboarding_procedencia.py::test_el_preflight_recalculado_no_inventa_el_consentimiento :: test_fase_h_onboarding_procedencia.py:448: AssertionError: el consentimiento es acto del operador; H no puede 
+M10: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_intento_unico.py::test_la_captura_de_stdout_redacta_antes_de_escribir :: run_once.py:351: run_once_h_ac17.CapturaSinRedactar: salida sin redactar en el canal 'run_once.stdout'
+M11: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_onboarding_procedencia.py::test_la_procedencia_declarar_no_disponible_los_campos_no_transportados :: test_fase_h_onboarding_procedencia.py:127: AssertionError: el derivado de la copia tiene que tomar la rama YAM
+M12: exit=1 restaurado=True rojos=1 motivo=True | test_fase_h_onboarding_procedencia.py::test_sin_fecha_de_captura_la_derivacion_rechaza_en_lugar_de_seguir :: test_fase_h_onboarding_procedencia.py:156: Failed: DID NOT RAISE <class 'ValueError'>
+M13: exit=1 restaurado=True rojos=2 motivo=True | test_fase_h_onboarding_procedencia.py::test_cero_coincidencias_detienen_el_preflight, test_fase_h_onboarding_procedencia.py::test_multiples_coincidencias_detienen_el_preflight :: derivar_onboarding.py:70: IndexError: list index out of range / test_fase_h_onboarding_procedencia.py:105: Fai
+{
+  "mutantes": 13,
+  "rojos_por_el_guard": 13,
+  "restaurados_por_sha256": 13,
+  "rojos_por_import_o_sintaxis": 0,
+  "anclajes_no_unicos": 0
+}
+MUT_EXIT=0

@@ -1,5 +1,62 @@
 # Changelog
 
+## [Sin publicar] - FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+
+### Runner de intento único, onboarding derivado con procedencia y preflight NO FAVORABLE
+
+**Qué cambió.** Tres artefactos nuevos dentro del allowlist de la fase (que acota el código nuevo al runner) y
+**cero archivos de producto modificados**:
+
+- `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py` — runner **stdlib**: reserva por creación
+  exclusiva (`O_CREAT` + `O_EXCL`) **antes** del spawn, máquina de estados con terminales
+  (`RESERVADO → EN_EJECUCION → FINALIZADO|FALLO|TIMEOUT`, y `DUDOSO` terminal), `attempts` que nunca baja,
+  vigilancia reanudable del PID sin relanzamiento, `exit_code` escrito solo si se observó la terminación, captura
+  de stdout/stderr **redactada antes de disco y de consola** con el sumidero calificado en FASE-F, snapshot previo
+  de `.agent/memory` con sha256, `preservar_resultado` (inventario con hash, cuarentena clasificada como
+  `CUARENTENA_NO_PUBLICADA`, faltantes nombrados) y `verificar_preflight` (argv, requisitos y hashes congelados).
+  El sumidero se carga **por ruta de archivo** porque `modules/utils/__init__.py` importa `horarios_detector`, que
+  importa selenium: un import normal arrastraría el grafo productivo y `.env` dentro del runner.
+- `…/FASE-H/derivar_onboarding.py` + `onboarding_provenance.json` — el YAML se deriva con el transformador real
+  (`main._observation_to_onboarding_format`) cambiando **una sola** clave (`hotel.url`, atribuida al operador),
+  exige `fecha_captura` (sin fecha **rechaza**: fail-closed propio, porque el bloque del loader no corre si
+  `ONBOARDING_FRESHNESS_HOURS` no está definida — medido: no está en el entorno, ni en `.env`, ni en la
+  template), declara `adr_cop` y `occupancy_rate` como `no_disponible` (los descarta `_FIELD_MAP`; no se estiman,
+  DA-P1.9), registra hash de la fuente antes y después, selector único, URLs con su normalización y productor por
+  campo, y **qué rama tomó el loader real** por comparación de contenido, no por la clave `fuente`.
+- `…/FASE-H/integracion_offline.py` + `.json` — recorrido del flujo productivo con la **red cortada** y prueba de
+  diente: parser real, puerta de permisos (`auto` permite la auditoría de pago, `chat` la omite y el pipeline
+  sigue con `audit_result=None`), loader, frescura (edad medida: **76 días**), pre-gate de D con su par
+  permitir/bloquear, lector AC9 de D sobre el baseline real, resolvedor de E y snapshot de memoria. **No se lanzó
+  `main.py v4complete`.**
+
+**El preflight que produce la fase es NO FAVORABLE y ese es su resultado.** 12 requisitos favorables y 1 en
+contra: `consentimiento_datado_sobre_la_url_viva`, un acto que FASE-A reservó al operador (el consentimiento de
+FASE-P4 ampara otra URL y declara expresamente que no es entrega a cliente). Con el preflight en contra,
+`run_once.py --spawn` se niega **antes** de reservar: la arista a E2E queda cerrada y el **contador v4complete
+sigue en 0/1**. El control productivo `evidence/…/FASE-E2E/run_control.json` no existe, y un test lo assertiona.
+
+**Mediciones.** Canónicas **4.982 → 5.040 (+58)** en `tests/test_fase_h_intento_unico.py` (30) y
+`tests/test_fase_h_onboarding_procedencia.py` (28). PRE S1 (10 rutas literales) **367 passed / EXIT 0** → POST S1
+**367 passed / EXIT 0 (delta 0)**; POST extendido **425 passed / EXIT 0**. S2 (`tests/e2e`) medida aparte,
+idéntica en PRE y POST (17 passed / 4 skipped), por la contaminación de `selenium` del conftest de ese
+directorio: se declara con dueño (S-H4) en vez de esconderla. **13/13 mutantes rojos por su guard con la causa
+impresa, 13/13 restaurados por sha256, 0 por import o sintaxis.** Quick de apertura **13/13 / EXIT 0**.
+
+**Dos premisas del plan cayeron contra el artefacto** (`L-V.3`, cuarta ocurrencia): el `hotel_id` del reporte no
+sale de `"hotel_id": args.url` sino de `OnboardingController.generate_hotel_id` (y hay una cuarta cadena, el slug
+`hotel_don_alfonso` de rutas y ZIP); y por AST el análisis previo **solo se imprime** en `run_v4_complete_mode` —
+la reutilización vive en `run_execution_mode`. Ninguna exigencia del preflight se retiró: se re-ancló a la razón
+medida, y quedó abierta **S-H7** porque `find_latest_analysis` devuelve un **directorio** (se guarda
+`analysis_path=output_dir`).
+
+**Deuda con dueño.** S-H1 consentimiento datado (operador; bloquea E2E), S-H2 anclaje por `run_id` de los JSON
+timestamped y S-H3 `legacy-ancestor-walk` (deudas de E asignadas a H: la cura es de `review_inputs.py` y queda
+fuera del allowlist de esta fase), S-H4 conftest de `tests/e2e`, S-H5 modo `auto` que autoriza gasto externo,
+S-H6 el spawn borraría 8 de 10 sesiones de memoria, S-H7 referencia de análisis previo, S-H8 dos definiciones de
+normalización de URL, S-H9 `DOMAIN_PRIMER` (checkpoint, el mandato no autoriza escribirlo) y S-H10 erratas de
+REGISTRY esperando el sello de RELEASE. **Cierran por H las deudas S-F5 y S-F8 de FASE-F.** Contador v4complete:
+**0/1**. E2E no se inició (R1).
+
 ## [Sin publicar] - FASE-F del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
 
 ### Sumidero único de redacción y AC13 verificado offline (sanitización de salidas)

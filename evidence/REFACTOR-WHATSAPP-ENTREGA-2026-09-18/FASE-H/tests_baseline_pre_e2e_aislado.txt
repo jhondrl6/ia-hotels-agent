@@ -1,0 +1,6 @@
+# FASE-H PRE - unidad aislada S2 (tests/e2e, medida aparte por la contaminacion de su conftest)
+# Comando exacto: ./venv/Scripts/python.exe -m pytest tests/e2e -q
+# HEAD de partida: ec8a272 | fecha: 2026-10-06
+................s.sss                                                    [100%]
+17 passed, 4 skipped in 4.91s
+EXIT=0

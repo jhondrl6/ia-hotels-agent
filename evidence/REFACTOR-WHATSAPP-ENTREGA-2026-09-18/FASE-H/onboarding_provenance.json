@@ -1,0 +1,86 @@
+{
+  "derivado": {
+    "bytes": 499,
+    "ruta": "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/clientes/hotel_don_alfonso_onboarding.yaml",
+    "sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734"
+  },
+  "fase": "FASE-H",
+  "fixture_descartado_como_modelo": {
+    "motivo": "carece de metadatos.fecha_captura y de campos_confirmados, y su canal_directo_pct 20.0 es el default del pipeline cristalizado",
+    "ruta": "tests/fixtures/donalfonsohotel_onboarding.yaml"
+  },
+  "fuente_inmutable": {
+    "observaciones_en_la_fuente": 6,
+    "ruta": "data/hotel_observations/observations.json",
+    "sha256_antes": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+    "sha256_despues": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+    "sin_cambio": true
+  },
+  "generado_el": "2026-10-06",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "productor_por_campo": {
+    "adr_cop": "no_disponible: _FIELD_MAP del transformador no lo propaga; no se estima ni se rellena",
+    "datos_operativos.canal_directo_pct": "_observation_to_onboarding_format._FIELD_MAP desde observations.json[Hotel Don Alfonso]",
+    "datos_operativos.habitaciones": "_observation_to_onboarding_format._FIELD_MAP desde observations.json[Hotel Don Alfonso]",
+    "datos_operativos.reservas_mes": "_observation_to_onboarding_format._FIELD_MAP desde observations.json[Hotel Don Alfonso]",
+    "datos_operativos.valor_reserva_cop": "_observation_to_onboarding_format._FIELD_MAP desde observations.json[Hotel Don Alfonso]",
+    "hotel.url": "unica edicion explicita de esta fase (URL indicada por el operador)",
+    "occupancy_rate": "no_disponible: _FIELD_MAP del transformador no lo propaga; no se estima ni se rellena"
+  },
+  "rama_aceptable_para_certificar_ac14": "YAML_DE_DIR_CLIENTES",
+  "rama_efectiva": "YAML_DE_DIR_CLIENTES",
+  "ramas_posibles_del_loader": [
+    "YAML_DE_DIR_CLIENTES",
+    "OBSERVATIONS_DENTRO_DE_LA_FUNCION",
+    "NINGUNA (defaults en run_v4_complete_mode)"
+  ],
+  "respaldo_externo": {
+    "corrobora": [
+      "rooms: 11 productos de alojamiento, cero divergencia"
+    ],
+    "declaracion": "registro de FASE-A con fecha y metodo; no genero ningun valor nuevo y no es consentimiento ni autorizacion de entrega.",
+    "no_corrobora": [
+      "monthly_reservations",
+      "direct_channel_percentage"
+    ],
+    "ruta": "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/fuente-publica-precios-2026-09-19.md"
+  },
+  "schema": "iah-onboarding-provenance/1.0",
+  "selector": {
+    "cero_o_multiples_detienen": true,
+    "coincidencias": 1,
+    "expresion": "hotel_name == \"Hotel Don Alfonso\""
+  },
+  "transformador": {
+    "campos_no_transportados": [
+      "adr_cop",
+      "occupancy_rate"
+    ],
+    "campos_que_propaga": [
+      "canal_directo_pct",
+      "habitaciones",
+      "reservas_mes",
+      "valor_reserva_cop"
+    ],
+    "simbolo": "main._observation_to_onboarding_format"
+  },
+  "url": {
+    "casan": false,
+    "declaracion": "correccion de identidad trazable con atribucion al operador. No se afirma equivalencia universal de dominios ni redireccion comprobada en esta fase.",
+    "matching_del_loader": "por _normalize_url(hotel.url); el nombre no participa (Args de su docstring)",
+    "normalizada_original": "hoteldonalfonso.com",
+    "normalizada_solicitada": "donalfonsohotel.com",
+    "original_en_la_fuente": "https://hoteldonalfonso.com/",
+    "solicitada_por_el_operador": "https://www.donalfonsohotel.com/"
+  },
+  "valores_declarados_por_el_operador": {
+    "canal_directo_pct": 30.0,
+    "confidence_de_la_fuente": 0.95,
+    "epistemic_status_de_la_fuente": "verified",
+    "fecha_captura": "2026-07-22",
+    "habitaciones": 11,
+    "limite": "dato capturado el 2026-07-22; NO se presenta como verificado hoy. Su edad la calcula el control de frescura de H, que es fail-closed, no este archivo.",
+    "reservas_mes": 140,
+    "valor_reserva_cop": 330000
+  }
+}

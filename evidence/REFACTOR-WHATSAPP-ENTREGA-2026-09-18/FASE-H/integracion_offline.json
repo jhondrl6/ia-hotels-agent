@@ -1,0 +1,319 @@
+{
+  "argv_congelado": [
+    "./venv/Scripts/python.exe",
+    "main.py",
+    "v4complete",
+    "--url",
+    "https://www.donalfonsohotel.com/",
+    "--nombre",
+    "Hotel Don Alfonso",
+    "--output",
+    "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+    "--permission-mode",
+    "auto"
+  ],
+  "cli_real_invocada": false,
+  "contratos_de_D_y_E": {
+    "lector_AC9_de_D": {
+      "baseline_real": {
+        "archivos": [
+          "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation.json",
+          "output/TAREA7-2026-09-19/v4_complete/hotel_don_alfonso/v4_audit/coherence_validation_post_gen.json"
+        ],
+        "causas": [
+          "",
+          ""
+        ],
+        "estados": [
+          "OK",
+          "OK"
+        ]
+      },
+      "estados_en_tmp": {
+        "ABSENT": "ABSENT",
+        "READ_ERROR_por_json_roto": "READ_ERROR",
+        "READ_OK_con_lista_vacia_valida": "OK"
+      },
+      "simbolo": "coherence_validator.read_coherence_report"
+    },
+    "pre_gate_de_D": {
+      "lectura": "funcion de modulo; `PublicationGateEngine._check_coherence` no existe (rectificacion ya registrada por D)",
+      "par_permitir_bloquear": {
+        "bloquea_por_errores": {
+          "blocks_asset_generation": true,
+          "generate_proposal": false,
+          "guilty_check_names": [
+            "whatsapp_verified"
+          ],
+          "passed": false
+        },
+        "permite_sin_errores": {
+          "blocks_asset_generation": false,
+          "generate_proposal": true,
+          "guilty_check_names": [],
+          "passed": true
+        }
+      },
+      "simbolo": "main._coherence_pre_gate_decision"
+    },
+    "resolvedor_de_E": {
+      "deuda_que_H_declara": "los JSON timestamped (gate_report_*, pain_ledger, financial_scenarios) siguen sin anclarse por run_id: H lo declara con dueño E2E/VERIFY y no lo cura porque el allowlist de H acota el codigo nuevo al runner stdlib",
+      "existe": true,
+      "simbolo": "ReviewInputs.for_run",
+      "vocabulario_de_lectura": [
+        "READ_OK",
+        "ABSENT",
+        "READ_ERROR",
+        "NO_LEIDO"
+      ]
+    },
+    "sumidero_de_F": {
+      "boca_que_cierra_deuda": "S-F8: H lo llama en redactar_salida() antes de escribir captura alguna",
+      "guard": "assert_redacted(texto, channel=...) del contrato de F",
+      "ruta": "modules/utils/redaction.py",
+      "sha256": "4dff37537a6da33dcbcb3adebdb7a79209dafb2ee44c4b1afe03e3488a6a9365"
+    }
+  },
+  "frescura": {
+    "bloque_de_frescura_del_loader_corre": false,
+    "control_de_H": "fail-closed: sin fecha se rechaza el spawn; con fecha se declara la edad y se exige consentimiento datado sobre la URL viva (dueño: operador)",
+    "edad_dias": 76,
+    "fecha_captura_presente": true,
+    "motivo": "si la variable no esta, `if freshness_hours:` no entra; y si estuviera pero faltara fecha, `if fecha_str:` tambien se salta el bloque. Doble silencio medido.",
+    "variable_en_dotenv": false,
+    "variable_en_dotenv_template": false,
+    "variable_en_el_entorno": false
+  },
+  "generado_el": "2026-10-06",
+  "identidades": {
+    "declaracion": "son tres valores distintos para el mismo hotel; el preflight los fija ANTES del spawn. Ninguno es 'el archivo mas reciente entre hoteles'.",
+    "hotel_id_del_reporte": {
+      "bandera_que_participa": "--url",
+      "productor": "OnboardingController.generate_hotel_id(args.url); main.py lo escribe en v4_complete_report.json",
+      "valor": "hotel_donalfonsohotel.com"
+    },
+    "identidad_de_memoria": {
+      "bandera_que_participa": "--url",
+      "productor": "_normalize_url(args.url) -> target_id de MemoryManager",
+      "valor": "donalfonsohotel.com"
+    },
+    "los_tres_son_distintos": true,
+    "nombre_del_paquete": {
+      "bandera_que_participa": "--nombre",
+      "productor": "hotel_name = args.nombre or _extract_hotel_name_from_url(args.url)",
+      "si_se_omite_el_flag": "Donalfonsohotel",
+      "slug_de_rutas_y_zip": "hotel_don_alfonso",
+      "valor": "Hotel Don Alfonso"
+    },
+    "rectificacion_al_prompt": "el prompt de H decia que el hotel_id del reporte sale de `\"hotel_id\": args.url` en run_v4_complete_mode; medido, esa asignacion es el payload financiero (main.py:1909/2000/2073), mientras el reporte escribe `state.hotel_id`, que produce generate_hotel_id(). Se fija el productor real, no el citado."
+  },
+  "limite_del_recorrido": "Se ejercitaron parser, puerta de permisos, loader, frescura, pre-gate y resolvedor. NO se ejecuto run_v4_complete_mode: eso consume el intento unico y es de E2E.",
+  "loader": {
+    "campos_confirmados": [
+      "habitaciones",
+      "reservas_mes",
+      "valor_reserva_cop",
+      "canal_directo_pct"
+    ],
+    "devolvio_datos": true,
+    "dir_clientes": "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/clientes",
+    "dir_clientes_existe": true,
+    "fallback_de_main": "run_v4_complete_mode reintenta en output/clientes si el directorio propio vuelve None; esa ruta esta ocupada por zi-one-luxury_onboarding.yaml y tampoco casa por URL",
+    "fecha_captura": "2026-07-22",
+    "fuente_declarada": "observations_tier_a",
+    "rama_efectiva": "YAML_DE_DIR_CLIENTES",
+    "ramas_descartadas": [
+      "OBSERVATIONS_DENTRO_DE_LA_FUNCION: la URL del warehouse normaliza a hoteldonalfonso.com y no casa con la de la corrida",
+      "NINGUNA (defaults en run_v4_complete_mode): se rechaza; el derivado existe y el loader lo toma"
+    ]
+  },
+  "parseo_real": {
+    "--nombre": "Hotel Don Alfonso",
+    "--onboarding-file NO existe (bandera inventada)": true,
+    "--output": "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+    "--permission-mode": "auto",
+    "--permission-mode existe en build_parser": true,
+    "--url": "https://www.donalfonsohotel.com/",
+    "argv_sin_interprete": [
+      "v4complete",
+      "--url",
+      "https://www.donalfonsohotel.com/",
+      "--nombre",
+      "Hotel Don Alfonso",
+      "--output",
+      "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "--permission-mode",
+      "auto"
+    ],
+    "banderas_prohibidas_presentes_en_el_argv": [],
+    "command": "v4complete",
+    "default_sin_el_flag": "auto"
+  },
+  "permisos": {
+    "auto_permite_auditoria_externa": true,
+    "chat_permite_auditoria_externa": false,
+    "consecuencia_de_chat": {
+      "audit_result": "None (rama `if not check_permission(...)` de run_v4_complete_mode)",
+      "mismo_exit_code_resultado_distinto": true,
+      "sigue_el_pipeline_con_defaults": true
+    },
+    "modo_efectivo_del_argv_congelado": "auto",
+    "prueba_de_que_chat_bloquea_es_determinista": true
+  },
+  "red": {
+    "diente_del_corte": true,
+    "prueba": "socket.create_connection(('donalfonsohotel.com', 443)) debe levantar AssertionError",
+    "puntos_sustituidos": [
+      "create_connection",
+      "getaddrinfo"
+    ]
+  },
+  "schema": "iah-fase-h-integracion/1.0",
+  "snapshot_memoria_previo": {
+    "analysis_reutilizable_para_el_canonical_url": {
+      "consumo_en_la_ruta_de_v4complete": {
+        "asignaciones": 1,
+        "consumos_que_cambian_el_flujo": [],
+        "funcion": "run_v4_complete_mode",
+        "lecturas": 2,
+        "lecturas_como_guard_if": 1,
+        "lecturas_dentro_de_print": 1,
+        "lineas_de_uso": [
+          1736,
+          1737,
+          1738
+        ],
+        "productor_de_reutilizacion": "run_execution_mode: DeliveryContext.from_analysis_json (main.py:806-811), que no es la ruta de v4complete",
+        "solo_se_declara_en_consola": true
+      },
+      "declaracion_de_dependencia": "si E2E no lo excluye, la corrida se declara dependiente del analisis previo y su evidencia se lee con esa marca, no como corrida aislada (L-PF11)",
+      "encontrado": true,
+      "exige_exclusion_explicita_o_declaracion": true,
+      "rectificacion": "el hallazgo existe y se declara; medido por AST, en run_v4_complete_mode la variable solo se imprime. La reutilizacion que describe el prompt vive en run_execution_mode. Aun asi E2E debe excluir el analisis previo o declararlo: la premisa no se hereda (L-V.3)",
+      "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\TAREA7-2026-09-19\\v4_complete"
+    },
+    "archivos": 21,
+    "bytes_totales": 53734,
+    "declaracion": "`--output` aísla el arbol de salida pero no la memoria: run_v4_complete_mode llama a memory.cleanup_old_sessions(days=20) y find_latest_analysis escanea el output fijo. El snapshot es PREVIO al spawn y se preserva, no se reconstruye despues.",
+    "directorio": ".agent/memory",
+    "inventario_completo": [
+      {
+        "bytes": 276,
+        "ruta": ".agent/memory/archives/sessions/2026-01-15_8cd64ac1.json",
+        "sha256": "1e90fa9b0ab3f37524d5d7f67660a5b10a5b1a66de0b44eeb6a184eedd255b86"
+      },
+      {
+        "bytes": 721,
+        "ruta": ".agent/memory/archives/sessions/2026-02-19_9ca626af.json",
+        "sha256": "0901c1956549ffffef9bc8bfebb08893ba1b0afc6d5cc96c18d902e1ba392ece"
+      },
+      {
+        "bytes": 571,
+        "ruta": ".agent/memory/archives/sessions/2026-02-20_a01b9738.json",
+        "sha256": "ea0bb89f29ad1daf3e90e22103da6602a6c45b5ae84ab36efd5c01410c856667"
+      },
+      {
+        "bytes": 3112,
+        "ruta": ".agent/memory/archives/sessions/2026-02-20_b435b315.json",
+        "sha256": "455209139d820110d91d5d69bd4692f87eeabeb3457da2c675e766aa1e0c1687"
+      },
+      {
+        "bytes": 7787,
+        "ruta": ".agent/memory/archives/sessions/2026-02-20_consolidated.json",
+        "sha256": "89da8374129cfd5c992322e1aa1955b6434083c208abe7f82aa81728ea7519fe"
+      },
+      {
+        "bytes": 703,
+        "ruta": ".agent/memory/archives/sessions/2026-02-20_f1429339.json",
+        "sha256": "20c873e9a45b5d233149415629a3a2bc5b57ead6d2d3a890592c164d5b4799ef"
+      },
+      {
+        "bytes": 5425,
+        "ruta": ".agent/memory/COMMON_ERRORS.md",
+        "sha256": "f47e6b0764b2a50fe70f04845b012bab5fcb7eaaed07f173b3cace263f2fb265"
+      },
+      {
+        "bytes": 109,
+        "ruta": ".agent/memory/current_state.json",
+        "sha256": "cf1aae29b442890fdc94f954c56daaa360a41efb7adad3ad70b6dabbcebeb13e"
+      },
+      {
+        "bytes": 5117,
+        "ruta": ".agent/memory/error_catalog.json",
+        "sha256": "91c060ca0656e92305c9617e70a38a2ad9f5c0657093195db559745eb211ae4b"
+      },
+      {
+        "bytes": 4886,
+        "ruta": ".agent/memory/sessions/2026-08-31_16b8b476.json",
+        "sha256": "728b4ebd9716116c49a0bca1c234ae8e0332311e7c9c3983552cc39fd933a15b"
+      },
+      {
+        "bytes": 778,
+        "ruta": ".agent/memory/sessions/2026-08-31_996a1a9b.json",
+        "sha256": "3e194e1ec9d1cb6594990d780ec30353d298e896d80bdb67e0eb702166dc42cc"
+      },
+      {
+        "bytes": 778,
+        "ruta": ".agent/memory/sessions/2026-09-04_05929e88.json",
+        "sha256": "ec5fd0d06cdb1ea3e4a6744d09c5804245b620ac104c7e3a03ea66650f79c500"
+      },
+      {
+        "bytes": 5058,
+        "ruta": ".agent/memory/sessions/2026-09-04_9d9b4f36.json",
+        "sha256": "e46fc7adca447a725baf7e10ca2b5f07d40c36d3b65c0ed6bce30c9de03e318b"
+      },
+      {
+        "bytes": 4418,
+        "ruta": ".agent/memory/sessions/2026-09-11_87062dc4.json",
+        "sha256": "506b40f025a45797b54d5fe024ffe8ce42abd1b58b8fc63b7936621b7cf89fb2"
+      },
+      {
+        "bytes": 778,
+        "ruta": ".agent/memory/sessions/2026-09-11_9d9a1248.json",
+        "sha256": "b95a0821b460d46d2d9cc4cef4ff4451856578434d55adb43637121e6951af64"
+      },
+      {
+        "bytes": 4912,
+        "ruta": ".agent/memory/sessions/2026-09-14_1441d3e1.json",
+        "sha256": "3acc0238e456999995ea6bfbcc72fffb27add5699b06dc740cd64f06b2b6c4eb"
+      },
+      {
+        "bytes": 778,
+        "ruta": ".agent/memory/sessions/2026-09-14_eee6a379.json",
+        "sha256": "f8c09a9b8356fdc48e49b0ef641b47ac6d735f7b95fa4608ecefcd4d424afb7b"
+      },
+      {
+        "bytes": 4803,
+        "ruta": ".agent/memory/sessions/2026-09-19_3b0f3a94.json",
+        "sha256": "92d92bc253848b21cbb1c18f2e704dd00ba45033bac9f3e37f1d4852a78d6ced"
+      },
+      {
+        "bytes": 778,
+        "ruta": ".agent/memory/sessions/2026-09-19_dfa27c04.json",
+        "sha256": "e010c72d99771663611026141737b6f360f804879586f16b01f27adc9348ee42"
+      },
+      {
+        "bytes": 1803,
+        "ruta": ".agent/memory/target_index.json",
+        "sha256": "d4743a375781713a9a730a1424dece1a2c65a6ebe76f4ad84284f63251b53bc8"
+      },
+      {
+        "bytes": 143,
+        "ruta": ".agent/memory/url_guard_force_events.json",
+        "sha256": "f30292aeeb74bafdce5769f64bfc2625753e49d288c1474224e6e666f59b3a3b"
+      }
+    ],
+    "nombres_que_borraria": [
+      ".agent/memory/sessions/2026-08-31_16b8b476.json",
+      ".agent/memory/sessions/2026-08-31_996a1a9b.json",
+      ".agent/memory/sessions/2026-09-04_05929e88.json",
+      ".agent/memory/sessions/2026-09-04_9d9b4f36.json",
+      ".agent/memory/sessions/2026-09-11_87062dc4.json",
+      ".agent/memory/sessions/2026-09-11_9d9a1248.json",
+      ".agent/memory/sessions/2026-09-14_1441d3e1.json",
+      ".agent/memory/sessions/2026-09-14_eee6a379.json"
+    ],
+    "sesiones_que_cleanup_old_sessions_20_dias_borraria": 8,
+    "sha256_del_inventario": "d65bcf454b6929a0fc61dd89f47293b59f4394b8d258e9fbbbf7d3c87e81ad48"
+  }
+}

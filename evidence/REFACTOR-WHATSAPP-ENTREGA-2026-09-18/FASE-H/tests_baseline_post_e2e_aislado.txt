@@ -1,0 +1,5 @@
+# FASE-H POST - unidad S2 aislada (tests/e2e), misma medida que el PRE
+# comando: ./venv/Scripts/python.exe -m pytest tests/e2e -q
+................s.sss                                                    [100%]
+17 passed, 4 skipped in 6.26s
+EXIT=0

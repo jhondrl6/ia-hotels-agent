@@ -193,4 +193,58 @@ acceso a una credencial filtrada: esa es la pata que AC13 no deja certificar por
 `scripts/preload_prospects_gbp.py` persiste `PlaceData.error_message` (fuera de allowlist); S-F2
 `_query_perplexity` sin `try/except` propio ni diente de consola; S-F3 el escaneo nuevo cubre el instante de la
 validacion, no un watch; S-F4 la allowlist de cuarentena de P5 queda intacta. Y una separacion que sigue
-vigente: la integracion con captura/snapshot del runner es prueba de **H**.
+vigente: la integracion con captura/snapshot del runner es prueba de **H**. ⟦**Cerrada por H el 2026-10-06**: la
+boca de captura del runner (`run_once.redactar_salida`) llama `redact_secrets` y `assert_redacted` del contrato de
+F antes de escribir o mostrar, y `preflight.json` pasa el mismo guard. S-F5 y S-F8 quedan cerradas; S-F6
+(revocación) y S-F7 (errata de registro) siguen con su dueño⟧.
+
+## Cierre incremental de FASE-H (2026-10-06)
+
+**Qué se cerró.** El onboarding de la corrida se derivó con el transformador real del repo
+(`main._observation_to_onboarding_format`), cambiando **una sola** clave del resultado (`hotel.url`, atribuida al
+operador en `onboarding_provenance.json`) y declarando el resto con productor por campo. Se recorrió el flujo
+productivo **offline** —parser, puerta de permisos, loader, frescura, pre-gate de D, lector AC9 de D sobre el
+baseline real, resolvedor de E y snapshot previo de `.agent/memory`— con la red cortada y con prueba de que el
+corte tiene diente. Y se implementó el runner stdlib previsto:
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py`, con reserva por creación exclusiva antes del
+spawn, máquina de estados terminales, vigilancia del PID sin relanzamiento, captura redactada por el sumidero
+calificado en F y preservación de evidencia con hash. **0 archivos de producto modificados**: el allowlist de H
+acota el código nuevo al runner. Nada de la fase ejecutó `main.py v4complete` y el control productivo de FASE-E2E
+no se creó (lo assertiona un test de la batería).
+
+**El veredicto del preflight es NO FAVORABLE, y ese es el resultado de la fase.** 12 requisitos favorables y 1 en
+contra (`consentimiento_datado_sobre_la_url_viva`), un acto que FASE-A reservó al operador. Consecuencia
+gobernable: `run_once.py --spawn` se niega **antes** de reservar, la arista a E2E queda cerrada y el contador
+sigue en **0/1**.
+
+**Métricas de la fase (medidas, no previstas).** Canónicas **4.982 → 5.040 (+58)** en dos baterías nuevas
+(`tests/test_fase_h_intento_unico.py` 30 y `tests/test_fase_h_onboarding_procedencia.py` 28). PRE S1 (10 rutas
+literales) **367 passed / EXIT 0** → POST S1 **367 passed / EXIT 0 (delta 0)**; POST extendido **425 / EXIT 0**.
+S2 (`tests/e2e`) medida aparte por la contaminación de `selenium` de su conftest: 17 passed / 4 skipped / EXIT 0
+idéntica en PRE y POST. **13/13 mutantes rojos por su guard con la causa impresa, 13/13 restaurados por sha256,
+0 por import o sintaxis.** Rama del loader `YAML_DE_DIR_CLIENTES`, medida dos veces y decidida por contenido.
+Edad del dato **76 días** con `ONBOARDING_FRESHNESS_HOURS` ausente (medido por presencia, nunca por valor).
+Snapshot previo: 21 archivos de `.agent/memory` con sha256 y **8 de 10** sesiones que el spawn borraría.
+Quick de apertura **13/13 / EXIT 0** y quick de cierre **13/13 / EXIT 0** (`quick_final.txt`).
+**Sello de regresión completa: 1 failed / 5.122 passed / 41 skipped / 4 xfailed en 359,83 s (EXIT 1)** sobre el
+árbol definitivo; el único rojo es el ajeno del piloto JEV, que pasa 15/15 en su archivo aislado y 141/141 en su
+directorio. Cuatro corridas anteriores quedaron desechadas (dos por superponerse entre sí, dos vencidas por ediciones
+documentales de la propia fase) y se archivan en
+`evidence/…/FASE-H/descartados_por_superposicion_de_corridas/` con su número real: no se reutilizan como verde
+y las cuatro devuelven el mismo conteo, 1 failed / 5.122 passed, con el mismo rojo ajeno.
+
+**Rectificaciones medidas por H** (detalle en `evidence/…/FASE-H/resultados-y-observaciones.md` §1 y en la fila H
+de `10-analisis`): el `hotel_id` del reporte lo produce `OnboardingController.generate_hotel_id`, no
+`"hotel_id": args.url`; y el análisis previo, medido por AST, solo se imprime en `run_v4_complete_mode` — la
+reutilización vive en `run_execution_mode`. Ninguna exigencia del preflight se retiró: se re-anccló a la razón
+medida, y se abrió **S-H7** porque lo que devuelve el índice de sesiones es un **directorio**.
+
+**Archivos afiliados tocados por H.** Producto: ninguno. Tests: 2 archivos nuevos. Evidencia: 16 artefactos bajo
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/` (runner, derivación, recorrido offline + JSON, procedencia,
+preflight, informe, selección, 5 crudos de pytest, arnés de mutaciones + JSON + crudo). Docs del plan: `00`
+(§Aplicación efectiva H + `L-H-RES` y `L-H-ARGV`), `05-prompt-inicio-sesion-fase-H.md` (estado, dos premisas
+rectificadas y los casilleros del presupuesto), `06-checklist-implementacion.md` (cabecera, fila H, filas
+AC9/AC12/AC13/AC14/AC15/AC17 y cuatro casilleros de prerrequisitos/controles), `dependencias-fases.md` (filas F,
+H y E2E + cierre documental), `09` y `10` (secciones y fila de la fase), `CHANGELOG.md` bajo `## [Sin publicar]`
+y `docs/GUIA_TECNICA.md`. Derivados regenerados con su escritor al cerrar: packs, índice de lecciones + `--check`,
+referencias, citas y `wiring_report.json`.

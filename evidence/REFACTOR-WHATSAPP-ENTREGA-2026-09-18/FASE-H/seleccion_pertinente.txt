@@ -1,0 +1,44 @@
+# FASE-H — seleccion pertinente de pruebas (misma unidad en PRE y POST)
+#
+# Unidades medidas (el contrato exige PRE y POST con la MISMA seleccion y entorno):
+#   S1 = 10 rutas conjuntas, corridas con:
+#        ./venv/Scripts/python.exe -m pytest <las diez rutas de abajo, en este orden> -q
+#   S2 = tests/e2e, medida APARTE (ver "contaminacion medida" al final).
+#
+# Entorno: python del venv del repo, cwd = raiz del repo, Git Bash bajo Windows, sin red.
+# HEAD de partida: ec8a272. Funciones canonicas de S1: 325 (metodo canonico
+#   grep -rE "^\s*def test_" sobre estas rutas). Casos collectados en el PRE: 367 (42 de
+#   parametrizacion sobre las funciones). S2: 21 funciones canonicas, 17 passed / 4 skipped.
+#
+# Area         | ruta
+# onboarding   | tests/test_ac_g2_onboarding_fallback.py                        (4)
+# onboarding   | tests/test_fase_d_onboarding_loader.py                         (7)
+# onboarding   | tests/test_onboarding.py                                       (32)
+# onboarding   | tests/test_onboarding_injection.py                             (16)
+# integracion  | tests/e2e                                                      (21) -> S2, aislada
+# orquestacion | tests/orchestration_v4                                         (93)
+# delivery     | tests/delivery                                                 (78)
+# AC12/AC9/AC11| tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py (31, writer y acta reales)
+# seguridad    | tests/utils/test_fase_f_sumidero_redaccion.py                   (42, sumidero de F)
+# seguridad    | tests/auditors/test_p5_ac_s1_secret_sanitization.py             (12)
+# seguridad    | tests/test_p5_ac_s2_remediacion.py                              (10)
+#
+# ── Contaminacion medida (motivo de las dos unidades, no una exclusion para ocultar nada) ──
+# `tests/e2e/conftest.py` instala un stub de `selenium` en `sys.modules` al importar (`_ensure_module`
+# solo respeta un modulo ya presente). Cualquier ruta que se recorra despues de esa conftest y que
+# importe la cadena productiva revienta en coleccion:
+#   ImportError: cannot import name 'ElementNotInteractableException' from
+#                'selenium.common.exceptions' (unknown location)
+# Medido en este arbol, con la seleccion de diez rutas original (S1 + tests/e2e juntas):
+#   3 errores de coleccion, EXIT=2, 250 collectados.
+# No es sensibilidad al orden de los argumentos: `pytest tests/delivery tests/e2e` y
+# `pytest tests/e2e tests/delivery` dan el mismo ERROR en `tests/delivery/test_delivery_contract.py`.
+# Tampoco es un defecto del producto: cada una de esas rutas colecciona sola sin errores
+# (delivery 78, orchestration_v4 93, utils 48, auditors 12, e2e 21) y el nombre de selenium
+# existe en el paquete instalado (`venv/Lib/site-packages/selenium/common/exceptions.py`, selenium 4.38.0).
+# En la regresion COMPLETA (`pytest tests/`) no aparece porque los `tests/*.py` de raiz importan
+# selenium de verdad antes de que corra la conftest de e2e.
+# Consecuencia: S1 se mide sin `tests/e2e` y S2 se mide aislada; las dos unidades se reportan
+# por separado en PRE y en POST. El defecto del arnes se declara con dueño en
+# `resultados-y-observaciones.md` (no se cura aqui: `tests/e2e/conftest.py` no esta en el
+# allowlist de H, que acota el codigo nuevo al runner stdlib).

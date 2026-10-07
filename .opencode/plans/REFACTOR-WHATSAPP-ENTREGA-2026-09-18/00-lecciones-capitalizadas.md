@@ -147,3 +147,34 @@ concatenados, el recurso que ya usa `test_p5_ac_s2_remediacion.py`), el valor en
 es donde los tests la prueban, y la regla quedó intacta. Es la segunda vez que este plan tropieza con el mismo
 mecanismo, y en las dos el rojo era información sobre el *instrumento*, no sobre el producto: un detector que
 nunca miró los fixtures no había probado nunca que los rechazaría. Formulada al medir, no al cerrar.
+
+## Aplicación efectiva medida — FASE-H (2026-10-06)
+
+| ID | Qué hizo realmente la fase con esta lección |
+|---|---|
+| L-VUP-9 | **Congelar el argv exacto del maestro, sin inventar banderas.** El argv se validó contra el parser real (`build_parser`), no contra la memoria: `--permission-mode` existe y su default es `auto`; `--onboarding-file` **no existe** en ningún archivo, así que H no lo creó. El valor efectivo quedó escrito en el argv congelado y en el preflight, porque un default heredado no es una decisión. |
+| L-PF6 | **El lector nuevo del control distingue ausencia de fallo.** `run_once.leer_control` publica `ABSENT` (archivo inexistente), `READ_ERROR` (JSON roto, raíz que no es objeto, ruta que no es archivo) y `READ_OK`; en la frescura, la falta de `fecha_captura` es **rechazo**, no omisión: el bloque del loader se salta el chequeo si falta la fecha, y ese silencio es exactamente lo que la lección prohíbe presentar como dato vigente. |
+| L-PF10 | **Vacío válido ≠ fuente ausente.** El control de test escrito como archivo vacío se lee `READ_OK` con `data == {}` y causa declarada; y la **rama del loader** se decide por comparación de contenido, no por la presencia de una clave: `observations_tier_a` aparece tanto en el YAML derivado (porque el transformador la escribe) como en el fallback dentro de la función, así que buscar esa clave para discriminar la rama habría dado verde sobre el fallback silencioso. |
+| L-R.4 | **AC17 declara su límite por escrito.** El `mutation_report.json` deja `limite`: el runner controla sus propios lanzamientos y **no** puede contabilizar comandos manuales externos; el preflight productivo sigue en `intentos: 0` porque la fase no lanzó, y un test assertiona que `evidence/…/FASE-E2E/run_control.json` no existe. |
+| L-VUP-12 | **Preservar antes de analizar.** `preservar_resultado` inventaría el directorio de la corrida con sha256 y clasifica `.zip.tmp` como `CUARENTENA_NO_PUBLICADA` (no como entrega); un directorio ausente se registra en `errores`, no como cero. El snapshot de `.agent/memory` es **previo** al spawn porque el propio `run_v4_complete_mode` borra sesiones al arrancar. |
+| L-V.3 | **Cuarta vez que la premisa cae contra el artefacto.** El prompt fijaba el `hotel_id` del reporte en `"hotel_id": args.url`: medido, esa línea está en `run_execution_mode` y en los payloads financieros; el reporte escribe `state.hotel_id` de `OnboardingController.generate_hotel_id`. Y afirmaba que un análisis previo «se reutiliza en vez de auditar»: por AST, en `run_v4_complete_mode` la variable solo se lee para el guard y el `print` (`consumos_que_cambian_el_flujo = []`); la reutilización vive en `run_execution_mode`. Ninguna exigencia del preflight se retiró: se re-ancclaron a la razón medida. |
+| L-PF11 | **El aislamiento declarado no aísla.** `find_latest_analysis("donalfonsohotel.com")` encuentra `output/TAREA7-2026-09-19/v4_complete` aunque el `--output` de la corrida sea propio, y el inventario previo muestra que **8 de 10** sesiones caerían por `cleanup_old_sessions(days=20)`. Por eso el snapshot es evidencia de la fase, no un paso posterior al spawn. |
+| DA-P1.9 | **Transformación trazable, no llenada.** `adr_cop` y `occupancy_rate` existen en la observación y el transformador no los propaga: se declaran `no_disponible` en la procedencia y **no** aparecen en el YAML. El pipeline deriva ocupación de `reservas_mes / (habitaciones × 30)` con su propio productor nombrado; eso se declara, no se anota como valor de la fuente. |
+
+**Lección nueva (L-H-RES).** *Una guarda con dos patas no se prueba apagando una.* La reserva exclusiva del
+runner tiene dos defensas: el pre-chequeo (`leer_control` ve que el control existe) y la creación atómica con
+`O_EXCL`. El primer intento de mutante apagó solo `O_EXCL` y la batería quedó **verde**: el rechazo seguía viniendo
+de la otra pata, así que el rojo no habría probado nada de lo que el informe alegaba. El mutante definitivo quita
+las dos, y además convierte el `FileExistsError` de la carrera en el mismo rechazo nombrado, porque en dos
+lanzadores concurrentes el pre-chequeo puede pasarlo **ambos**. Un verde que no puede perder tampoco es un diente
+cuando el instrumento que lo mide tiene redundancia sin declarar: la redundancia se nombra o se muta entera.
+Formulada al medir, no al cerrar.
+
+**Lección nueva (L-H-ARGV).** *Lo que un proceso persiste es superficie de filtración, incluso si no lo imprime.*
+El runner guarda el argv completo en `run_control.json` para poder auditar el único intento. Con la forma sintética
+de credencial puesta literalmente en el argv, el propio control la copiaba a disco: el leak no estaba en la consola,
+estaba en el registro que se escribió para probar que no hubo leak. Dos consecuencias operativas: la batería arma
+la forma **dentro del proceso hijo por concatenación** (el literal completo no puede quedar en un archivo
+versionado, porque la pata `staged` de `_check_no_secrets` no aplica la exclusión de cuarentena y lo cortaría al
+commitear — precedente medido por FASE-F), y `_serializar_control` pasa el guard del sumidero antes de escribir.
+Formulada al medir, no al cerrar.

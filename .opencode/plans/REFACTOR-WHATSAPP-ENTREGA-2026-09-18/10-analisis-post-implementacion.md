@@ -18,7 +18,7 @@ Estado al 2026-09-24: **análisis vivo, cuatro fases cerradas con su fila y su e
 | D | Nueva sesión | PENDIENTE | Por medir | No | Veredicto y diagnóstico de bloqueos |
 | E | Nueva sesión | PENDIENTE | Por medir | No | Entrega y evidencia interna |
 | F | Nueva sesión | PENDIENTE | Por medir | Solo pistas independientes sin secretos | Seguridad de salidas |
-| H | Nueva sesión | PENDIENTE | Por medir | Preparación de inventarios sin imports | Integración offline y preflight |
+| H | **2026-10-06 (HEAD de partida `ec8a272`)** | **COMPLETADA EN CONTRATOS OFFLINE, SIN COMMIT; preflight NO FAVORABLE que bloquea la arista a E2E** — AC14/AC17/AC13/AC9 **VERIFICADOS OFFLINE** con 13/13 mutantes rojos por su guard y restaurados por sha256; AC12 **PARCIAL** (el par con writer/acta reales es de E y se re-ejecuto; H aporta el par permitir/bloquear del spawn) | **Fuera de servicio (R2.1)** con auto-reporte en unidad propia | No | Runner stdlib con hijo falso; onboarding derivado por el transformador real; rama del loader medida dos veces |
 | E2E | Nueva sesión | PENDIENTE | Por medir | Sí, si entorno y presupuesto lo permiten | Única corrida y snapshot |
 | VERIFY | Nueva sesión | PENDIENTE | Por medir | No | Certificación directa, sin fixes |
 | RELEASE | Nueva sesión | PENDIENTE | Por medir | Documentación con allowlist | Cierre y archivado |
@@ -375,6 +375,70 @@ pre-commit leen HEAD mientras `output/`/`logs/` nunca entran al index — dueno 
 dueno operador. (5) La **integracion con captura/snapshot del runner** (consola y stdout/stderr reales) es
 prueba de H, no de F; F definio el contrato que H consume.
 
+## FASE-H (2026-10-06) — AC13/AC14/AC17 offline, runner e intento único
+
+**Que se cerro.** El onboarding de la corrida se derivo con el transformador real del repo
+(`main._observation_to_onboarding_format`), cambiando **una sola** clave (`hotel.url`) y declarando el resto con
+productor por campo; el recorrido offline camino parser, puerta de permisos, loader, frescura, pre-gate de D,
+lector AC9 de D sobre el baseline real, resolvedor de E y snapshot previo de `.agent/memory` con la red cortada y
+prueba de que el corte tiene diente; y se implemento el runner stdlib previsto (`run_once.py`) con reserva por
+creacion exclusiva antes del spawn, estados terminales, vigilancia del PID sin relanzamiento, captura redactada
+con el contrato de F y preservacion de evidencia con hash. **No se lanzo `main.py v4complete` y no se creo el
+control productivo de FASE-E2E**: lo assertiona un test de la bateria.
+
+**El veredicto que la fase produce es NO FAVORABLE y eso es su resultado, no un fallo suyo.** El preflight
+mide 12 requisitos favorables y 1 en contra: `consentimiento_datado_sobre_la_url_viva`. FASE-A decidio que ese
+acto corresponde solo al operador (el consentimiento de FASE-P4 ampara otra URL y declara expresamente que no es
+entrega a cliente), y el dato tiene **76 dias** al cerrar la fase. El operador eligio cerrar H con el preflight
+en contra, no saltarselo. Consecuencia gobernable: `run_once.py --spawn` se niega **antes** de reservar, de modo
+que la arista a E2E queda cerrada y el contador sigue en **0/1**.
+
+**Verificado offline por H.** AC14 (selector unico 1 de 6, hash de fuente identico antes y despues, URL
+atribuida sin afirmar equivalencia de dominios, `fecha_captura` exigida y fail-closed, `adr_cop`/`occupancy_rate`
+declarados `no_disponible`, **rama del loader medida dos veces** y el contrafactual de la URL historica cayendo a
+`Using defaults`, `monkeypatch` del transformador que no anula al loader, rechazo real con la variable de frescura
+activa). AC17 (reserva exclusiva con dos hilos y barrera, consumo del intento tras fallo y tras timeout, `exit_code`
+`None` en timeout porque no se observo terminacion, vigilancia reanudable, `DUDOSO` terminal, `attempts` que no
+baja, argv y hashes congelados cotejados contra el preflight). AC13 (S-F5 y S-F8: `assert_redacted` tiene por fin
+lamador en el producto y la captura del runner no escribe crudo). AC9 (lector nuevo `leer_control` con `READ_OK` de
+vacio valido, `ABSENT` y `READ_ERROR` con causa, y baseline real = el `preflight.json` de la fase). AC12 **parcial**:
+H re-ejecuto el par con writer/acta de E y aporto el suyo propio (favorable → proceso; en contra → ni proceso ni
+control), sin tocar `write/publish/suppress`, el Juez ni `outcome.py`.
+
+**Rectificaciones medidas por H, con el artefacto delante (`L-V.3`, cuarta ocurrencia en este plan).** (1) El
+`hotel_id` que escribe el reporte **no** sale de `"hotel_id": args.url`: esa asignacion vive en `run_execution_mode`
+(clave `analysis_path` de su payload de entrega) y en las llamadas de `run_v4_complete_mode` a
+`resolve_adr_with_shadow` y `calculate_price_with_shadow`; el reporte escribe `state.hotel_id`, que produce
+`OnboardingController.generate_hotel_id()` (`"hotel_" + netloc normalizado`). Y hay una cuarta cadena que el plan
+no nombraba: el slug de rutas y ZIP (`hotel_don_alfonso`). (2) El analisis previo **no** cambia el flujo de
+`run_v4_complete_mode`: por AST, `discovered_analysis` tiene 1 asignacion y 2 lecturas sin consecuencia (el guard
+`if discovered_analysis:` y su `print`); la reutilizacion real, `DeliveryContext.from_analysis_json`, vive en
+`run_execution_mode`. El hallazgo
+existe y contamina la evidencia de aislamiento (devuelve un **directorio**, no un `analisis_completo.json`), asi
+que la exigencia del preflight se mantiene, pero por la razon medida.
+
+**Seguimientos abiertos por H.** **S-H1** consentimiento datado sobre la URL viva — duenio **operador**, bloquea
+E2E y **tiene ventana cerrada: ultimo dia util 2026-10-20** (limite admitido [76, 90] dias con `EDAD_MAXIMA_DIAS = 90`;
+desde el 2026-10-21 la edad 91 exige una captura nueva del hotel, que el maestro SS5 no puede sustituir editando la fecha). **S-H2** anclaje por `run_id` de los JSON timestamped (deuda que E asigno a H; la cura es de
+`review_inputs.py`, fuera del allowlist de H) — duenio **E2E/VERIFY**. **S-H3** `legacy-ancestor-walk` sigue
+siendo el fallback sin manifiesto — duenio **E2E/VERIFY**. **S-H4** `tests/e2e/conftest.py` inyecta un stub de
+`selenium` en `sys.modules` y rompe la coleccion de las rutas que lo siguen **en cualquier orden de argumentos**
+(medido en los dos ordenes y con cada ruta aislada) — duenio **arnes de tests**; mientras, la seleccion se mide en
+dos unidades y se declara. **S-H5** el argv congelado fija `--permission-mode auto`, que autoriza llamadas
+externas de pago (~0,03 USD por auditoria) — duenio **operador**, antes del spawn. **S-H6** el spawn borraria
+**8 de 10** sesiones de `.agent/memory` por `cleanup_old_sessions(days=20)` — duenio **E2E** (respaldo o
+aceptacion explicita; el snapshot previo ya esta en `preflight.json`). **S-H7** `find_latest_analysis` devuelve un
+directorio porque `memory.save_analysis_reference(...)`, al final de `run_v4_complete_mode`, guarda
+`analysis_path=output_dir` — duenio **producto/VERIFY**. Las lineas concretas las publica
+`evidence/…/FASE-H/integracion_offline.json` (R2.2 del executor: en los documentos se citan simbolos). **S-H8** la
+normalizacion de URL vive en dos definiciones (`main._normalize_url` y una copia privada en
+`OnboardingController.generate_hotel_id`) — duenio **identidad/calidad**. **S-H9** `DOMAIN_PRIMER` no se
+regenero (checkpoint arrastrado desde C). **S-H10** erratas de registro heredadas (S-F7 y la de C) siguen
+esperando el sello de RELEASE.
+
+**Cierre de la fase con deuda declarada, no con verde agregado.** El contador v4complete sigue en **0/1** y E2E
+no se inicio (asi lo exige R1 y el propio preflight).
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: actualmente 0, máximo autorizado en el diseño 1.
@@ -408,6 +472,24 @@ Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfa
 | Modo rápido | 10/10 al abrir (10 checks) · **11/11 al cerrar (11 checks)** | `run_all_validations.py --quick` |
 | Tiempo de pared | verificador ~10,8 s por corrida · suite nuevo 45 s · POST-B 63,7 s | cronometrado en la sesión |
 | Contador v4complete | **0 / 1** | ni esta fase ni ninguna anterior lo consumió |
+
+### FASE-H (2026-10-06) — medidas, no previstas
+
+| Metrica | Valor medido | Instrumento |
+|---|---|---|
+| Funciones canonicas | **4.982 en HEAD → 5.040 en el arbol (+58)** | `git grep -c -E "^\s*def test_" HEAD -- tests` y el grep canonico del arbol |
+| PRE S1 (10 rutas) | **367 passed / 0 failed / EXIT 0** sobre 325 funciones canonicas (42 casos de parametrizacion) | `tests_baseline_pre.txt` |
+| POST S1 (misma seleccion) | **367 passed / EXIT 0 · delta 0** | `tests_baseline_post.txt` |
+| POST extendido | **425 passed / EXIT 0** (+58 de las dos baterias nuevas) | `tests_post_extended.txt` |
+| S2 `tests/e2e` (unidad aislada) | 17 passed / 4 skipped / EXIT 0 en **PRE y POST**, delta 0 | `tests_baseline_pre/post_e2e_aislado.txt` |
+| Mutantes | **13 aplicados / 13 rojos por su guard y su causa impresa / 13 restaurados por sha256 / 0 por import o sintaxis / 0 anclajes no unicos** | `run_mutations.py` → `mutation_report.json`, crudo en `mutaciones_crudo.txt` |
+| Preflight | `intentos: 0`, 12 requisitos favorables y **1 en contra** (`consentimiento_datado_sobre_la_url_viva`), 10 hashes congelados, 4 cadenas de identidad, snapshot previo de 21 archivos de `.agent/memory` | `run_once.py --emitir-preflight` → `preflight.json` |
+| Sello de regresion completa | **1 failed / 5.122 passed / 41 skipped / 4 xfailed / EXIT 1** · el unico rojo es el ajeno del piloto JEV (15/15 en su archivo aislado, 141/141 en su directorio) · dos corridas anteriores desechadas por superponerse, archivadas con su numero real | `tests_postfull_regresion.txt` y `descartados_por_superposicion_de_corridas/` |
+| Rama efectiva del loader | `YAML_DE_DIR_CLIENTES`, medida dos veces (derivacion y recorrido offline) y decidida **por contenido**, no por la clave `fuente` | `derivar_onboarding.py` + `integracion_offline.py` |
+| Edad del dato | **76 dias** (captura 2026-07-22) con `ONBOARDING_FRESHNESS_HOURS` ausente del entorno, `.env` y `.env.template` | `integracion_offline.json §frescura` |
+| Red | cortada despues de los imports, con prueba de diente (`AssertionError` al conectar) | `integracion_offline.json §red` |
+| Producto modificado | **0 archivos**: el codigo nuevo queda acotado al runner y a la evidencia de la fase | `git diff --name-only HEAD` |
+| Contador v4complete | **0 / 1** | ni el recorrido ni la bateria invocarion `main.py v4complete` |
 
 ## Decisiones arquitectónicas
 

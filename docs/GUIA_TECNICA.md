@@ -2734,3 +2734,55 @@ versionado con la evidencia.
 sustituido. La captura real del runner, su stdout/stderr y el snapshot se prueban en H, y la revocación de una
 credencial no es resultado de ningún test: vive en `credential_status.json` como afirmación del operador.
 
+
+## Nota Técnica — FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-06)
+
+**Qué gobierna esta nota.** El único intento de `v4complete` del plan se lanza con
+`evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py`, y ese runner exige un preflight favorable que
+**hoy no existe**: `preflight.json` cierra con 12 requisitos verdes y 1 en contra
+(`consentimiento_datado_sobre_la_url_viva`), un acto reservado al operador por FASE-A. Con el preflight en contra,
+`--spawn` se niega **antes** de reservar: el contador del plan sigue en 0/1.
+
+**Cómo se usa (E2E, otra sesión y otro mandato).**
+
+```bash
+# 1) re-derivar el onboarding si la fuente o el derivado cambiaron (usa el transformador real)
+./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py
+# 2) re-correr el recorrido offline (imports del repo, red cortada, sin CLI real)
+./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/integracion_offline.py --hoy 2026-10-06
+# 3) emitir el preflight (attempts=0) y leer su veredicto
+./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py --emitir-preflight
+# 4) solo con veredicto favorable, el spawn unico; --watch observa sin relanzar
+./venv/Scripts/python.exe evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py --spawn
+```
+
+**Tres cosas que conviene saber antes de tocar el runner.**
+
+1. **El argv congelado es el literal del maestro §5 más `--permission-mode auto` explícito.** El default del
+   parser ya es `auto`, pero heredado: con `chat` el pipeline omite la auditoría externa, sigue con
+   `audit_result=None` y devuelve el mismo exit code con otro resultado. Cualquier bandera no congelada
+   (`--force`, `--skip-check`, `--dry-run`) se rechaza, y no existe `--onboarding-file`: el loader iguala por
+   `_normalize_url(hotel.url)` y **ignora el nombre del hotel**.
+2. **La rama del loader se decide por contenido, no por la clave `fuente`.** El propio transformador escribe
+   `observations_tier_a` dentro del YAML, así que esa clave no distingue la rama buena del fallback silencioso
+   dentro de `_load_latest_onboarding_data`. `derivar_onboarding.py` compara el dict devuelto con el YAML releído,
+   y `run_once.rama_favorable` exige que las dos mediciones (derivación y recorrido offline) coincidan.
+3. **La reserva tiene dos guardas y hay que respetar las dos.** `reservar` primero lee el control (rechazo
+   nombrado) y después crea con `O_CREAT|O_EXCL`; en dos lanzadores concurrentes el pre-chequeo lo pasan ambos,
+   así que el `FileExistsError` se convierte en el mismo `SegundaReservaRechazada`. Apagar una de las dos patas no
+   debilita el contrato pero deja de medirse: el mutante M1 del arnés quita las dos, y por eso es diente.
+
+**Dientes y evidencia.** `tests/test_fase_h_intento_unico.py` (30 funciones) gobierna reserva, concurrencia,
+timeout sin exit code fabricado, vigilancia, estados terminales, rechazos de preflight/hash/argv, el lector
+`leer_control` (AC9 con vacío válido) y la captura redactada con el contrato de FASE-F (cierra S-F5 y S-F8);
+`tests/test_fase_h_onboarding_procedencia.py` (28) gobierna AC14: selector único, cero y múltiples coincidencias,
+hash de la fuente, URL atribuida, campos no transportados declarados `no_disponible`, frescura fail-closed y las
+tres variantes del consentimiento. Los 13 mutantes están en `mutation_report.json` con su causa impresa y su
+restauración por sha256; el crudo, en `mutaciones_crudo.txt`.
+
+**Límites que esta nota no cierra.** S-H2 (anclaje por `run_id` de los JSON timestamped) y S-H3
+(`legacy-ancestor-walk`) siguen abiertos con dueño E2E/VERIFY: la cura pertenece a `review_inputs.py` y el
+allowlist de H acotaba el código nuevo al runner. S-H4 es del arnés de tests: `tests/e2e/conftest.py` inyecta un
+stub de `selenium` en `sys.modules` y rompe la colección de las rutas que lo siguen, en cualquier orden de
+argumentos — por eso la selección de H se midió en dos unidades y no en una. S-H6 recuerda que el spawn borra
+memoria compartida (`cleanup_old_sessions(days=20)` alcanzaba 8 de 10 sesiones).
