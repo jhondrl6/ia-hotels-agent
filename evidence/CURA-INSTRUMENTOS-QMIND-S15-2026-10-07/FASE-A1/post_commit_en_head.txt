@@ -1,0 +1,49 @@
+# verificacion en el arbol del commit (L-VCF-15), tras publicar 63b944a
+# comando: venv/Scripts/python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -v
+# arbol: HEAD 63b944a (worktree limpio salvo los 13 untracked ajenos de S-CIM-7)
+# identidad del instrumento: sha256 del BLOB commiteado vs el archivo que se mut
+blob HEAD  = 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4
+mutado con = 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4 (crudo mutantes-resumen.txt)
+---
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 31 items
+
+tests/test_validate_qmind_writeback_escritura.py::test_title_y_file_solo_tienen_sentido_con_upload PASSED [  3%]
+tests/test_validate_qmind_writeback_escritura.py::test_control_negativo_el_writer_versionado_antes_no_aceptaba_title PASSED [  6%]
+tests/test_validate_qmind_writeback_escritura.py::test_file_fuera_del_repo_corta_antes_de_subir_nada PASSED [  9%]
+tests/test_validate_qmind_writeback_escritura.py::test_upload_explicito_registra_instanea_y_marca_la_anterior PASSED [ 12%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_contenido_distinto_no_colisiona_en_silencio PASSED [ 16%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_el_mismo_contenido_es_skip_declarado PASSED [ 19%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_default_de_upload_sigue_publicando_con_el_titulo_historico PASSED [ 22%]
+tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido PASSED [ 25%]
+tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_que_cambio_despues_de_publicar_es_vencido PASSED [ 29%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_coincidente_con_contenido_distinto_es_rojo PASSED [ 32%]
+tests/test_validate_qmind_writeback_escritura.py::test_metadata_del_servidor_es_primera_via_y_la_descarga_la_verifica PASSED [ 35%]
+tests/test_validate_qmind_writeback_escritura.py::test_fuente_que_promete_y_no_baja_es_no_evaluable_nunca_vencido PASSED [ 38%]
+tests/test_validate_qmind_writeback_escritura.py::test_descarga_que_desmiente_la_promesa_es_promesa_rota PASSED [ 41%]
+tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan PASSED [ 45%]
+tests/test_validate_qmind_writeback_escritura.py::test_la_fuente_marcada_como_reemplazada_no_duplica PASSED [ 48%]
+tests/test_validate_qmind_writeback_escritura.py::test_registro_vacio_no_es_verde_sino_no_evaluable PASSED [ 51%]
+tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_inaccesible_es_no_evaluable_no_vencido PASSED [ 54%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion PASSED [ 58%]
+tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass PASSED [ 61%]
+tests/test_validate_qmind_writeback_escritura.py::test_con_strict_el_cli_ausente_corta_fail PASSED [ 64%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_check_del_runner_invoca_con_strict_y_trata_el_dos_como_estado_propio PASSED [ 67%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_check_queda_cableado_al_modo_completo_y_no_al_rapido PASSED [ 70%]
+tests/test_validate_qmind_writeback_escritura.py::test_collect_archived_analisis_resuelve_bajo_la_raiz_de_planes PASSED [ 74%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada PASSED [ 77%]
+tests/test_validate_qmind_writeback_escritura.py::test_la_migracion_no_rellena_hacia_atras_la_entrada_vieja PASSED [ 80%]
+tests/test_validate_qmind_writeback_escritura.py::test_entrada_sin_sha_cuerpo_es_no_evaluable_por_migracion PASSED [ 83%]
+tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo PASSED [ 87%]
+tests/test_validate_qmind_writeback_escritura.py::test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido PASSED [ 90%]
+tests/test_validate_qmind_writeback_escritura.py::test_los_tres_estados_del_contador_no_se_colapsan PASSED [ 93%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion_de_migracion PASSED [ 96%]
+tests/test_validate_qmind_writeback_escritura.py::test_sin_cuerpo_resoluble_el_writer_no_publica_ni_graba PASSED [100%]
+
+============================= 31 passed in 0.60s ==============================
+EXIT=0

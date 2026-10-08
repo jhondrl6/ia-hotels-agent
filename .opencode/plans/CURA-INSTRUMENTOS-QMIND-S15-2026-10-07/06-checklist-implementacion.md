@@ -25,7 +25,7 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 
 ## Etapa 2 — Implementación
 
-### FASE-A1 — AC1 y AC2 (✅ CERRADA 2026-10-08, sin commitear: el commit no estaba autorizado en el chat)
+### FASE-A1 — AC1 y AC2 (✅ CERRADA y COMMITEADA 2026-10-08: commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`))
 
 - [x] PRE re-medido con HEAD, status, quick y la selección literal — HEAD de la sesión `d8a7d80` (no `98c190e`: la preparación ya había subido tres commits), quick 13/13 EXIT 0, PRE 23 passed EXIT 0 con intérprete declarado (`venv` Python 3.13.3, no el del sistema que usó la preparación) → `E/FASE-A1/`
 - [x] `registrar_publicacion()` escribe `sha_cuerpo`; `schema_version` 1.1; `cargar_registro` tolera entradas 1.0 — el sha se resuelve por `cuerpo_del_plan()` con `raiz_de_planes()`, no por la copia `--file`; diente `test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada` lee el JSON **en disco**
@@ -36,7 +36,7 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [x] Cuatro estados no colapsados (R2.9) y contador publicado por el verificador — `[CONTADOR] N vigente(s): por cuerpo / fidelidad remota medida / NO-EVALUABLE por migracion / sin observacion local` con su suma `cuerpo+migracion+local==N`; muestra en `E/FASE-A1/contador_muestra.txt` (offline)
 - [x] 23 dientes viejos verdes **sin re-bajar ninguna aserción** — POST 31 passed; la resta `31 − 23 = 8` son los dientes de ESTA fase; las tres llamadas a `registrar_publicacion()` del archivo se adaptaron al parámetro nuevo, ninguna aserción se tocó
 - [x] Mutantes archivados con restauración por sha256, ejecutados sobre el instrumento versionado — M1/M2/M3 sobre copia en `temp/` (nunca el worktree vivo), cada uno con su par copia-intacta-verde / mutado-rojo y el sha del script vivo igual antes y después → `E/FASE-A1/mutantes-resumen.txt`
-- [x] `README.md` de `instantaneas/` actualizado por su dueño humano (prosa no regenerable por escritor); **viajará en el mismo commit que la cura solo si el operador autoriza el commit** — hasta entonces queda en el árbol sin commitear, declarado
+- [x] `README.md` de `instantaneas/` actualizado por su dueño humano (prosa no regenerable por escritor); **viajó en el mismo commit que la cura** (`63b944a`) cuando el operador autorizó commit, L3 y push en la misma sesión
 - [x] Cierre incremental del contrato (8 pasos) con registro propio y quick verde
 
 ### FASE-A2 — AC3 y AC4 (⬜ Pendiente)

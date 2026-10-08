@@ -11,8 +11,7 @@ conteo (maestro §5 S-CIM-7, sigue vigente).
 ## Cortes y estado
 
 Implementación terminada → verificación terminada → cierre documental → **listo para revisión** → espera de
-autorización. El `git commit` **no** se ejecutó: no llegó instrucción literal en el chat de esta sesión, y los cinco
-cortes se sostienen sin él. AC1 y AC2 están landed en el árbol de trabajo.
+autorización. El `git commit` no estaba ejecutado al cerrar esta nota: los cinco cortes se sostienen sin commit. Después, en la misma sesión, llegó la instrucción literal «Git Commit + L3 + Push» y se ejecutó. **Sello:** commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`); 30 rutas (16 modificadas + 14 nuevas), 1165 inserciones y 97 supresiones. AC1 y AC2 están landed y publicados.
 
 **Presupuesto (unidad declarada, no comparable con el instrumento canónico).** El instrumento
 `evidence/FASE-D/measure_iterations.py` sigue **FUERA DE SERVICIO** (R2.1) y no se reintentó. Contado a mano sobre
@@ -62,6 +61,14 @@ con su cita de una línea), el guard extra del escritor ante cuerpo no resoluble
    publicación» (población vacía) de «NO-EVALUABLE en alguna publicación (ver el [CONTADOR])». Lección nueva
    `L-CIM.2`.
 4. Modo completo **no** se corrió como certificación propia (L-V2.2); lo hace FASE-RELEASE con su crudo.
+5. Verificación en el árbol del commit (L-VCF-15): los 31 dientes se re-corrieron sobre HEAD (crudo `post_commit_en_head.txt`) y la identidad del instrumento publicado se comprobó por sha256 del **blob** contra el archivo que se mutó (`979ea64b…`): si casan, la evidencia de los tres mutantes corresponde a los bytes que están en el tip.
+
+## Erratas que cobra el sello (medidas, no heredadas)
+
+- **La fila de REGISTRY quedó corta.** `log_phase_completion.py` la escribió con `--archivos-mod 13 --archivos-nuevos 13`, medidos antes de los últimos retoques documentales; al commit entraron **30 rutas** (16 modificadas + 14 nuevas). El escritor es aditivo y **no** se re-ejecuta sobre una fase cerrada, así que el delta se declara aquí y no se re-registra.
+- **DOMAIN_PRIMER no viajó.** `doctor.py --regenerate-domain-primer` corrió y el derivado quedó byte-idéntico a HEAD; por eso `.agent/knowledge/DOMAIN_PRIMER.md` no aparece entre las rutas del commit. Precedente del mismo resultado en el CHANGELOG de la tanda JEV.
+- **Seis crudos de consola son CRLF en disco y LF en el blob.** `quick_apertura.txt`, `quick_cierre.txt`, `tests_baseline_pre.txt`, `tests_baseline_post.txt`, `contador_muestra.txt` y `hermanos_regresion.txt` nacieron de un `>` sobre stdout de Python (cp1252/CRLF bajo Git Bash) y `core.autocrlf=input` los normalizó al indexar: una verificación por sha256 de esos archivos debe hacerse sobre `git show`, no sobre disco.
+- **El `README.md` de `instantaneas/` viajó en el mismo commit que la cura**, que era la cláusula de L-G3 que al cerrar el documento estaba pendiente.
 
 ## Derivados regenerados en este cierre, con su escritor
 
