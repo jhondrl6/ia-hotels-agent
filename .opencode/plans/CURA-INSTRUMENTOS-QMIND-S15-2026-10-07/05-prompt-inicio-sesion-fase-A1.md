@@ -26,7 +26,7 @@ La decisión del operador está tomada y **no se reabre**: se cura por separaci�
 
 | Fase | Estado |
 |---|---|
-| Preparación (FASE-0) | ✅ Cerrada 2026-10-08, sin commit autorizado |
+| Preparación (FASE-0) | ✅ Cerrada 2026-10-08, commiteada (`b536748` + sello `a19fa06`) y empujada hasta `origin/master`; L3 sin hallazgos |
 | FASE-A2, A3, B, C, RELEASE | ⬜ Pendientes, en ese orden |
 
 ### Base técnica disponible
