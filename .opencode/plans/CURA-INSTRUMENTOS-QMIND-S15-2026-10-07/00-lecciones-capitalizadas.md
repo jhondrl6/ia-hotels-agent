@@ -1,0 +1,93 @@
+# Lecciones capitalizadas — CURA-INSTRUMENTOS-QMIND-S15 (2026-10-07)
+
+Creado el 2026-10-08 en la sesión de preparación, **antes** del maestro y de los prompts. Preparación
+documental: ninguna implementación, ninguna subida remota, ninguna edición de código. Actualizar al cierre
+de cada fase.
+
+Las consultas se hicieron por **dos ejes**, no solo por el síntoma: el eje del defecto (write-back, contenido
+publicado, registro) y el eje de la superficie de cierre (verificador que se ejecuta, mutante, control negativo
+anclado a una revisión fija, índice del corpus). La medición que fundó esta práctica está en
+`Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/00-lecciones-capitalizadas.md` §1ter («la cobertura de una
+consulta depende del **eje** con que se formula»), y aquí se nota otra vez: las cuatro filas más pertinentes
+del plan (`L-QW.1` a `L-QW.4`) no aparecieron con la pregunta por el síntoma, sino con la pregunta por la
+superficie.
+
+## 1. Consultas ejecutadas (re-ejecutables)
+
+| # | Capa | Consulta literal | Resultado medido |
+|---|---|---|---|
+| Q1 | Índice completo | `python scripts/build_lesson_index.py --check` | `[OK] Índice de lecciones fresco (348 IDs)` y `[fechas] nombre=337 commit=11 sin_fuente=0`. La línea `[fechas]` es la que FASE-B tiene que seguir imprimiendo en verde y en rojo: es la prueba de la cura de S15 del 2026-09-26 |
+| Q2 | Índice completo, eje **síntoma** | `grep -nE "write-back\|writeback\|instantanea\|publicacion\|publicado\|subir\|subida" .opencode/LECCIONES-INDEX.md` | 2 aportes: `L-ENT.14` y `L-VCF-11`. Pobres: el corpus llama a esta superficie con otras palabras |
+| Q3 | Índice completo, eje **instrumento** | `grep -nE "verificador\|control negativo\|mutante\|verde vacio\|vacio\|NO-EVALUABLE\|no evaluable" .opencode/LECCIONES-INDEX.md` | 8 aportes, entre ellos `L-QW.1`, `L-ENT.12`, `L-V2.2`, `L-R.4`, `L-JEV.R2`. Q2 y Q3 sobre el mismo archivo: la diferencia la hizo el eje, no el corpus |
+| Q4 | Índice completo, eje **fecha del índice (FASE-B)** | `grep -nE "slug\|colisi\|renombre\|registro\|indice del corpus\|fuente de fecha\|mtime" .opencode/LECCIONES-INDEX.md` | La cabecera del índice publica su propia cobertura de fechas («El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas») y `L-G3`, `L-T4A.3`, `L-VUP-6` |
+| Q5 | QMind `iah-cli-lecciones` (nb `01a04d98-b7bd-778c-8441-26fdc7e35f45`) | `mcp__plugin_qoder-qmind_qoder-qmind__retrieve` — query «verificador de contenido de publicacion instantanea sha cuerpo saneado registro json colision de nombre de archivo slug id de fuente parsear tabla», `maxResults 6` | **Permitida y respondida.** 1 aporte (score 0,635): el `10-analisis` del padre, sección FASE-RELEASE, que deja escrita la consecuencia del hueco que este plan cura: «el sha de la fuente, su id y el resultado de la verificación por descarga **no** se escriben aquí, porque re-escribirlos vencería el cuerpo que la capa de contenido compara». **No se persistió `originUrl`**: trae credencial y firma OSS (límite conocido de la interfaz, registrado en la memoria de referencia del proyecto) |
+| Q6 | QMind, mismo notebook, eje **contrato de estados** | `retrieve` — query «NO-EVALUABLE abstenion nunca vencido rojo manda promesa rota control negativo instrumento versionado mutante restauracion sha», `maxResults 5` | **Respondida con 0 chunks.** Es el estado «sin hallazgos», no un fallo del instrumento: la consulta fue aceptada y el corpus no tiene esa formulación. Se registra vacía porque una abstención pintada de hallazgo es el defecto que este plan persigue |
+| Q7 | QMind, mismo notebook, eje **S15 (FASE-B)** | `retrieve` — query «indice de lecciones fecha de origen del plan mtime commit nombre del directorio dueno de la leccion divergencia entre dos checkouts del mismo commit», `maxResults 5` | **Permitida y respondida.** 5 aportes, todos del `10-analisis` de `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (score 0,879–0,953), sección «Seguimientos abiertos», fila S15. Trae el texto integral de la cura del 2026-09-26, su **límite declarado** («un futuro `git mv` masivo de `Historico/` colapsaría esas dos fechas a una sola y el desempate pasaría al nombre del plan») y su segundo disparador vivo: «un `[FAIL]` en un clon con CRLF no es S15 sino el otro corte — hay que clonar con `-c core.autocrlf=input`». Ninguna subida |
+| Q8 | Memoria del proyecto | `Read(".qoder/projects/C--Users-Jhond-Github-iah-cli/memory/qmind-writeback-verifica-por-cuerpo-saneado.md")` | Los cuatro huecos del writer ya medidos el 2026-10-07, con su contrafactual en tmp. Es el insumo directo de AC1-AC6 |
+| Q9 | Memoria del proyecto | `Read(".qoder/projects/C--Users-Jhond-Github-iah-cli/memory/reference-qmind-lecciones.md")` | Interfaz real del notebook: la respuesta de `qmind source upload` es **tabla, no JSON** (por eso AC4 no puede parsearla como JSON ni re-subir al fallar); `metadata.fileSha256` es primera vía; verificar por descarga + sha256; el CLI flakesa. También el refutamiento de la nota vieja «el writer no tiene vía de actualización» |
+| Q10 | Definiciones, no resúmenes | Lectura en el documento definitorio: `L-QW.1` a `L-QW.4` en `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md` §E; `S-1` a `S-7` de su deuda en §F; `L-ENT.12`/`L-ENT.14` con dueño `Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18` | Cada fila capitalizada se leyó donde está definida. La deuda S-2 del hermano (`[18/18]` invocado sin `--strict`) quedó registrada en el maestro §5 con su dueño: este plan la nombra y **no** la toma en alcance |
+
+## 2. Lecciones capitalizadas
+
+| ID | Enunciado (una línea) | Definida en (ruta) | Qué cambia en ESTE plan | Dónde se aplica |
+|---|---|---|---|---|
+| L-QW.1 | Un verificador que comprueba la *clave* de una operación no puede detectar que el contenido detrás de esa clave es viejo: idempotencia y frescura son dos propiedades. | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md` | Es el acta de nacimiento de AC2: la puerta de vigencia deja de comparar la instantánea contra el cuerpo crudo y pasa a comparar **cuerpo contra cuerpo** (`sha_cuerpo`). Cambia también el criterio de cierre: AC2 no se certifica con un verde, se certifica con el diente contrario (subida saneada que antes cortaba `[VENCIDO]` y ahora es vigente) | FASE-A1, AC2 |
+| L-QW.2 | Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la versión obsoleta y el retrieve la devuelve puntuada por parecido, no por vigencia. | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md` | Gobierna AC3 y AC6. AC3: si el slug pisa el archivo de la publicación anterior, el registro queda con dos shas y el repo con un solo byte-exacto — la contabilidad del reemplazo es mentira. AC6: la tentación de «borrar la fuente de la era G» es exactamente el duplicado mal resuelto; `qmind source delete` es irreversible y no está en alcance | FASE-A2 (AC3, AC4), FASE-A3 (AC6) |
+| L-QW.3 | Un verde producido por la ausencia del instrumento es un rojo disfrazado. | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md` | AC1 en su pata de migración: las entradas existentes sin `sha_cuerpo` son **NO-EVALUABLE por instrumento**, nunca VENCIDO y nunca verde. AC4 con la misma regla: si el parseo de la tabla falla, el estado se publica como «id no capturado» y se verifica por censo, no se re-sube | FASE-A1 (AC1), FASE-A2 (AC4) |
+| L-QW.4 | Un límite conocido y escrito no se cierra solo: la restricción estaba documentada desde 2026-09-11 y se redescubrió desde cero porque ningún AC la reclamaba y ningún check la violaba. | `.opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md` | AC6 se redacta con dueño y disparador, no con nota: la fuente `01a0bfc9-…` queda o registrada como `vigente-historica` con su sha, o roja declarada con dueño escrito en el maestro §5. La deuda S-2 del hermano entra al maestro con esa misma forma (dueño + disparador) en vez de como prosa | FASE-A3 (AC6), maestro §5 |
+| L-PF10 | Una lista vacía válida no equivale a falta de fuente. | `.opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md` | AC1 y AC4 como contrato de formas: `fuente_id: ""` actual es un valor publicado, no una fuente ausente; `sha_cuerpo` ausente es otro estado distinto. Ninguno de los dos se colapsa con «vencido» ni con «sin problema» | FASE-A1 (AC1), FASE-A2 (AC4) |
+| L-PF6 | Ausencia observada y lector fallido no son equivalentes. | `.opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md` | AC4 y AC6: la descarga que falló 3/3 el 2026-10-07 no es verificación hecha ni culpa del instrumento de frescura; el parseo de la tabla que no encuentra id es lector fallido con motivo, no «no hay fuente nueva». AC5: el cuerpo que no resuelve bajo la raíz publicada es abstención, no VENCIDO | FASE-A2 (AC4), FASE-A3 (AC5, AC6) |
+| L-T4A.5 | Un test verde puede no alcanzar la rama que dice certificar. | `.opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md` | Riguro la forma de los dientes exigidos: cada mutante se hace sobre el símbolo real (`verificar_contenido`, `registrar_publicacion`, `do_upload`, la rama de `main()` que resuelve `--upload`), nunca reimplementando el hueco dentro del test. Es también la restricción dura de FASE-B: prohibido concluir «el fixture está mal» sin reproducir la clasificación | Todas las fases de código, FASE-B |
+| L-VUP-5 | Un contrato ya verde exige mutación para demostrar sensibilidad. | `.opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md` | R2.8 por AC: los 23 dientes existentes de `tests/test_validate_qmind_writeback_escritura.py` se re-ejecutan **sin re-bajar ninguna aserción** y cada AC nueva aporta un rojo con el guard apagado y su verde con el fix, archivando las dos salidas | FASE-A1, FASE-A2, FASE-A3, FASE-C |
+| L-V2.1 | Un test que solo mira qué check disparó puede quedar verde por una rama distinta de la que pretendía observar. | `.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md` | Los dientes afirman la **razón** del fallo y el cortocircuito, no la etiqueta: el diente contrario de AC2 no basta con «no sale VENCIDO», tiene que salir la línea de vigencia por cuerpo y el mutante tiene que caer por esa aserción | FASE-A1 (AC2), FASE-A2 (AC3) |
+| L-V2.2 | Un verificador no debe apoyar su conclusión en el artefacto generado por otro gate. | `.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md` | La regla del mandato «no auditar el verde con el instrumento que lo produjo»: el `[17/18]` curado no se certifica a sí mismo; se corre el modo completo y su crudo se archiva. En AC1, la lectura del registro migrado se comprueba contra el JSON que escribe `registrar_publicacion`, no contra el dict en memoria | FASE-A3, FASE-RELEASE |
+| L-V2.3 | Una medición sobre el artefacto equivocado deja pasar el rojo que pretendía descartar; y hay tests que pinean la **forma** del artefacto que vas a editar. | `.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md` | Medido al capitalizarla: dos dientes de la familia del write-back no leen el artefacto, leen la **fuente** de `scripts/run_all_validations.py`. `test_el_check_del_runner_invoca_con_strict_y_trata_el_dos_como_estado_propio` aserta `cuerpo.count("passed=True") == 1` dentro de `_check_qmind_writeback` y el orden `exit_code == 0` antes que `exit_code == 2`; `test_el_check_queda_cableado_al_modo_completo_y_no_al_rapido` aserta que la invocación cae **después** del `if not self.quick:` de `run_all`. Consecuencia: esta cura no añade ni quita checks, y si una fase necesita tocar `_check_qmind_writeback`, reescribe esos dos en el mismo commit con su registro (L-G3) en vez de debilitarlos | Contrato §tests, FASE-A3 |
+| L-VCF-15 | Un verde del árbol de trabajo no sustituye la prueba en el árbol del commit. | `.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md` | FASE-B en su raíz: el control negativo está anclado a la revisión fija `6b02532` y se ejecuta sobre el generador **commiteado** allí; re-anclearlo a HEAD lo deja sin rojo con el que compararse. Cada fase declara además el árbol donde corrió cada verde | FASE-B (AC7, AC8), contrato §tests |
+| L-ENT.14 | Una prueba de NO-existencia recortada por un `head` no prueba nada. | `.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md` | Forma de los barridos de este plan: el censo de fuentes del notebook (`fetch_sources()`), el inventario de `instantaneas/` y la población de entradas sin `sha_cuerpo` se publican con el comando completo y sin corte de salida | FASE-A2 (AC4), FASE-A3 (AC6) |
+| L-ENT.12 | El verde del verificador no probaba su propia cobertura: lo delató una cuenta que el verificador exige de sí mismo. | `.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md` | AC1/AC2 cierran con un **contador publicado**: el resumen de `[17/18]` dice cuántas entradas se dictaminaron por cuerpo, cuántas por metadata+descarga y cuántas quedaron NO-EVALUABLE por migración. Un verde sin denominador no es cobertura | FASE-A1 (AC1, AC2), FASE-A3 |
+| L-G3 | Al cambiar un contrato, reescribir sus tests en el mismo commit y con registro. | `.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md` | El registro pasa de `schema_version` `1.0` a `1.1` (nuevo campo `sha_cuerpo`): el cambio de contrato viaja con su migración, su diente de lectura de entradas viejas y la actualización del `README.md` de `instantaneas/`, que hoy describe la semántica que AC2 retira | FASE-A1 (AC1), FASE-A2 (AC3) |
+
+## 3. Candidatos evaluados y descartados
+
+| ID | Por qué NO se capitaliza como tarea de este plan |
+|---|---|
+| L-NC6 | «El cable perdido se busca en el caller, no creando otra fuente». Descartado: la cura decidida por el operador es la **separación de las dos preguntas** dentro del propio verificador; no hay una población de callers que gobernar ni se añade un segundo escritor. Adoptar `--sanear` en el writer habría sido exactamente crear la fuente paralela que esta lección prohíbe, y esa alternativa está rechazada por mandato |
+| L-PF11 | «Dos corridas del mismo hotel comparten identidad de memoria». Del pipeline `v4complete` y su `.agent/memory`; este plan no ejecuta el pipeline ni toca la memoria de análisis |
+| DA-P1.9 | «La decisión de quién aporta el dato no es de diseño». De onboarding y datos del hotel. Aquí solo gobierna su corolario ya capitalizado en el contrato: ningún valor de cliente se propaga; la receta de saneado por bytes sigue vigente |
+| L-E2E.1 | «El punto de cableado importa tanto como el cableado» (MANIFEST inexistente en modo ZIP-only). Del tribunal y la entrega; ningún artefacto del pipeline entra en esta cura |
+| L-T4A.2 | Parsing de cercas Markdown en respuestas LLM. No hay LLM en la ruta curada: el extractor aquí es una tabla fija del CLI (`L-QW` sí lo cubre) |
+| L-VUP-6 | Cobertura de diseño de una delegación (conflicto de archivos entre tracks). Este plan tiene un solo track: las tres subfases de FASE-A editan el mismo script y el mismo archivo de tests, así que la conflicts table de `dependencias-fases.md` se resuelve por orden, no por paralelización |
+| L-P5.3 | Casilla de presupuesto vacía al cerrar. Descartada como fila propia porque la métrica ya está **fuera de servicio** en este plan (maestro §3 y contrato §R2): el instrumento canónico pide el transcript del cliente y su acceso está denegado. Se conserva la exigencia real —auto-reporte con unidad declarada— sin inventar una lección |
+
+## 3bis. Lecciones definidas por este plan
+
+Reservada la serie **`L-CIM-n`** (n = 1, 2, …), que se llena al cierre de cada fase en
+`10-analisis-post-implementacion.md`, sección «Lecciones nuevas de este plan». La reserva se anuncia aquí y en
+el maestro para que ningún otro plan la ocupe, y **no** se adelanta ninguna fila: al cerrar la preparación no
+hay lección definida. «Sin lecciones nuevas» es un resultado legítimo si una fase no produce ninguna.
+
+## 4. Cobertura declarada
+
+Este archivo lo verifica `scripts/validate_lesson_capitalization.py` (forma y trazabilidad: existe y se lee,
+tiene §1-§4, al menos una consulta corpus-wide con comando re-ejecutable, al menos una fila de §2 que nombra
+un AC presente en `01-plan-maestro.md`, al menos tres descartes, §4 nombrando al verificador y a su límite,
+cada ID definido en el corpus con el dueño que publica el índice generado, y dueños de al menos dos fuentes
+distintas). **No verifica la pertinencia**: no puede saber si la lección que debía capitalizarse era otra, ni
+si el «qué cambia» alegado es real. Ese juicio queda de quien diseña el plan y de quien certifica la fase
+(L-R.4). El verificador se autoclasifica en los tres estados de R2.9 y ningún verde sale del tercero.
+
+Estado real de las capas en esta sesión de preparación, medido y no heredado:
+
+- **Capa fría**: índice fresco al abrir (`348 IDs`, Q1). Las cuatro consultas locales se ejecutaron sobre el
+  archivo completo, incluido `Archives/` (Q2-Q4).
+- **Capa tibia**: QMind **accesible por MCP** en los tres intentos (Q5, Q6, Q7). Ninguna escritura remota: no
+  se subió ni se borró nada. **No se persistieron los `originUrl`** de las respuestas: llevan credencial y
+  firma de object storage. La consulta Q6 volvió 0 chunks y se registró como sin-hallazgos, no como fallo.
+- **Capa caliente**: dos entradas de la memoria del proyecto, leídas completas (Q8, Q9), más la verificación
+  en disco de lo que afirman (`registro.json` con dos entradas y **un solo** archivo en `instantaneas/`).
+- **Descarga de fuentes por CLI**: no se intentó en esta sesión. El antecedente medido el 2026-10-07 es 3/3
+  fallos con `error: QMind network request failed`; FASE-A3 y FASE-RELEASE la reintentan con racha contada y
+  declaran `NO-EVALUABLE` si vuelve a fallar, nunca VENCIDO.
+- El par MD+JSON del índice se regenera **después** de escribir los documentos del plan: el índice publica el
+  dueño de cada ID con su ruta y el conteo de citas por plan, así que cualquier `.md` nuevo que nombre un ID
+  lo vence (R2.10). Su `--check` es `[6/8]` del hook versionado: sin regeneración, el commit de cierre bloquea.

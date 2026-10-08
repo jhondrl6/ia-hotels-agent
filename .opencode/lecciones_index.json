@@ -2,13 +2,13 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 17,
+    "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 39,
-    "archivos_md_escaneados": 435,
-    "ids_con_definicion": 348,
-    "ids_citados_sin_definicion": 80,
+    "archivos_md_escaneados": 449,
+    "ids_con_definicion": 356,
+    "ids_citados_sin_definicion": 91,
     "fechas_por_fuente": {
-      "nombre": 337,
+      "nombre": 345,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -661,6 +661,118 @@
       "redefiniciones": []
     },
     {
+      "id": "DA-CIM.1",
+      "familia": "DA",
+      "enunciado": "Curar por separación de las dos preguntas (sha_cuerpo + puerta cuerpo-cuerpo), no por --sanear en el writer — Dictada por el operador, no se reabre. El writer no conoce la política de identidades de cada cliente y un saneado automático en el emisor crearía una segunda verdad sobre qué era publicable",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.2",
+      "familia": "DA",
+      "enunciado": "schema_version 1.0 → 1.1 con campo nuevo y sin back-fill — Rellenar hacia atrás con el sha de hoy fabrica verde por construcción y borra la historia de un cuerpo editado antes de la primera corrida del migrador",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.3",
+      "familia": "DA",
+      "enunciado": "Ante parseo fallido del id: no re-subir, verificar por censo — La idempotencia es por título y un título nuevo nunca existió: re-subir crea el duplicado que L-QW.2 mide",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.4",
+      "familia": "DA",
+      "enunciado": "AC6 cierra declarando con dueño, no tocando el notebook — source delete es irreversible sobre contenido publicado y exige decisión escrita aparte; el registro a mano por una fuente ajena también pide autorización literal",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 4,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.5",
+      "familia": "DA",
+      "enunciado": "FASE-A dividida en A1/A2/A3 por parejas de acoplamiento real — R3: seis ACs con mutante propio son más de cuatro tareas; el corte por acoplamiento (qué función toca cada una) mantiene cada fase verificable en una sesión",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.6",
+      "familia": "DA",
+      "enunciado": "La cura del generador pertenece a FASE-C con su propio AC — Es código de producto con 16 + 36 funciones hermanas y alimenta [6/8] de cada commit",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.7",
+      "familia": "DA",
+      "enunciado": "AC10: el plan se publica a sí mismo con el writer curado, y su certificación está separada en entrega offline / aceptación remota — Es la única prueba de que la cura cierra su meta en el caso real (cuerpo con identidades sustituidas), sin convertir el mandato en una subida no autorizada",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.8",
+      "familia": "DA",
+      "enunciado": "FASE-VERIFY no se activa — Criterio 2 de §4.6: cero ejecuciones E2E en el plan; fallando uno de los tres, la etapa no aplica",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "DA-E1",
       "familia": "DA",
       "enunciado": "El writer persiste el snapshot como passthrough versionado — {\"snapshot_version\": \"1.0\", \"snapshot\": <ya normalizado>}, sin llamar a normalize_site_presence() ni tocar campos — DT4-N2 manda «calcular una vez, propagar el snapshot normalizado — gates validan, no reconstruyen». Normalizar en el punto de persistencia instalaría un segundo oráculo exactamente delante del archivo que existe para certificar el primero. La no-reconstrucción no queda como intención: la sonda de tests/test_site_presence_persistence.py persiste un snapshot con campos de probe falsificados y afirma que salen idénticos al disco",
@@ -973,9 +1085,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -1597,10 +1710,11 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -1834,11 +1948,14 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 9,
       "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-ENT.13",
@@ -1864,11 +1981,14 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 14,
       "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-ENT.15",
@@ -1964,9 +2084,13 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
-      "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "total_citas": 16,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-H1",
@@ -2142,8 +2266,10 @@
       "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
       "fecha_plan": "2026-09-21",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -2262,10 +2388,11 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 19,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
       ],
       "redefiniciones": []
@@ -2667,8 +2794,10 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
-      "planes_que_lo_citan": [],
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -2817,11 +2946,12 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 101,
+      "total_citas": 105,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -2877,12 +3007,13 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 105,
+      "total_citas": 110,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -2896,9 +3027,10 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -2929,8 +3061,9 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 9,
       "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -2945,8 +3078,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -2959,8 +3094,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -2973,8 +3110,9 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 11,
       "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -3043,14 +3181,14 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 89,
+      "total_citas": 91,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -3378,9 +3516,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -3394,8 +3533,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -3424,12 +3565,13 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 92,
+      "total_citas": 99,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -3546,9 +3688,10 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 92,
+      "total_citas": 97,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
@@ -3565,12 +3708,15 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 69,
+      "total_citas": 76,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-V2.3",
@@ -3582,13 +3728,16 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 86,
+      "total_citas": 89,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-V3",
@@ -3888,8 +4037,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 49,
-      "planes_que_lo_citan": [],
+      "total_citas": 50,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ],
       "redefiniciones": []
     },
     {
@@ -3946,11 +4097,14 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 39,
+      "total_citas": 44,
       "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
     },
     {
       "id": "L-VCF-16",
@@ -4153,12 +4307,13 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 73,
+      "total_citas": 76,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -4172,10 +4327,11 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -4220,11 +4376,12 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
+      "total_citas": 24,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
     },
@@ -4363,14 +4520,14 @@
       "seccion": "5. Criterios de éxito para el plan DT-2",
       "fecha_plan": "2026-07-26",
       "fuente_fecha": "commit",
-      "total_citas": 17,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
-        "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": [
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
@@ -4387,9 +4544,10 @@
       "seccion": "5. Criterios de éxito para el plan DT-2",
       "fecha_plan": "2026-07-26",
       "fuente_fecha": "commit",
-      "total_citas": 12,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
@@ -4410,12 +4568,13 @@
       "seccion": "5. Criterios de éxito para el plan DT-2",
       "fecha_plan": "2026-07-26",
       "fuente_fecha": "commit",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2"
       ],
       "redefiniciones": [
@@ -4433,11 +4592,12 @@
       "seccion": "5. Criterios de éxito para el plan DT-2",
       "fecha_plan": "2026-07-26",
       "fuente_fecha": "commit",
-      "total_citas": 8,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
       ],
       "redefiniciones": [
@@ -4499,12 +4659,13 @@
       "seccion": "5. Criterios de éxito para el plan DT-2",
       "fecha_plan": "2026-07-26",
       "fuente_fecha": "commit",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
         "Archives/DT-3-TECH-DEBT-2026-07-25",
         "Archives/DT-4-ROOT-CAUSE-2026-07-25",
-        "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
+        "Archives/ONBOARDING-INJECTION-GAP-2026-07-29",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": [
         "context/CONTEXT-DT-3-TECH-DEBT-POST-DT2",
@@ -5538,6 +5699,15 @@
       ]
     },
     {
+      "id": "D-1",
+      "familia": "D",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "DA-T4B.1",
       "familia": "DA",
       "total_citas": 5,
@@ -5590,11 +5760,11 @@
       ]
     },
     {
-      "id": "D-1",
-      "familia": "D",
+      "id": "L-CIM",
+      "familia": "L",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24"
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5613,6 +5783,22 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-CIM-2",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-3",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5640,6 +5826,24 @@
       ]
     },
     {
+      "id": "D-2",
+      "familia": "D",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "D-3",
+      "familia": "D",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "D-D",
       "familia": "D",
       "total_citas": 3,
@@ -5653,6 +5857,15 @@
       "total_citas": 3,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "L-QW",
+      "familia": "L",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5671,6 +5884,22 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-CIM-1",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5722,27 +5951,19 @@
       ]
     },
     {
-      "id": "D-2",
-      "familia": "D",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24"
-      ]
-    },
-    {
-      "id": "D-3",
-      "familia": "D",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24"
-      ]
-    },
-    {
       "id": "DA-T4B.3",
       "familia": "DA",
       "total_citas": 2,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
+      ]
+    },
+    {
+      "id": "L-CIM-n",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5795,14 +6016,6 @@
       ]
     },
     {
-      "id": "L-QW",
-      "familia": "L",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
-      ]
-    },
-    {
       "id": "L-VUP-n",
       "familia": "L",
       "total_citas": 2,
@@ -5825,6 +6038,30 @@
       "total_citas": 2,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "S-CIM-4",
+      "familia": "S",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-5",
+      "familia": "S",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-8",
+      "familia": "S",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5961,6 +6198,22 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
+      ]
+    },
+    {
+      "id": "S-CIM-6",
+      "familia": "S",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-n",
+      "familia": "S",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
