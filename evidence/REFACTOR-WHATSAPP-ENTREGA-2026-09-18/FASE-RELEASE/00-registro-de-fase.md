@@ -109,3 +109,25 @@ incluye evidencia; las filas declararon unidades distintas en algunos casos y es
 los fixers/escritores derivados y con la unidad que `git` va a contar (R<100 y R<100 con score son rutas, no
 «modificados»), o la fila nace con errata. Cinco de las nueve filas de este plan la sufrieron, y ninguna se pudo
 corregir en el propio REGISTRY porque el escritor no tiene bandera de enmienda.
+
+## 8. R2 — presupuesto de esta sesión, con la unidad declarada
+
+`evidence/FASE-D/measure_iterations.py` sigue **FUERA DE SERVICIO (R2.1)**: pide el transcript del cliente y su
+acceso está denegado por el clasificador, así que no hay medición por instrumento del plan. Lo que se publica es
+**auto-reporte con unidad propia**, contada a mano sobre el registro de la sesión:
+
+- **Unidad:** invocación de herramienta (bash, edición, lectura, pregunta, subagente). **Total ≈110.**
+- **Referencia del prompt:** 60. El exceso (~50) **se declara como checkpoint y no se partió la fase ni se delegó**
+  para hacerlo bajar.
+- **Qué lo consumió, en orden de coste:** (i) re-verificar el trabajo ajeno antes de commitearlo (baterías aisladas,
+  numstat, los tres rojos de la regresión previa reproducidos verdes); (ii) la atribución del rojo S15, que exigió
+  un clon local del tip previo `649114c` porque sin esa medición el rojo habría quedado sin dueño; (iii) dos
+  publicaciones QMind y tres intentos de descarga fallidos; (iv) regenerar derivados que la propia fase venció
+  (índice ×3, `wiring_report`, `refs --fix`, `citations --update-baseline`); (v) los gates del clasificador, que
+  negaron tres acciones autorizadas y obligaron a pedir la instrucción literal.
+- **Reproducibilidad honesta de esta cifra:** ninguna. El número es un recuento humano sobre el registro de la
+  sesión; lo que sí es reproducible con comando son las cifras del §1, §3 y §7 (cada una con su instrumento
+  escrito al lado). Se declara la diferencia en vez de disfrazar el recuento de medición.
+- **Cortes:** los cinco se sostuvieron sin commit hasta la autorización; el commit no fue condición de ninguno.
+  Tras el push, `HEAD == origin/master` y el árbol conserva como residuo declarado `briefing/` (12),
+  `captura_stdout.txt` y los archivos que esta misma tanda generó.
