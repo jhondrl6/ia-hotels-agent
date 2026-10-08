@@ -42,6 +42,15 @@ El criterio dejó de ser la existencia del título (premisas P3 y P4 del mini-pl
   `NO-EVALUABLE` cuando no hubo observación (nunca `VENCIDO` ni verde) y `PROMESA-ROTA` si la
   descarga desmiente al índice.
 
+Son **dos preguntas separadas** (AC1/AC2 de `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`, schema 1.1):
+- *¿el plan cambió?* → `sha_cuerpo` grabado al publicar contra el sha del cuerpo actual del repo.
+- *¿lo publicado casa con el servidor?* → la capa D2 de arriba, sobre la instantánea.
+
+Publicar una **copia saneada** (`--file`) deja de ser estructuralmente vencible: el cuerpo del repo ya no
+se compara contra los bytes ingeridos. Una entrada sin `sha_cuerpo` (registro `1.0`, anterior a la cura) es
+`NO-EVALUABLE por migracion`: no se rellena hacia atrás, porque calcular el sha de hoy y escribirlo en la
+entrada vieja daría verde por construcción.
+
 Códigos de salida (verificación):
     0 — medido y vigente: cada 10-analisis archivado está ingestado y cada instantánea vigente
         casa por contenido
@@ -73,7 +82,7 @@ CONTEXT_DIR = ROOT_DIR / ".opencode" / "context"
 PLANS_DIR = ROOT_DIR / ".opencode" / "plans"
 REGISTRO_PATH = ROOT_DIR / ".opencode" / "qmind-writeback" / "registro.json"
 INSTANEAS_DIR = ROOT_DIR / ".opencode" / "qmind-writeback" / "instantaneas"
-REGISTRO_ESQUEMA = "1.0"
+REGISTRO_ESQUEMA = "1.1"
 ESTADO_VIGENTE = "vigente"
 ESTADO_REEMPLAZADA = "reemplazada"
 ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
@@ -259,9 +268,23 @@ def resolver_instanea(entrada: dict, ruta_registro: Path) -> Path:
     return directorio_de_instantaneas(ruta_registro) / entrada.get("instanea", "")
 
 
+def raiz_de_planes(plan_dir: Path) -> Path:
+    """La raiz bajo la que `cuerpo_del_plan()` re-resuelve el cuerpo de un plan pasado por `--upload`.
+
+    `--upload` recibe `<PLAN>` o `Archives/<PLAN>` ya compuesto contra `--plans-dir`, y el sha que entra al
+    registro es el del **cuerpo**: se re-resuelve con el mismo lector que usa la capa de verificación en vez
+    de dar por hecho que `plan_dir/10-analisis` es el cuerpo.
+    """
+    return plan_dir.parent.parent if plan_dir.parent.name == "Archives" else plan_dir.parent
+
+
 def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: str,
-                          archivo: Path, fuente_id: str, fecha: str) -> dict:
+                          archivo: Path, fuente_id: str, fecha: str, cuerpo: Path) -> dict:
     """Copia la instantánea al repo, la registra como vigente y marca la anterior del mismo plan.
+
+    `sha256` es el de la instantánea (lo que el servidor recibió) y `sha_cuerpo` el del cuerpo del plan en el
+    momento de publicar (lo que el repo prometió): dos identidades, dos preguntas (AC1). Con `--file` las dos
+    difieren por diseño —la copia va saneada— y la puerta de vigencia lee la segunda.
 
     Borrar la fuente antigua en el notebook es irreversible sobre contenido publicado y sigue
     siendo decisión escrita del operador (maestro §4): aquí se **marca**, no se borra.
@@ -276,8 +299,10 @@ def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: s
             entrada["estado"] = ESTADO_REEMPLAZADA
             entrada["reemplazada_por"] = titulo
     entrada = {"plan": plan, "titulo": titulo, "estado": ESTADO_VIGENTE,
-               "fuente_id": fuente_id, "sha256": sha, "instanea": slug, "publicado": fecha}
+               "fuente_id": fuente_id, "sha256": sha, "sha_cuerpo": sha256_de(cuerpo),
+               "instanea": slug, "publicado": fecha}
     datos["entradas"].append(entrada)
+    datos["schema_version"] = REGISTRO_ESQUEMA
     guardar_registro(ruta_registro, datos)
     return entrada
 
@@ -359,6 +384,11 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
 
     Códigos: 0 todo vigente, 1 rojo medido, 2 NO-EVALUABLE. El rojo manda sobre la abstención, y
     la abstención manda sobre el verde: lo que no se observó nunca se pinta de VENCIDO (D2).
+
+    Dos preguntas separadas sobre la misma entrada (AC2): la **vigencia del plan** se dictamina cuerpo contra
+    cuerpo (`sha_cuerpo` publicado vs sha del cuerpo actual), y la **fidelidad de lo publicado** sigue con la
+    metadata del servidor y su descarga. La instantánea editada sin re-subuir la corta el gate de registro, que
+    no se toca.
     """
     base = plans_dir if plans_dir is not None else PLANS_DIR
     ruta_registro = registro_path if registro_path is not None else REGISTRO_PATH
@@ -371,30 +401,43 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
 
     rojo = 0
     abstencion = 0
+    contador = {"cuerpo": 0, "remoto": 0, "migracion": 0, "local": 0}
     for e in vigentes:
         etiqueta = f"{e['plan']} :: {e['titulo']}"
         instanea = resolver_instanea(e, ruta_registro)
         cuerpo = cuerpo_del_plan(e["plan"], base)
         if not instanea.is_file():
             abstencion = 2
+            contador["local"] += 1
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la instantanea registrada no esta en {instanea}")
             continue
         if cuerpo is None:
             abstencion = 2
+            contador["local"] += 1
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: el cuerpo del plan no resuelve bajo {base} "
                           f"(movido o archivado): re-fijar su ruta en el registro; no es VENCIDO")
             continue
 
         sha_inst = sha256_de(instanea)
-        if sha_inst != sha256_de(cuerpo):
+        sha_cuerpo_ahora = sha256_de(cuerpo)
+        if not e.get("sha_cuerpo"):
+            abstencion = 2
+            contador["migracion"] += 1
+            lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la entrada no grabo sha_cuerpo (registro schema "
+                          f"{datos.get('schema_version') or 'sin_version'}), es anterior a la cura y no se "
+                          f"rellena hacia atras; no es VENCIDO ni verde")
+            continue
+        contador["cuerpo"] += 1
+        if e["sha_cuerpo"] != sha_cuerpo_ahora:
             rojo = 1
-            lineas.append(f"  [VENCIDO] {etiqueta}: la instantanea publicada ({sha_inst[:12]}...) ya no casa "
-                          f"con el cuerpo del repo ({sha256_de(cuerpo)[:12]}...): re-publicar con titulo nuevo")
+            lineas.append(f"  [VENCIDO] {etiqueta}: la instantanea publicada sobre otra version del cuerpo: "
+                          f"el registro grabo sha_cuerpo={e['sha_cuerpo'][:12]}... y el cuerpo del repo "
+                          f"({cuerpo}) hoy es {sha_cuerpo_ahora[:12]}...: re-publicar con titulo nuevo")
             continue
         if e.get("sha256") and e["sha256"] != sha_inst:
             rojo = 1
-            lineas.append(f"  [VENCIDO] {etiqueta}: el registro declara sha256={e['sha256'][:12]}... y la "
-                          f"instantanea en disco tiene {sha_inst[:12]}...")
+            lineas.append(f"  [VENCIDO] {etiqueta}: la instantanea publicada en disco ({sha_inst[:12]}...) no "
+                          f"casa con el sha256={e['sha256'][:12]}... que declara el registro")
             continue
 
         prometidas = [f for f in fuentes if f["sha_metadata"] and f["sha_metadata"] == sha_inst]
@@ -409,10 +452,12 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                 else:
                     rotas.append((fuente, bajo))
             if casadas:
+                contador["remoto"] += 1
                 lineas.append(f"  [FRESCO] {etiqueta}: {len(casadas)} fuente(s) que casan por metadata del "
                               f"servidor, promesa verificada por descarga+sha256")
             elif rotas:
                 rojo = 1
+                contador["remoto"] += 1
                 for fuente, bajo in rotas:
                     lineas.append(f"  [PROMESA-ROTA] {etiqueta}: {fuente['id'][:13]}... declara "
                                   f"fileSha256={fuente['sha_metadata'][:12]}... y su descarga dio "
@@ -427,6 +472,7 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
             candidatas = [f for f in fuentes if f["title"] == e["titulo"]]
             if not candidatas:
                 rojo = 1
+                contador["remoto"] += 1
                 lineas.append(f"  [VENCIDO] {etiqueta}: ninguna fuente del notebook lleva el titulo "
                               f"registrado y el servidor no promete este sha")
             else:
@@ -438,9 +484,11 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                     continue
                 if bajo != sha_inst:
                     rojo = 1
+                    contador["remoto"] += 1
                     lineas.append(f"  [VENCIDO] {etiqueta}: titulo coincidente con contenido distinto "
                                   f"(publicado {sha_inst[:12]}... ingerido {bajo[:12]}...)")
                     continue
+                contador["remoto"] += 1
                 lineas.append(f"  [FRESCO] {etiqueta}: descarga+sha256 casa "
                               f"({sha_inst[:12]}...) con {candidatas[0]['id'][:13]}...")
 
@@ -453,6 +501,11 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                 lineas.append(f"  [DUPLICADO-VIGENTE] {etiqueta}: la fuente {f['id'][:13]}... "
                               f"({f['title'][:60]}...) nombra al plan y no esta marcada como "
                               f"reemplazada: dos fuentes vigentes del mismo plan")
+    lineas.append(f"  [CONTADOR] {len(vigentes)} vigente(s): {contador['cuerpo']} dictaminada(s) por cuerpo, "
+                  f"{contador['remoto']} con fidelidad remota medida, {contador['migracion']} NO-EVALUABLE "
+                  f"por migracion, {contador['local']} sin observacion local; cuerpo y remota son preguntas "
+                  f"distintas y pueden solaparse: {contador['cuerpo']}+{contador['migracion']}"
+                  f"+{contador['local']}=={len(vigentes)}")
     return (rojo or abstencion), lineas
 
 
@@ -473,7 +526,8 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
 
     Sin `titulo`/`archivo` el comportamiento es el histórico. Con ellos se publica ESA copia con
     ESE título: es la vía de actualización que el writer no tenía (P4), y deja en el repo la
-    instantánea versionada que la capa de contenido va a verificar.
+    instantánea versionada que la capa de contenido va a verificar. El registro graba además el sha del
+    cuerpo del plan (`sha_cuerpo`), que es lo que la puerta de vigencia compara (AC1).
     """
     registro_path = registro_path if registro_path is not None else REGISTRO_PATH
     base_repo = repo_root if repo_root is not None else ROOT_DIR
@@ -492,13 +546,20 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
               f"{archivo} no lo está: se publica una copia versionada, no un archivo suelto")
         return 1
 
+    plan_name = plan_dir.name
+    cuerpo = cuerpo_del_plan(plan_name, raiz_de_planes(plan_dir))
+    if cuerpo is None:
+        print(f"[FAIL] Upload: el cuerpo de {plan_name} no resuelve bajo {raiz_de_planes(plan_dir)} "
+              f"({ANALISIS_FILENAME}): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa "
+              f"uno")
+        return 1
+
     try:
         titles = fetch_source_titles(notebook_id)
     except QmindUnavailable as exc:
         print(f"[FAIL] Upload: {exc}")
         return 1
 
-    plan_name = plan_dir.name
     uploaded = 0
     skipped = 0
     failed = 0
@@ -530,7 +591,7 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
                 print(f"[FAIL] Upload falló: {_first_line(out)}")
                 return 1
             entrada = registrar_publicacion(datos, registro_path, plan_name, analisis_title,
-                                            origen, "", fecha or _hoy())
+                                            origen, "", fecha or _hoy(), cuerpo)
             print(f"[OK] Registrada instantanea {entrada['instanea']} sha256={entrada['sha256']}")
             uploaded += 1
         print(f"\n[RESUMEN] upload={uploaded} skip={skipped} fail={failed}")
@@ -549,7 +610,7 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
         else:
             print(f"[OK] Subido: {analisis.stem}")
             entrada = registrar_publicacion(datos, registro_path, plan_name, analisis_title,
-                                            analisis, "", fecha or _hoy())
+                                            analisis, "", fecha or _hoy(), cuerpo)
             print(f"[OK] Registrada instantanea {entrada['instanea']} sha256={entrada['sha256']}")
             uploaded += 1
 
@@ -674,8 +735,14 @@ def main(argv=None) -> int:
         print(resumen)
         return 1
     if codigo_contenido == 2:
-        print("[NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE, la "
-              "comparacion no goberna ninguna publicacion todavia")
+        if any("[CONTADOR]" in l for l in lineas):
+            # Hubo poblacion y al menos una entrada se abstvo (migracion o cuerpo inaccesible): decir
+            # «no goberna ninguna publicacion» seria falso, goberno a las que tenian sha_cuerpo.
+            print("[NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE en alguna "
+                  "publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO")
+        else:
+            print("[NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE, la "
+                  "comparacion no goberna ninguna publicacion todavia")
         return 2
     print(f"[PASS] qmind write-back: titulo y contenido vigentes ({len(archived)} archivado(s), "
           f"{len([l for l in lineas if '[FRESCO]' in l])} instantanea(s) fresca(s))")

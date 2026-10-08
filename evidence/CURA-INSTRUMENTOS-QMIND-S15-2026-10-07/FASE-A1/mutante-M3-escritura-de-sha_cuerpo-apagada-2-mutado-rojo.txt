@@ -1,0 +1,137 @@
+# mutante M3-escritura-de-sha_cuerpo-apagada: se apago la guarda sobre la COPIA (sha 19b714373327fba027c89dac5e1343e321459593cd7a506d3a4338b70757423c)
+# ancla unica: '"sha256": sha, "sha_cuerpo": sha256_de(cuerpo),' -> '"sha256": sha,'
+# seleccion del grupo: (registro_graba_sha_cuerpo or copia_saneada or cuerpo_editado or tres_estados)
+---
+============================= test session starts =============================
+collected 31 items / 27 deselected / 4 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py F [ 25%]
+FFF                                                                      [100%]
+
+================================== FAILURES ===================================
+____ test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada ____
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_el_registro_graba_sha_cue0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_el_registro_graba_sha_cue0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025AE3046C40>
+
+    def test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada(vw, montaje, monkeypatch):
+        """AC1 en el artefacto: las dos identidades conviven y se distinguen leyendo solo el JSON."""
+        m = montaje
+        falso = QmindFalso([], {})
+        monkeypatch.setattr(vw, "_run_qmind", falso)
+        monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+        copia = m["tmp"] / "copia-saneada.md"
+        copia.write_bytes(b"# 10-analisis con las identidades sustituidas\n")
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            salio = vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+                                 registro_path=m["registro"], fecha="2026-10-07", repo_root=m["tmp"])
+        assert salio == 0
+        en_disco = json.loads(m["registro"].read_text(encoding="utf-8"))
+        assert en_disco["schema_version"] == "1.1"
+        entrada = en_disco["entradas"][0]
+>       assert entrada["sha_cuerpo"] == hashlib.sha256(CUERPO).hexdigest()
+               ^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'sha_cuerpo'
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:524: KeyError
+________ test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo ________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_cuerpo_editado_despues_de0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_cuerpo_editado_despues_de0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025AE30455B0>
+
+    def test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo(vw, montaje, monkeypatch):
+        """Diente de vigencia real: la linea nombra el cuerpo y el rojo corta antes de preguntar al servicio.
+    
+        Se exige ademas que NO sea el gate de registro el que habla: con dos guards locales sobre el mismo
+        `[VENCIDO]`, afirmar solo la etiqueta dejaria el diente verde por la rama equivocada (L-V2.1).
+        """
+        m = montaje
+        falso = QmindFalso([], {})
+        monkeypatch.setattr(vw, "_run_qmind", falso)
+        monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+        copia = m["tmp"] / "copia-saneada.md"
+        copia.write_bytes(b"# 10-analisis con las identidades sustituidas\n")
+        with redirect_stdout(io.StringIO()):
+            assert vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+                                registro_path=m["registro"], fecha="2026-10-07", repo_root=m["tmp"]) == 0
+        m["cuerpo"].write_bytes(CUERPO + b"\nescrito despues de publicar\n")
+        fuente = _fuente(_id(32), TITULO_CIERRE, copia.read_bytes())
+        salio, falso2, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: copia.read_bytes()})
+>       assert salio == 1
+E       assert 2 == 1
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:573: AssertionError
+_ test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido _
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_copia_saneada_con_cuerpo_0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_copia_saneada_con_cuerpo_0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025AE390DD90>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_copia_saneada_con_cuerpo_0')
+
+    def test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido(vw, montaje,
+                                                                                                monkeypatch, tmp_path):
+        """El diente contrario (L-QW.1): la misma poblacion sobre los dos instrumentos, en las dos direcciones.
+    
+        `d8a7d80` es el tip con el que abrio FASE-A1: su puerta comparaba sha(instantanea) contra sha(cuerpo
+        crudo), asi que publicar una copia saneada era estructuralmente vencible. El control se ejecuta sobre el
+        blob commiteado, no sobre un defecto reimplementado aqui dentro.
+        """
+        viejo = _modulo_versionado("d8a7d80", tmp_path / "control", "writer_viejo.py")
+        for mod, registro in ((viejo, tmp_path / "control" / "qmind" / "registro.json"),
+                              (vw, montaje["registro"])):
+            m = montaje
+            copia = m["tmp"] / "copia-saneada-para-el-control.md"
+            copia.write_bytes(b"# 10-analisis con las identidades sustituidas\n")
+            falso = QmindFalso([], {})
+            monkeypatch.setattr(mod, "_run_qmind", falso)
+            monkeypatch.setattr(mod, "scan_context_declarations", lambda: [])
+            registro.parent.mkdir(parents=True, exist_ok=True)
+            buffer = io.StringIO()
+            with redirect_stdout(buffer):
+                assert mod.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+                                     registro_path=registro, fecha="2026-10-07", repo_root=m["tmp"]) == 0
+                doble = QmindFalso(falso.fuentes, {f["id"]: copia.read_bytes() for f in falso.fuentes})
+                monkeypatch.setattr(mod, "_run_qmind", doble)
+                salio = mod.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(registro)])
+            salida = buffer.getvalue()
+>           assert salio == (1 if mod is viejo else 0), salida
+E           AssertionError: [UP] 10-analisis: PLAN-A (cierre v2) <- copia-saneada-para-el-control.md
+E             [OK] Registrada instantanea PLAN-A-2026-09-01--10-analisis_PLAN-A_cierre_v2_.md sha256=0a147943239f7318a69a77d4cc35e2b47247a3a49c5e2c680012df4dd84d4e83
+E             
+E             [RESUMEN] upload=1 skip=0 fail=0
+E             [OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'
+E               [NO-EVALUABLE] PLAN-A-2026-09-01 :: 10-analisis: PLAN-A (cierre v2): la entrada no grabo sha_cuerpo (registro schema 1.1), es anterior a la cura y no se rellena hacia atras; no es VENCIDO ni verde
+E               [CONTADOR] 1 vigente(s): 0 dictaminada(s) por cuerpo, 0 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 0+1+0==1
+E             [NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE en alguna publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO
+E             
+E           assert 2 == 0
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:605: AssertionError
+______________ test_los_tres_estados_del_contador_no_se_colapsan ______________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_los_tres_estados_del_cont0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1633/test_los_tres_estados_del_cont0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025AE3077130>
+
+    def test_los_tres_estados_del_contador_no_se_colapsan(vw, montaje, monkeypatch):
+        """R2.9: sin hallazgos, ausente y lector fallido salen por textos distintos y con su denominador."""
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        fuente = _fuente(_id(33), TITULO_CIERRE, CUERPO)
+        salio, _, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: CUERPO})
+        contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+>       assert salio == 0
+E       assert 2 == 0
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:622: AssertionError
+=========================== short test summary info ===========================
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_los_tres_estados_del_contador_no_se_colapsan
+====================== 4 failed, 27 deselected in 0.30s =======================
+
+EXIT=1

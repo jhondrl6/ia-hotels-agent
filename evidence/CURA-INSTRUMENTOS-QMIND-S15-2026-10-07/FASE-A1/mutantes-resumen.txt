@@ -1,0 +1,31 @@
+MUTANTES FASE-A1 — AC1/AC2 de CURA-INSTRUMENTOS-QMIND-S15
+
+Los tres se corrieron sobre `temp/mutantes_a1/mount/scripts/validate_qmind_writeback.py` (copia),
+nunca sobre el worktree vivo. El script vivo se comparo por sha256 antes y despues de la corrida:
+  ANTES   979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4
+  DESPUES 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4
+  EL ARBOL VIVO QUEDO INTACTO: True
+
+Cada mutante tiene sus dos salidas archivadas (copia intacta y copia mutada) en este directorio.
+
+[M1-puerta-cuerpo-contra-cuerpo-apagada]
+  ancla: '        if e["sha_cuerpo"] != sha_cuerpo_ahora:'  ->  '        if False:'
+  grupo (-k): (cuerpo_editado or rojo_manda_sobre_la_abstencion_de_migracion or cuerpo_que_cambio_despues_de_publicar)
+  copia intacta (sha 979ea64b2109): EXIT=0 | ====================== 3 passed, 28 deselected in 0.22s =======================
+  copia mutada  (sha 645e9aa38700): EXIT=1 | ====================== 3 failed, 28 deselected in 0.24s =======================
+  SENSIBILIDAD DEMOSTRADA: True
+
+[M2-gate-de-registro-apagado]
+  ancla: '        if e.get("sha256") and e["sha256"] != sha_inst:'  ->  '        if False:'
+  grupo (-k): instanea_editada_sin_re_subir_es_vencido
+  copia intacta (sha 979ea64b2109): EXIT=0 | ====================== 1 passed, 30 deselected in 0.20s =======================
+  copia mutada  (sha 64cef89d39ce): EXIT=1 | ====================== 1 failed, 30 deselected in 0.19s =======================
+  SENSIBILIDAD DEMOSTRADA: True
+
+[M3-escritura-de-sha_cuerpo-apagada]
+  ancla: '"sha256": sha, "sha_cuerpo": sha256_de(cuerpo),'  ->  '"sha256": sha,'
+  grupo (-k): (registro_graba_sha_cuerpo or copia_saneada or cuerpo_editado or tres_estados)
+  copia intacta (sha 979ea64b2109): EXIT=0 | ====================== 4 passed, 27 deselected in 0.28s =======================
+  copia mutada  (sha 19b714373327): EXIT=1 | ====================== 4 failed, 27 deselected in 0.30s =======================
+  SENSIBILIDAD DEMOSTRADA: True
+

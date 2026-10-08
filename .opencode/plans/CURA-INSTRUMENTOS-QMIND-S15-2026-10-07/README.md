@@ -9,11 +9,10 @@ commit).
 `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (4.79.0), cuya sesión dejó los dos huecos medidos y sin cura: sin writer para
 saneear, y sin control S15 estable.
 
-**Estado:** preparación cerrada el 2026-10-08 contra HEAD `98c190e`. **Sin código implementado.** ⟦Sello del
+**Estado:** preparación cerrada el 2026-10-08 contra HEAD `98c190e`. **Sin código implementado.** ⟦Estado de FASE-A1, 2026-10-08, misma fecha y sesión distinta: AC1 y AC2 landed en el árbol de trabajo contra HEAD `d8a7d80`, **sin commitear** porque el commit no se autorizó en el chat. La frase anterior describe el árbol al cerrar la preparación y se conserva como registro.⟧ ⟦Sello del
 cierre: el operador autorizó commit, L3 y push en la misma sesión. El commit documental de la preparación es
 `b536748`, los ocho checks del hook versionado pasaron, la revisión profunda L3 no produjo hallazgos y el rango
-empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de
-reanudación: FASE-A1.**
+empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de reanudación: FASE-A2** (AC3 y AC4), que por contrato no arranca si A1 no cerró; A1 cerró en el árbol sin commitear, así que la línea base de A2 es ese árbol más lo que el operador estampe.
 
 ## Por qué importa cada fila
 

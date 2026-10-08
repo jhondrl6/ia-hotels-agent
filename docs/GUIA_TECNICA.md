@@ -3028,6 +3028,8 @@ de `scripts/validate_qmind_writeback.py`; curas candidatas: `sha_cuerpo` aparte 
 writer). Detalle del que desconfiar: la línea `[FIX] 10-analisis-post-implementacion.md` del fixer **no** era de este
 plan — el sha del cuerpo no cambió; un nombre de archivo repetido entre planes no es identidad.
 
+**Errata de estado, 2026-10-08 (FASE-A1 de `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`).** El párrafo anterior queda como registro de su sesión; el hueco que describía ya no existe: `registrar_publicacion()` graba `sha_cuerpo` (schema 1.1) y `verificar_contenido()` dicta la vigencia **cuerpo contra cuerpo**, así que publicar una copia saneada deja de ser estructuralmente vencible. Las tres preguntas siguen separadas —¿el plan cambió? (`sha_cuerpo`), ¿la copia del repo sigue siendo lo publicado? (`sha256` del registro), ¿lo publicado casa con el servidor? (`metadata.fileSha256` + descarga)— y el verificador publica cuántas entradas respondieron cada una. Las entradas anteriores a la cura (sin `sha_cuerpo`) salen `NO-EVALUABLE por migracion`: no se rellena hacia atrás.
+
 **Readabilidad del cierre.** El registro oficial lo escribe `log_phase_completion.py` (aditivo, una entrada por fase,
 con `--fecha` real y `--nota` si es tardía) y sus columnas `Archivos Nuevos/Modificados` **imprimen el número que se
 les pasa como si fuera una ruta** (`| 17 | 17 |`): son conteos, no inventarios, y la unidad hay que declararla en la

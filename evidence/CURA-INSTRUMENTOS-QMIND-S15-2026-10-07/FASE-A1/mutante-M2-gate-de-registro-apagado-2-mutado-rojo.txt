@@ -1,0 +1,40 @@
+# mutante M2-gate-de-registro-apagado: se apago la guarda sobre la COPIA (sha 64cef89d39ce99dfc9e52e1fc2bb232ed329018824cae03fc62aa713d1771b2e)
+# ancla unica: '        if e.get("sha256") and e["sha256"] != sha_inst:' -> '        if False:'
+# seleccion del grupo: instanea_editada_sin_re_subir_es_vencido
+---
+============================= test session starts =============================
+collected 31 items / 30 deselected / 1 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py F [100%]
+
+================================== FAILURES ===================================
+________________ test_instanea_editada_sin_re_subir_es_vencido ________________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1631/test_instanea_editada_sin_re_s0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1631/test_instanea_editada_sin_re_s0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000020906DD6C40>
+
+    def test_instanea_editada_sin_re_subir_es_vencido(vw, montaje, monkeypatch):
+        """M1: mover la instantanea versionada sin volver a publicar corta rojo por el guard de contenido.
+    
+        La razon se nombra y se exige: sin ella, una segunda guarda de contenido (registro vs instantanea)
+        daria tambien `[VENCIDO]` y el mutante M1 passaria desapercibido. Se pide ademas que el rojo corte
+        ANTES de bajar nada: la comprobacion local no depende del servicio.
+        """
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        datos = vw.cargar_registro(m["registro"])
+        instanea = vw.directorio_de_instantaneas(m["registro"]) / datos["entradas"][0]["instanea"]
+        instanea.write_bytes(CUERPO + b"\nreedactada en el disco\n")
+        fuente = _fuente(_id(9), TITULO_CIERRE, CUERPO)
+        salio, falso, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: CUERPO})
+        assert salio == 1
+>       assert "la instantanea publicada" in salida
+E       assert 'la instantanea publicada' in "[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\n  [VENCIDO] PLAN-A-2026-09-01 :: 1...remota son preguntas distintas y pueden solaparse: 1+0+0==1\n[FAIL] qmind write-back: titulo OK | contenido: VENCIDO\n"
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:299: AssertionError
+=========================== short test summary info ===========================
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido
+====================== 1 failed, 30 deselected in 0.19s =======================
+
+EXIT=1

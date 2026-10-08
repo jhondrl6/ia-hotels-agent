@@ -1,5 +1,37 @@
 # Changelog
 
+## [Sin publicar] - FASE-A1 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+
+### Las dos identidades del registro y la puerta de vigencia cuerpo contra cuerpo (AC1, AC2)
+
+- **Qué cambia.** `scripts/validate_qmind_writeback.py` no podía dictaminar vigencia de un plan cuyo `10-analisis`
+  fue **saneado**: `verificar_contenido()` comparaba `sha256(instantánea)` contra el cuerpo crudo del repo, y como
+  `--file` existe para subir una copia con identidades sustituidas, ningún cierre saneado podía dar verde. Ahora el
+  registro guarda las dos identidades y cada una responde su pregunta.
+- **AC1 (`sha_cuerpo`, schema 1.1).** `registrar_publicacion()` graba `sha_cuerpo` = sha del **cuerpo del plan** en
+  el momento de publicar (resuelto por `cuerpo_del_plan()` con `raiz_de_planes()`, no por la copia `--file`) y sube
+  `schema_version` a `1.1`. Sin back-fill: el lector no escribe el registro. El escritor rechaza publicar cuando el
+  cuerpo no resuelve, en vez de inventar un valor.
+- **AC2 (puerta cuerpo contra cuerpo).** VENCIDO se dictamina por `sha(cuerpo actual) != sha_cuerpo publicado`; la
+  fidelidad remota sigue en manos del contrato D2 (`metadata.fileSha256` + descarga, `PROMESA-ROTA`, nunca
+  abstención pintada de VENCIDO) y se **conserva** el gate `e["sha256"] != sha_inst`, que es lo que sostiene el
+  diente de instantánea editada. Entradas sin `sha_cuerpo` → `NO-EVALUABLE` con el motivo y la schema impresos.
+- **Contador propio (L-ENT.12).** El verificador publica `[CONTADOR] N vigente(s): por cuerpo / con fidelidad remota
+  medida / NO-EVALUABLE por migracion / sin observacion local` con su suma. Se corrigió el resumen que decía «no
+  goberna ninguna publicacion» también cuando alguna sí se gobernaraba.
+- **Tests.** 23 → **31** funciones en `tests/test_validate_qmind_writeback_escritura.py` (resta comprobada: 8 de
+  ESTA fase), **sin re-bajar ninguna aserción**; las tres llamadas a `registrar_publicacion()` del archivo se
+  adaptaron al parámetro `cuerpo`. Diente contrario con control negativo ejecutado sobre el blob commiteado
+  `d8a7d80`; diente de vigencia real nombrando cuerpo y ruta; migración NO-EVALUABLE; tres estados sin colapsar;
+  rojo mandando sobre la abstención; y el guard nuevo del escritor. Intérprete: `venv` Python 3.13.3.
+- **Mutantes (R2.8).** M1 puerta cuerpo-cuerpo, M2 gate de registro, M3 escritura de `sha_cuerpo`: los tres sobre
+  copia aislada en `temp/` (el worktree vivo nunca se mutó), cada uno con su par copia-intacta-verde / mutado-rojo y
+  el sha256 del script vivo idéntico antes y después. Crudos en `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/`.
+- **Prosa que viaja con la cura (L-G3).** `.opencode/qmind-writeback/instantaneas/README.md` re-escrito por su dueño
+  humano: ya no promete «compara el sha de esta copia contra el cuerpo del plan».
+- **Fuera de alcance, declarado:** ninguna subida, descarga o borrado en el notebook (AC4 es de A2 y AC10 de
+  RELEASE); las dos entradas `1.0` del plan padre quedan NO-EVALUABLE por migración, sin re-escribir.
+
 ## [Sin publicar] - FASE-UNICA del plan VERIFICADOR-ESCRITURA-QMIND-2026-09-20 - 2026-10-07
 
 ### Write-back de QMind actualizable y verificado por contenido (AC1–AC5 y AC6-entrega; momento A offline)

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-07
+> **Ultima actualizacion:** 2026-10-08
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 515
+> **Total fases completadas:** 516
 
 ---
 
@@ -12004,6 +12004,28 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-A1 - 2026-10-08
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: sha_cuerpo en el registro y puerta de vigencia cuerpo contra cuerpo
+**Nota:** Unidad de las columnas: conteos de rutas contadas por git status -uall sobre el arbol de trabajo, excluidas las 13 rutas untracked ajenas (S-CIM-7). Fase cerrada en el arbol SIN commit (no hubo instruccion literal en el chat). Cortes: hasta 'listo para revision'. Presupuesto: ~70 tool_use contados a mano, por encima de la referencia de 60; el instrumento canónico sigue FUERA DE SERVICIO (R2.1). Previs: PRE 23 passed / POST 31 passed, resta 8 = tests nuevos de esta fase; tres mutantes sobre copia aislada con el arbol vivo intacto por sha256. validate_opencode_refs --fix y validate_wiring --write-report NO se corrieron: no entraron rutas nuevas bajo .opencode ni .py nuevos al arbol versionado.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `13` | NUEVO | 13 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `13` | 13 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 8 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

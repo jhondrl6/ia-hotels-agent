@@ -1,0 +1,95 @@
+# mutante M1-puerta-cuerpo-contra-cuerpo-apagada: se apago la guarda sobre la COPIA (sha 645e9aa38700e642c3dac34a120e3a8ea7e1cae499ee27450c534994352559f0)
+# ancla unica: '        if e["sha_cuerpo"] != sha_cuerpo_ahora:' -> '        if False:'
+# seleccion del grupo: (cuerpo_editado or rojo_manda_sobre_la_abstencion_de_migracion or cuerpo_que_cambio_despues_de_publicar)
+---
+============================= test session starts =============================
+collected 31 items / 28 deselected / 3 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py F [ 33%]
+FF                                                                       [100%]
+
+================================== FAILURES ===================================
+____________ test_cuerpo_que_cambio_despues_de_publicar_es_vencido ____________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_cuerpo_que_cambio_despues0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_cuerpo_que_cambio_despues0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D9D6816C40>
+
+    def test_cuerpo_que_cambio_despues_de_publicar_es_vencido(vw, montaje, monkeypatch):
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        m["cuerpo"].write_bytes(CUERPO + b"\nY hoy escribi el cierre\n")
+        fuente = _fuente(_id(10), TITULO_CIERRE, CUERPO)
+        salio, _, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: CUERPO})
+>       assert salio == 1
+E       assert 0 == 1
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:310: AssertionError
+________ test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo ________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_cuerpo_editado_despues_de0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_cuerpo_editado_despues_de0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D9D68155B0>
+
+    def test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo(vw, montaje, monkeypatch):
+        """Diente de vigencia real: la linea nombra el cuerpo y el rojo corta antes de preguntar al servicio.
+    
+        Se exige ademas que NO sea el gate de registro el que habla: con dos guards locales sobre el mismo
+        `[VENCIDO]`, afirmar solo la etiqueta dejaria el diente verde por la rama equivocada (L-V2.1).
+        """
+        m = montaje
+        falso = QmindFalso([], {})
+        monkeypatch.setattr(vw, "_run_qmind", falso)
+        monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+        copia = m["tmp"] / "copia-saneada.md"
+        copia.write_bytes(b"# 10-analisis con las identidades sustituidas\n")
+        with redirect_stdout(io.StringIO()):
+            assert vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+                                registro_path=m["registro"], fecha="2026-10-07", repo_root=m["tmp"]) == 0
+        m["cuerpo"].write_bytes(CUERPO + b"\nescrito despues de publicar\n")
+        fuente = _fuente(_id(32), TITULO_CIERRE, copia.read_bytes())
+        salio, falso2, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: copia.read_bytes()})
+>       assert salio == 1
+E       assert 0 == 1
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:573: AssertionError
+_____________ test_el_rojo_manda_sobre_la_abstencion_de_migracion _____________
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a1\\mount\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_el_rojo_manda_sobre_la_ab0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1629/test_el_rojo_manda_sobre_la_ab0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001D9D70DDD90>
+
+    def test_el_rojo_manda_sobre_la_abstencion_de_migracion(vw, montaje, monkeypatch):
+        """Un dictamen VENCIDO por cuerpo y una abstencion por migracion en la misma corrida: EXIT 1, las dos lineas."""
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        viejo_plan = "PLAN-VIEJO-2026-09-02"
+        viejo_dir = m["plans"] / "Archives" / viejo_plan
+        viejo_dir.mkdir(parents=True)
+        contenido_viejo = CUERPO + b"\nla entrada antigua\n"
+        (viejo_dir / "10-analisis-post-implementacion.md").write_bytes(contenido_viejo)
+        destino = vw.directorio_de_instantaneas(m["registro"]) / "instanea-1-0.md"
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_bytes(contenido_viejo)
+        datos = vw.cargar_registro(m["registro"])
+        datos["entradas"].append({"plan": viejo_plan, "titulo": "10-analisis: PLAN-VIEJO (cierre)",
+                                  "estado": "vigente", "fuente_id": "",
+                                  "sha256": hashlib.sha256(contenido_viejo).hexdigest(),
+                                  "instanea": "instanea-1-0.md", "publicado": "2026-09-30"})
+        vw.guardar_registro(m["registro"], datos)
+        m["cuerpo"].write_bytes(CUERPO + b"\nescrito despues de publicar\n")
+        fuente = _fuente(_id(34), TITULO_CIERRE, CUERPO)
+        huesped = _fuente(_id(35), "10-analisis: PLAN-VIEJO (cierre)", contenido_viejo)
+        salio, _, salida = _corrida(vw, monkeypatch, m, [fuente, huesped],
+                                    {fuente["id"]: CUERPO, huesped["id"]: contenido_viejo})
+>       assert salio == 1
+E       assert 2 == 1
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py:669: AssertionError
+=========================== short test summary info ===========================
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_que_cambio_despues_de_publicar_es_vencido
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo
+FAILED temp/mutantes_a1/mount/tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion_de_migracion
+====================== 3 failed, 28 deselected in 0.24s =======================
+
+EXIT=1

@@ -1,8 +1,9 @@
 # Checklist de implementación — CURA-INSTRUMENTOS-QMIND-S15 (2026-10-07)
 
-Estado al 2026-10-08, medido contra HEAD `98c190e`. Una fase por sesión (R1); ninguna casilla de fase pendiente se
-marca como hecha por adelantado. Las cifras que imprime una corrida **no** se copian aquí: viven en
-`09-documentacion-post-proyecto.md` §D, en su test o en su crudo.
+Estado al 2026-10-08. La preparación midió contra HEAD `98c190e`; FASE-A1 re-midió contra `d8a7d80` (los tres
+commits documentales de la preparación ya estaban sobre el tip cuando abrió). Una fase por sesión (R1); ninguna
+casilla de fase pendiente se marca como hecha por adelantado. Las cifras que imprime una corrida **no** se copian
+aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crudo.
 
 ## Etapa 1 — Preparación (ESTA sesión)
 
@@ -24,19 +25,19 @@ marca como hecha por adelantado. Las cifras que imprime una corrida **no** se co
 
 ## Etapa 2 — Implementación
 
-### FASE-A1 — AC1 y AC2 (⬜ Pendiente)
+### FASE-A1 — AC1 y AC2 (✅ CERRADA 2026-10-08, sin commitear: el commit no estaba autorizado en el chat)
 
-- [ ] PRE re-medido con HEAD, status, quick y la selección literal
-- [ ] `registrar_publicacion()` escribe `sha_cuerpo`; `schema_version` 1.1; `cargar_registro` tolera entradas 1.0
-- [ ] Migración sin back-fill: entrada sin campo → NO-EVALUABLE con motivo, nunca VENCIDO ni verde
-- [ ] `verificar_contenido()` decide vigencia cuerpo contra cuerpo, conserva el gate `e["sha256"] != sha_inst` y el contrato D2
-- [ ] Diente contrario: copia saneada con crudo intacto → antes `[VENCIDO]`, ahora vigente
-- [ ] Diente de vigencia real: cuerpo editado después de publicar → VENCIDO
-- [ ] Cuatro estados no colapsados (R2.9) y contador publicado por el verificador
-- [ ] 23 dientes viejos verdes **sin re-bajar ninguna aserción**
-- [ ] Mutantes archivados con restauración por sha256, ejecutados sobre el instrumento versionado
-- [ ] `README.md` de `instantaneas/` actualizado por su dueño humano en el mismo commit
-- [ ] Cierre incremental del contrato (8 pasos) con registro propio y quick verde
+- [x] PRE re-medido con HEAD, status, quick y la selección literal — HEAD de la sesión `d8a7d80` (no `98c190e`: la preparación ya había subido tres commits), quick 13/13 EXIT 0, PRE 23 passed EXIT 0 con intérprete declarado (`venv` Python 3.13.3, no el del sistema que usó la preparación) → `E/FASE-A1/`
+- [x] `registrar_publicacion()` escribe `sha_cuerpo`; `schema_version` 1.1; `cargar_registro` tolera entradas 1.0 — el sha se resuelve por `cuerpo_del_plan()` con `raiz_de_planes()`, no por la copia `--file`; diente `test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada` lee el JSON **en disco**
+- [x] Migración sin back-fill: entrada sin campo → NO-EVALUABLE con motivo, nunca VENCIDO ni verde — y el lector no escribe el registro (`test_la_migracion_no_rellena_hacia_atras_la_entrada_vieja`, bytes antes/después)
+- [x] `verificar_contenido()` decide vigencia cuerpo contra cuerpo, conserva el gate `e["sha256"] != sha_inst` y el contrato D2 — **nota de forma (L-G3):** el gate de registro conservó su condición y su poder, pero su *texto* pasó a encabezar con «la instantanea publicada en disco», porque el diente viejo `test_instanea_editada_sin_re_subir_es_vencido` afirma esa frase y ahora lo sostiene el gate de registro, no el de contenido
+- [x] Diente contrario: copia saneada con crudo intacto → antes `[VENCIDO]`, ahora vigente — `test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido` corre la misma población sobre el blob commiteado `d8a7d80` (rojo, 0 descargas) y sobre el curado (verde, `1 dictaminada(s) por cuerpo`)
+- [x] Diente de vigencia real: cuerpo editado después de publicar → VENCIDO, con la línea nombrando el cuerpo **y** su ruta, y la negativa de que hable el gate de registro
+- [x] Cuatro estados no colapsados (R2.9) y contador publicado por el verificador — `[CONTADOR] N vigente(s): por cuerpo / fidelidad remota medida / NO-EVALUABLE por migracion / sin observacion local` con su suma `cuerpo+migracion+local==N`; muestra en `E/FASE-A1/contador_muestra.txt` (offline)
+- [x] 23 dientes viejos verdes **sin re-bajar ninguna aserción** — POST 31 passed; la resta `31 − 23 = 8` son los dientes de ESTA fase; las tres llamadas a `registrar_publicacion()` del archivo se adaptaron al parámetro nuevo, ninguna aserción se tocó
+- [x] Mutantes archivados con restauración por sha256, ejecutados sobre el instrumento versionado — M1/M2/M3 sobre copia en `temp/` (nunca el worktree vivo), cada uno con su par copia-intacta-verde / mutado-rojo y el sha del script vivo igual antes y después → `E/FASE-A1/mutantes-resumen.txt`
+- [x] `README.md` de `instantaneas/` actualizado por su dueño humano (prosa no regenerable por escritor); **viajará en el mismo commit que la cura solo si el operador autoriza el commit** — hasta entonces queda en el árbol sin commitear, declarado
+- [x] Cierre incremental del contrato (8 pasos) con registro propio y quick verde
 
 ### FASE-A2 — AC3 y AC4 (⬜ Pendiente)
 

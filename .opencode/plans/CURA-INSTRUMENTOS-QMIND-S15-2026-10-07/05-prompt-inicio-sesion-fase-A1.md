@@ -27,6 +27,7 @@ La decisión del operador está tomada y **no se reabre**: se cura por separaci�
 | Fase | Estado |
 |---|---|
 | Preparación (FASE-0) | ✅ Cerrada 2026-10-08, commiteada (`b536748` + sello `a19fa06`) y empujada hasta `origin/master`; L3 sin hallazgos |
+| FASE-A1 | ✅ Cerrada 2026-10-08 contra HEAD `d8a7d80`, **sin commitear** (no hubo instrucción literal de commit en el chat): AC1 y AC2 landed, PRE 23 passed → POST 31 passed, tres mutantes con su par intacto/mutado y restauración por sha256 |
 | FASE-A2, A3, B, C, RELEASE | ⬜ Pendientes, en ese orden |
 
 ### Base técnica disponible
@@ -137,15 +138,17 @@ su dueño humano y la regeneración del par del índice.
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] AC1 legible en `registro.json` con su clave `sha_cuerpo` y `schema_version` 1.1 (R2.4: sin clave legible, no hay ✅)
-- [ ] AC2 con los dos verdes nombrados (contrario y vigencia real) y su par de mutantes archivado
-- [ ] Los 23 dientes viejos verdes sin haber tocado una aserción (delta explicado por adiciones de ESTA fase, R2.3/R2.7)
-- [ ] Ninguna entrada del padre fue re-escrita ni rellenada hacia atrás
-- [ ] contador publicado por el verificador: entradas dictaminadas por cuerpo / por metadata+descarga / NO-EVALUABLE por migración
-- [ ] PRE/POST con resta comprobada y `EXIT=$?` dentro del archivo, esperando el PID real
-- [ ] Post-ejecución completo; quick verde; derivados regenerados con su escritor
-- [ ] El `README.md` de `instantaneas/` describe la semántica nueva y viaja en el mismo commit que la cura
+- [x] AC1 legible en `registro.json` con su clave `sha_cuerpo` y `schema_version` 1.1 (R2.4: sin clave legible, no hay ✅)
+- [x] AC2 con los dos verdes nombrados (contrario y vigencia real) y su par de mutantes archivado
+- [x] Los 23 dientes viejos verdes sin haber tocado una aserción (delta explicado por adiciones de ESTA fase, R2.3/R2.7)
+- [x] Ninguna entrada del padre fue re-escrita ni rellenada hacia atrás
+- [x] contador publicado por el verificador: entradas dictaminadas por cuerpo / por metadata+descarga / NO-EVALUABLE por migración
+- [x] PRE/POST con resta comprobada y `EXIT=$?` dentro del archivo, esperando el PID real
+- [x] Post-ejecución completo; quick verde; derivados regenerados con su escritor
+- [x] El `README.md` de `instantaneas/` describe la semántica nueva y viaja en el mismo commit que la cura
 
+
+**Nota de la sesión que la ejecutó (2026-10-08):** las ocho casillas se marcaron sobre el árbol de trabajo contra `d8a7d80`. La casilla del `README.md` de `instantaneas/` se cumple en contenido; su cláusula «viaja en el mismo commit que la cura» queda en suspenso hasta que el operador autorice el commit, y así se declara en `09-documentacion-post-proyecto.md` §E.
 ## Restricciones
 
 - No tocar `AGENTS.md`, `.cursorrules`, `VERSION.yaml`, el workflow ni los hooks. No liberar versión.

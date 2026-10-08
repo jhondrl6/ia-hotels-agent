@@ -1,0 +1,14 @@
+# control: copia intacta del instrumento curado (sha 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4)
+# comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest <copia>/tests/test_validate_qmind_writeback_escritura.py -k "(registro_graba_sha_cuerpo or copia_saneada or cuerpo_editado or tres_estados)" -v -o addopts=
+# interpreter: venv Python 3.13.3, arbol: worktree (el script vivo no se toco)
+# seleccion del grupo: (registro_graba_sha_cuerpo or copia_saneada or cuerpo_editado or tres_estados)
+---
+============================= test session starts =============================
+collected 31 items / 27 deselected / 4 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py . [ 25%]
+...                                                                      [100%]
+
+====================== 4 passed, 27 deselected in 0.28s =======================
+
+EXIT=0

@@ -17,8 +17,9 @@ Unidades declaradas: «funciones `def test_`» se cuenta con el método canónic
 
 | Feature | Módulo | Descripción | Fase |
 |---|---|---|---|
-| Identidad de cuerpo en el registro de publicaciones (`sha_cuerpo`, schema 1.1) | `scripts/validate_qmind_writeback.py` | Separa «el plan cambió» de «lo publicado casa con el servidor»; migración sin back-fill | ⬜ A1 (futura) |
-| Puerta de vigencia cuerpo contra cuerpo | `scripts/validate_qmind_writeback.py` | `verificar_contenido()` dicta VENCIDO solo contra `sha_cuerpo`; conserva el gate de registro y el contrato D2 | ⬜ A1 (futura) |
+| Identidad de cuerpo en el registro de publicaciones (`sha_cuerpo`, schema 1.1) | `scripts/validate_qmind_writeback.py` | Separa «el plan cambió» de «lo publicado casa con el servidor»; migración sin back-fill | ✅ A1 (2026-10-08) |
+| Puerta de vigencia cuerpo contra cuerpo | `scripts/validate_qmind_writeback.py` | `verificar_contenido()` dicta VENCIDO solo contra `sha_cuerpo`; conserva el gate de registro y el contrato D2 | ✅ A1 (2026-10-08) |
+| [CONTADOR] de las dos preguntas en el resumen del verificador | `scripts/validate_qmind_writeback.py` | Publica cuántas entradas se dictaminaron por cuerpo, cuántas tuvieron fidelidad remota medida y cuántas quedaron NO-EVALUABLE, con su suma | ✅ A1 (2026-10-08) |
 | Slug de instantánea sin colisión | `scripts/validate_qmind_writeback.py` | Dos títulos con prefijo común ya no pisan el mismo byte-exacto | ⬜ A2 (futura) |
 | `fuente_id` capturado de la tabla del CLI | `scripts/validate_qmind_writeback.py` | Parseo `Key: value` en las dos ramas de `do_upload()`; ante fallo, censo y no re-subida | ⬜ A2 (futura) |
 | Rutas con el plan archivado fijadas por diente | `scripts/validate_qmind_writeback.py` | `Archives/<PLAN>` publica con clave `plan_dir.name`; `cuerpo_del_plan()` resuelve dos raíces | ⬜ A3 (futura) |
@@ -30,16 +31,20 @@ Unidades declaradas: «funciones `def test_`» se cuenta con el método canónic
 
 | Métrica | Valor | Unidad e instrumento | Fase |
 |---|---|---|---|
-| Funciones `def test_` en `tests/test_validate_qmind_writeback_escritura.py` | 23 | `grep -cE "^\s*def test_"` sobre el archivo — **medido 2026-10-08 en la preparación** (línea base PRE, no producto del plan) | Preparación |
+| Funciones `def test_` en `tests/test_validate_qmind_writeback_escritura.py` | 23 → **31** | `grep -cE "^\s*def test_"` sobre el archivo — 23 **medido 2026-10-08 en la preparación** (línea base PRE, no producto del plan) y 31 medido al cerrar FASE-A1 | Preparación / ✅ A1 |
+| Tests nuevos de cada fase | A1: **8** | resta comprobada sobre la **misma** selección y el mismo intérprete: POST `31 passed` − PRE `23 passed` = 8; crudos `E/FASE-A1/tests_baseline_pre.txt` (EXIT 0) y `tests_baseline_post.txt` (EXIT 0) | ✅ A1 |
+| Regresión de la familia vecina al cerrar A1 | `90 passed`, `EXIT=0` | `venv/Scripts/python.exe -m pytest tests/test_verify_qmind_context_freshness.py tests/quality_gates/governance_numbers -q`; crudo `E/FASE-A1/hermanos_regresion.txt`, árbol: worktree con la cura sin commitear | ✅ A1 |
+| Mutantes ejecutados sobre copia aislada | 3 de 3 con sensibilidad demostrada | montaje en `temp/mutantes_a1/mount` (el worktree vivo nunca se mutó): cada mutante con su par copia-intacta(verde) / mutada(roja) y el sha256 del script vivo idéntico antes y después; crudos `E/FASE-A1/mutante-*.txt` y `mutantes-resumen.txt` | ✅ A1 |
 | Funciones `def test_` en `tests/test_build_lesson_index_s15_fecha_versionada.py` | 4 | idem — medido 2026-10-08 | Preparación |
 | Funciones `def test_` en la familia del índice (16 + 36 hermanas) | 52 | idem sobre `tests/test_build_lesson_index.py` y `tests/test_verify_qmind_context_freshness.py` — medido 2026-10-08 | Preparación |
 | Cases de la selección PRE de apertura | 1 failed / 26 passed (27 collectados) | pytest 9.0.2 con Python 3.13.3 del sistema; crudo en `E/FASE-0/pre_seleccion_apertura.txt`, EXIT=1 | Preparación |
 | Checks del quick de apertura | todos verdes, con `EXIT=0` | `python scripts/run_all_validations.py --quick`; **el número lo imprime la corrida**, no se fija aquí — crudo `E/FASE-0/quick_apertura.txt` | Preparación |
+| Checks del quick al cerrar A1 | todos verdes, con `EXIT=0` | `venv/Scripts/python.exe scripts/run_all_validations.py --quick` sobre el worktree con la cura; el número lo imprime la corrida y no se copia aquí — crudo de apertura `E/FASE-A1/quick_apertura.txt`, el del cierre en el registro de fase | ✅ A1 |
 | IDs definidos en el índice del corpus | 348 | salida de `build_lesson_index.py --check`, medido 2026-10-08 | Preparación |
 | Distribución de fuentes de fecha del índice | 337 `nombre` / 11 `commit` / 0 `SIN-FUENTE` | línea `[fechas]` del writer; la FASE-B/C la re-mide | Preparación |
-| Tests nuevos de cada fase | ⬜ pendiente | lo imprime su POST | A1, A2, A3, B, C |
+| Tests nuevos de cada fase | A2, A3, B, C: ⬜ pendiente (A1: 8, fila arriba) | lo imprime su POST | A2, A3, B, C |
 | Checks del modo completo al cerrar | ⬜ pendiente | `run_all_validations.py` sin `--quick`, crudo archivado | RELEASE |
-| Presupuesto `tool_use` por fase | ⬜ pendiente | **auto-reporte con unidad declarada** (instrumento canónico FUERA DE SERVICIO, R2.1) | todas |
+| Presupuesto `tool_use` por fase | A1: ≈70 contados a mano, **por encima de la referencia de 60 → checkpoint declarado** (no fase adicional, contrato §R2) | **auto-reporte con unidad declarada** (instrumento canónico FUERA DE SERVICIO, R2.1); el desglose de en qué se fue, en `E/FASE-A1/00-registro-de-fase.md` | ✅ A1 (A2, A3, B, C pendientes) |
 
 ## Sección E: Archivos afiliados actualizados
 
@@ -51,10 +56,11 @@ Unidades declaradas: «funciones `def test_`» se cuenta con el método canónic
 | `CHANGELOG.md` | Subsección de fase bajo `## [Sin publicar]` en cada fase; encabezado de versión solo en RELEASE | todas |
 | `docs/GUIA_TECNICA.md` | Nota técnica por fase | todas |
 | `docs/contributing/REGISTRY.md` | Una entrada por fase, escrita **por esa fase** con `log_phase_completion.py` | todas |
-| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado con `doctor.py --regenerate-domain-primer` al cerrar fases de implementación, si la fase tiene mandato para escribirlo; verificado con `--context` en RELEASE | A1, A2, A3, B, C, RELEASE |
-| `.opencode/qmind-writeback/instantaneas/README.md` | Prosa humana del directorio: describe la comparación que AC2 retira y el esquema de nombres que AC3 cambia | A1, A2 |
-| `scripts/validate_qmind_writeback.py` | El instrumento curado | A1, A2, A3 |
-| `tests/test_validate_qmind_writeback_escritura.py` | Dientes aditivos por AC | A1, A2, A3 |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado con `doctor.py --regenerate-domain-primer` al cerrar fases de implementación, si la fase tiene mandato para escribirlo; verificado con `--context` en RELEASE | A1 ✅ (regenerado al cerrar), A2, A3, B, C, RELEASE |
+| `.opencode/qmind-writeback/instantaneas/README.md` | Prosa humana del directorio: A1 re-escribió «Qué sirve» con las tres comprobaciones (cuerpo / registro-vs-instantánea / servidor) y la regla de no-back-fill; el esquema de nombres que AC3 cambia queda declarado pendiente para A2 | A1 ✅ (2026-10-08), A2 (pendiente) |
+| `scripts/validate_qmind_writeback.py` | El instrumento curado: A1 landed (`sha_cuerpo`, schema 1.1, puerta cuerpo-contra-cuerpo, `[CONTADOR]`, guard del escritor ante cuerpo no resoluble) | A1 ✅, A2, A3 |
+| `tests/test_validate_qmind_writeback_escritura.py` | Dientes aditivos por AC: A1 sumó 8 (23 → 31) sin re-bajar aserciones; las tres llamadas a `registrar_publicacion()` se adaptaron al parámetro `cuerpo` | A1 ✅, A2, A3 |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/**` | Doce crudos: quick de apertura, PRE/POST de la selección literal, regresión de hermanos, muestra offline del `[CONTADOR]`, tres mutantes con su par intacto/mutado y el resumen con la restauración por sha256 | A1 ✅ |
 | `tests/test_build_lesson_index_s15_fecha_versionada.py` | Cura del control | B |
 | `scripts/build_lesson_index.py` | Solo si AC9 lo exige | C |
 | `VERSION.yaml` | **No** en fases intermedias | RELEASE con mandato |

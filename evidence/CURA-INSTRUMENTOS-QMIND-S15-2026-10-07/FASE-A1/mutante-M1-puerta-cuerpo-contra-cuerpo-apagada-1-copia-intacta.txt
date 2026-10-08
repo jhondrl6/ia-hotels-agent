@@ -1,0 +1,14 @@
+# control: copia intacta del instrumento curado (sha 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4)
+# comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest <copia>/tests/test_validate_qmind_writeback_escritura.py -k "(cuerpo_editado or rojo_manda_sobre_la_abstencion_de_migracion or cuerpo_que_cambio_despues_de_publicar)" -v -o addopts=
+# interpreter: venv Python 3.13.3, arbol: worktree (el script vivo no se toco)
+# seleccion del grupo: (cuerpo_editado or rojo_manda_sobre_la_abstencion_de_migracion or cuerpo_que_cambio_despues_de_publicar)
+---
+============================= test session starts =============================
+collected 31 items / 28 deselected / 3 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py . [ 33%]
+..                                                                       [100%]
+
+====================== 3 passed, 28 deselected in 0.22s =======================
+
+EXIT=0

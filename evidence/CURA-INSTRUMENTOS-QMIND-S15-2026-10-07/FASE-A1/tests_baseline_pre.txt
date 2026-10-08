@@ -1,0 +1,41 @@
+# PRE seleccion literal: tests/test_validate_qmind_writeback_escritura.py
+# comando: venv/Scripts/python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -v
+# interprete: Python 3.13.3 (venv del proyecto)
+# arbol: worktree contra HEAD d8a7d80
+# fecha: 2026-10-08T07:17:45-05:00
+# funciones def test_ por metodo canonico: 23
+---
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 23 items
+
+tests/test_validate_qmind_writeback_escritura.py::test_title_y_file_solo_tienen_sentido_con_upload PASSED [  4%]
+tests/test_validate_qmind_writeback_escritura.py::test_control_negativo_el_writer_versionado_antes_no_aceptaba_title PASSED [  8%]
+tests/test_validate_qmind_writeback_escritura.py::test_file_fuera_del_repo_corta_antes_de_subir_nada PASSED [ 13%]
+tests/test_validate_qmind_writeback_escritura.py::test_upload_explicito_registra_instanea_y_marca_la_anterior PASSED [ 17%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_contenido_distinto_no_colisiona_en_silencio PASSED [ 21%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_el_mismo_contenido_es_skip_declarado PASSED [ 26%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_default_de_upload_sigue_publicando_con_el_titulo_historico PASSED [ 30%]
+tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido PASSED [ 34%]
+tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_que_cambio_despues_de_publicar_es_vencido PASSED [ 39%]
+tests/test_validate_qmind_writeback_escritura.py::test_titulo_coincidente_con_contenido_distinto_es_rojo PASSED [ 43%]
+tests/test_validate_qmind_writeback_escritura.py::test_metadata_del_servidor_es_primera_via_y_la_descarga_la_verifica PASSED [ 47%]
+tests/test_validate_qmind_writeback_escritura.py::test_fuente_que_promete_y_no_baja_es_no_evaluable_nunca_vencido PASSED [ 52%]
+tests/test_validate_qmind_writeback_escritura.py::test_descarga_que_desmiente_la_promesa_es_promesa_rota PASSED [ 56%]
+tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan PASSED [ 60%]
+tests/test_validate_qmind_writeback_escritura.py::test_la_fuente_marcada_como_reemplazada_no_duplica PASSED [ 65%]
+tests/test_validate_qmind_writeback_escritura.py::test_registro_vacio_no_es_verde_sino_no_evaluable PASSED [ 69%]
+tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_inaccesible_es_no_evaluable_no_vencido PASSED [ 73%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion PASSED [ 78%]
+tests/test_validate_qmind_writeback_escritura.py::test_sin_qmind_sin_strict_es_no_evaluable_y_nunca_pass PASSED [ 82%]
+tests/test_validate_qmind_writeback_escritura.py::test_con_strict_el_cli_ausente_corta_fail PASSED [ 86%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_check_del_runner_invoca_con_strict_y_trata_el_dos_como_estado_propio PASSED [ 91%]
+tests/test_validate_qmind_writeback_escritura.py::test_el_check_queda_cableado_al_modo_completo_y_no_al_rapido PASSED [ 95%]
+tests/test_validate_qmind_writeback_escritura.py::test_collect_archived_analisis_resuelve_bajo_la_raiz_de_planes PASSED [100%]
+
+============================= 23 passed in 0.40s ==============================
+EXIT=0

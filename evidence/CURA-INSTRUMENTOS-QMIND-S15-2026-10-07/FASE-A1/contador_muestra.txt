@@ -1,0 +1,40 @@
+# muestra del contador publicado, offline (doble del CLI en memoria; cero subidas, cero descargas remotas al notebook)
+# comando: venv/Scripts/python.exe temp/contador_muestra.py
+# interprete: venv Python 3.13.3 | arbol: worktree HEAD d8a7d80 con la cura sin commitear
+# sha256 del instrumento bajo prueba (disco): 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4
+---
+--- registro montado (las dos formas conviviendo) ---
+{
+  "schema_version": "1.1",
+  "entradas": [
+    {
+      "plan": "PLAN-NUEVO-2026-10-08",
+      "titulo": "10-analisis: PLAN-NUEVO (cierre)",
+      "estado": "vigente",
+      "fuente_id": "",
+      "sha256": "4257743e6a5da3fb20aaba57b924563478ee5f4da4ac0016cc02766b8ce2d4c7",
+      "sha_cuerpo": "4257743e6a5da3fb20aaba57b924563478ee5f4da4ac0016cc02766b8ce2d4c7",
+      "instanea": "PLAN-NUEVO-2026-10-08--10-analisis_PLAN-NUEVO_cierre_.md",
+      "publicado": "2026-10-08"
+    },
+    {
+      "plan": "PLAN-ANTIGUO-2026-09-02",
+      "titulo": "10-analisis: PLAN-ANTIGUO (cierre)",
+      "estado": "vigente",
+      "fuente_id": "",
+      "sha256": "a469be09f0b8159892756584f4a4c8c3ca4cdbbc1b6c2bda422df2f8bba267cf",
+      "instanea": "instanea-1-0.md",
+      "publicado": "2026-09-30"
+    }
+  ]
+}
+
+--- corrida del verificador (offline, sin subida ni descarga remota) ---
+[OK] QMind Write-back: 2/2 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [FRESCO] PLAN-NUEVO-2026-10-08 :: 10-analisis: PLAN-NUEVO (cierre): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [NO-EVALUABLE] PLAN-ANTIGUO-2026-09-02 :: 10-analisis: PLAN-ANTIGUO (cierre): la entrada no grabo sha_cuerpo (registro schema 1.1), es anterior a la cura y no se rellena hacia atras; no es VENCIDO ni verde
+  [CONTADOR] 2 vigente(s): 1 dictaminada(s) por cuerpo, 1 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 1+1+0==2
+[NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE en alguna publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO
+
+EXIT=2  descargas al doble=1
+EXIT_DEL_SCRIPT=0

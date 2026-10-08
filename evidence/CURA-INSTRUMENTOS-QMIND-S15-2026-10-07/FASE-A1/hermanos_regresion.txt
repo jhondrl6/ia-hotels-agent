@@ -1,0 +1,6 @@
+# regresion de la familia QMind escrita por FASE-A1
+# comando: venv/Scripts/python.exe -m pytest tests/test_verify_qmind_context_freshness.py tests/quality_gates/governance_numbers -q
+........................................................................ [ 80%]
+..................                                                       [100%]
+90 passed in 23.84s
+EXIT=0

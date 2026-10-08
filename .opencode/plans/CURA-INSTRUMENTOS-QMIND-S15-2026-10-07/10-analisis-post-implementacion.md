@@ -1,7 +1,9 @@
 # Análisis Post-Implementación — CURA-INSTRUMENTOS-QMIND-S15 (2026-10-07)
 
 > **Estado**: preparación cerrada el 2026-10-08 contra HEAD `98c190e` — diseño aprobado contra código vivo y dos
-> filas del mandato refutadas por medición. Ninguna fase de implementación ejecutada.
+> filas del mandato refutadas por medición. FASE-A1 ejecutada el 2026-10-08 contra HEAD `d8a7d80` (AC1 y AC2
+> landed en el árbol de trabajo, **sin commitear**: el commit no fue autorizado en el chat de esa sesión). Las
+> fases A2, A3, B, C y RELEASE siguen pendientes.
 > **Plan**: `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/`
 > **Versión objetivo**: no decidida por el plan. `VERSION.yaml` publica `4.79.0` (release del padre, 2026-10-07);
 > el número lo dicta el operador en FASE-RELEASE y se invoca con `--release "$VERSION_AUTORIZADA"`.
@@ -14,7 +16,7 @@ corta si aparece una declaración de cierre conviviendo con filas pendientes.
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |---|---|---|---|---|---|
 | Preparación | 2026-10-08 | ✅ Cerrada, commiteada (`b536748`) y empujado `98c190e..b536748`, L3 sin hallazgos | auto-reporte con unidad declarada (R2.1: instrumento FUERA DE SERVICIO) — ver `E/FASE-0/00-registro-de-fase.md` | 0 delegaciones de trabajo; 1 lectura delegada (inventario `read-only` del control S15 y del generador) cuyas cifras se re-midieron en el agente principal antes de publicarse | Cero código, cero escrituras remotas. Dos filas del mandato refutadas: el tip (ya empujado, cuatro commits más) y el corpus del control S15 (20 rutas cambiadas bajo `.opencode/`) |
-| FASE-A1 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC1 + AC2 |
+| FASE-A1 | 2026-10-08 | ✅ Cerrada **en el árbol de trabajo, sin commitear** (el commit no se autorizó en el chat); HEAD medido `d8a7d80`, paridad con `origin/master` verificada por `git ls-remote` | auto-reporte con unidad declarada: **≈70 `tool_use`** contados a mano sobre las llamadas de la sesión (instrumento canónico FUERA DE SERVICIO, R2.1) — **excede la referencia de 60 y se declara checkpoint, no fase adicional**; detalle en `E/FASE-A1/00-registro-de-fase.md` | 0 delegaciones: la fase es DIRECTA por contrato (§delegate_task) | AC1 y AC2 landed: `sha_cuerpo` + schema 1.1 en `registrar_publicacion()`, puerta cuerpo-contra-cuerpo en `verificar_contenido()` con el gate de registro y D2 conservados, `[CONTADOR]` publicado. PRE 23 passed / POST 31 passed, resta 8 = dientes de esta fase; tres mutantes con su par intacto/mutado sobre copia aislada y el worktree vivo intacto por sha256. Cuatro consecuencias declaradas en el registro de fase, la primera para A3 |
 | FASE-A2 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC3 + AC4; no arranca sin A1 |
 | FASE-A3 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC5 + AC6; dependencia dura con A1 por flujo de control |
 | FASE-B | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC7 diagnóstico + AC8 cura |
@@ -27,7 +29,7 @@ Se llena al cierre de la última fase de implementación (FASE-VERIFY no aplica 
 
 | # | Hallazgo | Expected | Real | Status |
 |---|---|---|---|---|
-| H-1 | `verificar_contenido()` comparaba sha(instantánea) contra sha(cuerpo crudo), así que ninguna subida saneada puede dar verde | Medido 2026-10-07 por el padre y re-confirmado el 2026-10-08: crudo `3d2184fb2822…` (124.280 B) vs publicado `1f0ee6e52f00…` (125.198 B), crudo sin editar desde `83a6dc2` | ⬜ | ⬜ confirmado en preparación; su cierre es AC2 |
+| H-1 | `verificar_contenido()` comparaba sha(instantánea) contra sha(cuerpo crudo), así que ninguna subida saneada puede dar verde | Medido 2026-10-07 por el padre y re-confirmado el 2026-10-08: crudo `3d2184fb2822…` (124.280 B) vs publicado `1f0ee6e52f00…` (125.198 B), crudo sin editar desde `83a6dc2` | Re-medido al cerrar A1 sobre `d8a7d80`: crudo `3d2184fb2822f38d3b8fe97d55d565d10027373256fd63feb40fa226ee73d28e` (124.280 B) y publicado `1f0ee6e52f008e7413846039e244a8a242b472ba93e59bc933af2bb47e7286e0` (125.198 B); el `git show 83a6dc2` de la ruta archivada casa con el disco | ✅ confirmado **y curado** por AC2 en FASE-A1 (diente contrario con el blob `d8a7d80` corriendo el guard viejo) |
 | H-2 | El slug `[:120]` pisa la instantánea de la publicación reemplazada | Medido 2026-10-08: **un** archivo en `instantaneas/` para **dos** entradas con shas distintos; el archivo casa con `1f0ee6e52f00…` | ⬜ | ⬜ confirmado; los bytes de la entrada `reemplazada` están perdidos (deuda S-CIM-3) |
 | H-3 | `fuente_id` se publica vacío en las dos ramas de `do_upload()` | Confirmado por lectura del emisor; y por lectura de la memoria de referencia: la respuesta del CLI es tabla, no JSON | ⬜ | ⬜ su cierre es AC4 |
 | H-4 | `--upload Archives/<PLAN>` ya resuelve hoy; lo que falta es el diente y el rojo nombrado | Rectificación del mandato, medida por lectura de `main()` y `cuerpo_del_plan()` | ⬜ | ⬜ AC5 re-escrita como gobernar, no construir |
@@ -59,12 +61,18 @@ Ninguna al cerrar la preparación. **Sin cuota:** «sin lecciones nuevas» es un
 documental. Lo que esta sesión sí produjo fueron **mediciones que refutan premisas heredadas** (maestro §1), que
 quedan registradas como tales y no infladas a lecciones.
 
+| ID | Enunciado (una línea) | Qué lo produjo en A1 | Pertinencia |
+|---|---|---|---|
+| L-CIM.1 | Cuando un verificador tiene dos guardas locales que emiten la misma etiqueta, la guarda que se conserva tiene que seguir nombrando lo que afirma el diente viejo: si no, el diente muerde por la rama equivocada y el mutante de la otra guarda pasa desapercibido. | Al retirar la comparación instantánea-vs-cuerpo, el diente `test_instanea_editada_sin_re_subir_es_vencido` quedó sostenido por el gate de registro, y su aserción pedía la frase «la instantanea publicada». Se re-escribió el **texto** del gate (nunca la aserción) y el diente nuevo de vigencia niega en contra («que declara el registro» no debe aparecer) para que cada rojo se atribuya a su guarda | INCLUIR |
+| L-CIM.2 | La abstención se publica por entrada, no por corrida: un resumen que dice «no goberna ninguna publicación» con población mixta miente sobre la cobertura que el propio verificador acaba de medir. | La migración `1.0` introdujo una población donde unas entradas se dictaminan y otras se abstienen; el resumen de `[17/18]` conservaba la frase del caso vacío. Se bifurcó el texto y el `[CONTADOR]` publica los cuatro conteos con su suma | INCLUIR |
+
 ## Seguimientos abiertos
 
 | Tema | Estado | Acción futura |
 |---|---|---|
 | `[18/18]` invocado sin `--strict` (deuda S-2 del hermano) | FUERA DE ALCANCE, nombrada | maestro §5 S-CIM-1: dueño operador, disparador una AC propia |
 | Rojo `[DUPLICADO-VIGENTE]` de la era G tras AC2 | DECLARADO con dos salidas | maestro §5 S-CIM-2; la vía (a) requiere autorización literal |
+| Las entradas `1.0` salen NO-EVALUABLE **con `continue`**, así que tampoco llegan al bloque `[DUPLICADO-VIGENTE]`: el rojo de la era G sigue sin evaluarse mientras el registro solo tenga entradas viejas | MEDIDO en A1 por flujo de control y declarado para que A3 no lo redescubra | dueño FASE-A3 (AC6); su disparador es una entrada 1.1 en el registro o la gobernanza explícita de la huésped |
 | Byte-exacto perdido de la entrada `reemplazada` | NO RECUPERABLE | maestro §5 S-CIM-3; se publica en CHANGELOG con la fila del registro |
 | Limpieza retroactiva de `TRIBUNAL-OFFLINE-2026-09-09` | FUERA DE ALCANCE | maestro §5 S-CIM-4 |
 | Packs de briefing de este plan | NO GENERADOS, declarado | maestro §5 S-CIM-5 |

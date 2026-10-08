@@ -1,0 +1,13 @@
+# control: copia intacta del instrumento curado (sha 979ea64b210929d93426a35ee9d13753b92ee6366fbcf5a071ff10c85e65d2d4)
+# comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest <copia>/tests/test_validate_qmind_writeback_escritura.py -k "instanea_editada_sin_re_subir_es_vencido" -v -o addopts=
+# interpreter: venv Python 3.13.3, arbol: worktree (el script vivo no se toco)
+# seleccion del grupo: instanea_editada_sin_re_subir_es_vencido
+---
+============================= test session starts =============================
+collected 31 items / 30 deselected / 1 selected
+
+temp\mutantes_a1\mount\tests\test_validate_qmind_writeback_escritura.py . [100%]
+
+====================== 1 passed, 30 deselected in 0.20s =======================
+
+EXIT=0

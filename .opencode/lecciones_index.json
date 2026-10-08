@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 449,
-    "ids_con_definicion": 356,
+    "ids_con_definicion": 358,
     "ids_citados_sin_definicion": 91,
     "fechas_por_fuente": {
-      "nombre": 345,
+      "nombre": 347,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1594,6 +1594,34 @@
       "redefiniciones": []
     },
     {
+      "id": "L-CIM.1",
+      "familia": "L",
+      "enunciado": "Cuando un verificador tiene dos guardas locales que emiten la misma etiqueta, la guarda que se conserva tiene que seguir nombrando lo que afirma el diente viejo: si no, el diente muerde por la rama equivocada y el mutante de la otra guarda pasa desapercibido. — Al retirar la comparación instantánea-vs-cuerpo, el diente test_instanea_editada_sin_re_subir_es_vencido quedó sostenido por el gate de registro, y su aserción pedía la frase «la instantanea publicada». Se re-escribió el texto del gate (nunca la aserción) y el diente nuevo de vigencia niega en contra («que declara el registro» no debe aparecer) para que cada rojo se atribuya a su guarda",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.2",
+      "familia": "L",
+      "enunciado": "La abstención se publica por entrada, no por corrida: un resumen que dice «no goberna ninguna publicación» con población mixta miente sobre la cobertura que el propio verificador acaba de medir. — La migración 1.0 introdujo una población donde unas entradas se dictaminan y otras se abstienen; el resumen de [17/18] conservaba la frase del caso vacío. Se bifurcó el texto y el [CONTADOR] publica los cuatro conteos con su suma",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-D1",
       "familia": "L",
       "enunciado": "«Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)*",
@@ -1948,7 +1976,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -2084,7 +2112,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
@@ -3007,13 +3035,13 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 110,
+      "total_citas": 111,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3061,7 +3089,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3094,7 +3122,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
+      "total_citas": 7,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
@@ -3565,13 +3593,13 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 99,
+      "total_citas": 100,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -3688,7 +3716,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 97,
+      "total_citas": 98,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
