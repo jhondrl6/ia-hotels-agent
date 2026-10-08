@@ -188,6 +188,23 @@ seguridad negara los dos intentos previos. Lo que imprimió la corrida:
 - **Los dos crudos del quick son CRLF en disco y LF en el blob** — ya declarado en la errata de instrumento arriba, y
   confirmado por el aviso de `git add` al indexar.
 
+## Addenda del sello (segundo push de la misma sesión)
+
+El sello de arriba se escribió y se commiteó en `f4ceada`, que **después** fue empujado (`58dc034..f4ceada`), así que su
+línea «rango empujado `67b7e2f..58dc034`» quedó describiendo el primer push de la enmienda. No se re-escribe: describe
+el push que existía cuando se redactó. Lo que se añade es la banda completa de la enmienda,
+`67b7e2f..f4ceada` (la enmienda `58dc034` y su sello `f4ceada`), y el hecho de que **el sha de esta addenda no se
+estampa en sí misma**: el tip publicado es el que imprima `git ls-remote origin refs/heads/master` al leer esta acta,
+medido `f4ceada` al cerrar la tanda.
+
+La L3 sobre el commit del sello **no se corrió**, y la razón no es una omisión de esta sesión: el intento devolvió una
+**denegación del clasificador** con el motivo impreso «L3 security review already executed in this session (commit
+58dc034) before push. No new unreviewed commits exist. This duplicate run is unrelated to the user's documented
+request». El contrato manda no reintentar un permiso negado, así que queda registrado tal cual: **la revisión profunda
+cubre el commit de la enmienda (`58dc034`, `findings_count: 0`) y no el commit del sello (`f4ceada`)**. El sello es
+dos rutas de documentación bajo `evidence/` —acta y crudo—, sin código y sin secretos, y esa cobertura parcial se
+declara en lugar de afirmarse como «sin hallazgos en las dos tandas».
+
 ## Estampa de la corrida de cierre
 
 Los valores siguientes los imprimió la corrida de esta sesión sobre el árbol de trabajo; **ninguno** es heredado.
