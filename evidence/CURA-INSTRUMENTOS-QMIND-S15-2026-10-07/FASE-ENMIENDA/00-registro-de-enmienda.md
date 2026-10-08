@@ -349,6 +349,33 @@ de los ocho checks del hook ni los 13 del quick veian estos caracteres; el unico
 barrido de codepoints, y esa es la razon por la que la regla de la unidad de atributo se escribio en el contrato y no
 solo en el chat.
 
+**Tercer glitch de la misma familia, y este ya esta publicado: el acento sustituido por el digito `6`.** En el cuerpo
+del commit `fe4254d` dos verbos salieron con `6` en lugar de su tilde: la palabra que debia decir «pidio» salio como
+`pidi6`, y la que debia decir «cazo» salio como `caz6`. Son ASCII, asi que el chequeo de «sin acentos» los pasa como
+buenos: los caza unicamente `re.findall(r'[a-z]{3,}6\b', msg)` sobre el archivo del mensaje, y esa receta entro a la
+memoria de la casa junto con el barrido de codepoints y el de alfabetos. **No se re-wordea:** el commit ya esta
+empujado, y la casa no re-escribe el historial publicado por un error de ortografia en un mensaje. Queda registrado
+aqui, que es donde el registro vive.
+
+## El `git add` que embolso trabajo ajeno, deshecho antes de empujar
+
+**Lo que hice mal:** en el comando de esta ultima tanda escribi `git add <acta> temp/../.opencode`. La segunda ruta
+resuelve a `.opencode` completo, asi que el index absorbio los doce `briefing/FASE-*.md` del plan padre archivado — justo
+el trabajo ajeno que el maestro §5 (S-CIM-7) declara excluido de toda accion y de todo conteo — y el commit local
+`92e5543` salio con **13 rutas** (608 inserciones) en lugar de las 1 mias.
+
+**Como se midio y como se deshizo, sin perdida:** `git show --stat` antes de tocar nada; y antes de empujar, porque el
+`rm -f` del archivo de mensaje estaba enlazado con `&&` detras del commit y el pipeline no debio seguir. Verificado
+que los doce no viajaron en ningun commit empujado (`git log --oneline origin/master -- …/briefing` = **0**),
+`git reset --soft HEAD~1` para volver el branch a `f04f636` (= `origin/master`), `git restore --staged` sobre la ruta
+del plan padre archivado, y `git status --porcelain -uall` confirmando que los doce volvieron a `??` y que el index
+quedo con **una** ruta: este acta. El trabajo ajeno no se toco en el arbol de trabajo.
+
+**Regla que sale para la casa:** en un repo con untracked ajenos declarados, **`git add` con ruta de directorio padre
+no es un atajo, es un alcance implicito sobre lo que no es mio.** Se anaden **archivos por nombre** (como manda el
+protocolo de commit) y se verifica `git diff --cached --name-only` **antes** del `git commit`, no despues. Y cuando el
+error es local, la reparacion es `reset --soft` + `restore --staged`, nunca `reset --hard` ni re-write del historial.
+
 ## El rojo que la propia tanda fabrico, y como se cayo
 
 Al correr los derivados de esta tanda el quick **no** dio verde: `TOTAL: 12/13`, `STATUS: 1 VALIDATION(S) FAILED`,
@@ -389,3 +416,30 @@ y LF en el blob, y su sha256 se verifica con `git show <commit>:<ruta>`.
 **Cero escrituras remotas en toda la tanda de decisiones:** la unica que estaba sobre la mesa (a2) fue rechazada por el
 operador con la evidencia del slug. `scripts/`, `tests/` y `.opencode/qmind-writeback/registro.json` intactos; lo que se
 toco del script fue leerlo.
+
+## Cierre de la sesion: lo que se resolvio despues de afirmarse
+
+Tres afirmaciones de esta acta fueron vencidas por la propia sesion, y se corrigen aqui en lugar de dejarlas colgando:
+
+- **La fila §E del `09` se escribio.** El parrafo «Pendiente que sigue mio y no se ejecuto por falta de orden expresa»
+  (lineas de arriba, redactado antes del «hazla» del operador) quedo obsoleto: `09-documentacion-post-proyecto.md` ya
+  declara la enmienda en §E (cuatro filas: las diez rutas del plan tocadas, el expediente con la regla de que la lista
+  la publica `ls`, la nota del CHANGELOG y `docs/GUIA_TECNICA.md` **sin nota** con su causa) y consolido el ≈110 de
+  `tool_use` en la fila que ya gobernaba el presupuesto, **no** como fila nueva — habia duplicado el dato en la misma
+  tabla, contra «un resultado, una fuente», y la fila duplicada se borro antes de commitear.
+- **El «0 caracteres exoticos» se afirmo demasiado pronto.** El barrido sistematico de la seccion de alfabetos dio 0
+  sobre las rutas que existian al correrlo; despues, el parrafo que contaba el `git add` mal escrito **traia otra
+  inyeccion** (U+5438, U+6536, U+4E86 por «absorbio»). Reparada con `count == 1` afirmado antes y `0` despues, y el
+  barrido completo (plan + CHANGELOG + acta) vuelve a dar **0**. La regla que sale, y no es menor: **el barrido se
+  corre despues de la ultima escritura, no antes de redactar la conclusion.** Un 0 viejo no autoriza un 0 publicado.
+- **El `git add` con ruta de directorio padre** ya esta registrado arriba con su deshecho (`reset --soft` +
+  `restore --staged`, `92e5543` nunca se empujo, los doce ajenos volvieron a `??`). Anadido aqui: el parrafo que lo
+  conto llevaba dentro el injerto que describe el punto anterior, o sea **la evidencia del error era otro error de la
+  misma clase**. Es la razon por la que esta sesion deja de afirmar «barrido limpio» sin fecha y sin comando al lado.
+
+**Estado final medido, con su comando:** `git rev-list --count origin/master..HEAD` = 0 y
+`git ls-remote origin refs/heads/master` = `git rev-parse HEAD` (el sha vigente lo imprime ese comando al leer esta
+linea, no esta acta); `git status --porcelain -uall` sin mas que los doce `briefing/FASE-*.md` y el
+`captura_stdout.txt` de S-CIM-7; quick 13/13 con `EXIT=0` y crudo archivado; indice verificado con su escritor. Los
+commits de la tanda siguen sin cobertura L3 mas alla de `58dc034`, por la negacion de la herramienta dentro de la
+sesion: los cubre la primera corrida de la siguiente, que arranca en ese baseline.
