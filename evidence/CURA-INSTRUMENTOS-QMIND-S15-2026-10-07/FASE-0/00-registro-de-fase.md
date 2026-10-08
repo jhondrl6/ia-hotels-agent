@@ -90,9 +90,17 @@ suma a ningún total. Excedido el número, la consecuencia es checkpoint y **no*
 
 **Cinco cortes:** implementación terminada — *no aplica* (fase documental, declarado) → verificación terminada
 (M4-M11) → cierre documental (este registro, sin CHANGELOG/GUIA porque la preparación no cambia el producto y el
-mandato prohíbe liberar versión) → **listo para revisión** → espera de autorización. **Commit no ejecutado** (no
-hubo instrucción literal en el chat): el árbol queda con 14 rutas nuevas propias, dos derivados modificados y las
-13 rutas ajenas intactas. Push, tag y L3: no solicitados, no ejecutados.
+mandato prohíbe liberar versión) → **listo para revisión** → espera de autorización. **Commit no ejecutado al cerrar
+el documento** (no hubo instrucción literal en el chat hasta ese momento): el árbol quedó con 14 rutas nuevas
+propias, dos derivados modificados y las 13 rutas ajenas intactas.
+
+⟦**Sello de la misma sesión (2026-10-08), después del cierre documental:** llegó la instrucción literal «Git Commit +
+L3 + Push» y se ejecutó en ese orden. **Commit `b536748`** — 20 rutas, 2.445 inserciones / 137 borrados, con los
+ocho checks del hook versionado pasados (incluidos `[6/8]` del índice y `[7/8]` de capitalización). **Revisión
+profunda L3** sobre los commits desde su baseline: **0 hallazgos**. **Push:** rango `98c190e..b536748`, paridad
+verificada con `git ls-remote origin refs/heads/master` = `b536748…`. Sin tag (opción no solicitada). Las 13 rutas
+untracked ajenas siguen intactas y sin stagear. El quick posterior al sello y su crudo van en el commit documental
+siguiente, y el sha de ese commit no se estampa aquí.⟧
 
 ## 8. Límites de esta fase
 

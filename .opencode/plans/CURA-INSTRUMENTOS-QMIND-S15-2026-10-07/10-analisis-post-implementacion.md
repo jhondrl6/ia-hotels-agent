@@ -13,7 +13,7 @@ corta si aparece una declaración de cierre conviviendo con filas pendientes.
 
 | Fase | Sesión | Estado | Iteraciones | delegate_task | Notas |
 |---|---|---|---|---|---|
-| Preparación | 2026-10-08 | ✅ Cerrada, sin commit autorizado | auto-reporte con unidad declarada (R2.1: instrumento FUERA DE SERVICIO) — ver `E/FASE-0/00-registro-de-fase.md` | 0 delegaciones de trabajo; 1 lectura delegada (inventario `read-only` del control S15 y del generador) cuyas cifras se re-midieron en el agente principal antes de publicarse | Cero código, cero escrituras remotas. Dos filas del mandato refutadas: el tip (ya empujado, cuatro commits más) y el corpus del control S15 (20 rutas cambiadas bajo `.opencode/`) |
+| Preparación | 2026-10-08 | ✅ Cerrada, commiteada (`b536748`) y empujado `98c190e..b536748`, L3 sin hallazgos | auto-reporte con unidad declarada (R2.1: instrumento FUERA DE SERVICIO) — ver `E/FASE-0/00-registro-de-fase.md` | 0 delegaciones de trabajo; 1 lectura delegada (inventario `read-only` del control S15 y del generador) cuyas cifras se re-midieron en el agente principal antes de publicarse | Cero código, cero escrituras remotas. Dos filas del mandato refutadas: el tip (ya empujado, cuatro commits más) y el corpus del control S15 (20 rutas cambiadas bajo `.opencode/`) |
 | FASE-A1 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC1 + AC2 |
 | FASE-A2 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC3 + AC4; no arranca sin A1 |
 | FASE-A3 | ⬜ Pendiente | ⬜ Pendiente | ⬜ | ⬜ | AC5 + AC6; dependencia dura con A1 por flujo de control |

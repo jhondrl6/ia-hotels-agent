@@ -171,9 +171,12 @@ aserción**, más un diente por AC nueva.
 
 Qué hizo esta sesión y qué no. **No tocó código fuente ni tests, no ejecutó `v4complete`, no subió ni borró nada
 en el notebook, no editó `AGENTS.md`, `.cursorrules` ni `VERSION.yaml`, no commiteó ni empujó** (el mandato
-reserva esas acciones a instrucción literal en el chat y aquí no vino). Consultó el corpus por tres capas (Q1-Q10
-de `00-lecciones-capitalizadas.md`), midió en disco el hueco del slug y sus dos shas, reprodujo el rojo de S15
-contra `98c190e`, y releyó los símbolos del writer antes de citar uno.
+reserva esas acciones a instrucción literal en el chat y aquí no vino). ⟦**Sello de la misma sesión:** esa cláusula
+describe el árbol al cerrar el documento. Después del cierre documental llegó la instrucción literal «Git Commit +
+L3 + Push», y commit, revisión L3 y push se ejecutaron; ver «Estado de los cinco cortes» abajo y el §7 del registro
+de fase. No se reescribe la afirmación original porque es registro de la preparación.⟧ Consultó el corpus por tres
+capas (Q1-Q10 de `00-lecciones-capitalizadas.md`), midió en disco el hueco del slug y sus dos shas, reprodujo el
+rojo de S15 contra `98c190e`, y releyó los símbolos del writer antes de citar uno.
 
 Escritura efectuada: los documentos de este directorio y el expediente `E/FASE-0/` (`quick_apertura.txt`,
 `pre_seleccion_apertura.txt`, `00-registro-de-fase.md`). El par del índice del corpus se regenera con su escritor
@@ -181,8 +184,11 @@ como **último paso**, porque esta sesión añade `.md` que nombran IDs y eso ve
 
 Auto-reporte de presupuesto (unidad declarada, no comparable con el instrumento canónico): ver
 `E/FASE-0/00-registro-de-fase.md`, sección de presupuesto. El corte usado es **«hasta listo para revisión»**,
-porque el commit no está autorizado; no se simula un corte de código.
+porque el commit no estaba autorizado al momento del cierre documental; no se simuló un corte de código. ⟦**Sello 2026-10-08, misma sesión:** llegó la instrucción literal «Git Commit + L3 + Push». Commit `b536748` con los ocho checks del hook versionado pasados, revisión profunda L3 **sin hallazgos** y rango empujado `98c190e..b536748` (paridad verificada con `git ls-remote`). No se re-escribe la frase original: registra el estado del árbol al cerrar el documento.⟧
 
 **Estado de los cinco cortes:** implementación terminada (no aplica: fase documental) → verificación terminada
-→ cierre documental → listo para revisión → **espera de autorización**. La autorización pendiente es del operador:
-commit (con sus hooks y sus derivados en el mismo commit), y después push con su revisión profunda si él la pide.
+→ cierre documental → listo para revisión → **espera de autorización**. ⟦**Sello (2026-10-08, misma sesión):** la
+autorización llegó después del cierre documental, con la instrucción literal «Git Commit + L3 + Push». Commit
+`b536748` con sus ocho checks de hook pasados, revisión profunda L3 **sin hallazgos**, rango empujado
+`98c190e..b536748` y paridad verificada por `git ls-remote`. El registro de esta frase viaja en el commit
+documental posterior, no en el propio: el sha de un sello no se estampa a sí mismo.⟧

@@ -20,7 +20,7 @@ marca como hecha por adelantado. Las cifras que imprime una corrida **no** se co
 - [x] Baselines de apertura archivados: `E/FASE-0/quick_apertura.txt` (13/13, EXIT 0) y `E/FASE-0/pre_seleccion_apertura.txt` (1 failed / 26 passed, EXIT 1, intérprete declarado)
 - [x] Auto-reporte de presupuesto con unidad declarada y corte usado (`E/FASE-0/00-registro-de-fase.md`)
 - [x] Trabajo ajeno untracked **excluido y declarado**, no tocado (maestro §5 S-CIM-7)
-- [ ] Commit / L3 / push — **no autorizados** en esta sesión; el árbol queda listo para revisión
+- [x] Commit, L3 y push — autorizados por el operador en la misma sesión: ⟦**Sello 2026-10-08, misma sesión:** llegó la instrucción literal «Git Commit + L3 + Push». Commit `b536748` con los ocho checks del hook versionado pasados, revisión profunda L3 **sin hallazgos** y rango empujado `98c190e..b536748` (paridad verificada con `git ls-remote`). No se re-escribe la frase original: registra el estado del árbol al cerrar el documento.⟧
 
 ## Etapa 2 — Implementación
 

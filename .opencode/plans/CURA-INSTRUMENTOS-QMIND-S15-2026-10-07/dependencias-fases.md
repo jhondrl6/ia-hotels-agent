@@ -3,7 +3,7 @@
 ## Grafo
 
 ```
-Preparacion (FASE-0)  ✅ 2026-10-08 · HEAD 98c190e · sin commit autorizado
+Preparacion (FASE-0)  ✅ 2026-10-08 · commit b536748 · empujado 98c190e..b536748 · L3 sin hallazgos
       |
       v
 FASE-A1  AC1 sha_cuerpo + AC2 puerta cuerpo-contra-cuerpo
@@ -64,7 +64,7 @@ FASE-RELEASE  AC10 write-back propio + docs + archivado R2.10
 
 | # | Fase | Estado | HEAD medido al cerrar | Nota |
 |---|---|---|---|---|
-| 0 | Preparación | ✅ CERRADA 2026-10-08 (sin commit autorizado) | `98c190e` | Dos filas del mandato refutadas y re-ancoradas (maestro §1); AC5 bajó de construcción a diente |
+| 0 | Preparación | ✅ CERRADA 2026-10-08, commiteada y empujada | `98c190e` al medir; tip empujado `b536748` | Dos filas del mandato refutadas y re-ancoradas (maestro §1); AC5 bajó de construcción a diente |
 | 1 | FASE-A1 | ⬜ Pendiente | — | Requiere AC1 y AC2 con sus dos verdes nombrados |
 | 2 | FASE-A2 | ⬜ Pendiente | — | No arranca si A1 no cerró |
 | 3 | FASE-A3 | ⬜ Pendiente | — | Dependencia dura con A1 por flujo de control; su rojo de AC6 es un hallazgo verdadero |
