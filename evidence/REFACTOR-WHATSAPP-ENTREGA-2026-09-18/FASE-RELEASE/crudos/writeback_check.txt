@@ -1,0 +1,3 @@
+[OK] QMind Write-back: 14/14 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [VENCIDO] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07): la instantanea publicada (0b02bb5084e3...) ya no casa con el cuerpo del repo (3d2184fb2822...): re-publicar con titulo nuevo
+[FAIL] qmind write-back: titulo OK | contenido: VENCIDO

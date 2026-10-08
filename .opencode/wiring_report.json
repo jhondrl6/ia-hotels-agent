@@ -1,8 +1,8 @@
 {
   "cobertura": {
     "archivos_en_alcance": 713,
-    "archivos_excluidos_por_rol": 8521,
-    "archivos_excluidos_por_rol_versionado": 165,
+    "archivos_excluidos_por_rol": 8529,
+    "archivos_excluidos_por_rol_versionado": 167,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -44,7 +44,7 @@
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
-      "cantidad_versionada": 153,
+      "cantidad_versionada": 155,
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-07T22:07:51+00:00",
-  "git_sha": "21ade6c",
+  "generado": "2026-10-08T00:49:01+00:00",
+  "git_sha": "086ce65",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",

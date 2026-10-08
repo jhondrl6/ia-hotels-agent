@@ -257,7 +257,7 @@ Para aceptar una mejora deben quedar definidos:
 - Para cambios en sitio: permisos, alcance, aprobación, recuperación y evidencia de aceptación.
 - Criterio de aceptación verificable y límite de lo que no se ha medido.
 
-No se fija un plazo de 8–12 semanas sin alcance, disponibilidad y presupuesto. Tampoco se abren planes paralelos que dupliquen trabajo: cada brecha confirmada debe incorporarse al plan que ya la gobierne o recibir un alcance específico autorizado. La preparación de assets y evidencia del plan `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` no equivale a implementar deploy; su maestro excluye esa operación de su corrida (`.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:151`). Este contexto no amplía ese alcance silenciosamente.
+No se fija un plazo de 8–12 semanas sin alcance, disponibilidad y presupuesto. Tampoco se abren planes paralelos que dupliquen trabajo: cada brecha confirmada debe incorporarse al plan que ya la gobierne o recibir un alcance específico autorizado. La preparación de assets y evidencia del plan `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` no equivale a implementar deploy; su maestro excluye esa operación de su corrida (`.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md:151`). Este contexto no amplía ese alcance silenciosamente.
 
 ## 6. Resultado esperado y límites de esta revisión
 

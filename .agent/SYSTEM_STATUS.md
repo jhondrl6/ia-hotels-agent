@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-10-05 20:07:30 UTC
+> Auto-generado: 2026-10-07 23:43:09 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -23,12 +23,12 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1270 archivos JSON |
-| Sesiones activas | 10 |
+| Shadow logs | 1318 archivos JSON |
+| Sesiones activas | 4 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20261005_195113_ab98d9df.json |
-| Ultima sesion activa | 2026-09-19_dfa27c04.json |
-| Ultimo contexto actualizado | 2026-09-19T19:58:31.332935+00:00 |
+| Ultimo shadow log | 20261007_202501_82fd184b.json |
+| Ultima sesion activa | 2026-10-07_d2f46bd4.json |
+| Ultimo contexto actualizado | 2026-10-07T14:32:14.098996+00:00 |
 | Ultima URL procesada | https://www.donalfonsohotel.com/ |
 
 ## Config Files (11/11 healthy)

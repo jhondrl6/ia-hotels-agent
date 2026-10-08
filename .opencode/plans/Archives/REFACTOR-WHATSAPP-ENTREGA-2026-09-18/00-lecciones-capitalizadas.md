@@ -178,3 +178,35 @@ la forma **dentro del proceso hijo por concatenación** (el literal completo no 
 versionado, porque la pata `staged` de `_check_no_secrets` no aplica la exclusión de cuarentena y lo cortaría al
 commitear — precedente medido por FASE-F), y `_serializar_control` pasa el guard del sumidero antes de escribir.
 Formulada al medir, no al cerrar.
+
+## Aplicación efectiva medida — FASE-VERIFY (2026-10-07)
+
+| Lección | Cómo se aplicó, medida contra el artefacto | Resultado |
+|---|---|---|
+| L-V.4 (VERIFY registra y no remedia) | Los dos ACs en FALLA (AC6, AC10) y los ocho hallazgos V-1…V-8 salieron con causa, dueño y disparador. No se editó producto, umbrales, `BLOCKING_VERDICTS` ni evidencia; la corrección de S-E2E-4 se redactó como errata para el sello de RELEASE, no como fix | **Aplicada sin excepciones** |
+| L-VUP-17 (tests locales no certifican integración) | Ningún AC pasó a «SUPERADO con pata E2E» por tener tests verdes: la pata E2E se concedió solo donde hay artefacto de la corrida (AC9, AC11, AC12, AC15 por fases, AC17, AC19a, AC20). AC1 conserva su verde offline **y** su límite E2E aunque la ausencia fantasma se observó por otra vía (org_schema) | **Aplicada; el offline nunca ascendió** |
+| L-T4A.5 (un verde puede no alcanzar la rama) | **Confirmada con costo real:** FASE-E certificó AC10 «con el writer real» y su arnés pasó nombres del catálogo; el ZIP publicado trae `IMPLEMENTATION_ORDER.md` con las tres secciones de tarea vacías porque la rama de producción recibe basenames con marca de tiempo. El dictamen offline era cierto y el paquete incumplía | **Confirmada, no decorada** |
+| L-R.4 (una regla sin verificador declara su límite) | `certificacion.json` publica límites: muestra de un hotel y una corrida; readiness calculado muy antes del veredicto: `check_publication_readiness` frente a `TribunalJudge`, en puntos distintos de `run_v4_complete_mode`; cuatro cláusulas certificables frente a seis evaluadas; un revisor que recomienda devolver pruebas no detiene la entrega | **Aplicada con ocho límites escritos** |
+| L-PF6 (ausencia observada ≠ lector fallido) | Se separaron los tres casos: 0 assets de WhatsApp (ausencia real, rama no ejercitada), `providers_used` ausente **por caída del lector** (S-E2E-1), y el `wa.me` presente con canal no verificado (hallazgo, no ausencia). Ninguno se dictaminó con el razonamiento del otro | **Aplicada** |
+| L-ENT.1 / L-ENT.10 (un estado heredado caduca; la métrica agregada oculta la rama) | Dos ocurrencias medidas en la propia fase: el `Using defaults` que habría derribado AC14 pertenece a otro hotel y a 2026-09-11, y `clauses_evaluated: 6` no son seis verificaciones | **Reaplicadas como límite de lectura** |
+
+**Lecciones nuevas de VERIFY: ninguna de producto** (sin cuota, contrato §2). Lo anterior son confirmaciones medidas de
+lecciones ya definidas, más una de proceso que ya vivía en la memoria de colaboración y volvió a aplicar: un patrón
+coincidente en un directorio gitignored es una **forma**, no la identidad del run — se verifica a quién y a cuándo
+pertenece el artefacto antes de atribuirle un estado a la corrida.
+
+## Aplicación efectiva medida — FASE-RELEASE (2026-10-07)
+
+**Consulta al corpus (Paso 0):** se releyeron las tres lecciones que el prompt declara aplicables y se contrastó
+su aplicación con lo que la fase efectivamente hizo. Sin lecciones nuevas de producto: RELEASE no tocó código.
+
+| Lección | Se aplicó o no, con la medición delante |
+|---|---|
+| **L-V.4** — VERIFY registra fallos con dueño y no los remedia | **Aplicada.** El CHANGELOG, la GUIA y el `10-analisis` publican AC6 y AC10 en FALLA con su dictamen literal; la recuperación (otra sesión) se registra con su límite offline y **no** se redactó como cierre del defecto en flujo real. RELEASE no abrió fixes. |
+| **L-R.4** — una regla sin verificador declara expresamente su límite | **Aplicada.** Los límites de muestra (un hotel, una corrida, código corrector no ejercitado, cuatro cláusulas certificables contra cuatro revisores divulgados) salieron a la **documentación oficial** (`## [4.79.0]` §Límites publicados y la nota técnica), no solo al análisis interno. |
+| **L-VUP-9** — los comandos delegados deben usar flags comprobados | **Aplicada y con dos correcciones medidas.** Se leyó `--help` antes de usar `validate_qmind_writeback.py`: existen `--title`, `--file`, `--registro`, `--plans-dir` y `--strict`; el título pre-acordado del plan ya no basta para publicar contenido nuevo, porque re-usar un título vigente con contenido distinto es `[FAIL]` y `--upload` pelado responde SKIP dejando la era G como verdad publicada. Y el bump de versión reveló un rojo **no heredado**: `doctor.py --context` había dado PASS con el sello viejo, así que la regeneración de DOMAIN_PRIMER no era un prerrequisito teórico sino la cura del rojo que la propia fase fabricó. |
+
+**Observación de proceso de esta fase, declarada sin ID nueva (no hay cuota de lecciones):** subir la versión de
+la fuente única sin regenerar DOMAIN_PRIMER produce un rojo del quick que **ninguna AC nombra** — el desajuste
+vive en el sello de versión/fecha del derivado, no en el contenido gobernado. La forma barata de evitarlo es
+correr el writer de DOMAIN_PRIMER dentro del mismo bump, con su instrucción expresa.

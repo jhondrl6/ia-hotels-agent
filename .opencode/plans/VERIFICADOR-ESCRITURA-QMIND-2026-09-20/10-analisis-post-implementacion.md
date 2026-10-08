@@ -88,7 +88,7 @@ volver a ejecutar nada (re-correr un validador para verificar su propio conteo l
   Comando: `git status --porcelain -- scripts/validate_qmind_writeback.py scripts/run_all_validations.py
   CHANGELOG.md docs/GUIA_TECNICA.md .opencode/qmind-writeback tests/test_validate_qmind_writeback_escritura.py
   evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
-  ".opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md"`.
+  ".opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md"`.
 - **Corridas con crudo conservado:** la lista nominal, no una cifra suelta — quick de arranque y tres de cierre,
   cinco de pytest y dos del harness de mutación, más los validadores documentales. Los crudos quedan en `temp/`
   (no versionado) y dos versionados en el directorio de evidencia de esta fase (`tests_baseline_post.txt` y

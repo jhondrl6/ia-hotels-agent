@@ -1,0 +1,4 @@
+notebook: 01a04d98-b7bd-778c-8441-26fdc7e35f45
+01a118f3-ca9a-7cf8-beae-3723640007da | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas) | 1f0ee6e52f008e7413846039e244a8a242b472ba93e59bc933af2bb47e7286e0 | 125198
+01a118ee-fa45-7aa1-be01-4ce7332323d4 | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07) | 0b02bb5084e3a785e67a2b4303f849060309c177f7faf45d4bb3ddf461c8ab64 | 125072
+01a0bfc9-5f5a-783e-9492-16367bbff596 | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones) | 87b9b6664f945ac6279f1efaf9aa7682cac8a1c952e633bfc4ff55ce67a49274 | 39422

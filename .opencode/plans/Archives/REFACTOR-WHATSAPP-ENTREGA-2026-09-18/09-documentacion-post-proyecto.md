@@ -295,3 +295,77 @@ post-corrida, dos capturas redactadas y crudo del spawn) más `FASE-H/preflight.
 Docs del plan: `05-prompt-inicio-sesion-fase-E2E.md` (estado y los seis casilleros), `06-checklist-implementacion.md`
 (fila E2E, filas AC12/AC17/AC20 y cuatro casilleros de controles), `dependencias-fases.md` (fila E2E), `09` (Sección D
 y esta sección) y `10` (fila de la fase). Sin write-back a QMind, sin `DOMAIN_PRIMER`, sin tag.
+
+## Cierre incremental de FASE-VERIFY (2026-10-07)
+
+**Qué hizo la fase:** certificación transversal de **AC1–AC20** (AC19 en sus dos mitades) sobre la evidencia preservada,
+en ejecución **directa y sin delegación**, sin código, sin tests, sin `v4complete` y sin remediación (L-V.4).
+
+| Métrica de VERIFY | Valor | Cómo se midió |
+|---|---|---|
+| ACs dictaminados | 20 (AC19a y AC19b por separado) | matriz en `evidence/…/FASE-VERIFY/certificacion.json` |
+| Con pata E2E superada | 7 (AC9, AC11, AC12, AC15, AC17, AC19a, AC20) | artefacto de la corrida citado por símbolo/ruta |
+| Offline superado | 9 (AC1, AC2, AC3, AC4, AC7, AC8, AC13, AC14, AC16) + 1 parcial (AC5) | mutantes restaurados por sha256 en cada fase |
+| **FALLA** | **2 (AC6, AC10)** | `wa.me` fabricado desde `gbp.phone` en el ZIP y `IMPLEMENTATION_ORDER` con secciones vacías |
+| NO EJERCITADO | 1 (AC19b) | diferido a maestro §6 con dueño |
+| Integridad del intento único | 10/10 `source_hashes` casan; `argv_sha256` recomputado casa; `attempts=1`, PID 30576, exit 0, 116 s | `sha256sum` + `run_once.argv_sha256` |
+| Paquete entregado | sha `487f5800…`, 70.191 bytes, 57 miembros, `testzip() → None`, 0 `.zip.tmp`, sin snapshot interno ni documentos retenidos | `zipfile` sobre el miembro y coteje bilateral con `MANIFEST.json` |
+| Evidencia del plan | **153 rutas en disco, 150 versionadas** (3 = `captura_stdout.txt` + 2 `.pyc`); **0 ABSENT, 0 READ_ERROR** | `find … \| wc -l` y `git ls-files … \| wc -l` |
+| Hallazgos nuevos | 8 (V-1…V-8), **todos con dueño y disparador, ninguno cerrado aquí** | `certificacion.json .hallazgos_nuevos` |
+| Lecciones nuevas | **Ninguna de producto**; dos confirmaciones medidas (L-T4A.5 en AC10, L-VUP-17 en la matriz) y una de proceso ya registrada | sin cuota (contrato §2) |
+
+**Contratos que VERIFY no ejecutó y por qué no son verde:** revocación de credenciales (S-F6, solo afirmación del
+operador), AC1/AC2/AC3/AC6 en la rama WhatsApp (el hotel no produce el pain), AC19b (diferido), medición IAO (perdida
+con el `LLMMentionChecker` caído en el único intento).
+
+**Docs tocados por esta fase:** `evidence/…/FASE-VERIFY/certificacion.json` y su `resultados-y-observaciones.md` (nuevos);
+`05-prompt-inicio-sesion-fase-VERIFY.md` (estado), `06-checklist-implementacion.md` (fila VERIFY, fila RELEASE y
+cabecera), `dependencias-fases.md` (filas VERIFY y RELEASE), `README.md` (índice), `10-analisis-post-implementacion.md`
+(matriz dictaminada, comparación con baseline, sección de la fase y once filas de seguimientos),
+`00-lecciones-capitalizadas.md` (aplicación efectiva), `CHANGELOG.md` (subsección bajo `## [Sin publicar]`) y
+`docs/GUIA_TECNICA.md` (nota técnica).
+
+**R2:** `measure_iterations.py` sigue **FUERA DE SERVICIO (R2.1)** — pide el transcript del cliente y su acceso está
+denegado. Auto-reporte con unidad declarada (invocaciones de herramienta de esta sesión): **≈90**, recuento propio y
+no medición por instrumento del plan; por encima de la referencia de 60 del prompt se declara el exceso como checkpoint y **no** se partió la
+fase ni se delegó nada (executor §4.6: FASE-VERIFY no delegable).
+
+**Sin commit, push, tag, QMind write-back ni `DOMAIN_PRIMER`** — no autorizados. `DOMAIN_PRIMER` acumula checkpoint
+desde FASE-C (C, D, E, F, H, E2E y VERIFY). RELEASE es sesión y autorización separadas, y **no puede declararse éxito
+integral** mientras AC6 y AC10 consten en FALLA (maestro §4, condición de honestidad).
+
+## Cierre incremental de FASE-RELEASE (2026-10-07) — release **4.79.0**, write-back y archivado
+
+**Qué hizo la fase:** cierre documental y versionado del plan. Sin `v4complete` (contador **1/1** intacto), sin código
+de producto y sin rehacer VERIFY. Los permisos se resolvieron con el operador antes de ejecutarlos: bump con
+propagación a configuración central, regeneración de DOMAIN_PRIMER, **dos commits separados**, write-back y push con
+L3 previa. **Tag: no autorizado**, declarado como opción rechazada.
+
+| Métrica de FASE-RELEASE | Valor | Cómo se midió |
+|---|---|---|
+| Versión autorizada | **4.79.0** · codename *WhatsApp verificado, orden real y entrega única de Don Alfonso* · 2026-10-07 | mandato de la sesión con el operador; base medida al abrir: 4.78.0/2026-09-25 en `VERSION.yaml` |
+| Archivos gobernados por el sync | 5 (`README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`) | `sync_versions.py` en modo escritura + `version_consistency_checker.py` (TODO SINCRONIZADO); el diff de esos archivos es **solo** el sello de versión y fecha |
+| DOMAIN_PRIMER | **verificado** y **regenerado con su writer** (7/7 líneas del sello) | `doctor.py --regenerate-domain-primer`, luego `--context` (5 PASS) y `--status` (`SYSTEM_STATUS.md` regenerado) |
+| Rojo propio de la fase | `[6/13] Document Integration` tras el bump | no se heredó ni se absorbió: se curó con el writer, con instrucción expresa, y se re-midió |
+| CHANGELOG | 7 bloques del plan re-encabezados bajo `## [4.79.0]` + 2 subsecciones nuevas (recuperación y RELEASE); **0** bloques de otros planes tocados | transformación con `temp/release-2026-10-07/reordena_changelog.py`, con `assert` de unicidad por encabezado; numstat 205/12 |
+| GUIA_TECNICA | 2 notas nuevas: recuperación AC6/AC10 y FASE-RELEASE | las siete notas por fase ya existían |
+| REGISTRY | 2 filas por el escritor: `RECUPERACION-AC6-AC10` (registro tardío, con `--nota` y su unidad declarada) y `FASE-RELEASE` con `--release 4.79.0` | `log_phase_completion.py`; se declara que sus columnas «Archivos» **imprimen el conteo como si fuera ruta** (`| 17 | 17 |`), así que el inventario real vive en el CHANGELOG |
+| Write-back | 2 publicaciones: la primera **marcada** `reemplazada`, la vigente con sha `1f0ee6e52f00…`; **nada borrado** | `validate_qmind_writeback.py --upload … --file --title`; copia saneada con 6 identidades sustituidas y **prueba de fidelidad** (revertida reproduce `3d2184fb2822…`, byte a byte) |
+| Archivado | orden R2.10 respetado | write-back → `build_lesson_index.py` → `git mv` a `Archives/` → `build_lesson_index.py` → `validate_opencode_refs.py --fix` (18 referencias, 2 archivos fuera del plan) → `validate_plan_citations.py --update-baseline` (81 archivos, 745 citas) |
+| Índice de lecciones | **348 IDs** fresco | `build_lesson_index.py --check` con EXIT 0 antes y después del `git mv` |
+| Derivado vencido por la propia fase | `wiring_report.json` DIVERGE (EXIT 3) al versionar los dos `.py` de la evidencia | regenerado con `validate_wiring.py --write-report` (evidence 153→155, exclusión 165→167) y re-corrído el `--check` en verde |
+| Validaciones | quick de apertura **13/13**; quick de cierre y **modo completo** sobre el árbol commiteado: su crudo en `evidence/…/FASE-RELEASE/crudos/` (la corrida que certifica se corre después del write-back y del `git mv`, como manda el prompt) | `run_all_validations.py` (rápido y completo, con notificación de término) |
+| **Rojo estructural declarado** | `[17/18]` **VENCIDO por diseño del instrumento** | `verificar_contenido()` compara `sha(instantánea)` con `sha(cuerpo del plan)`: solo se satisface subiendo el cuerpo **sin sanear**. Contrafactual ejecutado en `tmp` sin tocar el árbol (`contrafactual_1718.py`). Dueño: `scripts/validate_qmind_writeback.py` (mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`). **Por eso esta fase se cierra INCOMPLETA con el rojo listado, no como TOTAL PASS** |
+| Contador v4complete | **1/1 consumido** | ninguna fase posterior a E2E ejecutó el comando |
+| R2 | **FUERA DE SERVICIO (R2.1)** con auto-reporte por unidad | `measure_iterations.py` sigue pidiendo el transcript del cliente y su acceso está denegado |
+
+**Lo que queda residuo deliberado, declarado:** los 12 packs de `briefing/` del plan siguen **sin versionar** (estaban
+así desde antes de esta fase y ningún verificador los pide); `evidence/…/FASE-E2E/captura_stdout.txt` sigue
+**retenido** por S-E2E-6 y no se commitea; y los `.pyc` de la evidencia quedan fuera por `.gitignore`.
+
+**Dictamen que esta release no suaviza.** AC6 y AC10 constan en **FALLA** en el certificado de VERIFY; la recuperación
+los cerró **offline y sin corrida nueva**, así que el ZIP entregado el 2026-10-07 conserva ambos defectos y el código
+corrector no está ejercitado por ninguna salida del pipeline. AC19b no se intentó. Una muestra de un hotel y una
+corrida no certifica todos los hoteles (L-R.4). Deudas vivas con dueño: V-3, V-4, V-6, V-7, V-8, S-F6, S-H2, S-E2E-11,
+F-B y F-E, más los tres hallazgos del instrumento de write-back publicados en
+`evidence/…/FASE-RELEASE/qmind-writeback-RELEASE.md`.

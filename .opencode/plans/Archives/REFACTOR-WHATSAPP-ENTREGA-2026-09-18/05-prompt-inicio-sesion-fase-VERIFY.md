@@ -1,6 +1,6 @@
 # FASE-VERIFY — Certificación transversal sobre evidencia existente
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-E2E cerrada con evidencia preservada (o checkpoint explícito de corrida no consumida).
+**Estado:** **CERRADA el 2026-10-07** en ejecución directa y sin delegación, sin código, sin tests, sin `v4complete` y sin remediación. Los cuatro casilleros de abajo quedan marcados en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/` (`certificacion.json` + `resultados-y-observaciones.md`). **Dictamen:** meta de entrega demostrada (ZIP + acta favorable + AC20 en flujo real) y **certificación NO íntegra**: **AC6 y AC10 en FALLA** en régimen E2E, ambos en superficies que el plan no tocó; AC19b NO EJERCITADO; F-P4.3 reabierto por su mismo ID con la causa original **no certificada como cerrada** por falta de caso en la muestra; ocho hallazgos nuevos (V-1…V-8) con dueño y disparador. **Dependencia inmediata (histórica, ya cumplida):** FASE-E2E cerrada con evidencia preservada (o checkpoint explícito de corrida no consumida).
 **Complejidad técnica:** ALTA: juicio transversal sobre **las veinte filas de la matriz AC1–AC20** (con AC19 leída en sus dos mitades, 19a aditiva y 19b diferida), límites causales y una sola muestra. ⟦Rectificado el 2026-09-24 por el bloque C de la orden de calidad: esta línea y el registro de fase decían «18 ACs / AC1-AC18», población que dejó de ser la del plan cuando la revisión 2 añadió AC20 y partió AC19; certificar sobre 18 habría cerrado VERIFY con dos filas sin verificación y sin decirlo⟧.
 **Scope R3:** 4 tareas, 0 comandos largos externos. **Ejecución DIRECTA obligatoria: VERIFY no se delega.** Sin código nuevo, sin tests, sin v4complete, sin remediación.
 
@@ -64,9 +64,9 @@ Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo complet
 
 Referencia **60 tool_use**; fase sin código, corte **documental** declarado aparte. Instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`; sin transcript o con acceso denegado, **FUERA DE SERVICIO (R2.1)** con auto-reporte por unidad separado.
 
-- [ ] E2E cerrada (o checkpoint de corrida no consumida) y evidencia íntegra verificada por hash.
-- [ ] Matriz AC1–AC20 dictaminada con régimen offline/E2E explícito y artefacto citado por AC.
-- [ ] `certificacion.json` con límites de muestra; READY no deducido de exit code.
-- [ ] F-P4.3 reabierto y enlazado, sin duplicación; deudas F-B/F-E vigentes con condición escrita.
-- [ ] Lecciones reales extraídas; 00/09/10, checklist, dependencias e índice actualizados.
-- [ ] Ninguna remediación, ejecución ni delegación; RELEASE queda para otra sesión.
+- [x] E2E cerrada (o checkpoint de corrida no consumida) y evidencia íntegra verificada por hash. **10/10 `source_hashes` casan con el árbol vivo; `argv_sha256` recomputado con la fórmula del runner; `attempts=1`, PID 30576, 116 s, `exit_code` del hijo 0; ZIP validado con `testzip() → None`, sha casante con el acta y 57 miembros = `member_count`; cero `.zip.tmp`. Inventario 153 en disco / 150 versionados, 0 ABSENT y 0 READ_ERROR.**
+- [x] Matriz AC1–AC20 dictaminada con régimen offline/E2E explícito y artefacto citado por AC. **En `10-analisis §Matriz dictaminada por VERIFY` y en `certificacion.json .matriz` (20 filas, AC19 en dos mitades).**
+- [x] `certificacion.json` con límites de muestra; READY no deducido de exit code. **Límites en `.limites_de_la_certificacion` (8) y el mecanismo escrito: readiness la calcula `check_publication_readiness` y el veredicto `TribunalJudge`, en dos puntos distintos de `run_v4_complete_mode`.**
+- [x] F-P4.3 reabierto y enlazado, sin duplicación; deudas F-B/F-E vigentes con condición escrita. **F-P4.1 recalificado y F-P4.2/F-P4.5 confirmados por medición; las once filas de seguimientos están en `10-analisis`.**
+- [x] Lecciones reales extraídas; 00/09/10, checklist, dependencias e índice actualizados. **Sin lecciones nuevas de producto (sin cuota) y con dos confirmaciones medidas: L-T4A.5 en AC10 y L-VUP-17 en la matriz.**
+- [x] Ninguna remediación, ejecución ni delegación; RELEASE queda para otra sesión. **Cero ediciones de producto, umbrales o evidencia; cero pytest; cero `v4complete`; ningún `Agent`/`Explore`.**

@@ -1,0 +1,40 @@
+[!] 19 referencia(s) rota(s):
+  .opencode\plans\Archives\EVALUACION-JEV-TYPESAFE-2026-09-21\00-lecciones-capitalizadas.md:62 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-0.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-0.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-A.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-B.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-B.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-C.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-D.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-E.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-E2E.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-F.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-G.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-G.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-H.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-RELEASE.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\briefing\FASE-VERIFY.md:9 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md
+  .opencode\plans\Archives\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\README.md:93 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  .opencode\plans\VERIFICADOR-ESCRITURA-QMIND-2026-09-20\00-lecciones-capitalizadas.md:24 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  .opencode\plans\VERIFICADOR-ESCRITURA-QMIND-2026-09-20\00-lecciones-capitalizadas.md:25 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  .opencode\plans\VERIFICADOR-ESCRITURA-QMIND-2026-09-20\10-analisis-post-implementacion.md:91 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+  .opencode\context\ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md:122 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  .opencode\context\Refuerzo.md:260 -> .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md
+  [FIX] 00-lecciones-capitalizadas.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  [FIX] FASE-0.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-0.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-0.md
+  [FIX] FASE-A.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md
+  [FIX] FASE-B.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-B.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-B.md
+  [FIX] FASE-C.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md
+  [FIX] FASE-D.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md
+  [FIX] FASE-E.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md
+  [FIX] FASE-E2E.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md
+  [FIX] FASE-F.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md
+  [FIX] FASE-G.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-G.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-G.md
+  [FIX] FASE-H.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md
+  [FIX] FASE-RELEASE.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+  [FIX] FASE-VERIFY.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md
+  [FIX] README.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  [FIX] 00-lecciones-capitalizadas.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  [FIX] 10-analisis-post-implementacion.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  [FIX] Refuerzo.md: .opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md -> .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md
+[FIX] 18 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas

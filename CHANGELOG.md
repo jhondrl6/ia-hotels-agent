@@ -1,8 +1,271 @@
 # Changelog
 
-## [Sin publicar] - FASE-E2E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-07
+## [Sin publicar] - FASE-UNICA del plan VERIFICADOR-ESCRITURA-QMIND-2026-09-20 - 2026-10-07
 
-### Corrida única de Hotel Don Alfonso: ZIP publicado y AC20 ejercitado en flujo real
+### Write-back de QMind actualizable y verificado por contenido (AC1–AC5 y AC6-entrega; momento A offline)
+
+- **Qué cambia.** `scripts/validate_qmind_writeback.py` dejaba de ser un verificador que decidía **por título**
+  y que no admitía actualización: una fuente publicada a mitad de plan satisfied el check para siempre (P3),
+  la única vía de publicar el cierre era un título nuevo, y eso **creaba** el duplicado (P4 → P5: dos fuentes
+  de `TRIBUNAL-OFFLINE-2026-09-09` convivían en el notebook desde 2026-09-11). Ahora el writer expone
+  `--title` y `--file`, deja en el repo la **instantánea versionada** con su sha256 y marca la fuente vigente
+  anterior como `reemplazada`; y la verificación compara **contenido y vigencia**, no la existencia del título.
+- **AC1 (writer actualizable).** `--title`/`--file` explícitos: `--file` fuera del repo corta por
+  `dentro_del_repo()` antes de invocar el CLI, re-usar un título vigente con contenido distinto es `[FAIL]` y
+  no un duplicado silencioso, y `--upload <PLAN>` sin banderas sigue publicando con el título histórico.
+  Control negativo ejercitado sobre el blob versionado en `21ade6c` (su parser moría con `--title`, exit 2).
+- **AC2/AC4 (contenido y vigencia).** `verificar_contenido()` reutiliza el **contrato D2** del hermano
+  `verify_qmind_context_freshness.py`: `metadata.fileSha256`/`fileSize` como primera vía, la **descarga +
+  sha256** como verificación de esa promesa, `NO-EVALUABLE` si no hubo observación (nunca `VENCIDO`),
+  `PROMESA-ROTA` si el índice del servidor miente, y `[DUPLICADO-VIGENTE]` si una fuente que nombra al plan
+  no está contable en el registro. Decisión abierta del maestro §4 resuelta en voz alta: **marcar**, no borrar.
+- **AC3 (fin del verde por ausencia).** `_check_qmind_writeback()` del runner invoca con `--strict` y trata el
+  código **2** como estado propio `NO-EVALUABLE`: la ausencia del CLI `qmind` ya no se publica como PASS. Su
+  consecuencia declarada: mientras `.opencode/qmind-writeback/registro.json` no tenga entradas, el **modo
+  completo** corta `[17/18]` en rojo — es el verde hueco cerrado, no una regresión, y lo apaga la primera
+  publicación por `--upload` del momento B.
+- **AC5 (mutaciones).** `temp/mutaciones_writeback_fase_unica.py` → 3/3 aplicadas, 3/3 rojas **por el guard**,
+  3/3 con la aserción esperada en el rojo, ninguna invalidada por sintaxis o import, y árbol restaurado con su
+  sha256 re-casado (`50d1a7f8…`).
+- **AC6-entrega (cierra aquí).** El prompt de FASE-RELEASE del plan `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`
+  ahora **manda el writer** con `--title`/`--file` en lugar de depender de que alguien recuerde el título
+  pre-acordado, y corrige la errata de símbolo (`run()` → `run_all()`). **AC6-aceptación** queda **diferida con
+  dueño y disparador** (RELEASE del padre, tras su ingesta de cierre, verificada por descarga + sha256): no es
+  condición de esta fase por construcción (maestro §6).
+- **Tests.** 23 funciones nuevas, íntegramente offline, en `tests/test_validate_qmind_writeback_escritura.py`;
+  64 verdes en la corrida de cierre con las 36 del hermano de frescura y las 5 del denominador por modo.
+- **Archivos nuevos.** `.opencode/qmind-writeback/registro.json`, `tests/test_validate_qmind_writeback_escritura.py`,
+  `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/` (mutation_report, crudo, baseline post, diff del prompt del
+  padre), `10-analisis-post-implementacion.md` del mini-plan (define `L-QW.1`–`L-QW.4`).
+- **Fuera de alcance declarado:** `[18/18]` conserva el mismo hueco de verde por ausencia (dueño: operador),
+  la limpieza retroactiva de las dos fuentes de `TRIBUNAL-OFFLINE-2026-09-09` (decisión escrita del operador)
+  y la errata de `run()` en el `10-analisis` del padre (dueño: su RELEASE). Ninguna operación remota se ejecutó.
+
+## [4.79.0] - WhatsApp verificado, orden real y entrega única de Don Alfonso — 2026-10-07
+
+### Objetivo
+
+Cerrar el plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18: convertir en documentación oficial lo que sus fases produjeron (C, D, E, F, H, E2E y VERIFY) más la sesión de recuperación de los dos ACs que VERIFY dictaminó en FALLA, y archivar el plan. Estado terminal: **release publicada con la certificación NO íntegra a la vista**, no éxito integral.
+
+**Lo que se demostró.** La meta de entrega se demostró en flujo real: una única corrida de `v4complete` sobre Hotel Don Alfonso publicó su ZIP con sha y conteo casantes con el acta, un acta con veredicto no bloqueante y AC20 ejercitado en sus tres puntos (evidencia en la subsección FASE-E2E). **Lo que no.** La certificación del plan no es íntegra: AC6 y AC10 quedaron en **FALLA** en régimen E2E (dictamen de FASE-VERIFY; fuente única `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/certificacion.json`), y la sesión de recuperación los cerró **offline y sin corrida nueva**, así que el ZIP entregado el 2026-10-07 conserva ambos defectos. AC19b (migración tri-estado de los ocho consumidores de presencia) no se intentó en ninguna fase.
+
+### Límites publicados (L-R.4: una muestra no certifica todos los hoteles)
+
+- **Un hotel y una corrida.** Nada de esta release certifica otro hotel, otro idioma ni otra rama del pipeline; el contador `v4complete` del plan está en **1/1 consumido** y ninguna fase posterior volvió a ejecutar el comando.
+- **El código de la recuperación no está ejercitado por ninguna corrida.** Sus dientes son offline: el contrafactual se midió sobre las *entradas* de la corrida del 2026-10-07, no sobre una salida nueva.
+- **AC1, AC2, AC3, AC6 y AC19b quedan fuera del ejercicio vivo**; los SUPERADO_OFFLINE se publican con su régimen, no como certificación en flujo real.
+- La acta certifica **cuatro** cláusulas y divulga **cuatro** revisores: son dos poblaciones distintas y no deben leerse como seis verificaciones (V-8).
+- `readiness` se calcula antes del veredicto del Tribunal dentro de `run_v4_complete_mode`; su favorable no acredita entrega (V-6).
+- **Deudas vivas, con dueño declarado:** S-F6 (revocación de credencial sin evidencia operativa), S-H2 (anclaje por `run_id` no cubre los JSON timestamped), S-E2E-11 (formas ya enmascaradas que el gate no caza), V-3/V-4/V-6/V-7/V-8, y F-B y F-E diferidas con su condición escrita. Registro en `10-analisis-post-implementacion.md` del plan.
+- **Fuera de esta release queda declarada** la ingesta de cierre a QMind del mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20` (su bloque sigue bajo «Sin publicar») y el trabajo del bloque A de la orden de calidad.
+
+### Cambios Implementados
+
+- **Contrato único del destino de WhatsApp** (`modules/data_validation/whatsapp_contract.py`): vocabulario de cinco estados de lectura, `destino_whatsapp_verificado` como única puerta de un número utilizable y el gate de confianza que no se suplanta. La recuperación añadió aquí la lectura que antes esquivaban dos superficies.
+- **Número utilizable y botón seguro (FASE-C)**: AC3 y AC6 offline con AC19a aditivo; AC5 parcial con deuda C-D declarada.
+- **Veredicto canónico y causa legible del bloqueo (FASE-D)**: pre-gate unificado, `AssessmentBuilder.with_coherence` deja de leer 0.0 fabricado, culpables nombrados con dos errores (AC4, AC8, AC9).
+- **Entrega real revalidada (FASE-E)**: resolvedor único de insumos para los cuatro revisores, `read_status` en el manifiesto, snapshot interno fuera del ZIP de cliente y `package_evidence` en las dos ramas del acta (AC9–AC12).
+- **Sumidero único de redacción (FASE-F)**: `modules/utils/redaction.py` como única superficie que ensucia antes de escribir, verificador de salidas sobre `output/` y `logs/`, y estado operativo de la credencial publicado sin su valor (AC13).
+- **Runner de intento único (FASE-H)**: reserva exclusiva, control persistente, vigilancia de PID, captura redactada, onboarding derivado con procedencia por campo y preflight (AC9, AC12–AC14, AC17 offline).
+- **Corrida única de Hotel Don Alfonso (FASE-E2E)**: un proceso, `attempts: 1`, ZIP publicado con sha casante y AC20 ejercitado en flujo real.
+- **Recuperación de AC6 y AC10 (2026-10-07, offline)**: `LocalContentGenerator` consulta el contrato en vez de armar `wa.me` desde `hotel_data["phone"]`, y `AssetResponsibilityContract` empareja los nombres que el pipeline produce, con `implementation_order_check` publicando contenido y WARNING de tipo propio cuando el orden sale vacío.
+
+### Archivos Nuevos
+
+*Medidos con `git diff-tree --name-status` sobre los nueve commits del plan; la columna indica el commit que los dio de alta. Su descripción por fase vive en la subsección que corresponde (un resultado, una fuente).*
+
+| Archivo | alta en |
+|---|---|
+| `modules/data_validation/whatsapp_contract.py` | 67aa889 |
+| `modules/quality_gates/tribunal/review_inputs.py` | 11e0260 |
+| `modules/utils/redaction.py` | 20a07ae |
+| `tests/asset_generation/test_fase_c_boton_seguro.py` | 67aa889 |
+| `tests/asset_generation/test_reserva_whatsapp_desde_canal_ac6.py` | 086ce65 |
+| `tests/commercial_documents/test_contacto_propuesta_sin_whatsapp_hotel.py` | 086ce65 |
+| `tests/geo_enrichment/test_orden_implementacion_nombres_reales_ac10.py` | 086ce65 |
+| `tests/quality_gates/test_fase_d_veredicto_canonico.py` | 38073a7 |
+| `tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py` | 11e0260 |
+| `tests/quality_gates/tribunal/test_impl_order_check_contenido_ac10.py` | 086ce65 |
+| `tests/test_fase_h_intento_unico.py` | 1c20695 |
+| `tests/test_fase_h_onboarding_procedencia.py` | 1c20695 |
+| `tests/utils/test_fase_f_sumidero_redaccion.py` | 20a07ae |
+
+### Archivos Modificados
+
+*Mismo instrumento; cuando un archivo fue modificado por varias fases se listó la última modificación.*
+
+| Archivo | modificado en |
+|---|---|
+| `modules/assessment_builder.py` | 38073a7 |
+| `modules/asset_generation/conditional_generator.py` | 086ce65 |
+| `modules/asset_generation/local_content_generator.py` | 086ce65 |
+| `modules/asset_generation/site_presence_adapter.py` | 086ce65 |
+| `modules/asset_generation/site_presence_checker.py` | 67aa889 |
+| `modules/asset_generation/v4_asset_orchestrator.py` | 086ce65 |
+| `modules/auditors/llm_mention_checker.py` | 20a07ae |
+| `modules/auditors/v4_comprehensive.py` | 20a07ae |
+| `modules/commercial_documents/coherence_validator.py` | 38073a7 |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | 086ce65 |
+| `modules/commercial_documents/v4_proposal_generator.py` | 086ce65 |
+| `modules/data_validation/external_apis/pagespeed_client.py` | 20a07ae |
+| `modules/delivery/delivery_packager.py` | 11e0260 |
+| `modules/geo_enrichment/asset_responsibility_contract.py` | 086ce65 |
+| `modules/quality_gates/publication_gates.py` | 38073a7 |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | 11e0260 |
+| `modules/quality_gates/tribunal/artifact_paths.py` | 11e0260 |
+| `modules/quality_gates/tribunal/asset_reviewer.py` | 086ce65 |
+| `modules/quality_gates/tribunal/diagnosis_reviewer.py` | 11e0260 |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | 11e0260 |
+| `modules/quality_gates/tribunal/judge.py` | 11e0260 |
+| `modules/scrapers/google_places_client.py` | 20a07ae |
+| `modules/utils/http_client.py` | 20a07ae |
+| `modules/utils/ssl_logger.py` | 20a07ae |
+| `scripts/run_all_validations.py` | 20a07ae |
+| `tests/asset_generation/test_conditional_generator.py` | 67aa889 |
+| `tests/asset_generation/test_datasource_gap.py` | 67aa889 |
+| `tests/asset_generation/test_local_content_generator.py` | 086ce65 |
+| `tests/asset_generation/test_site_presence_adapter.py` | 67aa889 |
+| `tests/asset_generation/test_whatsapp_button.py` | 67aa889 |
+| `tests/auditors/test_p5_ac_s1_secret_sanitization.py` | 20a07ae |
+| `tests/test_never_block_architecture/test_phase5_integration.py` | 67aa889 |
+
+### Tests
+
+- **Funciones canónicas: 5072 → 5107 (+35)** por la sesión de recuperación (14 + 4 + 12 + 5 en los cuatro archivos nuevos). Medido con `git grep -E "^\s*def test_" 649114c -- tests | wc -l` contra `grep -rE "^\s*def test_" tests --include=*.py | wc -l` en el árbol de trabajo.
+- Las baterías por fase (mutantes, contrafactuales y selecciones) están en cada subsección con su crudo bajo `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-*/`.
+- Suite completa de cierre y validación del modo completo: las publica el sello de la subsección FASE-RELEASE, con la selección exacta del comando.
+
+
+#### FASE-RELEASE del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-07
+
+- **Qué hizo.** Cierre documental y versionado: `VERSION.yaml` de 4.78.0/2026-09-25 a **4.79.0**/2026-10-07 con
+  `sync_versions.py` hacia los cinco encabezados gobernados, CHANGELOG re-encabezado (los siete bloques del plan
+  bajo `## [4.79.0]`, sin tocar los bloques de otros planes), dos notas técnicas nuevas en GUIA_TECNICA, dos filas
+  de REGISTRY escritas por su escritor, `09` y `10` completos, y el plan archivado en el orden R2.10. Sin
+  `v4complete` (contador **1/1**), sin código de producto y sin rehacer VERIFY.
+- **DOMAIN_PRIMER, las dos operaciones separadas.** **Verificado** con `doctor.py --context` (5 PASS) y `--status`.
+  **Regenerado con su writer** por instrucción expresa del operador: el bump dejó rojo `[6/13] Document Integration`
+  porque el sello del derivado decía 4.78.0, y esa era la regeneración pendiente que C, D, E, F, H y E2E arrastraban
+  desde FASE-C. No se editó a mano (7 líneas cambiadas, todas del sello y los conteos que imprime el escritor).
+- **Write-back de cierre.** Con el plan aún en raíz y por el writer con `--title` y `--file` (no `--upload` pelado,
+  que respondía SKIP por el título de la era G). Copia saneada con 6 identidades del cliente sustituidas; la
+  fidelidad se probó invirtiendo el saneamiento sobre la copia, que reproduce el sha del cuerpo `3d2184fb2822…` byte
+  a byte. Dos publicaciones: la primera quedó **marcada** `reemplazada`, la vigente es
+  `1f0ee6e52f00…`; **ninguna fuente se borró**.
+- **Hallazgo nuevo del instrumento, con dueño y sin cura en esta fase.** `[17/18]` es **estructuralmente
+  insatisfacible** para un cuerpo con identidad de cliente: `verificar_contenido()` compara
+  `sha256(instantánea)` contra `sha256(cuerpo del plan)`, o sea exige publicar el cuerpo **sin sanear**, mientras
+  `--file` existe precisamente para subir la copia saneada y el writer no sanea nada. Demostrado con contrafactual
+  ejecutado en `tmp` sin tocar el árbol (A: subida idéntica al cuerpo → pasa esa puerta; B: copia saneada →
+  `VENCIDO`). Dueño: `scripts/validate_qmind_writeback.py` (mini-plan `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`).
+  Segundo hallazgo: el slug de la instantánea recorta el título a 120 caracteres, así que dos publicaciones con
+  prefijo común **pisan el mismo archivo** y se pierde el byte-exacto de la reemplazada. Tercero: `fuente_id`
+  queda vacío porque el writer no captura el id que devuelve `qmind source upload` (respuesta en tabla, no JSON).
+- **Archivado.** Orden R2.10 sin permutar: write-back → `build_lesson_index.py` → `git mv` del directorio a
+  `.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/` → `build_lesson_index.py` (índice **348 IDs**,
+  `--check` en verde) → `validate_opencode_refs.py --fix` (18 referencias reparadas; 6 líneas en archivos **de
+  otros planes** que apuntaban al plan archivado) → `validate_plan_citations.py --update-baseline` (81 archivos,
+  745 citas, acto visible de quien documenta).
+- **Derivado vencido por la propia fase, regenerado.** Al versionar los dos `.py` de la evidencia,
+  `wiring_report.json` dio `DIVERGE` con EXIT 3 (evidence versionada 153 → 155); se regeneró con
+  `validate_wiring.py --write-report` y el `--check` volvió a verde. No es un rojo absorbido: es el derivado de
+  esta edición.
+- **Validaciones.** Quick de apertura **13/13** (con `Version Sync` en verde: el rojo histórico no tiene referente
+  vivo y no se actuó sobre él). Modo completo certificador: **15/18**, con los tres rojos nombrados y su crudo en
+  `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-RELEASE/crudos/`. Por eso esta fase se publica como
+  **INCOMPLETA con los rojos listados**, no como TOTAL PASS.
+- **Permisos y cortes.** Autorizados en el mandato: bump con configuración central, regeneración de DOMAIN_PRIMER,
+  dos commits, write-back y push con L3 previa. **No autorizado: `git tag`** (opción rechazada, no olvido: el repo
+  tampoco etiquetó 4.78.0). Los cinco cortes se sostuvieron sin commit hasta la autorización.
+- **Lo que esta release NO declara.** Éxito integral, certificación universal a partir de un hotel, ni que la
+  recuperación de AC6/AC10 esté ejercitada por una corrida.
+
+#### RECUPERACIÓN AC6/AC10 del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-07
+
+- **Qué es.** Una sesión de recuperación autorizada después de VERIFY cerró, en régimen **offline y sin corrida
+  nueva**, los dos ACs que el dictamen dejó en FALLA. El contador `v4complete` del plan sigue en **1/1 consumido**.
+- **AC6 (V-1).** `LocalContentGenerator._conclusion` y `._build_internal_links` dejaron de armar
+  `https://wa.me/{phone}` desde `hotel_data["phone"]` y consultan `destino_whatsapp_verificado` del contrato: sin
+  canal verificado no se publica destino. Contrafactual medido sobre las entradas de la corrida del 2026-10-07:
+  **5 → 0** líneas `wa.me`. El `WhatsApp:` del bloque CONTACTO de la plantilla comercial se retiró porque en
+  `config/` no hay número de agencia (V-5).
+- **AC10 (V-2).** `AssetResponsibilityContract` despoja el prefijo `ESTIMATED_` y la marca de tiempo y empareja por
+  pertenencia exacta al catálogo: de los **13** nombres reales de la corrida **1** casa y **12** siguen
+  adicionalmente, sin pares inventados. `implementation_order_check` del tribunal publica `contenido`
+  (`OK` / `ORDEN_VACIA` / `NO-EVALUABLE`) y con cero tareas emite WARNING de tipo propio, contrato declarado.
+- **Tests.** 35 funciones canónicas en cuatro archivos nuevos (`test_reserva_whatsapp_desde_canal_ac6.py` 14,
+  `test_orden_implementacion_nombres_reales_ac10.py` 12, `test_impl_order_check_contenido_ac10.py` 5,
+  `test_contacto_propuesta_sin_whatsapp_hotel.py` 4) más 20/4 en el re-ancado `test_local_content_generator.py`.
+  Cinco mutantes del guard de AC6 y dos de AC10, rojos por su causa y restaurados por sha256.
+- **Límite que no se borra.** El ZIP entregado el 2026-10-07 **precede** a la corrección y conserva ambos
+  defectos; ninguna corrida ejercita el código nuevo; V-3 (enmendar el contrato de AC10) sigue abierto.
+- **Cierre documental tardío, declarado.** La sesión terminó en «listo para revisión» sin fila de CHANGELOG ni de
+  REGISTRY: esa parte la completó FASE-RELEASE. Commiteada aquí en `086ce65`, atribuida a su sesión.
+- **Artefactos.** `evidence/AC6-AC10-RECUPERACION-2026-10-07/`: `informe.md`, `certificacion_recuperacion.json`,
+  `contrafactual_wa_me.py` con su crudo, `run_mutations.py` + `mutation_report.json`, `verificacion_externa.py` y
+  los crudos de selección/regresión. La regresión completa de esa sesión registró 3 rojos que se reprodujeron
+  **verdes** al abrir RELEASE: eran de frescura del derivado, no del producto.
+
+#### FASE-VERIFY del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-07
+
+##### Certificación transversal AC1–AC20 sobre la evidencia preservada (sin código, sin ejecución, sin remediación)
+
+- **Dictamen:** la **meta de entrega se demostró** (ZIP publicado con sha y conteo casantes, acta con veredicto no
+  bloqueante `APROBADO-CONDICIONAL-PENDING-ONBOARDING`, tier `B+` con la regla de primer piso aplicada y AC20 ejercitado
+  en los tres puntos), pero la **certificación del plan no es íntegra**: **AC6 y AC10 quedan en FALLA** en régimen E2E.
+  Ninguno de los dos es un defecto introducido por el plan: `git log --since=2026-09-18` sobre las tres superficies
+  involucradas (`local_content_generator.py`, `asset_responsibility_contract.py`, `propuesta_v6_template.md`) está vacío.
+- **AC6 (FALLA).** El ZIP publicado lleva `https://wa.me/6063146139` en cinco líneas de
+  `ASSETS/local_content_page/contenido_local__20261007_093402.md` (73, 147, 221, 295, 369). El número es `gbp.phone`
+  del audit, con `validation.phone_web = null` y `whatsapp_status = estimated`; el canal verificado como WhatsApp no
+  existe (la presencia es `plugin_fingerprint`). `local_content_generator._conclusion` (líneas 528-530) y sus enlaces
+  (`:557-559`) construyen el destino desde `hotel_data["phone"]` sin importar `whatsapp_contract` ni consultar
+  confianza. La misma raíz aparece en la plantilla comercial (`propuesta_v6_template.md:252` publica el teléfono del
+  hotel en el bloque CONTACTO de la agencia), idéntica en el baseline del 2026-09-19. Dueño: `asset_generation` +
+  `commercial_documents`; disparador: sesión de recuperación autorizada.
+- **AC10 (FALLA).** `IMPLEMENTATION_ORDER.md` del paquete (2.586 caracteres) tiene **vacías** las tres secciones de
+  tarea — no hay ningún `### N.` ni rutas emparejadas — y las 13 rutas solo figuran como "Asset adicional sin par
+  conocido". Causa: `AssetResponsibilityContract.CORE_TO_GEO_MAP` casa tres nombres canónicos mientras el pipeline pasa
+  basenames con marca de tiempo, así que `get_implementation_order` devuelve vacío. El manifiesto **sí** cumple: 57/57
+  entradas, cero discrepancias de tamaño. Confirmación viva de `L-T4A.5`: el arnés offline de FASE-E certificó la rama
+  con nombres del catálogo y no alcanzó la rama de producción. Bot 3 lo reportó `OK` porque
+  `implementation_order_check` registra la **fuente**, no el contenido. Dueño: `delivery` + `geo_enrichment` + tribunal.
+- **Integridad verificada por instrumento:** los 10 `source_hashes` del control casan con el árbol vivo; `argv_sha256`
+  recomputado con la fórmula del propio runner casa; `attempts: 1`, `pid: 30576`, 116 s, `exit_code: 0`; el ZIP valida
+  con `testzip() → None`, 57 miembros = `member_count` y sha `487f5800…` igual en disco y en el acta; cero `.zip.tmp`
+  residantes; **ningún** snapshot interno ni documento retenido dentro del paquete. Inventario de evidencia: **153
+  archivos en disco, 150 versionados** (la diferencia es `captura_stdout.txt` retenido por S-E2E-6 y dos `.pyc`),
+  **0 ABSENT y 0 READ_ERROR**.
+- **readiness no certificado por exit code y sí explicado por mecanismo:** `readiness_report` se calcula en
+  `main.py:3014` de los gates y el veredicto del Tribunal en `:3311`; los dos vocabularios nunca se cruzan. En esta
+  corrida READY convivió con veredicto **favorable**; en el baseline convivió con `BLOQUEADO` y ZIP suprimido. El par
+  peligroso no se repitió y se declara como límite estructural (V-6), no como logro.
+- **Triaje:** F-P4.3 **reabierto por su mismo ID** sin duplicar ni reescribir su informe; F-P4.1 recalificado (el stub
+  de 470 bytes de P4 es hoy un documento de tamaño correcto con secciones vacías: el defecto cambió de unidad);
+  F-P4.2 confirmado curado en su cláusula literal; F-P4.5 y la revocación siguen sin evidencia operativa (S-F6);
+  F-B y F-E mantienen su diferimiento con condición escrita. **Ocho hallazgos nuevos** (V-1…V-8) con dueño y disparador,
+  ninguno cerrado aquí (`L-V.4`). **S-E2E-4 dictaminado:** `DEVOLVER-PRUEBAS` es vocabulario de *recomendaciones* y
+  `DEVOLVER-CORRECCIONES` el de *veredictos* (`outcome.py:16` vs `judge.py:27`, y este último sí está en
+  `BLOCKING_VERDICTS`); la elevación exige `verified_critical` o `verified_block` (`judge.py:511`), así que publicar con
+  un revisor que recomienda devolver pruebas **no es un defecto de esta corrida**, es un límite del Tribunal, y la
+  formulación de S-E2E-4 va al sello de RELEASE como errata.
+- **Falsa alarma desactivada midiendo:** `logs/fase_e2e_v4complete.log:159` dice `Using defaults (no fresh onboarding
+  data found)` y aparentemente tiraría AC14. El archivo es del **2026-09-11** y su URL es `hotelsalentoreal.com`
+  (líneas 84 y 316): otro hotel y otro mes. AC14 conserva su corroboración viva por stdout (`Onboarding data loaded:
+  4 campos confirmados`). Lección de proceso: una coincidencia de patrón en un directorio de logs no es evidencia del
+  run; se verifica identidad y fecha antes de atribuir.
+- **Contador:** sigue **1/1 consumido**; VERIFY no ejecutó `v4complete`, no corrió pytest, no mutó símbolos, no delegó
+  y no remedió. El `measure_iterations.py` propio del plan sigue **FUERA DE SERVICIO (R2.1)** por acceso denegado al
+  transcript, con auto-reporte por unidad declarada en el informe de la fase.
+- **Artefactos:** `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/certificacion.json` (matriz AC1–AC20 con
+  evidencia por símbolo/ruta, límites de muestra, diff estructural y comparación contra baseline) y
+  `…/FASE-VERIFY/resultados-y-observaciones.md`. **Sin commit, push, tag, QMind write-back ni `DOMAIN_PRIMER`** — no
+  autorizados; `DOMAIN_PRIMER` acumula su checkpoint desde FASE-C. RELEASE queda para otra sesión y no puede
+  declararse éxito integral mientras AC6 y AC10 consten en FALLA.
+
+#### FASE-E2E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-07
+
+##### Corrida única de Hotel Don Alfonso: ZIP publicado y AC20 ejercitado en flujo real
 
 **Qué cambió.** **Cero archivos de producto y cero tests.** El producto de esta fase es evidencia: el control
 productivo del único intento del plan y su preservación. `--spawn` se invocó **una vez** y el argv congelado nunca se
@@ -58,9 +321,9 @@ está en `.gitignore` y el contenido no es recuperable.
 
 **No se hizo:** commit, push, L3, tag, write-back a QMind, regeneración de `DOMAIN_PRIMER` ni rotación de credenciales. ⟦**Sello 2026-10-07, añadido sin reescribir la línea de arriba:** el propio push la venció. **Commit, L3 y push sí se hicieron**, por orden literal del operador: commit **`b05e620`** (25 archivos, +2.431/−49, **8/8** checks del pre-commit sin saltar), **revisión profunda L3 sin hallazgos** sobre el commit sin revisar, y push del rango **`6fd39c2..b05e620`** con paridad **0/0** verificada por `git ls-remote`. Lo que **sigue sin hacerse** es tag, write-back a QMind, `DOMAIN_PRIMER` y rotación de credenciales. **`FASE-E2E/captura_stdout.txt` se excluyó del versionado** (S-E2E-6): queda en disco con el sha256 que referencia `run_control.json` y entra `captura_stdout_saneada.txt`⟧. **AC18 no se marca en esta fase:** certifica VERIFY en su sesión, con esta corrida como única muestra.
 
-## [Sin publicar] - FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+#### FASE-H del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-06
 
-### Runner de intento único, onboarding derivado con procedencia y preflight NO FAVORABLE
+##### Runner de intento único, onboarding derivado con procedencia y preflight NO FAVORABLE
 
 **Qué cambió.** Tres artefactos nuevos dentro del allowlist de la fase (que acota el código nuevo al runner) y
 **cero archivos de producto modificados**:
@@ -115,9 +378,9 @@ normalización de URL, S-H9 `DOMAIN_PRIMER` (checkpoint, el mandato no autoriza 
 REGISTRY esperando el sello de RELEASE. **Cierran por H las deudas S-F5 y S-F8 de FASE-F.** Contador v4complete:
 **0/1**. E2E no se inició (R1).
 
-## [Sin publicar] - FASE-F del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+#### FASE-F del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-06
 
-### Sumidero único de redacción y AC13 verificado offline (sanitización de salidas)
+##### Sumidero único de redacción y AC13 verificado offline (sanitización de salidas)
 
 **Qué cambió.** Nuevo `modules/utils/redaction.py`: un solo punto define las formas de credencial
 (`AIzaSy…`, `sk-or-`/`sk-ant-`/`sk-…`, `ghp_`, `pplx-`), los parámetros `key=` en cualquier
@@ -170,9 +433,9 @@ dueño: S-F1 `scripts/preload_prospects_gbp.py` persiste `PlaceData.error_messag
 `_query_perplexity` sin `try/except` propio, S-F3 el escaneo nuevo cubre el instante de la validación, S-F4 la
 allowlist de cuarentena de P5 queda intacta.
 
-## [Sin publicar] - FASE-E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+#### FASE-E del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-06
 
-### Entrega real revalidada y revision con snapshot interno (AC9-AC12)
+##### Entrega real revalidada y revision con snapshot interno (AC9-AC12)
 
 **Que cambio.** Nuevo `modules/quality_gates/tribunal/review_inputs.py`: copia interna **no exportable** de
 diagnostico y propuesta tomada **antes** de que `run_v4_complete_mode` las borre, manifiesto
@@ -202,7 +465,7 @@ nuevas en `tests/quality_gates/tribunal/test_fase_e_snapshot_resolvedor.py`. Nin
 JSON timestamped del resto de insumos (FASE-H), severidad de `REVIEW_INPUT_ABSENT` (VERIFY) y retiro del
 fallback `legacy-ancestor-walk` (H/E2E). Sin commit, sin push, sin DOMAIN_PRIMER (checkpoint).
 
-## [Sin publicar] - FASE-D del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+#### FASE-D del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-06
 
 > **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a
 > FASE-RELEASE (`04-contrato-ejecucion.md`, paso 3). La fase se cerró **sin commit durante la
@@ -211,7 +474,7 @@ fallback `legacy-ancestor-walk` (H/E2E). Sin commit, sin push, sin DOMAIN_PRIMER
 > El sha del commit y el rango empujado se estampan en el sello documental de FASE-RELEASE (decisión
 > registrada al cerrar C: no abrir sellos recursivos por acciones git).
 
-### FASE-D — Veredicto canónico y causa legible del bloqueo (AC4, AC8, AC9; AC5 intacto)
+##### FASE-D — Veredicto canónico y causa legible del bloqueo (AC4, AC8, AC9; AC5 intacto)
 
 El mismo hecho —si la coherencia autoriza o no generar— se decidía en tres sitios con dos criterios, y
 cuando fallaba no decía por qué. Medido y gobernado:
@@ -261,13 +524,13 @@ falla en corrida completa y pasa aislada (contaminación de entorno; dueño el p
 de wiring se resolvió regenerando con su writer, no recortando la aserción. **Pendientes de autorización:**
 commit, `DOMAIN_PRIMER` (checkpoint) y la fila de cobertura de `AGENTS.md` (configuración central protegida).
 
-## [Sin publicar] - FASE-C del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 - 2026-10-06
+#### FASE-C del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 — 2026-10-06
 
 > **No es una release.** `VERSION.yaml` sigue en 4.78.0 y el encabezado de versión corresponde solo a
 > FASE-RELEASE (`04-contrato-ejecucion.md`, paso 3, re-anclado el 2026-10-06). La fase quedó **completada
 > sin commit**: el mandato no autorizó commit ni push, y los cinco cortes se sostienen sin ellos.
 
-### FASE-C — Número utilizable y botón seguro (AC3, AC6, AC19a-aditivo; AC5 parcial con deuda C-D)
+##### FASE-C — Número utilizable y botón seguro (AC3, AC6, AC19a-aditivo; AC5 parcial con deuda C-D)
 
 El botón de WhatsApp podía apuntar a un destino que nunca fue un número verificado, y la presencia en el
 sitio podía promocionarlo a VERIFIED. Medido y gobernado:

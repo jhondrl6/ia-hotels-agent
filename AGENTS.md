@@ -1,8 +1,8 @@
-<!-- agents_version: v4.78.0 | last_update: 2026-09-25 -->
+<!-- agents_version: v4.79.0 | last_update: 2026-10-07 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.78.0 -- Gobernanza, costura, pertinencia y carga medida COMPLETADO**
+> **v4.79.0 -- WhatsApp verificado, orden real y entrega única de Don Alfonso COMPLETADO**
 
 ---
 

@@ -1,15 +1,38 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.78.0"
-codename: "Gobernanza, costura, pertinencia y carga medida"
-release_date: "2026-09-25"
+version: "4.79.0"
+codename: "WhatsApp verificado, orden real y entrega única de Don Alfonso"
+release_date: "2026-10-07"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-09-25"
+date: "2026-10-07"
 plan_maestro_version: "v2.6.0"
+
+# v4.79.0 - REFACTOR-WHATSAPP-ENTREGA (2026-10-07)
+# Plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18, cerrado por su FASE-RELEASE: fases C, D, E, F, H,
+# E2E y VERIFY, mas la sesion de recuperacion de los dos ACs en FALLA.
+# FASE-C: numero utilizable y boton seguro (AC3, AC6, AC19a-aditivo; AC5 parcial con deuda C-D)
+# FASE-D: veredicto canonico y causa legible del bloqueo (AC4, AC8, AC9; AC5 intacto)
+# FASE-E: entrega real revalidada y revision con snapshot interno (AC9-AC12)
+# FASE-F: sumidero unico de redaccion y estado operativo de la credencial (AC13)
+# FASE-H: integracion offline, onboarding con procedencia y runner de intento unico (AC9, AC12-AC14, AC17)
+# FASE-E2E: unica corrida de Hotel Don Alfonso con ZIP publicado y AC20 en flujo real (contador 1/1)
+# FASE-VERIFY: matriz AC1-AC20 dictaminada sobre la evidencia preservada, sin remediacion:
+#         AC6 y AC10 en FALLA en regimen E2E, AC19b no ejercitado
+# RECUPERACION AC6/AC10 (2026-10-07, offline y SIN corrida nueva): el destino de WhatsApp se
+#         consulta al contrato (`wa.me` publicado: 5 -> 0 lineas medidas) y
+#         `IMPLEMENTATION_ORDER.md` empareja los nombres que el pipeline produce; el ZIP
+#         entregado el 2026-10-07 precede a esa correccion y conserva ambos defectos.
+# LIMITES que esta entrada publica: una muestra de un hotel y una corrida; el codigo nuevo no
+#         esta ejercitado por ninguna corrida; la certificacion no es integral. Fuente unica
+#         del dictamen: `10-analisis-post-implementacion.md` del plan y
+#         `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/certificacion.json`.
+# Aclaracion de la nota siguiente: su frase «la fuente unica de version es hoy 4.78.0» queda
+#         vencida desde esta entrada. Lo que esa nota decide NO cambia: el trabajo del bloque A
+#         de la orden de calidad sigue bajo «Sin publicar» y NO se acredita a 4.79.0.
 
 # ⟦Decidido el 2026-09-25 al cerrar ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: el trabajo del bloque A
 # PERMANECE bajo «Sin publicar» y NO se acredita a la entrada 4.78.0 del CHANGELOG. Queda vigente lo que

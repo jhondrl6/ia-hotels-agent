@@ -859,7 +859,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -903,7 +903,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 10,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -975,7 +975,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -991,7 +991,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1403,7 +1403,7 @@
       "total_citas": 16,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -1599,7 +1599,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 18,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -1616,7 +1616,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1633,7 +1633,7 @@
       "total_citas": 10,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1649,7 +1649,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -1671,7 +1671,7 @@
       "id": "L-ENT.1",
       "familia": "L",
       "enunciado": "Un estado agregado archivado se hereda como si fuera causa. Un snapshot de FASE-P4 registró confidence 0.3, site_verified false en los cinco probes; el plan heredó la lectura \"el sitio era inalcanzable, la señal es falsa por honestidad\". Re-medido hoy: el dominio del warehouse no resuelve y el sitio real responde 200 con el canal servido por un plugin. / Por qué: el artefacto guarda un resultado, no el modo de fallo, así que DNS vacío, respuesta sin cuerpo, HTML sin marcaje y excepción tragada comparten el mismo valor. / Qué lo previene: publicar alcance de observación y estado de lectura separados, nunca un único agregado. Rectificación de la revisión 2: el patrón se mantiene y se aplica a esta propia fila. El snapshot de P4 no registraba \"el lector no vio el botón\": registraba verification_failed en los cinco assets porque falló el *schema report* (la rama de SitePresenceChecker._check_asset_presence que lo consulta). La lectura de la home viva con el código del repo devuelve found=True por clase CSS. Un estado agregado me pasó factura dos veces: primero el de P4, después el mío propio — evidence/FASE-P4/.../site_presence_snapshot.json + output/TAREA7-2026-09-19/.../site_presence_snapshot.json + sonda HTTP y M1 del 2026-09-19",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1685,7 +1685,7 @@
       "id": "L-ENT.2",
       "familia": "L",
       "enunciado": "La pregunta no es \"¿existe el canal?\" sino \"¿puede el lector observarlo, en qué ruta y en qué marcaje?\". La home del sitio vivo tiene 0 referencias a WhatsApp y /contacto/ tiene 54, todas dentro de <style> o de href/src del plugin; ningún wa.me ni número en HTML estático y el método de detección devuelve found: False ante cualquier excepción. / Por qué: F-F y F-A' gobiernan promesas y cableado, pero el falso positivo nace aguas arriba, en la cobertura del detector; corregir el dato no cambia lo que el lector no mira. / Qué lo previene: gobernar el lector como parte del fix, y prohibir que una señal negativa sin alcance verificado se redacte como ausencia. Rectificación de la revisión 2 — el signo estaba invertido: la pregunta correcta resultó ser \"¿qué está viendo el lector cuando dice exists?\". Medido con el checker real sobre la raíz viva: found=True por la sonda de clases CSS (joinchat joinchat--left joinchat--btn), no por texto visible ni wa.me. El riesgo no era fabricar una ausencia, era certificar una presencia como si fuera un número (exists/0.85 → boost a 0.95 sobre un campo que no es teléfono). La lección sobrevive; la dirección del peligro no — M1 y M2 de 00-lecciones-capitalizadas.md §1bis (checker ejecutado + snapshot archivado de la corrida del 2026-09-19)",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1699,7 +1699,7 @@
       "id": "L-ENT.3",
       "familia": "L",
       "enunciado": "Un default de código se fosiliza como dato verificado cuando viaja por un fixture. El fixture versionado del hotel fija canal directo 20.0 contra los 30.0 del warehouse, con epistemic_status: verified, confidence: 0.95; el 20.0 es el respaldo de un datos.get(...) del propio test e2e y el encabezado del fixture afirmaba \"no introduce datos nuevos\" tras enumerar solo tres campos comprobados. / Por qué: el metadato de confianza se copió del contenedor y no del productor del valor; un comentario humano no es un verificador. / Qué lo previene: procedencia por campo con su productor declarado, y la regla de no citar un default como verificado. — Comparación fixture ↔ data/hotel_observations/observations.json ↔ literal del test e2e",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1713,7 +1713,7 @@
       "id": "L-ENT.4",
       "familia": "L",
       "enunciado": "Un rojo del working tree caduca: se hereda como prerrequisito y al re-medirlo ya no existe — y mi explicación del mecanismo también cayó. El quick PRE del 2026-09-18 daba 9/10 por Version Sync y se registró en tres documentos como \"A necesita autorización central\". Hoy el quick da 10/10 sin que yo tocara nada: AGENTS.md, VERSION.yaml, docs/GUIA_TECNICA.md y REGISTRY.md estaban modificados al abrir la sesión y ahora son idénticos a HEAD (mtime 11:06-11:10, revertidos fuera de esta sesión). Además, mi causa propuesta —\"el check espera cuatro segmentos\"— quedó refutada al leer _check_version_sync completa: solo ejecuta sync_versions.py --check, la misma herramienta que yo había visto pasar. / Por qué: heredé un estado transitorio del árbol y después inferí un mecanismo leyendo un fragmento del verificador; las dos cosas son atajos sobre mediciones incompletas. / Qué lo previene: re-medir los rojos al abrir cada fase y no convertirlos en prerrequisito de otra sesión; y antes de publicar una causa, leer el check completo, no la ventana que coincidía con mi hipótesis. — git status inicial frente al de hoy, mtimes de los 4 documentos, quick 10/19 10/10 y lectura de scripts/run_all_validations.py::_check_version_sync",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1727,7 +1727,7 @@
       "id": "L-ENT.5",
       "familia": "L",
       "enunciado": "Editar una tabla anclando en otra fila completa la reemplaza. Al insertar AC19 en la matriz del checklist, el ancla fue la fila AC18 y el resultado quedó sin AC18. / Por qué: la coincidencia de texto no valida la estructura del documento; la pérdida era invisible sin contar. / Qué lo previene: conteo de miembros antes y después de editar, y comprobación de persistencia sobre el commit y no sobre el buffer. Detectado en la misma sesión y remediado. — Registro del error y su reparación en la sesión del 2026-09-19; matriz re-verificada con 20 filas AC (AC1–AC20) en maestro y checklist —19 cuando se registró esta fila, antes de nacer AC20",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1741,7 +1741,7 @@
       "id": "L-ENT.6",
       "familia": "L",
       "enunciado": "El consentimiento liga una identidad concreta, no un nombre comercial. La autorización de FASE-P4 amparaba una corrida de diagnóstico sobre la URL del warehouse —hoy inexistente— y declaraba explícitamente que no era entrega a cliente; la corrida propuesta se lanzaría sobre un dominio distinto. / Por qué: el documento describe su objeto con la URL, y ese objeto ya no existe, de modo que la vigencia nominal del consentimiento no cubre el destino nuevo. / Qué lo previene: reemitir el consentimiento datado sobre la URL viva con su límite escrito, y verificar identidad única y hash de la fuente antes de consumir el único intento. — evidence/FASE-P4/consentimiento-donalfonso.md frente a la sonda DNS/HTTP del 2026-09-19",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1755,7 +1755,7 @@
       "id": "L-ENT.7",
       "familia": "L",
       "enunciado": "Todo estado heredado caduca, incluido el que el prompt de apertura afirma como hecho — segunda confirmación medida del patrón de L-ENT.4, ya no solo de rojos. El prompt de la intervención del 2026-09-19 daba por ciertos tres estados y los tres habían cambiado: los \"3 commits SIN push\" ya estaban pusheados (divergencia real 0/0), el árbol \"sucio en .opencode por trabajo ajeno\" estaba limpio (commits ajenos ya ingresados), y la revocación que mandaba pedir al operador \"no su valor\" ya estaba confirmada por este el día anterior. / Por qué: un prompt registra mediciones en el momento de redacción y se ejecuta después; el agente que no re-mide hereda comandos sobre hechos difuntos. / Qué lo previene: el primer bloque de toda sesión debe re-medir las premisas (git, registros externos, acreditaciones) antes de ejecutar la primera tarea; aquí la orden expresa \"verifica antes de fiarte\" salvó la sesión — la re-medición costó tres comandos. — git rev-list --count origin/master..master = 0, git status --short vacío, confirmación de rotación del operador 2026-09-18",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1769,7 +1769,7 @@
       "id": "L-ENT.8",
       "familia": "L",
       "enunciado": "Un hit de escáner es una forma, no una credencial: la naturaleza medida rebajó el nivel de contención de force-push a redacción de 8 líneas. La key marcada para purga de historial (reescribiría todos los SHA y 7 tags, con blast radius máximo sobre master compartido) resultó ser el key estático firmado que Google incrusta en su propio HTML de Maps, capturado por scraping: sin coincidencia con ninguna key viva del .env, no funcional como credencial del operador. El cierre proporcional fue redacción en HEAD + riesgo residual documentado + condición de escalada explícita. / Por qué: los patrones detectan sintaxis; ownership, vigencia y explotabilidad son mediciones aparte que el plan de escalación heredó sin repetir. / Qué lo previene: antes de elegir nivel de contención, medir procedencia (quién escribió, coincide con viva, firmada, inerte) y documentar la condición por la cual sí escalaría. — Contexto html_sample_end en archives/gbp_profiles.json, contraste con claves del .env (0 coincidencias), cierre a107f3c con nota en AC-S3-S4",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1783,7 +1783,7 @@
       "id": "L-ENT.9",
       "familia": "L",
       "enunciado": "Un proveedor configurado no es un proveedor ejercitado: la métrica agregada verde oculta qué rama corrió. La corrida e2e salió verde (source=llm_check, 5/5 consultas medidas) con Gemini vigente en el .env, pero cero consultas lo alcanzaron: OpenRouter es prioridad 1 y el bucle rompe al primer proveedor que responde. Solo providers_used delató la rama no ejercitada, y hubo que verificar Gemini con una llamada directa (gemini-flash-latest, 864 tokens, coste $0.0021 derivado). / Por qué: la métrica agrega \"hubo medición\", no \"con quién\"; en un diseño de corrida única como este plan, la rama silenciada no tiene segunda oportunidad de manifestarse. / Qué lo previene: exigir evidencia por rama ejercitada (quién respondió cada unidad) en la certificación E2E/VERIFY, igual que se exige por AC; un verde agregado no convierte en SUPERADO EN E2E una ruta NO EJERCITADA. — evidence/tarea7-corrida.log línea 129 (Providers: openrouter), prueba directa _query_gemini del 2026-09-19",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1800,7 +1800,7 @@
       "id": "L-ENT.10",
       "familia": "L",
       "enunciado": "Se re-midió el símbolo y no la ruta viva; el plan quedó bien construido sobre un caso que ya no ocurre. La preparación verificó cada símbolo del contexto de 2026-09-17 contra el código (y acertó: F-A es no-op, F-A' sí decide, el centinela viaja como teléfono). Pero nunca ejecutó la cadena completa sobre la URL alcanzable, y ahí el cuadro cambia de signo: sin pain de WhatsApp, sin botón en el plan, whatsapp_verified en verde vacuo y los 13 gates pasando. / Por qué: un símbolo leído dice qué haría el código, no qué hizo la corrida; y el defecto que se buscaba era el del contexto viejo, no el del camino nuevo. / Qué lo previene: antes de cerrar un diseño, ejecutar el lector o el verificador afectado sobre la entrada real del objetivo —aquí costó dos comandos— y tratar toda premisa \"el producto hoy hace X\" como refutable por un artefacto ya archivado — M1-M4 de 00-lecciones-capitalizadas.md §1bis frente a maestro §1",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1814,7 +1814,7 @@
       "id": "L-ENT.11",
       "familia": "L",
       "enunciado": "La consulta de lecciones se hizo por el síntoma y devolvió solo el síntoma; la causa del fracaso estaba en el índice desde once días antes. L-E2E.2 y L-V.3 (2026-09-11) documentan el critical_recall.details: {} real y el CRITICAL que produce; evidence/FASE-I/comparacion-vs-baseline.md midió el delta de serialización en su sección «2. NRs verificados». Cerraron como \"fix candidato fuera de este plan\", sin dueño ni AC, y once días después eran la única causa de supresión de la corrida que este plan quería certificar. / Por qué: la recuperación por palabras del síntoma (\"WhatsApp\", \"promesa\") no alcanza la superficie donde vive la causa (acta, veredicto, cuarentena); y un hallazgo sin dueño ni AC no se cierra, se reencuentra. / Qué lo previene: capitalizar por dos ejes —síntoma y superficie de cierre— y prohibir la frase \"fix candidato\" sin fila con dueño y AC. Ahora FASE-0/AC20 — Q7-Q10 y las filas nuevas de 00-lecciones-capitalizadas.md §1-§2",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1828,7 +1828,7 @@
       "id": "L-ENT.12",
       "familia": "L",
       "enunciado": "El verde del verificador no probaba su propia cobertura: el hueco estaba en su resolutor de tipos, y lo delató una cuenta que el verificador exige de sí mismo. La primera versión escaneaba solo sentencias directas del cuerpo de una función, así que un pain_mapper = PainSolutionMapper() dentro de un try —el caller productivo de _identify_brechas— quedó RECEPTOR_NO_RESUELTO: el check estaba verde mientras gobernaba a menos. Reconstruido ese «antes» en memoria: 8 receptores productivos sin resolver; tras descender por try/if/with, 0, con gobernadas 67 → 70. / Por qué: un verificador de población describe lo que encontró, no lo que buscó; la ausencia de hallazgos y la ausencia de mirada se escriben igual en un JSON sin denominador. / Qué lo previene: que todo verificador de población publique y aserte su propio denominador (cobertura.receptores_no_resueltos_en_produccion == 0), como test y no como línea de reporte — evidence/…/FASE-G/resultados-y-observaciones.md obs. 3 (medición comparativa sin mutar el árbol)",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1844,7 +1844,7 @@
       "id": "L-ENT.13",
       "familia": "L",
       "enunciado": "Un registro de excepciones sin regla de caducidad es un allowlist con mejor prosa. AC7 exige «excepciones tipadas y justificadas», y G las necesitaba: tres hallazgos reales siguen abiertos con dueño en FASE-B, y un check rojo desde hoy no protege las ediciones de nadie. El peligro no era tenerlas, era quedárselas. Lo que las vuelve honestas son dos piezas medidas: una excepción que ya no ampara ningún hallazgo produce ella misma una violación (EXCEPCION_VAGA, mutación M4), y --ignore-known deja ver el total sin excepciones (4 violaciones en el árbol de hoy). / Por qué: el allowlist no nace de una decisión torpe, nace de una excepción razonable que sobrevive a su causa — el mismo mecanismo con el que L-ENT.4 hizo caducar estados heredados. / Qué lo previene: apareamiento biunívoco (sobrantes en cualquiera de los dos lados = rojo) y una bandera que exhibe el total — aplicar_excepciones() en scripts/validate_wiring.py, test_excepcion_que_ya_no_ampa_nada_es_en_si_una_violacion, mutation_report.json M4",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1858,7 +1858,7 @@
       "id": "L-ENT.14",
       "familia": "L",
       "enunciado": "Una prueba de NO-existencia recortada por un head no prueba nada: afirmó en cuatro documentos commiteados que el verificador de write-back no existía. Esta sesión midió grep -rln \"validate_qmind_writeback\" . \\ — head -20, el corte se comió el único archivo que la refutaba porque scripts/ ordena después de .agents/ y .opencode/, y la conclusión («saltárselo es silencioso», «no está en run_all_validations.py») entró al prompt de RELEASE, a 09, a 10, a dependencias y al registro de evidencia. Y el corpus ya la desmentía por otro eje: Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md, en su checklist de cierre de FASE-RELEASE, documenta el 2026-09-11 que el script «no tiene vía de actualización» y que is_ingested corta por título ⇒ SKIP. / Por qué: un corte de salida protege el contexto pero se lee idéntico a una ausencia, y una proposición universal negativa exige el conteo completo, no el primer pantallazo. / Qué lo previene: dos reglas — (1) en toda afirmación de ausencia, correr la búsqueda sin corte y publicar el conteo total junto al listado; (2) antes de escribir «no existe verificador», buscar el verificador por el artefacto que gobernaría, no por la cadena exacta que uno espera",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1874,7 +1874,7 @@
       "id": "L-ENT.15",
       "familia": "L",
       "enunciado": "Para medir el estado anterior no se usa git stash sobre trabajo sin commitear: existían git grep <rev> y git archive. La sesión midió el conteo canónico de HEAD con git stash push --include-untracked y eso ponía el trabajo de la fase —cinco archivos modificados, sin commit— a merced de un pop fallido o de un hook. Se revirtió en la misma sesión con git stash pop y verificación símbolo a símbolo, y la medición se rehízo sin tocar el árbol: git grep -h -E \"^[[:space:]]*def test_\" HEAD -- tests (4.264) y git archive HEAD extraído en un temporal para ejecutar la suite nueva contra el código sin el fix. / Por qué: el stash es una operación sobre el estado del usuario, no una lectura; la pregunta «¿qué decía HEAD?» nunca necesitó modificarlo. / Qué lo previene: regla de instrumento — medir revisiones con comandos de revisión (git grep <rev>, git show, git archive), y reservar las destructivas para cuando exista instrucción expresa — Registro de la propia sesión y tests_baseline_pre.txt (bloque PRE-c); restauración verificada con git status --porcelain y los símbolos de la fase presentes",
-      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "plan": "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -2084,7 +2084,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2264,7 +2264,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 18,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
       ],
@@ -2335,11 +2335,11 @@
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
       ],
       "redefiniciones": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -2741,7 +2741,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2803,7 +2803,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2821,7 +2821,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2881,7 +2881,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -2898,7 +2898,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 17,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -2931,7 +2931,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -2975,7 +2975,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3043,11 +3043,11 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 85,
+      "total_citas": 89,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -3140,8 +3140,8 @@
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
       ],
       "redefiniciones": []
@@ -3228,7 +3228,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3364,7 +3364,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3380,7 +3380,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3410,7 +3410,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3428,7 +3428,7 @@
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
@@ -3550,7 +3550,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
       "redefiniciones": []
@@ -3568,7 +3568,7 @@
       "total_citas": 69,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3585,7 +3585,7 @@
       "total_citas": 86,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
@@ -3616,7 +3616,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -3633,7 +3633,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3680,7 +3680,7 @@
       "total_citas": 39,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -3714,7 +3714,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 22,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3728,10 +3728,10 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 40,
+      "total_citas": 44,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -4124,8 +4124,8 @@
       "fuente_fecha": "nombre",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
     },
@@ -4157,7 +4157,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
@@ -4191,8 +4191,8 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
       ],
       "redefiniciones": []
     },
@@ -4220,11 +4220,11 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -4269,7 +4269,7 @@
       "total_citas": 13,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4286,7 +4286,7 @@
       "total_citas": 19,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
@@ -4349,7 +4349,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 8,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4602,7 +4602,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4618,7 +4618,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4634,7 +4634,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 50,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4652,7 +4652,7 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
@@ -4670,7 +4670,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4760,7 +4760,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4776,7 +4776,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 14,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4790,9 +4790,9 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
+      "total_citas": 24,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4806,10 +4806,10 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 17,
+      "total_citas": 19,
       "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
       ],
@@ -4827,7 +4827,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
@@ -4845,7 +4845,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4861,7 +4861,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4877,7 +4877,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4893,7 +4893,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 7,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4909,7 +4909,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4925,7 +4925,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4941,7 +4941,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -4955,9 +4955,9 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -5461,16 +5461,24 @@
       "familia": "S",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
+      ]
+    },
+    {
+      "id": "S-F6",
+      "familia": "S",
+      "total_citas": 9,
+      "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
       "id": "S-F7",
       "familia": "S",
-      "total_citas": 9,
+      "total_citas": 8,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5486,7 +5494,15 @@
       "familia": "S",
       "total_citas": 7,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-6",
+      "familia": "S",
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5519,22 +5535,6 @@
       "total_citas": 6,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-E2E-4",
-      "familia": "S",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-6",
-      "familia": "S",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5574,11 +5574,19 @@
       ]
     },
     {
-      "id": "S-F6",
+      "id": "S-E2E-4",
       "familia": "S",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-11",
+      "familia": "S",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5604,15 +5612,7 @@
       "total_citas": 4,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-2",
-      "familia": "S",
-      "total_citas": 4,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5620,7 +5620,7 @@
       "familia": "S",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5628,7 +5628,7 @@
       "familia": "S",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5636,7 +5636,7 @@
       "familia": "S",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5652,7 +5652,7 @@
       "familia": "D",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5660,7 +5660,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
       ]
     },
@@ -5670,7 +5670,15 @@
       "total_citas": 3,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-E2E-2",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5678,7 +5686,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5686,7 +5694,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5694,15 +5702,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-11",
-      "familia": "S",
-      "total_citas": 3,
-      "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5710,7 +5710,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5718,7 +5718,7 @@
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5750,7 +5750,7 @@
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5758,7 +5758,7 @@
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5766,7 +5766,7 @@
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5774,7 +5774,7 @@
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5807,8 +5807,8 @@
       "familia": "L",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/VALIDADOR-URL-PROPIA-2026-08-30",
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ]
     },
     {
@@ -5832,7 +5832,7 @@
       "familia": "S",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5840,7 +5840,7 @@
       "familia": "S",
       "total_citas": 2,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5968,7 +5968,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5976,7 +5976,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5984,7 +5984,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -5992,7 +5992,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -6008,7 +6008,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -6016,7 +6016,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {
@@ -6024,7 +6024,7 @@
       "familia": "S",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ]
     },
     {

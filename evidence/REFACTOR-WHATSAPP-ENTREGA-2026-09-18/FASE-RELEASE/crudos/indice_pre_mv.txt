@@ -1,0 +1,4 @@
+[OK] 348 IDs definidos + 80 sin definición (17 análisis, 435 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=337 commit=11 sin_fuente=0

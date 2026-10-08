@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.78.0 (Gobernanza, costura, pertinencia y carga medida)
-**Última actualización:** 2026-09-25
+**Versión:** v4.79.0 (WhatsApp verificado, orden real y entrega única de Don Alfonso)
+**Última actualización:** 2026-10-07
 
 ---
 
@@ -2852,3 +2852,184 @@ quedaron rojas hasta re-anclarlas. Ahora prueban dos cosas que sí pueden perder
 HEAD**: HEAD avanza con el propio versionado de E2E y anclarlo al tip dejaría la guarda sin nada que perder.
 Las diez deudas con dueño están
 en `evidence/…/FASE-E2E/resultados-y-observaciones.md` §7; VERIFY certifica la matriz AC1–AC20 en su propia sesión.
+
+## Nota Técnica — FASE-VERIFY del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-07)
+
+**Qué gobierna esta nota.** VERIFY es **lectura y dictamen**: no corre `v4complete`, no corre pytest, no muta símbolos y
+**no repara**. Su entregable es `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/certificacion.json`, con la
+matriz AC1–AC20, los límites de la muestra y el diff estructural. El resultado que hay que saber antes de tocar este
+pipeline: **la meta de entrega se demostró y la certificación no es íntegra** — AC6 y AC10 están en **FALLA** en régimen
+E2E, ambos por superficies que este plan no modificó.
+
+**AC6 — cómo se escapa un destino de WhatsApp.** El contrato del botón (`whatsapp_contract`, catálogo, prefight y
+coherencia) goberna **una** puerta. Hay dos más que construyen un `wa.me` o divulgan un canal sin consultarla:
+`modules/asset_generation/local_content_generator.py` (`_conclusion` en las líneas 528-530 y los enlaces en 557-559)
+arma `https://wa.me/{phone_clean}` desde `hotel_data["phone"]`, que en la corrida fue `gbp.phone` con
+`validation.phone_web = null` y `whatsapp_status = estimated`; y `modules/commercial_documents/templates/propuesta_v6_template.md:252`
+publica el teléfono del hotel como `WhatsApp:` dentro del bloque CONTACTO **de la agencia**. Regla práctica: **la unidad
+de medida de un contrato de "ZIP limpio" es el ZIP**, no el generador del botón — al revisar un miembro entregado hay
+que barrer los `wa.me`, `api.whatsapp.com` y números normalizados en **todos** los miembros, no solo en el asset
+gobernado.
+
+**AC10 — un archivo presente no es un documento útil.** `IMPLEMENTATION_ORDER.md` del paquete publicado existe, mide
+2.586 bytes y aun así deja **vacías** sus tres secciones de tarea. La causa es una divergencia de vocabularios:
+`AssetResponsibilityContract.CORE_TO_GEO_MAP` (`modules/geo_enrichment/asset_responsibility_contract.py:94-98`) casa
+tres nombres canónicos (`hotel_schema.json`, `faq_schema.json`, `boton_whatsapp.html`) mientras el `DeliveryPackager`
+pasa los basenames con marca de tiempo que realmente se generaron, así que `get_implementation_order` devuelve vacío y
+los 13 assets caen en "sin par conocido". **Dos poblaciones de nombres, un mismo archivo.** Para quien escriba un test
+de "orden no vacío": pasar nombres del catálogo ejercita la rama feliz del generador, no la de producción; hay que
+alimentarlo con los nombres que el pipeline produce hoy. Y un revisor que registra `implementation_order_check:
+{status: OK, source: zip}` no está comprobando contenido: si un acta va a descansar sobre ese campo, el campo tiene que
+declarar qué midió.
+
+**Cómo se certifica una corrida única (medido, y reusable).** Integridad por instrumento y no por relato: los diez
+`source_hashes` de `run_control.json` contra `sha256sum` del árbol vivo; `argv_sha256` recomputado con la fórmula del
+propio runner (`"\0".join(argv)`) para no reimplementar el criterio; el ZIP validado con `zipfile.testzip()`, conteo de
+`namelist()` contra `member_count` y sha contra `package_evidence`; coteje bilateral MANIFEST↔`namelist()` con tamaño de
+cada miembro leído; y barrido de `.zip.tmp` en el árbol para confirmar que la cuarentena cerró. El paquete **no**
+contuvo snapshot interno ni documentos retenidos.
+
+**readiness y veredicto son dos cálculos separados y lejanos.** `readiness_report` se calcula en `main.py:3014` a partir
+de los gates; el veredicto del Tribunal se calcula en `main.py:3311`. Por eso READY pudo convivir con `BLOQUEADO` y ZIP
+suprimido en el baseline del 2026-09-19. Un `exit_code == 0` del proceso hijo no acredita publicación: lo que la
+acredita es `package_evidence.suppressed: false` + sha + membresía validada.
+
+**Un rojo heredado de un log puede ser de otro hotel.** `logs/fase_e2e_v4complete.log:159` muestra
+`Using defaults (no fresh onboarding data found)`, que leído a primera vista derriba AC14. Es de 2026-09-11 y su URL es
+`hotelsalentoreal.com` (líneas 84 y 316). Antes de atribuirle un estado a una corrida, verificar identidad y fecha del
+artefacto: `logs/` y `output/` están gitignored y acumulan corridas de otros hoteles.
+
+**Dos vocabularios que se confunden al triar.** `DEVOLVER-PRUEBAS` es una **recomendación** de revisor
+(`outcome.py:16 RECOMMENDATION_RETURN_TESTS`); `DEVOLVER-CORRECCIONES` es un **veredicto** y sí está en
+`BLOCKING_VERDICTS` (`judge.py:27`, `:46`). Un revisor que recomienda devolver pruebas no detiene la entrega salvo que
+traiga `verified_critical` o `verified_block` (`judge.py:511`). Y en el acta, `clauses_evaluated: 6` no son seis
+verificaciones: P6.2 y P6.5 están fijadas a `NOT_EVALUABLE`, así que la acta certifica cuatro cláusulas y divulga
+cuatro revisores — dos poblaciones distintas.
+
+## Nota Técnica — FASE-UNICA del plan VERIFICADOR-ESCRITURA-QMIND-2026-09-20 (2026-10-07)
+
+**Qué es.** El write-back de cierre (`10-analisis` → notebook `iah-cli-lecciones`) dejó de ser una
+verificación **por existencia de título** y pasó a ser verificación **por contenido y vigencia**, con el
+writer capaz de **actualizar**. Dueño del contrato: `scripts/validate_qmind_writeback.py`; su conexión al
+sistema de validaciones: `scripts/run_all_validations.py::_check_qmind_writeback()` (check `[17/18]`, solo
+en el modo completo).
+
+**Por qué existía el hueco.** `is_ingested()` comparaba el título de la fuente contra el nombre del plan, así
+que una fuente publicada a mitad de plan satisfacía el check para siempre; y como `qmind source upload` no
+sobrescribe, la única vía de publicar el cierre era un título nuevo, que **creaba** el duplicado. El residuo
+estaba documentado desde 2026-09-11 (`TRIBUNAL-OFFLINE-2026-09-09` con dos fuentes) y nadie lo cerró porque
+ningún AC lo reclamaba.
+
+**Cómo funciona ahora.**
+- `--title` y `--file` (solo con `--upload <PLAN>`) publican una copia **saneada y versionada bajo el repo**:
+  `dentro_del_repo()` corta antes de invocar el CLI, y re-usar un título vigente con contenido distinto es
+  `[FAIL]` explícito — no un duplicado silencioso. Sin banderas, `--upload` hace exactamente lo de siempre.
+- Cada publicación deja una **instantánea** en `.opencode/qmind-writeback/instantaneas/` y una entrada en
+  `.opencode/qmind-writeback/registro.json` (único escritor: el propio writer). La entrada vigente anterior del
+  mismo plan pasa a `reemplazada` con `reemplazada_por`. **Se marca, no se borra**: borrar contenido publicado
+  es irreversible y pide decisión escrita aparte.
+- `verificar_contenido()` reutiliza el **contrato D2** del hermano `verify_qmind_context_freshness.py`:
+  `metadata.fileSha256`/`fileSize` del `source list` como primera vía, la **descarga + sha256** como
+  verificación de esa promesa, `NO-EVALUABLE` cuando no hubo observación (nunca `VENCIDO`), `PROMESA-ROTA` si
+  el índice desmiente a lo que baja, y `[DUPLICADO-VIGENTE]` si una fuente que nombra al plan no está contable.
+
+**Los tres códigos y su semáforo (AC3).** Verificación: `0` medido y vigente, `1` rojo medido (falta ingesta,
+cuerpo vencido, promesa rota o duplicado vigente), `2` **NO-EVALUABLE** — la medición no ocurrió (CLI ausente,
+instantánea o cuerpo inaccesibles, registro sin entradas). El runner pasa `--strict` y el `2` es estado propio
+del resumen: **la ausencia del instrumento ya no se publica como PASS**. Consecuencia conocida: con el
+registro en cero entradas, el modo completo corta `[17/18]` en rojo hasta que la primera publicación por
+`--upload` lo pueble.
+
+**Dónde corre y dónde no.** `[17/18]` vive en la cola de `run_all()` dentro de `if not self.quick:`: no lo ve
+`--quick` ni ningún hook. Las pruebas de la fase son íntegramente offline (`tests/test_validate_qmind_writeback_escritura.py`,
+23 funciones): la frontera de E/S es `_run_qmind`, sustituida por un doble que responde los cuatro comandos y
+cuenta las bajadas. Los tres rojos se demostraron **por el guard** con mutación (`temp/mutaciones_writeback_fase_unica.py`,
+informe en `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/mutation_report.json`).
+
+**Límites que esta nota no esconde.** El check hermano `[18/18]` conserva el mismo patrón de verde por
+ausencia (se invoca sin `--strict`) y quedó declarado con dueño; la limpieza retroactiva de las dos fuentes de
+`TRIBUNAL-OFFLINE-2026-09-09` sigue fuera de alcance; y la aceptación remota (que la fuente ingerida case byte
+a byte con la instantánea del plan padre) es el **momento B** del maestro §6, propiedad del FASE-RELEASE de
+`REFACTOR-WHATSAPP-ENTREGA-2026-09-18`.
+
+## Nota Técnica — Recuperación AC6/AC10 del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-07)
+
+**Qué gobierna esta nota.** Una sesión de recuperación autorizada por VERIFY cerró, en régimen **offline y sin
+corrida nueva**, los dos ACs que el dictamen dejó en FALLA. El contador `v4complete` del plan sigue en **1/1
+consumido**: nada de lo que sigue está ejercitado por una salida del pipeline, y el ZIP entregado el 2026-10-07
+**precede a la corrección y conserva ambos defectos**.
+
+**AC6 — el `wa.me` tenía dos puertas fuera del contrato.** `whatsapp_contract` gobierna el botón, el catálogo,
+el preflight y la coherencia, pero `LocalContentGenerator._conclusion` y sus enlaces internos armaban
+`https://wa.me/{phone}` desde `hotel_data["phone"]` sin importar el contrato: en la corrida ese número era
+`gbp.phone`, con `validation.phone_web = null` y `whatsapp_status = estimated`. Hoy los dos métodos consultan
+`destino_whatsapp_verificado`, que devuelve destino **solo** cuando el canal está verificado; sin canal
+verificado no se publica destino. Contrafactual medido sobre las entradas de la corrida: **5 → 0** líneas
+`wa.me`. La otra puerta era comercial: el bloque CONTACTO de `propuesta_v6_template.md` publicaba el teléfono
+del hotel como `WhatsApp:` **de la agencia**; se retiró la línea porque en `config/` no hay número de agencia
+que poner en su lugar (V-5), no porque el dato estuviera bien.
+
+**AC10 — dos poblaciones de nombres en un mismo archivo.** `AssetResponsibilityContract.CORE_TO_GEO_MAP` casaba
+tres nombres canónicos (`hotel_schema.json`, `faq_schema.json`, `boton_whatsapp.html`) mientras el
+`DeliveryPackager` pasa basenames con prefijo `ESTIMATED_` y marca de tiempo, así que
+`get_implementation_order` devolvía vacío y `IMPLEMENTATION_ORDER.md` salía con tamaño correcto y sus tres
+secciones de tarea sin una línea. El emparejamiento ahora despoja el prefijo y la marca y casa por pertenencia
+exacta al catálogo: de los 13 nombres reales de la corrida **1** casa y **12** siguen adicionalmente, **sin
+pares inventados**. Y el revisor dejó de descansar en la fuente: `implementation_order_check` publica
+`contenido` con su vocabulario (`OK` / `ORDEN_VACIA` / `NO-EVALUABLE`) y con cero tareas emite un WARNING de
+tipo propio, contrato declarado.
+
+**Regla para quien escriba la próxima prueba de esto.** Un test de «orden no vacío» que alimenta nombres del
+catálogo ejercita la rama feliz del generador y no la de producción: hay que alimentarlo con los nombres que el
+pipeline produce hoy. Es la segunda vez que este plan pisa ese hueco (`L-T4A.5` en FASE-E, AC10 en VERIFY).
+
+**Instrumentos.** `evidence/AC6-AC10-RECUPERACION-2026-10-07/`: `informe.md`, `certificacion_recuperacion.json`,
+`contrafactual_wa_me.py` con su crudo, `run_mutations.py` + `mutation_report.json` (los mutantes del guard, rojos
+por su causa y restaurados por sha256) y `verificacion_externa.py` (el `testzip()` y la tarea numerada sobre un
+ZIP de prueba). Su cierre documental no lo hizo esa sesión: corre a cargo de FASE-RELEASE.
+
+## Nota Técnica — FASE-RELEASE del plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (2026-10-07)
+
+**Qué gobierna esta nota.** Cómo se cierra un plan en este repo sin inventar una release y sin publicar material
+del cliente. Cuatro mecanismos que solo se ven al ejecutarlos.
+
+**El bump de la fuente única arrastra un derivado que ninguna AC gobierna.** `VERSION.yaml` es la fuente y
+`sync_versions.py` propaga a los cinco encabezados gobernados (README, AGENTS.md, `.cursorrules`, CONTRIBUTING,
+GUIA_TECNICA). Pero `.agent/knowledge/DOMAIN_PRIMER.md` lleva su **propio sello** de versión y fecha, generado por
+`doctor.py --regenerate-domain-primer`, y no está en la lista de reglas de `sync_config.yaml`: subir la versión sin
+regenerarlo deja rojo `[6/13] Document Integration` con el desajuste impreso (`DOMAIN_PRIMER=4.78.0` contra
+`VERSION.yaml=4.79.0`). Regla práctica: **el bump y la regeneración del DOMAIN_PRIMER son un solo acto**, y la
+regeneración sigue siendo operación de `doctor.py`, nunca de edición a mano. Es también la razón por la que un
+plan que acumula fases sin regenerarlo (aquí: C, D, E, F, H y E2E) no muestra el rezago hasta que alguien mueve la
+versión.
+
+**Darle encabezado de versión a un bloque «Sin publicar» es una operación de RELEASE, y solo de su plan.**
+`CHANGELOG.md` tenía siete bloques del plan y tres de **otros** planes. La cura no es tocar el archivo: es re-emplazar
+la línea `## [Sin publicar] - FASE-X del plan <PLAN> - <fecha>` por `#### FASE-X …` bajo un `## [4.79.0]` nuevo, con
+sus secciones `### Objetivo / Límites publicados / Cambios / Archivos / Tests`, y **no** tocar los bloques ajenos.
+Un `sed` sin ancla habría publicado como 4.79.0 el cierre del piloto JEV y el bloque A de la orden de calidad.
+Medición de la superficie: los archivos de código se listan con `git diff-tree --name-status` sobre los commits del
+plan, no a mano — así la tabla de archivos no es una transcripción que caduca.
+
+**El orden R2.10 tiene una trampa de rutas.** write-back → `build_lesson_index.py` → `git mv` a `Archives/` →
+`build_lesson_index.py` → `validate_opencode_refs.py --fix` → `validate_plan_citations.py --update-baseline`. Tras el
+`git mv`, `--upload <PLAN>` deja de resolver porque el writer lo busca en la raíz de planes: hay que pasar
+`--upload Archives/<PLAN>` (y `plan_dir.name` conserva la clave del registro). El fixer de referencias **también
+edita documentos de otros planes** que apuntan al plan archivado: en esta corrida reparó 18 referencias en cuatro
+archivos, dos de ellos fuera del plan.
+
+**El check `[17/18]` no puede dar verde con un cuerpo que lleve identidad de cliente (hallazgo con dueño).**
+`verificar_contenido()` compara `sha256(instantánea)` contra `sha256(cuerpo del plan)`, o sea exige que lo publicado
+sea byte a byte el cuerpo; pero `--file` existe precisamente para subir una **copia saneada** y el writer no sanea.
+Demostrado con contrafactual en `tmp` sin tocar el árbol (caso A: subida idéntica al cuerpo → pasa esa puerta;
+caso B: copia saneada → `[VENCIDO]`). Consecuencia para este cierre: la corrida que certifica sale roja en
+`[17/18]` por diseño del instrumento, y la fase se publica **INCOMPLETA con el rojo y su dueño** (`verificar_contenido`
+de `scripts/validate_qmind_writeback.py`; curas candidatas: `sha_cuerpo` aparte en el registro, o un `--sanear` en el
+writer). Detalle del que desconfiar: la línea `[FIX] 10-analisis-post-implementacion.md` del fixer **no** era de este
+plan — el sha del cuerpo no cambió; un nombre de archivo repetido entre planes no es identidad.
+
+**Readabilidad del cierre.** El registro oficial lo escribe `log_phase_completion.py` (aditivo, una entrada por fase,
+con `--fecha` real y `--nota` si es tardía) y sus columnas `Archivos Nuevos/Modificados` **imprimen el número que se
+les pasa como si fuera una ruta** (`| 17 | 17 |`): son conteos, no inventarios, y la unidad hay que declararla en la
+`--nota`. El inventario real vive en el CHANGELOG y en la evidencia.
+

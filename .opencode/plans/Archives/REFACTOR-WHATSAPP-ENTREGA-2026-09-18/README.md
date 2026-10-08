@@ -1,5 +1,7 @@
 # REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
+**Estado al cierre (2026-10-07): PLAN CERRADO, liberado como 4.79.0 y archivado en `.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/`. Contador `v4complete` **1/1**. La certificación **no** es íntegra: AC6 y AC10 fueron dictaminados en FALLA por VERIFY y su recuperación es offline y sin corrida nueva. ⟦El párrafo que sigue describe el estado al 2026-09-24 y se conserva como histórico, no como orden de reanudación⟧
+
 **Estado (reconciliado el 2026-09-24 por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, §4.C y §3).** Cerradas y empujadas: **A** (`3e97d95`), **G** (`66e17bd`), **0** (`7c6e75f`, paridad 0/0 verificada entonces) y **B**. **Contador v4complete: 0/1. Punto real de reanudación: FASE-C.**
 
 > **Por qué esta línea vale más que la cabecera que deroga.** Hasta hoy el README decía «Pendientes sin empezar: B–RELEASE» y «Siguiente sesión: FASE-B», y su tabla marcaba B como `PENDIENTE`. Eso estaba **vencido**, no en contradicción técnica: `473ed0f` llevó el código de producto de B (su mensaje aún declaraba la fase INCOMPLETA por una decisión de alcance), `05d0cc6` **cerró B con deuda registrada** re-ancorando AC5 de D-E a **C-D** con el fixture y el test que caracterizan el pase trivial, y `7553f51` barrió las citas de push. La fila de `dependencias-fases.md` y la de `06-checklist-implementacion.md` ya lo decían. **Nadie debe leer esa cabecera antigua como una orden de repetir B**: las fases cerradas conservan su evidencia y no se rehacen. Lo que queda por hacer de B es su **deuda AC5**, y esa es insumo de C, no prerrequisito suyo.
@@ -28,14 +30,14 @@ Los enlaces a prompts y documentos de cierre identifican los destinos previstos 
 | 2 · [G](05-prompt-inicio-sesion-fase-G.md) | Descubrimiento AST de callers y retirada del contrato muerto. **Adelantado: es el guard de las ediciones de B–F** | ALTA: cobertura sin lista fija y firmas compartidas | **CERRADA 2026-09-20** (`66e17bd`, empujado) |
 | 3 · [0](05-prompt-inicio-sesion-fase-0.md) | **Nueva.** Evidencia del veredicto serializada: recall fundado, hallazgos en el acta y hash del paquete publicado | MEDIA técnica / ALTA consecuencia: decide si puede existir un ZIP entregable | **CERRADA 2026-09-20** con código (AC20 VERIFICADO OFFLINE, par contrafactual medido, 6/6 mutaciones rojas por el guard), **commiteada y empujada el mismo día (`7c6e75f`, paridad 0/0)** |
 | 4 · [B](05-prompt-inicio-sesion-fase-B.md) | Pains, promesas y guía de setup sin número | ALTA: mapper, catálogo y productores de narrativa/coverage | **CERRADA CON DEUDA REGISTRADA 2026-09-20** (`473ed0f` el código; `05d0cc6` decide A4 con O5, caracteriza el pase trivial y re-ancla la **deuda AC5** al tramo **C-D**; `7553f51` barre las citas de push). AC1 y AC2 **VERIFICADO OFFLINE**; AC19a-consumo cerrado. La arista a C está **habilitada**: su deuda entra en C como insumo, no como prerrequisito que rehaga B |
-| 5 · [C](05-prompt-inicio-sesion-fase-C.md) | Confianza, campo validado, destino seguro del botón y AC19a aditivo | ALTA: precedencia del dato, falso VERIFIED y dos lectores que hay que unificar | **PENDIENTE ← punto de reanudación.** Arrastra la **deuda AC5** de B (dueño C-D): el test que caracteriza el pase trivial del gate debe ponerse rojo cuando AC5 lo gobierne |
-| 6 · [D](05-prompt-inicio-sesion-fase-D.md) | Veredicto único, fail-fast y causas serializadas | ALTA: gates y consumidores del assessment | PENDIENTE |
-| 7 · [E](05-prompt-inicio-sesion-fase-E.md) | Writer real, resolvedor único de artefactos y snapshot interno revisable | ALTA: orden temporal y separación interno/cliente | PENDIENTE |
-| 8 · [F](05-prompt-inicio-sesion-fase-F.md) | Redacción de salidas (sumidero único) y estado operativo de credencial | MEDIA-ALTA: seguridad de salidas y prueba externa de revocación | PENDIENTE |
-| 9 · [H](05-prompt-inicio-sesion-fase-H.md) | Integración offline, onboarding derivado con procedencia y runner acotado | ALTA: entorno, identidad, reserva y evidencia antes de gastar el único intento | PENDIENTE |
-| 10 · [E2E](05-prompt-inicio-sesion-fase-E2E.md) | Única invocación real y conservación inmediata de evidencia | MEDIA técnica / ALTA operativa: APIs y un solo intento | PENDIENTE |
-| 11 · [VERIFY](05-prompt-inicio-sesion-fase-VERIFY.md) | Análisis directo de artefactos y matriz de certificación AC1–AC20 | ALTA: atribución causal y límites de una sola muestra | PENDIENTE |
-| 12 · [RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Cierre y sincronización documental autorizados | MEDIA: coherencia y orden documental | PENDIENTE |
+| 5 · [C](05-prompt-inicio-sesion-fase-C.md) | Confianza, campo validado, destino seguro del botón y AC19a aditivo | ALTA: precedencia del dato, falso VERIFIED y dos lectores que hay que unificar | **CERRADA 2026-10-06 y empujada** — ver `06-checklist-implementacion.md` y su sección en `10-analisis`; arrastra la deuda AC5 con dueño C-D |
+| 6 · [D](05-prompt-inicio-sesion-fase-D.md) | Veredicto único, fail-fast y causas serializadas | ALTA: gates y consumidores del assessment | **CERRADA 2026-10-06 y empujada** — AC5 intacto con la deuda C-D abierta |
+| 7 · [E](05-prompt-inicio-sesion-fase-E.md) | Writer real, resolvedor único de artefactos y snapshot interno revisable | ALTA: orden temporal y separación interno/cliente | **CERRADA 2026-10-06 y empujada** — con deudas declaradas (anclaje por `run_id`, severidad de `REVIEW_INPUT_ABSENT`) |
+| 8 · [F](05-prompt-inicio-sesion-fase-F.md) | Redacción de salidas (sumidero único) y estado operativo de credencial | MEDIA-ALTA: seguridad de salidas y prueba externa de revocación | **CERRADA 2026-10-06 y empujada** — S-F6 (revocación) sigue con el operador |
+| 9 · [H](05-prompt-inicio-sesion-fase-H.md) | Integración offline, onboarding derivado con procedencia y runner acotado | ALTA: entorno, identidad, reserva y evidencia antes de gastar el único intento | **CERRADA** — contratos offline el 2026-10-06 y S-H1 cerrado por el operador el 2026-10-07 (preflight 12/12 favorable, `intentos=0`) |
+| 10 · [E2E](05-prompt-inicio-sesion-fase-E2E.md) | Única invocación real y conservación inmediata de evidencia | MEDIA técnica / ALTA operativa: APIs y un solo intento | **CERRADA 2026-10-07 y empujada** — única corrida ejecutada: contador **1/1 consumido**, ZIP publicado (`b05e620`) |
+| 11 · [VERIFY](05-prompt-inicio-sesion-fase-VERIFY.md) | Análisis directo de artefactos y matriz de certificación AC1–AC20 | ALTA: atribución causal y límites de una sola muestra | **CERRADA 2026-10-07** — AC1–AC20 dictaminados, **AC6 y AC10 en FALLA**, ocho hallazgos con dueño y sin remediación (L-V.4) |
+| 12 · [RELEASE](05-prompt-inicio-sesion-fase-RELEASE.md) | Cierre y sincronización documental autorizados | MEDIA: coherencia y orden documental | **CERRADA 2026-10-07 — release 4.79.0, write-back de cierre y archivado en `Archives/`** |
 
 Cadena estricta: **A → G → 0 → B → C → D → E → F → H → E2E → VERIFY → RELEASE**. No ejecutar fases en paralelo ni encadenarlas dentro de una sesión. Un checkpoint no habilita la fase siguiente.
 
@@ -88,7 +90,7 @@ que hay que re-medir.
 
 ```text
 Ejecuta únicamente FASE-C del plan
-C:/Users/Jhond/Github/iah-cli/.opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/.
+C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/.
 Lee 05-prompt-inicio-sesion-fase-C.md, 01-plan-maestro.md, 04-contrato-ejecucion.md,
 00-lecciones-capitalizadas.md, dependencias-fases.md, 06-checklist-implementacion.md y el workflow
 canónico. Ese prompt canónico es la autoridad de la fase: no reproduzcas sus instrucciones ni sus

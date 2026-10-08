@@ -1,0 +1,13 @@
+Hotel Don Alfonso                      -> [HOTEL-CLIENTE-OMITIDO]      : 1
+Don Alfonso                            -> [CLIENTE]                    : 3
+https://www.donalfonsohotel.com/       -> [URL-DEL-CLIENTE-OMITIDA]    : 1
+donalfonsohotel.com                    -> [DOMINIO-DEL-CLIENTE-OMITIDO] : 0
+consentimiento-donalfonso.md           -> consentimiento-[CLIENTE].md  : 1
+don_alfonso_20261007                   -> [ARCHIVO-DEL-CLIENTE-OMITIDO] : 0
+donalfonso                             -> [CLIENTE-RUTA]               : 0
+6063146139                             -> [TELEFONO-DEL-CLIENTE-OMITIDO] : 1
+Alfonso                                -> [CLIENTE-RESTO]              : 0
+
+original : 3d2184fb2822f38d3b8fe97d55d565d10027373256fd63feb40fa226ee73d28e  124280 B
+revertido: 3d2184fb2822f38d3b8fe97d55d565d10027373256fd63feb40fa226ee73d28e  124280 B
+[FIDELIDAD] OK - la copia invierte al original byte a byte

@@ -2,5 +2,25 @@
   "schema_version": "1.0",
   "creado": "2026-10-07",
   "nota": "Registro versionado de las publicaciones del write-back a QMind. Unico escritor: scripts/validate_qmind_writeback.py con --upload. Vacio al cerrar la FASE-UNICA de VERIFICADOR-ESCRITURA-QMIND-2026-09-20: la primera entrada la produce el momento B (maestro §6), que necesita autorizacion literal y presupuesto propios. Mientras este registro no tenga entradas, la capa de contenido del check [17/18] declara NO-EVALUABLE y no PASS.",
-  "entradas": []
+  "entradas": [
+    {
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "titulo": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07)",
+      "estado": "reemplazada",
+      "fuente_id": "",
+      "sha256": "0b02bb5084e3a785e67a2b4303f849060309c177f7faf45d4bb3ddf461c8ab64",
+      "instanea": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18--10-analisis_REFACTOR-WHATSAPP-ENTREGA-2026-09-18_cierre_4.79.0_lecciones_finales_2.md",
+      "publicado": "2026-10-07",
+      "reemplazada_por": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)"
+    },
+    {
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "titulo": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)",
+      "estado": "vigente",
+      "fuente_id": "",
+      "sha256": "1f0ee6e52f008e7413846039e244a8a242b472ba93e59bc933af2bb47e7286e0",
+      "instanea": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18--10-analisis_REFACTOR-WHATSAPP-ENTREGA-2026-09-18_cierre_4.79.0_lecciones_finales_2.md",
+      "publicado": "2026-10-07"
+    }
+  ]
 }

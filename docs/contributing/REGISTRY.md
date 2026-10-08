@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-07
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 514
+> **Total fases completadas:** 515
 
 ---
 
@@ -11960,6 +11960,50 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 23 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## RECUPERACION-AC6-AC10 - 2026-10-07 (REFACTOR-WHATSAPP-ENTREGA-2026-09-18)
+**Descripcion:** REFACTOR-WHATSAPP-ENTREGA: recuperacion offline de AC6 (destino por contrato) y AC10 (orden con tareas reales)
+**Nota:** registro tardio: la sesion del 2026-10-07 cerro en 'listo para revision' sin fila de REGISTRY ni CHANGELOG; la estampo FASE-RELEASE. Unidad: archivos-mod = 9 productos + 1 test re-ancado; archivos-nuevos = 4 tests + 13 de evidencia. Offline, sin corrida nueva (contador 1/1 intacto); el ZIP del 2026-10-07 conserva ambos defectos. Commiteado en 086ce65.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `17` | NUEVO | 17 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `10` | 10 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 35 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE - 2026-10-07 (REFACTOR-WHATSAPP-ENTREGA-2026-09-18)
+**Descripcion:** REFACTOR-WHATSAPP-ENTREGA: release documental 4.79.0, write-back de cierre y archivado (INCOMPLETA: tres rojos listados en el modo completo certificador)
+**Nota:** registro de cierre de plan. Unidad de --archivos-mod: 21 gobernados/documentos + 8 archivos del plan re-encabezados despues del git mv (los otros 12 viajan solo renombrados; R100). --archivos-nuevos: 25 = 22 de evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-RELEASE/ + 2 de FASE-VERIFY (entregables de VERIFY que esa sesion no commiteo) + 1 instantanea en .opencode/qmind-writeback/instantaneas/. Tests nuevos: 0 (fase documental; las 35 funciones canonicas son de la recuperacion, en su propia fila). INCOMPLETA por tres rojos del modo completo: Tests, [17/18] VENCIDO estructural del writer de QMind (dueno: VERIFICADOR-ESCRITURA-QMIND-2026-09-20) y [18/18] NO-EVALUABLE por dos descargas fallidas. Sin tag (no autorizado). Contador v4complete 1/1.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `25` | NUEVO | 25 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `29` | 29 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

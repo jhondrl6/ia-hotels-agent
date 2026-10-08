@@ -1,0 +1,457 @@
+{
+  "schema": "iah-certificacion/1.0",
+  "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+  "fase": "FASE-VERIFY",
+  "fecha_certificacion": "2026-10-07",
+  "regimen": "lectura y dictamen sobre artefactos preservados; sin ejecucion de v4complete, sin pytest, sin codigo nuevo, sin remediacion (04-contrato-ejecucion.md §Corrida unica; executor §4.6)",
+  "muestra": {
+    "hoteles": 1,
+    "corridas_v4complete": 1,
+    "contador": "1/1 consumido, acreditado por evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/run_control.json y no por narracion",
+    "baseline_comparado": "output/TAREA7-2026-09-19/ (corrida real del 2026-09-19, ZIP suprimido)",
+    "limite_de_muestra": "un hotel y una corrida no certifican todos los hoteles ni todas las ramas. Todo dictamen E2E rige solo para la rama que esta corrida recorrio."
+  },
+  "integridad_de_entrada": {
+    "source_hashes_10_contra_disco": "10/10 CASAN (sha256sum en el arbol vivo, medido el 2026-10-07)",
+    "argv_sha256_recomputado": "b57488913134feb23561f05ff3a7dfe5f5b93b1c8c09ca14656ffaddebc07704 = publicado (run_once.argv_sha256(chr(0).join(argv)))",
+    "capturas": {
+      "captura_stdout.txt": "7dffa6f2c9ce8ef8919ede899328b5aefb5ce4ef1eb3340f301a037a9311ed23 CASAN con run_control (16.931 bytes)",
+      "captura_stderr.txt": "aeca1ff308f178018b652bb538da142f4df7418dca5ec09926c9c4fc570e0877 CASA",
+      "captura_stdout_saneada.txt": "137e85083f33c038c39cdd596877299758506e0c29bcdf4f002297829223d923 (derivado propio; no es la captura que referencia el control)"
+    },
+    "run_control": {
+      "attempts": 1,
+      "pid": 30576,
+      "estado": "FINALIZADO",
+      "exit_code_hijo": 0,
+      "duracion_s": 116,
+      "timestamps": "creado 14:32:13.721Z, iniciado 14:32:13.731Z, terminado 14:34:09.761Z, actualizado 14:34:09.786Z (monotonia verificada)",
+      "preflight_sha256": null,
+      "limite": "S-E2E-8: la ruta del preflight queda consignada, su integridad no"
+    },
+    "zip_publico": {
+      "ruta": "output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/deliveries/hotel_don_alfonso_20261007.zip",
+      "bytes": 70191,
+      "sha256_disco": "487f5800c1410b167c0338862ec5991c207fac0a418315f62ff5e2dfe409929d",
+      "sha256_acta": "487f5800c1410b167c0338862ec5991c207fac0a418315f62ff5e2dfe409929d",
+      "member_count_disco": 57,
+      "member_count_acta": 57,
+      "testzip": null,
+      "cuarentena_residante": "ningun .zip.tmp bajo el arbol del plan (medido con glob recursivo)",
+      "documento_retenido_o_snapshot_dentro_del_zip": "NINGUNO: namelist() no contiene _review_inputs, review_input_manifest, acta_revision ni revision_*.json; los unicos artefactos internos bajo ASSETS/v4_audit/ son reportes de auditoria",
+      "manifiesto_contra_namelist": "57 entradas, 0 en manifest sin miembro, 0 miembros sin manifest, 0 discrepancias de tamano (len(read()) vs size_bytes)"
+    },
+    "inventario_evidencia": {
+      "comando": "find evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 -type f | wc -l y git ls-files <dir> | wc -l",
+      "en_disco": 153,
+      "versionados": 150,
+      "no_versionados": [
+        "FASE-E2E/captura_stdout.txt (excluido por S-E2E-6, decision declarada)",
+        "FASE-H/__pycache__/*.pyc (2, generados)"
+      ],
+      "read_status": "READ_OK en las 150 rutas versionadas leidas o inventariadas; ABSENT: 0 artefactos esperados faltantes; READ_ERROR: 0",
+      "retenciones_declaradas": [
+        "briefing/ (12 packs del plan, decision de no versionar)",
+        "FASE-H/descartados_por_superposicion_de_corridas/ (4 crudos desechados, versionados como retencion deliberada)",
+        "preflight_2026-10-06_no_favorable.json y preflight_2026-10-07_emision_b1_hash_vencido.json (preservados por sha)"
+      ]
+    }
+  },
+  "matriz": [
+    {
+      "ac": "AC1",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO EJERCITADO en la rama WhatsApp (limite, no fracaso)",
+      "evidencia_offline": "FASE-B/mutation_report.json (8 mutaciones, M1 'AC1 senal propagate a detect_pains' con pytest_exit_code 1 y wiring_exit_code 1); tests de B",
+      "evidencia_viva": "output/.../v4_audit/pain_ledger.json: 13 entries, ninguno de WhatsApp (el camino vivo no produce el pain); la ausencia fantasma con HTML visible SI se observo y se goberno: no_org_schema pasa a status VERIFIED_IN_SITE con severity LOW y evidence_refs site_verification:org_schema:exists, contra site_presence_snapshot.json org_schema status exists confidence 0.95",
+      "simbolo": "pain_ledger.PainLedger (STATUS_VERIFIED_IN_SITE) y su downgrade",
+      "limite": "la rama WhatsApp de este AC sigue sin exercised por una sola corrida"
+    },
+    {
+      "ac": "AC2",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO EJERCITADO (boton fuera del plan); con observacion nueva",
+      "evidencia_offline": "FASE-B (contractos de propuesta/specs/asset_generation_report/matriz de servicios); asset_catalog y pain_solution_mapper probados por mutacion, no por constante",
+      "evidencia_viva": "proposal_asset_matrix.json alignment: 7 servicios, 6 linked, 1 present_in_production (whatsapp_button con confidence 0.0 y asset_path null); delivery_quality_report.json gate G9 passed",
+      "hallazgos": [
+        "V-4 (el servicio Boton de WhatsApp se presenta como 'Presente en sitio' sustentado en presence_evidence_kind plugin_fingerprint, sin numero verificado; identico en el baseline del 2026-09-19)"
+      ],
+      "limite": "sin numero utilizable no prometen boton: la corrida no prometio un boton generado; lo que si prometio fue presencia"
+    },
+    {
+      "ac": "AC3",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO EJERCITADO (verde vacuo declarado como limite)",
+      "evidencia_offline": "FASE-C: 9/9 mutantes rojos por su guard y 9/9 restaurados por sha256 (FASE-C/mutation_report.json)",
+      "evidencia_viva": "coherence_validation.json checks whatsapp_verified passed=true score=1.0 message 'No hay asset de WhatsApp button' - el verde por ausencia de asset, exactamente lo que el maestro §4 nota final prohibio presentar como proteccion",
+      "limite": "la ruta de bloqueo por confidence <0.9 / CONFLICT / centinela no fue alcanzada por esta corrida"
+    },
+    {
+      "ac": "AC4",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO EJERCITADO",
+      "evidencia_offline": "FASE-D: 6/6 mutantes por causa correcta con arbol intacto por sha; AC4 verificado con dos checks en error nombrados en el JSON del writer real",
+      "evidencia_viva": "gate_report_20261007_093402.json gate coherence details.failed_check_names=[] y failed_check_messages=[] porque no hubo checks en error (0.9172, severity error 0)",
+      "limite": "la serializacion de culpables no se ejercito con culpables reales"
+    },
+    {
+      "ac": "AC5",
+      "dictamen": "SUPERADO_OFFLINE_PARCIAL",
+      "regimen_e2e": "NO EJERCITADO",
+      "evidencia_offline": "FASE-C/thresholds.json barras_de_whatsapp: cada barra con fuente, consumidor y valor (catalogo 0.7 con block_on_failure=false, coherencia 0.9 blocking, PAIN_SOLUTION_MAP 0.9/0.5, NEW_HOTEL_THRESHOLDS 0.3, CommercialGate 0.9 legado, match_percentage 0.5/0.6); ninguna barra bajada para dejar pasar ESTIMATED",
+      "deuda_vigente": "AC5 parcial con dueño C-D declarado al cerrar C: la ruta NEW_HOTEL_THRESHOLDS=0.3 sigue sin gobernar que un hotel nuevo planifique boton contra el 0.9 de coherencia; S-D4 sigue abierto",
+      "limite": "no existe 'el umbral de WhatsApp'; la certificacion no puede declarar una barra vigente unica"
+    },
+    {
+      "ac": "AC6",
+      "dictamen": "FALLA",
+      "motivo": "El ZIP publicado contiene un destino de WhatsApp construido fuera del contrato: ASSETS/local_content_page/contenido_local__20261007_093402.md publica https://wa.me/6063146139 en 5 lineas (73, 147, 221, 295, 369). El numero es el telefono GBP (audit_report_20261007_093348.json gbp.phone='(606) 3146139'), con validation.phone_web=null y validation.whatsapp_status='estimated'; el canal verificado como WhatsApp no existe (presence_evidence_kind=plugin_fingerprint, sin href wa.me ni numero). AC6 exige 'destino de boton igual al canal verificado normalizado' y 'sin sustitucion por phone_web': aqui el destino WhatsApp sale de un telefono de otro canal.",
+      "causa_simbolo": "modules/asset_generation/local_content_generator.py:528-530 (_conclusion) y :557-559 construyen f'https://wa.me/{phone_clean}' desde hotel_data.get('phone'); el archivo no importa whatsapp_contract ni consulta confidence/presence_evidence_kind (medido por grep del modulo)",
+      "superficie_del_boton": "SUPERADO_OFFLINE en C (9/9 mutantes sobre el camino del boton); la FALLA es por una puerta que ningun AC del plan goberno",
+      "atribucion": "preexistente: git log --since=2026-09-18 sobre local_content_generator.py y propuesta_v6_template.md esta vacio; el plan no toco esas rutas. La linea de contacto 'WhatsApp: ${hotel_phone}' (propuesta_v6_template.md:252) es identica en el baseline del 2026-09-19 (02_PROPUESTA_COMERCIAL linea 336).",
+      "dueño": "asset_generation (local_content_generator) + commercial_documents (plantilla de contacto)",
+      "disparador": "sesion de recuperacion autorizada post-VERIFY; VERIFY no repara (L-V.4)",
+      "hallazgos": [
+        "V-1",
+        "V-5"
+      ]
+    },
+    {
+      "ac": "AC7",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO APLICABLE (el verificador corre en el quick, no en la corrida)",
+      "evidencia_offline": "FASE-G: .opencode/wiring_report.json (poblacion descubierta por AST, 169 llamadas / 70 gobernadas / 0 receptores sin resolver, excepciones tipadas) + 7/7 mutaciones con rojo del guard; check [11/13] del quick",
+      "verificado_ahora": "el quick de esta sesion vuelve a darle 13/13 (ver resultados-y-observaciones.md §validaciones)"
+    },
+    {
+      "ac": "AC8",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "NO EJERCITADO (rama de bloqueo no alcanzada)",
+      "evidencia_offline": "FASE-D: score 0.88 con veredicto False -> blocks_asset_generation=True con spy de generador no invocado; 6/6 mutantes",
+      "evidencia_viva": "coherence_pre_gate_20261007_093358.json gate: stage pre-gate, threshold 0.8, passed true, blocks_asset_generation false; persistido con failed_error_check_names y failed_error_checks presentes",
+      "limite": "la corrida no produjo el caso de bloqueo; el artefacto demuestra la persistencia del pre-gate, no su corte"
+    },
+    {
+      "ac": "AC9",
+      "dictamen": "SUPERADO",
+      "regimen": "OFFLINE en D/E/H y OBSERVADO EN E2E en su vocabulario",
+      "evidencia_offline": "D: lector nuevo sobre baseline real; E: cuatro estados con cause y 'no favorable ante error'; H: leer_control distingue ABSENT/READ_ERROR",
+      "evidencia_viva": "whatsapp_contract.py:88-105 define el vocabulario unico (READ_OK='OK', READ_ERROR, READ_NO_APLICABLE='NO-APLICABLE', READ_ABSENT='ABSENT', READ_NOT_READ='NO_LEIDO'); site_presence_snapshot.json publica read_status por sonda (OK y NO-APLICABLE) y review_input_manifest.json lo publica con cause:null en los dos documentos",
+      "ampliacion_declarada": "el maestro enumeraba tres estados; el vocabulario designado son cinco. NO-APLICABLE y NO_LEIDO estan documentados en el fuente con su motivo (F-D AC9 y F-E AC11) y no colapsan ausencia con error.",
+      "observado_vacuo": "read_status='OK' sobre un documento efectivamente leido (source snapshot), no un OK sobre lista vacia"
+    },
+    {
+      "ac": "AC10",
+      "dictamen": "FALLA",
+      "motivo": "En el ZIP publicado, IMPLEMENTATION_ORDER.md (2.586 chars) tiene vacias las tres secciones de tarea: '📋 ORDEN DE IMPLEMENTACION', '🔗 GUIA DE RELACIONES ENTRE ARCHIVOS' y '✅ CHECKLIST DE IMPLEMENTACION' no contienen ninguna linea entre su titulo y el siguiente separador; no existe ningun '### N.' ni ruta emparejada. Las 13 rutas reales solo aparecen bajo 'ASSETS ADICIONALES (fuera del catalogo CORE/GEO)' con la formula repetida 'Asset adicional sin par conocido. Revisar contenido para determinar proposito.' AC10 exige IMPLEMENTATION_ORDER con tareas no vacias y rutas ASSETS existentes; las rutas existen, las tareas no.",
+      "causa_simbolo": "AssetResponsibilityContract.CORE_TO_GEO_MAP (asset_responsibility_contract.py:94-98) casa 3 nombres canonicos ('hotel_schema.json', 'faq_schema.json', 'boton_whatsapp.html'); get_implementation_order(core_assets, geo_assets) recibe basenames timestamped (ESTIMATED_guia_optimizacion_20261007_093402.md y companeros), ningun name casa, order queda vacio y el resto cae en unknown_assets (:326-329)",
+      "loQueElOfflineNoAlcanzo": "L-T4A.5 confirmado en vivo: el arnes de E certifico '### N.' y rutas que existen como miembros pasando nombres del catalogo; la rama de produccion con nombres reales no estaba cubierta",
+      "coherencia_del_manifiesto": "SUPERADO: 57 entradas del MANIFEST.json contra 57 miembros, 0 ausencias, 0 discrepancias de tamano",
+      "revisor_no_detecta": "revision_assets.json implementation_order_check = {status: 'OK', source: 'zip'}; Bot 3 registra la fuente del documento, no que el orden este vacio (hallazgo V-2)",
+      "no_comparable_con_baseline": "el ZIP del 2026-09-19 fue suprimido por suppress() (F-P4.9), asi que su IMPLEMENTATION_ORDER no es legible; la comparacion directa esta bloqueada por el propio diseno de cuarentena",
+      "atribucion": "preexistente: git log --since=2026-09-18 -- modules/geo_enrichment/asset_responsibility_contract.py = vacio",
+      "dueño": "delivery + geo_enrichment (contrato de responsabilidad de assets) y tribunal (Bot 3)",
+      "disparador": "sesion de recuperacion autorizada post-VERIFY",
+      "hallazgos": [
+        "V-2",
+        "V-3"
+      ]
+    },
+    {
+      "ac": "AC11",
+      "dictamen": "SUPERADO",
+      "regimen": "OFFLINE en E y EJERCITADO EN E2E",
+      "evidencia_viva": "review_input_manifest.json (schema 1.0): run_id run_20261007T093402, original_path, internal_path, sha256 y size_bytes por documento, read_status OK, disposition 'internal_review_copy'; los cuatro revision_*.json publican review_inputs con resolver='review_inputs', manifest_present=true y los dos documentos leidos del snapshot",
+      "disposition_retenida": "retained_by_gate NO aplica en esta corrida: main.py la usa solo cuando el gate va a borrar; aqui hubo publicacion, por eso disposition=internal_review_copy. Registrado como caso observado, no como ausencia del contrato.",
+      "snapshot_fuera_del_paquete": "verificado por namelist(): 57 miembros sin '_review_inputs' ni 'review_input_manifest'",
+      "deuda_viva": "S-H2/E-1: el anclaje por run_id sigue sin cubrir los JSON timestamped (pain_ledger, gate_report_*, delivery_quality_report, proposal_asset_matrix, financial_scenarios) - Bot 1 y Bot 3 usan glob local y Bot 4/Juez resuelven sin explicit. No afecta la exigencia literal de AC11 pero limita la trazabilidad multi-run.",
+      "limite": "una sola corrida: NO_LEIDO y ABSENT no se ejercitaron en vivo (el insumo existio y se leyo)"
+    },
+    {
+      "ac": "AC12",
+      "dictamen": "SUPERADO",
+      "regimen": "OFFLINE en E/H y rama publish EJERCITADA EN E2E; rama supresion acreditada por el baseline archivado",
+      "evidencia_viva_publish": "acta_revision.json package_evidence {suppressed:false, path, sha256 487f5800..., member_count 57} y enforcement {blocking_env GATE_BLOCKING_ENABLED, enabled true, suppressed_by_operator false}; el sha y el conteo casan con la medicion independiente del ZIP en disco",
+      "evidencia_baseline": "output/TAREA7-2026-09-19/.../acta_revision.json package_evidence {suppressed:true, path .zip.tmp, sha256 4847ccde...} con el archivo ya borrado: la rama de supresion conserva decision/hash/conteo sin el paquete (F-P4.9 confirmado)",
+      "correccion_medida_vigente": "clauses P6.2 y P6.5 siguen NOT_EVALUABLE ('no implementado en T1' y 'Reservada para Bot 4') mientras alignment_reviewer y honesty_reviewer SI emiten reporte con hallazgos; T1_CERTIFIABLE_CLAUSES=4 confirmado en el artefacto vivo. La acta certifica 4 clausulas y divulga 4 revisores: no son la misma poblacion.",
+      "doble_hallazgo_por_borrado": "no observado (0 duplicaciones en los reportes)"
+    },
+    {
+      "ac": "AC13",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "PARCIAL, con hueco de forma residual",
+      "evidencia_offline": "FASE-F: sumidero modules/utils/redaction.py (redact_secrets/redact_values/contains_secret_shape/assert_redacted/redact_and_clip/redact_payload) sobre 9 rutas; 9/9 mutantes caen por fuga detectada; ValidationRunner._check_no_secrets ahora lee output/ y logs/; FASE-F/sanitization_report.json",
+      "revocacion": "FASE-F/credential_status.json: rotacion de la key Gemini local acreditada como AFIRMACION DEL OPERADOR (2026-09-18) y el resto PENDIENTE-SIN-EVIDENCIA-OPERATIVA. Un test verde no certifica revocacion: AC13 se dictamina sin certificacion de revocacion.",
+      "hueco_residencial": "S-E2E-11: config_checker._check_env_variables imprime valor[:4]...valor[-4:] y esas formas no casan con los patrones del gate (exigen AIzaSy+30 / sk-+20), asi que ni redact_secrets ni el hook las ven. 4 fragmentos reales quedaron en FASE-E2E/captura_stdout.txt, excluido del versionado con captura_stdout_saneada.txt en su lugar (S-E2E-6 resuelto por opcion A).",
+      "medicion_de_verify": "en los 57 miembros del ZIP y en los 70 archivos del arbol de output del plan no aparece ninguna forma de credencial (barrido de patrones sobre el ZIP; unico hallazgo de forma: G-XXXXXXXXXX de la guia GA4, plantilla documental)",
+      "dueño_hueco": "modules/utils/redaction.py + config_checker",
+      "hallazgos": [
+        "S-E2E-11 enlazado (no es hallazgo nuevo de VERIFY)"
+      ]
+    },
+    {
+      "ac": "AC14",
+      "dictamen": "SUPERADO_OFFLINE",
+      "regimen_e2e": "CORROBORADO, no acreditado por artefacto JSON",
+      "evidencia_offline": "FASE-H/onboarding_provenance.json (schema iah-onboarding-provenance/1.0): fuente inmutable sha256_antes = sha256_despues (sin cambio), selector unico 1 de 6 observaciones, productor_por_campo con adr_cop y occupancy_rate declarados 'no_disponible: _FIELD_MAP no lo propaga; no se estima ni se rellena', rama_efectiva YAML_DE_DIR_CLIENTES con sus tres ramas posibles enumeradas, y el fixture descartado como modelo con su motivo",
+      "corroboracion_viva": "captura_stdout_saneada.txt linea 157 'Onboarding data loaded: 4 campos confirmados', consistente con los 4 campos del _FIELD_MAP y con campos_confirmados del YAML derivado (sha 2990d768... casa con source_hashes del control)",
+      "medicion_negativa_decodida": "logs/fase_e2e_v4complete.log:159 dice 'Using defaults (no fresh onboarding data found)' - NO pertenece a esta corrida: el archivo es del 2026-09-11 y su URL es https://www.hotelsalentoreal.com/ (lineas 84 y 316). Descartado como evidencia por identidad y fecha, no por suposicion.",
+      "limite": "la rama tomada por el loader no se serializa en un JSON de la corrida; hoy se corrobora por stdout. H dueño de cerrar el anclaje si se exige acreditacion por artefacto."
+    },
+    {
+      "ac": "AC15",
+      "dictamen": "SUPERADO",
+      "regimen": "por fase, con su propio par PRE/POST y mutacion del simbolo real",
+      "mutaciones_por_fase": {
+        "0": "6/6 rojas y restauradas",
+        "B": "8 mutaciones reportadas con exit codes de pytest y wiring",
+        "C": "9/9 rojas por el guard, 9/9 restauradas por sha256",
+        "D": "6/6 por causa correcta, arbol intacto por sha",
+        "E": "8/8 por su guard, arbol intacto",
+        "G": "7/7 con rojo del guard y asercion esperada",
+        "H": "13/13 rojos por su guard, 0 por import/sintaxis"
+      },
+      "rojo_ajeno_declarado": "la regresion completa de cada fase arrastra 1 rojo ajeno y dependiente del orden: tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py, verde en aislado (15/15). No es de este plan y no se curo aqui.",
+      "limite": "AC15 no aplica a E2E (no hay mutacion en la corrida unica)"
+    },
+    {
+      "ac": "AC16",
+      "dictamen": "SUPERADO_OFFLINE",
+      "evidencia_offline": "FASE-G: inventario AST de with_validation sin el argumento descartado; wiring_report.json politica['AssessmentBuilder.with_validation'].firma_real; 3 callers actualizados y las 8 lineas de main.py que construyen el dato conservadas; rojos M5 y M6",
+      "limite": "el check legacy domain_gates se conservo por decision (maestro §6); ningun modulo del plan certifica WhatsApp por esa via"
+    },
+    {
+      "ac": "AC17",
+      "dictamen": "SUPERADO_EN_E2E",
+      "evidencia": "run_control.json: schema iah-run-control/1.0, attempts 1, pid 30576, argv de 11 piezas con --permission-mode auto efectivo, argv_sha256 recomputado y casante, timestamps monotonicos, exit_code 0, source_hashes de 10 rutas (todas casan con disco) y snapshot de .agent/memory con inventario de 21 archivos y sha256_del_inventario d65bcf45...",
+      "prueba_de_intento_unico": "el control se creo antes del spawn y una sola invocacion del runner consigno la corrida; la segunda guarda quedo re-anclada por S-E2E-12 con pata historica en revision fija 6fd39c2 (git cat-file -e debe fallar) + caracterizacion del control del arbol vivo",
+      "anclajes_con_limite": "preflight.sha256=null (S-E2E-8); cleanup_old_sessions borro las 8 sesiones declaradas (S-E2E-9 materializa S-H6): el inventario prueba que existieron y .gitignore:38 impide restaurarlas",
+      "hallazgos": [
+        "V-7"
+      ]
+    },
+    {
+      "ac": "AC18",
+      "dictamen": "SUPERADO_CON_ENTREGA_DEMOSTRADA_Y_CERTIFICACION_NO_INTEGRA",
+      "meta_de_entrega": "ALCANZADA: ZIP publicado (57 miembros, sha casante, testzip sin errores) + acta con veredicto no bloqueante APROBADO-CONDICIONAL-PENDING-ONBOARDING + AC20 verde en flujo real",
+      "readiness_no_deducida_de_exit_code": "verificado por mecanismo: readiness_report se calcula en main.py:3014 a partir de los gates y el veredicto del Tribunal se calcula despues en main.py:3311; por eso en el baseline READY_FOR_PUBLICATION convivio con BLOQUEADO. El exit_code 0 del hijo no interviene en ninguno de los dos calculos.",
+      "obligacion_i": "readiness NO volvio a convivir con un veredicto bloqueante: vivo READY + APROBADO-CONDICIONAL con 11 PASSED + 2 WARNING y 0 fallidos; baseline READY + BLOQUEADO con ZIP suprimido",
+      "obligacion_ii": "AC1/AC2/AC3/AC6 declarados con regimen propio OFFLINE; el verde vacuo medido (whatsapp_verified 'No hay asset de WhatsApp button', [RC1] whatsapp_button sin brecha candidata en stderr) se publica como limite y NO como proteccion",
+      "obligacion_iii": "comparacion contra output/TAREA7-2026-09-19/ en vez de la expectativa del plan; ver bloque comparacion_baseline",
+      "no_integra_porque": "AC6 y AC10 caen en regimen E2E sobre superficies que el plan no modifico; la certificacion global del plan no puede declararse favorable sin triar esos dos"
+    },
+    {
+      "ac": "AC19",
+      "subfilas": {
+        "19a": {
+          "dictamen": "SUPERADO",
+          "regimen": "OFFLINE en C y EJERCITADO EN E2E con el caso real",
+          "evidencia_viva": "site_presence_snapshot.json: observation_scope {crawl:false, nivel:'raiz', routes_inspected:[https://www.donalfonsohotel.com/]}, read_status y presence_evidence_kind como claves nuevas por sonda; whatsapp_button con presence_evidence_kind='plugin_fingerprint', details.match_texts=['css_class:joinchat joinchat--left joinchat--btn'], found true, confidence 0.85, site_verified true; status/confidence/site_verified no fueron redefinidos y details se conserva en el resultado canonico",
+          "rojo_invertido": "NO se disparo: la huella del plugin produjo exists con confianza 0.85 (<0.9) y LA CORRIDA NO GENERO un boton con numero (ni boton_whatsapp.html en el ZIP). El techo que AC19 temia sigue sin cruzarse por la barra, no por un verificador del numero dentro de la huella.",
+          "limite": "la proteccion es el umbral de prefight/coherencia, no un guard que impida a una huella viajar como numero"
+        },
+        "19b": {
+          "dictamen": "NO EJERCITADO",
+          "motivo": "diferido a maestro §6 con dueño quality gates/delivery/narrativa; la migracion al tri-estado de los 8 consumidores no se intento en C ni en ninguna fase posterior (declarado por C)"
+        }
+      }
+    },
+    {
+      "ac": "AC20",
+      "dictamen": "SUPERADO_EN_E2E",
+      "punto_i": "gate_report_20261007_093402.json critical_recall {value:1.0, details:{critical_issues_count:3, recall_basis:'all_critical_issues_detected'}} - el camino fundado del 1.0 va serializado",
+      "punto_ii": "acta_revision.json reviewer_reports[].findings presente en los cuatro revisores (diagnostico [], assets P12_UNVERIFIABLE, alineacion S_C4_TECHNICAL_ASSETS_TABLE, honestidad CG_WARNING_UNDISCLOSED) con severity y description; CONTRAFACTUAL: en el baseline los cuatro reportes no tienen la clave findings (medido: 'findings' in r = False)",
+      "punto_ii_limite": "el hallazgo del Bot 4 llega al acta SIN finding_type porque el revisor escribe la clave type (outcome.py RECOMMENDATION_* vs proyeccion del acta); AC20(ii) se cumple en la causa, no en el tipo (S-E2E-3, dueño tribunal/RELEASE)",
+      "punto_iii": "package_evidence en la rama publish con sha256 y member_count; en el baseline solo existia en la de supresion",
+      "prohibiciones_verificadas": "umbrales, severidades, BLOCKING_VERDICTS y GATE_BLOCKING_ENABLED intactos: thresholds.json de C sin barras bajadas, judge.py:46 BLOCKING_VERDICTS = {BLOQUEADO, DEVOLVER-CORRECCIONES} y enforcement.enabled true",
+      "contrafactual_de_fase_0": "el par BLOQUEADO -> APROBADO-CONDICIONAL-PENDING-ONBOARDING queda medido en FASE-0/baseline_vs_contrafactual.json sobre el acta archivada; VERIFY no lo recalcula, lo enlaza"
+    }
+  ],
+  "conteo": {
+    "SUPERADO_TOTAL_o_con_pata_E2E": [
+      "AC9",
+      "AC11",
+      "AC12",
+      "AC15",
+      "AC17",
+      "AC18",
+      "AC19a",
+      "AC20"
+    ],
+    "SUPERADO_OFFLINE": [
+      "AC1",
+      "AC2",
+      "AC3",
+      "AC4",
+      "AC7",
+      "AC8",
+      "AC13",
+      "AC14",
+      "AC16",
+      "AC5 (parcial)"
+    ],
+    "FALLA": [
+      "AC6",
+      "AC10"
+    ],
+    "NO_EJERCITADO": [
+      "AC19b"
+    ],
+    "total_filas": 20,
+    "filas_con_dictamen_desfavorable_o_diferido": 3
+  },
+  "comparacion_baseline": {
+    "instrumento": "ambas actas y ambos gate_report leidos del arbol; ninguna cifra del baseline se re-transcribe de memoria",
+    "veredicto": {
+      "baseline": "BLOQUEADO",
+      "viva": "APROBADO-CONDICIONAL-PENDING-ONBOARDING"
+    },
+    "evidence_tier": {
+      "baseline": "B",
+      "viva": "B+ con first_floor_rule aplicado (reason 'evidence_tier B+ -> maximo condicional', source_artifact financial_scenarios_20261007_093348.json)"
+    },
+    "readiness": {
+      "baseline": "READY_FOR_PUBLICATION con blocking_issues [] Y ZIP suprimido",
+      "viva": "READY_FOR_PUBLICATION con blocking_issues [] y 2 WARNING, con ZIP publicado"
+    },
+    "critical_recall_details": {
+      "baseline": "value 1.0 (la medida del camino vacuo la tiene FASE-0 en baseline_vs_contrafactual.json)",
+      "viva": "value 1.0 con critical_issues_count 3 y recall_basis fundado"
+    },
+    "reviewer_findings": {
+      "baseline": "clave findings ausente en los cuatro reportes",
+      "viva": "presente en los cuatro"
+    },
+    "package_evidence": {
+      "baseline": "suppressed true, sha 4847ccde..., archivo borrado",
+      "viva": "suppressed false, sha 487f5800..., archivo presente y validado"
+    },
+    "coherence": {
+      "baseline": "0.8966666 con is_coherent=false por whatsapp_verified",
+      "viva": "0.9172 / 0.92 con is_coherent=true y 0 checks en error"
+    },
+    "wa_me_en_el_paquete": {
+      "baseline": "sin asset local_content_page y por tanto sin wa.me (grep del arbol: 0 coincidencias)",
+      "viva": "5 wa.me con numero GBP en contenido_local"
+    },
+    "whatsapp_en_propuesta": {
+      "baseline": "'Boton de WhatsApp | Presente en sitio' (linea 55) y 'WhatsApp: (606) 3146139' (linea 336)",
+      "viva": "mismas dos lineas (55 y 330) - comportamiento de plantilla preexistente, no introducido por el plan"
+    },
+    "no_comparable": "IMPLEMENTATION_ORDER del baseline: suprimido con el ZIP (F-P4.9), no legible"
+  },
+  "limites_de_la_certificacion": [
+    "Una corrida y un hotel: nada aqui certifica otra rama, otro tier, otro proveedor de LLM ni otro estado de red.",
+    "Régimen offline no promocionado: los 10 ACs verificados offline conservan esa etiqueta; ningun test verde pasa a SUPERADO EN E2E (L-VUP-17).",
+    "Medicion IAO perdida: LLMMentionChecker cayo con AttributeError en _parse_mentions y se llevo la unica muestra; audit_report actual no tiene providers_used (el del baseline si). AC del proveedor por unidad: NO EJERCITADO, dueño auditors (S-E2E-1).",
+    "El prompt de E2E pedia una imposibilidad: providers_used nunca fue campo por revisor (S-E2E-2, errata de RELEASE).",
+    "Revocacion de credenciales sigue sin certificar: credential_status.json la registra como afirmacion del operador y deja el resto pendiente (S-F6).",
+    "Ausencia observada != lector fallido: los 0 assets de WhatsApp y los 0 providers_used se dictaminan por separado; un fallo de red no probó ausencia de canal (L-PF6).",
+    "AC10 no es comparable con el baseline porque el enforcement borro su evidencia (F-P4.9, deuda diferida de producto).",
+    "La meta de entrega se alcanzó pero la certificacion global NO es integra: VERIFY dictamina el plan como ENTREGA DEMOSTRADA CON DOS ACs EN FALLA y sin remediacion en esta sesion."
+  ],
+  "diff_estructural": {
+    "metodo": "superficies efectivamente tocadas por fase (reporte de cada fase + hashes congelados) frente a lo asignado por maestro §3/§4",
+    "superficies_del_camino_decisivo": [
+      "modules/data_validation/whatsapp_contract.py (vocabulario read_status, 5 estados)",
+      "modules/quality_gates/tribunal/{judge,outcome,review_inputs,artifact_paths,4 revisores}.py",
+      "modules/delivery/delivery_packager.py (cuarentena O1 + package_evidence en publish)",
+      "modules/commercial_documents/coherence_validator.py + modules/quality_gates/publication_gates.py (pre-gate y culpables)",
+      "main.py (captura de insumos antes del borrado, pre-gate, gate fundado)",
+      "modules/utils/redaction.py (sumidero unico)",
+      "modules/asset_generation/{site_presence_checker,site_presence_adapter,v4_asset_orchestrator,pain_ledger}.py",
+      "evidence/.../FASE-H/{run_once,integracion_offline,derivar_onboarding}.py (runner, sin entrar al pipeline)",
+      "data/hotel_observations/observations.json (solo lectura; sha inmutable verificado antes/despues)"
+    ],
+    "asignaciones_del_plan_sin_ejercicio_vivo": [
+      "AC1/AC2/AC3/AC6 en la rama WhatsApp (B y C) - sin pain de WhatsApp en la ruta de este hotel",
+      "AC19b (maestro §6, diferido)",
+      "AC10 y AC6 en las superficies que FALLAN (asset_responsibility_contract.py, local_content_generator.py, propuesta_v6_template.md): ninguna fase del plan las modificó; git log --since=2026-09-18 sobre esas tres rutas esta vacio"
+    ],
+    "brecha_de_diseno_revelada": "el plan goberno la puerta del boton (whatsapp_button, prefight, catalogo, coherencia) y no las otras dos puertas por las que viaja un destino de WhatsApp: la generacion de contenido local y la plantilla de contacto comercial. AC6 decia 'HTML y ZIP' y el ZIP es la unidad de medida; por eso la FALLA es del contrato, no del alcance."
+  },
+  "triaje": {
+    "F-P4.1": "RECALIFICADO: el informe original de FASE-P4 decia 'IMPLEMENTATION_ORDER.md es un stub de ~470 bytes con secciones vacias'. FASE-E re-valido con mutacion y corrigio la formulacion (con assets planificados el orden trae '### N.' y rutas reales; sin assets el paquete no lleva archivo). MEDIADO POR VERIFY: en la corrida real el archivo existe (2.586 bytes, no 468) y AUN ASI sus tres secciones de tarea estan vacias. Dictamen: F-P4.1 queda FALLA en regimen E2E (AC10) sobre base nueva - el defecto que P4 describio como stub de tamano es hoy un documento de tamano correcto con secciones vacias. No se reescribe el informe original.",
+    "F-P4.2": "CONFIRMADO CURADO EN SU CLAUSULA LITERAL: el double-finding por documentos inexistentes ya no ocurre; en la corrida real Bot 1 y Bot 2 leyeron sus insumos por el resolvedor (review_inputs con source snapshot, read_status OK) y los CRITICAL inflados no aparecen (critical_count 0 en los cuatro reportes). Su re-enfoque (resolvedor unico y 'no leido != OK') esta en AC11 y se dictamina SUPERADO.",
+    "F-P4.3": "REABIERTO por su mismo ID, sin duplicar su informe (evidence/FASE-P4/informe-observacion.md §3) y sin reescribirlo. Su objeto era el gate coherence bloqueando con score 0.8967 >= 0.8 por el check whatsapp_verified 'no hay campo whatsapp_number'. Medida hoy: la condicion de contorno cambio de signo (el hotel ya no produce el pain, el check queda vacuo y la coherencia pasa con 0.9172), pero el mecanismo que F-P4.3 senalaba - un check de severidad error decidiendo bloqueo por la ausencia de un campo que la ruta de datos no carga - sigue sin gobernar la ruta de transporte de contacto. Cierre de la causa original: NO CERTIFICADO por VERIFY; queda con dueño Generacion/orquestacion (maestro §6) y su disparador es una corrida con pain de WhatsApp, que esta muestra no tiene.",
+    "F-P4.5": "CONFIRMADO EN SU ESTADO DOCUMENTAL: revocacion acreditada solo como afirmacion del operador (2026-09-18) en FASE-F/credential_status.json, resto PENDIENTE-SIN-EVIDENCIA-OPERATIVA (S-F6). Ademas S-E2E-14 registro que 10-analisis publica un fragmento de credencial real (AIzaSyDq..., 8 caracteres) en la fila F-P4.5 y que el patron del gate no lo caza: contenido, no forma. Dueño operador/RELEASE.",
+    "F-P4.9": "VIGENTE y con consecuencia de certificacion: por el borrado del .zip.tmp el IMPLEMENTATION_ORDER del baseline no es legible, asi que AC10 perdio su comparacion historica.",
+    "F-B": "DEUDA DIFERIDA con su condicion escrita (maestro §6): contacto almacenable en el warehouse requiere canal comercial definido y consentimiento por escrito; la corrida no la toca y VERIFY no la cierra.",
+    "F-E": "DEUDA DIFERIDA con su condicion escrita: tri-estado global de coherencia con denominador explicado y consumidores actualizados; AC19b es su cara visible y sigue NO EJERCITADO.",
+    "deudas_operativas_a_RELEASE": [
+      "tag",
+      "write-back QMind",
+      "DOMAIN_PRIMER (checkpoint arrastrado C->E2E, siete fases)",
+      "rotacion de credenciales (S-F6)",
+      "erratas de conteo S-F7/S-H11/S-E2E (18->26)",
+      "| sin escapar en la fila H de dependencias",
+      "S-E2E-11",
+      "S-E2E-13 (caracteres CJK en GUIA_TECNICA)",
+      "S-E2E-2/S-E2E-3 (erratas de plan y de acta)"
+    ]
+  },
+  "hallazgos_nuevos": [
+    {
+      "id": "V-1",
+      "hallazgo": "wa.me construido desde gbp.phone fuera del contrato de WhatsApp viaja en el ZIP publicado (5 ocurrencias en contenido_local)",
+      "evidencia": "ASSETS/local_content_page/...:73,147,221,295,369 + audit_report gbp.phone/validation.phone_web=null/whatsapp_status estimated + local_content_generator.py:528-530 y :557-559",
+      "dueño": "asset_generation",
+      "disparador": "sesion de recuperacion autorizada (AC6 FALLA)"
+    },
+    {
+      "id": "V-2",
+      "hallazgo": "IMPLEMENTATION_ORDER con las tres secciones de tarea vacias en el ZIP publicado y Bot 3 lo reporta OK (registro de fuente, no de contenido)",
+      "evidencia": "ZIP miembro IMPLEMENTATION_ORDER.md + asset_responsibility_contract.py:94-98/326-329 + revision_assets.json implementation_order_check",
+      "dueño": "delivery + geo_enrichment + tribunal (Bot 3)",
+      "disparador": "sesion de recuperacion autorizada (AC10 FALLA)"
+    },
+    {
+      "id": "V-3",
+      "hallazgo": "el contrato de AC10 no previó que 'tareas no vacías' significa 'con emparejamientos resueltos por nombre real de archivo'; los nombres del catalogo y los basenames timestamped son dos poblaciones distintas",
+      "evidencia": "comparacion entre el arnes offline de E y la miembro del ZIP",
+      "dueño": "calidad de gates / contrato del plan",
+      "disparador": "enmienda de AC10 en otra sesion"
+    },
+    {
+      "id": "V-4",
+      "hallazgo": "servicio comercial 'Boton de WhatsApp' se divulga como 'Presente en sitio' sustentado en una huella de plugin sin numero verificado (presence_evidence_kind=plugin_fingerprint, confidence 0.85)",
+      "evidencia": "PROPUESTA_COMERCIAL.md:55 + proposal_asset_matrix.json entries[whatsapp_button] + site_presence_snapshot.json whatsapp_button",
+      "dueño": "commercial_documents + quality_gates",
+      "disparador": "decisión de producto sobre si una huella habilita la promesa de presencia"
+    },
+    {
+      "id": "V-5",
+      "hallazgo": "la plantilla de contacto publica el telefono del hotel en el bloque de CONTACTO de IA Hoteles ('WhatsApp: ${hotel_phone}', propuesta_v6_template.md:252) - preexistente e identico en el baseline",
+      "evidencia": "plantilla:252 + propuestas 2026-09-19:336 y 2026-10-07:330",
+      "dueño": "commercial_documents (plantillas)",
+      "disparador": "errata de plantilla en otra sesion"
+    },
+    {
+      "id": "V-6",
+      "hallazgo": "readiness se calcula 300 lineas antes del veredicto del Tribunal (main.py:3014 vs :3311): los dos vocabularios nunca se cruzan, y el unico que puede impedir entrega es el enforcement del packager",
+      "evidencia": "orden de main.py + baseline READY con BLOQUEADO",
+      "dueño": "quality_gates",
+      "disparador": "declarado como limite; no es un rojo de esta corrida porque el veredicto fue favorable"
+    },
+    {
+      "id": "V-7",
+      "hallazgo": "S-E2E-4 dictaminado: la recomendacion DEVOLVER-PRUEBAS de un revisor no puede detener la entrega por contrato; las dos palabras de dos vocabularios distintos (RECOMMENDATION_RETURN_TESTS en outcome.py:16 vs VERDICT_RETURN='DEVOLVER-CORRECCIONES' en judge.py:27) y la elevacion exige verified_critical o verified_block (judge.py:511). El Bot 4 emitió critical_count 0.",
+      "consecuencia": "NO es defecto de esta corrida; es un limite del Tribunal que debe escribirse. El texto de S-E2E-4 confunde las dos poblaciones y va al sello de RELEASE como errata.",
+      "dueño": "tribunal / RELEASE",
+      "disparador": "escrito en el sello"
+    },
+    {
+      "id": "V-8",
+      "hallazgo": "clauses P6.2/P6.5 NOT_EVALUABLE conviven con reportes reales de los Bots 2 y 4: la acta certifica 4 clausulas y divulga 4 revisores; leer 'clauses_evaluated: 6' como seis verificaciones es un error de poblacion",
+      "evidencia": "acta_revision.json clauses + reviewer_reports",
+      "dueño": "tribunal",
+      "disparador": "errata documental en RELEASE (precedente AC12 ya lo declara)"
+    }
+  ],
+  "ready_for_publication": {
+    " gates_y_acta": "13 gates con 0 fallidos y 0 bloqueantes; acta con veredicto no bloqueante; enforcement enabled",
+    "zip_valido": "SI por instrumento: testzip() None, 57 miembros, sha casante, sin cuarentena residante",
+    "exit_code_no_usado": "el exit_code 0 del hijo no interviene en el dictamen; la conclusion de READY viene de gates+acta+paquete",
+    "declaracion": "READY_FOR_PUBLICATION es favorable PARA EL PAQUETE OBSERVADO. La meta de entrega del plan se demostro. La certificacion del plan NO es integral por AC6 y AC10, y la condicion de honestidad del maestro §4 se mantiene: dos ACs en FALLA viajan a una sesion de recuperacion autorizada, no se cierran aqui."
+  }
+}

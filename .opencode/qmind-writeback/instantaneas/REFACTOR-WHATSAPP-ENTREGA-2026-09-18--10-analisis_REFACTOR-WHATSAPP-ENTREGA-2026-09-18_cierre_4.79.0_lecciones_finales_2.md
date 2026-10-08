@@ -1,6 +1,23 @@
+<!-- COPIA-SANEADA-QMIND-INI -->
+> **Esta NO es el documento canónico.** Es la **copia saneada** del `10-analisis` del plan
+> `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` producida por su FASE-RELEASE el 2026-10-07 para el write-back a
+> QMind con `scripts/validate_qmind_writeback.py --upload --file --title`. El documento canónico es
+> `.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md` (la ruta
+> estaba en raíz de planes al momento de la primera ingesta de cierre; el `git mv` de archivado la movió). Se sustituyeron
+> identidades del cliente (nombre comercial, URL, dominio, teléfono y rutas que las nombran) con conteo
+> declarado por token; la fidelidad se probó invirtiendo las sustituciones sobre esta copia y cotejando el
+> sha256 contra el original. Prueba y conteos: `qmind-writeback-RELEASE.md` en esta carpeta.
+<!-- COPIA-SANEADA-QMIND-FIN -->
 # Análisis post-implementación — REFACTOR-WHATSAPP-ENTREGA-2026-09-18
 
-Estado al 2026-09-24: **análisis vivo, cuatro fases cerradas con su fila y su evidencia** (A, G, 0 y B; B con deuda AC5 → dueño C-D) y **punto de reanudación en FASE-C**. ⟦Reconciliado por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`; la línea anterior describía la concepción («PREPARACIÓN; no hay resultados post-implementación») y quedó vencida por esas cuatro filas⟧. Versión base 4.77.0; versión objetivo propuesta 4.78.0, sujeta a confirmación al iniciar RELEASE. ⟦Puesta al día 2026-10-06: **4.78.0 quedó liberada** el 2026-09-25 por `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`VERSION.yaml` `version: "4.78.0"`, `release_date: "2026-09-25"`; medido con `grep -nE "version|release_date" VERSION.yaml`), así que la propuesta de esta fila está vencida. La versión de este plan la decide el mandato de su FASE-RELEASE con el operador y se invoca como `--release "$VERSION_AUTORIZADA"`⟧.
+Estado al cierre **2026-10-07**: **PLAN CERRADO Y ARCHIVADO por su FASE-RELEASE, liberado como 4.79.0** — quince
+sesiones desde la preparación, contador `v4complete` en **1/1**, y **sin certificación integral**: AC6 y AC10
+constan en FALLA en el dictamen de VERIFY y la recuperación los cerró offline, sin corrida nueva. ⟦Lo que sigue
+describe el estado al 2026-09-24 y se conserva como histórico, no como orden de reanudación⟧: **análisis vivo,
+cuatro fases cerradas con su fila y su evidencia** (A, G, 0 y B; B con deuda AC5 → dueño C-D) y **punto de
+reanudación en FASE-C**. ⟦Reconciliado por el bloque C de `ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`; la línea
+anterior describía la concepción («PREPARACIÓN; no hay resultados post-implementación») y quedó vencida por esas
+cuatro filas⟧. Versión base 4.77.0; versión objetivo propuesta 4.78.0, sujeta a confirmación al iniciar RELEASE. ⟦Puesta al día 2026-10-06: **4.78.0 quedó liberada** el 2026-09-25 por `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20` (`VERSION.yaml` `version: "4.78.0"`, `release_date: "2026-09-25"`; medido con `grep -nE "version|release_date" VERSION.yaml`), así que la propuesta de esta fila está vencida. La versión de este plan la decide el mandato de su FASE-RELEASE con el operador y se invoca como `--release "$VERSION_AUTORIZADA"`⟧.
 
 **Revisión 2 (2026-09-19, HEAD `938f59f`).** Re-medición del diseño contra código vivo y contra la corrida real archivada en `output/TAREA7-2026-09-19/`. Consecuencias para este archivo: `L-ENT.1` y `L-ENT.2` quedan **rectificadas** (se conservan con la corrección a la vista), se definen `L-ENT.10` y `L-ENT.11`, y la tabla de seguimientos incorpora la causa de supresión que ninguna fase cubría.
 
@@ -14,14 +31,15 @@ Estado al 2026-09-24: **análisis vivo, cuatro fases cerradas con su fila y su e
 | G | **2026-09-20 (HEAD de partida `d7ff932`)** | **CERRADA — commit `66e17bd` y push a `origin/master` (paridad 0/0)** | **Métrica FUERA DE SERVICIO (R2.1)**: el instrumento pide el transcript y no estuvo disponible. Auto-reporte con unidad contable propia (9 rutas tocadas: 5 modificadas +125/−21 y 4 nuevas; 2 corridas de baseline + 1 extendida; 7 mutaciones; 2 quicks), corte de código y corte documental separados, **sin comparar** con la referencia de 60 porque no es la unidad medida. Tiempo de pared aparte | Sin delegación: el inventario lo produjo el propio instrumento, no un subagente (así se evita repetir el episodio de la cifra 50/779 medida por subagente y nunca re-medida) | AC7 y AC16 verificados offline con sus rojos; quick 10/10 → **11/11**; 4.246 → **4.264** funciones canónicas; **la fila F-A' del plan quedó subdimensionada: son tres invocaciones divergentes, no una**; QMind recuperado por el eje de cierre (Q12, 6 aportes, 3 aplicados y medidos); rojo preexistente con causa raíz medida y conservado sin excluir. **Contador v4complete 0/1** |
 | **0** | **2026-09-20 (HEAD de partida `ad0cc84`)** | **CERRADA con código de producto, commiteada y empujada el 2026-09-20 (`7c6e75f` → `origin/master`, paridad 0/0 verificada por `git ls-remote`, 7/7 checks del hook en verde sin saltarlos)** | **Métrica FUERA DE SERVICIO (R2.1)**: `measure_iterations.py` sigue pidiendo el transcript y no estuvo disponible. Auto-reporte con unidad propia: ~45 intervenciones de herramienta contadas a mano sobre el registro de la sesión, de las cuales ~28 hasta el último estado de código; **corte de código = no consumado** (no hay commit); tiempo de pared aparte: suite completa 232 s y 6 mutaciones ~12 s. No comparable con la referencia de 60 | Sin delegación: la causa raíz, el par contrafactual y la serie del gate son decisiones de arquitectura con evidencia en el worktree | AC20 **VERIFICADO OFFLINE** con el par `BLOQUEADO → APROBADO-CONDICIONAL-PENDING-ONBOARDING` medido sobre el acta archivada; AC12 **PARCIAL** (rama publish); quick 11/11; 4.264 → **4.285** funciones canónicas (+21); 6/6 mutaciones rojas por el guard con restauración por sha256; **contador v4complete 0/1** |
 | B | **2026-09-20 (`473ed0f` + `05d0cc6` + `7553f51`)** | **CERRADA CON DEUDA REGISTRADA** — AC1 y AC2 **VERIFICADO OFFLINE**, AC19a-consumo cerrado; la **deuda AC5 (S-B1)** queda con dueño **C-D** como insumo suyo, no como prerrequisito que rehaga B. Commit de producto y push ejecutados con instrucción literal | **Métrica FUERA DE SERVICIO (R2.1)**, auto-reporte con unidad declarada | — | ⟦Fila rectificada el 2026-09-24 por el bloque C de la orden de calidad: publicaba «Nueva sesión / PENDIENTE», que estaba vencido; su evidencia y su cierre están en `06-`, `dependencias-fases.md` y `evidence/…/FASE-B/`⟧ |
-| C | Nueva sesión | **PENDIENTE ← punto de reanudación** | Por medir | No | Botón seguro y confianza; **arrastra la deuda AC5 de B** |
-| D | Nueva sesión | PENDIENTE | Por medir | No | Veredicto y diagnóstico de bloqueos |
-| E | Nueva sesión | PENDIENTE | Por medir | No | Entrega y evidencia interna |
-| F | Nueva sesión | PENDIENTE | Por medir | Solo pistas independientes sin secretos | Seguridad de salidas |
+| C | 2026-10-06 | **CERRADA y empujada** — estado y cifras en su sección (§FASE-C) y en `06-checklist` | FUERA DE SERVICIO (R2.1) con auto-reporte | No | Botón seguro y confianza; la deuda AC5 de B quedó en C-D |
+| D | 2026-10-06 | **CERRADA y empujada** — §FASE-D y `06-checklist` | FUERA DE SERVICIO (R2.1) con auto-reporte | No | Veredicto canónico y causas; AC5 intacto con dueño |
+| E | 2026-10-06 | **CERRADA y empujada** — §FASE-E y `06-checklist` | FUERA DE SERVICIO (R2.1) con auto-reporte | No | Resolvedor único y snapshot interno fuera del ZIP |
+| F | 2026-10-06 | **CERRADA y empujada** — §FASE-F y `06-checklist` | FUERA DE SERVICIO (R2.1) con auto-reporte | Pistas independientes sin secretos | Sumidero único de redacción; S-F6 sigue con el operador |
 | H | **2026-10-06 (HEAD de partida `ec8a272`)** | **COMPLETADA EN CONTRATOS OFFLINE, SIN COMMIT; preflight NO FAVORABLE que bloquea la arista a E2E** — AC14/AC17/AC13/AC9 **VERIFICADOS OFFLINE** con 13/13 mutantes rojos por su guard y restaurados por sha256; AC12 **PARCIAL** (el par con writer/acta reales es de E y se re-ejecuto; H aporta el par permitir/bloquear del spawn) | **Fuera de servicio (R2.1)** con auto-reporte en unidad propia | No | Runner stdlib con hijo falso; onboarding derivado por el transformador real; rama del loader medida dos veces |. ⟦**Commiteado y empujado el 2026-10-06:** `1c20695` (40 archivos, +6.780/−92, 8/8 checks del pre-commit), L3 `ec8a272..1c20695` con **0 hallazgos**, paridad 0/0⟧ |
-| E2E | Nueva sesión | PENDIENTE | Por medir | Sí, si entorno y presupuesto lo permiten | Única corrida y snapshot |
-| VERIFY | Nueva sesión | PENDIENTE | Por medir | No | Certificación directa, sin fixes |
-| RELEASE | Nueva sesión | PENDIENTE | Por medir | Documentación con allowlist | Cierre y archivado |
+| E2E | 2026-10-07 | **CERRADA y empujada** — §FASE-E2E y `06-checklist` | FUERA DE SERVICIO (R2.1) con auto-reporte | Sí, con hijo único controlado | **Contador v4complete 1/1 consumido**: la única corrida autorizada se ejecutó ahí |
+| VERIFY | 2026-10-07 | **CERRADA** — dictamen en §FASE-VERIFY y en `evidence/…/FASE-VERIFY/certificacion.json` | FUERA DE SERVICIO (R2.1) con auto-reporte | No (no delegable) | AC6 y AC10 en **FALLA**; ocho hallazgos con dueño; sin remediación (L-V.4) |
+| RECUPERACIÓN AC6/AC10 | 2026-10-07 | **CERRADA offline, commiteada por RELEASE en `086ce65`** — §RECUPERACIÓN | Auto-reporte de su sesión | No | Sin corrida nueva; el ZIP del 2026-10-07 conserva ambos defectos |
+| RELEASE | 2026-10-07 | **EJECUTADA en esta sesión** — release **4.79.0**, sello en §FASE-RELEASE | FUERA DE SERVICIO (R2.1) con auto-reporte | Documental con allowlist | Cierre, write-back y archivado; **no declara éxito integral** |
 
 ## Matriz de verificación de hallazgos
 
@@ -29,7 +47,33 @@ Copiar la matriz completa de ACs del maestro al certificar y llenar una fila por
 
 | AC | Hallazgo | Expected | Real | Fuente y clave | Status |
 |---|---|---|---|---|---|
-| AC1–AC20 | Ver `01-plan-maestro.md` | Contratos del maestro | Sin medición post, salvo AC7/AC15/AC16 | Artefactos de G | PENDIENTE, con tres filas medidas abajo |
+| AC1–AC20 | Ver `01-plan-maestro.md` §4 | Contratos del maestro | **Certificados el 2026-10-07 por FASE-VERIFY sobre artefactos reales** (dictamen abajo; evidencia por símbolo/ruta en `evidence/…/FASE-VERIFY/certificacion.json`, que es la fuente de cada cita) | `certificacion.json` + `evidence/…/FASE-VERIFY/resultados-y-observaciones.md` | **CERRADO con dos FALLA:** 7 SUPERADO con pata E2E (AC9, AC11, AC12, AC15, AC17, AC19a, AC20), 9 SUPERADO OFFLINE (AC1, AC2, AC3, AC4, AC7, AC8, AC13, AC14, AC16), 1 OFFLINE PARCIAL (AC5), 1 NO EJERCITADO (AC19b), 2 FALLA (AC6, AC10) y AC18 con la entrega demostrada pero la certificación no íntegra. Veinte ACs, con AC19 leído en sus dos mitades |
+
+### Matriz dictaminada por VERIFY (2026-10-07) — una fila por AC, sin agrupar rojos con verdes
+
+| AC | Dictamen | Régimen | Qué acredita la fila |
+|---|---|---|---|
+| AC1 | SUPERADO_OFFLINE | offline (B) + NO EJERCITADO en WhatsApp | `FASE-B/mutation_report.json` (M1 con rojo de pytest y de wiring); en vivo el ledger muestra 13 pains sin ninguno de WhatsApp |
+| AC2 | SUPERADO_OFFLINE | offline (B) + NO EJERCITADO | contrato de promesa y catálogo por mutación; en vivo matriz de 7 servicios con 1 `present_in_production` (V-4) |
+| AC3 | SUPERADO_OFFLINE | offline (C) + NO EJERCITADO | 9/9 mutantes rojos por su guard; en vivo `whatsapp_verified` en **verde vacuo** con "No hay asset de WhatsApp button" |
+| AC4 | SUPERADO_OFFLINE | offline (D) + NO EJERCITADO | culpables nombrados con dos errores; en vivo `failed_check_names: []` porque no hubo checks en error |
+| AC5 | SUPERADO_OFFLINE_PARCIAL | offline (C/D) | `FASE-C/thresholds.json` lista las barras con fuente y consumidor; la ruta `NEW_HOTEL_THRESHOLDS=0.3` sigue sin gobernar (dueño C-D, S-D4) |
+| AC6 | **FALLA** | E2E (la offline del botón sigue superada) | cinco líneas de `ASSETS/local_content_page/contenido_local__20261007_093402.md` publican `wa.me` desde `gbp.phone`; `LocalContentGenerator._conclusion` y `._build_internal_links`, fuera de `whatsapp_contract` (V-1, V-5) |
+| AC7 | SUPERADO_OFFLINE | offline (G) | `.opencode/wiring_report.json` población AST + 7/7 mutaciones; el check vive en el quick, no en la corrida |
+| AC8 | SUPERADO_OFFLINE | offline (D) + NO EJERCITADO | pre-gate persistido y corte con spy; en vivo `blocks_asset_generation: false` porque passed |
+| AC9 | SUPERADO | offline (D/E/H) + **observado en E2E** | vocabulario único de **cinco** estados en el vocabulario de `whatsapp_contract` (READ_OK, READ_ERROR, READ_NO_APLICABLE, READ_ABSENT, READ_NOT_READ) y `read_status` legible en `site_presence_snapshot.json` y `review_input_manifest.json` |
+| AC10 | **FALLA** | E2E (manifiesto sí cumple) | `IMPLEMENTATION_ORDER.md` de 2.586 bytes con sus tres secciones de tarea **vacías**; causa: `CORE_TO_GEO_MAP` casa 3 nombres canónicos vs basenames timestamped (V-2, V-3) |
+| AC11 | SUPERADO | offline (E) + **ejercitado en E2E** | `review_input_manifest.json` con run_id/hash/ruta interna/read_status/disposition y los cuatro `revision_*.json` con `resolver: review_inputs`; snapshot fuera del ZIP |
+| AC12 | SUPERADO | offline (E/H) + rama publish en E2E | `package_evidence` con `suppressed: false`, sha `487f5800…` y 57 miembros, casando con el ZIP medido; la de supresión, en el baseline (`4847cc…`, archivo ya borrado) |
+| AC13 | SUPERADO_OFFLINE | offline (F) + PARCIAL en vivo | sumidero `modules/utils/redaction.py` con 9/9 mutantes; revocación solo como afirmación del operador; hueco **S-E2E-11** de formas ya enmascaradas que el gate no caza (dueño `redaction.py` + `config_checker`) |
+| AC14 | SUPERADO_OFFLINE | offline (H) + corroborado en stdout | `FASE-H/onboarding_provenance.json` con productor por campo y `adr_cop`/`occupancy_rate` en `no_disponible`; "4 campos confirmados" en la captura. El `Using defaults` de `logs/` es de **otro hotel y otra fecha** |
+| AC15 | SUPERADO | por fase | mutación del símbolo real en 0/B/C/D/E/G/H (6, 8, 9, 6, 8, 7 y 13 respectivamente) con restauración por sha256 |
+| AC16 | SUPERADO_OFFLINE | offline (G) | AST de `with_validation`, `inventario-callers.md` y los rojos M5/M6; el check legacy `domain_gates` se conservó por decisión |
+| AC17 | SUPERADO_EN_E2E | E2E | `run_control.json`: attempts 1, PID 30576, argv de 11 piezas con `--permission-mode auto`, `argv_sha256` recomputado casante, 10 hashes casantes, snapshot de memoria y exit 0 del hijo |
+| AC18 | SUPERADO_CON_ENTREGA_DEMOSTRADA_Y_CERTIFICACION_NO_INTEGRA | E2E + lectura | meta demostrada (ZIP + acta favorable + AC20); readiness **no** deducida del exit code sino del orden de `check_publication_readiness` frente a `TribunalJudge` dentro de `run_v4_complete_mode`; AC6 y AC10 impiden el éxito integral |
+| AC19a | SUPERADO | offline (C) + **ejercitado en E2E** | `observation_scope`, `read_status` y `presence_evidence_kind` publicados como claves nuevas; el caso real: `plugin_fingerprint` con confidence **0.85** y **sin** botón generado (el rojo invertido no se disparó) |
+| AC19b | NO EJERCITADO | diferido a maestro §6 | la migración tri-estado de los 8 consumidores no se intentó en ninguna fase; cara visible de la deuda F-E |
+| AC20 | SUPERADO_EN_E2E | E2E (offline en 0) | `critical_recall` con `details {critical_issues_count: 3, recall_basis: all_critical_issues_detected}`, `findings` en los cuatro revisores (contra baseline sin la clave) y `package_evidence` en publish; límite: el tipo del Bot 4 se pierde (`type` vs `finding_type`, S-E2E-3) |
 
 | AC7 | Señal requerida omitible sin que nadie lo note | Población descubierta por AST sin lista fija; `wiring_report.json` en el quick | **169 llamadas / 70 gobernadas / 0 receptores sin resolver en producción**; check 11/11 verde y rojo con `--ignore-known` | `.opencode/wiring_report.json`: `poblacion`, `cobertura`, `politica`, `excepciones_aplicadas`, `limites` | **VERIFICADO OFFLINE en G** (rojos: caller nuevo, `**kwargs`, alias, `self`, homónimos, y la divergencia de hoy en TRES invocaciones) |
 
@@ -39,18 +83,18 @@ Copiar la matriz completa de ACs del maestro al certificar y llenar una fila por
 | AC20 | La evidencia del veredicto viaja completa en las dos ramas (gate fundado, acta con causas, hash del paquete entregado) | `details.critical_issues_count`/`recall_basis` en el recall fundado; `findings` en `reviewer_reports`; `package_evidence` en publish; contrafactual medido sobre el acta archivada | **Productor y acta medidos sobre el artefacto real**: el camino del `1.0` es la rama `return 1.0  # All critical issues were detected` de `_extract_critical_recall` (identificado por símbolo, R2.2), reconstruido con el `AssessmentBuilder` real reproduce `value: 1.0, details: {}` del `gate_report` archivado; el par es `BLOQUEADO` → `APROBADO-CONDICIONAL-PENDING-ONBOARDING`; hacer cero del conteo **sin** recalcular la recomendación sigue `BLOQUEADO` (verificado, no asumido) | `evidence/…/FASE-0/`: `pre_camino_gate.json`, `baseline_vs_contrafactual.json`, `mutation_report.json`, `thresholds.json` | **VERIFICADO OFFLINE en 0** (rojos M1–M4 por el guard; M5/M6 demuestran que los límites prohibidos están vigilados; **la rama E2E sigue sin ejercitar**) |
 | AC12 | Decisión, hash y conteo del paquete en **las dos** ramas del acta | `enforcement` + `package_evidence` legibles tanto si publica como si suprime | Rama de supresión: ya estaba (AC-G3) y re-verificada en el acta archivada (sha `4847cc…`, 52 entradas). Rama de publicación: **cubierta offline en 0** sobre la ruta publicada (`suppressed: False`), en las dos salidas de `publish`; MD del acta sin cambio (+0 bytes) y JSON +1.151 bytes medidos | `main._record_published_package_evidence` + `tests/test_fase_0_ac20_evidencia_veredicto.py` | **PARCIAL (0)**: falta el par del flujo real, que aporta E2E |
 
-Estados: SUPERADO EN E2E, VERIFICADO OFFLINE, NO EJERCITADO EN E2E, FALLA, BLOQUEADO EXTERNO. Un offline verde no se convierte en SUPERADO EN E2E. La certificación global falla si un AC obligatorio carece de evidencia suficiente.
+Estados: SUPERADO EN E2E, VERIFICADO OFFLINE, NO EJERCITADO EN E2E, FALLA, BLOQUEADO EXTERNO. Un offline verde no se convierte en SUPERADO EN E2E. La certificación global falla si un AC obligatorio carece de evidencia suficiente. ⟦**Post-dictamen, declarado sin mover el semáforo:** V-1 (AC6) y V-2 (AC10) fueron **recuperados offline el 2026-10-07 sin corrida nueva** — ver §RECUPERACIÓN. La matriz conserva **FALLA** porque ninguna salida del pipeline ejercita la corrección y el ZIP del 2026-10-07 sigue con ambos defectos; re-clasificar estas dos filas exigiría una corrida autorizada, no una edición de esta tabla⟧.
 
 ## Comparación histórica y post-implementación
 
 | Dimensión | P4 histórico | Post de este plan | Límite causal |
 |---|---|---|---|
-| URL | Dominio histórico distinto del solicitado ahora | `https://www.donalfonsohotel.com/` | No es un experimento A/B equivalente |
-| Datos financieros | Fuente warehouse según reportes históricos | Verificar selección exacta y procedencia | No completar campos ausentes |
-| WhatsApp / pains / promesa | Releer JSON histórico saneado | Por medir | Red y fuentes pueden variar |
-| IMPLEMENTATION_ORDER | Stub en corpus anterior a correcciones P6/P6-R | Leer writer actual y ZIP nuevo | No extrapolar stub histórico al HEAD |
-| Score / veredicto | 0.8966666 / false documentados en P4 | Por medir sin confundir redondeo con cálculo distinto | Registrar todos los gates |
-| Acta / revisores / entrega | ZIP suprimido | Por medir | Bloqueo legítimo no es fallo del enforcement |
+| URL | Dominio histórico distinto del solicitado ahora | `[URL-DEL-CLIENTE-OMITIDA]` en el argv congelado; la corrida obtuvo datos reales (org_schema con propiedades del ápice, Places API, Booking HTTP 202) pese a resolución DNS local inestable | No es un experimento A/B equivalente |
+| Datos financieros | Fuente warehouse según reportes históricos | Selección exacta 1 de 6 observaciones, cuatro campos propagados y `adr_cop`/`occupancy_rate` declarados `no_disponible`; escenario con `operational_floor` 400.000 COP aplicado | No completar campos ausentes |
+| WhatsApp / pains / promesa | Releer JSON histórico saneado | **Rama WhatsApp NO EJERCITADA:** 13 pains sin ninguno de WhatsApp, `whatsapp_verified` en verde vacuo y `[RC1] whatsapp_button` sin brecha candidata en stderr. Presencia observada como `plugin_fingerprint` con 0.85 | Un verde vacuo no es protección (maestro §4 nota final) |
+| IMPLEMENTATION_ORDER | Stub en corpus anterior a correcciones P6/P6-R | **Leído del ZIP real: 2.586 bytes con las tres secciones de tarea vacías** (AC10 FALLA); el manifiesto sí es coherente (57/57, tamaños exactos) | El baseline no es comparable: su ZIP fue suprimido y con él el documento (F-P4.9) |
+| Score / veredicto | 0.8966666 / false documentados en P4 | Coherencia **0.9172** con `is_coherent: true` y 0 checks en error; veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING`, tier `B+` con primer piso | No confundir redondeo con cálculo distinto; el tier B+ sigue sin ser el A que exigiría `APROBADO-PARA-ENTREGA` |
+| Acta / revisores / entrega | ZIP suprimido | **ZIP publicado** con sha y `member_count` casantes; cuatro revisores con `review_inputs` por el resolvedor; `findings` presentes (en el baseline la clave no existía) | Bloqueo legítimo no es fallo del enforcement; un revisor que recomienda devolver pruebas no detiene la entrega (V-7) |
 
 ## Lecciones aprendidas
 
@@ -75,10 +119,10 @@ Al cierre de cada fase registrar **las observaciones sustentadas que hayan exist
 |---|---|---|---|---|
 | L-ENT.1 | **Un estado agregado archivado se hereda como si fuera causa.** Un snapshot de FASE-P4 registró `confidence 0.3, site_verified false` en los cinco probes; el plan heredó la lectura "el sitio era inalcanzable, la señal es falsa por honestidad". Re-medido hoy: el dominio del warehouse **no resuelve** y el sitio real responde 200 con el canal servido por un plugin. / Por qué: el artefacto guarda un resultado, no el modo de fallo, así que DNS vacío, respuesta sin cuerpo, HTML sin marcaje y excepción tragada comparten el mismo valor. / Qué lo previene: publicar alcance de observación y estado de lectura separados, nunca un único agregado. **Rectificación de la revisión 2:** el patrón se mantiene y se aplica a esta propia fila. El snapshot de P4 no registraba "el lector no vio el botón": registraba `verification_failed` en los **cinco** assets porque falló el *schema report* (la rama de `SitePresenceChecker._check_asset_presence` que lo consulta). La lectura de la home viva con el código del repo devuelve `found=True` por clase CSS. Un estado agregado me pasó factura dos veces: primero el de P4, después el mío propio | `evidence/FASE-P4/.../site_presence_snapshot.json` + `output/TAREA7-2026-09-19/.../site_presence_snapshot.json` + sonda HTTP y M1 del 2026-09-19 | AC19a y AC9 | INCLUIR, **rectificada** |
 | L-ENT.2 | **La pregunta no es "¿existe el canal?" sino "¿puede el lector observarlo, en qué ruta y en qué marcaje?".** La home del sitio vivo tiene 0 referencias a WhatsApp y `/contacto/` tiene 54, todas dentro de `<style>` o de `href`/`src` del plugin; ningún `wa.me` ni número en HTML estático y el método de detección devuelve `found: False` ante cualquier excepción. / Por qué: F-F y F-A' gobiernan promesas y cableado, pero el falso positivo nace aguas arriba, en la cobertura del detector; corregir el dato no cambia lo que el lector no mira. / Qué lo previene: gobernar el lector como parte del fix, y prohibir que una señal negativa sin alcance verificado se redacte como ausencia. **Rectificación de la revisión 2 — el signo estaba invertido:** la pregunta correcta resultó ser "¿qué está viendo el lector cuando dice `exists`?". Medido con el checker real sobre la raíz viva: `found=True` por la sonda de clases CSS (`joinchat joinchat--left joinchat--btn`), no por texto visible ni `wa.me`. El riesgo no era fabricar una ausencia, era **certificar una presencia como si fuera un número** (`exists/0.85` → boost a 0.95 sobre un campo que no es teléfono). La lección sobrevive; la dirección del peligro no | M1 y M2 de `00-lecciones-capitalizadas.md` §1bis (checker ejecutado + snapshot archivado de la corrida del 2026-09-19) | AC19a (lector en C, consumo en B); matriz §2 fila "solo HTML/presencia, centinela" | INCLUIR, **rectificada** |
-| L-ENT.3 | **Un default de código se fosiliza como dato verificado cuando viaja por un fixture.** El fixture versionado del hotel fija canal directo 20.0 contra los 30.0 del warehouse, con `epistemic_status: verified, confidence: 0.95`; el 20.0 es el respaldo de un `datos.get(...)` del propio test e2e y el encabezado del fixture afirmaba "no introduce datos nuevos" tras enumerar solo tres campos comprobados. / Por qué: el metadato de confianza se copió del contenedor y no del productor del valor; un comentario humano no es un verificador. / Qué lo previene: procedencia por campo con su productor declarado, y la regla de no citar un default como verificado. | Comparación fixture ↔ `data/hotel_observations/observations.json` ↔ literal del test e2e | AC14; deuda §6 "Procedencia del dato Don Alfonso" | INCLUIR |
+| L-ENT.3 | **Un default de código se fosiliza como dato verificado cuando viaja por un fixture.** El fixture versionado del hotel fija canal directo 20.0 contra los 30.0 del warehouse, con `epistemic_status: verified, confidence: 0.95`; el 20.0 es el respaldo de un `datos.get(...)` del propio test e2e y el encabezado del fixture afirmaba "no introduce datos nuevos" tras enumerar solo tres campos comprobados. / Por qué: el metadato de confianza se copió del contenedor y no del productor del valor; un comentario humano no es un verificador. / Qué lo previene: procedencia por campo con su productor declarado, y la regla de no citar un default como verificado. | Comparación fixture ↔ `data/hotel_observations/observations.json` ↔ literal del test e2e | AC14; deuda §6 "Procedencia del dato [CLIENTE]" | INCLUIR |
 | L-ENT.4 | **Un rojo del working tree caduca: se hereda como prerrequisito y al re-medirlo ya no existe — y mi explicación del mecanismo también cayó.** El quick PRE del 2026-09-18 daba 9/10 por Version Sync y se registró en tres documentos como "A necesita autorización central". Hoy el quick da **10/10** sin que yo tocara nada: `AGENTS.md`, `VERSION.yaml`, `docs/GUIA_TECNICA.md` y `REGISTRY.md` estaban modificados al abrir la sesión y ahora son idénticos a HEAD (mtime 11:06-11:10, revertidos fuera de esta sesión). Además, mi causa propuesta —"el check espera cuatro segmentos"— quedó **refutada** al leer `_check_version_sync` completa: solo ejecuta `sync_versions.py --check`, la misma herramienta que yo había visto pasar. / Por qué: heredé un estado transitorio del árbol y después inferí un mecanismo leyendo un fragmento del verificador; las dos cosas son atajos sobre mediciones incompletas. / Qué lo previene: re-medir los rojos al abrir cada fase y no convertirlos en prerrequisito de otra sesión; y antes de publicar una causa, leer el check completo, no la ventana que coincidía con mi hipótesis. | `git status` inicial frente al de hoy, mtimes de los 4 documentos, quick 10/19 10/10 y lectura de `scripts/run_all_validations.py::_check_version_sync` | §1, §6 y §7 del maestro corregidos; A ya no requiere autorización central | INCLUIR |
 | L-ENT.5 | **Editar una tabla anclando en otra fila completa la reemplaza.** Al insertar AC19 en la matriz del checklist, el ancla fue la fila AC18 y el resultado quedó sin AC18. / Por qué: la coincidencia de texto no valida la estructura del documento; la pérdida era invisible sin contar. / Qué lo previene: conteo de miembros antes y después de editar, y comprobación de persistencia sobre el commit y no sobre el buffer. Detectado en la misma sesión y remediado. | Registro del error y su reparación en la sesión del 2026-09-19; matriz re-verificada con 20 filas AC (AC1–AC20) en maestro y checklist —19 cuando se registró esta fila, antes de nacer AC20 | Proceso de edición, no producto | INCLUIR como límite de proceso |
-| L-ENT.6 | **El consentimiento liga una identidad concreta, no un nombre comercial.** La autorización de FASE-P4 amparaba una corrida de diagnóstico sobre la URL del warehouse —hoy inexistente— y declaraba explícitamente que no era entrega a cliente; la corrida propuesta se lanzaría sobre un dominio distinto. / Por qué: el documento describe su objeto con la URL, y ese objeto ya no existe, de modo que la vigencia nominal del consentimiento no cubre el destino nuevo. / Qué lo previene: reemitir el consentimiento datado sobre la URL viva con su límite escrito, y verificar identidad única y hash de la fuente antes de consumir el único intento. | `evidence/FASE-P4/consentimiento-donalfonso.md` frente a la sonda DNS/HTTP del 2026-09-19 | AC14/AC17 (preflight de H); deuda §6 de procedencia | INCLUIR |
+| L-ENT.6 | **El consentimiento liga una identidad concreta, no un nombre comercial.** La autorización de FASE-P4 amparaba una corrida de diagnóstico sobre la URL del warehouse —hoy inexistente— y declaraba explícitamente que no era entrega a cliente; la corrida propuesta se lanzaría sobre un dominio distinto. / Por qué: el documento describe su objeto con la URL, y ese objeto ya no existe, de modo que la vigencia nominal del consentimiento no cubre el destino nuevo. / Qué lo previene: reemitir el consentimiento datado sobre la URL viva con su límite escrito, y verificar identidad única y hash de la fuente antes de consumir el único intento. | `evidence/FASE-P4/consentimiento-[CLIENTE].md` frente a la sonda DNS/HTTP del 2026-09-19 | AC14/AC17 (preflight de H); deuda §6 de procedencia | INCLUIR |
 | L-ENT.7 | **Todo estado heredado caduca, incluido el que el prompt de apertura afirma como hecho — segunda confirmación medida del patrón de L-ENT.4, ya no solo de rojos.** El prompt de la intervención del 2026-09-19 daba por ciertos tres estados y los tres habían cambiado: los "3 commits SIN push" ya estaban pusheados (divergencia real 0/0), el árbol "sucio en `.opencode` por trabajo ajeno" estaba limpio (commits ajenos ya ingresados), y la revocación que mandaba pedir al operador "no su valor" ya estaba confirmada por este el día anterior. / Por qué: un prompt registra mediciones en el momento de redacción y se ejecuta después; el agente que no re-mide hereda comandos sobre hechos difuntos. / Qué lo previene: el primer bloque de toda sesión debe re-medir las premisas (git, registros externos, acreditaciones) antes de ejecutar la primera tarea; aquí la orden expresa "verifica antes de fiarte" salvó la sesión — la re-medición costó tres comandos. | `git rev-list --count origin/master..master` = 0, `git status --short` vacío, confirmación de rotación del operador 2026-09-18 | Apertura de A y de cada fase; FASE-A ya la aplica en su propia Tarea 3 reescrita | INCLUIR |
 | L-ENT.8 | **Un hit de escáner es una forma, no una credencial: la naturaleza medida rebajó el nivel de contención de force-push a redacción de 8 líneas.** La key marcada para purga de historial (reescribiría todos los SHA y 7 tags, con blast radius máximo sobre master compartido) resultó ser el key estático firmado que Google incrusta en su propio HTML de Maps, capturado por scraping: sin coincidencia con ninguna key viva del `.env`, no funcional como credencial del operador. El cierre proporcional fue redacción en HEAD + riesgo residual documentado + condición de escalada explícita. / Por qué: los patrones detectan sintaxis; ownership, vigencia y explotabilidad son mediciones aparte que el plan de escalación heredó sin repetir. / Qué lo previene: antes de elegir nivel de contención, medir procedencia (quién escribió, coincide con viva, firmada, inerte) y documentar la condición por la cual sí escalaría. | Contexto `html_sample_end` en `archives/gbp_profiles.json`, contraste con claves del `.env` (0 coincidencias), cierre `a107f3c` con nota en AC-S3-S4 | F (seguridad de salidas): clasificar por naturaleza antes de costear contención | INCLUIR |
 | L-ENT.9 | **Un proveedor configurado no es un proveedor ejercitado: la métrica agregada verde oculta qué rama corrió.** La corrida e2e salió verde (`source=llm_check`, 5/5 consultas medidas) con Gemini vigente en el `.env`, pero cero consultas lo alcanzaron: OpenRouter es prioridad 1 y el bucle rompe al primer proveedor que responde. Solo `providers_used` delató la rama no ejercitada, y hubo que verificar Gemini con una llamada directa (`gemini-flash-latest`, 864 tokens, coste $0.0021 derivado). / Por qué: la métrica agrega "hubo medición", no "con quién"; en un diseño de corrida única como este plan, la rama silenciada no tiene segunda oportunidad de manifestarse. / Qué lo previene: exigir evidencia por rama ejercitada (quién respondió cada unidad) en la certificación E2E/VERIFY, igual que se exige por AC; un verde agregado no convierte en SUPERADO EN E2E una ruta NO EJERCITADA. | `evidence/tarea7-corrida.log` línea 129 (`Providers: openrouter`), prueba directa `_query_gemini` del 2026-09-19 | E2E/VERIFY: matriz por rama de proveedor, no solo por AC | INCLUIR |
@@ -107,7 +151,16 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 
 | Tema | Estado | Dueño | Acción / condición de cierre |
 |---|---|---|---|
-| F-P4.3 / HALLAZGO-N4 / BUG-6 | Retomado, no duplicado | Orquestación + generación; onboarding conserva D1 | Cerrar bloqueo por promesa imposible, no afirmar que D1 queda implementado |
+| F-P4.3 / HALLAZGO-N4 / BUG-6 | **REABIERTO por VERIFY el 2026-10-07, por su mismo ID y sin duplicar su informe original** | Orquestación + generación; onboarding conserva D1 | Cerrar bloqueo por promesa imposible, no afirmar que D1 queda implementado. Medido en la corrida única: la condición de contorno cambió de signo (sin pain de WhatsApp, coherencia 0.9172, cero checks en error) y **la causa original no queda certificada como cerrada** porque la muestra no contiene el caso; el transporte de contacto sigue sin ruta |
+| V-1 · AC6 FALLA |ABIERTO con dueño | `asset_generation` (`LocalContentGenerator._conclusion` y `._build_internal_links`) | Sesión de recuperación autorizada: el `wa.me` publicado en `contenido_local` (5 líneas) se construye desde `gbp.phone` sin pasar por `whatsapp_contract`, sin gate de confianza y sin canal verificado. No se corrigió en VERIFY (L-V.4) ⟦RECUPERADO 2026-10-07, **offline, sin corrida** (contador 1/1 intacto): los dos métodos dejan de leer `hotel_data["phone"]` y consultan `destino_whatsapp_verificado` en `whatsapp_contract`; contrafactual medido **5 → 0** líneas `wa.me` sobre las entradas de la corrida del 2026-10-07 (`evidence/AC6-AC10-RECUPERACION-2026-10-07/crudos/contrafactual_wa_me.txt`); cinco mutantes del guard, rojos por su causa y restaurados por sha256. El `WhatsApp:` del bloque CONTACTO de la plantilla se retiró por no haber número de agencia en `config/` (V-5). **El ZIP entregado el 2026-10-07 precede a esta corrección y conserva el defecto**⟧ |
+| V-2 · AC10 FALLA | ABIERTO con dueño | `delivery` + `geo_enrichment` (`AssetResponsibilityContract.CORE_TO_GEO_MAP` y `get_implementation_order`) + tribunal (Bot 3) | Sesión de recuperación autorizada: `IMPLEMENTATION_ORDER.md` del ZIP con sus tres secciones de tarea vacías; el revisor lo reporta `OK` porque su campo registra fuente y no contenido ⟦RECUPERADO 2026-10-07, **offline, sin corrida**: el emparejamiento despoja `ESTIMATED_` y la marca de tiempo y casa solo por pertenencia exacta al catálogo (de los 13 nombres reales de la corrida, **1** casa y **12** siguen adicionales, sin pares inventados); writer real sobre esos 13 nombres → `testzip() None` y **1** tarea numerada con ruta `ASSETS/...` existente como miembro; `implementation_order_check` publica `contenido` (`OK` / `ORDEN_VACIA` / `NO-EVALUABLE`) y con cero tareas emite WARNING de tipo propio, contrato declarado. Dos mutantes rojos por su causa. **El ZIP entregado el 2026-10-07 conserva el defecto y no está ejercitado por ninguna corrida**⟧ |
+| V-3 · contrato de AC10 | ABIERTO con dueño | calidad del plan | Enmendar AC10 para que "tareas no vacías" se mida sobre los nombres que el pipeline produce, no sobre el catálogo de tres entradas |
+| V-4 · promesa de presencia | ABIERTO, decisión de producto | `commercial_documents` + `quality_gates` | Definir si una huella de plugin sin número habilita divulgar "Botón de WhatsApp — Presente en sitio"; hoy la matriz lo registra como `present_in_production` con confidence 0.0 |
+| V-5 · plantilla de contacto | ABIERTO con dueño | `commercial_documents` (plantillas) | el bloque CONTACTO de `propuesta_v6_template.md` publica el teléfono del hotel como `WhatsApp:` en el bloque CONTACTO de la agencia; preexistente e idéntico en el baseline del 2026-09-19 |
+| V-6 · readiness y veredicto | LÍMITE DECLARADO, no rojo de esta corrida | `quality_gates` | `readiness` se calcula en `check_publication_readiness` y el veredicto en `TribunalJudge`; el único que puede impedir entrega es el enforcement del packager. Escribir el límite o cerrar la costura, en otra sesión |
+| V-7 · S-E2E-4 dictaminado | CERRADO como hallazgo, ABIERTO como errata | tribunal / sello de RELEASE | `DEVOLVER-PRUEBAS` es recomendación (`outcome.RECOMMENDATION_RETURN_TESTS`), `DEVOLVER-CORRECCIONES` es veredicto bloqueante (`judge.VERDICT_RETURN`, miembro de `judge.BLOCKING_VERDICTS`); la elevación exige `verified_critical`/`verified_block` (`TribunalJudge._compute_verdict`). Corregir la formulación en el sello |
+| V-8 · población de la acta | LÍMITE DECLARADO | tribunal / RELEASE | `clauses_evaluated: 6` convive con P6.2 y P6.5 en `NOT_EVALUABLE`: son cuatro cláusulas certificables y cuatro revisores divulgados, dos poblaciones distintas |
+| S-H2 / deuda E-1 | SIGUE ABIERTA, acreditada en vivo | H / RELEASE | El anclaje por `run_id` no cubre los JSON timestamped (`pain_ledger`, `gate_report_*`, `delivery_quality_report`, `proposal_asset_matrix`, `financial_scenarios`); Bot 1 y Bot 3 usan glob local |
 | F-B / contacto warehouse | DIFERIDO, no autorizado | Producto + privacidad + onboarding | Decisión escrita de campos comerciales permitidos, fuente y consentimiento antes de ampliar esquema/formulario/adaptador |
 | F-E / no evaluable | DIFERIDO | Coherencia | Contrato serializado y tests vacío/ausente/error, sin bajar protección del botón |
 | F-D' / parámetro descartado | **CERRADO POR FASE-G (2026-09-20)**: `AssessmentBuilder.with_validation` quedó en `(self, validation_summary)` y se retiró de sus 3 callers; el verificador lo declara `prohibido`, así que re-introducirlo en firma o caller hace rojo (M5/M6). El dato upstream de `main.py` sigue consumido por sus 8 líneas originales | AssessmentBuilder + `validate_wiring.py` | Cerrado; la no-regresión la sostiene el check 11 del quick, no un test suelto |
@@ -129,7 +182,7 @@ Anclas de línea medidas el 2026-09-19 en HEAD 938f59f: `evidence/REFACTOR-WHATS
 | F-P4.5 | **CERRADO POR ACREDITACIÓN DEL OPERADOR (registrado 2026-09-19)**: rotación de la key Gemini-local (AIzaSyDq…) confirmada por el operador el 2026-09-18, con ocasión de la intervención previa; registro en `evidence/FASE-P5/AC-S3-S4-inventario-superficie.md`. La key de `archives/gbp_profiles.json` no aplica a este cierre: es el key estático firmado de Google en HTML scrapeado, resuelto como higiene de HEAD (a107f3c) con riesgo residual documentado | Operador de credenciales + providers | A/F referencian el registro, no la vuelven a pedir; la prevención activa ya la validan los tests de redacción (48a242b). Acreditación = afirmación del operador, no inferible del repo |
 | Version Sync del quick PRE | **CERRADO POR MEDICIÓN 2026-09-19**: el quick pasa 10/10. El rojo del 2026-09-18 venía de cuatro documentos sucios en el árbol (`AGENTS.md`, `VERSION.yaml`, `docs/GUIA_TECNICA.md`, `REGISTRY.md`), hoy idénticos a HEAD tras una reversión externa a esta sesión. La explicación "desacuerdo verificador↔escritor" se retracta: `_check_version_sync` solo invoca `sync_versions.py --check` | Operador | Nada que autorizar en A. Verificar de nuevo el quick al abrir cada fase; si reaparece, leer el check completo antes de atribuirle una causa |
 | **Nueva (post-cierre de A, 2026-09-19): fuente pública de precios señalada por el operador** | Registrada en `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-A/fuente-publica-precios-2026-09-19.md`. **Corrobora dos de los cuatro campos** del dato operativo con una fuente datada sobre la URL viva: `rooms` (11 productos de alojamiento, cero divergencia) y el punto de precio (330.000 es moda y mediana de una lista que corre de 249.900 a 395.000). **No** toca `monthly_reservations` ni `direct_channel_percentage`, y no sustituye el consentimiento | Datos/procedencia + **H** | H cita la fuente en `onboarding_provenance.json` como respaldo con URL, fecha y método, declarando que **no** generó ningún valor nuevo. No se convierte en "precio gobernante" sin productor declarado: tarifa de lista ≠ `adr_cop` ≠ `avg_reservation_cop`, y manda la regla "No Defaults in Money". El warehouse no se editó ni se edita por esta fila |
-| Procedencia del dato del hotel (L-ENT.3, L-ENT.6) | **SIGUE PENDIENTE DE OPERADOR, y A lo re-confirma como requerimiento (2026-09-19).** A seleccionó exactamente el registro (`hotel_name == "Hotel Don Alfonso"` da 1 de 6), conservó `collected_at: 2026-07-22` y mido que `ONBOARDING_FRESHNESS_HOURS` no existe en `.env`, en la template ni en el entorno. **A decidió que hace falta reconfirmación** porque el consentimiento P4 ampara una corrida de observación sobre la URL hoy inexistente y declara que no es entrega a cliente | Datos/procedencia + operador | Valor gobernante declarado con productor; fixture corregido desde ahí y consentimiento re-emitido datado sobre la URL viva antes de consumir el intento. **Añadido por A:** el preflight de H debe gobernar los **dos relojes** — el de consentimiento y el activo de 20 días de `MemoryManager.cleanup_old_sessions(days=20)`, con 3 artefactos de memoria de Don Alfonso ya presentes (`L-PF11`) |
+| Procedencia del dato del hotel (L-ENT.3, L-ENT.6) | **SIGUE PENDIENTE DE OPERADOR, y A lo re-confirma como requerimiento (2026-09-19).** A seleccionó exactamente el registro (`hotel_name == "[HOTEL-CLIENTE-OMITIDO]"` da 1 de 6), conservó `collected_at: 2026-07-22` y mido que `ONBOARDING_FRESHNESS_HOURS` no existe en `.env`, en la template ni en el entorno. **A decidió que hace falta reconfirmación** porque el consentimiento P4 ampara una corrida de observación sobre la URL hoy inexistente y declara que no es entrega a cliente | Datos/procedencia + operador | Valor gobernante declarado con productor; fixture corregido desde ahí y consentimiento re-emitido datado sobre la URL viva antes de consumir el intento. **Añadido por A:** el preflight de H debe gobernar los **dos relojes** — el de consentimiento y el activo de 20 días de `MemoryManager.cleanup_old_sessions(days=20)`, con 3 artefactos de memoria de [CLIENTE] ya presentes (`L-PF11`) |
 | **Nueva (FASE-A / QMind R5): reconciliador multi-sede no declarado en el plan** | `CrossValidator._reconcile_whatsapp_multisede` (`modules/data_validation/cross_validator.py`, rama "FASE-P1-D (F12)") ya cierra el falso positivo de cruce entre sedes que el corpus remoto documentaba, con suite propia (`tests/data_validation/test_whatsapp_multisede.py`). El plan no lo nombraba en ninguna de sus nueve filas de productores | Generación + validación cruzada; **B y C** | B/C **no** reimplementan ni eluyen ese reconciliador (`L-NC6`); AC6 debe enunciar que el "campo verificado" puede salir de una reconciliación por sede. No abre fase ni AC nuevo: es una dependencia que se cita |
 | **Nueva (FASE-A / QMind R6): el acta no viaja en el ZIP de cliente** | `DeliveryPackager._INTERNAL_DOC_PREFIXES = ("acta_revision",)` (`modules/delivery/delivery_packager.py`, constante de clase): el acta queda solo en `v4_audit/`, y DA-P1.4 registra el círculo estricto (los bytes del ZIP nacen en `write()`, el acta se enriquece después) | Entrega + tribunal; **E** | El resolvedor único de AC11 no debe esperar `acta_revision.json` dentro del ZIP; "snapshot interno fuera del árbol exportado" pasa de disciplina a **construcción vigente** y así se redacta en su prompt |
 | Una corrida insuficiente por fallo externo | Condicional | Operador | Conservar resultado; nueva corrida requiere ampliar expresamente presupuesto y plan |
@@ -498,6 +551,155 @@ y con eso se declaró la red fuera de riesgo. La frase estaba sobrestimada: lo s
 redirección al ápice y que, al re-medir con cinco intentos, la resolución local cayó **0/5**. La corrida obtuvo datos
 reales de la página de todos modos. La rectificación está en la evidencia de la fase, no solo aquí.
 
+## FASE-VERIFY (2026-10-07) — certificación, triaje y límites
+
+**Modo:** lectura y dictamen directos, sin delegación, sin código, sin tests, sin `v4complete`, sin remediación
+(`L-V.4`). Entregable: `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-VERIFY/certificacion.json` (matriz, límites,
+diff estructural, comparación con baseline) y `resultados-y-observaciones.md` de esa carpeta.
+
+**Resultado gobernante: la meta de entrega se demostró y la certificación del plan NO es íntegra.** AC6 y AC10 quedan en
+**FALLA** en régimen E2E, y ninguno de los dos fue introducido por el plan: `git log --since=2026-09-18` sobre
+`local_content_generator.py`, `asset_responsibility_contract.py` y `propuesta_v6_template.md` está vacío. Lo que el plan
+sí descubrió es que su propio contrato de "ZIP limpio" se medía sobre una sola de las tres puertas por las que viaja un
+destino de WhatsApp, y que "ZIP con IMPLEMENTATION_ORDER" no equivale a "orden con tareas".
+
+**Integridad acreditada por instrumento:** los diez `source_hashes` casan con el árbol vivo; `argv_sha256` recomputado
+con la fórmula del propio runner casa; `attempts: 1`, `pid: 30576`, 116 s, `exit_code: 0` del hijo y timestamps
+monotónicos; el ZIP validado con `testzip() → None`, sha `487f5800…` igual en disco y en el acta, 57 miembros =
+`member_count`, cero `.zip.tmp` residantes y **ningún** snapshot interno ni documento retenido dentro del paquete.
+Inventario: **153 rutas de evidencia en disco, 150 versionadas** (diferencia = `captura_stdout.txt` retenido por
+S-E2E-6 y dos `.pyc`), **0 ABSENT, 0 READ_ERROR**.
+
+**Tres mediciones que cambiaron el dictamen, no el relato:**
+
+1. **`wa.me` en el entregable.** Cinco líneas del `contenido_local` publicado con el número `[TELEFONO-DEL-CLIENTE-OMITIDO]`, que es
+   `gbp.phone`, con `validation.phone_web = null` y `whatsapp_status = estimated`. La puerta es
+   `local_content_generator._conclusion` y su `_build_internal_links`, que no consultan `whatsapp_contract`.
+   Compañero: el bloque CONTACTO de `propuesta_v6_template.md` publica el teléfono del hotel como WhatsApp **de la agencia**, idéntico en
+   el baseline. (V-1, V-5)
+2. **`IMPLEMENTATION_ORDER` vacío con tamaño correcto.** 2.586 bytes y las tres secciones de tarea sin una línea; causa:
+   `CORE_TO_GEO_MAP` casa tres nombres canónicos frente a los basenames timestamped del pipeline. Es la confirmación
+   viva de `L-T4A.5`: el arnés de FASE-E Certificó la rama con nombres del catálogo. Y `revision_assets.implementation_order_check`
+   reporta `OK` porque registra la **fuente**, no el contenido. (V-2, V-3)
+3. **`Using defaults` no era de esta corrida.** la línea `Using defaults` de `logs/fase_e2e_v4complete.log` habría tirado AC14; el archivo es del
+   **2026-09-11** y su URL `hotelsalentoreal.com` (sus dos líneas de URL). Se descartó por identidad y fecha. Lección: un
+   directorio gitignored con corridas de varios hoteles no es evidencia del run sin verificar a quién pertenece.
+
+**Triaje (sin duplicar informes ajenos):** F-P4.3 **reabierto por su mismo ID**; su causa original (bloqueo por
+`whatsapp_verified` con score ≥ umbral) **no queda certificada como cerrada** porque la muestra no tiene el caso y el
+transporte de contacto sigue sin ruta. F-P4.1 recalificado: el "stub de ~470 bytes" de P4 es hoy un documento de tamaño
+correcto con secciones vacías — el defecto sobrevivió cambiando de unidad. F-P4.2 confirmado curado en su cláusula
+literal (los cuatro revisores leyeron por el resolvedor; 0 CRITICAL inflados). F-P4.5 sin evidencia operativa de
+revocación (S-F6). F-P4.9 vigente con coste de certificación: borró la comparación histórica de AC10. F-B y F-E siguen
+diferidas con su condición escrita. **S-E2E-4 dictaminado aquí:** `DEVOLVER-PRUEBAS` (recomendación, `outcome.RECOMMENDATION_RETURN_TESTS`) no
+es `DEVOLVER-CORRECCIONES` (veredicto bloqueante, `judge.VERDICT_RETURN` en `BLOCKING_VERDICTS`); la elevación exige
+`verified_critical`/`verified_block` (`TribunalJudge._compute_verdict`), así que publicar con ese revisor **no es defecto de la corrida**
+sino límite del Tribunal, y la frase de S-E2E-4 va al sello de RELEASE como errata (V-7).
+
+**Ocho hallazgos nuevos con dueño y disparador** (V-1…V-8 en `certificacion.json`), **ninguno cerrado en esta sesión**.
+
+**Límites de la muestra (`L-R.4`):** un hotel y una corrida. La medición IAO se perdió con el `LLMMentionChecker` caído
+(S-E2E-1); `providers_used` no existe en el `audit_report` de hoy y sí en el baseline; AC1/AC2/AC3/AC6 y AC19b quedan
+fuera del ejercicio vivo; la acta certifica **cuatro** cláusulas y divulga **cuatro** revisores, dos poblaciones que no
+deben leerse como seis verificaciones (V-8); y `readiness` se calcula 300 líneas antes del veredicto del Tribunal
+(`check_publication_readiness` frente a `TribunalJudge`, ambos dentro de `run_v4_complete_mode`), por lo que su favorable no acredita entrega (V-6).
+
+**Lecciones de esta fase:** **sin lecciones nuevas de producto.** Dos confirmaciones medidas de lecciones existentes
+(`L-T4A.5` en AC10 y `L-VUP-17` en toda la matriz, que mantuvo separados offline y ejercitado) y una de proceso ya
+registrada en memoria que volvió a aplicar: un patrón coincidente en un directorio no versionado es una forma, no la
+identidad del run.
+
+## RECUPERACIÓN AC6/AC10 (2026-10-07) — los dos FALLA del dictamen, cerrados offline
+
+**Qué fue y qué no.** Una sesión de recuperación autorizada después de VERIFY corrigió los dos ACs que el
+dictamen dejó en FALLA, **sin ejecutar `v4complete`** (contador 1/1 intacto) y sin re-hacer VERIFY. Terminó en
+«listo para revisión»: **sin commit, push, L3 ni tag**, y **sin su cierre incremental completo** — no escribió
+fila de CHANGELOG ni de REGISTRY, y su `10-analisis` quedó reducido a las dos filas V-1 y V-2 anotadas con `⟦…⟧`.
+Ese cierre documental tardío corre a cargo de RELEASE y así se declara.
+
+| | AC6 (V-1) | AC10 (V-2 y V-3) |
+|---|---|---|
+| Causa | `LocalContentGenerator._conclusion` y `._build_internal_links` armaban `https://wa.me/{phone}` desde `hotel_data["phone"]` sin consultar `whatsapp_contract`; el número de la corrida era `gbp.phone` con `whatsapp_status = estimated` | `CORE_TO_GEO_MAP` casaba tres nombres canónicos contra los basenames timestamped del pipeline: `get_implementation_order` devolvía vacío y el archivo salía con tamaño correcto y secciones sin línea |
+| Cura | consultan `destino_whatsapp_verificado`; sin canal verificado no se publica destino | el emparejamiento despoja `ESTIMATED_` y la marca de tiempo y casa por pertenencia exacta al catálogo; `implementation_order_check` publica `contenido` (`OK` / `ORDEN_VACIA` / `NO-EVALUABLE`) y con cero tareas emite WARNING de tipo propio |
+| Medido | contrafactual **5 → 0** líneas `wa.me` sobre las entradas de la corrida del 2026-10-07 | de los **13** nombres reales de la corrida, **1** casa y **12** siguen adicionales, sin pares inventados; writer real → `testzip() None` y **1** tarea numerada con ruta existente |
+| Dientes | 4 archivos nuevos: 14 + 4 + 12 + 5 = **35 funciones canónicas** (+1 re-ancada en `test_local_content_generator.py`) | cinco mutantes del guard de AC6 y dos de AC10, rojos por su causa y restaurados por sha256 |
+| V-5 | el `WhatsApp:` del bloque CONTACTO de la plantilla se **retiró** por no haber número de agencia en `config/` | — |
+
+**Límites que la recuperación no se borra a sí misma:** el ZIP entregado el 2026-10-07 **precede** a la
+corrección y conserva ambos defectos; nada de esto está ejercitado por una corrida; y el contrato de AC10 (V-3)
+sigue pidiendo la enmienda del AC para que «tareas no vacías» se mida sobre nombres reales, no sobre el catálogo.
+
+**Superficie:** 9 archivos de producto (`whatsapp_contract`, `local_content_generator`,
+`asset_responsibility_contract`, `asset_reviewer`, `conditional_generator`, `v4_asset_orchestrator`,
+`site_presence_adapter`, `v4_proposal_generator`, `propuesta_v6_template.md`), 5 de tests y
+`evidence/AC6-AC10-RECUPERACION-2026-10-07/`. Regresión completa de esa sesión: **3 failed / 5182 passed**, y los
+tres rojos se reprodujeron **verdes** al abrir RELEASE (medido en `temp/release-2026-10-07/`): eran de
+frescura del derivado, no del producto. Commiteado por RELEASE en `086ce65`, atribuido a su sesión.
+
+## FASE-RELEASE (2026-10-07) — release 4.79.0, cierre documental y archivado
+
+**Modo:** documental. No ejecutó `v4complete` (contador **1/1** intacto), no reparó código, no re-hizo VERIFY y
+no convirtió un FALLA en nota de éxito (L-V.4). Los cinco cortes se sostuvieron **sin commit** hasta que el
+operador lo autorizó.
+
+**Versión autorizada en el mandato de esta sesión: `4.79.0`**, codename *WhatsApp verificado, orden real y
+entrega única de [CLIENTE]*, fecha 2026-10-07. Base medida al abrir: `VERSION.yaml` en **4.78.0 /
+2026-09-25**, liberada por el hermano `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`, así que el literal del prompt
+(«4.78.0 propuesta») estaba vencido y 4.79.0 es el siguiente número libre. El plan trae código de producto
+(9 módulos y 35 funciones canónicas nuevas), a diferencia del RELEASE del hermano, que fue «no es una release».
+La propagación a los archivos gobernados la hizo `scripts/sync_versions.py` en modo escritura (README, AGENTS.md,
+`.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`) y la verificó
+`scripts/version_consistency_checker.py`.
+
+**Diagnóstico de apertura, re-medido y no heredado:** `run_all_validations.py --quick` **13/13 verdes**, con
+`Version Sync` en verde → el rojo preexistente de Version Sync del maestro §7 **no tiene referente vivo** y no
+se actuó sobre él. `doctor.py --context` dio PASS en sus cinco controles antes del bump.
+
+**DOMAIN_PRIMER: las dos operaciones, separadas como manda el contrato.** **Verificado** en esta fase con
+`--context`/`--status`. La **regeneración** pendiente (C, D, E, F, H y E2E cerraron sin mandato para escribir el
+archivo: checkpoint acumulado desde FASE-C y declarado por VERIFY) se ejecutó **aquí por instrucción expresa del
+operador** con su writer, después de que el bump dejara rojo `[6/13] Document Integration` con el sello viejo
+visible (`DOMAIN_PRIMER=4.78.0` contra `VERSION.yaml=4.79.0`). No se editó a mano.
+
+**Qué se publicó y dónde vive cada resultado.** CHANGELOG: los siete bloques del plan pasaron de
+`## [Sin publicar]` a `#### FASE-…` bajo `## [4.79.0]`, con las secciones de release (Objetivo / Límites /
+Cambios / Archivos Nuevos / Archivos Modificados / Tests) y dos subsecciones nuevas: la recuperación y esta
+fase. Los bloques de **otros** planes siguen bajo `## [Sin publicar]` (FASE-UNICA del mini-plan QMind,
+FASE-RELEASE del piloto JEV y el bloque A de la orden de calidad): darles encabezado de versión habría
+inventado una release ajena. GUIA_TECNICA: las siete notas por fase ya existían; se añadieron la de la
+recuperación y la de RELEASE. REGISTRY: la fila de esta fase la estampa `log_phase_completion.py --release
+4.79.0` con archivos y tests medidos, y la de la recuperación entra con `--nota` de registro tardío porque esa
+sesión no la escribió. 09-documentación y el sello de esta fase: `evidence/…/FASE-RELEASE/`.
+
+**Write-back de cierre (AC6-entrega del mini-plan, ejecutada aquí).** Se publicó con el **writer** y el plan
+**aún en raíz**, con `--title` y `--file` sobre una copia saneada y versionada — no con `--upload` pelado, que
+respondía SKIP por el título de la era G y dejaba el contenido de G como verdad publicada. La instantánea quedó
+en `.opencode/qmind-writeback/instantaneas/` con su sha256 y la fuente de G pasó a `reemplazada` (decisión del
+mini-plan: **marcar**, no borrar). Consecuencia conocida y aceptada: **el cuerpo publicado es esta sección tal
+como está**; el sha de la fuente, su id y el resultado de la verificación por descarga **no** se escriben aquí,
+porque re-escribirlos vencería el cuerpo que la capa de contenido compara, y re-subir el mismo título con
+contenido distinto es `[FAIL]`. Esa evidencia vive en `evidence/…/FASE-RELEASE/` y en
+`.opencode/qmind-writeback/registro.json`, que es su fuente única. El orden R2.10 se respetó: write-back →
+índice → `git mv` → índice.
+
+**Dictamen que esta release publica sin suavizar.** La meta de entrega se demostró y la certificación **no es
+íntegra**: AC6 y AC10 constan en FALLA en el dictamen de VERIFY, y la recuperación los cerró **offline y sin
+corrida nueva**, así que el ZIP del 2026-10-07 conserva ambos defectos. AC19b no se ejercitó en ninguna fase.
+Los límites de muestra (un hotel y una corrida) están en las secciones de release del CHANGELOG y de GUIA, no
+solo en este análisis interno (L-R.4).
+
+**Permisos de esta sesión, resueltos con el operador antes de ejecutarlos.** Autorizados con instrucción
+expresa: bump de versión y propagación a configuración central, regeneración de DOMAIN_PRIMER con su writer,
+dos commits separados (recuperación y cierre documental), write-back a QMind y push precedido de la revisión
+profunda de seguridad. **No autorizado: `git tag`**, que queda declarado como opción rechazada y no como olvido
+(el repo no etiquetó 4.78.0 ni las dos anteriores). La ejecución de cada elemento, con su sha y su rango
+empujado, se estampa en el sello de la fase (`evidence/…/FASE-RELEASE/`), que es su fuente única: este cuerpo no
+consigna cifras que aún no existen cuando se congela la instantánea.
+
+**R2.** `measure_iterations.py` sigue **FUERA DE SERVICIO (R2.1)**: pide el transcript del cliente y su acceso
+está denegado. Auto-reporte con unidad declarada (invocaciones de herramienta de esta sesión), referencia 60 del
+prompt; el exceso se declara como checkpoint y no se partió la fase.
+
 ## Métricas de ejecución
 
 Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfailed, delta, hashes de PRE/POST, mutaciones por AC y tiempo real de ejecución. No sumar unidades incompatibles. Mantener contador único de invocaciones v4complete: **1 consumido de 1 autorizado**, acreditado por `evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/run_control.json` (`attempts: 1`) y no por esta prosa. ⟦La redacción original decía «actualmente 0»; quedó vencida por la corrida del 2026-10-07 y se actualiza aqui porque esta frase es el contador acumulado del plan, no el registro de una fase⟧.
@@ -587,15 +789,36 @@ Registrar por fase funciones canónicas, casos pytest, passed/failed/skipped/xfa
 
 ## Checklist de cierre
 
-- [ ] Todas las fases previas y sus cierres reales completos.
-- [ ] Matriz por AC con artefacto, clave, alcance y limitaciones.
-- [ ] Una sola corrida acreditada; no reintentos ocultos.
-- [ ] Lecciones y deudas con dueño y condición de cierre.
-- [ ] Write-back autorizado y contenido final comprobado antes de archivar.
-- [ ] Índice regenerado antes y después del archivado.
-- [ ] Validaciones verdes sin ocultar fallos previos.
-- [ ] Cierre de RELEASE con versión confirmada, sin cambios de código.
+- [x] Todas las fases previas y sus cierres reales completos — A, G, 0, B, C, D, E, F, H, E2E y VERIFY con su
+  sección, su evidencia y su fila en `06-checklist`; la recuperación de AC6/AC10 cerró offline y sin su cierre
+  incremental, que completó RELEASE.
+- [x] Matriz por AC con artefacto, clave, alcance y limitaciones — veinte filas dictaminadas por VERIFY, AC19 en
+  sus dos mitades, en `evidence/…/FASE-VERIFY/certificacion.json`.
+- [x] Una sola corrida acreditada; no reintentos ocultos — contador **1/1**, `attempts: 1` verificado por
+  instrumento (PID, argv y sha recomputado).
+- [x] Lecciones y deudas con dueño y condición de cierre — §Seguimientos abiertos (V-1…V-8, S-F6, S-H2,
+  S-E2E-11, F-B, F-E) y §Lecciones nuevas; ninguna lección fabricada para cumplir cuota.
+- [x] Write-back autorizado y contenido final comprobado antes de archivar — autorización literal del operador en
+  esta sesión; cuerpo final antes de la subida, instantánea versionada con su sha256 y la fuente de la era G
+  **marcada** como reemplazada. Su id, sha y la verificación por descarga están en
+  `evidence/…/FASE-RELEASE/` y en `.opencode/qmind-writeback/registro.json`, no aquí: re-escribirlos en este
+  cuerpo vencería la instantánea que el check `[17/18]` compara por contenido.
+- [x] Índice regenerado antes y después del archivado — orden R2.10: write-back → `build_lesson_index.py` →
+  `git mv` → `build_lesson_index.py` (segunda corrida obligatoria, porque el índice publica el plan con su ruta).
+- [x] Validaciones verdes sin ocultar fallos previos — las corridas y sus crudos (quick de apertura, quick de
+  cierre y modo completo posterior al archivado, que es la que certifica) viven en `evidence/…/FASE-RELEASE/`.
+  Ningún rojo se absorbió re-bajando una aserción ni re-fijando un baseline; los derivados vencidos por las
+  propias ediciones se regeneraron con su escritor y se declaró cada uno.
+- [x] Cierre de RELEASE con versión confirmada, sin cambios de código — **4.79.0** decidida con el operador en
+  el mandato de esta sesión; RELEASE no reparó código y no rehizo VERIFY.
 
 ## Cierre del plan
 
-PENDIENTE. Este encabezado se completa únicamente en RELEASE después de la certificación; no anticipa éxito.
+**CERRADO el 2026-10-07 por su FASE-RELEASE, liberado como 4.79.0 y archivado en
+`.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/`.** Cierre con la certificación **no íntegra
+publicada, no suavizada**: la meta de entrega se demostró en la única corrida autorizada (ZIP publicado, acta con
+veredicto no bloqueante y AC20 ejercitado en flujo real), pero AC6 y AC10 constan en **FALLA** en el dictamen de
+VERIFY y su recuperación quedó en régimen **offline, sin corrida nueva**, así que el ZIP entregado el 2026-10-07
+conserva ambos defectos y ninguna salida del pipeline ejercita el código corrector. AC19b no se intentó en
+ninguna fase. Una muestra de un hotel y una corrida no certifica todos los hoteles (L-R.4). Deudas vivas con
+dueño: V-3, V-4, V-6, V-7, V-8, S-F6, S-H2, S-E2E-11, F-B y F-E.

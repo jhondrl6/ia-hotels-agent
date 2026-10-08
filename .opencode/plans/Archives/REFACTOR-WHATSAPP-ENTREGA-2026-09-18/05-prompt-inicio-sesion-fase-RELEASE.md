@@ -1,13 +1,13 @@
 # FASE-RELEASE — Documentación oficial, versionado y archivado
 
-**Estado:** PENDIENTE. **Dependencia inmediata:** FASE-VERIFY cerrada con dictamen y alcance de cierre explícitos.
+**Estado:** EJECUTADA 2026-10-07 (sesión de cierre). **Dependencia inmediata:** cumplida — FASE-VERIFY cerró el 2026-10-07 con dictamen y alcance explícitos, y la recuperación de AC6/AC10 se ejecutó después, offline y sin corrida. ⟦Lo que sigue es el mandato tal como se escribió; las decisiones que esta sesión resolvió con el operador están estampadas con `⟦RELEASE 2026-10-07⟧`⟧
 **Complejidad técnica:** MEDIA: sincronización documental, orden de archivado y permisos.
 **Scope R3:** 4 tareas, 0 comandos largos externos. Última fase; documental. **No ejecuta v4complete ni repara código.**
 
 ## Contexto e inicio
 
 Ejecución futura con mandato propio. Lee `01-plan-maestro.md` §6 y §7; `04-contrato-ejecucion.md` §"Cierre incremental obligatorio"; `10-analisis-post-implementacion.md` con el dictamen de VERIFY; `docs/CONTRIBUTING.md`; `docs/contributing/documentation_rules.md`; `docs/contributing/validation.md` y el workflow canónico (FASE-RELEASE).
-Versión objetivo: **la decide el mandato de esta fase con el operador** y se usa como `$VERSION_AUTORIZADA` en los comandos. ⟦Puesta al día 2026-10-06: aquí constaba «Versión objetivo propuesta: **4.78.0**», y ese número ya está **ocupado**: `VERSION.yaml` publica `version: "4.78.0"` con `release_date: "2026-09-25"` (medido con `grep -nE "version|release_date" VERSION.yaml`) y el `CHANGELOG.md` lo encabeza como `## [4.78.0] - Gobernanza, costura, pertinencia y carga medida — 2026-09-25`, release del plan `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`. Proponer 4.78.0 inventaría una release ya hecha; el maestro y `10-analisis-post-implementacion.md` llevan su anotación datada⟧. La fuente única de la versión sigue siendo `VERSION.yaml`, y su propagación a los archivos gobernados es `sync_versions.py`. Si VERIFY dictaminó la meta de entrega como parcial o FALLA, RELEASE **publica ese límite** y no cierra como éxito integral.
+Versión objetivo: **la decide el mandato de esta fase con el operador** y se usa como `$VERSION_AUTORIZADA` en los comandos. ⟦RELEASE 2026-10-07: el operador autorizó **4.79.0** con propagación a los archivos gobernados; codename *WhatsApp verificado, orden real y entrega única de Don Alfonso*; `release_date` y `date` = 2026-10-07⟧. ⟦Puesta al día 2026-10-06: aquí constaba «Versión objetivo propuesta: **4.78.0**», y ese número ya está **ocupado**: `VERSION.yaml` publica `version: "4.78.0"` con `release_date: "2026-09-25"` (medido con `grep -nE "version|release_date" VERSION.yaml`) y el `CHANGELOG.md` lo encabeza como `## [4.78.0] - Gobernanza, costura, pertinencia y carga medida — 2026-09-25`, release del plan `VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20`. Proponer 4.78.0 inventaría una release ya hecha; el maestro y `10-analisis-post-implementacion.md` llevan su anotación datada⟧. La fuente única de la versión sigue siendo `VERSION.yaml`, y su propagación a los archivos gobernados es `sync_versions.py`. Si VERIFY dictaminó la meta de entrega como parcial o FALLA, RELEASE **publica ese límite** y no cierra como éxito integral.
 Permisos: configuración central, commit, push, tag y subida a QMind requieren autorización expresa para esa acción, en este turno. Un permiso negado no se evade ni se reinterpreta.
 
 ### Lecciones capitalizadas aplicables
@@ -85,10 +85,26 @@ Las cuatro etiquetas son las que imprime el **modo rápido**; en el modo complet
 
 Referencia **60 tool_use**; fase sin código de producto: corte **documental** declarado aparte, sin fingir commit de código y **sin tratar la ausencia de commit como un corte «no consumado»** — los cinco cortes se sostienen sin commit y el commit es posterior, opcional y con autorización expresa. Instrumento `evidence/FASE-D/measure_iterations.py <transcript> <corte-ISO>`; sin transcript o con acceso denegado, **FUERA DE SERVICIO (R2.1)** con auto-reporte por unidad.
 
-- [ ] VERIFY cerrada y su dictamen reflejado sin suavizar; límites de muestra publicados.
-- [ ] VERSION y archivos gobernados sincronizados, con autorización, y con la versión que nombró el mandato (`$VERSION_AUTORIZADA`); el check de Version Sync se re-mide al abrir y solo se actúa sobre él si la corrida de esta sesión lo dio rojo (resuelto o visible en checkpoint, según autorización).
-- [ ] CHANGELOG/GUIA_TECNICA/REGISTRY/09 completos, DOMAIN_PRIMER **verificado** con `doctor.py --context`/`--status`; su **regeneración** pertenece a los cierres de las fases de implementación y aquí solo procede por instrucción expresa, con el checkpoint declarado si falta (dos operaciones distintas, ambas declaradas).
-- [ ] Validaciones con TOTAL PASS real en el alcance autorizado; write-back autorizado, saneado y verificado (o checkpoint).
-- [ ] Write-back final por el **writer con `--title` y `--file`** (el título de G sigue produciendo SKIP si se corre `--upload` pelado), con el plan **aún en raíz**, contenido saneado revisado a mano, instantánea versionada registrada con su sha256 y la fuente anterior **marcada** como reemplazada. Verificación por **descarga + sha256**, no por título. ⟦AC6-entrega de `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`, 2026-10-07⟧.
-- [ ] Archivado en orden write-back → índice → `git mv`; estados finales coherentes en los cinco documentos del plan.
-- [ ] Operaciones git solo con autorización expresa; push precedido de la revisión de seguridad vigente y confirmación escrita.
+- [x] VERIFY cerrada y su dictamen reflejado sin suavizar; límites de muestra publicados. AC6 y AC10 constan en
+  FALLA en el CHANGELOG (`## [4.79.0]` §Límites publicados), en la nota técnica y en el `10-analisis`; la
+  recuperación de esos dos ACs se publica con su límite (offline, sin corrida, el ZIP del 2026-10-07 conserva los
+  dos defectos) y no como éxito en flujo real.
+- [x] VERSION y archivos gobernados sincronizados con autorización y con la versión que nombró el mandato:
+  **4.79.0**. Version Sync se re-midió al abrir (quick **13/13**, `[3/13]` en verde) y no se actuó sobre él; el
+  rojo que apareció después fue propio de esta sesión (`[6/13]` Document Integration por el sello de DOMAIN_PRIMER
+  contra la versión nueva) y se resolvió con la regeneración autorizada.
+- [x] CHANGELOG/GUIA_TECNICA/REGISTRY/09 completos. DOMAIN_PRIMER **verificado** con `--context`/`--status` y
+  **regenerado con su writer por instrucción expresa del operador** (era la regeneración pendiente que C, D, E, F,
+  H y E2E arrastraban desde FASE-C); las dos operaciones quedan declaradas por separado, no editado a mano.
+- [ ] Validaciones con TOTAL PASS real en el alcance autorizado, o fase INCOMPLETA con los rojos listados. Se
+  publica con su crudo en `evidence/…/FASE-RELEASE/`: quick de apertura, quick de cierre y **modo completo
+  después del write-back y del `git mv`**, que es la corrida que certifica.
+- [ ] Write-back final por el **writer con `--title` y `--file`**, con el plan **aún en raíz**, copia saneada
+  revisada a mano, instantánea versionada con su sha256 y la fuente de la era G **marcada** como reemplazada;
+  verificación por **descarga + sha256**. En curso: la copia saneada está producida y su fidelidad probada
+  (`evidence/…/FASE-RELEASE/qmind-upload-10-analisis-cierre-4.79.0-saneado.md`).
+- [ ] Archivado en orden write-back → índice → `git mv`; estados finales coherentes en los cinco documentos del
+  plan (README, 06, dependencias, 09/10 y este prompt).
+- [ ] Operaciones git solo con autorización expresa; push precedido de la revisión de seguridad vigente y
+  confirmación escrita. Autorizados: dos commits (recuperación `086ce65` y cierre documental) + L3 + push. **No
+  autorizado: `git tag`**, declarado como opción rechazada.

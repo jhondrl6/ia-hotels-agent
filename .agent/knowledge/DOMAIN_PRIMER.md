@@ -3,22 +3,22 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.78.0 | **Codename**: Gobernanza, costura, pertinencia y carga medida
-> **Release date**: 2026-09-25 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.79.0 | **Codename**: WhatsApp verificado, orden real y entrega única de Don Alfonso
+> **Release date**: 2026-10-07 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 207 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 210 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
 | **scrapers/** | 16 | BookingScraper; DriverInterface; GBPAuditor; GBPAuditorAuto; GBPRevenueLeakDetector; DriverAdapterProtocol, DriverAdapterBase, SeleniumAdapter, PlaywrightAdapter; PostsAuditResult, GBPPostsAuditor; Pl |
-| **data_validation/** | 6 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; UrlNoPropiaError, UrlClassification; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResult |
+| **data_validation/** | 7 | ConfidenceLevel, DataSource, ValidationResult, ConfidenceTaxonomy; CrossValidator; UrlNoPropiaError, UrlClassification; PageSpeedResult, PageSpeedClient; SchemaType, SchemaValidationResult, RichResult |
 | **financial_engine/** | 19 | ADRSource, ADRResolutionResult, ADRResolutionWrapper; CalculationStatus, FinancialCalculationResult, FinancialCalculatorV2; InferredChannel, EvidenceConfidence, ChannelEvidence, ChannelEvidenceResolve |
 | **orchestration_v4/** | 2 | OnboardingPhase, OnboardingStatus, OnboardingState, OnboardingController; Phase1Result, Phase2Result, HookRangeTraceability, HotelInputs |
 | **onboarding/** | 4 | OnboardingForm |
@@ -52,13 +52,13 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **quality_gates/** | 18 | ActaWriter; _DerivedEntry, AlignmentResult; AlignmentReviewer; AssetReviewer; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateRe |
+| **quality_gates/** | 19 | ActaWriter; _DerivedEntry, AlignmentResult; AlignmentReviewer; AssetReviewer; ClaimHealingAction, ClaimHealingResult, ClaimSelfHealer; CoherenceStatus, PublicationStatus, CoherenceGap, CoherenceGateRe |
 
 ### UTILIDADES Y VALIDACION
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **utils/** | 17 | BenchmarkLoader; CanonicalMetric; DataSource, DataConfidence, ConfidenceReport, ConfidenceTracker; ConfigChecker; ImpactResult, DynamicImpactReport, DynamicImpactCalculator; EnvValidator; FinancialFac |
+| **utils/** | 18 | BenchmarkLoader; CanonicalMetric; DataSource, DataConfidence, ConfidenceReport, ConfidenceTracker; ConfigChecker; ImpactResult, DynamicImpactReport, DynamicImpactCalculator; EnvValidator; FinancialFac |
 | **monitoring/** | 2 | HealthDashboardGenerator; ExecutionMetrics, HealthMetricsCollector |
 | **validation/** | 3 | ValidationResult, ContentValidator; ValidationResult, PlanValidator; ValidationResult, SecurityIssue, SecurityValidator |
 
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-04 | v4.78.0 Gobernanza, costura, pertinencia y carga medida*
+*Auto-generado: 2026-10-08 | v4.79.0 WhatsApp verificado, orden real y entrega única de Don Alfonso*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
