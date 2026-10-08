@@ -140,6 +140,54 @@ está denegado; no se reintentó. Este número **no es comparable** con las medi
 
 **Referencia de esta sesión documental según el propio mandato:** ≈40 `tool_use`.
 
+**Medido al cerrar:** **≈110 `tool_use`** contados a mano sobre las llamadas de esta sesión (una llamada = 1; los
+bloques paralelos cuentan por llamada individual). **Excede la referencia del mandato por ≈2.8× y se declara como
+checkpoint, no como fase adicional** (contrato §R2). Dónde se fue lo que los 40 no presupuestaban, con la corrida
+delantera:
+
+| Partida | Aprox. | Causa medida |
+|---|---|---|
+| Escrituras de estampado | ≈45 | 19 ediciones sobre 11 rutas (los cinco lugares de DA-CIM.9, los dos de DA-CIM.10, las reglas c2 y la línea base) |
+| Lectura de línea base | ≈18 | siete documentos del plan y el registro de A1, más el grafo de dependencias, re-medidos y no heredados |
+| Investigación del censo y la serie DA | ≈15 | leer `ID_RE`/`FAMILIES`/`_scan` de `build_lesson_index.py` para descubrir que la familia `DA` se indexa y que el par derivado añade rutas al atributo de cierre |
+| Instrumentación y verificación | ≈12 | arnés de paridad de celdas, dos corridas de quick, escritor del índice con su `--check`, integración, citas y tres censos por comando |
+| Gate de seguridad y publicación | ≈12 | resolución de ajustes, dos intentos de L3 **denegados por el clasificador**, la petición de instrucción literal, la L3 con `findings_count: 0` y el push con su verificación de paridad |
+| Re-intentos de instrumento propio | ≈8 | un heredoc que se comió el backslash de la regex, un `grep -o "[^\x00-\x7F]"` que no es POSIX (daba un falso sin-acento), un `print` que reventó por cp1252 y un `AskUserQuestion` que el clasificador no aceptó como confirmación |
+
+**Cuatro negaciones o fallos de instrumento registrados en vivo, ninguno reintentado como si fuera un rojo del
+repo:** la lectura de `docs/GUIA_TECNICA.md` denegada; el primer y el segundo intento de `qodersec review --layer=l3`
+denegados por el gate (el segundo, pese a la respuesta del formulario; desbloqueó la instrucción literal del
+operador); el heredoc de Python; y la unidad del censo publicado, errata abajo.
+
+## Sello de la enmienda (2026-10-08, misma sesión)
+
+El operador autorizó commit, L3 y push con la instrucción literal «corre la L3 y empuja», después de que el gate de
+seguridad negara los dos intentos previos. Lo que imprimió la corrida:
+
+- **Commit documental:** `58dc034` — 16 rutas (13 modificadas + 3 nuevas), 520 inserciones y 50 supresiones
+  (`git diff --cached --numstat` antes de commitear, `git show --stat` después), con los **ocho checks** del hook
+  versionado en verde, incluido `[6/8] Índice de lecciones fresco (358 IDs)`.
+- **Revisión profunda L3 sobre el commit nuevo:** `findings_count: 0`, **sin hallazgos**, corrida antes del push.
+- **Rango empujado:** `67b7e2f..58dc034` (`git push origin master`), con paridad verificada por
+  `git ls-remote origin refs/heads/master` == `git rev-parse HEAD`.
+- **El sha de este sello no se estampa en sí mismo.** El tip publicado al leer esta acta es el que imprima
+  `git ls-remote origin refs/heads/master`. Los rangos anteriores de FASE-A1 (`d8a7d80..63b944a`,
+  `63b944a..15f4fdd`, `15f4fdd..67b7e2f`) **no se re-escriben**: este sello añade el suyo.
+
+## Erratas que cobra este sello (medidas, no heredadas)
+
+- **La unidad del censo estaba mal etiquetada.** Arriba publicué «9 ocurrencias en 6 rutas» con el instrumento
+  `grep -cF`, que cuenta **líneas con coincidencia**, no coincidencias. La medida correcta sobre el árbol commiteado
+  es `git grep -o -F "<frase>" HEAD | wc -l` = **10 coincidencias en 6 rutas**, con `2` en cada una de
+  `01-plan-maestro.md`, `05-…-A3.md`, `dependencias-fases.md` y este acta, y `1` en `10-analisis` y `CHANGELOG.md`.
+  La fila original no se re-escribe: queda como registro de lo que dije; esta es la corrección con su comando.
+- **El mensaje de commit lleva cuatro signos tipográficos no ASCII** (`§`, `«`, `»`, `≈`) **y cero letras acentuadas**
+  (medido con `re.findall(r'[^\x00-\x7f]', msg)` sobre `git log -1 --format=%B` → `['§', «, », ≈]`, sin alfabeto). El
+  mandato pedía «sin acentos» y se cumple en su letra; aun así se declara porque la convención de la casa es ASCII
+  estricto en los mensajes. No se re-wordé: el commit ya está empujado y su sha `58dc034` viaja citado en este sello.
+- **Los dos crudos del quick son CRLF en disco y LF en el blob** — ya declarado en la errata de instrumento arriba, y
+  confirmado por el aviso de `git add` al indexar.
+
 ## Estampa de la corrida de cierre
 
 Los valores siguientes los imprimió la corrida de esta sesión sobre el árbol de trabajo; **ninguno** es heredado.
