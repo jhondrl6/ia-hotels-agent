@@ -294,3 +294,28 @@ reportarla con el rango que imprimió el comando, no con un «la tanda anterior 
   `quick_addenda.txt`, todos nacidos de una redirección `>` sobre stdout de Python y normalizados por
   `core.autocrlf=input` al indexar (el aviso de `git add` apareció por ruta en los cuatro). Su sha256 se verifica con
   `git show <commit>:<ruta>`, nunca sobre disco.
+
+## Addenda de la errata de crudos (y por qué el conteo fijo es una trampa)
+
+La errata de arriba corrigió «dos crudos» a **cuatro** — pero el mismo commit que la escribió traía un quinto
+(`quick_negacion.txt`), así que esa cifra quedó corta al nacer. Medido con el instrumento que la sostiene:
+`ls -1 evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-ENMIENDA/*.txt` responde **cinco** crudos de quick
+(apertura, cierre, sello, addenda, negacion). Ninguno de `pytest`: esta sesión no corrió tests, por contrato.
+
+**Regla que sale de aquí y es la que viaja, no el número:** en un directorio donde cada tanda documental archiva su
+propio crudo, **todo conteo fijo de crudos queda vencido por el commit que lo publica**. Se cita el `ls`, y la
+propiedad que importa —que los cinco son CRLF en disco y LF en el blob, y que su sha256 se verifica con
+`git show <commit>:<ruta>`, nunca sobre disco— no depende de cuántos sean.
+
+## Injerto cirílico cazado por codepoints, no por el gate
+
+El párrafo que acababa de escribir sobre el conteo de crudos contenía **tres letras cirílicas** dentro de una palabra
+española: U+0430, U+0440 y U+0445 en lugar de `a`, `r` y `h` de «archiva» (línea 305). Lo encontró un
+`unicodedata.name()` barrido de codepoints sobre el archivo, **no** ninguno de los ocho checks del hook ni los 13 del
+quick — que quedaron verdes con el carácter adentro. Precedente del mismo tipo, ya memorizado por la casa: un carácter
+CJK injertado en prosa española dentro de una celda.
+
+Reparación afirmada antes y después: `t.count(<secuencia>) == 1` **antes** de escribir (una aparición, no dos), y el
+barrido de CYRILLIC/CJK devolviendo **0** después. Byte count del archivo: 26.118 → 26.116 (cada cirílica son 2 bytes
+en UTF-8 y su equivalente latino 1). El commit que estampa esto trae la misma lección: **el gate estructural no ve
+alfabetos; los codepoints sí.**
