@@ -47,10 +47,14 @@ huésped no contable se emite en el bloque `DUPLICADO-VIGENTE` de `verificar_con
 
 ## 2. Decisiones de diseño y alcance
 
-**Fuente única de la serie:** las ocho decisiones, con su rationale y sus alternativas rechazadas, están
-estructuradas en `10-analisis-post-implementacion.md` §Decisiones Arquitectónicas como `DA-CIM.1`…`DA-CIM.8`. Aquí
-se enuncian las que fijan alcance, con los mismos números. La serie propia de seguimientos y deudas es
-`S-CIM-n` (§5), elegida **namespaced a propósito**: los IDs `D-1`, `D-2`, `D-3` ya existían como citas del corpus
+**Fuente única de la serie:** las **ocho** decisiones de la preparación, con su rationale y sus alternativas
+rechazadas, están estructuradas en `10-analisis-post-implementacion.md` §Decisiones Arquitectónicas como
+`DA-CIM.1`…`DA-CIM.8`. Aquí se enuncian las que fijan alcance, con los mismos números. A esas ocho se sumaron el
+2026-10-08 **dos decisiones del operador**, `DA-CIM.9` y `DA-CIM.10` (abajo, al final de este §2): no son filas de
+aquella tabla —la preparación no las dictó y el censo de la enmienda no la incluye— y por eso el índice del corpus
+las publica como *citadas sin definición*, un estado explícito del escritor y no un rojo. Su fuente canónica es este
+§2 más el contrato §R2 para el presupuesto y el prompt de A3 para el bloque huésped. La serie propia de seguimientos
+y deudas es `S-CIM-n` (§5), elegida **namespaced a propósito**: los IDs `D-1`, `D-2`, `D-3` ya existían como citas del corpus
 `DT-2` y una versión temprana de este documento los usó como etiquetas propias — al regenerar el índice del corpus,
 el plan se había convertido en dueño de IDs ajenos. Medido y corregido en la misma preparación.
 
@@ -99,6 +103,20 @@ mismo: el modo completo se corre y su crudo se archiva (L-V2.2). Y el diente dec
 **DA-CIM.8: FASE-VERIFY no se activa en este plan**, con los tres criterios de §4.6 medidos en el maestro §3. La
 certificación cruzada la hacen AC10 en RELEASE y los dientes por AC.
 
+**DA-CIM.9 (dictada por el operador el 2026-10-08, Caso A vía a1): FASE-A3 gobierna el bloque huésped también en el
+camino de migración.** No re-abre AC6: le añade el diente sin el cual el rojo de la era G es inalcanzable mientras
+el registro solo tenga entradas `1.0` (consecuencia 1 del registro de A1). Su especificación, sus tres dientes y su
+mutante viven en `05-prompt-inicio-sesion-fase-A3.md` (subtarea 3b) y su fila en §4 con la errata que la estampa.
+**Rechazadas:** a2 (re-publicar el `10-analisis` del padre como 1.1 — escritura remota sobre contenido publicado,
+con autorización propia) y a3 (declarar y no tocar, que dejaría `[17/18]` en NO-EVALUABLE sin fecha).
+
+**DA-CIM.10 (dictada por el operador el 2026-10-08, Caso C vía c1): el presupuesto de referencia se fija por fase** —
+90 `tool_use` para A2, A3 y B, 60 para RELEASE — sobre la base medida de A1. Su fuente canónica es el contrato §R2 y
+la fila de §3 de este maestro; las dos reglas c2 que se adoptan con ella viven en el prompt de A2. **Rechazada c3**
+(aceptar checkpoints: el número deja de ser señal). La cláusula «un exceso produce checkpoint y fase INCOMPLETA, no
+una segunda fase» queda intacta, y **FASE-C no está nombrada** en la decisión: se queda con 60 hasta que el operador
+la cite si B la abre.
+
 **Fuera de alcance, declarado:** `[18/18]` y su invocación sin `--strict` (deuda S-2 del hermano, maestro §5);
 la limpieza retroactiva de las fuentes duplicadas de `TRIBUNAL-OFFLINE-2026-09-09` (S-4 del hermano); la edición
 de cualquier documento del plan padre archivado; `AGENTS.md`, `.cursorrules`, `VERSION.yaml` en fases
@@ -126,10 +144,19 @@ largos en las siete filas de arriba; (3) ACs que cruzan múltiples fases — **s
 Fallando el criterio 2, el workflow queda en tres etapas. La certificación cruzada la hacen AC10 en RELEASE y
 los dientes por AC, no una sesión de verificación.
 
-**Presupuesto (R2.1):** referencia 60 `tool_use` **al corte que la sesión tenga autorizado**. El instrumento
+**Presupuesto (R2.1, referencia re-ancurada el 2026-10-08 por DA-CIM.10 — Caso C, vía c1):** **90 `tool_use` para
+FASE-A2, FASE-A3 y FASE-B, y 60 para FASE-RELEASE**, siempre **al corte que la sesión tenga autorizado**. La base
+es la medición de FASE-A1: ≈70 `tool_use` contados a mano en
+`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/00-registro-de-fase.md` (≈30 código + tests + mutantes, ≈25
+cierre documental, ≈15 verificaciones y re-tomas; el total lo imprime ese registro y la separación en partidas la
+declaró el operador al dictar la decisión). Rechazada c3 (aceptar checkpoints: con un denominador que las fases
+exceden a medias, el número deja de ser señal). La cláusula «un exceso produce checkpoint y fase INCOMPLETA, no una
+segunda fase» del contrato §R2 queda **intacta**, y con ella la de las fases ya cerradas: A1 corrió contra la
+referencia de 60 que estaba vigente y su exceso quedó declarado como checkpoint. El instrumento
 canónico `evidence/FASE-D/measure_iterations.py` sigue **FUERA DE SERVICIO**: pide el transcript del cliente y su
 acceso está denegado (medido el 2026-10-07, no reintentado aquí). Cada sesión cierra con auto-reporte en la
-unidad usada y declarando que no es comparable con las que usaron el instrumento.
+unidad usada y declarando que no es comparable con las que usaron el instrumento. **FASE-C no está nombrada en la
+decisión** y se queda con los 60: si B la abre, la referencia la dicta el operador.
 
 ## 4. Criterios de aceptación y pares de evidencia
 
@@ -144,6 +171,7 @@ AC1-AC6 conservan el número y el contenido del mandato; AC7-AC10 las añade est
 | AC4 | `do_upload()` captura `fuente_id` parseando la **tabla** que responde `qmind source upload` (líneas `Key: value`, no JSON) y la escribe en la entrada. Si el parseo falla, **NO re-sube**: verifica por censo de `fetch_sources()` y reporta el estado | Verde: la entrada nueva lleva un id que casa con una fuente real del censo (id + título + `sha_metadata`). Rojo con mutante: un parseo que asuma JSON deja el id vacío y el diente lo declara «id no capturado», no silencioso. Rojo de contención: ante parseo fallido el instrumento **no** invoca una segunda subida (el contador de subidas de la corrida es 1). Límite declarado: si el censo remoto no está accesible, AC4 se certifica sobre la tabla archivada de una subida real y se dice que el censo quedó NO-EVALUABLE | A2 |
 | AC5 | Con el plan bajo `Archives/`, `--upload Archives/<PLAN>` publica y la clave del registro sigue siendo `plan_dir.name` (sin el prefijo). El modo verificación (`cuerpo_del_plan()`) resuelve el cuerpo en las dos raíces | Verde: ruta con prefijo → entrada registrada con `plan` = nombre del directorio; y el dictamen del verificador sobre ese mismo plan no sale NO-EVALUABLE por «no resuelve». Rojo: `--upload <PLAN>` a secas con el plan archivado corta `[FAIL]` **por ruta no encontrada nombrada**, no por red. Rojo de mutante: eliminar la segunda raíz de `cuerpo_del_plan()` convierte un NO-EVALUABLE honesto en VENCIDO falso. **Medido en preparación:** la composición de `main()` ya admite el prefijo; lo que aporta esta fase es el diente, no la construcción | A3 |
 | AC6 | La fuente `01a0bfc9-…` (era G) nombra al plan padre y no está contable en el registro, así que al curar AC2 corta `[DUPLICADO-VIGENTE]`. **No se borra nada.** Se cierra de dos formas y solo una es elegible sin autorización literal: (a) registrarla como `vigente-historica` con su sha —requiere instrucción expresa para escribir el registro a mano por una fuente ajena— o (b) **dejar el rojo declarado con dueño y disparador** | Verde de (b): la corrida imprime el rojo con el id, el título truncado y la ruta del documento donde está el dueño. Rojo que no puede desaparecer: silenciar el bloque huésped, o marcar la era G como reemplazada sin su sha. Si se ejecuta (a), verde adicional: el censo de fuentes vigentes del plan pasa de 2 a 1 y el rojo se retira **por contabilidad, no por borrado**; la alternativa (a) queda sin ejecutar si falta la autorización | A3 |
+| AC6 — **errata AÑADIDA 2026-10-08, despues de la fila original, que no se re-escribe** | **DA-CIM.9 (Caso A, vía a1): FASE-A3 pasa a gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9).** La fila de arriba sigue vigente tal como se dictó; esta errata le añade el requisito que el diseño no podía ver: con la guarda de migración terminando en `continue` —medido y declarado por A1 en `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/00-registro-de-fase.md`, consecuencia 1— las entradas `1.0` **nunca** llegan al bloque `[DUPLICADO-VIGENTE]`, así que mientras el registro solo tenga entradas viejas el dictamen de la era G es inalcanzable y `[17/18]` queda en NO-EVALUABLE sin fecha. Especificación, dientes y mutante viven en `05-prompt-inicio-sesion-fase-A3.md` (subtarea «AC6 por DA-CIM.9»). **Rechazadas:** a2 (re-publicar el `10-analisis` del padre como 1.1: es una escritura remota sobre contenido publicado y pide autorización propia, solo si el operador la pide aparte) y a3 (declarar y no tocar: dejaría `[17/18]` en NO-EVALUABLE indefinidamente) | Verde: una corrida con **solo entradas `1.0`** en el registro imprime el rojo huésped con su id, su título truncado legible y su sha del censo, **y** la abstención de migración en la misma corrida. Rojo con mutante: apagar la llamada huésped en la rama de migración. La capa D2 **no** se levanta para entradas `1.0`: siguen en abstención, nunca `[FRESCO]` sobre quien no tiene `sha_cuerpo` | A3 |
 | AC7 | FASE-B produce un **diagnóstico con medición, no con hipótesis**: por cada `i` divergente, la tupla `fuente_fecha` de A y de B, el documento dueño que la produce, y la prueba de si la diferencia depende del reloj del sistema, de `MTO_A`/`MTO_B` contra mtimes reales, o de que en un clon la ruta no materialice. Artefacto: `E/FASE-B/diagnostico.md` + crudo de la corrida | Verde: el informe nombra la causa con la corrida delante y **reproduce** el rojo contra el HEAD de su sesión (no contra `649114c` a secas). Rojo de método: concluir «el fixture está mal» sin reproducir la clasificación, o citar la medición del 2026-10-07 como propia. Prohibido cerrar AC7 tocando código | B |
 | AC8 | La clasificación queda gobernada de modo que la divergencia **esperada** del control sea solo la fecha de `mtime`, sin debilitar la aserción ni el control negativo anclado a la revisión fija (`REV_CONTROL_DEFECTUOSO`). El diente se ejecuta sobre el instrumento versionado | Verde: los cuatro dientes del archivo cierran, el control sigue perdiendo cuando el generador defectuoso está puesto, y `test_dos_checkouts_con_mtimos_distintos_publican_bytes_identicos` sigue verde sin tocar su aserción. Rojo exigido: apagar la gobernanza nueva **vuelve** el rojo; re-ancorar el control a HEAD se detecta por un diente que afirma la revisión fija literal. **Prohibido**: re-anclear a HEAD, re-fijar un baseline, o convertir la aserción en un `in {...}` que traga la mala clasificación | B |
 | AC9 | **Condicional.** Si AC7 concluye que la cura está en `scripts/build_lesson_index.py`, el cambio va con su propio AC, su mutación sobre el símbolo real (`_plan_date` y su cascada `nombre`/`commit`/`SIN-FUENTE`) y la re-ejecución de la familia (`tests/test_build_lesson_index.py`, 16 funciones, y `tests/test_verify_qmind_context_freshness.py`, 36 funciones). Si AC7 no exige el generador, **esta fase no se ejecuta** y se declara en el checklist | Verde: la línea `[fechas]` del writer y del `--check` sigue imprimiendo los tres tiers en verde **y** en rojo, y ningún tier nuevo aparece sin su diente. Rojo: quitar la rama de orden publicada deja un `[OK]` sin denominador. Límite conservado de la cura del 2026-09-26, que no se cura aquí: el desempate por nombre si un `git mv` masivo de `Historico/` colapsa las fechas del tier `commit` | C |
@@ -159,7 +187,7 @@ aserción**, más un diente por AC nueva.
 | # | Tema | Estado | Dueño | Disparador |
 |---|---|---|---|---|
 | S-CIM-1 | `[18/18]` sigue invocado **sin** `--strict`: el verde por ausencia del instrumento que AC3 del hermano cerró en `[17/18]` vive ahí (deuda S-2 del `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`) | FUERA DE ALCANCE de este plan, nombrada para que no se re-descubra (L-QW.4) | operador / siguiente mandato sobre los verificadores QMind | una AC con su propio disparador; **no** se la añade a ninguna fase de este plan a espaldas del operador |
-| S-CIM-2 | Rojo `[DUPLICADO-VIGENTE]` de la era G una vez landed AC2 | DECLARADA con dos salidas (maestro §2 DA-CIM.4); la elegida por diseño es la de rojo con dueño | operador (decisión escrita para tocar el registro por una fuente ajena; `source delete` queda fuera) | la corrida del modo completo que la nombra; se presenta con opciones, no se tapa |
+| S-CIM-2 | Rojo `[DUPLICADO-VIGENTE]` de la era G una vez landed AC2 | **DECIDIDA 2026-10-08 por el operador (Caso A, vía a1): gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9).** Sigue DECLARADA con dos salidas (maestro §2 DA-CIM.4); la elegida por diseño sigue siendo la de rojo con dueño, ahora con diente propio porque A1 midió que la guarda de migración la deja inalcanzable (maestro §4, fila AC6 con su errata) | operador (decisión escrita para tocar el registro por una fuente ajena; `source delete` queda fuera) y FASE-A3 para la gobernanza del bloque | la corrida del modo completo que la nombra; se presenta con opciones, no se tapa |
 | S-CIM-3 | Byte-exacto perdido de la entrada `reemplazada` del padre (el `0b02bb5084e3…` ya no tiene archivo) | NO RECUPERABLE; se documenta como consecuencia de AC3 y como motivo por el que la migración no rellena nada | este plan (su RELEASE lo publica en CHANGELOG con la fila del registro) | la cura de AC3 |
 | S-CIM-4 | Limpieza retroactiva de las dos fuentes vigentes de `TRIBUNAL-OFFLINE-2026-09-09` (S-4 del hermano) | FUERA DE ALCANCE | operador | mandato expreso sobre contenido publicado |
 | S-CIM-5 | Packs de briefing (`briefing/` + `build_phase_briefing.py`) para los prompts de este plan | NO GENERADOS en la preparación, declarado: los prompts nuevos usan la forma canónica `Lee …` de §8 del template, la generación de packs pertenece a la fase que los consuma | la primera sesión que pida un pack de este plan | esa solicitud |

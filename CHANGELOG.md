@@ -1,5 +1,44 @@
 # Changelog
 
+## [Sin publicar] - FASE-ENMIENDA del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+
+### Las dos decisiones del operador estampadas en la línea base: el bloque huésped en migración y el presupuesto por fase
+
+- **Qué consolidar.** Esta enmienda no cura código: estampa **dos decisiones del operador del 2026-10-08** en todos
+  los documentos que las piden, para que FASE-A2 arranque con presupuesto real y regla de congelación, FASE-A3
+  herede la premisa de AC6 corregida y ninguna fase futura redescubra la consecuencia que FASE-A1 midió y declaró.
+  Cero escrituras remotas en QMind; `scripts/`, `tests/` y `.opencode/qmind-writeback/registro.json` intactos.
+- **Decisión 1 (Caso A, vía a1) — gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9).** A1
+  midió que la guarda de migración termina en `continue`, así que las entradas `1.0` **nunca** recorren el bloque
+  `[DUPLICADO-VIGENTE]`: con el registro como está, el rojo de la era G es inalcanzable y `[17/18]` queda en
+  NO-EVALUABLE sin fecha. FASE-A3 pasa a gobernar ese bloque: extraer `_huespedes_sin_contabilidad(datos, fuentes, plan)`
+  y llamarla también en la rama de migración antes del `continue`, **sin levantar la capa D2** para entradas `1.0`
+  (siguen en abstención, nunca `[FRESCO]` sobre quien no tiene `sha_cuerpo`), con tres dientes y su mutante. Estampada
+  en maestro §4 (errata **añadida**, la fila original de AC6 conserva su texto), maestro §5 S-CIM-2, maestro §2, el
+  prompt de A3 (subtarea 3b, con la especificación completa), `dependencias-fases.md` (fila A3 y el seguimiento del
+  grafo) y `10-analisis` §Seguimientos, cuya fila pasa a **DECIDIDA**. Rechazadas: a2 (re-publicar el `10-analisis`
+  del padre como 1.1: escritura remota con autorización propia) y a3 (declarar y no tocar).
+- **Decisión 2 (Caso C, vía c1) — presupuesto de referencia por fase (DA-CIM.10).** 90 `tool_use` para FASE-A2, A3 y
+  B, y 60 para FASE-RELEASE, con la base medida de A1: ≈70 contados a mano en su registro (≈30 código + tests +
+  mutantes, ≈25 cierre documental, ≈15 verificaciones y re-tomas; el total lo imprime ese registro y las partidas las
+  declaró el operador). La cláusula «un exceso produce checkpoint y fase INCOMPLETA, no una segunda fase» queda
+  **intacta** y las fases cerradas conservan su medición histórica. Estampada en `04-contrato-ejecucion.md` §R2 y
+  maestro §3 (y enunciada en maestro §2); los prompts de A2, A3 y B citan ahora el valor con su fuente, sin
+  re-transcribir la decisión. Rechazada c3 (aceptar checkpoints: el número deja de ser señal). **FASE-C no está
+  nombrada** en la decisión y se queda con 60: abierta al operador si B la abre.
+- **Reglas c2 adoptadas dentro del prompt de A2.** (i) congelar el código antes de abrir el cierre documental, con el
+  POST y los mutantes re-tomados **una** sola vez al final; (ii) los reemplazos documentales del cierre se ejecutan
+  con **un solo script de bytes bajo `temp/`**, `count(old) == 1` por ancla, borrado al terminar.
+- **Línea base refrescada.** FASE-A1 quedó publicada en la banda `d8a7d80..67b7e2f` (cura `63b944a`, sello `15f4fdd`,
+  addenda `67b7e2f`; L3 **sin hallazgos** en las tres tandas). Los lugares que afirmaban «tip publicado `63b944a`» o
+  «la línea base de A2 es ese tip» se corrigieron en `dependencias-fases.md`, `06-checklist`, `10-analisis` y el README
+  del plan **añadiendo** rangos, sin re-escribir los sellos originales; la cifra del tip vigente la imprime
+  `git ls-remote origin refs/heads/master`, no un documento. El punto de reanudación del README pasa a FASE-A2.
+- **Derivados, con su escritor y como último paso:** `scripts/build_lesson_index.py` (y su `--check`, que es `[6/8]`
+  del hook) y `scripts/validate_document_integration.py`; quick con crudo en
+  `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-ENMIENDA/`. **No** se corrió `scripts/log_phase_completion.py`:
+  es aditivo, FASE-A1 ya tiene su fila y esto no es una fase de implementación.
+
 ## [Sin publicar] - FASE-A1 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 
 ### Las dos identidades del registro y la puerta de vigencia cuerpo contra cuerpo (AC1, AC2)

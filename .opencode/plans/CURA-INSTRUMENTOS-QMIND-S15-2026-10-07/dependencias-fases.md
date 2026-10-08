@@ -30,7 +30,10 @@ FASE-RELEASE  AC10 write-back propio + docs + archivado R2.10
   tres suman dientes en `tests/test_validate_qmind_writeback_escritura.py`.
 - **A3 depende duramente de A1** (no de A2): con el guard viejo, `verificar_contenido()` sale por `continue` antes
   de evaluar los huéspedes, así que AC6 **no es evaluable** sin la puerta nueva. Medido por flujo de control en la
-  preparación (maestro §1 fila 5).
+  preparación (maestro §1 fila 5). **Seguimiento de esa dependencia, decidido 2026-10-08:** A1 midió que la guarda
+  de migración también termina en `continue`, así que las entradas `1.0` tampoco recorren el bloque huésped. El
+  operador resolvió el Caso A por la vía a1: gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9).
+  Es la subtarea 3b del prompt de A3, no una re-apertura de AC6.
 - **B es independiente de A** en código (otra superficie: `scripts/build_lesson_index.py` y su test), pero **va
   después**: las dos familias regeneran el par `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json`, y
   el índice es derivado de *todo* `.md` que nombre un ID. Ejecutarlas en paralelo produce rojos ajenos en `[6/8]`.
@@ -65,9 +68,9 @@ FASE-RELEASE  AC10 write-back propio + docs + archivado R2.10
 | # | Fase | Estado | HEAD medido al cerrar | Nota |
 |---|---|---|---|---|
 | 0 | Preparación | ✅ CERRADA 2026-10-08, commiteada y empujada | `98c190e` al medir; tip empujado `b536748` | Dos filas del mandato refutadas y re-ancoradas (maestro §1); AC5 bajó de construcción a diente |
-| 1 | FASE-A1 | ✅ CERRADA, COMMITEADA y EMPUJADA 2026-10-08 — commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`) | `d8a7d80` al abrir; tip publicado `63b944a` | AC1 y AC2 landed: `sha_cuerpo` + schema 1.1, puerta cuerpo-contra-cuerpo con el gate de registro y D2 conservados, `[CONTADOR]` publicado; PRE 23 → POST 31 (resta 8), tres mutantes sobre copia aislada. Consecuencia durísima para A3: la guarda de migración termina en `continue`, así que las entradas `1.0` **tampoco** llegan al bloque `[DUPLICADO-VIGENTE]` y el rojo de la era G sigue sin evaluarse hasta que haya una entrada 1.1 en el registro |
+| 1 | FASE-A1 | ✅ CERRADA, COMMITEADA y EMPUJADA 2026-10-08 — commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`) | `d8a7d80` al abrir; tip publicado `63b944a`. **Addenda 2026-10-08:** esa fue la primera tanda; la banda completa de la fase es `d8a7d80..67b7e2f` (sello `15f4fdd` y addenda `67b7e2f`, L3 sin hallazgos en las tres tandas). El tip vigente no se estampa aquí: lo imprime `git ls-remote origin refs/heads/master` al leer esta fila | AC1 y AC2 landed: `sha_cuerpo` + schema 1.1, puerta cuerpo-contra-cuerpo con el gate de registro y D2 conservados, `[CONTADOR]` publicado; PRE 23 → POST 31 (resta 8), tres mutantes sobre copia aislada. Consecuencia durísima para A3: la guarda de migración termina en `continue`, así que las entradas `1.0` **tampoco** llegan al bloque `[DUPLICADO-VIGENTE]` y el rojo de la era G sigue sin evaluarse hasta que haya una entrada 1.1 en el registro — **decidida el 2026-10-08, ver la fila 3** |
 | 2 | FASE-A2 | ⬜ Pendiente | — | No arranca si A1 no cerró |
-| 3 | FASE-A3 | ⬜ Pendiente | — | Dependencia dura con A1 por flujo de control; su rojo de AC6 es un hallazgo verdadero |
+| 3 | FASE-A3 | ⬜ Pendiente | — | Dependencia dura con A1 por flujo de control; su rojo de AC6 es un hallazgo verdadero. **Decidido 2026-10-08 por el operador (Caso A, vía a1):** gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9), ejecutado como subtarea 3b de su prompt |
 | 4 | FASE-B | ⬜ Pendiente | — | Diagnóstico con medición antes de tocar nada |
 | 5 | FASE-C | ⬜ Condicional — la abre B | — | Si B no la abre, se declara «no aplica» |
 | 6 | FASE-RELEASE | ⬜ Pendiente | — | Requiere versión dictada y autorización literal de la subida |

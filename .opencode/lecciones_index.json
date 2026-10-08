@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 449,
     "ids_con_definicion": 358,
-    "ids_citados_sin_definicion": 91,
+    "ids_citados_sin_definicion": 93,
     "fechas_por_fuente": {
       "nombre": 347,
       "commit": 11,
@@ -712,7 +712,7 @@
       "seccion": "Decisiones Arquitectónicas",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 5,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -5581,6 +5581,14 @@
       ]
     },
     {
+      "id": "DA-CIM.9",
+      "familia": "DA",
+      "total_citas": 15,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-B11",
       "familia": "S",
       "total_citas": 15,
@@ -5703,6 +5711,14 @@
       ]
     },
     {
+      "id": "DA-CIM.10",
+      "familia": "DA",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-B8",
       "familia": "S",
       "total_citas": 6,
@@ -5772,6 +5788,14 @@
       ]
     },
     {
+      "id": "S-CIM-2",
+      "familia": "S",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-E2E-4",
       "familia": "S",
       "total_citas": 5,
@@ -5811,14 +5835,6 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-CIM-2",
-      "familia": "S",
-      "total_citas": 4,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {

@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `18` análisis de plan + `39` archivos de `.opencode/context/`. `449` `.md` en total como corpus de **citas**.
-- 358 IDs con definición detectada; 91 IDs citados sin definición (ver última sección).
+- 358 IDs con definición detectada; 93 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -34,7 +34,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-*` | Decisiones / reglas de alineación | 51 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
-| — | Citados sin definición | 91 |
+| — | Citados sin definición | 93 |
 
 ## `L-*` — Lecciones aprendidas (206)
 
@@ -258,7 +258,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-CIM.1` | Curar por separación de las dos preguntas (sha_cuerpo + puerta cuerpo-cuerpo), no por --sanear en el writer — Dictada por el operador, no se reabre. El writer no conoce la política de identidades de… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 3 (solo el plan dueño) |
 | `DA-CIM.2` | schema_version 1.0 → 1.1 con campo nuevo y sin back-fill — Rellenar hacia atrás con el sha de hoy fabrica verde por construcción y borra la historia de un cuerpo editado antes de la primera corrida… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 2 (solo el plan dueño) |
 | `DA-CIM.3` | Ante parseo fallido del id: no re-subir, verificar por censo — La idempotencia es por título y un título nuevo nunca existió: re-subir crea el duplicado que L-QW.2 mide | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 2 (solo el plan dueño) |
-| `DA-CIM.4` | AC6 cierra declarando con dueño, no tocando el notebook — source delete es irreversible sobre contenido publicado y exige decisión escrita aparte; el registro a mano por una fuente ajena también pide… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 4 (solo el plan dueño) |
+| `DA-CIM.4` | AC6 cierra declarando con dueño, no tocando el notebook — source delete es irreversible sobre contenido publicado y exige decisión escrita aparte; el registro a mano por una fuente ajena también pide… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 5 (solo el plan dueño) |
 | `DA-CIM.5` | FASE-A dividida en A1/A2/A3 por parejas de acoplamiento real — R3: seis ACs con mutante propio son más de cuatro tareas; el corte por acoplamiento (qué función toca cada una) mantiene cada fase… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 1 (solo el plan dueño) |
 | `DA-CIM.6` | La cura del generador pertenece a FASE-C con su propio AC — Es código de producto con 16 + 36 funciones hermanas y alimenta [6/8] de cada commit | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 1 (solo el plan dueño) |
 | `DA-CIM.7` | AC10: el plan se publica a sí mismo con el writer curado, y su certificación está separada en entrega offline / aceptación remota — Es la única prueba de que la cura cierra su meta en el caso real… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Decisiones Arquitectónicas | 1 (solo el plan dueño) |
@@ -414,7 +414,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (91)
+## Citados sin definición (93)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -422,6 +422,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | ID | Citas | Dónde se cita |
 |----|-------|---------------|
 | `D-T1.3` | 25 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
+| `DA-CIM.9` | 15 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-B11` | 15 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B10` | 13 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `D-C` | 12 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
@@ -437,6 +438,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-E2E-1` | 7 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-6` | 7 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-A-QUICK-TRECE` | 6 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
+| `DA-CIM.10` | 6 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-B8` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B13` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B14` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -445,12 +447,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-12` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-13` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B6` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
+| `S-CIM-2` | 5 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-4` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-11` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-CIM` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B2` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-CIM-2` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-CIM-3` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-10` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F5` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -479,6 +481,4 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-P4` | 2 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-PF` | 2 | Archives/SR-PIPELINE-FIXES-2026-08-27, context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29 |
 | `L-VUP-n` | 2 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
-| `S-B5` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
-| `S-B9` | 2 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
-| … | +31 más en el JSON | |
+| … | +33 más en el JSON | |

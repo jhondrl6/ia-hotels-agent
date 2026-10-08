@@ -12,10 +12,14 @@ saneear, y sin control S15 estable.
 **Estado:** preparación cerrada el 2026-10-08 contra HEAD `98c190e`. **Sin código implementado.** ⟦Estado de FASE-A1, 2026-10-08, misma fecha y sesión distinta: AC1 y AC2 landed en el árbol de trabajo contra HEAD `d8a7d80`, **sin commitear** porque el commit no se autorizó en el chat. La frase anterior describe el árbol al cerrar la preparación y se conserva como registro.⟧ ⟦**Sello 2026-10-08, misma sesión:** llegó la instrucción literal «Git Commit + L3 + Push». commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`). El sha del commit que estampa esta nota no se estampa en sí mismo.⟧ ⟦**Addenda del mismo sello (segundo push de
 la sesión):** la nota anterior se escribió antes de empujar el propio sello, que viajó en `15f4fdd` con rango
 empujado `63b944a..15f4fdd`. El sha de esta addenda no se estampa en sí misma: el tip publicado de la fase es el
-que imprima `git ls-remote origin refs/heads/master` al leerla.⟧ ⟦Sello del
+que imprima `git ls-remote origin refs/heads/master` al leerla.⟧ ⟦**Segunda addenda del mismo sello (enmienda
+documental del 2026-10-08):** la sesión del sello empujó una tercera tanda, `15f4fdd..67b7e2f`, así que la banda
+completa de FASE-A1 es `d8a7d80..67b7e2f` — la cura `63b944a`, el sello `15f4fdd` y la addenda `67b7e2f`, con L3 sin
+hallazgos en las tres tandas. Los rangos anteriores se conservan porque cada uno describe su push; no se
+re-escriben.⟧ ⟦Sello del
 cierre: el operador autorizó commit, L3 y push en la misma sesión. El commit documental de la preparación es
 `b536748`, los ocho checks del hook versionado pasaron, la revisión profunda L3 no produjo hallazgos y el rango
-empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de reanudación: FASE-A2** (AC3 y AC4), que por contrato no arranca si A1 no cerró; A1 cerró commiteada y empujada (`63b944a`), así que la línea base de A2 es ese tip.
+empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de reanudación: FASE-A2** (AC3 y AC4), que por contrato no arranca si A1 no cerró; A1 cerró commiteada y empujada con banda `d8a7d80..67b7e2f`, así que la **línea base de A2 es el tip que imprima `git ls-remote origin refs/heads/master` al abrir su sesión**, no una cifra de este índice: todo commit posterior la mueve. Las dos decisiones del operador del 2026-10-08 están estampadas en maestro §4 (con su errata), §5 y §3, en `04-contrato-ejecucion.md` §R2, en `dependencias-fases.md`, en `10-analisis-post-implementacion.md` §Seguimientos y en los prompts de A2 y A3.
 
 ## Por qué importa cada fila
 
@@ -37,8 +41,8 @@ empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se es
 | `04-contrato-ejecucion.md` | Límites y precedencias, inicio de cada fase, presupuesto (R2.1 con el instrumento **fuera de servicio**), reglas de tests/mutantes/tres estados, cierre incremental en 8 pasos, orden R2.10 del write-back y del archivado |
 | `dependencias-fases.md` | Grafo, tabla de conflictos por archivo y la dependencia **dura** A1→A3 leída del flujo de control |
 | `05-prompt-inicio-sesion-fase-A1.md` | AC1 + AC2 — las dos identidades y la puerta de vigencia |
-| `05-prompt-inicio-sesion-fase-A2.md` | AC3 + AC4 — slug sin colisión y `fuente_id` desde la tabla |
-| `05-prompt-inicio-sesion-fase-A3.md` | AC5 + AC6 — rutas archivadas y la era G declarada con dueño |
+| `05-prompt-inicio-sesion-fase-A2.md` | AC3 + AC4 — slug sin colisión y `fuente_id` desde la tabla; desde la enmienda del 2026-10-08 trae además las **dos reglas de ejecución** (código congelado antes del cierre documental y reemplazos documentales por un solo script de bytes bajo `temp/`) |
+| `05-prompt-inicio-sesion-fase-A3.md` | AC5 + AC6 — rutas archivadas y la era G declarada con dueño, más la **subtarea 3b**: gobernar el bloque huésped también en el camino de migración, con su especificación, sus tres dientes y su mutante |
 | `05-prompt-inicio-sesion-fase-B.md` | AC7 + AC8 — diagnóstico medido del control S15 y cura con diente intacto |
 | `05-prompt-inicio-sesion-fase-C.md` | AC9 — condicional: solo si B concluye que la cura está en el generador |
 | `05-prompt-inicio-sesion-fase-RELEASE.md` | AC10 — write-back de **este** plan con el writer curado, docs oficiales y archivado |
@@ -52,8 +56,8 @@ empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se es
 | Fase | ACs | Estado |
 |---|---|---|
 | Preparación | — | ✅ 2026-10-08 |
-| FASE-A1 | AC1, AC2 | ⬜ Pendiente |
-| FASE-A2 | AC3, AC4 | ⬜ Pendiente |
+| FASE-A1 | AC1, AC2 | ✅ CERRADA, COMMITEADA Y EMPUJADA 2026-10-08 (banda `d8a7d80..67b7e2f`, L3 sin hallazgos en las tres tandas) |
+| FASE-A2 | AC3, AC4 | ⬜ Pendiente — **punto de reanudación** |
 | FASE-A3 | AC5, AC6 | ⬜ Pendiente |
 | FASE-B | AC7, AC8 | ⬜ Pendiente |
 | FASE-C | AC9 | ⬜ Condicional (la abre B) |
@@ -63,9 +67,10 @@ empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se es
 ## Cómo continuar
 
 Una fase por sesión (R1). La siguiente sesión abre con el contenido de
-`05-prompt-inicio-sesion-fase-A1.md` (bloque «Prompt de ejecución») y **re-mide** HEAD, paridad, status y el quick
-antes de escribir la primera línea: dos filas del mandato caducaron entre su redacción y esta preparación, y la
-tercera puede caducar entre sesiones.
+`05-prompt-inicio-sesion-fase-A2.md` (bloque «Prompt de ejecución») —A1 ya cerró, commiteada y empujada— y
+**re-mide** HEAD, paridad, status y el quick antes de escribir la primera línea: dos filas del mandato caducaron
+entre su redacción y esta preparación, y la tercera puede caducar entre sesiones. La referencia de presupuesto y su
+base medida viven en `04-contrato-ejecucion.md` §R2.
 
 Reglas que gobiernan sin excepción (maestro §2 y contrato): ninguna fase re-baja una aserción existente para
 conseguir verde; todo mutante se ejecuta sobre el instrumento versionado y se restaura verificando sha256; el

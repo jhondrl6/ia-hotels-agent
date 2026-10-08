@@ -24,6 +24,7 @@ Unidades declaradas: «funciones `def test_`» se cuenta con el método canónic
 | `fuente_id` capturado de la tabla del CLI | `scripts/validate_qmind_writeback.py` | Parseo `Key: value` en las dos ramas de `do_upload()`; ante fallo, censo y no re-subida | ⬜ A2 (futura) |
 | Rutas con el plan archivado fijadas por diente | `scripts/validate_qmind_writeback.py` | `Archives/<PLAN>` publica con clave `plan_dir.name`; `cuerpo_del_plan()` resuelve dos raíces | ⬜ A3 (futura) |
 | Dictamen de la fuente de la era G | notebook `iah-cli-lecciones` + registro | `[DUPLICADO-VIGENTE]` con id, título y sha, declarado con dueño; nada borrado | ⬜ A3 (futura) |
+| Bloque huésped gobernado también en el camino de migración | `scripts/validate_qmind_writeback.py` | `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada antes del `continue` de la guarda de migración, sin levantar la capa D2 para entradas `1.0` (decisión del operador del 2026-10-08; especificación en el prompt de A3, subtarea 3b) | ⬜ A3 (futura) |
 | Control S15 estabilizado con diente intacto | `tests/test_build_lesson_index_s15_fecha_versionada.py` | La divergencia esperada queda gobernada sin re-anclar el control ni debilitar la aserción | ⬜ B (futura) |
 | Cura de clasificación en el generador (condicional) | `scripts/build_lesson_index.py` | Solo si AC7 la exige; con su mutación y sus baterías | ⬜ C (condicional) |
 
@@ -44,7 +45,7 @@ Unidades declaradas: «funciones `def test_`» se cuenta con el método canónic
 | Distribución de fuentes de fecha del índice | 337 `nombre` / 11 `commit` / 0 `SIN-FUENTE` | línea `[fechas]` del writer; la FASE-B/C la re-mide | Preparación |
 | Tests nuevos de cada fase | A2, A3, B, C: ⬜ pendiente (A1: 8, fila arriba) | lo imprime su POST | A2, A3, B, C |
 | Checks del modo completo al cerrar | ⬜ pendiente | `run_all_validations.py` sin `--quick`, crudo archivado | RELEASE |
-| Presupuesto `tool_use` por fase | A1: ≈70 contados a mano, **por encima de la referencia de 60 → checkpoint declarado** (no fase adicional, contrato §R2) | **auto-reporte con unidad declarada** (instrumento canónico FUERA DE SERVICIO, R2.1); el desglose de en qué se fue, en `E/FASE-A1/00-registro-de-fase.md` | ✅ A1 (A2, A3, B, C pendientes) |
+| Presupuesto `tool_use` por fase | A1: ≈70 contados a mano, **por encima de la referencia de 60 → checkpoint declarado** (no fase adicional, contrato §R2). **Referencia vigente desde la enmienda del 2026-10-08: 90 para A2/A3/B y 60 para RELEASE** (contrato §R2; la decisión y su base medida están allí) | **auto-reporte con unidad declarada** (instrumento canónico FUERA DE SERVICIO, R2.1); el desglose de en qué se fue, en `E/FASE-A1/00-registro-de-fase.md`; el total ≈70 lo imprime ese registro y las tres partidas (≈30 código+tests+mutantes / ≈25 cierre documental / ≈15 verificaciones y re-tomas) las declaró el operador al dictar la referencia, no las publica ningún instrumento | ✅ A1 (A2, A3, B, C pendientes) |
 
 ## Sección E: Archivos afiliados actualizados
 

@@ -31,9 +31,13 @@ vigencia corte `[VENCIDO]`, el bloque `DUPLICADO-VIGENTE` no se evalúa (los cam
 | Fase | Estado |
 |---|---|
 | Preparación | ✅ 2026-10-08 |
-| FASE-A1 | ⬜ Pendiente (requisito duro: `sha_cuerpo` y la puerta de vigencia) |
+| FASE-A1 | ✅ **CERRADA, COMMITEADA Y EMPUJADA** 2026-10-08 — requisito duro landed: `sha_cuerpo` + schema 1.1 y la puerta de vigencia cuerpo contra cuerpo, con el gate de registro y el contrato D2 conservados. Banda empujada `d8a7d80..67b7e2f` (cura `63b944a`, sello `15f4fdd`, addenda `67b7e2f`; L3 **sin hallazgos** en las tres tandas). Crudos: `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/`. **Su consecuencia 1 —las entradas `1.0` salen por `continue` y nunca llegan al bloque huésped— quedó resuelta por DA-CIM.9 y es la subtarea 3b de este prompt** |
 | FASE-A2 | ⬜ Pendiente (requisito: slug y `fuente_id`) |
 | FASE-B, C, RELEASE | ⬜ Pendientes |
+
+**Línea base de esta fase:** el tip que imprima `git ls-remote origin refs/heads/master` **al abrir la sesión**. Las
+cifras de la tabla son históricas: la banda de A1 se cerró con la enmienda del 2026-10-08 y cualquier commit
+posterior la mueve hacia adelante.
 
 ### Lecciones capitalizadas aplicables a esta fase
 
@@ -73,6 +77,39 @@ La **opción (a)** —registrarla como `vigente-historica` con su sha— solo se
 para editar la contabilidad por una fuente ajena; entonces el rojo se retira **por contabilidad** y el censo de
 fuentes vigentes del plan pasa de 2 a 1, declarando que no se borró nada.
 
+### Tarea 3b — AC6 por DA-CIM.9: gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9)
+
+**Decisión del operador del 2026-10-08 (Caso A, vía a1), estampada en maestro §4 con su errata y en maestro §5
+S-CIM-2.** Lo que A1 midió y declaró (`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/00-registro-de-fase.md`,
+consecuencia 1): la guarda de migración termina en `continue`, así que las entradas `1.0` **no** recorren el bloque
+`[DUPLICADO-VIGENTE]`. Con el registro como está hoy —solo dos entradas `1.0` del padre— el dictamen de la era G es
+inalcanzable y `[17/18]` queda en NO-EVALUABLE sin fecha, no porque falte red sino porque falta el camino.
+
+**Especificación (así se ejecuta, no se re-abre en la fase):**
+
+- Extraer el bloque huésped a una función `_huespedes_sin_contabilidad(datos, fuentes, plan)` —recibe las fuentes
+  del censo y el nombre del plan, devuelve las fuentes que nombran al plan sin entrada contable en el registro— y
+  **llamarla también en la rama de migración, antes del `continue`**. El bloque deja de ser código suelto del final
+  del bucle: lo llaman los dos caminos (entradas `1.1` y entradas `1.0`), y el `continue` de la abstención sigue
+  donde estaba.
+- **La capa D2 NO se levanta para entradas `1.0`.** Siguen en abstención con su motivo impreso; nunca un `[FRESCO]`
+  sobre quien no tiene `sha_cuerpo`. Lo que se añade es la evaluación de la huésped, no una dictaminación de
+  vigencia que el registro no puede sostener.
+- **Dientes (los tres, con su población montada en `tmp_path`, cero escrituras remotas):**
+  (i) huésped **roja** sobre una entrada `1.0` con `descargas == 0` —el rojo se imprime con id, título truncado
+  legible y `sha_metadata` del censo, y el contador de descargas de la corrida sigue en 0;
+  (ii) **rojo + abstención de migración en la misma corrida** —las dos líneas conviven y el EXIT es el del rojo;
+  la abstención no tapa el hallazgo ni el hallazgo pinta de VENCIDO a la abstención (contrato D2, R2.9);
+  (iii) `[CONTADOR]` **sigue cuadrando** con el rojo fuera de esa partición: `cuerpo + migracion + local == N`, la
+  huésped se reporta aparte y no entra en la suma.
+- **Mutante (R2.8):** apagar la llamada huésped en la rama de migración rompe el diente (i) y solo (i) — se ancla la
+  aserción que pierde, no el token. Ejecutado sobre copia aislada, con el par copia-intacta-verde / mutada-rojo y
+  la restauración verificada por sha256; el worktree vivo intacto antes y después.
+
+**Fuera de esta subtarea, declarada:** la vía (a) del maestro §2 DA-CIM.4 (registrar la era G como
+`vigente-historica`) y la vía a2 del mandato (re-publicar el `10-analisis` del padre como 1.1) siguen siendo
+escrituras que requieren autorización literal propia; el operador no las dictó el 2026-10-08.
+
 ### Tarea 4 — Dientes, contador y cierre
 
 Mutantes (cada uno con restauración por sha256): quitar la segunda raíz de `cuerpo_del_plan()` convierte una
@@ -105,6 +142,7 @@ Conforme al contrato §cierre, sin `--release`:
 
 - [ ] AC5 con sus dos rojos nombrados por causa (ruta no encontrada; abstención con raíz buscada) y su verde de clave `plan_dir.name`
 - [ ] AC6 cerrada por una de sus dos vías **escrita en la evidencia**, con sha y dueño; si fue la (b), el rojo sigue imprimiéndose y ningún documento del plan lo describe como resuelto
+- [ ] DA-CIM.9 landed: `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración antes del `continue`, con el diente (i) rojo sobre entrada `1.0` y `descargas == 0`, el diente (ii) rojo + abstención en la misma corrida, el diente (iii) `[CONTADOR]` cuadrando con la huésped fuera de la suma, y el mutante con restauración por sha256
 - [ ] Nada fue borrado en el notebook; ninguna subida ejecutada; ningún enlace firmado persistido
 - [ ] Los dientes de A1 y A2 siguen verdes; delta explicado por adiciones de ESTA fase
 - [ ] Contador publicado y crudo del modo completo archivado con el estado de cada check
@@ -115,7 +153,8 @@ Conforme al contrato §cierre, sin `--release`:
 - Dependencia dura con A1: sin la puerta de vigencia landed, AC6 **no es evaluable** y la fase se detiene.
 - Prohibido `qmind source delete`, prohibido re-subir, prohibido editar el registro a mano sin autorización literal.
 - No tocar `AGENTS.md`, `.cursorrules`, `VERSION.yaml`, el workflow ni los hooks; no liberar versión.
-- No iniciar FASE-B. Presupuesto 60 `tool_use` al corte autorizado; auto-reporte con unidad declarada.
+- No iniciar FASE-B. Presupuesto **90 `tool_use`** al corte autorizado (la referencia por fase y su base medida
+  viven en `04-contrato-ejecucion.md` §R2); auto-reporte con unidad declarada.
 
 ## Prompt de ejecución
 
@@ -131,10 +170,14 @@ OBJETIVO: gobernar por diente la ruta del --upload con el plan archivado y dicta
 
 TAREAS: 1) PRE, censo del notebook y racha remota. 2) AC5 resolucion de rutas fijada por diente en tmp_path.
 3) AC6 rojo declarado con dueño y sha, o registro como vigente-historica solo con autorizacion literal.
+3b) gobernar el bloque huesped tambien en el camino de migracion (DA-CIM.9): extraer
+_huespedes_sin_contabilidad(datos, fuentes, plan), llamarla en la rama de migracion antes del continue, sin
+levantar D2 para entradas 1.0, con los tres dientes y su mutante.
 4) mutantes, contador publicado, modo completo con crudo y cierre.
 
 CRITERIOS: el cuerpo ausente es NO-EVALUABLE y nunca VENCIDO, la fuente huesped corta DUPLICADO-VIGENTE con su id
-y su sha, y el modo completo se archiva en vez de auditarse con el check recien curado.
+y su sha tambien cuando la entrada es 1.0 y la corrida no descarga nada, y el modo completo se archiva en vez de
+auditarse con el check recien curado.
 
 RESTRICCIONES: sin source delete, sin subir, sin editar el registro a mano, sin tocar el plan padre, sin AGENTS ni
 VERSION, sin commit salvo instruccion literal, sin iniciar B.

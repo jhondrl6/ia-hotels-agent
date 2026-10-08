@@ -25,7 +25,7 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 
 ## Etapa 2 — Implementación
 
-### FASE-A1 — AC1 y AC2 (✅ CERRADA y COMMITEADA 2026-10-08: commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`))
+### FASE-A1 — AC1 y AC2 (✅ CERRADA y COMMITEADA 2026-10-08: commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`)). **Banda completa al cerrar la enmienda 2026-10-08: `d8a7d80..67b7e2f`** — sello `15f4fdd` y addenda `67b7e2f`, cada tanda con su L3 sin hallazgos; el tip vigente lo imprime `git ls-remote origin refs/heads/master`)
 
 - [x] PRE re-medido con HEAD, status, quick y la selección literal — HEAD de la sesión `d8a7d80` (no `98c190e`: la preparación ya había subido tres commits), quick 13/13 EXIT 0, PRE 23 passed EXIT 0 con intérprete declarado (`venv` Python 3.13.3, no el del sistema que usó la preparación) → `E/FASE-A1/`
 - [x] `registrar_publicacion()` escribe `sha_cuerpo`; `schema_version` 1.1; `cargar_registro` tolera entradas 1.0 — el sha se resuelve por `cuerpo_del_plan()` con `raiz_de_planes()`, no por la copia `--file`; diente `test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada` lee el JSON **en disco**
@@ -48,6 +48,7 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [ ] Parseo fallido → estado «id no capturado» + censo; **contador de subidas de la corrida = 1**
 - [ ] Ninguna subida real ejecutada; ninguna salida con enlace firmado persistida
 - [ ] Cinco mutantes con su par rojo/verde y restauración por sha
+- [ ] Reglas de ejecución c2 (contrato §R2): código **congelado** antes de abrir el cierre documental, con el POST y los mutantes re-tomados **una** sola vez al final, y los reemplazos documentales hechos por **un único script de bytes bajo `temp/`** con `count(old) == 1` por ancla, borrado al terminar
 - [ ] Cierre incremental con registro propio y quick verde
 
 ### FASE-A3 — AC5 y AC6 (⬜ Pendiente)
@@ -58,6 +59,7 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [ ] Todo diente de rutas montado en `tmp_path` con `--plans-dir` y `--registro`, sin tocar el registro real
 - [ ] Censo del notebook publicado completo (sin `head`), con racha de intentos si la red falló
 - [ ] AC6 cerrada por una de sus dos vías **escrita en evidencia**: rojo declarado con dueño y sha, o `vigente-historica` con autorización literal
+- [ ] Subtarea 3b landed (decisión del operador del 2026-10-08, maestro §4 con su errata): `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración **antes del `continue`**, con el rojo huésped sobre entrada `1.0` y `descargas == 0`, el par rojo + abstención de migración en la misma corrida, `[CONTADOR]` cuadrando con la huésped **fuera** de la suma, y el mutante con restauración por sha256. La capa D2 sigue sin levantarse para entradas `1.0`
 - [ ] Nada borrado en el notebook; modo completo corrido con crudo archivado, sin auditarse con el check recién curado
 - [ ] Cierre incremental con registro propio y quick verde
 

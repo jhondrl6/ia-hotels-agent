@@ -140,7 +140,8 @@ derivados con su escritor, quick, auto-reporte.
 - No editar `scripts/build_lesson_index.py` en esta fase (pertenece a AC9/FASE-C).
 - No re-ancorar `REV_CONTROL_DEFECTUOSO` a HEAD, no re-fijar baselines, no convertir la aserción en pertenencia.
 - No tocar `AGENTS.md`, `.cursorrules`, `VERSION.yaml`, el workflow ni los hooks; no liberar versión.
-- No iniciar FASE-C ni FASE-RELEASE. Presupuesto 60 `tool_use` al corte autorizado; auto-reporte con unidad declarada.
+- No iniciar FASE-C ni FASE-RELEASE. Presupuesto **90 `tool_use`** al corte autorizado (la referencia por fase y su
+  base medida viven en `04-contrato-ejecucion.md` §R2); auto-reporte con unidad declarada.
 
 ## Prompt de ejecución
 

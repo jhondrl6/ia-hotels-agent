@@ -56,12 +56,25 @@ manda el executor y la fase lo declara.
 
 ## R2 — presupuesto e instrumento
 
-Presupuesto de referencia por sesión: **60 `tool_use` al corte que la sesión tenga autorizado**. El instrumento
-canónico (`evidence/FASE-D/measure_iterations.py`) está **FUERA DE SERVICIO (R2.1)**: pide el transcript del
+**Presupuesto de referencia por sesión — DA-CIM.10 (Caso C, vía c1, dictada por el operador el 2026-10-08):**
+**90 `tool_use` para FASE-A2, FASE-A3 y FASE-B, y 60 para FASE-RELEASE**, siempre **al corte que la sesión tenga
+autorizado**. La base es la medición de FASE-A1, publicada en
+`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/00-registro-de-fase.md`: **≈70 `tool_use` contados a mano**
+(su desglose declarado al dictar la decisión: ≈30 de código + tests + mutantes, ≈25 de cierre documental, ≈15 de
+verificaciones y re-tomas). Procedencia de cada cifra: el total ≈70 lo imprime ese registro; la separación en tres
+partidas es la que declaró el operador al dictar DA-CIM.10 y **no** está publicada por ningún instrumento del repo.
+El instrumento canónico (`evidence/FASE-D/measure_iterations.py`) está **FUERA DE SERVICIO (R2.1)**: pide el transcript del
 cliente y su acceso está denegado (medido el 2026-10-07, R2.1 del mandato). No se reintenta para “ver si hoy
 va”. Cada fase cierra con auto-reporte **en la unidad usada** (`tool_use`, `ids únicos`, lo que su cliente mida)
 y declara que no es comparable con las que usaron el instrumento. No se mezcla unidades en un total y no se
 reporta cumplimiento estimado. Un exceso produce checkpoint y fase INCOMPLETA, no una segunda fase.
+
+**Rechazada c3** (aceptar checkpoints sin más): con un denominador que la mitad de las fases excede, el número deja
+de ser señal. **Adoptada además c2** como reglas de ejecución dentro de `05-prompt-inicio-sesion-fase-A2.md`:
+congelar el código antes de abrir el cierre documental y hacer los reemplazos documentales con un solo script de
+bytes bajo `temp/`. La cláusula del párrafo anterior sobre el exceso queda **intacta**; lo único que mueve
+DA-CIM.10 es el denominador y su base. FASE-C no está nombrada en la decisión: mantiene los 60 que dictaba esta
+sección antes del 2026-10-08 y queda **abierta al operador** si B la abre.
 
 **Qué corte se toma.** Con commit autorizado: hasta el commit de código. Sin esa autorización —caso normal de
 este plan hasta que el operador la dé—: hasta **«listo para revisión»**, declarándolo. El commit no es condición

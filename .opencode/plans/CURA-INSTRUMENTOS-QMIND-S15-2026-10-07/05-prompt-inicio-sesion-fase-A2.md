@@ -32,8 +32,13 @@ Dos defectos medidos el 2026-10-07 y re-confirmados en la preparación:
 | Fase | Estado |
 |---|---|
 | Preparación | ✅ 2026-10-08 |
-| FASE-A1 | ⬜ Pendiente — esta fase **no arranca** si A1 no cerró con `sha_cuerpo` landed |
+| FASE-A1 | ✅ **CERRADA, COMMITEADA Y EMPUJADA** 2026-10-08 — AC1 y AC2 landed (`sha_cuerpo` + schema 1.1 y puerta de vigencia cuerpo contra cuerpo, con el gate de registro y D2 conservados). Banda empujada completa: `d8a7d80..67b7e2f` — la cura `63b944a`, el sello `15f4fdd` y la addenda `67b7e2f`, con L3 **sin hallazgos** en las tres tandas. PRE 23 passed → POST 31 passed (resta 8), tres mutantes sobre copia aislada. Crudos y registro: `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/` |
 | FASE-A3, B, C, RELEASE | ⬜ Pendientes |
+
+**Línea base de esta fase:** el tip que imprima `git ls-remote origin refs/heads/master` **al abrir la sesión**, no la
+cifra de la tabla de arriba — esa describe la banda de A1 y es histórica. La banda `d8a7d80..67b7e2f` quedó cerrada
+con la enmienda del 2026-10-08; cualquier commit posterior la sigue moviendo hacia adelante, así que la paridad se
+declara por comando (`ls-remote` == `rev-parse HEAD`) y por `git status --porcelain -uall`, nunca por memoria.
 
 ### Lecciones capitalizadas aplicables a esta fase
 
@@ -48,6 +53,26 @@ Dos defectos medidos el 2026-10-07 y re-confirmados en la preparación:
 | L-G3 | Cambiar un contrato reescribe sus tests y su prosa en el mismo commit | El `README.md` de `instantaneas/` describe el esquema de nombres y viaja con esta fase si A1 no lo actualizó ya |
 
 ## Tareas
+
+### Reglas de ejecución adoptadas (vía c2 de la decisión de presupuesto, 2026-10-08)
+
+Las dos reglas entran **antes** de las tareas porque redistribuyen el presupuesto de la fase. Su base es la medición
+de FASE-A1 (`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/00-registro-de-fase.md`): ≈25 `tool_use` se fueron
+en el cierre documental y ≈15 en verificaciones y re-tomas, y las re-tomas nacían de editar código cuando el cierre
+ya estaba abierto.
+
+1. **Congelar el código antes de abrir el cierre documental.** Cuando terminan las tareas 2 a 4 —el `slug`, el
+   `fuente_id` y sus dientes— el código y los tests quedan **congelados**. A partir de ahí el POST de la selección y
+   la corrida de mutantes se re-toman **UNA sola vez, al final**, sobre el instrumento ya definitivo, y se archivan.
+   Si algo obliga a re-abrir el código, se declara la re-toma y su motivo en el registro de fase; no se encadena una
+   segunda ni una tercera.
+2. **Los reemplazos documentales del cierre se ejecutan con un solo script de bytes bajo `temp/`, con
+   `count(old) == 1` por ancla, y se borra al terminar.** Es la misma receta canónica del saneado (contrato
+   §Límites: sustitución a nivel de bytes con `assert count(old) == N` y prueba de sha inversa), aplicada a las
+   ediciones de documentación que el cierre acumula. El script es de un solo uso, vive bajo `temp/` (excluido por
+   declaración de Git), imprime el ancla que casó y el recuento por archivo, y se elimina al terminar; lo que
+   produce queda en el diff del árbol, no en el scratch. **Ningún `.py` se escribe bajo `evidence/`** (contrato
+   §Límites).
 
 ### Tarea 1 — PRE y lectura de la interfaz real
 
@@ -116,13 +141,18 @@ Identica a la de A1 (contrato §cierre), con el comando del escritor y sin `--re
 - [ ] Ninguna subida real ejecutada; ningún material del cliente propagado; ninguna salida firmada persistida
 - [ ] PRE/POST con resta comprobada; post-ejecución completo; quick verde; derivados regenerados
 - [ ] El `README.md` de `instantaneas/` describe el esquema de nombres vigente
+- [ ] Reglas c2 cumplidas y verificables en la evidencia: el código quedó **congelado** antes de abrir el cierre
+  documental, el POST y los mutantes se re-tomaron **una** sola vez al final (si hubo más de una re-toma, cada una
+  está declarada con su motivo), y los reemplazos documentales los hizo **un único script de bytes bajo `temp/`**
+  con `count(old) == 1` por ancla, impreso con su recuento por archivo y borrado al terminar
 
 ## Restricciones
 
 - Depende duramente de A1: sin `sha_cuerpo` landed, esta fase se detiene y declara INCOMPLETA con checkpoint.
 - Prohibido re-subir ante un parseo fallido. Prohibido `qmind source delete`. Prohibido editar el registro a mano.
 - No tocar `AGENTS.md`, `.cursorrules`, `VERSION.yaml`, el workflow ni los hooks; no liberar versión.
-- No iniciar FASE-A3. Presupuesto 60 `tool_use` al corte autorizado; auto-reporte con unidad declarada (R2.1).
+- No iniciar FASE-A3. Presupuesto **90 `tool_use`** al corte autorizado (la referencia por fase y su base medida
+  viven en `04-contrato-ejecucion.md` §R2); auto-reporte con unidad declarada (R2.1).
 
 ## Prompt de ejecución
 
@@ -139,6 +169,11 @@ parseo fallido provoque una segunda subida.
 
 TAREAS: 1) PRE y lectura de la interfaz real sin subir nada. 2) AC3 slug unico y legible. 3) AC4 fuente_id desde
 la tabla Key value con no-re-subida. 4) cinco mutantes con restauracion por sha y cierre.
+
+REGLAS c2 (adoptadas con la decision de presupuesto del 2026-10-08): (i) congela el codigo antes de abrir el cierre
+documental, y el POST y los mutantes se re-toman UNA sola vez al final; (ii) los reemplazos documentales del cierre
+se ejecutan con un solo script de bytes bajo temp/, con count(old) == 1 por ancla, borrado al terminar. Presupuesto
+90 tool_use al corte autorizado; la referencia y su base medida viven en 04-contrato-ejecucion.md §R2.
 
 CRITERIOS: dos publicaciones del mismo plan dejan dos archivos que casan cada uno con su entrada, la tabla
 archivada produce un id que casa con el censo, y ante tabla degenerada el estado es id no capturado con contador
