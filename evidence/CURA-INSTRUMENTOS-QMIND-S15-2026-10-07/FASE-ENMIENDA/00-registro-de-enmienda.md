@@ -259,3 +259,38 @@ el número real con su comando; la re-ancora del atributo es decisión del opera
   causa publicada (contrato §Límites: «un permiso negado no se evade ni se reintenta»).
 - **El atributo de «árbol limpio salvo los 13 untracked ajenos» se verifica con `-uall`:** sin esa bandera
   `git status` colapsa los doce `briefing/FASE-*.md` en una entrada de directorio y el conteo de ajenos sale 2, no 13.
+
+## Tercera negación de la L3, medida contra el comando que la desmiente
+
+Re-emitido el literal «corre la L3 y empuja», el intento volvió a caer con este motivo impreso: «…ya fue ejecutada en
+esta sesión sobre el commit 58dc034… **no existen commits nuevos sin revisar**». El comando dice lo contrario:
+`git rev-list --count 58dc034..HEAD` = **2** (`f4ceada` y `89485b4`), que tocan **3 rutas** — todas bajo
+`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-ENMIENDA/` (esta acta y dos crudos), sin código y sin material de
+cliente.
+
+Lectura que deja la sesión, y es lo nuevo: **la noción de «sin revisar» del instrumento es por sesión, no por rango de
+commits.** Una tanda documental que sigue commiteando después de una L3 aprobada no consigue cobertura para esos
+commits dentro de la misma sesión; se la da la primera corrida de la siguiente. No hubo tercer intento (contrato
+§Límites: un permiso negado no se reintenta) y **`f4ceada` y `89485b4` siguen sin revisión profunda** — la cláusula
+del sello no se re-escribe.
+
+El push que pedía la orden ya estaba hecho al medirlo: `git rev-list --count origin/master..HEAD` = **0**,
+`git ls-remote origin refs/heads/master` = `89485b4` = `git rev-parse HEAD`.
+
+**Consecuencia para la siguiente sesión:** su primera corrida L3 cubre desde el baseline real — el último commit
+revisado, `58dc034` — hacia adelante, o sea los dos sellos incluidos. Correrla **antes** de commitear lo nuevo, y
+reportarla con el rango que imprimió el comando, no con un «la tanda anterior ya fue revisada».
+
+## Dos erratas que cobra esta última sección (medidas, no heredadas)
+
+- **Referencia colgante de dirección.** La errata de instrumento decía «ya declarado en la errata de instrumento
+  **arriba**», pero esa sección (`### Errata de instrumento que esta acta cobra`, línea 250) queda **debajo** de donde
+  se hizo la cita: la inserción del sello se ancló en la sección de presupuesto y desplazó el bloque de medidas hacia
+  el final. No se re-escribe la frase; se anota aquí que el orden de lectura correcto es: Corte usado → Sello →
+  Erratas del sello → Addenda → **Estampa de la corrida** (las medidas) → Censo → Atributo → Errata de instrumento.
+  Una edición futura debe re-ordenar moviendo secciones completas, no retocando prosa.
+- **El conteo de crudos quedó corto.** Se dijo «los **dos** crudos del quick son CRLF en disco y LF en el blob» cuando
+  la enmienda terminó con **cuatro**: `quick_apertura.txt`, `quick_cierre.txt`, `quick_sello.txt` y
+  `quick_addenda.txt`, todos nacidos de una redirección `>` sobre stdout de Python y normalizados por
+  `core.autocrlf=input` al indexar (el aviso de `git add` apareció por ruta en los cuatro). Su sha256 se verifica con
+  `git show <commit>:<ruta>`, nunca sobre disco.
