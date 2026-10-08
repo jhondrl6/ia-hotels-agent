@@ -155,7 +155,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-PF11` | QUÉ PASÓ: la corrida post-hotfix (H2, output salentoreal_final_v4c_h2) encontró el análisis previo de la corrida SR-H (output salentoreal_final_v4c) — directorios distintos, mismo hotel — vía memoria… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 18 en Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-PF12` | QUÉ PASÓ: tras el fix de sondas (SR-F), el plan de assets quedó determinista y estable entre corridas (3 pains → 3 assets pain-mapeados + monthly_report estándar en H2), mientras corridas históricas… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 6 en Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-QW.1` | Un verificador que comprueba la *clave* de una operación no puede detectar que el contenido | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 10 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-QW.2` | Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 6 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
+| `L-QW.2` | Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 7 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `L-QW.3` | Un verde producido por la ausencia del instrumento es un rojo disfrazado. El exit 0 por CLI | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 7 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `L-QW.4` | Un límite conocido y escrito no se cierra solo: la restricción estaba documentada en el corpus | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 11 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-R.1` | R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 61 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
@@ -422,7 +422,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | ID | Citas | Dónde se cita |
 |----|-------|---------------|
 | `D-T1.3` | 25 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
-| `DA-CIM.9` | 15 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
+| `DA-CIM.9` | 16 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-B11` | 15 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B10` | 13 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `D-C` | 12 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
@@ -448,12 +448,12 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-13` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B6` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-CIM-2` | 5 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
+| `S-CIM-3` | 5 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-4` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-11` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-CIM` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B2` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-CIM-3` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-10` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F5` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F8` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |

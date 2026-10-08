@@ -63,7 +63,9 @@ ajusta la aserción.
 
 - No tocar `scripts/validate_qmind_writeback.py` ni su familia (pertenece a A1-A3, ya cerradas).
 - No re-ancorar el control de B; no tocar `AGENTS.md`, `.cursorrules`, `VERSION.yaml`; no liberar versión.
-- No iniciar FASE-RELEASE. Presupuesto 60 `tool_use` al corte autorizado; auto-reporte con unidad declarada.
+- No iniciar FASE-RELEASE. Presupuesto **90 `tool_use`** al corte autorizado — igual que A2/A3/B, por decisión del
+  operador del 2026-10-08 sobre la medición de A1 (ALTA, ≈70) más las 4 + 16 + 36 funciones hermanas que C re-ejecuta;
+  la referencia y su base viven en `04-contrato-ejecucion.md` §R2. Auto-reporte con unidad declarada.
 
 ## Prompt de ejecución
 

@@ -38,6 +38,24 @@
   del hook) y `scripts/validate_document_integration.py`; quick con crudo en
   `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-ENMIENDA/`. **No** se corrió `scripts/log_phase_completion.py`:
   es aditivo, FASE-A1 ya tiene su fila y esto no es una fase de implementación.
+- **Addenda de la misma sesión (cuatro decisiones del operador, registradas y ejecutadas).** (1) **a2 rechazada** — no
+  se re-publica el `10-analisis` del padre como entrada 1.1: con AC3 y AC4 sin landear, el slug comparte prefijo de 120
+  caracteres y **pisaría la única instantánea que queda del padre** (el mecanismo de S-CIM-3), la entrada nacería con
+  `fuente_id` vacía y el título nuevo crearía el duplicado de L-QW.2; el `1.1` llega con AC10 en RELEASE.
+  (2) **Vía (a) de AC6 no autorizada**: se mantiene (b), el rojo `[DUPLICADO-VIGENTE]` declarado con dueño — editar el
+  registro a mano inventaría un `sha_cuerpo` que nunca se publicó. (3) **FASE-C pasa a 90 `tool_use`**, como A2/A3/B:
+  A1 (complejidad ALTA) consumió ≈70 contra los 60 viejos, y C muta `_plan_date` más re-ejecuta 4 + 16 + 36 funciones
+  hermanas. (4) **Regla de unidad escrita en el contrato §Cierre**: un atributo que fije «exactamente N rutas» para un
+  ID estampado es inalcanzable aquí (dos lugares comparten archivo; el par derivado del índice es versionado y indexa
+  la familia `DA`), así que se declara la unidad con su comando y se publica el total con desglose — nunca se deja de
+  regenerar el derivado para que cuadre un número.
+- **El rojo que la tanda fabricó y cómo cayó.** La primera corrida del quick tras estas ediciones dio `12/13, EXIT=1`
+  por `Plan Citations`: había citado código por **número de línea** en maestro §2, contra `R2.2` del executor. Se
+  corrigió la cita (a símbolo), **no** el baseline: `--update-baseline` estaba disponible y habría dado verde con el
+  defecto adentro. Los dos crudos quedan archivados como par (`quick_rojo_citas_numericas.txt` / `quick_decisiones.txt`).
+  El mismo barrido encontró una cita ya desfasada por las ediciones propias (el párrafo `Punto de reanudación` del
+  README, anclado por posición y hoy desplazado) y tres caracteres de otro alfabeto inyectados en prosa española,
+  cazados solo por `unicodedata.name()` — ningún check del hook los ve.
 
 ## [Sin publicar] - FASE-A1 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 

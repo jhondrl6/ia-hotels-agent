@@ -79,7 +79,7 @@ que la regla tenga oportunidad de perder.
 | `05-…-fase-A3.md`, misma tabla | ídem A1 pendiente | ídem, más la pointer a la subtarea 3b como resolución de la consecuencia 1 de A1 |
 | `dependencias-fases.md`, fila 1 (A1) | «tip publicado `63b944a`» (afirmación de estado vigente, ya falsa) | se **añade** la addenda con la banda `d8a7d80..67b7e2f`; el rango del primer push no se re-escribe |
 | `06-checklist-implementacion.md`, encabezado de FASE-A1 | banda del primer push | se **añade** la banda completa |
-| `README.md` del plan, línea 18 | «A1 cerró commiteada y empujada (`63b944a`), así que la línea base de A2 es **ese tip**» (falso tras dos pushes más) | banda `d8a7d80..67b7e2f` y «la línea base de A2 es el tip que imprima `git ls-remote` al abrir» |
+| `README.md` del plan, parrafo de **Punto de reanudacion** (citado como «linea 18» al redactar; hoy cae en la 22 por las addendas que esta misma sesion anadio — deriva medida, R2.2 del executor: se citan simbolos, no lineas) | «A1 cerró commiteada y empujada (`63b944a`), así que la línea base de A2 es **ese tip**» (falso tras dos pushes más) | banda `d8a7d80..67b7e2f` y «la línea base de A2 es el tip que imprima `git ls-remote` al abrir» |
 | `README.md`, tabla Progreso y §Cómo continuar | «FASE-A1 ⬜ Pendiente» y «la siguiente sesión abre con el prompt de **A1**» | A1 ✅ y punto de reanudación en FASE-A2 |
 | `10-analisis-post-implementacion.md`, cabecera y fila de A1 | rango del primer push, sin señal de los dos siguientes | **addenda** con la banda completa y la L3 de las tres tandas |
 | `09-documentacion-post-proyecto.md` §B y §D | sin la funcionalidad de la huésped en migración; presupuesto con la referencia sola | fila nueva en §B (⬜ A3 futura) y la referencia por fase en §D con su procedencia |
@@ -284,7 +284,7 @@ reportarla con el rango que imprimió el comando, no con un «la tanda anterior 
 ## Dos erratas que cobra esta última sección (medidas, no heredadas)
 
 - **Referencia colgante de dirección.** La errata de instrumento decía «ya declarado en la errata de instrumento
-  **arriba**», pero esa sección (`### Errata de instrumento que esta acta cobra`, línea 250) queda **debajo** de donde
+  **arriba**», pero esa sección (`### Errata de instrumento que esta acta cobra`) queda **debajo** de donde
   se hizo la cita: la inserción del sello se ancló en la sección de presupuesto y desplazó el bloque de medidas hacia
   el final. No se re-escribe la frase; se anota aquí que el orden de lectura correcto es: Corte usado → Sello →
   Erratas del sello → Addenda → **Estampa de la corrida** (las medidas) → Censo → Atributo → Errata de instrumento.
@@ -310,7 +310,7 @@ propiedad que importa —que los cinco son CRLF en disco y LF en el blob, y que 
 ## Injerto cirílico cazado por codepoints, no por el gate
 
 El párrafo que acababa de escribir sobre el conteo de crudos contenía **tres letras cirílicas** dentro de una palabra
-española: U+0430, U+0440 y U+0445 en lugar de `a`, `r` y `h` de «archiva» (línea 305). Lo encontró un
+española: U+0430, U+0440 y U+0445 en lugar de `a`, `r` y `h` de «archiva» en el parrafo del conteo de crudos. Lo encontró un
 `unicodedata.name()` barrido de codepoints sobre el archivo, **no** ninguno de los ocho checks del hook ni los 13 del
 quick — que quedaron verdes con el carácter adentro. Precedente del mismo tipo, ya memorizado por la casa: un carácter
 CJK injertado en prosa española dentro de una celda.
@@ -319,3 +319,73 @@ Reparación afirmada antes y después: `t.count(<secuencia>) == 1` **antes** de 
 barrido de CYRILLIC/CJK devolviendo **0** después. Byte count del archivo: 26.118 → 26.116 (cada cirílica son 2 bytes
 en UTF-8 y su equivalente latino 1). El commit que estampa esto trae la misma lección: **el gate estructural no ve
 alfabetos; los codepoints sí.**
+
+## Decisiones del operador de esta tanda, registradas (2026-10-08, despues del push)
+
+Cuatro preguntas con opciones respondidas por el operador; cada una se ejecuto en el mismo turno.
+
+| # | Decision | Resuelto | Evidencia medida | Donde quedo escrito |
+|---|---|---|---|---|
+| 1 | a2: re-publicar el `10-analisis` del padre como entrada 1.1 (escritura remota) | **RECHAZADA ahora** | `registrar_publicacion()` sigue trancando el slug a 120 caracteres (la linea `slug = re.sub(...)[:120] + ".md"` dentro de `registrar_publicacion()`), asi que una segunda publicacion del mismo plan comparte prefijo y **pisaria la unica instantanea que queda del padre** — el mecanismo que perdio los byte-exactos de la entrada `reemplazada` (S-CIM-3). Las dos ramas de `do_upload()` siguen pasando cadena vacia en `fuente_id` (las dos llamadas a `registrar_publicacion()` dentro de `do_upload()`). Con titulo nuevo se crea el duplicado que mide L-QW.2; con el titulo vigente, el crudo de 124.280 B corta `[FAIL]` contra lo publicado de 125.198 B. Y no hace falta: el diente de A3 hace visible el rojo sin entrada 1.1 | maestro §2, parrafo DA-CIM.9, con su addenda |
+| 2 | Via (a) de AC6: registrar la era G como `vigente-historica` editando el registro a mano | **MANTENIDA la (b)** — rojo declarado con dueño | Ningun camino del writer produce esa entrada; escribirla a mano inventaria un `sha_cuerpo` que nunca se publico y taparia el hallazgo antes de que A3 lo imprima. Si algun dia se hace, el precursor es una bandera del writer con su AC y su mutante, no un edit | sin cambio: ya esta estampado en maestro §4 y §5 y en el prompt de A3 |
+| 3 | FASE-C sin numero en DA-CIM.10 | **90**, como A2/A3/B | A1 (complejidad ALTA) consumio ≈70 contra los 60 vigentes; C muta `_plan_date` y re-ejecuta 4 + 16 + 36 funciones hermanas | maestro §3 (addenda), contrato §R2 (addenda) y la fila de Restricciones del prompt de C |
+| 4 | Atributo de cierre inalcanzable | **Regla escrita en el contrato** | Dos lugares de estampado comparten archivo, y el par derivado versionado anade 2 rutas a todo `git grep -l` de una familia indexada; `grep -cF` cuenta lineas con coincidencia, no coincidencias | contrato §Cierre, apartado nuevo «Unidad de todo atributo verificable que cuente rutas» |
+
+**Cero escrituras remotas en esta tanda:** la decision 1 rechazo la unica que estaba sobre la mesa. `registro.json`,
+`scripts/` y `tests/` siguen intactos — lo que se toco del script fue leerlo. Referencia del registro al medirlo: raiz
+con `schema_version` 1.0, 2 entradas, ambas con `fuente_id` = `None` y sin `sha_cuerpo`.
+
+**Pendiente que sigue mio y no se ejecuto por falta de orden expresa:** la seccion E de
+`09-documentacion-post-proyecto.md` no declara la enmienda — un conteo sobre ese archivo responde **0** menciones de
+`FASE-ENMIENDA`. Faltan la fila del acta con sus crudos y la mencion de las rutas del plan que esta sesion edito.
+
+**Tres injertos de alfabeto en la propia escritura de esta tanda, y lo que eso significa.** `unicodedata.name()`
+sobre el acta encontro, en tres pasadas distintas: tres letras cirilicas (U+0430, U+0440, U+0445) dentro de «archiva»
+y dos ideograficas (U+7F16, U+8F91) dentro de «edito». Los tres se repararon por codepoint, con recuento de
+apariciones afirmado **antes** de escribir (1 cada uno) y barrido devolviendo **0** despues. Tambien se borro una
+afirmacion falsa que habia quedado en el parrafo anterior — decia «ya corregido» cuando el caracter seguia adentro:
+**declarar corregido sin re-ejecutar el barrido es exactamente el defecto que la casa ya tiene memorizado**. Ninguno
+de los ocho checks del hook ni los 13 del quick veian estos caracteres; el unico instrumento que los caza es el
+barrido de codepoints, y esa es la razon por la que la regla de la unidad de atributo se escribio en el contrato y no
+solo en el chat.
+
+## El rojo que la propia tanda fabrico, y como se cayo
+
+Al correr los derivados de esta tanda el quick **no** dio verde: `TOTAL: 12/13`, `STATUS: 1 VALIDATION(S) FAILED`,
+`EXIT=1`, con la etiqueta impresa `[-] Plan Citations: Line-number citations introduced or grown in plans (fix: cite
+symbols, or --update-baseline if the record legitimately grew)`. El rojo era mio y de la regla exacta que el mandato
+prohibe: al redactar la evidencia de la decision 1 cite el codigo por numero de linea en maestro §2, y `R2.2` del
+executor manda citar **simbolos**.
+
+Receta aplicada: **corregir la cita, no mover el baseline.** `--update-baseline` estaba disponible y habria dado verde
+con el defecto adentro; no se invoco. Se re-anclo a simbolo (`registrar_publicacion()` y su linea de `slug`,
+las dos llamadas dentro de `do_upload()`), y el mismo barrido encontro dos citas numericas mas en esta acta — una de
+ellas **ya desfasada por mis propias ediciones**: la que senalaba el parrafo `Punto de reanudacion` del README del plan
+como «linea 18» quando hoy cae en la 22. Deriva de 4 lineas, medida con `sed -n '18p'` (que respondio otro parrafo) y
+`grep -n "Punto de reanudacion"` (que respondio 22). Re-ancorada a seccion, con la deriva escrita.
+
+Los dos crudos quedan archivados como par, no sustituidos: `quick_rojo_citas_numericas.txt` (12/13, `EXIT=1`, el
+arbol con la cita mal) y `quick_decisiones.txt` (13/13, `EXIT=0`, el arbol commiteable). Tras la correccion:
+`validate_plan_citations.py` `[OK] … 0 nuevas y 0 crecimientos`, `build_lesson_index.py` `[OK] 358 IDs definidos + 93
+sin definición`, `validate_document_integration.py` `RESULT: All checks passed`.
+
+## Alfabetos inyectados en la escritura de esta tanda (barrido sistematico)
+
+Tres veces, en tres parrafos distintos, la escritura metio caracteres de otro alfabeto dentro de prosa espanola:
+cirilicas U+0430/U+0440/U+0445 en «archiva», ideograficas U+7F16/U+8F91 en «edito», y una afirmacion falsa encima — el
+parrafo decia «ya corregido» mientras el caracter seguia adentro, que es el defecto de declarar corregido sin
+re-ejecutar el instrumento. Reparacion por codepoint con `count == 1` afirmado antes y `0` despues, y **barrido
+sistematico de las 13 rutas tocadas** (`unicodedata.name()` contra CYRILLIC/CJK/HIRAGANA/KATAKANA/IDEOGRAPH/HANGUL/
+THAI/ARABIC): **0 caracteres exoticos**. Ningun check del hook ni del quick ve esos caracteres; el unico instrumento
+que los caza es el barrido, y por eso su regla quedo escrita en el contrato, no en el chat.
+
+## Estado de los crudos y de la cuenta
+
+`ls -1 evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-ENMIENDA/*.txt` es el instrumento: la lista crece con cada
+tanda, por eso se cita el comando y no la cifra. Lo que no cambia y si se afirma: todos los crudos son de
+`run_all_validations.py --quick` (ninguno de `pytest` — esta sesion no corrio tests, por contrato), todos CRLF en disco
+y LF en el blob, y su sha256 se verifica con `git show <commit>:<ruta>`.
+
+**Cero escrituras remotas en toda la tanda de decisiones:** la unica que estaba sobre la mesa (a2) fue rechazada por el
+operador con la evidencia del slug. `scripts/`, `tests/` y `.opencode/qmind-writeback/registro.json` intactos; lo que se
+toco del script fue leerlo.

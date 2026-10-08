@@ -108,7 +108,17 @@ camino de migración.** No re-abre AC6: le añade el diente sin el cual el rojo 
 el registro solo tenga entradas `1.0` (consecuencia 1 del registro de A1). Su especificación, sus tres dientes y su
 mutante viven en `05-prompt-inicio-sesion-fase-A3.md` (subtarea 3b) y su fila en §4 con la errata que la estampa.
 **Rechazadas:** a2 (re-publicar el `10-analisis` del padre como 1.1 — escritura remota sobre contenido publicado,
-con autorización propia) y a3 (declarar y no tocar, que dejaría `[17/18]` en NO-EVALUABLE sin fecha).
+con autorización propia) y a3 (declarar y no tocar, que dejaría `[17/18]` en NO-EVALUABLE sin fecha). **Addenda de la
+misma sesión, con el coste medido — a2 queda RECHAZADA también por daño, no solo por autorización:** con AC3 y AC4
+sin landear, una segunda publicación del mismo plan comparte prefijo de 120 caracteres en el slug (la línea
+`slug = re.sub(…)[:120] + ".md"` dentro de `registrar_publicacion()`, en
+`scripts/validate_qmind_writeback.py`) y **pisaría la única instantánea que queda del padre** — que es
+exactamente el mecanismo que perdió los byte-exactos de la entrada `reemplazada` (S-CIM-3); y la entrada nueva
+nacería con `fuente_id` vacía, porque las dos ramas de `do_upload()` siguen pasando la cadena vacía al llamar a
+`registrar_publicacion()`. Además, con título nuevo la idempotencia por título **crea la fuente duplicada** que mide
+L-QW.2, y con el título vigente el crudo de 124.280 B no casa con lo publicado de 125.198 B, así que corta `[FAIL]`. No hace
+falta para DA-CIM.9: el diente de A3 hace visible el rojo **sin** necesitar una entrada 1.1. El `1.1` llega con AC10
+en RELEASE, con el writer ya curado por A2.
 
 **DA-CIM.10 (dictada por el operador el 2026-10-08, Caso C vía c1): el presupuesto de referencia se fija por fase** —
 90 `tool_use` para A2, A3 y B, 60 para RELEASE — sobre la base medida de A1. Su fuente canónica es el contrato §R2 y
@@ -156,7 +166,10 @@ referencia de 60 que estaba vigente y su exceso quedó declarado como checkpoint
 canónico `evidence/FASE-D/measure_iterations.py` sigue **FUERA DE SERVICIO**: pide el transcript del cliente y su
 acceso está denegado (medido el 2026-10-07, no reintentado aquí). Cada sesión cierra con auto-reporte en la
 unidad usada y declarando que no es comparable con las que usaron el instrumento. **FASE-C no está nombrada en la
-decisión** y se queda con los 60: si B la abre, la referencia la dicta el operador.
+decisión** y se queda con los 60: si B la abre, la referencia la dicta el operador. ⟦**Addenda de la misma sesión,
+decidida por el operador tras medir el precedente:** FASE-C pasa a **90**. La base es la misma medición: A1, también
+de complejidad ALTA, consumió ≈70 con dos ACs y tres mutantes, y C trae mutación sobre `_plan_date` más la
+re-ejecución de 4 + 16 + 36 funciones hermanas. El 60 de la fila de C era el denominador que A1 ya había reventado.⟧
 
 ## 4. Criterios de aceptación y pares de evidencia
 

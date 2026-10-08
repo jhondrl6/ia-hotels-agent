@@ -74,7 +74,11 @@ de ser señal. **Adoptada además c2** como reglas de ejecución dentro de `05-p
 congelar el código antes de abrir el cierre documental y hacer los reemplazos documentales con un solo script de
 bytes bajo `temp/`. La cláusula del párrafo anterior sobre el exceso queda **intacta**; lo único que mueve
 DA-CIM.10 es el denominador y su base. FASE-C no está nombrada en la decisión: mantiene los 60 que dictaba esta
-sección antes del 2026-10-08 y queda **abierta al operador** si B la abre.
+sección antes del 2026-10-08 y queda **abierta al operador** si B la abre. ⟦**Addenda de la misma sesión, decidida por
+el operador:** FASE-C queda **nombrada y en 90**, igual que A2/A3/B. La evidencia que la motiva es la medición de A1
+(complejidad ALTA, ≈70 consumidos contra los 60 viejos) más lo que C re-ejecuta: 4 + 16 + 36 funciones hermanas con su
+mutación sobre `_plan_date`. Referencia final del plan: **A2/A3/B/C = 90, RELEASE = 60**, con la cláusula del exceso
+sin tocar.⟧
 
 **Qué corte se toma.** Con commit autorizado: hasta el commit de código. Sin esa autorización —caso normal de
 este plan hasta que el operador la dé—: hasta **«listo para revisión»**, declarándolo. El commit no es condición
@@ -162,6 +166,17 @@ Forma parte de la tarea 4 del prompt; no se difiere a RELEASE.
    imprime la corrida **no se copia** a ningún documento del plan: se referencia el comando.
 8. Revisar `git diff` y `git status`, cerrar el auto-reporte de presupuesto y terminar la sesión. No iniciar la
    fase siguiente.
+
+**Unidad de todo atributo verificable que cuente rutas (regla añadida 2026-10-08 por decisión del operador).** Un
+mandato que fije «exactamente N rutas» para un ID estampado en varios documentos **no es alcanzable en este repo**
+por dos estructuras, no por error de ejecución: (i) dos lugares de estampado pueden compartir archivo, así que
+«lugares» ≠ «rutas»; y (ii) el par derivado `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` está
+versionado y `scripts/build_lesson_index.py` indexa las familias `L`/`DA`/`D`/`S` con `ID_RE`, así que toda
+regeneración obligatoria (R2.10, `[6/8]` del hook) **añade dos rutas** a cualquier `git grep -l` de un ID de esas
+familias. Forma correcta de fijar el atributo: declarar la unidad y el comando —rutas de plan con
+`git grep -lF "<frase>" -- .opencode/plans`, coincidencias con `git grep -oF "<frase>" HEAD | wc -l` (**no** `grep -cF`,
+que cuenta líneas con coincidencia, no coincidencias)— y publicar el total versionado con su desglose. Nunca se deja
+de regenerar el derivado, ni se edita el índice a mano, para que un número cuadre.
 
 ## Orden del cierre documental y la subida remota
 
