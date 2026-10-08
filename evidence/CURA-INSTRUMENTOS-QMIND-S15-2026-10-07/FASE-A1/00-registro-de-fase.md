@@ -11,7 +11,10 @@ conteo (maestro §5 S-CIM-7, sigue vigente).
 ## Cortes y estado
 
 Implementación terminada → verificación terminada → cierre documental → **listo para revisión** → espera de
-autorización. El `git commit` no estaba ejecutado al cerrar esta nota: los cinco cortes se sostienen sin commit. Después, en la misma sesión, llegó la instrucción literal «Git Commit + L3 + Push» y se ejecutó. **Sello:** commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`); 30 rutas (16 modificadas + 14 nuevas), 1165 inserciones y 97 supresiones. AC1 y AC2 están landed y publicados.
+autorización. El `git commit` no estaba ejecutado al cerrar esta nota: los cinco cortes se sostienen sin commit. Después, en la misma sesión, llegó la instrucción literal «Git Commit + L3 + Push» y se ejecutó. **Sello:** commit `63b944a` con los ocho checks del hook versionado en verde, revisión profunda L3 **sin hallazgos** y rango empujado `d8a7d80..63b944a` (paridad verificada con `git ls-remote`); 30 rutas (16 modificadas + 14 nuevas), 1165 inserciones y 97 supresiones. AC1 y AC2 están landed y publicados. **Addenda por el segundo push de la misma sesión:** el sello viajó en
+`15f4fdd` con rango empujado `63b944a..15f4fdd` y su propia L3 sin hallazgos, así que la línea anterior quedó
+incompleta sin ser falsa (no se re-escribe: describe el primer push). El sha de esta addenda no se estampa en sí
+misma; el tip publicado de la fase es el que imprima `git ls-remote origin refs/heads/master` al leerla.
 
 **Presupuesto (unidad declarada, no comparable con el instrumento canónico).** El instrumento
 `evidence/FASE-D/measure_iterations.py` sigue **FUERA DE SERVICIO** (R2.1) y no se reintentó. Contado a mano sobre
