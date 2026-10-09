@@ -1,0 +1,136 @@
+CRUDO 11 - estampado del `10-analisis` y frescura QMind (SESION 2 del piloto JEV, 2026-10-09)
+
+Hecho que se prueba aqui: la hoja del plan fue estampada con una anotacion aditiva fechada 2026-10-09
+y, por tanto, su cuerpo en disco ya no casa con la fuente publicada en el notebook
+`iah-cli-lecciones`. Ese es un `[VENCIDO]` REAL, el caso que la cura de B2-4 no puede disfrazar.
+
+## 1. Las dos caras del sha256
+
+| cara | sha256 | bytes | como se midio |
+|---|---|---|---|
+| ANTES (cuerpo publicado, blob en `fb13108`) | `ee40f5ee52ffd6a27ccce262509b235495cbf4feedc03e676cd968c7ace67755` | 32551 | sha256 de `git cat-file blob $(git rev-parse HEAD:<ruta>)`, contado en bytes crudos |
+| DESPUES (cuerpo estampado, en disco) | `b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05` | 37874 | sha256 del archivo en esta corrida |
+
+El `ee40f5ee52ff…` que el mandato traia como sha «antes» **casa con el blob de HEAD y con el disco**
+antes de editar: la premisa del mandato estaba fresca en ese punto, y se verifico antes de escribir.
+Ojo de instrumento: `git rev-parse HEAD:<ruta>` devuelve el **object id (SHA-1)** del blob, no su
+sha256; la primera version de esta tabla puso ese id en la columna de sha256 y un conteo hecho sobre
+el texto ya decodificado (`32550`, un menos por el salto de linea final). Corregido a byte crudo.
+Es la misma trampa de `git show` vs disco que la casa ya habia cobrado con CRLF.
+El sha posterior no puede vivir dentro de la hoja que estampa (un documento no aloja la evidencia de su
+propia publicacion): la anotacion lo declara y remite a este crudo. Es el mismo criterio con que
+FASE-RELEASE cerro la suya.
+
+## 2. El estampado es aditivo, medido contra HEAD
+
+$ git diff --numstat HEAD -- <10-analisis>
+EXIT 0 :: 53	0	.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+0 lineas borradas. La tabla de «Seguimientos abiertos al cerrar» de FASE-RELEASE queda escrita como la
+cerro esa fase: se anota, no se reescribe. Las filas B2-1/B2-1c siguen ahi, en presente, y la anotacion
+nueva las estampa.
+
+## 3. Incidente de la sesion: el estampado se escribio tres veces
+
+Tres ediciones reportadas como bloqueadas por el clasificador **escribieron igualmente**. El resultado
+fueron tres copias de la misma anotacion y un bloque hermano que perdio su `⟧` de cierre. No se curo
+a ojo: se midio.
+
+- copias antes de curar: **3** (marcador `SESIÓN 2 del piloto JEV, 2026-10-09`, lineas 283 / 328 / 344)
+- copias despues de curar: **1** (desde la 283 hasta su cierre `⟧`)
+- delimitadores: aperturas `⟦` = 14, cierres `⟧` = 14 (balance por conteo)
+- un intento de reparacion anadio un `⟧` de mas (`⟧⟧` en la linea 281); se conto, se quito y se
+  re-midio el balance, no se asumio
+- sha intermedio tras la primera cura: `b6e6434f223e9368` (lo imprimio una corrida de frescura de ese
+  momento); sha final: `b88e3e08a70da45f` despues de re-anclar la poblacion
+
+Leccion que sube al cierre: un bloqueo notificado del clasificador **no prueba que la herramienta no
+escribio**. Se cuenta el resultado en disco. Queda enunciada sin ID en el contexto de lecciones.
+
+## 4. Frescura en la ventana del estampado: el VENCIDO real (transcripto de las dos corridas de ese momento)
+
+Las dos corridas que van abajo se corrieron **entre** el estampado y la publicacion, con el cuerpo nuevo ya
+en disco y la fuente vieja todavia publicada. Son la evidencia del rojo real; se transcriben porque la
+ventana ya cerro y no se puede volver a producir (despues del write-back el mismo comando da FRESCO).
+
+```text
+$ ./venv/Scripts/python.exe scripts/verify_qmind_context_freshness.py --strict      (corrida 1)
+EXIT 1
+poblacion declarada: 1 gobernado(s) (10-analisis-post-implementacion.md) | 0 fuera de alcance
+notebook iah-cli-lecciones: 61 fuente(s) publicada(s)
+  [VENCIDO] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): sha_disco=b6e6434f223e… y ninguna de 61 fuente(s) examinada(s) casa (4 la nombran por titulo) [barrido completo]
+[FAIL] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 5 problema(s)
+
+$ ./venv/Scripts/python.exe scripts/verify_qmind_context_freshness.py --strict      (corrida 2, tras re-anclar la poblacion)
+EXIT 1
+notebook iah-cli-lecciones: 61 fuente(s) publicada(s)
+  [VENCIDO] 10-analisis-post-implementacion.md (...): sha_disco=b88e3e08a70d… y ninguna de 61 fuente(s) examinada(s) casa (4 la nombran por titulo) [barrido completo]
+[FAIL] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 5 problema(s)
+```
+
+Cada una de esas dos corridas traia ademas **4 `[SIN-DESCARGA]`** (la red de QMind flakesa en esta maquina).
+El contrato curado el 2026-10-05 dice que una fuente que no baja se registra `NO-EVALUABLE` y nunca
+`VENCIDO`, y que el rojo de las que si se observaron **manda sobre la abstencion**. Eso es lo que se ve:
+`0 fresco(s), 5 problema(s)` = 1 vencido + 4 abstenciones, y el EXIT es 1 por el vencido, no por las
+abstenciones.
+
+**Este es el vencido real, no el falso de B2-4.** El falso era `[VENCIDO]` pintado por descargas que fallaron
+sin observacion; aqui el barrido esta marcado `[barrido completo]`, las 61 fuentes se examinaron y es el
+cuerpo en disco el que desmiente al indice. La unica salida era el write-back (punto 4 del mandato), y no se
+apago el verificador.
+
+## 4bis. Corrida tardia, despues de publicar (se pega aqui tal como salio, para no dejarla mudando)
+
+EXIT 2
+```text
+  [AVISO] descarga 01a12247-f791-7944-832e-13f5cad68f3e salio 1: error: QMind network request failed
+  [EXCLUIDO] CONTEXT-JEV-CURA-B2-1-2026-10-09.md: no autodeclara una leccion durable: la politica del write-back es por aporte declarado, no por existencia (executor v2.18.0)
+  [EXCLUIDO] CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DT-3-TECH-DEBT-POST-DT2.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DT-4.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-DT4-RESIDUAL-FIXES.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+  [EXCLUIDO] CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md: esta bajo `Historico/`: el contenido archivado queda congelado y no necesita mantenimiento (R2.5 y la nota «QMind y archivado» del executor)
+poblacion declarada: 1 gobernado(s) (10-analisis-post-implementacion.md) | 0 fuera de alcance
+notebook iah-cli-lecciones: 62 fuente(s) publicada(s)
+  [NO-EVALUABLE] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md): 1 fuente(s) cuyo metadata casa con el disco (01a12247-f791…) no bajaron; el servidor promete unos bytes y la verificacion de esa promesa no se pudo hacer. No es VENCIDO: nunca se pinta de vencido lo que no se observo.
+[NO-EVALUABLE] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 0 problema(s)
+```
+
+Despues de la publicacion el par ya no esta vencido. Lo que cambia de una corrida a otra es si la fuente
+baja: cuando baja, `[FRESCO]` con el sha del disco casando (quedó estampado en el crudo `13-` §5 y en las
+cuatro corridas del crudo `14-`); cuando no baja, `NO-EVALUABLE`, que es el camino etiquetado por su cuenta.
+Ninguna de las dos es el rojo del estampado: ese vive en la ventana que cerró la publicación.
+
+## 5. Poblacion re-medida: el mandato traia el dato vencido
+
+- el mandato decia `59 → 60`;
+- medido por el propio emisor del dato (`verify_qmind_context_freshness.py --strict` imprime
+  `notebook iah-cli-lecciones: 61 fuente(s) publicada(s)`): la subida va de **61 → 62**;
+- el 59 es el antecedente que publico la tanda del 2026-10-08 en el sello del plan, y cuatro fuentes
+  mas del hermano entraron despues. La anotacion del plan quedo re-anclada a la medicion y conserva el
+  59 como antecedente explicito.
+
+## 6. Indices y cableado, en el estado final
+
+$ build_lesson_index.py --check
+EXIT 0 :: [OK] Índice de lecciones fresco (368 IDs) | [fechas] nombre=357 commit=11 sin_fuente=0
+$ validate_wiring.py --check
+EXIT 0 :: [OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Gi
+
+El indice de lecciones sigue fresco con este estampado: `10-analisis` esta en el corpus de citas y la
+anotacion nueva no menciona IDs de leccion, asi que no movio contadores. Si los moviera, la cura es
+regenerar con el escritor, no editar el indice a mano.

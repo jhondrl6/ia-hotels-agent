@@ -1,0 +1,82 @@
+CRUDO 13 - write-back del 10-analisis a QMind (SESION 2 del piloto JEV, 2026-10-09)
+
+## 1. La subida, por el writer de la casa
+
+$ ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py \
+    --upload Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 \
+    --file .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md \
+    --title "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)"
+[UP] 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09) <- 10-analisis-post-implementacion.md
+[OK] Registrada instantanea EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_...--b88e3e08a70da45f.md
+     sha256=b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05 fuente_id=01a12247-f791-7944-832e-13f5cad68f3e
+[RESUMEN] upload=1 skip=0 fail=0
+
+El titulo conserva el stem de las publicaciones previas (`10-analisis: <PLAN> (<motivo>)`) y solo
+cambia el parentesis. Primer intento con la ruta larga: `[FAIL] Upload: el directorio no existe`
+rc 1, y **no publico nada** - el writer resuelve `--upload` contra `--plans-dir`.
+
+## 2. Poblacion: el dato del mandato estaba vencido
+
+antes de la subida: 61 fuentes | despues: 62 | nuevas: 1 | desaparecidas: 0
+El mandato decia `59 -> 60`. Medido: **61 -> 62**. El 59 es lo que publico la tanda del 2026-10-08;
+entre esa tanda y esta el notebook absorbio dos fuentes mas que esta hoja no midio en su momento.
+La subida suma exactamente una fuente, que es lo que el mandato pedia en forma.
+estados de las 62 fuentes: {"ready": 62}
+
+## 3. Las previas, intactas (verificado por id, no por titulo)
+
+- `01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5` sigue `ready` :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)
+- `01a10853-6da2-7820-b2a3-fa1cb5ccb4ba` sigue `ready` :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)
+- `01a10e39-1625-71b1-8ca6-73cbdb1c6a94` sigue `ready` :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)
+- `01a10ec9-8113-7875-a806-2eec6521d37a` sigue `ready` :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)
+las 4 anteriores en ready y con su titulo sin mover: SI
+fuente nueva: `01a12247-f791-7944-832e-13f5cad68f3e` :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)
+
+## 4. Verificacion por DESCARGA + sha256 contra el disco
+
+sha256 del cuerpo en disco: b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05 (37874 bytes)
+racha de intentos de la fuente nueva (el CLI flakesa en esta maquina; un fallo de bajada no
+re-sube nada, solo declara la racha):
+- 1:FALLO (no bajo)
+- 2:FALLO (no bajo)
+- 3:FALLO (no bajo)
+- 4:OK 37874 bytes, sha b88e3e08a70d CASA
+CASAN POR BYTES: True - descargado 37874 vs disco 37874
+
+## 5. Frescura, cerrado el circulo
+
+$ ./venv/Scripts/python.exe scripts/verify_qmind_context_freshness.py --strict   -> EXIT 0
+notebook iah-cli-lecciones: 62 fuente(s) publicada(s)
+  [FRESCO] 10-analisis-post-implementacion.md: 1 fuente(s) que casan por metadata del servidor,
+    verificada la promesa por descarga+sha256 (01a12247-f79...coincide)
+[OK] frescura de CONTEXT/10-analisis declarados: 1 fresco(s), 0 problema(s)
+
+El [VENCIDO] real que declaro el estampado (crudo 11-, sha b88e3e08a70d) quedo cerrado por el
+write-back: el mismo sha pasa de 'ninguna fuente casa' a 'casa por metadata y por bytes descargados'.
+
+## 6. El rojo que la subida destapa: DUPLICADO-VIGENTE, y depende de la red
+
+Con la entrada vigente en el registro, validate_qmind_writeback.py marca las cuatro fuentes era-G
+del mismo plan que nunca entraron al registro (publicadas antes del schema 1.1):
+  [DUPLICADO-VIGENTE] ... la fuente 01a10ec9-8113... nombra al plan y no esta marcada como
+  reemplazada: dos fuentes vigentes del mismo plan        (x4)
+  [FAIL] qmind write-back: titulo OK | contenido: VENCIDO   -> EXIT 1
+Linea base medida con el registro de HEAD (--registro sobre la copia versionada, sin mi entrada):
+EXIT 2, '1 vigente(s) ... 1 NO-EVALUABLE por migracion', sin DUPLICADO-VIGENTE. El rojo es
+consecuencia de esta subida, no preexistente: es la cuenta honesta de que el plan tiene cinco
+fuentes publicadas y un registro que solo conoce una.
+Matiz de instrumento: el bloque DUPLICADO solo se evalua cuando la comparacion de cuerpo no se
+abstiene. Corrida con descarga OK -> EXIT 1 con los cuatro DUPLICADO. Corrida con la descarga
+fallida -> EXIT 2 con [NO-EVALUABLE] y sin DUPLICADO. El veredicto de ese gate depende de si la
+red contesto. Se declara; no se apaga.
+
+## 7. Rutas que esta sesion agrega al repo por el write-back
+
+- .opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md (37874 bytes)
+- .opencode/qmind-writeback/instantaneas/README.md (3173 bytes)
+- .opencode/qmind-writeback/instantaneas/REFACTOR-WHATSAPP-ENTREGA-2026-09-18--10-analisis_REFACTOR-WHATSAPP-ENTREGA-2026-09-18_cierre_4.79.0_lecciones_finales_2.md (125198 bytes)
+- .opencode/qmind-writeback/registro.json (2334 bytes)
+
+Deuda que queda abierta, con dueño y sin cura aqui: las cuatro fuentes era-G del plan no tienen
+entrada en el registro y `fuente_id` esta vacio en las dos entradas del hermano. Es la letra A2 del
+plan CURA-INSTRUMENTOS-QMIND-S15. Un back-fill sin byte-exacto no se inventa.

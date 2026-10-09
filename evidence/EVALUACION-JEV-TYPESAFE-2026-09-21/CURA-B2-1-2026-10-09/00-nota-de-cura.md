@@ -228,3 +228,75 @@ también curada** (el techo ya rebasado corta el siguiente envío) → (c) proto
 llamadas/tokens y splits, congelado antes de evaluar → tu etiquetado de los 60 pares → corrida C nueva
 con mandato y presupuesto → `decide` emite `ACTIVAR`/`RECHAZAR` → firma del operador.
 Sigue abierto B2-1d (la cuenta de etapa) y el estampado documental de las filas B2-1/B2-1c/B2-1e.
+
+---
+
+## Addendum de la SESIÓN 2 (2026-10-09): la hoja cierra documentalmente
+
+Esta sección es aditiva. Lo que la sesión 1 dejo abierto en esta hoja quedó cerrado hoy, y se re-mide
+antes de afirmarlo: el tip de arranque era `fb13108` (paridad `0 0` con `origin/master`), la selección del
+piloto abrio en **173 passed** y el quick gate en **13/13**.
+
+| lo que la sesión 1 dejó dicho | estado medido hoy | dónde queda la prueba |
+|---|---|---|
+| «Sigue abierto B2-1d (la cuenta de etapa)» | **CURADO.** `registrar_envio_en_cuenta()` en `scripts/evaluate_jev_pilot.py` suma y publica la cuenta de etapa en el mismo acto, y por envío. Decisión por costo: la alternativa («que el brazo pase por `run`») duplicaba la costura que el mandato de FASE-B prohíbe, así que se cerró por el persistidor de la casa. No se tocó `modules/providers/llm_provider.py`. | `tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py`, **9 funciones**; crudo `10-`; contrafactual a nivel de archivo: la batería contra el runner versionado en `fb13108` da **7 rojos / 2 verdes** y la restauración se verifica por sha256 (`4a26552237be9c84`) |
+| «no se estampan las filas B2-1/B2-1c/B2-1e del `10-analisis`» | **ESTAMPADO**, en modo anotación aditiva (la tabla de seguimientos queda intacta: `git diff --numstat` = 53/0). sha256 de disco antes `ee40f5ee52ff…` (coincide con el blob de HEAD), después `b88e3e08a70d…`. | `10-analisis-post-implementacion.md` (anotación 2026-10-09) y crudo `11-` |
+| «cada edición obliga a re-verificar por descarga + sha256 y a sumar una fuente» | **HECHO.** Write-back por el writer de la casa con título nuevo que conserva el stem; verificación por **descarga + sha256 contra el disco**, no por título. | crudo `13-` |
+| la población `59 → 60` que traía el mandato | **RE-ANCLADA POR MEDICIÓN.** El notebook `iah-cli-lecciones` tenía **61** fuentes publicadas antes de la subida y **62** después; las cuatro publicaciones previas del stem siguen `ready` con su título intacto (verificado por `id`, no por título). El 59 es el dato de la tanda del 2026-10-08. | crudo `13-` §2 y §3 |
+
+**Hallazgo nuevo de la sesión 2, con número.** El estampado se escribió **tres veces**: tres ediciones
+reportadas como bloqueadas por el clasificador escribieron igualmente, y una anotación hermana perdió su
+`⟧`. Se midió por conteo de copias y balance de delimitadores, y se curó en la misma sesión (crudo `11-` §3).
+La regla que sale —un bloqueo notificado no prueba que la herramienta no escribió; se cuenta el resultado en
+disco— queda enunciada en `§2` del contexto de lecciones **sin ID**, porque aún no tiene instrumento que la
+haga cumplir.
+
+**Lo que esta sesión NO hizo.** No corrió inferencias ni autenticó credenciales (el guard de sockets del
+`conftest.py` estuvo armado y la selección lo ejerce); no escribió en `FASE-C/` (el arnés que fundo el
+hallazgo se lee, no se re-escribe: su ancla está en el test `T7` de la batería nueva); no abrió la corrida de
+60 pares ni FASE-C; no movió `VERSION.yaml`, `AGENTS.md` ni `modules/`; no tocó las 13 rutas ajenas que siguen
+staged en esta máquina. `REL-5` (hermeticidad del brazo por el `dotenv`) sigue **terminal por decisión del
+operador**: su cura cabe en un fixture autouse y está descripta, no ejecutada.
+
+**Cierre documental de esta hoja (medido, no prometido).** Selección del piloto **182 passed** (173 + 9) y
+**190 passed** con los 8 dientes del hook; `validate_wiring.py --check` **EXIT 0** con
+`cobertura.archivos_en_alcance` **714 → 715** re-publicado por el writer; `build_lesson_index.py --check`
+**EXIT 0** con **368 IDs** (365 → 368 por `L-JEV.C1/C2/C3`, definidos en
+`.opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md`); `run_all_validations.py --quick` **13/13**;
+`REGISTRY.md` escrito con `scripts/log_phase_completion.py` (primero `--dry-run`), 7 rutas nuevas y 7
+modificadas declaradas como rutas, no como conteos.
+
+**Frescura, dicha como se midió.** `verify_qmind_context_freshness.py --strict` sobre `10-analisis` dio
+**`[FRESCO]` / EXIT 0 en cuatro de cinco corridas de la serie limpia** (`2-0-0-0-0`) y
+**`NO-EVALUABLE` / EXIT 2 en la restante**, siempre por una descarga que no bajó (`QMind network
+request failed`). **Nunca dio `VENCIDO` después del write-back**: el rojo real que sí dio, antes
+de publicar, quedó cerrado por la publicación. Lo que sostiene la afirmación de que la fuente publicada es este cuerpo
+**no es la etiqueta del verificador** sino la medición propia: la descarga de `13-` dio
+`b88e3e08a70da45f…` con 37874 bytes, idénticos a los del disco, con su racha `0-0-0-1` de reintentos. Un
+`NO-EVALUABLE` del instrumento no desdice esa observación, y tampoco la borra.
+
+Queda **vencido y sin curar**, con dueño: `CHANGELOG.md:764-765` (afirma en presente la deuda y el exceso de
+un solo brazo; lo cierra quien mueva el próximo release, no esta sesión).
+
+**Hallazgo del censo que esta hoja no tenía: dos celdas de `09-documentacion` dicen `PENDIENTE` donde los
+ledger prueban envíos.** `09-documentacion-post-proyecto.md:31` y `:32`, en la celda de la columna C, afirman
+que el brazo jev y el comparador no ejercitaron inferencias en FASE-C. Medido contra los artefactos
+versionados: `ledger.jsonl` tiene 2 filas jev (1 `EJERCITADO` + 1 `FALLO`, 2 attempts) y
+`ledger-deepseek.jsonl` 2 filas `EJERCITADO`; el `registro_deepseek.json` entra con 2 llamadas y sale con 4.
+O sea que C sí envió en los dos brazos. **Está vencido desde el cierre de C, no desde esta firma** — la firma
+solo lo hace visible, y es la misma forma de `L-JEV.R1`: una fase que mutó el artefacto y no escribió la fila
+que lo declara. No se curó aquí (el mandato estampa el `10-analisis`, no el `09`) y queda con dueño: quien
+reabra el `09` al cerrar la corrida nueva. Crudo `12-` §6.
+
+**Límite del instrumento, y por eso van DOS conteos en el censo.** Un barrido por patrones de *síntoma* sobre
+*líneas* no ve una celda cuyo contenido literal es `PENDIENTE`, y además confunde el sello de una celda con el
+de la vecina en la misma fila. El censo se rehízo en tres pasadas (semántica, línea, celda con cabecera de
+columna) y reporta 29 líneas / 51 celdas declarando que **las unidades no son comparables**. Lección de
+método: en una tabla, el sello y el veredicto son de celda.
+
+**Los cinco cortes, re-medidos al cerrar la hoja.** Implementación terminada (la función y su cableado en
+`run`) · verificación terminada (9 funciones, contrafactual a nivel de archivo, gates) · cierre documental
+(estampado + lección + índice + `REGISTRY.md` con `log_phase_completion.py`) · listo para revisión (este
+addendum y los crudos `10-` a `13-`) · **espera de autorización escrita**: el `git commit` no es condición de
+ninguno de los anteriores y queda en manos del operador, con su pathspec nombrado. El push y el escaneo L3 son
+actos aparte, cada uno con su línea escrita.

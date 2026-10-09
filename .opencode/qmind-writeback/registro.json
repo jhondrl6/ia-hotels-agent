@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "creado": "2026-10-07",
   "nota": "Registro versionado de las publicaciones del write-back a QMind. Unico escritor: scripts/validate_qmind_writeback.py con --upload. Vacio al cerrar la FASE-UNICA de VERIFICADOR-ESCRITURA-QMIND-2026-09-20: la primera entrada la produce el momento B (maestro §6), que necesita autorizacion literal y presupuesto propios. Mientras este registro no tenga entradas, la capa de contenido del check [17/18] declara NO-EVALUABLE y no PASS.",
   "entradas": [
@@ -21,6 +21,16 @@
       "sha256": "1f0ee6e52f008e7413846039e244a8a242b472ba93e59bc933af2bb47e7286e0",
       "instanea": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18--10-analisis_REFACTOR-WHATSAPP-ENTREGA-2026-09-18_cierre_4.79.0_lecciones_finales_2.md",
       "publicado": "2026-10-07"
+    },
+    {
+      "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)",
+      "estado": "vigente",
+      "fuente_id": "01a12247-f791-7944-832e-13f5cad68f3e",
+      "sha256": "b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05",
+      "sha_cuerpo": "b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05",
+      "instanea": "EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md",
+      "publicado": "2026-10-09"
     }
   ]
 }

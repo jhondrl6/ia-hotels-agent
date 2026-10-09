@@ -3,12 +3,12 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 18,
-    "archivos_contexto_escaneados": 39,
-    "archivos_md_escaneados": 449,
-    "ids_con_definicion": 365,
+    "archivos_contexto_escaneados": 40,
+    "archivos_md_escaneados": 450,
+    "ids_con_definicion": 368,
     "ids_citados_sin_definicion": 93,
     "fechas_por_fuente": {
-      "nombre": 354,
+      "nombre": 357,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -2366,6 +2366,48 @@
       "planes_que_lo_citan": [
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.C1",
+      "familia": "L",
+      "enunciado": "Una deuda de contabilidad no es una fila: es una familia que se ramifica por quién produce cada número, y cerrar el emisor no cierra a los hermanos. / Qué pasó: B2-1 se abrió con un enunciado concreto («el informe no compara usage_normalized contra los techos ni publica cost_calculated/cost_billed»). Al implementar el emisor aparecieron tres hijas con dueño distinto: B2-1c (el exceso no lo publicaba nadie), B2-1e (reservar_presupuesto cortaba por llamadas y reintentos pero nunca comparaba los tokens observados antes del envío siguiente) y B2-1d (la cuenta de etapa la persistía solo run, así que un brazo despachado por un arnés contaba en su memoria y no publicaba). Con las cuatro curadas, dos números que la documentación repetía resultaron falsos: el rebase del techo congelado de 139 era de dos brazos —jev 145 (+6) y el comparador deepseek 158 (+19)— y la cuenta publicada decía 2 llamadas cuando la real al cerrar era 4. / Por qué: cada fila se abrió mirando un artefacto distinto (informe, ledger, consumo.json, registro del arnés) y nadie re-midió el resto de la familia; el escritor de la cuenta y el lector del arnés no eran el mismo código, de modo que la cifra publicada era la foto del primer brazo y el instrumento que debía delatar la diferencia no existía. / Qué lo previene: (1) cuando una cura cierra una fila de contabilidad, en la misma sesión se barre el número y sus vecinos de familia por todo el corpus, no solo el ID de la fila — así nació el censo de citas vencidas de esta tanda (crudo 12-); (2) contabilidad y publicación son un solo acto: registrar_envio_en_cuenta suma y escribe consumo.json juntos, porque «quien cuenta» y «quien publica» separados fabrican esta misma bug; (3) el estampado dice la cifra rectificada y su antecedente, nunca la cifra sola",
+      "plan": "context/CONTEXT-JEV-CURA-B2-1-2026-10-09",
+      "origen": "contexto",
+      "archivo": "CONTEXT-JEV-CURA-B2-1-2026-10-09.md",
+      "seccion": "1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene)",
+      "fecha_plan": "2026-10-09",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.C2",
+      "familia": "L",
+      "enunciado": "Un gate de pre-commit que lee HEAD está leyendo el padre del commit que se intenta: con derivados divergentes corta el repo entero y no puede aprobar su propio fix. / Qué pasó: el check [8/8] del hook corría verify_packs_in_committed_tree.py con su default --rev HEAD. En un pre-commit HEAD es el commit anterior. Como 5249aed movió la fuente proyectada de los briefing packs sin regenerar los derivados, HEAD estaba divergente y el hook cortaba todo commit del repo — incluido el commit que reparaba esa divergencia, que se autocortaba. Medido en el árbol staged: --rev HEAD → DIVERGE/EXIT 1, y el mismo verificador sobre el índice materializado → 5/5 reproducidos, 0 divergentes, EXIT 0. / Por qué: el verificador fue escrito asumiendo «el árbol ya commiteado», que es cierto después del commit y falso antes; nadie separó las dos posiciones del reloj, y el gate quedó condicionado a que la cura que debía aprobar ya estuviera aprobada. Es un deadlock de auto-referencia, no un defecto de contenido. / Qué lo previene: (1) en un pre-commit se materializa el árbol del índice (git write-tree + git commit-tree -p HEAD) y se verifica ese árbol; la caída a HEAD existe pero imprime AVISO y no apaga ningún corte; (2) gobernar por test la identidad hook-instalado ≡ hook-versionado: un fix en scripts/git_hooks/pre-commit que no pasa por install_git_hooks.py no se ejecuta en ninguna corrida, así que el diente de identidad es lo que convierte el edit en comportamiento; (3) ante un gate rojo, la primera pregunta es a qué árbol está mirando, no «qué contenido está mal»",
+      "plan": "context/CONTEXT-JEV-CURA-B2-1-2026-10-09",
+      "origen": "contexto",
+      "archivo": "CONTEXT-JEV-CURA-B2-1-2026-10-09.md",
+      "seccion": "1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene)",
+      "fecha_plan": "2026-10-09",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-JEV.C3",
+      "familia": "L",
+      "enunciado": "Un load_dotenv() en el import del entry point rompe la premisa de los tests de brazo, y el rojo que produce se atribuyó mal durante una tanda entera. / Qué pasó: un test del brazo comparador, escrito sobre la premisa «no hay credencial», salía verde en su archivo y en la selección del piloto y caía en la suite grande. Se había registrado como «dependiente del orden de colección» (REL-5/D5). Medido con el orden invertido: también cae. El disparador tiene nombre y mecanismo: tests/quality_gates/test_fase_d_veredicto_canonico.py importa main, y main.py:17 ejecuta load_dotenv(env_path) al importarse, inyectando DEEPSEEK_API_KEY en os.environ (comprobado solo por presencia: False antes de importar main, True después; nunca se imprimió el valor ni su longitud). / Por qué: la credencial la resuelve el entorno del proceso, no el test; el entry point carga configuración como efecto de lado de importarse, y cualquier selección que lo importe hereda un entorno que ya no es el premisado por el test. La atribución falsa («es del orden») vivió una tanda porque nadie invirtió el orden para medir: un rojo mal atribuido envejece mejor que un rojo mirado. / Qué lo previene: (1) hermeticidad del brazo: borrar las credenciales de proveedor en un fixture autouse de tests/quality_gates/jev_pilot/conftest.py y gobernar el par que hoy cae (esa cura es REL-5, declarada terminal por decisión del operador, con línea propia en el mandato de esta sesión); (2) antes de atribuir un rojo al orden de colección, invertir el orden y medir — la atribución es una hipótesis, no un hecho; (3) verificar este tipo de hallazgos por presencia y por nombre de variable, nunca imprimiendo el valor",
+      "plan": "context/CONTEXT-JEV-CURA-B2-1-2026-10-09",
+      "origen": "contexto",
+      "archivo": "CONTEXT-JEV-CURA-B2-1-2026-10-09.md",
+      "seccion": "1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene)",
+      "fecha_plan": "2026-10-09",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {

@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-08
+> **Ultima actualizacion:** 2026-10-09
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 518
+> **Total fases completadas:** 519
 
 ---
 
@@ -12070,6 +12070,66 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 12 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## CURA-B2-1-SESION-2 - 2026-10-09 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+**Descripcion:** piloto JEV: B2-1d curada (la cuenta de etapa se publica en el acto en que se suma), estampado del 10-analisis, write-back QMind, censo de citas vencidas y tres lecciones capitalizadas
+**Nota:** Unidad de las columnas: rutas medidas con  M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-0.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-A.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-B.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-C.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-D.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E2E.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-F.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-G.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-H.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-RELEASE.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-VERIFY.md
+ M .opencode/qmind-writeback/registro.json
+ M .opencode/wiring_report.json
+ M evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md
+A  evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/captura_stdout.txt
+ M scripts/evaluate_jev_pilot.py
+?? .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md
+?? .opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/10-crudo-b2-1d-cuenta-de-etapa.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/11-crudo-estampado-y-frescura.txt
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/12-censo-de-citas-vencidas.md
+?? evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/13-crudo-writeback-qmind.txt
+?? tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py sobre el arbol de trabajo, EXCLUIDAS las 13 rutas ajenas staged (briefing/ del REFACTOR-WHATSAPP y un captura_stdout.txt) que esta sesion no toco. Falta una fila por construccion: este escritor toca docs/contributing/.last_doc_phase.json y la entrada no puede contarse a si misma. Gates medidos al cerrar: seleccion del piloto 182 passed (173 al abrir + 9 de la bateria nueva); validate_wiring.py --check EXIT 0 con cobertura.archivos_en_alcance 714->715 re-publicado por el writer; build_lesson_index.py --check EXIT 0 con 368 IDs (365->368 por L-JEV.C1/C2/C3); run_all_validations.py --quick 13/13; verify_qmind_context_freshness.py --strict FRESCO/EXIT 0, con la racha de descargas fallidas declarada en el crudo 13-. Contrafactual a nivel de archivo: la bateria B2-1d contra el runner versionado en fb13108 da 7 rojos / 2 verdes y la restauracion se verifica por sha256 (4a26552237be9c84). Cero inferencias y cero autenticacion de credenciales; nada escrito en FASE-C/. Rojo dejado con dueño: validate_qmind_writeback.py marca las cuatro publicaciones era-G del plan como [DUPLICADO-VIGENTE] desde que el registro tiene una entrada vigente para el plan (letra A2; la linea base con el registro de HEAD no las imprimia). Estampado y publicacion: sha del 10-analisis ee40f5ee52ff->b88e3e08a70d, notebook 61->62 fuentes y las cuatro previas siguen ready con su titulo intacto, verificado por id y por descarga+sha256 contra el disco. Vencido y sin curar, con dueño: CHANGELOG.md:764-765. Cortes: hasta 'espera de autorizacion escrita' - el arbol queda SIN commit porque el mandato fija el commit como acto aparte y el push y el L3 como otros dos. Rango L3 medido al arrancar: 5249aed..fb13108.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md` | NUEVO | Context-Jev-Cura-B2-1-2026-10-09 |
+| `.opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md` | NUEVO | Evaluacion-Jev-Typesafe-2026-09-21--10-Analisis Evaluacion-Jev-Typesafe-2026-09-21 Cura B2-1 B2-1C --B88E3E08A70Da45F |
+| `tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py` | NUEVO | Test Jev Pilot Cuenta Etapa B2 1D |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/10-crudo-b2-1d-cuenta-de-etapa.txt` | NUEVO | 10-Crudo-B2-1D-Cuenta-De-Etapa |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/11-crudo-estampado-y-frescura.txt` | NUEVO | 11-Crudo-Estampado-Y-Frescura |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/12-censo-de-citas-vencidas.md` | NUEVO | 12-Censo-De-Citas-Vencidas |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/13-crudo-writeback-qmind.txt` | NUEVO | 13-Crudo-Writeback-Qmind |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/evaluate_jev_pilot.py` | Evaluate Jev Pilot |
+| `.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/qmind-writeback/registro.json` | Registro |
+| `evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md` | 00-Nota-De-Cura |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 9 funciones nuevas; seleccion del piloto 173 -> 182 passed (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -519,6 +519,32 @@ def _persistir(out_dir: Path, nombre: str, datos) -> Path:
     return destino
 
 
+def registrar_envio_en_cuenta(out_dir: Path, cuenta: dict, fila: dict,
+                             *, nombre: str = "consumo.json") -> dict:
+    """B2-1d/AC8: sumar un envio a la cuenta de etapa y dejarla persistida en el mismo acto.
+
+    La funcion existe porque el defecto era de separacion, no de aritmetica: `run` era el unico que
+    escribia `consumo.json`, mientras que un brazo despachado por un arnes sumaba la misma aritmetica
+    en su propia memoria y no publicaba nada. Medido en FASE-C: la cuenta publicada se quedo en 2
+    llamadas con `tokens_out_max` 145 (la foto del brazo jev) mientras la cuenta real al cerrar era 4
+    llamadas y 158. Aqui quien suma publica, asi que contar sin quedarse en disco ya no es un camino.
+
+    Se persiste por envio y no solo al cerrar la corrida: si el proceso muere a mitad, la cuenta que
+    lee el siguiente `run` es la que ya se gasto, que es lo que AC8 pide entre sesiones.
+    """
+    cuenta["llamadas_usadas"] += 1
+    cuenta["intentos"] += fila["attempts"]
+    uso = fila["usage_normalized"]
+    if uso.get("input_tokens") is not None:
+        cuenta["tokens_in_max"] = max(cuenta.get("tokens_in_max") or 0, uso["input_tokens"])
+    if uso.get("output_tokens") is not None:
+        cuenta["tokens_out_max"] = max(cuenta.get("tokens_out_max") or 0, uso["output_tokens"])
+    if uso.get("estado") not in ("observado",):
+        cuenta.setdefault("usage_estados", []).append(uso.get("estado"))
+    _persistir(Path(out_dir), nombre, cuenta)
+    return cuenta
+
+
 def _nulos_de(objeto, ruta="") -> list:
     """Rutas punteadas cuyo valor es `null`, para gobernar cuales se admiten."""
     nulos: list[str] = []
@@ -745,15 +771,9 @@ def run(*, muestra: Path, protocolo: Path, indice: Path, preflight: Path, out_di
             estado["answers"] = payload.get("answers")
             estado["request_id"] = payload.get("request_id")
         # `attempts` es lo que el SDK hizo, no lo que el runner pidio: con max_retries=0 debe ser 1.
-        cuenta["llamadas_usadas"] += 1
-        cuenta["intentos"] += estado["attempts"]
-        uso = estado["usage_normalized"]
-        if uso.get("input_tokens") is not None:
-            cuenta["tokens_in_max"] = max(cuenta.get("tokens_in_max") or 0, uso["input_tokens"])
-        if uso.get("output_tokens") is not None:
-            cuenta["tokens_out_max"] = max(cuenta.get("tokens_out_max") or 0, uso["output_tokens"])
-        if uso.get("estado") not in ("observado",):
-            cuenta.setdefault("usage_estados", []).append(uso.get("estado"))
+        # B2-1d: la suma y la publicacion van juntas por `registrar_envio_en_cuenta`, la misma funcion
+        # que le toca usar a un brazo despachado fuera de `run`.
+        cuenta = registrar_envio_en_cuenta(out_dir, cuenta, estado)
         enviados += 1
         with ledger_ruta.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(estado, ensure_ascii=False) + "\n")

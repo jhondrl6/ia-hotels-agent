@@ -1,0 +1,97 @@
+CRUDO 14 - cierre documental de la SESION 2: leccion, indice y REGISTRY (2026-10-09)
+
+Orden exigido: leccion capitalizada -> build_lesson_index (--check antes, escribir, --check despues) ->
+REGISTRY con log_phase_completion.py DESPUES de todo el cierre documental. Se cumple en ese orden y cada
+paso esta corrido, no descripto.
+
+## 1. Donde se definieron las lecciones, y por que no en el 10-analisis
+
+El corpus de DEFINICIONES del indice son `09-/10-...analisis...md` de los planes y todo
+`.opencode/context/` (build_lesson_index.py:77 y :302-305). El analisis del plan dueno esta archivado Y
+publicado en QMind: escribir ahi habria vuelto a vencer la fuente verificada hoy y habria exigido una
+segunda publicacion que el mandato no autoriza. Se definieron en
+`.opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md`, que el indice lee igual.
+El archivo NO declara `⟦Control de contexto⟧` y tampoco se nombra desde los tres documentos que
+gobernan contexts (`10-analisis`, `00-lecciones-capitalizadas`, `dependencias-fases`): si se hiciera,
+`citados_por_planes_archivados()` lo convertiria en gobernado sin fuente publicada y fabricaria un rojo.
+Queda listado como EXCLUIDO con su razon (executor v2.18.0: la politica es por aporte declarado).
+
+IDs capitalizados (los tres hallazgos del mandato):
+- `L-JEV.C1` familia B2-1: una deuda de contabilidad se ramifica por quien produce cada numero.
+- `L-JEV.C2` gate [8/8]: un verificador de pre-commit que lee HEAD lee el padre del commit intentado.
+- `L-JEV.C3` dotenv: `main.py:17` hace `load_dotenv()` al importarse y rompe la premisa del brazo.
+- Sin ID, enunciada en `§2` del mismo archivo: el incidente del clasificador que escribe pese al
+  bloqueo. No sube a leccion porque aun no tiene instrumento que la haga cumplir.
+
+## 2. Indices: la secuencia real, en el orden en que se midio
+
+El paso intermedio es el rojo que prueba que la leccion entro al corpus y que el indice estaba vencido; no
+es la re-corrida de un estado cerrado.
+
+    $ build_lesson_index.py --check        (linea base, antes de escribir la leccion)
+      EXIT 0 :: [OK] Índice de lecciones fresco (365 IDs)
+                 [fechas] nombre=354 commit=11 sin_fuente=0
+
+    # se escribe .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md con las tres definiciones
+
+    $ build_lesson_index.py --check        (leccion escrita, indice todavia con los bytes viejos)
+      EXIT 1 :: [FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+                 Regenera: python scripts/build_lesson_index.py
+                 [fechas] nombre=357 commit=11 sin_fuente=0
+
+    $ build_lesson_index.py                (el escritor de la casa; nunca edicion a mano del indice)
+      EXIT 0 :: [OK] 368 IDs definidos + 93 sin definición (18 análisis, 450 .md citados)
+
+    $ build_lesson_index.py --check        (despues de escribir)
+      EXIT 0 :: [OK] Índice de lecciones fresco (368 IDs)
+                 [fechas] nombre=357 commit=11 sin_fuente=0
+
+Movimiento: **365 -> 368**, los tres nuevos con `fuente_fecha=nombre` y dueno
+`context/CONTEXT-JEV-CURA-B2-1-2026-10-09`. En la linea `fechas`, `nombre` paso de 354 a 357 (+3) y
+`commit=11` no se movio: ninguna leccion nueva quedo SIN-FUENTE, que es la guarda de S15.
+
+Nota de instrumento. El primer borrador del contexto definio las lecciones como `L-JEV.S2.1/.2/.3`; se
+re-escribio con la familia `L-JEV.C1/C2/C3` **antes** de cualquier indexacion. Medido sobre el JSON
+regenerado: 368 IDs definidos, 3 de la familia `L-JEV.C`, `L-JEV.S2` ausente del indice y de
+`citados_sin_definicion` (que sigue en 93, sin movimiento). No quedaron citas huerfanas del borrador.
+
+## 3. REGISTRY con el escritor de la casa
+
+Se corrio `--dry-run` primero (existe y es barato) y se reviso la fila: pasar rutas pinta una fila por
+ruta; pasar un conteo pintaria `| `13` | NUEVO | 13 |`, que es la errata ya cobrada en la casa.
+Entrada escrita: docs/contributing/REGISTRY.md:12078:## CURA-B2-1-SESION-2 - 2026-10-09 (EVALUACION-JEV-TYPESAFE-2026-09-21)
+
+$ git diff --numstat HEAD -- docs/contributing/REGISTRY.md docs/contributing/.last_doc_phase.json
+8	2	docs/contributing/.last_doc_phase.json
+62	2	docs/contributing/REGISTRY.md
+El escritor toco el tracker (efecto de pasar `--archivos-mod`), y esa ruta NO esta en las filas de la
+entrada: una fila no puede contarse a si misma. Queda declarado en la `**Nota:**` de la propia entrada.
+
+## 4. Gates finales, con la hoja cerrada
+
+$ run_all_validations.py --quick
+EXIT 0 :: TOTAL: 13/13 validations passed | STATUS: ALL VALIDATIONS PASSED
+
+$ pytest tests/quality_gates/jev_pilot -q
+EXIT 0 :: 182 passed in 1.64s
+
+$ validate_wiring.py --check
+EXIT 0 :: [OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 e
+
+$ verify_qmind_context_freshness.py --strict --quiet   (serie limpia de cinco, la red de QMind flakesa)
+  corrida 1: EXIT 2 :: [NO-EVALUABLE]   (la fuente 01a12247-f791... no bajo)
+  corrida 2: EXIT 0 :: [OK] 1 fresco(s), 0 problema(s)
+  corrida 3: EXIT 0 :: [OK] 1 fresco(s), 0 problema(s)
+  corrida 4: EXIT 0 :: [OK] 1 fresco(s), 0 problema(s)
+  corrida 5: EXIT 0 :: [OK] 1 fresco(s), 0 problema(s)
+Racha medida: **2-0-0-0-0**, una abstencion en cinco. El veredicto del par `10-analisis` es FRESCO cuando la
+fuente baja y NO-EVALUABLE cuando no; nunca VENCIDO por ceguera del instrumento (cura de B2-4).
+
+Lo que sostiene la afirmacion de que la fuente publicada es este cuerpo no es la etiqueta del verificador:
+es la medicion propia del crudo `13-`, donde la descarga dio `b88e3e08a70d…` y 37874 bytes identicos al disco,
+con su propia racha de reintentos.
+
+## 5. Las 13 rutas ajenas, intactas
+
+$ git status --porcelain | grep -c REFACTOR-WHATSAPP  ->  13
+Siguen staged como A, sin tocar, y ninguna entra en las filas del registro ni en el pathspec preparado.

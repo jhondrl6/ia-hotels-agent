@@ -1,0 +1,341 @@
+CURA B2-1d - la cuenta de etapa se publica en el acto en que se suma
+(SESION 2 del piloto JEV, 2026-10-09). Maquina win32 / Git Bash.
+Codificacion: UTF-8 escrita por arnes con newline=LF, no redireccion de consola
+(la consola de esta maquina es cp1252 y ese arreglo ya fue cobrado en la casa).
+
+========================================================================================
+BLOQUE: seleccion del piloto, bateria nueva incluida
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/quality_gates/jev_pilot -q
+----------------------------------------------------------------------------------------
+........................................................................ [ 39%]
+........................................................................ [ 79%]
+......................................                                   [100%]
+182 passed in 1.44s
+EXIT = 0
+
+========================================================================================
+BLOQUE: bateria B2-1d sola, funcion por funcion
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py -v
+----------------------------------------------------------------------------------------
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 9 items
+
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_registrar_envio_persiste_la_cuenta_en_el_mismo_acto PASSED [ 11%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_la_cuenta_persistida_mantiene_las_cinco_claves PASSED [ 22%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_un_arnes_de_brazo_no_deja_la_cuenta_publicada_atras PASSED [ 33%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_sumar_sin_publicar_reproduce_la_divergencia_de_fase_c PASSED [ 44%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_el_run_no_reimplementa_la_aritmetica_de_la_cuenta PASSED [ 55%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_una_caida_a_mitad_deja_en_disco_lo_que_ya_se_envio PASSED [ 66%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_sin_publicacion_por_envio_la_caida_no_deja_cuenta PASSED [ 77%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_las_filas_negadas_por_techo_no_suman_a_la_cuenta PASSED [ 88%]
+tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_el_artefacto_versionado_de_fase_c_muestra_la_divergencia PASSED [100%]
+
+============================== 9 passed in 0.18s ==============================
+EXIT = 0
+
+========================================================================================
+BLOQUE: conteo canonico de funciones test del archivo nuevo
+COMANDO: grep -cE ^\s*def test_ tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py
+----------------------------------------------------------------------------------------
+9
+EXIT = 0
+
+========================================================================================
+BLOQUE: gate de cableado ANTES de re-publicar (el .py nuevo mueve el contador)
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_wiring.py --check
+----------------------------------------------------------------------------------------
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest beaa7dfb88ca)
+[OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=157 versionada=0, venv bruto=7610 versionada=0
+EXIT = 0
+
+========================================================================================
+BLOQUE: writer del derivado
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_wiring.py --write-report
+----------------------------------------------------------------------------------------
+[OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=157 versionada=0, venv bruto=7610 versionada=0
+EXIT = 0
+
+========================================================================================
+BLOQUE: gate de cableado DESPUES del writer
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe scripts/validate_wiring.py --check
+----------------------------------------------------------------------------------------
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest beaa7dfb88ca)
+[OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=157 versionada=0, venv bruto=7610 versionada=0
+EXIT = 0
+
+========================================================================================
+BLOQUE: estado del arbol (las 13 rutas ajenas siguen sin tocar)
+COMANDO: git status --porcelain
+----------------------------------------------------------------------------------------
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-0.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-A.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-B.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-C.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-D.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E2E.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-F.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-G.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-H.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-RELEASE.md
+A  .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-VERIFY.md
+ M .opencode/wiring_report.json
+A  evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/captura_stdout.txt
+ M scripts/evaluate_jev_pilot.py
+?? tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py
+EXIT = 0
+
+========================================================================================
+BLOQUE: rutas tocadas por esta sesion
+COMANDO: git diff --name-only HEAD
+----------------------------------------------------------------------------------------
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-0.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-A.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-B.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-C.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-D.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-E2E.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-F.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-G.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-H.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-RELEASE.md
+.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/briefing/FASE-VERIFY.md
+.opencode/wiring_report.json
+evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/captura_stdout.txt
+scripts/evaluate_jev_pilot.py
+warning: in the working copy of '.opencode/wiring_report.json', CRLF will be replaced by LF the next time Git touches it
+EXIT = 0
+
+
+========================================================================================
+CONTRAFACTUAL DE RESTAURACION (el mismo bloque, ejecutado)
+========================================================================================
+
+========================================================================================
+BLOQUE: conformidad de la copia de seguridad
+COMANDO: sha256sum del runner curado antes del intercambio
+----------------------------------------------------------------------------------------
+runner curado  : 4a26552237be9c847bc4de11abf4312da9e41a7a954ee74935e0368c7c000368
+runner de HEAD   : 01dd264b91f71ba5642a785569d610ecca416c3e76a34a0f5d8085d408a928e1
+(el intercambio escribe en el arbol de trabajo la version anterior a esta cura)
+EXIT = 0
+
+========================================================================================
+BLOQUE: CONTRAFACTUAL: la bateria contra el runner de HEAD (pre-cura)
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py -q
+----------------------------------------------------------------------------------------
+FFFFFFF..                                                                [100%]
+================================== FAILURES ===================================
+__________ test_registrar_envio_persiste_la_cuenta_en_el_mismo_acto ___________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_registrar_envio_persiste_0')
+runner = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_registrar_envio_persiste_la_cuenta_en_el_mismo_acto(tmp_path, runner):
+        """La cuenta en memoria y la que esta en disco salen de la misma llamada."""
+        out = tmp_path / "out"
+        cuenta = runner._estado_cuenta(out)
+        assert cuenta["llamadas_usadas"] == 0 and cuenta["tokens_out_max"] is None
+        fila = _fila_de_envio(runner, "jev", 1778, 145)
+>       devuelta = runner.registrar_envio_en_cuenta(out, cuenta, fila)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'evaluate_jev_pilot_piloto' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:183: AttributeError
+_____________ test_la_cuenta_persistida_mantiene_las_cinco_claves _____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_la_cuenta_persistida_mant0')
+runner = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_la_cuenta_persistida_mantiene_las_cinco_claves(tmp_path, runner):
+        """Forma: lo que escribe la contabilidad tiene que ser lo que `_estado_cuenta` espera."""
+        out = tmp_path / "out"
+        cuenta = runner._estado_cuenta(out)
+>       runner.registrar_envio_en_cuenta(out, cuenta, _fila_de_envio(runner, "jev", 100, 50))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'evaluate_jev_pilot_piloto' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:196: AttributeError
+__________ test_un_arnes_de_brazo_no_deja_la_cuenta_publicada_atras ___________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_un_arnes_de_brazo_no_deja0')
+runner = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_un_arnes_de_brazo_no_deja_la_cuenta_publicada_atras(tmp_path, runner):
+        """B2-1d curada: dos brazos, la cuenta publicada es la real (4 llamadas, salida maxima 158).
+    
+        Poblacion a mano, con las cifras medidas de FASE-C: brazo jev por `run` con 2 envios de salida
+        145 (entrada 1778), luego un arnes comparador con 2 envios de salida 158 (entrada 1054). Antes
+        de la cura el disco se quedaba en la foto del primer brazo (2 / 145); ahora dice 4 / 158.
+        """
+        kwargs = _armar(tmp_path, n_pares=2, splits="dev,eval")
+        out = kwargs["out_dir"]
+        enviar = _transporte(tok_in=1778, tok_out=145)
+        primero = runner.run(**kwargs, enviar=enviar)
+        assert primero["status"] == "OK" and primero["envios"] == 2
+>       despues = _arnes(runner, out, [("deepseek", 1054, 158), ("deepseek", 1000, 130)])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+mod = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+out_dir = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_un_arnes_de_brazo_no_deja0/out')
+envios = [('deepseek', 1054, 158), ('deepseek', 1000, 130)]
+
+    def _arnes(mod, out_dir: Path, envios: list) -> dict:
+        """Un brazo despachado fuera de `run`: lee la cuenta publicada, la suma y la publica.
+    
+        `envios` es la lista de (proveedor, tokens_in, tokens_out). Devuelve la cuenta en memoria, que
+        es lo que el arnes versionado estampaba en `cuenta_al_salir`.
+        """
+        cuenta = mod._estado_cuenta(out_dir)
+        for proveedor, tok_in, tok_out in envios:
+            fila = _fila_de_envio(mod, proveedor, tok_in, tok_out)
+>           mod.registrar_envio_en_cuenta(out_dir, cuenta, fila)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'evaluate_jev_pilot_piloto' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:142: AttributeError
+_________ test_sumar_sin_publicar_reproduce_la_divergencia_de_fase_c __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_sumar_sin_publicar_reprod0')
+runner_fresco_b21d = <module 'evaluate_jev_pilot_mutante_cuenta_etapa' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_sumar_sin_publicar_reproduce_la_divergencia_de_fase_c(
+            tmp_path, runner_fresco_b21d):
+        """Contrafactual: si la publicacion se separa de la suma, el disco vuelve a decir 2/145.
+    
+        Se apaga la escritura de `registrar_envio_en_cuenta` por la conducta del arnes versionado de
+        FASE-C. Con el mutante: disco 2/145 contra memoria 4/158, la divergencia exacta del hallazgo.
+        Restaurada la funcion, el mismo arnes deja el disco en 4/158 y publicada == real.
+        """
+        mod = runner_fresco_b21d
+        kwargs = _armar(tmp_path, n_pares=2, splits="dev,eval")
+        out = kwargs["out_dir"]
+>       original = copy.copy(mod.registrar_envio_en_cuenta)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'evaluate_jev_pilot_mutante_cuenta_etapa' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:237: AttributeError
+___________ test_el_run_no_reimplementa_la_aritmetica_de_la_cuenta ____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_el_run_no_reimplementa_la0')
+runner_fresco_b21d = <module 'evaluate_jev_pilot_mutante_cuenta_etapa' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_el_run_no_reimplementa_la_aritmetica_de_la_cuenta(tmp_path, runner_fresco_b21d):
+        """Un solo escritor: si la contabilidad de la casa no suma, `run` se queda en cero llamadas.
+    
+        `run` era el unico que hacia la suma en su propio cuerpo. Si aun la hiciera, el mutante daria 1
+        envio con cuenta 1 y el diente perderia: esto prueba donde vive la aritmetica, no que exista.
+        """
+        mod = runner_fresco_b21d
+        kwargs = _armar(tmp_path, n_pares=1, splits="dev")
+        out = kwargs["out_dir"]
+        llamadas = {"n": 0}
+    
+        def espia(out_dir, cuenta, fila, *, nombre="consumo.json"):
+            llamadas["n"] += 1
+            return cuenta  # no suma, no publica
+    
+>       original = copy.copy(mod.registrar_envio_en_cuenta)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'evaluate_jev_pilot_mutante_cuenta_etapa' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:274: AttributeError
+___________ test_una_caida_a_mitad_deja_en_disco_lo_que_ya_se_envio ___________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_una_caida_a_mitad_deja_en0')
+runner = <module 'evaluate_jev_pilot_piloto' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_una_caida_a_mitad_deja_en_disco_lo_que_ya_se_envio(tmp_path, runner):
+        """AC8 entre sesiones: se persiste por envio, no al cerrar, asi un fallo no borra el gasto.
+    
+        Poblacion: 2 pares, el transporte falso revienta con `KeyboardInterrupt` en el segundo (es
+        `BaseException`, o sea escapa al `except Exception` del runner). Esperable: 1 envio publicado.
+        """
+        kwargs = _armar(tmp_path, n_pares=2, splits="dev,eval")
+        out = kwargs["out_dir"]
+        enviar = _transporte(tok_in=1200, tok_out=100, muere_en=2)
+        with pytest.raises(KeyboardInterrupt):
+            runner.run(**kwargs, enviar=enviar)
+>       publicado = _leer(out)
+                    ^^^^^^^^^^
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:304: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:130: in _leer
+    return json.loads((out_dir / "consumo.json").read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:546: in read_text
+    return PathBase.read_text(self, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_abc.py:632: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_una_caida_a_mitad_deja_en0/out/consumo.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhond\\pytest-1718\\test_una_caida_a_mitad_deja_en0\\out\\consumo.json'
+
+..\..\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py:537: FileNotFoundError
+___________ test_sin_publicacion_por_envio_la_caida_no_deja_cuenta ____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1718/test_sin_publicacion_por_envio0')
+runner_fresco_b21d = <module 'evaluate_jev_pilot_mutante_cuenta_etapa' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\evaluate_jev_pilot.py'>
+
+    def test_sin_publicacion_por_envio_la_caida_no_deja_cuenta(tmp_path, runner_fresco_b21d):
+        """Control rojo de T5: con publicacion solo al cerrar, el mismo fallo no deja nada en disco."""
+        mod = runner_fresco_b21d
+        kwargs = _armar(tmp_path, n_pares=2, splits="dev,eval")
+        out = kwargs["out_dir"]
+>       original = copy.copy(mod.registrar_envio_en_cuenta)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'evaluate_jev_pilot_mutante_cuenta_etapa' has no attribute 'registrar_envio_en_cuenta'
+
+tests\quality_gates\jev_pilot\test_jev_pilot_cuenta_etapa_b2_1d.py:315: AttributeError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_registrar_envio_persiste_la_cuenta_en_el_mismo_acto
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_la_cuenta_persistida_mantiene_las_cinco_claves
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_un_arnes_de_brazo_no_deja_la_cuenta_publicada_atras
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_sumar_sin_publicar_reproduce_la_divergencia_de_fase_c
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_el_run_no_reimplementa_la_aritmetica_de_la_cuenta
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_una_caida_a_mitad_deja_en_disco_lo_que_ya_se_envio
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py::test_sin_publicacion_por_envio_la_caida_no_deja_cuenta
+7 failed, 2 passed in 0.24s
+EXIT = 1
+
+========================================================================================
+BLOQUE: restauracion verificada y bateria de nuevo
+COMANDO: cp <copia> scripts/evaluate_jev_pilot.py && C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py -q
+----------------------------------------------------------------------------------------
+sha256 restaurado: 4a26552237be9c847bc4de11abf4312da9e41a7a954ee74935e0368c7c000368
+IDENTICO al curado: si, la restauracion se verifica por sha, no por promesa
+EXIT = 0
+
+========================================================================================
+BLOQUE: bateria tras restaurar
+COMANDO: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py -q
+----------------------------------------------------------------------------------------
+.........                                                                [100%]
+9 passed in 0.17s
+EXIT = 0
+

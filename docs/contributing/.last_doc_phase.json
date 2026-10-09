@@ -286,7 +286,7 @@
   "tests/quality_gates/governance_numbers": "FASE-A",
   ".opencode/plans/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20": "FASE-D",
   "scripts/decision_client.py": "FASE-B",
-  "scripts/evaluate_jev_pilot.py": "FASE-B",
+  "scripts/evaluate_jev_pilot.py": "CURA-B2-1-SESION-2",
   "scripts/validate_wiring.py": "FASE-B",
   "tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py": "FASE-B",
   "30": "FASE-C",
@@ -304,5 +304,11 @@
   "29": "FASE-RELEASE",
   "13": "FASE-A1",
   "14": "FASE-ENMIENDA",
-  "16": "FASE-A2"
+  "16": "FASE-A2",
+  ".opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md": "CURA-B2-1-SESION-2",
+  ".opencode/wiring_report.json": "CURA-B2-1-SESION-2",
+  ".opencode/LECCIONES-INDEX.md": "CURA-B2-1-SESION-2",
+  ".opencode/lecciones_index.json": "CURA-B2-1-SESION-2",
+  ".opencode/qmind-writeback/registro.json": "CURA-B2-1-SESION-2",
+  "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md": "CURA-B2-1-SESION-2"
 }

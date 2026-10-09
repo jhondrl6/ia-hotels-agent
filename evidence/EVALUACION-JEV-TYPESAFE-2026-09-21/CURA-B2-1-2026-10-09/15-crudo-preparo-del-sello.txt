@@ -1,0 +1,98 @@
+CRUDO 15 - pre-vuelo del sello y pathspec preparado (SESION 2, 2026-10-09)
+
+Esta sesion NO commitea: el checkpoint del mandato deja el commit en espera de autorizacion escrita.
+Lo que si se hace es medir que el gate no va a cortar, para que la autorizacion se de sobre terreno
+conocido y no sobre un `--no-verify` posterior.
+
+## 1. Lo que vera el hook [8/8], sobre el arbol del INDICE (no sobre HEAD)
+
+Desde `ec69570` el hook materializa el arbol del indice y lo verifica a el. Se replico la misma receta,
+sin mover ninguna ref:
+
+$ git write-tree                   -> EXIT 0 :: 08ab12a4918832d3301de6f74cb4ad0363b5875f
+$ git commit-tree <tree> -p HEAD   -> EXIT 0 :: ca20b50b092b593b7005e5369c765690d18b4715
+  Declaracion de efecto: ese comando crea UN OBJETE de commit colgando, sin ref y sin push. No mueve
+  `master`, no toca el indice y lo recoge el `git gc`. Se escribe aqui en vez de dejarlo invisible.
+
+$ verify_packs_in_committed_tree.py --rev <arbol del indice>   (PLAN_CANONICO, lo que mira el hook)
+EXIT 0 :: [OK] packs en el árbol de ca20b50b092b593b7005e5369c765690d18b4715 (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+$ ... --plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18 --rev <el mismo arbol>   (el hermano)
+EXIT 0 :: [OK] packs en el árbol de ca20b50b092b593b7005e5369c765690d18b4715 (12/12 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+El hermano se corre explicito porque sus 13 rutas staged viven en el arbol que el gate materializa, y
+el hook no lo mira. No se toco ningun derivado suyo en esta sesion y aun asi pasa 12/12.
+
+## 2. Gates del arbol, con la hoja cerrada
+
+$ run_all_validations.py --quick                       -> EXIT 0 :: TOTAL: 13/13 validations passed
+$ pytest tests/quality_gates/jev_pilot tests/test_hook_precommit_packs_check.py -q   -> EXIT 0 :: 190 passed in 1.74s
+$ git rev-parse --short HEAD                           -> fb13108 (sin commitear)
+$ git rev-list --count --left-right master...origin/master  -> 0 0 (paridad)
+
+## 3. Pathspec del commit pendiente (por nombre, 18 rutas propias)
+
+El indice de esta maquina tiene 13 rutas staged por un tercero (briefing/ de REFACTOR-WHATSAPP y un
+`captura_stdout.txt`) que NO entran. El commiteado va por nombre, no con `git commit` a secas ni `-a`:
+`git write-tree` ve el indice completo, no el pathspec.
+
+  .opencode/LECCIONES-INDEX.md
+  .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md
+  .opencode/lecciones_index.json
+  .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+  .opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md
+  .opencode/qmind-writeback/registro.json
+  .opencode/wiring_report.json
+  docs/contributing/.last_doc_phase.json
+  docs/contributing/REGISTRY.md
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/10-crudo-b2-1d-cuenta-de-etapa.txt
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/11-crudo-estampado-y-frescura.txt
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/12-censo-de-citas-vencidas.md
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/13-crudo-writeback-qmind.txt
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/14-crudo-cierre-documental.txt
+  evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/15-crudo-preparo-del-sello.txt
+  scripts/evaluate_jev_pilot.py
+  tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py
+
+Comando propuesto, una linea por ruta para que la autorizacion se lea contra lo que entra:
+
+```sh
+git add -- .opencode/LECCIONES-INDEX.md .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md .opencode/lecciones_index.json \
+        .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md .opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md .opencode/qmind-writeback/registro.json \
+        .opencode/wiring_report.json docs/contributing/.last_doc_phase.json docs/contributing/REGISTRY.md \
+        evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/10-crudo-b2-1d-cuenta-de-etapa.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/11-crudo-estampado-y-frescura.txt \
+        evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/12-censo-de-citas-vencidas.md evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/13-crudo-writeback-qmind.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/14-crudo-cierre-documental.txt \
+        evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/15-crudo-preparo-del-sello.txt scripts/evaluate_jev_pilot.py tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py
+git commit -m "fix(jev): cura B2-1d en el runner y cierra documentalmente la cura B2-1 (SESION 2)" --
+        .opencode/LECCIONES-INDEX.md .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md .opencode/lecciones_index.json .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md .opencode/qmind-writeback/instantaneas/EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md .opencode/qmind-writeback/registro.json .opencode/wiring_report.json docs/contributing/.last_doc_phase.json docs/contributing/REGISTRY.md evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/10-crudo-b2-1d-cuenta-de-etapa.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/11-crudo-estampado-y-frescura.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/12-censo-de-citas-vencidas.md evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/13-crudo-writeback-qmind.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/14-crudo-cierre-documental.txt evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/15-crudo-preparo-del-sello.txt scripts/evaluate_jev_pilot.py tests/quality_gates/jev_pilot/test_jev_pilot_cuenta_etapa_b2_1d.py
+```
+
+El mensaje que va en el commit (cuerpo):
+
+```text
+La cuenta de etapa se suma y se publica en el mismo acto, por envio, con
+registrar_envio_en_cuenta(): un brazo despachado por un arnes ya no puede contar
+en su memoria y dejar atras el consumo.json que lee el siguiente proceso. Se
+republica el wiring (714->715), se estampa el 10-analisis en modo anotacion, se
+hace el write-back a QMind (61->62) verificado por descarga y sha256 contra el
+disco, se censura el censo de citas vencidas y se capitalizan L-JEV.C1/C2/C3.
+182 passed en la seleccion del piloto; quick 13/13; cero inferencias.
+```
+
+## 4. Rango L3, medido
+
+$ git rev-list --count 5249aed..fb13108  ->  3 commits
+Hoy el rango para el escaneo profundo es `5249aed..fb13108`. Si se autoriza el commit de arriba, el
+rango se extiende a `5249aed..<nuevo tip>` y hay que re-medirlo antes de pedir el L3: la cuenta de
+commits de un escaneo no se hereda del sello anterior (así quedó vencido el sello del 2026-10-05).
+El L3 de esta sesion **no se corrio**: es acto del operador, con su linea escrita.
+
+## 5. Los cinco cortes, declarados
+
+| corte | estado | evidencia |
+|---|---|---|
+| Implementación terminada | **HECHA** | `registrar_envio_en_cuenta` + su cableado en `run` (`scripts/evaluate_jev_pilot.py`), sin tocar la costura ni `modules/providers/llm_provider.py` |
+| Verificación terminada | **HECHA** | 9 funciones con par verde/rojo y tres mutantes; contrafactual a nivel de archivo 7 rojos / 2 verdes con restauración por sha256; selección 182; wiring EXIT 0 (715); quick 13/13 |
+| Cierre documental | **HECHO** | estampado aditivo 53/0, write-back 61→62 verificado por bytes, censo `12-`, lecciones `L-JEV.C1/C2/C3` con índice 365→368 y `REGISTRY.md` escrito por su autor |
+| Listo para revisión | **AHÍ** | este crudo y los `10-`…`15-` del expediente |
+| Espera de autorización | **ACTIVA** | commit, push y L3 sin ejecutar; las 13 rutas ajenas siguen staged y fuera de todo pathspec |

@@ -12,8 +12,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `18` análisis de plan + `39` archivos de `.opencode/context/`. `449` `.md` en total como corpus de **citas**.
-- 365 IDs con definición detectada; 93 IDs citados sin definición (ver última sección).
+- Corpus de **definiciones**: `18` análisis de plan + `40` archivos de `.opencode/context/`. `450` `.md` en total como corpus de **citas**.
+- 368 IDs con definición detectada; 93 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `354` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `357` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 212 |
+| `L-*` | Lecciones aprendidas | 215 |
 | `DA-*` | Decisiones / reglas de alineación | 52 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
 | — | Citados sin definición | 93 |
 
-## `L-*` — Lecciones aprendidas (212)
+## `L-*` — Lecciones aprendidas (215)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -107,6 +107,9 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-HF1` | Un candado con la *cobertura* equivocada pasa en verde mientras el artefacto miente *(FASE-HOTFIX)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 70 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-HF2` | La evidencia que no registra su comando no es re-ejecutable, aunque publique la cifra *(FASE-HOTFIX)* — EXCLUIDA de QMind | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 5 (solo el plan dueño) |
 | `L-I1` | Una fase de evidencia también produce conocimiento, y si no lo capitaliza lo pierde *(FASE-I — instanciada por FASE-VERIFY, que la encontró ausente al pasar el criterio V4)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 8 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
+| `L-JEV.C1` | Una deuda de contabilidad no es una fila: es una familia que se ramifica por quién produce cada número, y cerrar el emisor no cierra a los hermanos. / Qué pasó: B2-1 se abrió con un enunciado… | context/CONTEXT-JEV-CURA-B2-1-2026-10-09 | 1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene) | 0 (solo el plan dueño) |
+| `L-JEV.C2` | Un gate de pre-commit que lee HEAD está leyendo el padre del commit que se intenta: con derivados divergentes corta el repo entero y no puede aprobar su propio fix. / Qué pasó: el check [8/8] del… | context/CONTEXT-JEV-CURA-B2-1-2026-10-09 | 1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene) | 0 (solo el plan dueño) |
+| `L-JEV.C3` | Un load_dotenv() en el import del entry point rompe la premisa de los tests de brazo, y el rojo que produce se atribuyó mal durante una tanda entera. / Qué pasó: un test del brazo comparador, escrito… | context/CONTEXT-JEV-CURA-B2-1-2026-10-09 | 1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene) | 0 (solo el plan dueño) |
 | `L-JEV.R1` | una fase que no tiene la escritura de la fila que niega su hecho deja el hecho ganado y la | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 1 (solo el plan dueño) |
 | `L-JEV.R2` | un verificador que depende de la red necesita separar «no casa» de «no pude mirar». Tres | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 1 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `L-JEV.R3` | un patrón de rango mal formado fabrica verdes vacíos. Contar shas cortos con siete | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 | Lecciones nuevas de este plan (sesión FASE-RELEASE) | 0 (solo el plan dueño) |
