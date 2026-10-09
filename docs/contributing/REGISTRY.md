@@ -12135,6 +12135,58 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ---
 
 
+## FASE-A3 - 2026-10-09
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: ruta con plan archivado y fuente de la era G declarada con dueño
+**Nota:** 14 dientes nuevos (resta POST 57 - PRE 43); AC5 landed con rojo de ruta antes que la red y control negativo anclado a b32a5ad; AC6 cerrada por la opcion (b): huesped 01a0bfc9-5f5a-783e-9492-16367bbff596 con sha 87b9b6664f94 y 39.422 B, dueno operador, nada borrado y cero subidas; DA-CIM.9 landed con los tres dientes y M3 rompiendo solo el (i); cuatro mutantes con restauracion por sha256; modo completo 15/18 con crudo y sus tres rojos con dueno; unidad: rutas de git status excluidas las 13 ajenas de S-CIM-7, mas las dos que toca el propio escritor; presupuesto ~84 tool_use con unidad declarada (instrumento canonico FUERA DE SERVICIO)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/00-registro-de-fase.md` | NUEVO | 00-Registro-De-Fase |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/censo_qmind_racha.txt` | NUEVO | Censo Qmind Racha |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/derivados_cierre.txt` | NUEVO | Derivados Cierre |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/dictamen_17-18_strict.txt` | NUEVO | Dictamen 17-18 Strict |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/dictamen_17-18_strict_toma2_utf8.txt` | NUEVO | Dictamen 17-18 Strict Toma2 Utf8 |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/modo_completo.txt` | NUEVO | Modo Completo |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/modo_completo_final.txt` | NUEVO | Modo Completo Final |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/montaje-control-seleccion-completa.txt` | NUEVO | Montaje-Control-Seleccion-Completa |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/mutantes-M1-cuerpo_del_plan-sin-la-segunda-raiz.txt` | NUEVO | Mutantes-M1-Cuerpo Del Plan-Sin-La-Segunda-Raiz |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/mutantes-M2-bloque-huesped-silenciado-en-la-rama-1-1.txt` | NUEVO | Mutantes-M2-Bloque-Huesped-Silenciado-En-La-Rama-1-1 |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/mutantes-M3-llamada-huesped-apagada-en-la-rama-de-migracion.txt` | NUEVO | Mutantes-M3-Llamada-Huesped-Apagada-En-La-Rama-De-Migracion |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/mutantes-M4-el-resumen-vuelve-a-fijar-la-etiqueta-en-vencido.txt` | NUEVO | Mutantes-M4-El-Resumen-Vuelve-A-Fijar-La-Etiqueta-En-Vencido |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/mutantes-resumen.txt` | NUEVO | Mutantes-Resumen |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/quick_apertura.txt` | NUEVO | Quick Apertura |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/tests_baseline_post.txt` | NUEVO | Tests Baseline Post |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A3/tests_baseline_pre.txt` | NUEVO | Tests Baseline Pre |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/01-plan-maestro.md` | 01-Plan-Maestro |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-A3.md` | 05-Prompt-Inicio-Sesion-Fase-A3 |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md` | Readme |
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md` | Dependencias-Fases |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `scripts/validate_qmind_writeback.py` | Validate Qmind Writeback |
+| `tests/test_validate_qmind_writeback_escritura.py` | Test Validate Qmind Writeback Escritura |
+| `docs/contributing/REGISTRY.md` | Registry |
+| `docs/contributing/.last_doc_phase.json` | .Last Doc Phase |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 14 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
 ## Estadisticas
 
 ```markdown

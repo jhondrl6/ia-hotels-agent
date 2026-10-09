@@ -1,0 +1,40 @@
+# MUTANTE M2-bloque-huesped-silenciado-en-la-rama-1-1 — silenciar el bloque huesped en el camino de las entradas 1.1
+# mutacion: '        # Vigencia (AC4): toda fuente que nombra al plan debe estar contable en el registro.\n        huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])\n' -> '        # Vigencia (AC4): toda fuente que nombra al plan debe estar contable en el registro.\n        huesped = []  # MUTANTE M2\n'
+# ancla: count(old)==1 en scripts/validate_qmind_writeback.py
+
+== [A] COPIA INTACTA (EXIT=0) ==
+.........................................................                [100%]
+57 passed in 0.95s
+
+== [B] COPIA MUTADA (EXIT=1) ==
+.............F....................................FF..FF.                [100%]
+================================== FAILURES ===================================
+___________ test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan ___________
+tests\test_validate_qmind_writeback_escritura.py:388: in test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan
+    assert salio == 1
+E   assert 0 == 1
+_ test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion _
+tests\test_validate_qmind_writeback_escritura.py:1178: in test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion
+    assert salio == 1
+E   assert 2 == 1
+______ test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma _______
+tests\test_validate_qmind_writeback_escritura.py:1206: in test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma
+    assert salio == 1
+E   assert 2 == 1
+______ test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato _______
+tests\test_validate_qmind_writeback_escritura.py:1267: in test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato
+    assert salio == 1
+E   assert 0 == 1
+_______ test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido _______
+tests\test_validate_qmind_writeback_escritura.py:1286: in test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+    assert salio == 1
+E   assert 0 == 1
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+5 failed, 52 passed in 1.05s
+
+== restauracion: sha256 de la copia == sha256 del vivo despues del mutante: False; re-montada y verificada: True == ffce48557fbcfa343022c940c1a81386a124c3adaf76916643ee97553bf3c7dd

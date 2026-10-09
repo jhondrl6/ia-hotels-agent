@@ -1,0 +1,65 @@
+# FASE-A3 - escritor del indice del corpus (ultimo paso del cierre, R2.10)
+# comando: PYTHONUTF8=1 ./venv/Scripts/python.exe scripts/build_lesson_index.py
+
+[OK] 371 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=360 commit=11 sin_fuente=0
+EXIT=0
+
+# y su --check:
+[OK] Índice de lecciones fresco (371 IDs)
+[fechas] nombre=360 commit=11 sin_fuente=0
+EXIT_CHECK=0
+
+# integracion documental:
+============================================================
+DOCUMENT INTEGRATION VALIDATOR
+============================================================
+Project: C:\Users\Jhond\Github\iah-cli
+
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+      Executor section refs: 18
+      CONTRIBUTING section name entries: 7
+      Executor line refs (§LNN-MM): 0
+
+[PASS] CHANGELOG format consistency
+      Checked 3 recent entries
+      Last entry uses em-dash separator (correct)
+
+[PASS] Version headers with 'v' prefix
+      EXECUTOR: version v2.27.0 (OK)
+      TEMPLATE: version v1.7.0 (OK)
+      AGENTS.md: version v4.79.0 (OK)
+
+[PASS] Python path consistency (WSL)
+      phased_project_executor.md: python path OK
+
+[PASS] AGENTS.md cross-reference table
+      Cross-reference table has 6 entries
+
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.79.0
+      Release date aligned: 2026-10-07
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: no claim found in README
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (bytes reales LF)
+      CONTRIBUTING.md: docs/CONTRIBUTING.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT_INTEG=0
+
+# citas historicas (lectura, sin --update-baseline):
+[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+EXIT_CITAS=0

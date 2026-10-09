@@ -19,7 +19,7 @@ hallazgos en las tres tandas. Los rangos anteriores se conservan porque cada uno
 re-escriben.⟧ ⟦Sello del
 cierre: el operador autorizó commit, L3 y push en la misma sesión. El commit documental de la preparación es
 `b536748`, los ocho checks del hook versionado pasaron, la revisión profunda L3 no produjo hallazgos y el rango
-empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de reanudación: FASE-A3** (AC5 y AC6). **FASE-A2 cerró el 2026-10-08** contra HEAD `083e6ab` (AC3 y AC4 landed; la enmienda recibió su alta tardía en REGISTRY por mandato del operador). Cada fase re-mide su línea base con `git ls-remote origin refs/heads/master` al abrir, no con una cifra de este índice: todo commit posterior la mueve. Las dos decisiones del operador del 2026-10-08 están estampadas en maestro §4 (con su errata), §5 y §3, en `04-contrato-ejecucion.md` §R2, en `dependencias-fases.md`, en `10-analisis-post-implementacion.md` §Seguimientos y en los prompts de A2 y A3.
+empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se estampa aquí.⟧ **Punto de reanudación: FASE-B** (AC7 y AC8). **FASE-A3 cerró el 2026-10-09** contra HEAD `b32a5ad`: AC5 landed con sus dientes de ruta, AC6 cerrada por la opción (b) —rojo declarado con dueño y sha, nada borrado— y DA-CIM.9 landed como subtarea 3b; su árbol quedó **sin commitear** porque no hubo instrucción literal. **FASE-A2 cerró el 2026-10-08** contra HEAD `083e6ab` (AC3 y AC4 landed; la enmienda recibió su alta tardía en REGISTRY por mandato del operador). Cada fase re-mide su línea base con `git ls-remote origin refs/heads/master` al abrir, no con una cifra de este índice: todo commit posterior la mueve. Las dos decisiones del operador del 2026-10-08 están estampadas en maestro §4 (con su errata), §5 y §3, en `04-contrato-ejecucion.md` §R2, en `dependencias-fases.md`, en `10-analisis-post-implementacion.md` §Seguimientos y en los prompts de A2 y A3.
 
 ## Por qué importa cada fila
 
@@ -58,7 +58,7 @@ empujado es `98c190e..b536748`. El sha del commit que estampa esta nota no se es
 | Preparación | — | ✅ 2026-10-08 |
 | FASE-A1 | AC1, AC2 | ✅ CERRADA, COMMITEADA Y EMPUJADA 2026-10-08 (banda `d8a7d80..67b7e2f`, L3 sin hallazgos en las tres tandas) |
 | FASE-A2 | AC3, AC4 | ✅ CERRADA 2026-10-08 contra `083e6ab`; L3 sin hallazgos sobre `58dc034..083e6ab`. El tip vigente y su banda empujada los imprime `git ls-remote origin refs/heads/master` |
-| FASE-A3 | AC5, AC6 | ⬜ Pendiente |
+| FASE-A3 | AC5, AC6 | ✅ CERRADA 2026-10-09 (sin commit, espera de autorización) |
 | FASE-B | AC7, AC8 | ⬜ Pendiente |
 | FASE-C | AC9 | ⬜ Condicional (la abre B) |
 | FASE-RELEASE | AC10 | ⬜ Pendiente |

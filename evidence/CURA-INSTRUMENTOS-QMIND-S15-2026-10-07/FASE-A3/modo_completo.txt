@@ -1,0 +1,19 @@
+# FASE-A3 tarea 4 - modo completo (L-V2.2: se archiva, no se audita con el check recien curado)
+# comando: ./venv/Scripts/python.exe scripts/run_all_validations.py
+# arbol: worktree con HEAD b32a5ad sin commitear
+
+Exception in thread Thread-5 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\threading.py", line 1041, in _bootstrap_inner
+    self.run()
+    ~~~~~~~~^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+                  ~~~~~~~^^
+  File "C:\Users\Jhond\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x8d in position 31574: character maps to <undefined>

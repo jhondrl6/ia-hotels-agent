@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 40,
     "archivos_md_escaneados": 450,
-    "ids_con_definicion": 368,
-    "ids_citados_sin_definicion": 93,
+    "ids_con_definicion": 372,
+    "ids_citados_sin_definicion": 95,
     "fechas_por_fuente": {
-      "nombre": 357,
+      "nombre": 361,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -783,6 +783,20 @@
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
       "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.12",
+      "familia": "DA",
+      "enunciado": "El resumen agregado del verificador enumera las causas que la corrida imprimió en vez de fijar una etiqueta por código de salida; y la concurrence de dictámenes dentro de la misma entrada no se gobierna en esta fase — Decisión de FASE-A3, no del operador. La salida de un lector tiene que codificar el criterio que ese lector aplicó: con EXIT=1 y ninguna línea [VENCIDO], publicar contenido: VENCIDO inventaba una dictaminación que no ocurrió — es la única pista que ve quien corre [17/18] sin leer el cuerpo del crudo. Era hallazgo local y barato de la herramienta propia, así que se curó en la misma sesión en vez de ceremonializarlo como deuda. La concurrence, en cambio, sí es decisión de alcance: DA-CIM.9 recortó la cura a la rama de migración y abrir los demás continue cambiaría los dictámenes que A1 fijó",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1720,6 +1734,48 @@
       "redefiniciones": []
     },
     {
+      "id": "L-CIM.9",
+      "familia": "L",
+      "enunciado": "El resumen agregado de un verificador puede nombrar una causa que la corrida no imprimió: una etiqueta fija para «el código de salida fue 1» convierte cualquier rojo en el rojo que el instrumento sabía dictaminar. — Medido al cerrar FASE-A3: con DA-CIM.9 landed, [17/18] cortó EXIT=1 por un rojo de contabilidad (DUPLICADO-VIGENTE sobre una entrada 1.0) mientras el resumen agregado decía contenido: VENCIDO — y en toda la corrida no se imprimió una sola línea [VENCIDO]. La cura es causas_del_rojo(): la etiqueta lista las marcas que salieron; su diente afirma la etiqueta y el mutante M4 (volver a la cadena fija) rompe solo ese diente",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.10",
+      "familia": "L",
+      "enunciado": "Un mutante que tumba casi toda la batería no ancla un AC: demuestra que el símbolo está en el camino común. El ancla es la aserción unitaria del lector, y la predicción del mandato se mide, no se cita. — Medido al cerrar FASE-A3: el prompt esperaba que quitar la segunda raíz de cuerpo_del_plan() convirtiera una abstención honesta en [VENCIDO] falso; la copia mutada imprimió 0 líneas [VENCIDO] y 40 caídas con una sola causa (cuerpo is None → abstención y [FAIL] del escritor), o sea lo inverso: medición degradada a abstención. El diente que se ancla es el unitario de las dos raíces, y la predicción queda refutada con su medición en el acta",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.11",
+      "familia": "L",
+      "enunciado": "Una corrida de cierre puede morir por la codificación del lector, no por el árbol: un subprocess que decodifica con la cp1252 de la consola aborta antes de que el instrumento dictamine nada, y su crudo no es ni rojo ni verde. — Medido al cerrar FASE-A3: el modo completo sin PYTHONUTF8=1 murió en el reader thread (UnicodeDecodeError: byte 0x8d en position 31574) sin imprimir la primera etiqueta; con la variable corrida completa y archivada. La unidad de la racha y de la toma (primera cp1252, segunda UTF-8) se declara en el crudo, no en la prosa",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-D1",
       "familia": "L",
       "enunciado": "«Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)*",
@@ -2107,7 +2163,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -3114,7 +3170,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 106,
+      "total_citas": 107,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3175,7 +3231,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 111,
+      "total_citas": 112,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3278,7 +3334,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3733,7 +3789,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 102,
+      "total_citas": 103,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -3876,7 +3932,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 76,
+      "total_citas": 77,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
@@ -3896,7 +3952,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 89,
+      "total_citas": 90,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
@@ -5713,19 +5769,19 @@
   ],
   "citados_sin_definicion": [
     {
+      "id": "DA-CIM.9",
+      "familia": "DA",
+      "total_citas": 32,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "D-T1.3",
       "familia": "D",
       "total_citas": 25,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
-      ]
-    },
-    {
-      "id": "DA-CIM.9",
-      "familia": "DA",
-      "total_citas": 17,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5883,6 +5939,14 @@
       ]
     },
     {
+      "id": "S-CIM-2",
+      "familia": "S",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "D-1",
       "familia": "D",
       "total_citas": 5,
@@ -5928,14 +5992,6 @@
       ]
     },
     {
-      "id": "S-CIM-2",
-      "familia": "S",
-      "total_citas": 5,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
-      ]
-    },
-    {
       "id": "S-CIM-3",
       "familia": "S",
       "total_citas": 5,
@@ -5945,6 +6001,14 @@
     },
     {
       "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-9",
       "familia": "S",
       "total_citas": 5,
       "planes_que_lo_citan": [
@@ -6080,6 +6144,14 @@
     },
     {
       "id": "S-CIM-1",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-10",
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [

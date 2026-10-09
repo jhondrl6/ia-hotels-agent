@@ -1,0 +1,282 @@
+# MUTANTE M1-cuerpo_del_plan-sin-la-segunda-raiz — apagar la segunda raiz de cuerpo_del_plan()
+# mutacion: '    for relativo in (plan, f"Archives/{plan}"):\n' -> '    for relativo in (plan,):  # MUTANTE M1\n'
+# ancla: count(old)==1 en scripts/validate_qmind_writeback.py
+
+== [A] COPIA INTACTA (EXIT=0) ==
+.........................................................                [100%]
+57 passed in 0.96s
+
+== [B] COPIA MUTADA (EXIT=1) ==
+...FFFFFFFFFFFF..F.....F.FFFFF.FF..FFFFFFF.F.FFF.FFFFFFFF                [100%]
+================================== FAILURES ===================================
+_________ test_upload_explicito_registra_instanea_y_marca_la_anterior _________
+tests\test_validate_qmind_writeback_escritura.py:244: in test_upload_explicito_registra_instanea_y_marca_la_anterior
+    assert (primero, segundo) == (0, 0)
+E   assert (1, 1) == (0, 0)
+E     
+E     At index 0 diff: 1 != 0
+E     Use -v to get more diff
+___ test_titulo_ya_vigente_con_contenido_distinto_no_colisiona_en_silencio ____
+tests\test_validate_qmind_writeback_escritura.py:270: in test_titulo_ya_vigente_con_contenido_distinto_no_colisiona_en_silencio
+    assert "ya esta vigente" in buffer.getvalue().replace("á", "a")
+E   AssertionError: assert 'ya esta vigente' in '[FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhon...\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno\n'
+E    +  where '[FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhon...\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno\n' = <built-in method replace of str object at 0x000002F8BCBEAD30>('á', 'a')
+E    +    where <built-in method replace of str object at 0x000002F8BCBEAD30> = '[FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhon...\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno\n'.replace
+E    +      where '[FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jhon...\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno\n' = <built-in method getvalue of _io.StringIO object at 0x000002F8BCC26800>()
+E    +        where <built-in method getvalue of _io.StringIO object at 0x000002F8BCC26800> = <_io.StringIO object at 0x000002F8BCC26800>.getvalue
+_______ test_titulo_ya_vigente_con_el_mismo_contenido_es_skip_declarado _______
+tests\test_validate_qmind_writeback_escritura.py:285: in test_titulo_ya_vigente_con_el_mismo_contenido_es_skip_declarado
+    assert salio == 0
+E   assert 1 == 0
+_____ test_el_default_de_upload_sigue_publicando_con_el_titulo_historico ______
+tests\test_validate_qmind_writeback_escritura.py:301: in test_el_default_de_upload_sigue_publicando_con_el_titulo_historico
+    assert salio == 0
+E   assert 1 == 0
+________________ test_instanea_editada_sin_re_subir_es_vencido ________________
+tests\test_validate_qmind_writeback_escritura.py:323: in test_instanea_editada_sin_re_subir_es_vencido
+    assert salio == 1
+E   assert 2 == 1
+____________ test_cuerpo_que_cambio_despues_de_publicar_es_vencido ____________
+tests\test_validate_qmind_writeback_escritura.py:335: in test_cuerpo_que_cambio_despues_de_publicar_es_vencido
+    assert salio == 1
+E   assert 2 == 1
+___________ test_titulo_coincidente_con_contenido_distinto_es_rojo ____________
+tests\test_validate_qmind_writeback_escritura.py:346: in test_titulo_coincidente_con_contenido_distinto_es_rojo
+    assert salio == 1
+E   assert 2 == 1
+_____ test_metadata_del_servidor_es_primera_via_y_la_descarga_la_verifica _____
+tests\test_validate_qmind_writeback_escritura.py:355: in test_metadata_del_servidor_es_primera_via_y_la_descarga_la_verifica
+    assert salio == 0
+E   assert 2 == 0
+_______ test_fuente_que_promete_y_no_baja_es_no_evaluable_nunca_vencido _______
+tests\test_validate_qmind_writeback_escritura.py:367: in test_fuente_que_promete_y_no_baja_es_no_evaluable_nunca_vencido
+    assert falso.descargas == 1
+E   assert 0 == 1
+E    +  where 0 = <test_validate_qmind_writeback_escritura.QmindFalso object at 0x000002F8BCC3E950>.descargas
+___________ test_descarga_que_desmiente_la_promesa_es_promesa_rota ____________
+tests\test_validate_qmind_writeback_escritura.py:376: in test_descarga_que_desmiente_la_promesa_es_promesa_rota
+    assert salio == 1
+E   assert 2 == 1
+___________ test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan ___________
+tests\test_validate_qmind_writeback_escritura.py:388: in test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan
+    assert salio == 1
+E   assert 2 == 1
+_____________ test_la_fuente_marcada_como_reemplazada_no_duplica ______________
+tests\test_validate_qmind_writeback_escritura.py:402: in test_la_fuente_marcada_como_reemplazada_no_duplica
+    assert salio == 0, salida
+E   AssertionError: [OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'
+E       [NO-EVALUABLE] PLAN-A-2026-09-01 :: 10-analisis: PLAN-A (cierre v2): el cuerpo del plan no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_la_fuente_marcada_como_re0\plans (movido o archivado): re-fijar su ruta en el registro; no es VENCIDO
+E       [CONTADOR] 1 vigente(s): 0 dictaminada(s) por cuerpo, 0 con fidelidad remota medida, 0 NO-EVALUABLE por migracion, 1 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 0+0+1==1; 0 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+E     [NO-EVALUABLE] qmind write-back: titulo verificado | contenido: NO-EVALUABLE en alguna publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO
+E     
+E   assert 2 == 0
+___________________ test_el_rojo_manda_sobre_la_abstencion ____________________
+tests\test_validate_qmind_writeback_escritura.py:438: in test_el_rojo_manda_sobre_la_abstencion
+    assert salio == 1
+E   assert 2 == 1
+____ test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada ____
+tests\test_validate_qmind_writeback_escritura.py:545: in test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada
+    assert salio == 0
+E   assert 1 == 0
+__________ test_entrada_sin_sha_cuerpo_es_no_evaluable_por_migracion __________
+tests\test_validate_qmind_writeback_escritura.py:574: in test_entrada_sin_sha_cuerpo_es_no_evaluable_por_migracion
+    assert "no grabo sha_cuerpo" in salida and "schema 1.0" in salida
+E   assert ('no grabo sha_cuerpo' in "[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\n  [NO-EVALUABLE] PLAN-A-2026-09-01...contenido: NO-EVALUABLE en alguna publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO\n")
+________ test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo ________
+tests\test_validate_qmind_writeback_escritura.py:593: in test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo
+    assert vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function do_upload at 0x000002F8BD4920C0>(((WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_editado_despues_de0/plans') / 'Archives') / 'PLAN-A-2026-09-01'), '01a04d98-b7bd-778c-8441-26fdc7e35f45', titulo='10-analisis: PLAN-A (cierre v2)', archivo=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_editado_despues_de0/copia-saneada.md'), registro_path=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_editado_despues_de0/qmind/registro.json'), fecha='2026-10-07', repo_root=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_editado_despues_de0'))
+E    +    where <function do_upload at 0x000002F8BD4920C0> = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a3\\mount\\scripts\\validate_qmind_writeback.py'>.do_upload
+_ test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido _
+tests\test_validate_qmind_writeback_escritura.py:624: in test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido
+    assert mod.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function do_upload at 0x000002F8BD4920C0>(((WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_copia_saneada_con_cuerpo_0/plans') / 'Archives') / 'PLAN-A-2026-09-01'), '01a04d98-b7bd-778c-8441-26fdc7e35f45', titulo='10-analisis: PLAN-A (cierre v2)', archivo=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_copia_saneada_con_cuerpo_0/copia-saneada-para-el-control.md'), registro_path=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_copia_saneada_con_cuerpo_0/qmind/registro.json'), fecha='2026-10-07', repo_root=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_copia_saneada_con_cuerpo_0'))
+E    +    where <function do_upload at 0x000002F8BD4920C0> = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a3\\mount\\scripts\\validate_qmind_writeback.py'>.do_upload
+______________ test_los_tres_estados_del_contador_no_se_colapsan ______________
+tests\test_validate_qmind_writeback_escritura.py:647: in test_los_tres_estados_del_contador_no_se_colapsan
+    assert salio == 0
+E   assert 2 == 0
+_____________ test_el_rojo_manda_sobre_la_abstencion_de_migracion _____________
+tests\test_validate_qmind_writeback_escritura.py:694: in test_el_rojo_manda_sobre_la_abstencion_de_migracion
+    assert salio == 1
+E   assert 2 == 1
+___ test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos ____
+tests\test_validate_qmind_writeback_escritura.py:785: in test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos
+    _subir_explicito(vw, m, QmindFalso([], {}), TITULO_LARGO_1, una, monkeypatch)
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_dos_publicaciones_del_mis0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_____ test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores ______
+tests\test_validate_qmind_writeback_escritura.py:802: in test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores
+    _subir_explicito(vw, m, QmindFalso([], {}), titulo, copia, monkeypatch)
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_un_tercer_titulo_de_prefi0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_ test_el_nombre_generado_nunca_es_el_README_del_directorio_y_ese_archivo_sigue_intacto _
+tests\test_validate_qmind_writeback_escritura.py:834: in test_el_nombre_generado_nunca_es_el_README_del_directorio_y_ese_archivo_sigue_intacto
+    _subir_explicito(vw, m, QmindFalso([], {}), TITULO_CIERRE, _copia(vw, m, 9, "# cuerpo\n"), monkeypatch)
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_el_nombre_generado_nunca_0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+___ test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo ___
+tests\test_validate_qmind_writeback_escritura.py:842: in test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo
+    _subir_explicito(vw, m, QmindFalso([], {}), TITULO_CIERRE, copia, monkeypatch)
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_la_tabla_puebla_fuente_id0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+________ test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto ________
+tests\test_validate_qmind_writeback_escritura.py:862: in test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_la_tabla_puebla_fuente_id1\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_ test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida _
+tests\test_validate_qmind_writeback_escritura.py:879: in test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida
+    salida = _subir_explicito(vw, m, falso, TITULO_CIERRE, copia, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_tabla_degenerada_declara_0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_____________ test_una_respuesta_json_no_se_confunde_con_la_tabla _____________
+tests\test_validate_qmind_writeback_escritura.py:896: in test_una_respuesta_json_no_se_confunde_con_la_tabla
+    salida = _subir_explicito(vw, m, falso, TITULO_CIERRE, copia, monkeypatch)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_validate_qmind_writeback_escritura.py:737: in _subir_explicito
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_una_respuesta_json_no_se_0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_________ test_censo_que_no_responde_es_estado_propio_y_no_re_subida __________
+tests\test_validate_qmind_writeback_escritura.py:913: in test_censo_que_no_responde_es_estado_propio_y_no_re_subida
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_censo_que_no_responde_es_0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+___________ test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir ____________
+tests\test_validate_qmind_writeback_escritura.py:931: in test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_censo_que_no_la_ve_nombra0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_ test_upload_con_prefijo_y_desde_la_raiz_dejan_la_clave_del_directorio_sin_prefijo _
+tests\test_validate_qmind_writeback_escritura.py:1010: in test_upload_con_prefijo_y_desde_la_raiz_dejan_la_clave_del_directorio_sin_prefijo
+    assert (uno, dos) == (0, 0), buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_upload_con_prefijo_y_desd0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     [UP] 10-analisis: PLAN-EN-RAIZ-2026-10-09 (lecciones aprendidas y decisiones)
+E     [OK] Subido: 10-analisis-post-implementacion
+E     [OK] Registrada instantanea PLAN-EN-RAIZ-2026-10-09--10-analisis_PLAN-EN-RAIZ-2026-10-09_lecciones_aprendidas_y_decisiones_--6f3628a0a367f0f6.md sha256=6f3628a0a367f0f6a9dcdfb0e89b23c2a22fad2e9882e21003fedecd455c83f8 fuente_id=01a0bfc9-5f5a-783e-9492-000000000001
+E     
+E     [RESUMEN] upload=1 skip=0 fail=0
+E     
+E   assert (1, 0) == (0, 0)
+E     
+E     At index 0 diff: 1 != 0
+E     Use -v to get more diff
+__ test_cuerpo_del_plan_resuelve_las_dos_raices_y_su_ausencia_no_es_ninguna ___
+tests\test_validate_qmind_writeback_escritura.py:1066: in test_cuerpo_del_plan_resuelve_las_dos_raices_y_su_ausencia_no_es_ninguna
+    assert vw.cuerpo_del_plan(PLAN, m["plans"]) == m["cuerpo"], "el plan archivado resuelve bajo Archives/"
+E   AssertionError: el plan archivado resuelve bajo Archives/
+E   assert None == WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_del_plan_resuelve_0/plans/Archives/PLAN-A-2026-09-01/10-analisis-post-implementacion.md')
+E    +  where None = <function cuerpo_del_plan at 0x000002F8BD491080>('PLAN-A-2026-09-01', WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1756/test_cuerpo_del_plan_resuelve_0/plans'))
+E    +    where <function cuerpo_del_plan at 0x000002F8BD491080> = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a3\\mount\\scripts\\validate_qmind_writeback.py'>.cuerpo_del_plan
+_ test_el_plan_archivado_publicado_por_prefijo_no_abstiene_al_verificador_por_no_resolver _
+tests\test_validate_qmind_writeback_escritura.py:1091: in test_el_plan_archivado_publicado_por_prefijo_no_abstiene_al_verificador_por_no_resolver
+    assert vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+E   AssertionError: assert 1 == 0
+E    +  where 1 = <function main at 0x000002F8BD492200>(['--nb', '01a04d98-b7bd-778c-8441-26fdc7e35f45', '--plans-dir', 'C:\\Users\\Jhond\\AppData\\Local\\Temp\\pytest-of-Jho...Jhond\\AppData\\Local\\Temp\\pytest-of-Jhond\\pytest-1756\\test_el_plan_archivado_publica0\\qmind\\registro.json', ...])
+E    +    where <function main at 0x000002F8BD492200> = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a3\\mount\\scripts\\validate_qmind_writeback.py'>.main
+_ test_upload_con_ruta_absoluta_bajo_archives_tampoco_escribe_el_prefijo_en_la_clave _
+tests\test_validate_qmind_writeback_escritura.py:1114: in test_upload_con_ruta_absoluta_bajo_archives_tampoco_escribe_el_prefijo_en_la_clave
+    assert salio == 0, buffer.getvalue()
+E   AssertionError: [FAIL] Upload: el cuerpo de PLAN-A-2026-09-01 no resuelve bajo C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1756\test_upload_con_ruta_absoluta_0\plans (10-analisis-post-implementacion.md): sin cuerpo no hay sha_cuerpo que grabar y el registro no se inventa uno
+E     
+E   assert 1 == 0
+_ test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada _
+tests\test_validate_qmind_writeback_escritura.py:1151: in test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada
+    assert salio == 1, "el rojo manda sobre la abstencion (contrato D2, R2.9)"
+E   AssertionError: el rojo manda sobre la abstencion (contrato D2, R2.9)
+E   assert 2 == 1
+_ test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion _
+tests\test_validate_qmind_writeback_escritura.py:1178: in test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion
+    assert salio == 1
+E   assert 2 == 1
+______ test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma _______
+tests\test_validate_qmind_writeback_escritura.py:1206: in test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma
+    assert salio == 1
+E   assert 2 == 1
+_ test_la_fuente_del_titulo_reemplazado_no_es_huesped_en_el_camino_de_migracion _
+tests\test_validate_qmind_writeback_escritura.py:1238: in test_la_fuente_del_titulo_reemplazado_no_es_huesped_en_el_camino_de_migracion
+    assert "no grabo sha_cuerpo" in salida and "0 fuente(s) huesped(s)" in salida
+E   assert ('no grabo sha_cuerpo' in "[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\n  [NO-EVALUABLE] PLAN-A-2026-09-01...contenido: NO-EVALUABLE en alguna publicacion (ver el [CONTADOR]); la abstencion no es PASS y no se pinta de VENCIDO\n")
+_ test_un_vencido_por_cuerpo_y_una_abstencion_local_dan_exit_1_con_las_dos_lineas _
+tests\test_validate_qmind_writeback_escritura.py:1252: in test_un_vencido_por_cuerpo_y_una_abstencion_local_dan_exit_1_con_las_dos_lineas
+    assert salio == 1
+E   assert 2 == 1
+______ test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato _______
+tests\test_validate_qmind_writeback_escritura.py:1267: in test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato
+    assert salio == 1
+E   assert 2 == 1
+_______ test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido _______
+tests\test_validate_qmind_writeback_escritura.py:1286: in test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+    assert salio == 1
+E   assert 2 == 1
+_ test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado _
+tests\test_validate_qmind_writeback_escritura.py:1328: in test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado
+    assert salio == 1
+E   assert 2 == 1
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_upload_explicito_registra_instanea_y_marca_la_anterior
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_contenido_distinto_no_colisiona_en_silencio
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_titulo_ya_vigente_con_el_mismo_contenido_es_skip_declarado
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_default_de_upload_sigue_publicando_con_el_titulo_historico
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_instanea_editada_sin_re_subir_es_vencido
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_que_cambio_despues_de_publicar_es_vencido
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_titulo_coincidente_con_contenido_distinto_es_rojo
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_metadata_del_servidor_es_primera_via_y_la_descarga_la_verifica
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_fuente_que_promete_y_no_baja_es_no_evaluable_nunca_vencido
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_descarga_que_desmiente_la_promesa_es_promesa_rota
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_fuente_marcada_como_reemplazada_no_duplica
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_registro_graba_sha_cuerpo_del_cuerpo_y_no_de_la_copia_saneada
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_entrada_sin_sha_cuerpo_es_no_evaluable_por_migracion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_editado_despues_de_publicar_es_vencido_por_cuerpo
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_copia_saneada_con_cuerpo_intacto_es_vigente_y_el_guard_versionado_cortaba_vencido
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_los_tres_estados_del_contador_no_se_colapsan
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_manda_sobre_la_abstencion_de_migracion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_nombre_generado_nunca_es_el_README_del_directorio_y_ese_archivo_sigue_intacto
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_una_respuesta_json_no_se_confunde_con_la_tabla
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_censo_que_no_responde_es_estado_propio_y_no_re_subida
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_upload_con_prefijo_y_desde_la_raiz_dejan_la_clave_del_directorio_sin_prefijo
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_cuerpo_del_plan_resuelve_las_dos_raices_y_su_ausencia_no_es_ninguna
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_plan_archivado_publicado_por_prefijo_no_abstiene_al_verificador_por_no_resolver
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_upload_con_ruta_absoluta_bajo_archives_tampoco_escribe_el_prefijo_en_la_clave
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_fuente_del_titulo_reemplazado_no_es_huesped_en_el_camino_de_migracion
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_un_vencido_por_cuerpo_y_una_abstencion_local_dan_exit_1_con_las_dos_lineas
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado
+40 failed, 17 passed in 1.85s
+
+== restauracion: sha256 de la copia == sha256 del vivo despues del mutante: False; re-montada y verificada: True == ffce48557fbcfa343022c940c1a81386a124c3adaf76916643ee97553bf3c7dd

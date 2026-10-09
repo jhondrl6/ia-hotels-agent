@@ -429,6 +429,38 @@ def _fuente_nombral(fuente: dict, plan: str) -> bool:
     return "10-analisis" in fuente["title"] and (plan in fuente["title"] or stem in fuente["title"])
 
 
+def _huespedes_sin_contabilidad(datos: dict, fuentes: list, plan: str) -> list:
+    """Las fuentes del censo que nombran al plan y no tienen título contable en su registro (AC6).
+
+    DA-CIM.9: antes era código suelto al final del bucle, así que solo lo recorrían las entradas con
+    `sha_cuerpo`. Extraída, la llaman los dos caminos —el de las entradas `1.1` y el de la abstención de
+    migración— y el `continue` de la abstención sigue donde estaba: lo que se añade es la evaluación de la
+    huésped, no una dictaminación de vigencia que el registro `1.0` no puede sostener (la capa D2 **no** se
+    levanta para esas entradas).
+
+    Está contable un título que aparece en **cualquier** entrada del plan, incluida la marcada como
+    `reemplazada`: esa es la semántica con la que la cura de AC3 dejó de duplicar, y no se re-baja aquí.
+    """
+    registrados = {t["titulo"] for t in entradas_del_plan(datos, plan)}
+    return [f for f in fuentes if _fuente_nombral(f, plan) and f["title"] not in registrados]
+
+
+def _lineas_huesped(etiqueta: str, huesped: list) -> list:
+    """El rojo de la fila huésped con los tres datos que lo hacen dictaminable: id, título y sha del censo.
+
+    El sha lo publica el censo, no el registro: lo que se declara es que el servidor tiene esa fuente y el
+    registro no la cuenta. Una fuente sin `metadata.fileSha256` no miente con un sha vacío: nombra la
+    abstención del dato (R2.9).
+    """
+    lineas = []
+    for f in huesped:
+        sha = f"{f['sha_metadata'][:12]}..." if f["sha_metadata"] else "sin-sha-en-el-censo"
+        lineas.append(f"  [DUPLICADO-VIGENTE] {etiqueta}: la fuente {f['id'][:13]}... "
+                      f"({f['title'][:60]}...) con sha_metadata {sha} nombra al plan y no esta marcada como "
+                      f"reemplazada: dos fuentes vigentes del mismo plan")
+    return lineas
+
+
 _CACHE_BAJADAS: dict = {}
 
 
@@ -470,7 +502,7 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
 
     rojo = 0
     abstencion = 0
-    contador = {"cuerpo": 0, "remoto": 0, "migracion": 0, "local": 0}
+    contador = {"cuerpo": 0, "remoto": 0, "migracion": 0, "local": 0, "huespedes": 0}
     for e in vigentes:
         etiqueta = f"{e['plan']} :: {e['titulo']}"
         instanea = resolver_instanea(e, ruta_registro)
@@ -495,6 +527,14 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la entrada no grabo sha_cuerpo (registro schema "
                           f"{datos.get('schema_version') or 'sin_version'}), es anterior a la cura y no se "
                           f"rellena hacia atras; no es VENCIDO ni verde")
+            # DA-CIM.9: la abstencion de vigencia no puede tapar el hallazgo de contabilidad. La fuente que
+            # nombra al plan sin entrada contable se dictamina tambien aqui, antes del continue, y el rojo
+            # manda sobre la abstencion (contrato D2, R2.9).
+            huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])
+            contador["huespedes"] += len(huesped)
+            if huesped:
+                rojo = 1
+                lineas.extend(_lineas_huesped(etiqueta, huesped))
             continue
         contador["cuerpo"] += 1
         if e["sha_cuerpo"] != sha_cuerpo_ahora:
@@ -562,20 +602,33 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                               f"({sha_inst[:12]}...) con {candidatas[0]['id'][:13]}...")
 
         # Vigencia (AC4): toda fuente que nombra al plan debe estar contable en el registro.
-        registrados = {t["titulo"] for t in entradas_del_plan(datos, e["plan"])}
-        huesped = [f for f in fuentes if _fuente_nombral(f, e["plan"]) and f["title"] not in registrados]
+        huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])
+        contador["huespedes"] += len(huesped)
         if huesped:
             rojo = 1
-            for f in huesped:
-                lineas.append(f"  [DUPLICADO-VIGENTE] {etiqueta}: la fuente {f['id'][:13]}... "
-                              f"({f['title'][:60]}...) nombra al plan y no esta marcada como "
-                              f"reemplazada: dos fuentes vigentes del mismo plan")
+            lineas.extend(_lineas_huesped(etiqueta, huesped))
     lineas.append(f"  [CONTADOR] {len(vigentes)} vigente(s): {contador['cuerpo']} dictaminada(s) por cuerpo, "
                   f"{contador['remoto']} con fidelidad remota medida, {contador['migracion']} NO-EVALUABLE "
                   f"por migracion, {contador['local']} sin observacion local; cuerpo y remota son preguntas "
                   f"distintas y pueden solaparse: {contador['cuerpo']}+{contador['migracion']}"
-                  f"+{contador['local']}=={len(vigentes)}")
+                  f"+{contador['local']}=={len(vigentes)}; {contador['huespedes']} fuente(s) huesped(s) sin "
+                  f"contabilidad, reportadas aparte y fuera de la suma")
     return (rojo or abstencion), lineas
+
+
+def causas_del_rojo(lineas: list) -> str:
+    """La etiqueta del resumen nombra la causa que la corrida imprimió; no inventa un `VENCIDO` (AC6).
+
+    Con DA-CIM.9 landed el único rojo puede ser de contabilidad (`DUPLICADO-VIGENTE`) sobre una entrada cuya
+    vigencia está en abstención. Publicar «contenido: VENCIDO» ahí sería pintar de VENCIDO lo que la corrida
+    no dictaminó (contrato D2, R2.9), y sería además la única pista que ve quien corre `[17/18]` sin leer el
+    cuerpo del crudo. Si concurren varias causas, se listan las que salieron.
+    """
+    causas = [nombre for marca, nombre in (("[VENCIDO]", "VENCIDO"),
+                                           ("[PROMESA-ROTA]", "PROMESA-ROTA"),
+                                           ("[DUPLICADO-VIGENTE]", "DUPLICADO-VIGENTE"))
+              if any(marca in l for l in lineas)]
+    return "+".join(causas) if causas else "ROJO-SIN-CAUSA-IMPRESA"
 
 
 def dentro_del_repo(ruta: Path, base: Path = None) -> bool:
@@ -611,6 +664,29 @@ def publicar_en_registro(datos: dict, ruta_registro: Path, plan_name: str, titul
     return entrada
 
 
+def ruta_del_upload(argv: str, plans_dir: Path) -> Path:
+    """La ruta del plan que se publica: una `--upload` relativa se compone contra `--plans-dir`.
+
+    AC5 (`CURA-INSTRUMENTOS-QMIND-S15`): la composición **no** exige que la ruta exista. Por eso
+    `--upload Archives/<PLAN>` resuelve desde que el plan se archivó y `plan_dir.name` sigue dando la clave
+    correcta del registro; lo que nunca existió es el camino inverso. La capacidad no se construye aquí: se fija
+    por diente.
+    """
+    plan_dir = Path(argv)
+    if not plan_dir.is_absolute():
+        plan_dir = (plans_dir / plan_dir).resolve()
+    return plan_dir
+
+
+def sin_directorio(plan_dir: Path) -> str:
+    """El rojo por ruta inexistente nombra la ruta buscada (AC5); nunca es un fallo de red disfrazado.
+
+    Un solo emisor del texto porque lo llaman los dos cortes: `main()` antes de preguntar al notebook y
+    `do_upload()` como cota delAPI.
+    """
+    return f"[FAIL] Upload: el directorio no existe: {plan_dir}"
+
+
 def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Path = None,
               registro_path: Path = None, fecha: str = None,
               repo_root: Path = None) -> int:
@@ -624,7 +700,7 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
     registro_path = registro_path if registro_path is not None else REGISTRO_PATH
     base_repo = repo_root if repo_root is not None else ROOT_DIR
     if not plan_dir.is_dir():
-        print(f"[FAIL] Upload: el directorio no existe: {plan_dir}")
+        print(sin_directorio(plan_dir))
         return 1
 
     analisis = plan_dir / ANALISIS_FILENAME
@@ -767,14 +843,17 @@ def main(argv=None) -> int:
         return 1
 
     if args.upload:
+        plan_dir = ruta_del_upload(args.upload, args.plans_dir)
+        if not plan_dir.is_dir():
+            # AC5: la ruta equivocada se dicta antes de tocar el notebook. Si primero se resuelve el
+            # notebook, el rojo de un `--upload <PLAN>` archivado llegaria disfrazado de fallo de red.
+            print(sin_directorio(plan_dir))
+            return 1
         try:
             notebook_id = resolve_notebook_id(args.nb)
         except QmindUnavailable as exc:
             print(f"[FAIL] Upload: {exc}")
             return 1
-        plan_dir = Path(args.upload)
-        if not plan_dir.is_absolute():
-            plan_dir = (args.plans_dir / plan_dir).resolve()
         return do_upload(plan_dir, notebook_id, titulo=args.title, archivo=args.file,
                          registro_path=args.registro)
 
@@ -820,7 +899,8 @@ def main(argv=None) -> int:
         print(linea)
 
     codigo_titulo = 1 if missing else 0
-    estado = "VENCIDO" if codigo_contenido == 1 else ("NO-EVALUABLE" if codigo_contenido == 2 else "OK")
+    estado = (causas_del_rojo(lineas) if codigo_contenido == 1
+              else ("NO-EVALUABLE" if codigo_contenido == 2 else "OK"))
     if codigo_titulo == 1 or codigo_contenido == 1:
         resumen = f"[FAIL] qmind write-back: titulo {'OK' if not missing else str(len(missing))+' falta(n)'} | contenido: {estado}"
         print(resumen)

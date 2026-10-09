@@ -1,0 +1,19 @@
+# POST seleccion literal tests/test_validate_qmind_writeback_escritura.py
+# interprete: ./venv/Scripts/python.exe con PYTHONUTF8=1 (la consola de esta maquina es cp1252)
+# comando: PYTHONUTF8=1 venv/Scripts/python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q
+# arbol: worktree con HEAD b32a5ad sin commitear, instrumento CONGELADO (script ffce48557fbc / test 3ac1cf2c4e57)
+# resta: 57 - 43 = 14 dientes de ESTA fase; los 43 viejos siguen verdes sin re-bajar asercion
+
+.........................................................                [100%]
+57 passed in 0.88s
+EXIT=0
+
+# lineas assert eliminadas en el diff del archivo de tests (debe ser 0):
+0
+# funciones def test_ en el arbol de la fase:
+57
+# funciones def test_ en el tip al abrir (b32a5ad):
+b32a5ad:tests/test_validate_qmind_writeback_escritura.py:43
+# sha256 del instrumento congelado:
+ffce48557fbcfa34302 *scripts/validate_qmind_writeback.py
+895e64d92c2dc2c1b5c *tests/test_validate_qmind_writeback_escritura.py

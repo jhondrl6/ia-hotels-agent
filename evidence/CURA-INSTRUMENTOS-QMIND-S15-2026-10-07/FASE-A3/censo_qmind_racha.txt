@@ -1,0 +1,42 @@
+# FASE-A3 tarea 1 - censo del notebook iah-cli-lecciones
+# comando: ./venv/Scripts/python.exe temp/censo_a3.py (scratch, no versionado)
+# arbol: HEAD b32a5ad
+
+# censo del notebook 01a04d98-b7bd-778c-8441-26fdc7e35f45
+# comando: fetch_sources() del propio verificador (qmind source list --all --format json)
+# lectura: id, title, sha_metadata, tam_metadata - sin originUrl ni URI
+
+[RACHA] intentos: intento 1: EXIT 0, 62 fuentes
+
+[POBLACION] 62 fuentes en el notebook
+
+[NOMBRAN_AL_PLAN_PADRE] 3 fuente(s) con '10-analisis' que nombran a REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+
+[REGISTRO] C:\Users\Jhond\Github\iah-cli\.opencode\qmind-writeback\registro.json :: schema_version=1.1, 3 entrada(s) en total, 2 del plan padre
+  - estado=reemplazada sha256=0b02bb5084e3... sha_cuerpo=AUSENTE (1.0) fuente_id=vacio titulo='10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07)'
+  - estado=vigente sha256=1f0ee6e52f00... sha_cuerpo=AUSENTE (1.0) fuente_id=vacio titulo='10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)'
+
+[FUENTE] id=01a118f3-ca9a-7cf8-beae-3723640007da
+  titulo='10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)'
+  sha_metadata=1f0ee6e52f008e7413846039e244a8a242b472ba93e59bc933af2bb47e7286e0
+  fileSize=125198
+  contable_en_registro=SI
+  nombrada_en_instanea_de_registro=SI
+[FUENTE] id=01a118ee-fa45-7aa1-be01-4ce7332323d4
+  titulo='10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07)'
+  sha_metadata=0b02bb5084e3a785e67a2b4303f849060309c177f7faf45d4bb3ddf461c8ab64
+  fileSize=125072
+  contable_en_registro=SI
+  nombrada_en_instanea_de_registro=SI
+[FUENTE] id=01a0bfc9-5f5a-783e-9492-16367bbff596
+  titulo='10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)'
+  sha_metadata=87b9b6664f945ac6279f1efaf9aa7682cac8a1c952e633bfc4ff55ce67a49274
+  fileSize=39422
+  contable_en_registro=NO (huesped sin contabilidad)
+  nombrada_en_instanea_de_registro=NO
+
+[HUESPEDES] 1 fuente(s) que nombran al plan padre sin entrada contable
+  - id=01a0bfc9-5f5a-783e-9492-16367bbff596 sha_metadata=87b9b6664f945ac6279f1efaf9aa7682cac8a1c952e633bfc4ff55ce67a49274 fileSize=39422
+
+[DICTAMEN_DEL_INSTRUMENTO]
+EXIT=0

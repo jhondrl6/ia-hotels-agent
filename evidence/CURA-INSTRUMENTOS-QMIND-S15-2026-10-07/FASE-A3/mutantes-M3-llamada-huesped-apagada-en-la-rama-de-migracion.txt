@@ -1,0 +1,21 @@
+# MUTANTE M3-llamada-huesped-apagada-en-la-rama-de-migracion — apagar la llamada huesped dentro de la guarda de migracion (DA-CIM.9)
+# mutacion: '            # DA-CIM.9: la abstencion de vigencia no puede tapar el hallazgo de contabilidad. La fuente que\n            # nombra al plan sin entrada contable se dictamina tambien aqui, antes del continue, y el rojo\n            # manda sobre la abstencion (contrato D2, R2.9).\n            huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])\n' -> '            # DA-CIM.9: la abstencion de vigencia no puede tapar el hallazgo de contabilidad. La fuente que\n            # nombra al plan sin entrada contable se dictamina tambien aqui, antes del continue, y el rojo\n            # manda sobre la abstencion (contrato D2, R2.9).\n            huesped = []  # MUTANTE M3\n'
+# ancla: count(old)==1 en scripts/validate_qmind_writeback.py
+
+== [A] COPIA INTACTA (EXIT=0) ==
+.........................................................                [100%]
+57 passed in 1.00s
+
+== [B] COPIA MUTADA (EXIT=1) ==
+.................................................F.......                [100%]
+================================== FAILURES ===================================
+_ test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada _
+tests\test_validate_qmind_writeback_escritura.py:1151: in test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada
+    assert salio == 1, "el rojo manda sobre la abstencion (contrato D2, R2.9)"
+E   AssertionError: el rojo manda sobre la abstencion (contrato D2, R2.9)
+E   assert 2 == 1
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada
+1 failed, 56 passed in 0.87s
+
+== restauracion: sha256 de la copia == sha256 del vivo despues del mutante: False; re-montada y verificada: True == ffce48557fbcfa343022c940c1a81386a124c3adaf76916643ee97553bf3c7dd

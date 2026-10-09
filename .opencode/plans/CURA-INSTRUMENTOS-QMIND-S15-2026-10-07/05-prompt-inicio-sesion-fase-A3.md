@@ -32,7 +32,7 @@ vigencia corte `[VENCIDO]`, el bloque `DUPLICADO-VIGENTE` no se evalúa (los cam
 |---|---|
 | Preparación | ✅ 2026-10-08 |
 | FASE-A1 | ✅ **CERRADA, COMMITEADA Y EMPUJADA** 2026-10-08 — requisito duro landed: `sha_cuerpo` + schema 1.1 y la puerta de vigencia cuerpo contra cuerpo, con el gate de registro y el contrato D2 conservados. Banda empujada `d8a7d80..67b7e2f` (cura `63b944a`, sello `15f4fdd`, addenda `67b7e2f`; L3 **sin hallazgos** en las tres tandas). Crudos: `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A1/`. **Su consecuencia 1 —las entradas `1.0` salen por `continue` y nunca llegan al bloque huésped— quedó resuelta por DA-CIM.9 y es la subtarea 3b de este prompt** |
-| FASE-A2 | ⬜ Pendiente (requisito: slug y `fuente_id`) |
+| FASE-A2 | ✅ **CERRADA, COMMITEADA Y EMPUJADA** 2026-10-08 — AC3 y AC4 landed: `slug_de_instantanea()` con huella reservada al final del nombre (el recorte cae sobre el prefijo, nunca sobre la firma) y `fuente_id_de_tabla()` + `verificar_por_censo()` + `publicar_en_registro()` en las dos ramas de `do_upload()`, sin re-subida. PRE 31 → POST 43 (resta 12) sin aserción rebajada; cinco mutantes con restauración por sha; cero escrituras remotas. Crudos: `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/`. La banda empujada y el tip vigente los imprime `git ls-remote origin refs/heads/master` |
 | FASE-B, C, RELEASE | ⬜ Pendientes |
 
 **Línea base de esta fase:** el tip que imprima `git ls-remote origin refs/heads/master` **al abrir la sesión**. Las
@@ -133,20 +133,37 @@ de curar (L-V2.2).
 Conforme al contrato §cierre, sin `--release`:
 
 ```bash
-./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-A3 --fecha 2026-10-08 \
+./venv/Scripts/python.exe scripts/log_phase_completion.py --fase FASE-A3 --fecha "$(date +%F)" \
     --desc "CURA-INSTRUMENTOS-QMIND-S15: ruta con plan archivado y fuente de la era G declarada con dueño" \
     --archivos-mod "$ARCHIVOS_MOD_MEDIDOS" --tests "$TESTS_NUEVOS_MEDIDOS" --check-manual-docs
 ```
 
+> **Nota de preparación (2026-10-09):** la fecha se auto-evalúa (`$(date +%F)`) para que valga la real de la sesión de
+> A3 y no la de preparación (contrato §Cierre.5). Los prompts hermanos (B, C, RELEASE) conservan el literal
+> `2026-10-08` y se corrigen al prepararse cada uno.
+
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] AC5 con sus dos rojos nombrados por causa (ruta no encontrada; abstención con raíz buscada) y su verde de clave `plan_dir.name`
-- [ ] AC6 cerrada por una de sus dos vías **escrita en la evidencia**, con sha y dueño; si fue la (b), el rojo sigue imprimiéndose y ningún documento del plan lo describe como resuelto
-- [ ] DA-CIM.9 landed: `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración antes del `continue`, con el diente (i) rojo sobre entrada `1.0` y `descargas == 0`, el diente (ii) rojo + abstención en la misma corrida, el diente (iii) `[CONTADOR]` cuadrando con la huésped fuera de la suma, y el mutante con restauración por sha256
-- [ ] Nada fue borrado en el notebook; ninguna subida ejecutada; ningún enlace firmado persistido
-- [ ] Los dientes de A1 y A2 siguen verdes; delta explicado por adiciones de ESTA fase
-- [ ] Contador publicado y crudo del modo completo archivado con el estado de cada check
-- [ ] Post-ejecución completo; quick verde; derivados regenerados con su escritor
+- [x] AC5 con sus dos rojos nombrados por causa (ruta no encontrada; abstención con raíz buscada) y su verde de clave `plan_dir.name`
+- [x] AC6 cerrada por una de sus dos vías **escrita en la evidencia**, con sha y dueño; si fue la (b), el rojo sigue imprimiéndose y ningún documento del plan lo describe como resuelto
+- [x] DA-CIM.9 landed: `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración antes del `continue`, con el diente (i) rojo sobre entrada `1.0` y `descargas == 0`, el diente (ii) rojo + abstención en la misma corrida, el diente (iii) `[CONTADOR]` cuadrando con la huésped fuera de la suma, y el mutante con restauración por sha256
+- [x] Nada fue borrado en el notebook; ninguna subida ejecutada; ningún enlace firmado persistido
+- [x] Los dientes de A1 y A2 siguen verdes; delta explicado por adiciones de ESTA fase
+- [x] Contador publicado y crudo del modo completo archivado con el estado de cada check
+- [x] Post-ejecución completo; quick verde; derivados regenerados con su escritor
+    > *(el post-ejecución quedó en `listo para revisión`: el commit no se autorizó en el chat de esta sesión)*
+
+> **Sello de la sesión (2026-10-09).** AC5 landed con 5 dientes y AC6 cerrada por la **opción (b)**: el rojo
+> queda impreso con su id, su título truncado y su `sha_metadata` del censo, y su dueño escrito está en
+> `dependencias-fases.md` (fila 3) y en `10-analisis-post-implementacion.md` §Seguimientos. La vía (a)
+> (`vigente-historica`) **no** se ejecutó: no llegó autorización literal para editar la contabilidad por una
+> fuente ajena. Dos desviaciones declaradas con su medición: (1) el mutante de `cuerpo_del_plan()` no produce
+> el `[VENCIDO]` falso que predecía el prompt — **0** líneas `[VENCIDO]` en la copia mutada; produce lo inverso
+> (abstención donde había medición) y tumba 40 pruebas por una sola causa, así que el ancla del diente es la
+> unidad del lector (`test_cuerpo_del_plan_resuelve_las_dos_raices_y_su_ausencia_no_es_ninguna`). (2) El modo
+> completo murió en esta máquina al decodificar la salida de un subprocess con cp1252; se re-corrió con
+> `PYTHONUTF8=1` y la variable queda estampada en el crudo (deuda S-CIM-10).
+
 
 ## Restricciones
 
@@ -181,5 +198,10 @@ auditarse con el check recien curado.
 
 RESTRICCIONES: sin source delete, sin subir, sin editar el registro a mano, sin tocar el plan padre, sin AGENTS ni
 VERSION, sin commit salvo instruccion literal, sin iniciar B.
+
+INDICE: si el indice de esta maquina trae rutas staged ajenas (al 2026-10-09 son 13, del hermano
+REFACTOR-WHATSAPP: briefing/ y una evidencia), NO se comitean ni se des-stagean; los commits van por pathspec y el
+pre-vuelo de packs (hook [8/8]) se corre sobre el arbol del pathspec (HEAD + rutas propias), no sobre el indice
+completo. Si su dueno ya las commiteo, esta linea no aplica.
 
 ```

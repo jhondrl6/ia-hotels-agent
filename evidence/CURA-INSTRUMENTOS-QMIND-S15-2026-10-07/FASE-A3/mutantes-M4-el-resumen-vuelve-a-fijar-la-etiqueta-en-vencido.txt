@@ -1,0 +1,26 @@
+# MUTANTE M4-el-resumen-vuelve-a-fijar-la-etiqueta-en-vencido — devolver la etiqueta fija en causas_del_rojo(): el resumen vuelve a inventar un VENCIDO
+# mutacion: '    return "+".join(causas) if causas else "ROJO-SIN-CAUSA-IMPRESA"\n' -> '    return "VENCIDO"  # MUTANTE M4\n'
+# ancla: count(old)==1 en scripts/validate_qmind_writeback.py
+
+== [A] COPIA INTACTA (EXIT=0) ==
+.........................................................                [100%]
+57 passed in 1.01s
+
+== [B] COPIA MUTADA (EXIT=1) ==
+.......................................................F.                [100%]
+================================== FAILURES ===================================
+_______ test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido _______
+tests\test_validate_qmind_writeback_escritura.py:1287: in test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+    assert "contenido: DUPLICADO-VIGENTE" in salida, salida
+E   AssertionError: [OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'
+E       [FRESCO] PLAN-A-2026-09-01 :: 10-analisis: PLAN-A (cierre v2): 2 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+E       [DUPLICADO-VIGENTE] PLAN-A-2026-09-01 :: 10-analisis: PLAN-A (cierre v2): la fuente 01a0bfc9-5f5a... (10-analisis: PLAN-A-2026-09-01 (lecciones aprendidas y decis...) con sha_metadata 6f3628a0a367... nombra al plan y no esta marcada como reemplazada: dos fuentes vigentes del mismo plan
+E       [CONTADOR] 1 vigente(s): 1 dictaminada(s) por cuerpo, 1 con fidelidad remota medida, 0 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 1+0+0==1; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+E     [FAIL] qmind write-back: titulo OK | contenido: VENCIDO
+E     
+E   assert 'contenido: DUPLICADO-VIGENTE' in "[OK] QMind Write-back: 1/1 10-analisis archivados ingested en 'iah-cli-lecciones'\n  [FRESCO] PLAN-A-2026-09-01 :: 10...d(s) sin contabilidad, reportadas aparte y fuera de la suma\n[FAIL] qmind write-back: titulo OK | contenido: VENCIDO\n"
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido
+1 failed, 56 passed in 0.89s
+
+== restauracion: sha256 de la copia == sha256 del vivo despues del mutante: False; re-montada y verificada: True == ffce48557fbcfa343022c940c1a81386a124c3adaf76916643ee97553bf3c7dd

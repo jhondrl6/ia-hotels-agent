@@ -1,0 +1,25 @@
+# FASE-A3 - segunda tanda del cierre documental (09 SA/SB, matriz H-4..H-8, DA-CIM.12) y re-regeneracion de derivados
+# comando: PYTHONUTF8=1 ./venv/Scripts/python.exe temp/cierre_a3_tanda2.py --apply (10 anclas, count(old)==1) y despues los escritores
+
+[OK] 372 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_INDICE=0
+[OK] Índice de lecciones fresco (372 IDs)
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_CHECK=0
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT_INTEG=0
+[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+EXIT_CITAS=0
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+EXIT_QUICK=0

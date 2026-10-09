@@ -943,3 +943,390 @@ def test_el_parseo_de_tabla_no_confunde_NotebookID_ni_un_valor_que_no_es_uuid(vw
     assert vw.fuente_id_de_tabla("ID:\n") == ""
     assert vw.fuente_id_de_tabla("") == ""
     assert vw.fuente_id_de_tabla(json.dumps({"id": _id(9)})) == ""
+
+
+# ------------------- FASE-A3 de CURA-INSTRUMENTOS-QMIND-S15: AC5, AC6 y la errata DA-CIM.9
+
+REV_SIN_GUARDA_DE_RUTA = "b32a5ad"
+PLAN_RAIZ = "PLAN-EN-RAIZ-2026-10-09"
+PLAN_VIEJO = "PLAN-VIEJO-2026-09-02"
+PLAN_LOCAL = "PLAN-SIN-INSTANEA-2026-09-03"
+TITULO_VIEJO = "10-analisis: PLAN-VIEJO-2026-09-02 (lecciones aprendidas y decisiones)"
+TITULO_LOCAL = "10-analisis: PLAN-SIN-INSTANEA-2026-09-03 (lecciones aprendidas y decisiones)"
+
+
+def _verificar(vw, monkeypatch, m, doble, *extra) -> tuple:
+    """Corre `main()` en modo verificacion sobre un doble ya montado: el censo posterior a una publicacion."""
+    monkeypatch.setattr(vw, "_run_qmind", doble)
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        salio = vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                         *extra])
+    return salio, doble, buffer.getvalue()
+
+
+def _entrada_de_migracion(vw, m, plan: str, titulo: str, contenido: bytes, nombre: str) -> None:
+    """Anade al registro una entrada en la forma `1.0` (sin `sha_cuerpo`), con su cuerpo y su instantanea.
+
+    Es montaje, no imitacion del defecto: esa forma existe en `.opencode/qmind-writeback/registro.json` (las
+    dos entradas del padre) y asi queda poblada la rama que DA-CIM.9 governaba por separado, sin borrar las
+    entradas `1.1` que ya estan en el documento.
+    """
+    cuerpo = m["plans"] / "Archives" / plan / vw.ANALISIS_FILENAME
+    cuerpo.parent.mkdir(parents=True, exist_ok=True)
+    cuerpo.write_bytes(contenido)
+    destino = vw.directorio_de_instantaneas(m["registro"]) / nombre
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_bytes(contenido)
+    datos = vw.cargar_registro(m["registro"])
+    datos["entradas"].append({"plan": plan, "titulo": titulo, "estado": "vigente", "fuente_id": "",
+                              "sha256": hashlib.sha256(contenido).hexdigest(), "instanea": nombre,
+                              "publicado": "2026-10-07"})
+    vw.guardar_registro(m["registro"], datos)
+
+
+# ------------------------------------------------------------------ AC5: resolucion de rutas fijada por diente
+
+
+def test_upload_con_prefijo_y_desde_la_raiz_dejan_la_clave_del_directorio_sin_prefijo(vw, montaje, monkeypatch):
+    """AC5 en verde: la composicion `plans_dir / argv` ya admite `Archives/` y la clave sigue siendo el nombre.
+
+    La capacidad no la construye esta fase: la fija. Por eso se prueba por `main()`, que es donde vive la
+    composicion, y no llamando a `do_upload()` con la ruta ya armada.
+    """
+    m = montaje
+    falso = QmindFalso([], {})
+    monkeypatch.setattr(vw, "_run_qmind", falso)
+    monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    cuerpo_raiz = m["plans"] / PLAN_RAIZ / "10-analisis-post-implementacion.md"
+    cuerpo_raiz.parent.mkdir(parents=True)
+    cuerpo_raiz.write_bytes(CUERPO)
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        uno = vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                       "--upload", f"Archives/{PLAN}"])
+        dos = vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                       "--upload", PLAN_RAIZ])
+    assert (uno, dos) == (0, 0), buffer.getvalue()
+    claves = [e["plan"] for e in vw.cargar_registro(m["registro"])["entradas"]]
+    assert claves == [PLAN, PLAN_RAIZ], "la clave es el nombre del directorio, nunca el prefijo"
+    assert not any("Archives" in c for c in claves)
+    assert [t for t, _ in falso.subidas] == [TITULO_HISTORICO,
+                                             f"10-analisis: {PLAN_RAIZ} (lecciones aprendidas y decisiones)"]
+
+
+def test_upload_sin_prefijo_con_el_plan_archivado_corta_por_la_ruta_y_no_por_la_red(vw, montaje, monkeypatch,
+                                                                                   tmp_path):
+    """AC5 en rojo y por su causa: la ruta equivocada se dicta antes de preguntar al notebook.
+
+    El control se ejecuta sobre el writer commiteado en `b32a5ad` (tip al abrir esta sesion): alli `main()`
+    resolvía el notebook ANTES de componer la ruta, así que un `--upload <PLAN>` con el plan archivado
+    respondía el motivo del lector remoto y no la ruta buscada. La guarda nueva se prueba en las dos
+    direcciones: el curado nombra la ruta y no llama al servicio, el versionado nombra el servicio.
+    """
+    m = montaje
+    llamadas_nuevas = []
+
+    def sin_servicio_para(mod, llamadas):
+        """La excepcion REAL del modulo gobernado: si el doble lanzara otra, el control mediria al doble."""
+        def doble(args):
+            llamadas.append(args[:2])
+            raise mod.QmindUnavailable("el servicio no respondio: esta prueba no puede dictar la ruta por red")
+        return doble
+
+    monkeypatch.setattr(vw, "_run_qmind", sin_servicio_para(vw, llamadas_nuevas))
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        salio = vw.main(["--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                         "--upload", PLAN])
+    salida = buffer.getvalue()
+    assert salio == 1
+    assert "el directorio no existe" in salida and str(m["plans"] / PLAN) in salida
+    assert "no respondio" not in salida, "el rojo de la ruta no puede venir disfrazado de fallo de red"
+    assert llamadas_nuevas == [], "la guarda local corta antes de la primera llamada remota"
+    assert vw.cargar_registro(m["registro"])["entradas"] == []
+
+    viejo = _modulo_versionado(REV_SIN_GUARDA_DE_RUTA, tmp_path / "control", "writer_sin_guarda_de_ruta.py")
+    llamadas_viejas = []
+    monkeypatch.setattr(viejo, "_run_qmind", sin_servicio_para(viejo, llamadas_viejas))
+    buffer_viejo = io.StringIO()
+    with redirect_stdout(buffer_viejo):
+        salio_viejo = viejo.main(["--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                                  "--upload", PLAN])
+    salida_viejo = buffer_viejo.getvalue()
+    assert salio_viejo == 1
+    assert llamadas_viejas == [["notebook", "list"]], \
+        "el control perdio su forma: el viejo preguntaba al notebook antes que a la ruta"
+    assert "no respondio" in salida_viejo and "el directorio no existe" not in salida_viejo, salida_viejo
+
+
+def test_cuerpo_del_plan_resuelve_las_dos_raices_y_su_ausencia_no_es_ninguna(vw, montaje):
+    """AC5 por el lector: la raiz de planes, la raiz `Archives/` y la ausencia bajo las dos son tres estados."""
+    m = montaje
+    assert vw.cuerpo_del_plan(PLAN, m["plans"]) == m["cuerpo"], "el plan archivado resuelve bajo Archives/"
+    movido = m["plans"] / PLAN_RAIZ / "10-analisis-post-implementacion.md"
+    movido.parent.mkdir(parents=True)
+    movido.write_bytes(m["cuerpo"].read_bytes())
+    m["cuerpo"].unlink()
+    assert vw.cuerpo_del_plan(PLAN_RAIZ, m["plans"]) == movido, "el plan en raiz resuelve sin prefijo"
+    assert vw.cuerpo_del_plan("PLAN-QUE-NO-EXISTE-2026-09-09", m["plans"]) is None
+    m["cuerpo"].write_bytes(movido.read_bytes())
+    movido.unlink()
+    assert vw.cuerpo_del_plan(PLAN, m["plans"]) == m["cuerpo"]
+
+
+def test_el_plan_archivado_publicado_por_prefijo_no_abstiene_al_verificador_por_no_resolver(vw, montaje,
+                                                                                            monkeypatch):
+    """AC5 con los dos modos seguidos: publica por `Archives/<PLAN>` y el dictamen sobre ese plan es medible.
+
+    El rojo que prohibe el mandamiento es el `[NO-EVALUABLE] ... no resuelve bajo` sobre un cuerpo que si
+    está: la abstencion tiene que reservarse para la ausencia real (L-PF6, R2.9).
+    """
+    m = montaje
+    falso = QmindFalso([], {})
+    monkeypatch.setattr(vw, "_run_qmind", falso)
+    monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        assert vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                        "--upload", f"Archives/{PLAN}"]) == 0
+    entrada = vw.cargar_registro(m["registro"])["entradas"][0]
+    assert entrada["plan"] == PLAN and entrada["sha_cuerpo"] == hashlib.sha256(CUERPO).hexdigest()
+    doble = QmindFalso(list(falso.fuentes), {f["id"]: CUERPO for f in falso.fuentes})
+    salio, doble, salida = _verificar(vw, monkeypatch, m, doble)
+    assert salio == 0, salida
+    assert "no resuelve bajo" not in salida
+    assert "[FRESCO]" in salida and "1 dictaminada(s) por cuerpo" in salida
+    assert doble.descargas == 1, "ningun verde sale de la metadata sin haber bajado la fuente"
+
+
+def test_upload_con_ruta_absoluta_bajo_archives_tampoco_escribe_el_prefijo_en_la_clave(vw, montaje, monkeypatch):
+    """La otra rama de la composicion: una ruta absoluta no pasa por `--plans-dir` y la clave no se contamina."""
+    m = montaje
+    falso = QmindFalso([], {})
+    monkeypatch.setattr(vw, "_run_qmind", falso)
+    monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        salio = vw.main(["--nb", NB, "--plans-dir", str(m["plans"] / "esa-raiz-no-existe"),
+                         "--registro", str(m["registro"]), "--upload",
+                         str(m["plans"] / "Archives" / PLAN)])
+    assert salio == 0, buffer.getvalue()
+    assert vw.cargar_registro(m["registro"])["entradas"][0]["plan"] == PLAN
+
+
+# ---------------------------------------------------------- AC6 y DA-CIM.9: la fila huesped en los dos caminos
+
+
+def test_huespedes_sin_contabilidad_selecciona_por_plan_y_por_titulo_contable(vw, montaje):
+    """Unidad del bloque extraido: nombra al plan, es un `10-analisis` y su titulo no esta en el registro."""
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    datos = vw.cargar_registro(m["registro"])
+    huesped = _fuente(_id(50), TITULO_HISTORICO, CUERPO)
+    de_otro_plan = _fuente(_id(51), "10-analisis: PLAN-OTRO-2026-09-09 (lecciones)", CUERPO)
+    no_es_analisis = _fuente(_id(52), "contexto suelto que nombra al plan sin ser un 10-analisis", CUERPO)
+    contable = _fuente(_id(53), TITULO_CIERRE, CUERPO)
+    elegidas = vw._huespedes_sin_contabilidad(datos, [huesped, de_otro_plan, no_es_analisis, contable], PLAN)
+    assert [f["id"] for f in elegidas] == [huesped["id"]]
+    assert vw._huespedes_sin_contabilidad(datos, [], PLAN) == [], "censo vacio: ausencia, no hallazgo"
+
+
+def test_la_huesped_sin_contabilidad_corta_rojo_sobre_una_entrada_1_0_sin_descargar_nada(vw, montaje,
+                                                                                         monkeypatch):
+    """Diente (i) de DA-CIM.9: el rojo de contabilidad es alcanzable con un registro que solo tiene `1.0`.
+
+    Antes de la subtarea 3b la guarda de migracion terminaba en `continue` y el bloque huesped no se evaluaba:
+    con las dos entradas `1.0` del padre, `[17/18]` quedaba en NO-EVALUABLE sin fecha. Aqui la corrida no
+    descarga nada (la vigencia de esa entrada sigue en abstencion) y aun asi imprime el rojo con los tres
+    datos que lo dictaminan: id, titulo truncado legible y sha del censo.
+    """
+    m = montaje
+    _entrada_1_0(vw, m, TITULO_CIERRE, CUERPO)
+    antes = m["registro"].read_bytes()
+    contable = _fuente(_id(40), TITULO_CIERRE, CUERPO)
+    huesped = _fuente(_id(41), TITULO_HISTORICO, CUERPO)
+    salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, huesped],
+                                    {contable["id"]: CUERPO, huesped["id"]: CUERPO})
+    assert salio == 1, "el rojo manda sobre la abstencion (contrato D2, R2.9)"
+    assert "no grabo sha_cuerpo" in salida and "schema 1.0" in salida, "la abstencion sigue imprimiéndose"
+    assert "[DUPLICADO-VIGENTE]" in salida
+    assert huesped["id"][:13] in salida and TITULO_HISTORICO[:60] in salida
+    assert hashlib.sha256(CUERPO).hexdigest()[:12] in salida, \
+        "el sha que se publica es el del censo, no el del registro"
+    assert falso.descargas == 0, "la capa D2 no se levanta para una entrada 1.0"
+    assert "[VENCIDO]" not in salida and "[FRESCO]" not in salida
+    assert m["registro"].read_bytes() == antes, "declarar la huesped no es escribir su contabilidad"
+
+
+def test_el_rojo_huesped_de_una_entrada_1_1_convive_con_la_abstencion_de_migracion(vw, montaje, monkeypatch):
+    """Diente (ii): las dos lineas coexisten y el EXIT es el del rojo, sin pintar de VENCIDO la abstencion.
+
+    El rojo sale de una entrada `1.1`, la abstencion de una `1.0`: asi el diente sobrevive al mutante que
+    apaga SOLO la llamada de la rama de migracion (M3), que es lo que exige el prompt.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    contenido_viejo = CUERPO + b"\nla entrada antigua\n"
+    _entrada_de_migracion(vw, m, PLAN_VIEJO, TITULO_VIEJO, contenido_viejo, "instanea-vieja.md")
+    vigente = _fuente(_id(42), TITULO_CIERRE, CUERPO)
+    huesped = _fuente(_id(43), TITULO_HISTORICO, CUERPO)
+    contable_vieja = _fuente(_id(44), TITULO_VIEJO, contenido_viejo)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [vigente, huesped, contable_vieja],
+                                {vigente["id"]: CUERPO, huesped["id"]: CUERPO,
+                                 contable_vieja["id"]: contenido_viejo})
+    assert salio == 1
+    assert "[DUPLICADO-VIGENTE]" in salida and "no grabo sha_cuerpo" in salida
+    assert "[VENCIDO]" not in salida, "el hallazgo no pinta de VENCIDO a la abstencion"
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "1+1+0==2" in contador, salida
+    assert "1 fuente(s) huesped(s)" in contador
+
+
+def test_el_contador_sigue_cuadrando_con_la_huesped_fuera_de_la_suma(vw, montaje, monkeypatch):
+    """Diente (iii): `cuerpo + migracion + local == N` sigue cerrando aunque haya dos huespedes rojas.
+
+    Si la huesped entrara en la particcion, el literal de la suma dejaria de casar: por eso el diente afirma
+    la suma y el recuento de huespedes en la misma linea, con sus dos denominadores separados.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    viejo = CUERPO + b"\nentrada sin sha_cuerpo\n"
+    _entrada_de_migracion(vw, m, PLAN_VIEJO, TITULO_VIEJO, viejo, "instanea-migrada.md")
+    local = vw.registrar_publicacion(vw.cargar_registro(m["registro"]), m["registro"], PLAN_LOCAL, TITULO_LOCAL,
+                                     m["cuerpo"], "", "2026-10-09", m["cuerpo"])
+    (vw.directorio_de_instantaneas(m["registro"]) / local["instanea"]).unlink()
+    contable = _fuente(_id(45), TITULO_CIERRE, CUERPO)
+    h1 = _fuente(_id(46), f"10-analisis: {PLAN} (otra fuente suelta)", b"# otra\n")
+    h2 = _fuente(_id(47), f"10-analisis: {PLAN} (y una tercera)", b"# y otra\n")
+    contable_vieja = _fuente(_id(48), TITULO_VIEJO, viejo)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [contable, h1, h2, contable_vieja],
+                                {contable["id"]: CUERPO, h1["id"]: b"# otra\n", h2["id"]: b"# y otra\n",
+                                 contable_vieja["id"]: viejo})
+    assert salio == 1
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "3 vigente(s)" in contador and "1+1+1==3" in contador, contador
+    assert "2 fuente(s) huesped(s)" in contador, contador
+    assert "==3; 2" in contador, "la huesped se reporta aparte: nunca entra en la suma de la particion"
+
+
+def test_la_fuente_del_titulo_reemplazado_no_es_huesped_en_el_camino_de_migracion(vw, montaje, monkeypatch):
+    """La contabilidad que ya gobierna AC3 no se re-baja al extraer el bloque: `reemplazada` tambien cuenta.
+
+    Con las dos entradas `1.0` del padre (una vigente y una reemplazada) la corrida tiene que quedar en
+    NO-EVALUABLE por migracion, sin rojo: si `registrados` solo mirara las vigentes, la fuente vieja del
+    padre se dictaminaria huesped y el rojo de AC6 se mentiria por partida doble.
+    """
+    m = montaje
+    instanea = "instanea-dos-entradas-1-0.md"
+    destino = vw.directorio_de_instantaneas(m["registro"]) / instanea
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_bytes(CUERPO)
+    sha = hashlib.sha256(CUERPO).hexdigest()
+    m["registro"].write_text(json.dumps({"schema_version": "1.0", "entradas": [
+        {"plan": PLAN, "titulo": TITULO_HISTORICO, "estado": "reemplazada", "reemplazada_por": TITULO_CIERRE,
+         "fuente_id": "", "sha256": sha, "instanea": instanea, "publicado": "2026-10-01"},
+        {"plan": PLAN, "titulo": TITULO_CIERRE, "estado": "vigente", "fuente_id": "", "sha256": sha,
+         "instanea": instanea, "publicado": "2026-10-07"}]}, ensure_ascii=False, indent=2) + "\n",
+                             encoding="utf-8")
+    vieja = _fuente(_id(49), TITULO_HISTORICO, CUERPO)
+    nueva = _fuente(_id(54), TITULO_CIERRE, CUERPO)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [vieja, nueva],
+                               {vieja["id"]: CUERPO, nueva["id"]: CUERPO})
+    assert salio == 2, salida
+    assert "[DUPLICADO-VIGENTE]" not in salida
+    assert "no grabo sha_cuerpo" in salida and "0 fuente(s) huesped(s)" in salida
+
+
+def test_un_vencido_por_cuerpo_y_una_abstencion_local_dan_exit_1_con_las_dos_lineas(vw, montaje, monkeypatch):
+    """R2.9 con la particcion nueva: el rojo manda, la abstencion se nombra y cada una conserva su etiqueta."""
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    datos = vw.cargar_registro(m["registro"])
+    nueva = vw.registrar_publicacion(datos, m["registro"], PLAN_LOCAL, TITULO_VIEJO.replace(PLAN_VIEJO, PLAN_LOCAL),
+                                     m["cuerpo"], "", "2026-10-09", m["cuerpo"])
+    (vw.directorio_de_instantaneas(m["registro"]) / nueva["instanea"]).unlink()
+    m["cuerpo"].write_bytes(CUERPO + b"\neditado tras publicar\n")
+    fuente = _fuente(_id(55), TITULO_CIERRE, CUERPO)
+    salio, falso, salida = _corrida(vw, monkeypatch, m, [fuente], {fuente["id"]: CUERPO})
+    assert salio == 1
+    assert "[VENCIDO]" in salida and "sha_cuerpo=" in salida
+    assert "[NO-EVALUABLE]" in salida and "la instantanea registrada no esta en" in salida
+    assert salida.count("[VENCIDO]") == 1, "la abstencion no se pinta de VENCIDO"
+    assert falso.descargas == 0
+    assert "1+0+1==2" in next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+
+
+def test_la_huesped_sin_promesa_de_sha_nombra_su_abstencion_del_dato(vw, montaje, monkeypatch):
+    """L-PF6 sobre la linea nueva: sin `metadata.fileSha256` el rojo no miente con un sha vacio."""
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    contable = _fuente(_id(56), TITULO_CIERRE, CUERPO)
+    huesped = _fuente_sin_promesa(_id(57), TITULO_HISTORICO)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [contable, huesped], {contable["id"]: CUERPO})
+    assert salio == 1
+    assert "sin-sha-en-el-censo" in salida and huesped["id"][:13] in salida
+    assert "con sha_metadata ... nombra" not in salida
+
+
+def test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido(vw, montaje, monkeypatch):
+    """AC6 sobre la salida agregada: con DA-CIM.9 landed el unico rojo puede ser de contabilidad.
+
+    La etiqueta vieja del resumen era `"VENCIDO" if codigo == 1`, o sea un nombre fijo para cualquier rojo.
+    Desde que la huésped es evaluable sobre una entrada `1.0`, esa salida dictamina un VENCIDO que ninguna
+    linea imprimio — y es lo unico que ve quien corre `[17/18]` sin leer el cuerpo del crudo. Dos poblaciones:
+    la roja-solo-de-huesped y la de dos causas concurrentes.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    contable = _fuente(_id(58), TITULO_CIERRE, CUERPO)
+    huesped = _fuente(_id(59), TITULO_HISTORICO, CUERPO)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [contable, huesped],
+                                {contable["id"]: CUERPO, huesped["id"]: CUERPO})
+    assert salio == 1
+    assert "contenido: DUPLICADO-VIGENTE" in salida, salida
+    assert "contenido: VENCIDO" not in salida, "el resumen no dictamina una causa que la corrida no imprimio"
+    assert "[VENCIDO]" not in salida
+
+    contenido_viejo = CUERPO + b"\nel cuerpo del plan viejo\n"
+    viejo = m["plans"] / "Archives" / PLAN_VIEJO / vw.ANALISIS_FILENAME
+    viejo.parent.mkdir(parents=True, exist_ok=True)
+    viejo.write_bytes(contenido_viejo)
+    vw.registrar_publicacion(vw.cargar_registro(m["registro"]), m["registro"], PLAN_VIEJO, TITULO_VIEJO,
+                             viejo, "", "2026-10-09", viejo)
+    m["cuerpo"].write_bytes(CUERPO + b"\nescrito despues de las dos publicaciones\n")
+    fuente_a = _fuente(_id(62), TITULO_CIERRE, CUERPO)
+    fuente_vieja = _fuente(_id(64), TITULO_VIEJO, contenido_viejo)
+    huesped_vieja = _fuente(_id(63), f"10-analisis: {PLAN_VIEJO} (otra fuente suelta)", contenido_viejo)
+    salio2, _, salida2 = _corrida(vw, monkeypatch, m, [fuente_a, fuente_vieja, huesped_vieja],
+                                  {fuente_a["id"]: CUERPO, fuente_vieja["id"]: contenido_viejo,
+                                   huesped_vieja["id"]: contenido_viejo})
+    assert salio2 == 1
+    assert "contenido: VENCIDO+DUPLICADO-VIGENTE" in salida2, salida2
+    assert "[VENCIDO]" in salida2 and "[DUPLICADO-VIGENTE]" in salida2
+    contador2 = next(l for l in salida2.splitlines() if "[CONTADOR]" in l)
+    assert "2+0+0==2" in contador2 and "1 fuente(s) huesped(s)" in contador2, contador2
+
+
+def test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado(vw, montaje,
+                                                                                          monkeypatch):
+    """Caracterizacion del limite que deja DA-CIM.9, con su dueno: la concurrence no se gobierna aqui.
+
+    El bloque huesped vive al final del bucle y la puerta de vigencia termina en `continue`, asi que una
+    entrada `1.0` y una `1.1` VENCIDA son dos casos distintos: la primera ya evalua a su huesped (subtarea 3b)
+    y la segunda no. La especificacion del operador del 2026-10-08 recorto la cura a la rama de migracion y no
+    abrio los demas `continue`, asi que este diente **aserta el comportamiento vigente** y se pone rojo el dia
+    que un AC gobierne la concurrence (deuda S-CIM-9 del maestro §5, dueño operador).
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    m["cuerpo"].write_bytes(CUERPO + b"\neditado despues de publicar\n")
+    contable = _fuente(_id(60), TITULO_CIERRE, CUERPO)
+    huesped = _fuente(_id(61), TITULO_HISTORICO, CUERPO)
+    salio, _, salida = _corrida(vw, monkeypatch, m, [contable, huesped],
+                                {contable["id"]: CUERPO, huesped["id"]: CUERPO})
+    assert salio == 1
+    assert "[VENCIDO]" in salida and "sha_cuerpo=" in salida
+    assert "[DUPLICADO-VIGENTE]" not in salida, "limite vigente: el continue de vigencia no llega a la huesped"
+    assert "0 fuente(s) huesped(s)" in salida
+    assert "contenido: VENCIDO" in salida, "la etiqueta lista solo las causas que se imprimieron"

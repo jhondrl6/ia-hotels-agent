@@ -52,16 +52,16 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [x] El `README.md` de `instantaneas/` describe el esquema de nombres vigente (fila de `dependencias-fases.md` resuelta; viaja en el mismo commit que la cura, L-G3)
 - [x] Cierre incremental con registro propio y quick verde
 
-### FASE-A3 — AC5 y AC6 (⬜ Pendiente)
+### FASE-A3 — AC5 y AC6 (✅ CERRADA 2026-10-09 contra HEAD `b32a5ad`, en paridad con `origin/master` al abrir; árbol **sin commitear** — no hubo instrucción literal de commit en el chat)
 
-- [ ] Dependencia dura con A1 verificada antes de empezar
-- [ ] `--upload Archives/<PLAN>` publica con clave `plan_dir.name`; `--upload <PLAN>` con el plan archivado corta `[FAIL]` nombrando la ruta buscada
-- [ ] `cuerpo_del_plan()` resuelve las dos raíces y su ausencia es NO-EVALUABLE, nunca VENCIDO
-- [ ] Todo diente de rutas montado en `tmp_path` con `--plans-dir` y `--registro`, sin tocar el registro real
-- [ ] Censo del notebook publicado completo (sin `head`), con racha de intentos si la red falló
-- [ ] AC6 cerrada por una de sus dos vías **escrita en evidencia**: rojo declarado con dueño y sha, o `vigente-historica` con autorización literal
-- [ ] Subtarea 3b landed (decisión del operador del 2026-10-08, maestro §4 con su errata): `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración **antes del `continue`**, con el rojo huésped sobre entrada `1.0` y `descargas == 0`, el par rojo + abstención de migración en la misma corrida, `[CONTADOR]` cuadrando con la huésped **fuera** de la suma, y el mutante con restauración por sha256. La capa D2 sigue sin levantarse para entradas `1.0`
-- [ ] Nada borrado en el notebook; modo completo corrido con crudo archivado, sin auditarse con el check recién curado
+- [x] Dependencia dura con A1 verificada antes de empezar
+- [x] `--upload Archives/<PLAN>` publica con clave `plan_dir.name`; `--upload <PLAN>` con el plan archivado corta `[FAIL]` nombrando la ruta buscada
+- [x] `cuerpo_del_plan()` resuelve las dos raíces y su ausencia es NO-EVALUABLE, nunca VENCIDO
+- [x] Todo diente de rutas montado en `tmp_path` con `--plans-dir` y `--registro`, sin tocar el registro real
+- [x] Censo del notebook publicado completo (sin `head`), con racha de intentos si la red falló
+- [x] AC6 cerrada por una de sus dos vías **escrita en evidencia**: rojo declarado con dueño y sha, o `vigente-historica` con autorización literal
+- [x] Subtarea 3b landed (decisión del operador del 2026-10-08, maestro §4 con su errata): `_huespedes_sin_contabilidad(datos, fuentes, plan)` llamada en la rama de migración **antes del `continue`**, con el rojo huésped sobre entrada `1.0` y `descargas == 0`, el par rojo + abstención de migración en la misma corrida, `[CONTADOR]` cuadrando con la huésped **fuera** de la suma, y el mutante con restauración por sha256. La capa D2 sigue sin levantarse para entradas `1.0`
+- [x] Nada borrado en el notebook; modo completo corrido con crudo archivado, sin auditarse con el check recién curado
 - [ ] Cierre incremental con registro propio y quick verde
 
 ### FASE-B — AC7 y AC8 (⬜ Pendiente)
