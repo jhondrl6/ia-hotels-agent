@@ -112,6 +112,7 @@ Contrafactuales ejecutados (crudo `04-crudo-controfactuales-y-anclas.txt`):
 | `06-crudo-cura-b2-1e-y-gates.txt` | los dientes del corte nuevo, su contrafactual M3, el conteo canónico y los dos gates |
 | `07-crudo-atribucion-de-los-dos-rojos.txt` | los dos rojos de la suite grande: el de packs (preexistente, dueño `5249aed`) y el de colección, con su disparador nombrado y su mecanismo medido |
 | `08-crudo-sello-commit-y-gate.txt` | el commit `ec69570`, el gate re-apuntado visto desde HEAD, el quick gate en 13/13 y la paridad antes del push |
+| `09-crudo-sello-push.txt` | el rango empujado, la paridad `0 0`, el tip del servidor y el pre-flight que prueba que las rutas ajenas no entraron |
 
 Comando con el que se re-emiten `01-` y `02-` (una línea, ejecutado en esta sesión; la segunda corrida
 dio el mismo sha256 en los dos archivos, o sea la re-emisión es byte a byte):
@@ -140,7 +141,7 @@ re-publicarlo (cobrado en la ronda del 2026-10-05: 132 a 137 y EXIT 3).
 - No escribió en `REGISTRY.md`. El registro de fases lo escribe `scripts/log_phase_completion.py` al
   cerrar, y esta hoja aún no está cerrada documentalmente.
 - No corrió `build_lesson_index.py` ni `sync_versions.py`: no hay lección nueva ni versión que mover.
-- No llamó a ninguna API: toda la sesión es offline y el guard de sockets del `conftest.py` estuvo armado. ⟦Sello del commit `ec69570` (2026-10-09): el «No commiteó» de esta viñeta quedó vencido por autorización escrita del operador; el push es acto aparte y se estampa al medirse.⟧
+- No llamó a ninguna API: toda la sesión es offline y el guard de sockets del `conftest.py` estuvo armado. ⟦Sello del commit `ec69570` (2026-10-09): el «No commiteó» de esta viñeta quedó vencido por autorización escrita del operador; el push, acto aparte, ya esta estampado abajo con su paridad medida.⟧
 - No tocó `modules/providers/llm_provider.py`, `requirements.txt` ni `VERSION.yaml`.
 
 ## Los cinco cortes, medidos
@@ -153,6 +154,7 @@ re-publicarlo (cobrado en la ronda del 2026-10-05: 132 a 137 y EXIT 3).
 | Cierre documental | **NO HECHO, a proposito** | no se estampan las filas B2-1/B2-1c del `10-analisis` (esa hoja vive publicada en QMind: cada edicion obliga a re-verificar por descarga + sha256 y suma una fuente, 59 → 60), no se escribio leccion nueva, no se toco `REGISTRY.md`, no se movio `AGENTS.md`. Nota de instrumento: `validate_governance_numbers.py` dio **[SIN-HALLAZGOS]** con los 24 tests ya en el arbol, asi que ninguna cifra publicada quedo desfasada por esta sesion |
 | Listo para revision / espera de autorizacion | **AQUI** | el `git commit` no es condicion de ninguno de los cortes anteriores; queda en manos del operador |
 | Commiteado | **HECHO tras destrabar el gate** | `ec69570`, 19 rutas, los 8 checks del hook verdes; el push queda como acto aparte |
+| Commiteado y empujado | **HECHO tras destrabar el gate** | `ec69570` + sello `923979b`, 20 rutas en el rango, los 8 checks del hook verdes; push `5249aed..923979b` con paridad `0 0` y tip del servidor `923979be0273` (crudo `09-`) |
 
 ### Hallazgo sobre REL-5 (no curado aquí, con dueño)
 
@@ -187,6 +189,22 @@ versionado es el que obliga a reinstalar).
 Consecuencia verificada después del commit: `verify_packs_in_committed_tree.py` en su default da
 **5/5 reproducidos en HEAD** y `run_all_validations.py --quick` vuelve a **13/13**. El repo queda
 commiteable para cualquier tanda, que es lo que este gate no podía hacer desde `5249aed`.
+
+## Sello del push (2026-10-09)
+
+Rango empujado `5249aed..923979b` (2 commits, 41 objetos, 20 archivos, 2142/80 lineas). Paridad
+re-midida despues del push: `git rev-list --count --left-right master...origin/master` = **0 0** y
+`git ls-remote origin refs/heads/master` = `923979be0273`, igual al tip local. Pre-flight antes de
+empujar: `git diff --name-only origin/master..HEAD | grep -c REFACTOR-WHATSAPP` = **0**, o sea las 13
+rutas ajenas que siguen staged en esta maquina no entraron en el rango. Crudo: `09-`.
+
+**Lo que publica este rango y lo que no.** Publica la cura del runner, las dos baterias, el expediente y
+el gate `[8/8]` re-apuntado. **No** publica el estampado de las filas B2-1/B2-1c/B2-1e en el `10-analisis`
+(sigue pendiente su edicion y el write-back con la fuente 60), ni REGISTRY de esta tanda, ni leccion
+capitalizada: los tres quedan en la cola de la sesion 2 por decision del operador. **L3 (revision de
+seguridad profunda): NO corrida**; dueno el operador, rango medido para ese escaneo `5249aed..923979b`.
+
+Esta hoja se commitea y se empuja **despues** de medir esa paridad, asi que el commit que estampa el sello queda deliberadamente fuera de su propia cobertura: se re-mide con `git rev-list --count --left-right master...origin/master` y con `git ls-remote origin refs/heads/master`, no con un sello nuevo que vuelva a quedar atras (leccion cobrada en la tanda del 2026-10-05).
 
 ## Cola de autorizaciones (cada una con su puerta, no se infieren entre si)
 

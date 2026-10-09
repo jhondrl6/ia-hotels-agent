@@ -1,0 +1,48 @@
+# crudo 09: sello del push 5249aed..923979b
+
+## A) pre-flight, medido ANTES de empujar
+Transcrito de la corrida previa al push. **No es re-ejecutable ahora**: el rango
+`origin/master..HEAD` quedo vacio en cuanto el servidor acepto los dos commits.
+
+  git log --oneline origin/master..HEAD              -> 923979b (sello) y ec69570 (cura) = 2 commits
+  git rev-list --count origin/master..HEAD           -> 2
+  git rev-list --objects origin/master..HEAD | wc -l -> 41 objetos
+  git diff --stat origin/master..HEAD | tail -1      -> 20 files changed, 2142 insertions(+), 80 deletions(-)
+  git diff --name-only origin/master..HEAD | grep -c REFACTOR-WHATSAPP -> 0   (lo ajeno no entraba)
+  git push --dry-run origin master                   -> 5249aed..923979b  master -> master
+
+## B) el push
+  git push origin master
+  To https://github.com/jhondrl6/ia-hotels-agent.git
+     5249aed..923979b  master -> master
+
+## C) medido DESPUES del push (re-ejecutable)
+  comando: git rev-list --count --left-right master...origin/master
+  salida : 0	0   (0 adelante / 0 atras)
+
+  comando: git ls-remote origin refs/heads/master
+  salida : 923979be0273a61db875d731be9994faf05efff9	refs/heads/master
+
+  comando: git rev-parse --short HEAD
+  salida : 923979b
+
+  comando: git merge-base --is-ancestor ec69570 origin/master; echo $?
+  salida : 0   (0 = la cura esta en el tip remoto)
+
+  comando: git log --oneline -2 origin/master
+    923979b docs(jev): sello del commit ec69570 y del gate re-apuntado
+    ec69570 fix(jev): cura B2-1/B2-1c/B2-1e en el runner y re-apunta el gate de packs al arbol del indice
+
+## D) verificacion en el arbol del tip remoto, no en el arbol de trabajo
+  comando: git grep -c 'contabilidad_de_coste' origin/master -- scripts/evaluate_jev_pilot.py
+  salida : origin/master:scripts/evaluate_jev_pilot.py:2
+  comando: git grep -c 'techo_rebasado_de_' origin/master -- scripts/evaluate_jev_pilot.py
+  salida : origin/master:scripts/evaluate_jev_pilot.py:1
+  comando: git grep -c 'git write-tree' origin/master -- scripts/git_hooks/pre-commit
+  salida : origin/master:scripts/git_hooks/pre-commit:1
+
+## E) lo que queda en esta maquina, declarado y no empujado
+  comando: git status --porcelain | grep -c REFACTOR-WHATSAPP
+  salida : 13   (rutas ajenas stageadas por otro actor: siguen fuera de esta sesion)
+  comando: git status --porcelain | wc -l (sin las ajenas)
+  salida : 2   (los archivos que esta hoja escribe despues de medir C, mas el indice del propio push)
