@@ -4,6 +4,17 @@ Esta sesion NO commitea: el checkpoint del mandato deja el commit en espera de a
 Lo que si se hace es medir que el gate no va a cortar, para que la autorizacion se de sobre terreno
 conocido y no sobre un `--no-verify` posterior.
 
+NOTA ADITIVA (2026-10-09, escrita despues de este crudo y despues de ejecutar lo que aqui quedaba en espera):
+las tres acciones de la fila `Espera de autorización` del §5 se ejecutaron el mismo 2026-10-09, con
+autorizacion escrita del operador y en este orden: commit `d47953b` (18 rutas por pathspec, hook 8/8), L3 con
+0 hallazgos antes del empuje, y push `fb13108..d47953b`. El cuerpo de este crudo NO se reescribe: el preparo
+queda como se midio. Dos salvedades, ambas registradas en el crudo `16-` del mismo expediente: (a) la primera
+frase del parrafo de arriba y esa fila del §5 quedan vencidas por esta nota; (b) el pre-vuelo de §1 corrio
+`git write-tree` ANTES de stagear las rutas propias, y en un commit por pathspec el hook materializa
+`HEAD + pathspec` (medido en scratch: HOOK TREE == COMMIT TREE), asi que el arbol que §1 verifico no era el
+que el hook iba a mirar; antes de commitear se re-verifico el arbol parcial (5/5) y el del indice (5/5, y
+12/12 el hermano), ambos EXIT 0.
+
 ## 1. Lo que vera el hook [8/8], sobre el arbol del INDICE (no sobre HEAD)
 
 Desde `ec69570` el hook materializa el arbol del indice y lo verifica a el. Se replico la misma receta,

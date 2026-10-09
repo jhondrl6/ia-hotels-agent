@@ -1,0 +1,118 @@
+CRUDO 16 - sello del commit `d47953b` y del push `fb13108..d47953b`, con la L3 (SESION 2, 2026-10-09)
+
+Hecho que se prueba aqui: el commit que el crudo `15-` dejo en espera se ejecuto, se reviso y se empujo el
+mismo 2026-10-09, y el gate `[8/8]` se cotejo contra el arbol que el hook REALMENTE mira en un commit por
+pathspec. Todo lo que sigue lo imprime una corrida de esta sesion; nada va de memoria.
+
+## 1. Que ve el hook en un commit por pathspec (medido en un repo de scratch)
+
+El `15-` replico la receta del hook sobre `git write-tree` del indice, pero antes de stagear las rutas
+propias: ese arbol era HEAD + las 13 ajenas, y por eso no era el que el hook iba a evaluar. Para saber cual
+es, se levanto un repo de scratch (fuera del workspace, dos archivos, un pre-commit que imprimia su
+`GIT_INDEX_FILE` y su `write-tree`) y se corrio un commit parcial con OTRA ruta staged:
+
+```
+GIT_INDEX_FILE=[<tmp>/.git/next-index-8272.lock]
+HOOK TREE      = f46991454482fc4f70dfa85a38f248f2e0ed650e
+COMMIT TREE    = f46991454482fc4f70dfa85a38f248f2e0ed650e   (igual al del hook)
+INDEX BEFORE   = 4acb29a445b6dedc15027a57e05e387f65b167e4   (indice real, sin la ruta del pathspec)
+INDEX AFTER    = 26c316de34dedb92b398461b22e379ea1727bd66   (indice real, despues del commit)
+```
+
+Veredicto: en un commit por pathspec git cambia de indice (temporal) y el hook materializa
+`HEAD + pathspec`, que es **exactamente el arbol que ese commit va a convertir en tip**. No ve el indice
+completo ni las rutas staged que no entren. El comentario del hook ("literalmente lo que este commit va a
+convertir en tip") se cumple; la lectura que hacia el `15-` ("mira el indice completo, no el pathspec") no.
+
+## 2. Re-verificacion sobre los arboles reales, justo antes de commitear
+
+Ya con las 18 rutas propias staged:
+
+```
+TIDX  = 9ec5897deb5bcb753ba920142b2aeba88e54832c   (HEAD + 13 ajenas + 18 propias: el indice real)
+TPART = bb17ab313c2f03e1e9c5d035ff70bb1ddd943cf3   (HEAD + 18 propias: la vista del hook)
+```
+
+$ git commit-tree TPART -p HEAD -> `41b04c78c7a429040057e6bc573c98994526f7c1` (objeto colgante, sin ref)
+$ git commit-tree TIDX  -p HEAD -> `62aa2e75aaa401db61e2e3e00d3efbbcc0265b46` (idem)
+
+| corrida | rev evaluada | resultado |
+|---|---|---|
+| canonica sobre el arbol parcial (la del hook) | `41b04c78` | EXIT 0 :: 5/5 reproducidos, 0 divergentes, 0 no evaluables |
+| canonica sobre el indice completo | `62aa2e75` | EXIT 0 :: 5/5 reproducidos, 0 divergentes, 0 no evaluables |
+| hermano sobre el indice completo | `62aa2e75` | EXIT 0 :: 12/12 reproducidos, 0 divergentes, 0 no evaluables |
+
+Receta del arbol parcial, sin tocar el indice real: `GIT_INDEX_FILE=<tmp> git read-tree HEAD`,
+`GIT_INDEX_FILE=<tmp> git add -- <pathspec>`, `git write-tree` con el mismo ambiente. Tambien se pre-corrieron
+los siete checks previos del hook, todos EXIT 0 y `[3/8]` sin `[FIX]` (no escribio nada).
+
+## 3. El commit y la triple igualdad
+
+$ git commit -m "fix(jev): cura B2-1d en el runner y cierra documentalmente la cura B2-1 (SESION 2)" -- <18 rutas>
+EXIT 0 :: [1/8]..[7/8] OK, [8/8] OK con "packs en el árbol de `6d6d22b19ab1598850bf6126bd270412bd97ff31` (5/5...)"
+
+| cara | sha |
+|---|---|
+| tip nuevo | `d47953b54c3f997f06f10f03a4e9bf656ac4c199` |
+| arbol del commit | `bb17ab313c2f03e1e9c5d035ff70bb1ddd943cf3` |
+| arbol que evaluo el hook | `bb17ab313c2f03e1e9c5d035ff70bb1ddd943cf3` |
+| arbol que pre-verifique en §2 | `bb17ab313c2f03e1e9c5d035ff70bb1ddd943cf3` |
+
+Rutas: 18 exactas (9 M + 9 A), las mismas del pathspec preparado en el `15-`. Las 13 ajenas siguen staged y
+no entraron ni al commit ni al tip. Al sellar, paridad `1 0`.
+
+## 4. EOL declarado y verificado con el instrumento de la casa
+
+El `git add` aviso CRLF->LF en tres rutas (`registro.json`, `wiring_report.json`, `10-crudo-b2-1d...txt`).
+Cotejo por objeto limpio (`hash-object --path` contra el blob del commit), que es lo que git considera
+igualdad: las tres **IGUAL**, y el numstat no muestra reescrituras espurias (`registro.json` 11/1,
+`wiring_report.json` 3/3, `10-crudo...txt` 341/0). Y el cuerpo publicado:
+
+$ git cat-file blob HEAD:<10-analisis> | sha256 -> `b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05`
+$ sha256sum <10-analisis en disco>            -> el mismo valor
+
+Casa disco == blob == fuente publicada en QMind (`01a12247-f791-7944-832e-13f5cad68f3e`). Ojo ya cobrado:
+`git show HEAD:<ruta> | sha256sum` NO es este cotejo, porque aplica el filtro smudge.
+
+## 5. Pre-vuelo del push y empuje (repo PUBLICO)
+
+$ fetch + conteo bidireccional -> `1 0`; el tramo es UN solo commit, propio (`d47953b`, autor Hermes CLI).
+$ `git diff --name-only origin/master..HEAD` -> 18 rutas; `git rev-list --objects` con filtro `briefing/` -> 0
+$ `gh repo view --json visibility` -> PUBLIC
+Escaneo del DIFF que viaja contra familias de credenciales, imprimiendo solo conteos: `sk-` 0, `AIza` 0,
+`ghp_` 0, `Bearer` 0, asignaciones clave=valor 0, rachas de 9+ digitos 6. Esas 6 son segmentos de literales
+sha256 en `registro.json` (2), `11-crudo` (1) y `13-crudo` (2), mas una: todas de 9 digitos con primer digito
+7, ni forma de telefono (0), ni epoch de 10 (0), ni milisegundos de 13 (0).
+
+$ git push origin master -> `fb13108..d47953b  master -> master`
+$ git ls-remote origin refs/heads/master -> `d47953b54c3f997f06f10f03a4e9bf656ac4c199`
+paridad `0 0`; `ls-tree -r origin/master` con filtro `briefing/` -> 0 (las ajenas no se publicaron);
+ajenas staged locales -> 13, intactas.
+
+Nota de instrumento: el primer codigo de salida del push lo lei detras de una tuberia a `tail`, asi que ese 0
+era de `tail`. Lo que decide el empuje son `ls-remote` y la paridad, no ese codigo.
+
+## 6. L3 corrida antes del empuje
+
+Ajustes resueltos con el entry point del host: `status ok`, `host qoder_sdk`, `l2_enabled false`,
+`l3_enabled true`. Corrida directa porque la orden nombro la capa: **0 hallazgos** en capa l3. Cobertura:
+los commits sin revisar desde el baseline del instrumento; el rango que esta tanda declara es
+`5249aed..d47953b` = 4 commits medidos con `git rev-list --count`. Clausula de antemano: **el sha de este
+crudo y del commit que lo lleva no se estampa a si mismo**, lo barre la primera corrida de la sesion
+siguiente, que cubre desde el ultimo baseline revisado y por construccion lo incluye. El tip publicado es el
+que imprima `git ls-remote` al leer esta linea.
+
+## 7. Lo que este sello toca y lo que no
+
+- Rutas: `16-crudo-sello-commit-y-push.txt` (nueva) y `15-crudo-preparo-del-sello.txt` (nota ADITIVA; el
+  cuerpo del `15-` no se reescribe: lo que ahi esta es el preparo tal como se midio).
+- No re-estampa la entrada `CURA-B2-1-SESION-2` del `REGISTRY.md`: el escritor es aditivo y esa entrada declaró
+  la tanda cerrada al momento de escribirla. El delta posterior es este sello, que se cuenta a si mismo aqui.
+- No hay codigo nuevo: ni `.py` ni derivados que muevan contadores. No re-corri el quick (13/13) ni la
+  seleccion del piloto (182 passed): la ultima medicion de esas dos es la del `15-` y este commit no toca
+  codigo. Si se corrio `build_lesson_index.py --check` (EXIT 0, 368 IDs) y el pre-vuelo de packs del §2.
+- Errata declarada: el cuerpo del mensaje `d47953b` dice "se censura el censo", copiado tal cual del `15-` §3
+  (lectura probable: "se censa" o "se cierra"). No se reescribe: el mensaje ya esta publicado. Queda consignada.
+- Cinco cortes: implementacion, verificacion y cierre documental HECHOS; sello y empuje EJECUTADOS; L3 corrida
+  con 0 hallazgos antes del empuje y este sello sin cobertura hasta la proxima corrida. Las 13 rutas ajenas
+  intactas.
