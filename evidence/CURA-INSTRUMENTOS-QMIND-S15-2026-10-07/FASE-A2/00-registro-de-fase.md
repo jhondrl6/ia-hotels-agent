@@ -264,3 +264,19 @@ La clausula de arriba (árbol SIN commit) describe el estado al cerrar el corte 
 - **Rojo del arbol commiteado, diagnosticado por experimento:** el `--check` del indice salio **`EXIT=1`** en el clon y **`EXIT=0`** en el worktree. El clon tiene **398** `.md` bajo `.opencode/plans` contra **410** del worktree; los doce `briefing/FASE-*.md` ajenos (S-CIM-7) entran en la poblacion del derivado y no entran en ningun commit. Copiados esos doce al clon, el `--check` volvio **`EXIT=0`** (crudo `diagnostico_indice_en_clon.txt`). Consecuencia: `[6/8]` gobierna el worktree, no el arbol commiteado. No lo introdujo esta fase; queda declarado con dueno y sale como **`L-CIM.8`**, definida en `10-analisis` parrafo de Lecciones nuevas.
 - **Presupuesto final:** ≈**100** `tool_use` contados a mano. El corte anterior cerró en ≈80; la tanda de commit, verificacion en el arbol del commit, diagnose del rojo, L3 y push anadio ≈20. **Excede la referencia de 90** de DA-CIM.10 y se declara **checkpoint con causa medida**: el exceso se fue en el rojo del `--check` en el clon, que ningun mandato presupuestó.
 - **El sha de este sello no se estampa aqui**: el tip publicado es el que imprima `git ls-remote origin refs/heads/master`.
+## Cenén final del árbol publicado, con sus atributos
+
+Medido sobre `origin/master` después del push (los valores de la sección anterior son del árbol de trabajo previo al commit y no se re-escriben).
+
+| Atributo | Valor impreso | Comando |
+|---|---|---|
+| paridad | `083e6ab..28ef63c` empujado; `origin/master..HEAD` = **0** | `git rev-list --count origin/master..HEAD`, `git ls-remote origin refs/heads/master` |
+| dientes en HEAD | **43** | `git grep -c -E "^\s*def test_" HEAD -- tests/test_validate_qmind_writeback_escritura.py` |
+| `registro.json` | **intacto** en el rango publicado | `git diff --name-only 083e6ab..HEAD -- .opencode/qmind-writeback/registro.json` (vacío) |
+| `instantaneas/` | **2** rutas | `ls -1 .opencode/qmind-writeback/instantaneas/ \| wc -l` |
+| FASE-ENMIENDA en el registro | presente en HEAD; contador **518** | `git grep -c "FASE-ENMIENDA" HEAD -- docs/contributing/REGISTRY.md` |
+| fuga de enlaces firmados | **0** coincidencias en el árbol commiteado | `git archive HEAD evidence/…/FASE-A2 \| tar -xO \| grep -cE` con el patrón armado por `printf` |
+
+**El censo de DA-CIM sí se movió, y se declara con la medida antes y despues** (la nota del mandato pidió exactamente esto). `git grep -l "DA-CIM.9" HEAD | wc -l` pasó de **8** a **12**; el homólogo de `DA-CIM.10`, de **6** a **11**. No es deriva del instrumento: son rutas que esta fase añadió al corpus nombrando esos IDs — `docs/GUIA_TECNICA.md` (la nota de la enmienda que aquí se escribió por primera vez), el acta de FASE-A2 y la fila nueva de `09` §D sobre el presupuesto. Es el mecanismo que L-CIM.3 ya gobernó: todo `.md` que nombra un ID suma una ruta al `git grep -l`, y el par derivado está versionado. El atributo del mandato decía «A2 no debe moverlos»; la medida dice que los movió **por escribir lo que el mismo mandato mandaba escribir** (la nota de GUIA_TECNICA y la fila de 09). Queda publicado el número real con su comando; re-ancorar el atributo es decisión del operador.
+
+**Cobertura L3 de este commit:** la revisión profunda se corrió **después** de él y antes de empujarlo, así que lo cubre; no hay commits publicados sin revisión al cerrar la sesión (`git rev-list --count 083e6ab..HEAD` = 3, los tres con su corrida). El sha de esta sección no se estampa a sí mismo.
