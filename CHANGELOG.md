@@ -1,5 +1,45 @@
 # Changelog
 
+## [Sin publicar] - FASE-A2 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+
+### AC3: nombre de instantánea con huella, y AC4: `fuente_id` saliendo de la tabla real del CLI
+
+- **Qué cura.** Dos defectos del escritor `scripts/validate_qmind_writeback.py`, medidos por el plan padre y
+  cerrados aquí. (1) `registrar_publicacion()` nombraba la copia versionada con el prefijo saneado trancado a 120
+  caracteres: dos publicaciones del mismo plan compartían prefijo y la segunda copia **pisaba** los bytes de la
+  primera, que es cómo se perdieron los byte-exactos de la entrada `reemplazada` del padre (deuda S-CIM-3).
+  Ahora el nombre lo arma `slug_de_instantanea()` como `<plan>--<título-saneado>--<huella>.md`, con la huella
+  reservada al final del presupuesto de 120 caracteres: dos contenidos distintos no pueden dar el mismo nombre y
+  ningún nombre puede ser `README.md`. (2) Las dos ramas de `do_upload()` entregaban la cadena vacía en
+  `fuente_id` porque `upload_source()` devuelve la salida cruda y nadie la parseaba. `fuente_id_de_tabla()` parsea
+  la tabla `Key: value` con la que el CLI responde de verdad (no JSON), `publicar_en_registro()` la llama en **las
+  dos** ramas, y ante tabla sin `ID:` el camino es `verificar_por_censo()` y el estado publicado
+  «id no capturado» con su motivo — **nunca** una segunda subida (DA-CIM.3).
+- **Dientes.** Selección literal de `tests/test_validate_qmind_writeback_escritura.py`: PRE **31 passed**,
+  POST **43 passed**, resta **12** = dientes de esta fase, con el mismo intérprete
+  (`./venv/Scripts/python.exe`) y los 31 viejos verdes **sin re-bajar ninguna aserción** (medido: 0 líneas
+  `assert` eliminadas en el diff). El doble `QmindFalso` respondía JSON a `source upload`; ahora responde la
+  tabla `Key: value` copiada de la subida archivada por el hermano, que es la interfaz que el servicio tiene.
+- **Cinco mutantes** sobre copia aislada (`temp/mutantes_a2/mount`), cada uno con su par copia-intacta-verde /
+  copia-mutada-rojo y la aserción que pierde nombrada: M1 prefijo truncado (`assert 2 == 1` sobre los nombres
+  distinctos), M2 huella fuera del nombre (`endswith('--<huella>.md')`), M3 parseo como JSON (`la entrada nace con
+  su id` en las dos ramas y el diente contrario del «id no capturado»), M4 re-subida ante parseo fallido
+  (`assert len(falso.subidas) == 1` pasa a `2 == 1`), M5 `fuente_id` en una sola rama. El sha256 del script vivo y
+  del archivo de tests es idéntico antes y después de la tanda: el worktree no se mutó.
+- **Cero escrituras remotas.** Ni `source upload`, ni `source download`, ni `source delete`; `qmind` no se invocó.
+  `.opencode/qmind-writeback/registro.json` no se tocó y `instantaneas/` sigue con sus dos entradas de directorio.
+- **Registro tardio de la FASE-ENMIENDA.** Su alta en `docs/contributing/REGISTRY.md` la escribió
+  `log_phase_completion.py` en esta sesión por mandato del operador: 25 rutas medidas con
+  `git diff --name-status 67b7e2f..083e6ab` (14 modificadas + 11 nuevas, 0 renombradas, 0 en `tests/` ni `scripts/`),
+  `--tests 0` por valor medido, y la unidad declarada en `--nota`. La cabecera
+  `> **Total fases completadas:**` pasó de 516 a 517 por el propio instrumento, y la fila de FASE-A2 va
+  **después**, así que `> **Ultima actualizacion:**` queda en la fecha de A2.
+- **L3 antes del primer commit.** La revisión profunda cubrió el rango `58dc034..083e6ab` — los ocho commits
+  documentales que la sesión de la enmienda no pudo cubrir porque la herramienta niega una segunda corrida dentro
+  de la misma sesión (L-CIM.4) — y no produjo hallazgos.
+
+---
+
 ## [Sin publicar] - FASE-ENMIENDA del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 
 ### Las dos decisiones del operador estampadas en la línea base: el bloque huésped en migración y el presupuesto por fase

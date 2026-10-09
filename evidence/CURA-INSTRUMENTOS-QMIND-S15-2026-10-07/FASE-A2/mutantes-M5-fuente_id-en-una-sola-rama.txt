@@ -1,0 +1,47 @@
+MUTANTE M5-fuente_id-en-una-sola-rama
+descripcion: dejar la rama por defecto sin la salida de la tabla, o sea con id vacio
+montaje: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount (copia; el worktree vivo no se toco)
+seleccion -k: fuente_id_tambien_en_la_rama_por_defecto
+ancla unica: count(old) == 1 (exigido 1)
+
+[A] COPIA INTACTA   sha256=96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+    comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q -k 'fuente_id_tambien_en_la_rama_por_defecto'
+    EXIT=0
+    | .                                                                        [100%]
+    | 1 passed, 42 deselected in 0.27s
+
+[B] COPIA MUTADA   sha256=fe8ab60df077e94cb73e13ce0d82203171873ab0768dfbf8eeb58e4df7d3a8b7
+    mutacion: 'publicar_en_registro(datos, registro_path, plan_name, analisis_title, analisis,\n                                 cuerpo, out, fecha or _hoy(), notebook_id)'  ->  'publicar_en_registro(datos, registro_path, plan_name, analisis_title, analisis,\n                                 cuerpo, "", fecha or _hoy(), notebook_id)'
+    EXIT=1
+    | F                                                                        [100%]
+    | ================================== FAILURES ===================================
+    | ________ test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto ________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1658/test_la_tabla_puebla_fuente_id0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1658/test_la_tabla_puebla_fuente_id0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000024A197FB100>
+    | 
+    |     def test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto(vw, montaje, monkeypatch):
+    |         """AC4 (rama historica): la segunda llamada a `publicar_en_registro`, sin titulo ni archivo explicitos."""
+    |         m = montaje
+    |         falso = QmindFalso([], {})
+    |         monkeypatch.setattr(vw, "_run_qmind", falso)
+    |         monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    |         buffer = io.StringIO()
+    |         with redirect_stdout(buffer):
+    |             salio = vw.do_upload(m["plans"] / "Archives" / PLAN, NB, registro_path=m["registro"],
+    |                                  fecha="2026-10-08", repo_root=m["tmp"])
+    |         assert salio == 0, buffer.getvalue()
+    |         entrada = vw.cargar_registro(m["registro"])["entradas"][-1]
+    | >       assert entrada["fuente_id"] and vw.ID_RE.match(entrada["fuente_id"]), \
+    |             "la otra rama no puede seguir entregando la cadena vacia"
+    | E       AssertionError: la otra rama no puede seguir entregando la cadena vacia
+    | E       assert ('')
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:864: AssertionError
+    | =========================== short test summary info ===========================
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto
+    | 1 failed, 42 deselected in 0.23s
+
+restauracion verificada por sha256 (copia == intacta otra vez): True
+SENSIBILIDAD DEMOSTRADA: True

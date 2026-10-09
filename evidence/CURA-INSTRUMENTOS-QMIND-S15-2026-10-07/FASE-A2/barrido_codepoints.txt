@@ -1,0 +1,5 @@
+INJERTO docs/GUIA_TECNICA.md:2505 U+7ED1 CJK UNIFIED IDEOGRAPH-7ED1
+   contexto: 'ro de `try`/`if`/`with`**, `self.<attr>`\u7ed1\u5b9a desde la propia clase y alias de impo'
+INJERTO docs/GUIA_TECNICA.md:2505 U+5B9A CJK UNIFIED IDEOGRAPH-5B9A
+   contexto: 'o de `try`/`if`/`with`**, `self.<attr>`\u7ed1\u5b9a desde la propia clase y alias de impor'
+rutas: 30 exoticos: 2

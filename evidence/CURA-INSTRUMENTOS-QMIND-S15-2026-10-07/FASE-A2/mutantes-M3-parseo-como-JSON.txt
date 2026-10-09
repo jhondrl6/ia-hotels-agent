@@ -1,0 +1,87 @@
+MUTANTE M3-parseo-como-JSON
+descripcion: leer la respuesta de la subida como JSON en lugar de la tabla Key: value
+montaje: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount (copia; el worktree vivo no se toco)
+seleccion -k: (puebla_fuente_id_en_la_rama_explicita or rama_por_defecto or respuesta_json)
+ancla unica: count(old) == 1 (exigido 1)
+
+[A] COPIA INTACTA   sha256=96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+    comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q -k '(puebla_fuente_id_en_la_rama_explicita or rama_por_defecto or respuesta_json)'
+    EXIT=0
+    | ...                                                                      [100%]
+    | 3 passed, 40 deselected in 0.28s
+
+[B] COPIA MUTADA   sha256=db98df5103dc3ffd59d4796a91a481b3c150344facd3a7f3fc0a25224fbd0f0e
+    mutacion: '    for linea in output.splitlines():\n        clave, separador, valor = linea.partition(":")\n        if separador and clave.strip() == "ID":\n            candidato = valor.strip()\n            return candidato if ID_RE.match(candidato) else ""\n    return ""'  ->  '    try:\n        return json.loads(output).get("id", "")\n    except ValueError:\n        return ""'
+    EXIT=1
+    | FFF                                                                      [100%]
+    | ================================== FAILURES ===================================
+    | ___ test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo ___
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_la_tabla_puebla_fuente_id0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_la_tabla_puebla_fuente_id0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B5DDFFF100>
+    | 
+    |     def test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo(vw, montaje, monkeypatch):
+    |         """AC4 (rama `--file`/`--title`): el id sale de la tabla y el censo lo nombra con titulo y sha_metadata."""
+    |         m = montaje
+    |         copia = _copia(vw, m, 4, "# cuerpo con id que capturar\n")
+    |         _subir_explicito(vw, m, QmindFalso([], {}), TITULO_CIERRE, copia, monkeypatch)
+    |         entrada = vw.cargar_registro(m["registro"])["entradas"][-1]
+    | >       assert entrada["fuente_id"] and vw.ID_RE.match(entrada["fuente_id"]), "la entrada nace con su id"
+    | E       AssertionError: la entrada nace con su id
+    | E       assert ('')
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:844: AssertionError
+    | ________ test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto ________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_la_tabla_puebla_fuente_id1/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_la_tabla_puebla_fuente_id1')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B5DDFFD5B0>
+    | 
+    |     def test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto(vw, montaje, monkeypatch):
+    |         """AC4 (rama historica): la segunda llamada a `publicar_en_registro`, sin titulo ni archivo explicitos."""
+    |         m = montaje
+    |         falso = QmindFalso([], {})
+    |         monkeypatch.setattr(vw, "_run_qmind", falso)
+    |         monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    |         buffer = io.StringIO()
+    |         with redirect_stdout(buffer):
+    |             salio = vw.do_upload(m["plans"] / "Archives" / PLAN, NB, registro_path=m["registro"],
+    |                                  fecha="2026-10-08", repo_root=m["tmp"])
+    |         assert salio == 0, buffer.getvalue()
+    |         entrada = vw.cargar_registro(m["registro"])["entradas"][-1]
+    | >       assert entrada["fuente_id"] and vw.ID_RE.match(entrada["fuente_id"]), \
+    |             "la otra rama no puede seguir entregando la cadena vacia"
+    | E       AssertionError: la otra rama no puede seguir entregando la cadena vacia
+    | E       assert ('')
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:864: AssertionError
+    | _____________ test_una_respuesta_json_no_se_confunde_con_la_tabla _____________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_una_respuesta_json_no_se_0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1654/test_una_respuesta_json_no_se_0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001B5DE9B5B50>
+    | 
+    |     def test_una_respuesta_json_no_se_confunde_con_la_tabla(vw, montaje, monkeypatch):
+    |         """El diente contrario del parser: si alguien parseara JSON, aqui habria un id y el estado callaria.
+    |     
+    |         La respuesta real de `qmind source upload` es la tabla; el doble la imito mal durante toda la vida del
+    |         writer (respondio JSON) y por eso el verde nunca alcanzo la rama (L-T4A.5). Un parser de JSON pasaria
+    |         esta prueba dando por bueno un formato que el servicio no emite.
+    |         """
+    |         m = montaje
+    |         copia = _copia(vw, m, 6, "# cuerpo con respuesta json\n")
+    |         falso = QmindFalso([], {}, respuesta_upload='{"id": "01a0bfc9-5f5a-783e-9492-000000000042"}')
+    |         salida = _subir_explicito(vw, m, falso, TITULO_CIERRE, copia, monkeypatch)
+    | >       assert "id no capturado" in salida
+    | E       AssertionError: assert 'id no capturado' in '[UP] 10-analisis: PLAN-A (cierre v2) <- copia-6.md\n[OK] Registrada instantanea PLAN-A-2026-09-01--10-analisis_PLAN-A...e688f9380d00d35306df02811a37d513b fuente_id=01a0bfc9-5f5a-783e-9492-000000000042\n\n[RESUMEN] upload=1 skip=0 fail=0\n'
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:897: AssertionError
+    | =========================== short test summary info ===========================
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_la_tabla_puebla_fuente_id_en_la_rama_explicita_y_casa_con_el_censo
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_la_tabla_puebla_fuente_id_tambien_en_la_rama_por_defecto
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_una_respuesta_json_no_se_confunde_con_la_tabla
+    | 3 failed, 40 deselected in 0.29s
+
+restauracion verificada por sha256 (copia == intacta otra vez): True
+SENSIBILIDAD DEMOSTRADA: True

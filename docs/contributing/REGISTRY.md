@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-08
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 516
+> **Total fases completadas:** 518
 
 ---
 
@@ -12026,6 +12026,50 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 8 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-ENMIENDA - 2026-10-08
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: registro tardio de la enmienda documental (DA-CIM.9, DA-CIM.10 y reglas c2)
+**Nota:** Registro tardio: la enmienda cerro el 2026-10-08 sin fila porque el escritor es aditivo y la enmienda no es fase de implementacion; el alta la dicto el operador en la sesion de FASE-A2. Unidad de las columnas: rutas contadas por git diff --name-status 67b7e2f..083e6ab (14 modificadas + 11 nuevas = 25 rutas; 0 renombradas; 0 rutas en tests/ ni en scripts/), por eso van conteos y no listas: el escritor renderiza cada token como una fila de tabla. --tests 0 es el valor medido: la enmienda no toco tests ni codigo. Cero escrituras remotas. La revision profunda L3 de esos 8 commits la cubrio la sesion de FASE-A2, antes de su primer commit. Efecto colateral versionado: docs/contributing/.last_doc_phase.json, actualizado por este mismo escritor.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `11` | NUEVO | 11 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `14` | 14 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-A2 - 2026-10-08
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: slug sin colision y fuente_id capturado de la tabla
+**Nota:** Unidad de las columnas: rutas contadas por git status --porcelain -uall sobre el arbol de trabajo, excluidas las 13 rutas untracked ajenas (S-CIM-7); van conteos y no listas porque el escritor renderiza cada token como una fila de tabla (lo mismo que hizo FASE-A1). --plan NO se paso: la cabecera de FASE-A1 en REGISTRY tampoco la lleva y mantener la forma es parte de la coherencia del registro. Resta de la seleccion literal comprobada: PRE 31 passed - POST 43 passed = 12 dientes de ESTA fase, con los 31 viejos verdes y 0 lineas assert eliminadas en el diff. Cinco mutantes sobre copia aislada (temp/mutantes_a2/mount) con su par intacta-verde / mutada-rojo, la asercion que pierde nombrada y el sha256 del script vivo (96fe9257eddb) y del test vivo (499fbc2725cd) identicos antes y despues; el arnes se corrio dos veces por una expresion -k invalida en M3 (EXIT=4 en ambos lados), re-toma declarada con su motivo. Cero escrituras remotas: qmind no se invoco; .opencode/qmind-writeback/registro.json intacto y instantaneas/ sigue en 2 rutas. Desviacion declarada sobre un atributo del mandato: git diff 083e6ab -- .opencode/qmind-writeback/ imprime 1 ruta (instantaneas/README.md, el esquema de nombres que AC3 cambia, asignado a A2 por dependencias-fases.md y por L-G3), no 0; el registro en si esta intacto. Cortes: hasta 'listo para revision'; el arbol queda SIN commit porque no hubo instruccion literal en el chat de esta sesion. Presupuesto: ~68 tool_use contados a mano contra la referencia de 90 (DA-CIM.10); el instrumento canonico sigue FUERA DE SERVICIO (R2.1). L3 de esta sesion: rango 58dc034..083e6ab (los 8 commits que la enmienda no pudo cubrir), sin hallazgos.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `13` | NUEVO | 13 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `16` | 16 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 12 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

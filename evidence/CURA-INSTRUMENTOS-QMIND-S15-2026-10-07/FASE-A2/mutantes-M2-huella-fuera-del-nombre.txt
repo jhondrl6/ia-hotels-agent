@@ -1,0 +1,54 @@
+MUTANTE M2-huella-fuera-del-nombre
+descripcion: calcular la huella pero no ponerla en el nombre
+montaje: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount (copia; el worktree vivo no se toco)
+seleccion -k: (huella_del_nombre_es_el_sha256 or conserva_el_prefijo_legible)
+ancla unica: count(old) == 1 (exigido 1)
+
+[A] COPIA INTACTA   sha256=96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+    comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q -k '(huella_del_nombre_es_el_sha256 or conserva_el_prefijo_legible)'
+    EXIT=0
+    | ..                                                                       [100%]
+    | 2 passed, 41 deselected in 0.27s
+
+[B] COPIA MUTADA   sha256=7aee42c9d04af36eb5b16ab6761dc28570e1d13e8bf7a3de6b7e16edd0895730
+    mutacion: '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo'  ->  '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + ".md"'
+    EXIT=1
+    | FF                                                                       [100%]
+    | ================================== FAILURES ===================================
+    | _________ test_la_huella_del_nombre_es_el_sha256_de_su_propia_entrada _________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1652/test_la_huella_del_nombre_es_e0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1652/test_la_huella_del_nombre_es_e0')}
+    | 
+    |     def test_la_huella_del_nombre_es_el_sha256_de_su_propia_entrada(vw, montaje):
+    |         """AC3 por el nombre: `instanea` termina en la huella del `sha256` que la entrada declara."""
+    |         m = montaje
+    |         entrada = _publicar(vw, m, TITULO_CIERRE)
+    | >       assert entrada["instanea"].endswith("--" + entrada["sha256"][:vw.HUELLA_INSTANEA] + ".md")
+    | E       AssertionError: assert False
+    | E        +  where False = <built-in method endswith of str object at 0x00000248E91846F0>((('--' + '6f3628a0a367f0f6') + '.md'))
+    | E        +    where <built-in method endswith of str object at 0x00000248E91846F0> = 'PLAN-A-2026-09-01--10-analisis_PLAN-A_cierre_v2_.md'.endswith
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:813: AssertionError
+    | _ test_el_nombre_conserva_el_prefijo_legible_y_llena_el_presupuesto_sin_cortar_la_huella _
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | 
+    |     def test_el_nombre_conserva_el_prefijo_legible_y_llena_el_presupuesto_sin_cortar_la_huella(vw):
+    |         """Lo que un humano ve en `instantaneas/`: prefijo del plan, recorte en el titulo, huella intacta."""
+    |         sha = hashlib.sha256(b"cuerpo").hexdigest()
+    |         slug = vw.slug_de_instantanea(PLAN, TITULO_LARGO_1, sha)
+    |         assert slug.startswith(f"{PLAN}--10-analisis_{PLAN}_cierre_")
+    | >       assert slug.endswith(f"--{sha[:16]}.md")
+    | E       AssertionError: assert False
+    | E        +  where False = <built-in method endswith of str object at 0x00000248E9297AB0>('--b35eaa0e4925772a.md')
+    | E        +    where <built-in method endswith of str object at 0x00000248E9297AB0> = 'PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'.endswith
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:821: AssertionError
+    | =========================== short test summary info ===========================
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_la_huella_del_nombre_es_el_sha256_de_su_propia_entrada
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_el_nombre_conserva_el_prefijo_legible_y_llena_el_presupuesto_sin_cortar_la_huella
+    | 2 failed, 41 deselected in 0.25s
+
+restauracion verificada por sha256 (copia == intacta otra vez): True
+SENSIBILIDAD DEMOSTRADA: True

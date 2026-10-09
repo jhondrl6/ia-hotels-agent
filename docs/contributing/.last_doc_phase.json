@@ -302,5 +302,7 @@
   ".opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/05-prompt-inicio-sesion.md": "FASE-UNICA",
   "10": "RECUPERACION-AC6-AC10",
   "29": "FASE-RELEASE",
-  "13": "FASE-A1"
+  "13": "FASE-A1",
+  "14": "FASE-ENMIENDA",
+  "16": "FASE-A2"
 }

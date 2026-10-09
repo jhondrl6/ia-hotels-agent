@@ -26,7 +26,15 @@ cuántas tuvieron fidelidad remota medida y cuántas quedaron NO-EVALUABLE.
 **Nace vacío y así debe leerse.** Cero archivos = cero publicaciones registradas; el check `[17/18]` declara
 `NO-EVALUABLE` en ese estado y **no** PASS. Hoy hay dos entradas del plan padre y **un solo** byte-exacto: las dos
 publicaciones compartieron nombre por el slug truncado, así que los bytes de la primera están perdidos. Gobernar el
-nombre (AC3) le corresponde a FASE-A2, no a esta prosa.
+nombre (AC3) ya no es prosa pendiente: lo gobierna `slug_de_instantanea()` desde FASE-A2.
+
+**Cómo se nombra una instantánea (AC3 landed, 2026-10-08).** El nombre es
+`<plan>--<título-saneado>--<huella>.md`: el prefijo legible conserva `plan` y `titulo` con todo lo que no sea
+`[A-Za-z0-9._-]` convertido en `_`, y la `huella` son los 16 primeros hexádigitos del `sha256` que la propia
+entrada declara. El presupuesto total (`NOMBRE_INSTANEA_MAXIMO`, 120 caracteres) se reserva **desde el final**:
+la huella siempre cabe y el recorte cae sobre el prefijo. Dos contenidos distintos no pueden compartir nombre,
+y como todo nombre termina en `--<hex>.md`, ninguno puede ser `README.md` — el archivo que sigue en este
+directorio lo escribe un humano y el escritor no lo toca.
 
 **Escritor único:** `validate_qmind_writeback.py` (`registrar_publicacion()`). No editar a mano: un archivo
 aquí que no corresponda a una subida real convierte la verificación en una promesa falsa.

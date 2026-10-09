@@ -39,17 +39,18 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [x] `README.md` de `instantaneas/` actualizado por su dueño humano (prosa no regenerable por escritor); **viajó en el mismo commit que la cura** (`63b944a`) cuando el operador autorizó commit, L3 y push en la misma sesión
 - [x] Cierre incremental del contrato (8 pasos) con registro propio y quick verde
 
-### FASE-A2 — AC3 y AC4 (⬜ Pendiente)
+### FASE-A2 — AC3 y AC4 (✅ CERRADA 2026-10-08 contra HEAD `083e6ab`; su L3 cubrió `58dc034..083e6ab` sin hallazgos. El sha del commit de esta fase **no se estampa en la propia fila**: lo imprime `git ls-remote origin refs/heads/master`)
 
-- [ ] No arranca si A1 no cerró
-- [ ] Slug con sha (o correlativo) sin colisión entre publicaciones ni con `README.md`, y legible
-- [ ] Dos publicaciones del mismo plan dejan dos byte-exactos distintos, cada entrada casa con el suyo
-- [ ] `fuente_id` parseado de la tabla `Key: value` en **las dos ramas** de `do_upload()`
-- [ ] Parseo fallido → estado «id no capturado» + censo; **contador de subidas de la corrida = 1**
-- [ ] Ninguna subida real ejecutada; ninguna salida con enlace firmado persistida
-- [ ] Cinco mutantes con su par rojo/verde y restauración por sha
-- [ ] Reglas de ejecución c2 (contrato §R2): código **congelado** antes de abrir el cierre documental, con el POST y los mutantes re-tomados **una** sola vez al final, y los reemplazos documentales hechos por **un único script de bytes bajo `temp/`** con `count(old) == 1` por ancla, borrado al terminar
-- [ ] Cierre incremental con registro propio y quick verde
+- [x] No arranca si A1 no cerró — verificado: A1 está en REGISTRY, commiteada y empujada; el tip al abrir lo imprimió `git ls-remote origin refs/heads/master` (`083e6ab`, igual a `git rev-parse HEAD`)
+- [x] Nombre con sha (no correlativo) sin colisión entre publicaciones ni con `README.md`, y legible: `slug_de_instantanea()`, prefijo `<plan>--<título-saneado>` + huella `--<16 hex>.md` reservada al final
+- [x] Dos publicaciones del mismo plan dejan dos byte-exactos distintos, cada entrada casa con el suyo — diente con dos títulos de prefijo común y otro con tres, sobre montaje en `tmp_path`; y el `README.md` del directorio sigue intacto
+- [x] `fuente_id` parseado de la tabla `Key: value` en **las dos ramas** de `do_upload()` — una función nueva por rama no: `publicar_en_registro()` llamada en las dos, con un diente por rama (M5 cae solo por la rama por defecto)
+- [x] Parseo fallido → estado «id no capturado» + censo; **contador de subidas de la corrida = 1** — con la tabla degenerada, con el censo roto (`[NO-EVALUABLE]`) y con la fuente ausente (`[AUSENTE]`), los tres estados separados
+- [x] Ninguna subida real ejecutada; ninguna salida con enlace firmado persistida — `qmind` no se invocó; el barrido `grep -cE "originUrl|originalFileUri"` sobre los crudos de la fase responde 0 en todos
+- [x] Cinco mutantes con su par rojo/verde y restauración por sha — sobre `temp/mutantes_a2/mount`, ancla con `count(old) == 1`, aserción que pierde nombrada, y el sha256 del script vivo y del test vivo idénticos antes y después
+- [x] Reglas de ejecución c2 (contrato §R2): el código quedó **congelado** antes de abrir el cierre documental y el POST se archivó sobre el instrumento definitivo. **Declaración de re-toma:** los mutantes se corrieron **dos** veces — la primera, la expresión `-k` de M3 llevaba la conjunción en español y pytest salió `EXIT=4` en los dos lados sin ejecutar nada; la segunda, válida. Ninguna edición de código hubo entre las dos. Los reemplazos documentales los hizo **un único script de bytes bajo `temp/`** con `count(old) == 1` por ancla, impreso con su recuento y borrado al terminar
+- [x] El `README.md` de `instantaneas/` describe el esquema de nombres vigente (fila de `dependencias-fases.md` resuelta; viaja en el mismo commit que la cura, L-G3)
+- [x] Cierre incremental con registro propio y quick verde
 
 ### FASE-A3 — AC5 y AC6 (⬜ Pendiente)
 

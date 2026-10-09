@@ -3030,6 +3030,28 @@ plan — el sha del cuerpo no cambió; un nombre de archivo repetido entre plane
 
 **Errata de estado, 2026-10-08 (FASE-A1 de `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`).** El párrafo anterior queda como registro de su sesión; el hueco que describía ya no existe: `registrar_publicacion()` graba `sha_cuerpo` (schema 1.1) y `verificar_contenido()` dicta la vigencia **cuerpo contra cuerpo**, así que publicar una copia saneada deja de ser estructuralmente vencible. Las tres preguntas siguen separadas —¿el plan cambió? (`sha_cuerpo`), ¿la copia del repo sigue siendo lo publicado? (`sha256` del registro), ¿lo publicado casa con el servidor? (`metadata.fileSha256` + descarga)— y el verificador publica cuántas entradas respondieron cada una. Las entradas anteriores a la cura (sin `sha_cuerpo`) salen `NO-EVALUABLE por migracion`: no se rellena hacia atrás.
 
+**Nota técnica de la FASE-ENMIENDA (2026-10-08), escrita en FASE-A2 con autorización expresa del operador.** La
+enmienda no tocó código: estampó dos decisiones del operador (`DA-CIM.9` gobernar el bloque huésped también en el
+camino de migración, para FASE-A3; `DA-CIM.10` presupuesto por fase: 90 `tool_use` para A2/A3/B/C y 60 para RELEASE)
+y las dos reglas de ejecución c2 dentro del prompt de A2. Técnicamente no cambió ningún símbolo del repo, y esta nota
+se escribe ahora porque en aquella sesión la lectura de este archivo fue denegada por alcance y el contrato prohíbe
+reintentar un permiso negado.
+
+**Errata de estado, 2026-10-08 (FASE-A2 de `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`): el nombre de la instantánea y
+el id de la fuente.** Dos huecos del emisor quedén gobernados. (1) `registrar_publicacion()` ya no trunca el nombre
+a 120 caracteres a secas: llama a `slug_de_instantanea()`, que pone el prefijo legible
+`<plan>--<título-saneado>` y **detrás** la huella `--<16 hexádigitos del sha256>.md`, con el recorte cayendo sobre el
+prefijo para que la huella nunca se corte. El `sha256` que entra al registro se calcula sobre el archivo de origen y
+no sobre el destino: son el mismo número porque la copia es byte a byte, y así el nombre y la entrada derivan de un
+solo dato. (2) `do_upload()` deja de entregar la cadena vacía en `fuente_id`: las dos ramas llaman a
+`publicar_en_registro()`, que saca el id con `fuente_id_de_tabla()` de la tabla `Key: value` con la que
+`qmind source upload` responde (el valor tiene que casar con `ID_RE`; `NotebookID:` no es `ID:` y un título con dos
+puntos tampoco es una clave). Ante tabla sin id **no se re-sube** — la idempotencia del backend es por título y
+re-subir crearía el duplicado que L-QW.2 mide — y `verificar_por_censo()` publica uno de los tres estados: lector
+fallido (`[NO-EVALUABLE] censo`), ausencia observada (`[AUSENTE] censo`, con el título y el notebook buscados) o
+la fuente nombrada (`[CENSO]`). El código de salida de `--upload` no cambia: una publicación registrada con id
+no capturado sigue siendo 0, y el aviso va impreso.
+
 **Readabilidad del cierre.** El registro oficial lo escribe `log_phase_completion.py` (aditivo, una entrada por fase,
 con `--fecha` real y `--nota` si es tardía) y sus columnas `Archivos Nuevos/Modificados` **imprimen el número que se
 les pasa como si fuera una ruta** (`| 17 | 17 |`): son conteos, no inventarios, y la unidad hay que declararla en la

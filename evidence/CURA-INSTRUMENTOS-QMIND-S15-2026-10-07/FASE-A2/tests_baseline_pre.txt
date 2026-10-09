@@ -1,0 +1,8 @@
+# PRE seleccion literal tests/test_validate_qmind_writeback_escritura.py
+# interprete: ./venv/Scripts/python.exe
+# comando: venv/Scripts/python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q
+# arbol: worktree con HEAD 083e6ab (tip al abrir la sesion)
+
+...............................                                          [100%]
+31 passed in 0.64s
+EXIT=0

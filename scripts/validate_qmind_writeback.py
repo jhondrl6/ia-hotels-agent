@@ -85,6 +85,10 @@ INSTANEAS_DIR = ROOT_DIR / ".opencode" / "qmind-writeback" / "instantaneas"
 REGISTRO_ESQUEMA = "1.1"
 ESTADO_VIGENTE = "vigente"
 ESTADO_REEMPLAZADA = "reemplazada"
+# AC3: el nombre que se ve en `instantaneas/` es prefijo legible + huella. La huella se reserva al final del
+# presupuesto de caracteres, asi que el recorte del prefijo nunca puede cortarla.
+NOMBRE_INSTANEA_MAXIMO = 120
+HUELLA_INSTANEA = 16
 ID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 CONTEXT_DECLARATION_MARKERS = [
     re.compile(r"^Lección de forma:", re.MULTILINE),
@@ -278,22 +282,39 @@ def raiz_de_planes(plan_dir: Path) -> Path:
     return plan_dir.parent.parent if plan_dir.parent.name == "Archives" else plan_dir.parent
 
 
+def slug_de_instantanea(plan: str, titulo: str, sha: str) -> str:
+    """El nombre de la copia versionada: `<plan>--<titulo-saneado>--<huella>.md`.
+
+    AC3. El nombre viejo era el prefijo saneado trancado a 120 caracteres, y dos publicaciones del mismo plan
+    compartian prefijo: el segundo `shutil.copyfile` pisaba los bytes del primero y la entrada marcada como
+    `reemplazada` quedaba sin byte-exacto ( asi se perdieron los del plan padre — S-CIM-3 del maestro). La huella
+    es la cabecera del sha256 de lo que se copia, va despues del prefijo y el prefijo cede sitio: dos contenidos
+    distintos no pueden dar el mismo nombre, y como todo nombre termina en `--<hex>.md` ninguno puede ser
+    `README.md`, que es el archivo humano que ya vive en el directorio.
+    """
+    prefijo = re.sub(r"[^A-Za-z0-9._-]+", "_", f"{plan}--{titulo}")
+    sufijo = f"--{sha[:HUELLA_INSTANEA]}.md"
+    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo
+
+
 def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: str,
                           archivo: Path, fuente_id: str, fecha: str, cuerpo: Path) -> dict:
     """Copia la instantánea al repo, la registra como vigente y marca la anterior del mismo plan.
 
     `sha256` es el de la instantánea (lo que el servidor recibió) y `sha_cuerpo` el del cuerpo del plan en el
     momento de publicar (lo que el repo prometió): dos identidades, dos preguntas (AC1). Con `--file` las dos
-    difieren por diseño —la copia va saneada— y la puerta de vigencia lee la segunda.
+    difieren por diseño —la copia va saneada— y la puerta de vigencia lee la segunda. El `sha256` se calcula
+    sobre el archivo de origen y no sobre el destino porque es el mismo numero (la copia es byte a byte) y
+    porque el nombre de la copia sale de ese numero: la entrada casa con su archivo por construcción (AC3).
 
     Borrar la fuente antigua en el notebook es irreversible sobre contenido publicado y sigue
     siendo decisión escrita del operador (maestro §4): aquí se **marca**, no se borra.
     """
-    slug = re.sub(r"[^A-Za-z0-9._-]+", "_", f"{plan}--{titulo}")[:120] + ".md"
+    sha = sha256_de(archivo)
+    slug = slug_de_instantanea(plan, titulo, sha)
     destino = directorio_de_instantaneas(ruta_registro) / slug
     destino.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(archivo, destino)
-    sha = sha256_de(destino)
     for entrada in entradas_del_plan(datos, plan):
         if entrada.get("estado") == ESTADO_VIGENTE:
             entrada["estado"] = ESTADO_REEMPLAZADA
@@ -338,6 +359,54 @@ def upload_source(notebook_id: str, file_path: Path, title: str) -> tuple:
         "--title", title,
     ])
     return exit_code, output
+
+
+def fuente_id_de_tabla(output: str) -> str:
+    """El `ID:` de la tabla `Key: value` que responde `qmind source upload`; cadena vacia si no lo hay.
+
+    AC4. La subida NO responde JSON: son lineas `ID:`, `NotebookID:`, `Title:`, `Type:`, `Status:`, `URI:`,
+    `UpdatedAt:` (la forma esta archivada en el expediente del hermano, en
+    `evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/39-de-subida-leccion-11.txt`).
+    Se parte por el PRIMER `:` de cada linea para que un titulo con dos puntos —todos los `10-analisis: ...`—
+    no se lea como clave, y `NotebookID:` no casa porque la clave exigida es exacta. Un valor que no es UUID
+    tampoco cuenta: el id que entra al registro tiene la forma del resto de los ids del notebook.
+    """
+    for linea in output.splitlines():
+        clave, separador, valor = linea.partition(":")
+        if separador and clave.strip() == "ID":
+            candidato = valor.strip()
+            return candidato if ID_RE.match(candidato) else ""
+    return ""
+
+
+def verificar_por_censo(notebook_id: str, titulo: str, sha: str) -> str:
+    """Que dice el censo del notebook cuando la tabla de la subida no dio el id (AC4).
+
+    NO es una segunda subida: la idempotencia del backend es por titulo y subir de nuevo crea la fuente
+    duplicada que mide L-QW.2. Son los tres estados de R2.9, con el lector fallido separado de la ausencia
+    observada (L-PF6): el censo no respondio, el censo respondio y no esta, o el censo la nombra.
+    """
+    try:
+        fuentes = fetch_sources(notebook_id)
+    except QmindUnavailable as exc:
+        return f"[NO-EVALUABLE] censo: el lector no respondio ({exc}); no se re-subio nada"
+    por_titulo = [f for f in fuentes if f["title"] == norm(titulo)]
+    sin_sha = [f for f in por_titulo if f["sha_metadata"] != sha]
+    coincidencias = [f for f in por_titulo if f["sha_metadata"] == sha]
+    if not por_titulo:
+        return (f"[AUSENTE] censo: 0 fuentes con el titulo {titulo!r} en el notebook {notebook_id}; "
+                f"no se re-subio nada")
+    if not coincidencias:
+        return (f"[AUSENTE] censo: {len(por_titulo)} fuente(s) con el titulo y ninguna con el sha256 {sha}"
+                f" (los sha del censo: {', '.join(f['sha_metadata'] or '-' for f in sin_sha)}); "
+                f"no se re-subio nada")
+    ids = sorted({f["id"] for f in coincidencias})
+    if len(ids) > 1:
+        return (f"[DUPLICADO] censo: {len(ids)} fuentes con el mismo titulo y sha ({', '.join(ids)}); "
+                f"la entrada queda sin id y NO se re-subio nada")
+    return (f"[CENSO] la fuente publicada es {ids[0]} (casa por titulo y sha_metadata); la entrada queda "
+            f"sin id porque la tabla no lo trajo")
+
 
 
 def scan_context_declarations() -> list:
@@ -519,6 +588,29 @@ def dentro_del_repo(ruta: Path, base: Path = None) -> bool:
     return True
 
 
+def publicar_en_registro(datos: dict, ruta_registro: Path, plan_name: str, titulo: str,
+                         origen: Path, cuerpo: Path, out: str, fecha: str,
+                         notebook_id: str) -> dict:
+    """Registra lo que acaba de subir y publica su `fuente_id`, o el estado «id no capturado» (AC4).
+
+    Una sola llamada para **las dos ramas** de `do_upload()`: mientras cada rama imprimia su linea propia, el
+    id de la fuente se perdia en las dos. Ante tabla sin id el camino NO es re-subir sino preguntar al censo
+    (DA-CIM.3), y el codigo de salida sigue siendo el de una publicacion registrada: `--upload` no inventa un
+    rojo nuevo por un dato que el servidor no devolvio en la forma esperada. No se imprime la tabla cruda: trae
+    lineas de objeto que no van al registro ni al crudo archivado.
+    """
+    fuente_id = fuente_id_de_tabla(out)
+    entrada = registrar_publicacion(datos, ruta_registro, plan_name, titulo, origen,
+                                    fuente_id, fecha, cuerpo)
+    print(f"[OK] Registrada instantanea {entrada['instanea']} sha256={entrada['sha256']} "
+          f"fuente_id={fuente_id or 'no capturado'}")
+    if not fuente_id:
+        print("[AVISO] id no capturado: la tabla de la subida no trae una linea 'ID:' con forma de UUID; "
+              "no se re-subio nada")
+        print(verificar_por_censo(notebook_id, titulo, entrada["sha256"]))
+    return entrada
+
+
 def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Path = None,
               registro_path: Path = None, fecha: str = None,
               repo_root: Path = None) -> int:
@@ -590,9 +682,8 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
             if code != 0:
                 print(f"[FAIL] Upload falló: {_first_line(out)}")
                 return 1
-            entrada = registrar_publicacion(datos, registro_path, plan_name, analisis_title,
-                                            origen, "", fecha or _hoy(), cuerpo)
-            print(f"[OK] Registrada instantanea {entrada['instanea']} sha256={entrada['sha256']}")
+            publicar_en_registro(datos, registro_path, plan_name, analisis_title, origen,
+                                 cuerpo, out, fecha or _hoy(), notebook_id)
             uploaded += 1
         print(f"\n[RESUMEN] upload={uploaded} skip={skipped} fail={failed}")
         return 0
@@ -609,9 +700,9 @@ def do_upload(plan_dir: Path, notebook_id: str, titulo: str = None, archivo: Pat
             failed += 1
         else:
             print(f"[OK] Subido: {analisis.stem}")
-            entrada = registrar_publicacion(datos, registro_path, plan_name, analisis_title,
-                                            analisis, "", fecha or _hoy(), cuerpo)
-            print(f"[OK] Registrada instantanea {entrada['instanea']} sha256={entrada['sha256']}")
+            # La segunda rama (AC4): la misma via que la explicita, no una copia sin el parseo.
+            publicar_en_registro(datos, registro_path, plan_name, analisis_title, analisis,
+                                 cuerpo, out, fecha or _hoy(), notebook_id)
             uploaded += 1
 
     context_files = scan_context_declarations()

@@ -1,0 +1,102 @@
+MUTANTE M4-resubir-ante-parseo-fallido
+descripcion: volver a subir cuando la tabla no trajo el id (lo que DA-CIM.3 prohibe)
+montaje: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount (copia; el worktree vivo no se toco)
+seleccion -k: (tabla_degenerada_declara_id_no_capturado or censo_que_no_responde or censo_que_no_la_ve)
+ancla unica: count(old) == 1 (exigido 1)
+
+[A] COPIA INTACTA   sha256=96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+    comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q -k '(tabla_degenerada_declara_id_no_capturado or censo_que_no_responde or censo_que_no_la_ve)'
+    EXIT=0
+    | ...                                                                      [100%]
+    | 3 passed, 40 deselected in 0.29s
+
+[B] COPIA MUTADA   sha256=a9713f8523450f933e54e6a990ff51d8306860bbbe5b14df2447aa378ff12811
+    mutacion: '    if not fuente_id:\n        print("[AVISO] id no capturado:'  ->  '    if not fuente_id:\n        upload_source(notebook_id, origen, titulo)\n        print("[AVISO] id no capturado:'
+    EXIT=1
+    | FFF                                                                      [100%]
+    | ================================== FAILURES ===================================
+    | _ test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida _
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_tabla_degenerada_declara_0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_tabla_degenerada_declara_0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028583E8F100>
+    | 
+    |     def test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida(vw, montaje, monkeypatch):
+    |         """AC4 de contencion: sin linea `ID:` el estado publicado es �id no capturado� y el contador es 1.
+    |     
+    |         La re-subida estaba prohibida y era el camino natural de un parser que aborta: la idempotencia del
+    |         backend es por titulo, asi que re-corregir el parseo creando otra fuente es L-QW.2 consumado. Aqui el
+    |         diente es el conteo de `subidas`, y el censo responde por la fuente ya publicada.
+    |         """
+    |         m = montaje
+    |         copia = _copia(vw, m, 5, "# cuerpo con tabla sin id\n")
+    |         falso = QmindFalso([], {}, respuesta_upload=TABLA_DEGENERADA)
+    |         salida = _subir_explicito(vw, m, falso, TITULO_CIERRE, copia, monkeypatch)
+    | >       assert len(falso.subidas) == 1, "una segunda subida ante parseo fallido es el duplicado que DA-CIM.3 prohibe"
+    | E       AssertionError: una segunda subida ante parseo fallido es el duplicado que DA-CIM.3 prohibe
+    | E       assert 2 == 1
+    | E        +  where 2 = len([('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con tabla sin id\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con tabla sin id\n')])
+    | E        +    where [('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con tabla sin id\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con tabla sin id\n')] = <test_validate_qmind_writeback_escritura.QmindFalso object at 0x00000285847C6A50>.subidas
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:880: AssertionError
+    | _________ test_censo_que_no_responde_es_estado_propio_y_no_re_subida __________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_censo_que_no_responde_es_0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_censo_que_no_responde_es_0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028583E8D5B0>
+    | 
+    |     def test_censo_que_no_responde_es_estado_propio_y_no_re_subida(vw, montaje, monkeypatch):
+    |         """R2.9 en la via nueva: �el censo no respondio� se nombra como lector fallido, no como ausencia (L-PF6)."""
+    |         m = montaje
+    |         copia = _copia(vw, m, 7, "# cuerpo con censo roto\n")
+    |         base = QmindFalso([], {}, respuesta_upload=TABLA_DEGENERADA)
+    |         falso = _CensoSeparado(vw, base, falla=True)
+    |         monkeypatch.setattr(vw, "_run_qmind", falso)
+    |         monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    |         buffer = io.StringIO()
+    |         with redirect_stdout(buffer):
+    |             salio = vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+    |                                  registro_path=m["registro"], fecha="2026-10-08", repo_root=m["tmp"])
+    |         assert salio == 0, buffer.getvalue()
+    |         salida = buffer.getvalue()
+    |         assert "id no capturado" in salida and "[NO-EVALUABLE] censo" in salida
+    | >       assert len(falso.subidas) == 1
+    | E       AssertionError: assert 2 == 1
+    | E        +  where 2 = len([('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con censo roto\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con censo roto\n')])
+    | E        +    where [('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con censo roto\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con censo roto\n')] = <test_validate_qmind_writeback_escritura._CensoSeparado object at 0x00000285847C6CF0>.subidas
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:916: AssertionError
+    | ___________ test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir ____________
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_censo_que_no_la_ve_nombra0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1656/test_censo_que_no_la_ve_nombra0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028584845B50>
+    | 
+    |     def test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir(vw, montaje, monkeypatch):
+    |         """Ausencia observada: el censo responde y la fuente no esta; se publica lo buscado, no se sube otra vez."""
+    |         m = montaje
+    |         copia = _copia(vw, m, 8, "# cuerpo ausente del censo\n")
+    |         base = QmindFalso([], {}, respuesta_upload=TABLA_DEGENERADA)
+    |         falso = _CensoSeparado(vw, base, fuentes=[])
+    |         monkeypatch.setattr(vw, "_run_qmind", falso)
+    |         monkeypatch.setattr(vw, "scan_context_declarations", lambda: [])
+    |         buffer = io.StringIO()
+    |         with redirect_stdout(buffer):
+    |             salio = vw.do_upload(m["plans"] / "Archives" / PLAN, NB, titulo=TITULO_CIERRE, archivo=copia,
+    |                                  registro_path=m["registro"], fecha="2026-10-08", repo_root=m["tmp"])
+    |         assert salio == 0, buffer.getvalue()
+    |         assert "[AUSENTE] censo: 0 fuentes" in buffer.getvalue() and TITULO_CIERRE in buffer.getvalue()
+    | >       assert len(falso.subidas) == 1
+    | E       AssertionError: assert 2 == 1
+    | E        +  where 2 = len([('10-analisis: PLAN-A (cierre v2)', b'# cuerpo ausente del censo\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo ausente del censo\n')])
+    | E        +    where [('10-analisis: PLAN-A (cierre v2)', b'# cuerpo ausente del censo\n'), ('10-analisis: PLAN-A (cierre v2)', b'# cuerpo ausente del censo\n')] = <test_validate_qmind_writeback_escritura._CensoSeparado object at 0x00000285847BBB10>.subidas
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:933: AssertionError
+    | =========================== short test summary info ===========================
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_tabla_degenerada_declara_id_no_capturado_y_no_invoca_una_segunda_subida
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_censo_que_no_responde_es_estado_propio_y_no_re_subida
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_censo_que_no_la_ve_nombra_lo_buscado_sin_re_subir
+    | 3 failed, 40 deselected in 0.29s
+
+restauracion verificada por sha256 (copia == intacta otra vez): True
+SENSIBILIDAD DEMOSTRADA: True

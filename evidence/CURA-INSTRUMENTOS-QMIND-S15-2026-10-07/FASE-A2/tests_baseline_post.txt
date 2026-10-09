@@ -1,0 +1,10 @@
+# POST seleccion literal tests/test_validate_qmind_writeback_escritura.py (instrumento congelado)
+# interprete: ./venv/Scripts/python.exe | comando: venv/Scripts/python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q
+# arbol: worktree con la cura de AC3/AC4 sin commitear (HEAD 083e6ab)
+# nota: el barrido de consola no es UTF-8; el EXIT se imprime dentro del crudo
+
+...........................................                              [100%]
+43 passed in 0.60s
+EXIT=0
+
+# resta: POST(43) - PRE(31) = 12 dientes de ESTA fase

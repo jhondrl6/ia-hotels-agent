@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 449,
-    "ids_con_definicion": 361,
+    "ids_con_definicion": 364,
     "ids_citados_sin_definicion": 93,
     "fechas_por_fuente": {
-      "nombre": 350,
+      "nombre": 353,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -769,6 +769,20 @@
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
       "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-CIM.11",
+      "familia": "DA",
+      "enunciado": "El nombre de la instantánea lleva la huella al final del presupuesto de caracteres, y el sha256 del registro se calcula sobre el archivo de origen — Decisión de FASE-A2, no del operador. Define lo que un humano ve en instantaneas/, así que se enuncia en maestro §2. Si la huella se cortara con el nombre (prefijo[:120] + sufijo), dos títulos de prefijo común volverían a chocar; reservarla desde el final hace que el recorte caiga siempre sobre el prefijo. Calcular el sha sobre el origen (y no sobre el destino) hace que nombre y entrada deriven de un solo número, y la copia es byte a byte. Terminar en --<hex>.md vuelve estructuralmente imposible que el nombre sea README.md",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1664,6 +1678,34 @@
       "redefiniciones": []
     },
     {
+      "id": "L-CIM.6",
+      "familia": "L",
+      "enunciado": "Un fixture que modela mal la interfaz del servicio hace el verde inaccesible, no falso: las pruebas pueden estar todas verdes y ninguna tocar la rama que se pretendía gobernar. — QmindFalso respondía json.dumps(...) a source upload desde su creación, cuando la respuesta real de qmind source upload es la tabla Key: value (archivada por el hermano en evidence/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/SESION-SCRIPTS-CURAS-2026-09-28/39-de-subida-leccion-11.txt). Con esa interfaz inventada, upload_source() podía devolver lo que devolviera y los 31 dientes seguían verdes: nada del código leía la salida. El rojo de FASE-A2 salió de cambiar la forma del doble, no de escribir una aserción nueva, y por eso AC4 cierra con diente contrario (test_una_respuesta_json_no_se_confunde_con_la_tabla) además del diente de la tabla. Es L-T4A.5 con mecanismo distinto: allí el verde no alcanzaba la rama por la aserción; aquí no la alcanzaba porque el servicio falso no tenía esa salida",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.7",
+      "familia": "L",
+      "enunciado": "El par rojo/verde de un mutante no detecta un arnés roto: si la selección no se ejecuta, los dos lados «fallan» igual. Lo que distingue el caso es exigir que el lado intacto salga EXIT=0, no que los lados difieran. — La primera corrida del arnés de A2 registró M3 con EXIT=4 en copia intacta y en copia mutada porque la expresión -k llevaba la conjunción en español (o en lugar de or) y pytest no recolectó nada. Un resumen que solo compara «cayó / no cayó» lo habría contado como mutante demostrado; lo que lo desmintió fue la línea de recuento del lado intacto, que ahora viaja archivada en cada crudo del par",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-D1",
       "familia": "L",
       "enunciado": "«Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)*",
@@ -2051,7 +2093,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
@@ -2154,7 +2196,7 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 18,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
@@ -3016,7 +3058,7 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 105,
+      "total_citas": 106,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3148,7 +3190,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
@@ -3164,7 +3206,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
@@ -3635,7 +3677,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 100,
+      "total_citas": 102,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -3758,7 +3800,7 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 98,
+      "total_citas": 99,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
@@ -4377,7 +4419,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 76,
+      "total_citas": 77,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -5625,7 +5667,7 @@
     {
       "id": "DA-CIM.9",
       "familia": "DA",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
@@ -5729,6 +5771,14 @@
       ]
     },
     {
+      "id": "DA-CIM.10",
+      "familia": "DA",
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-E2E-1",
       "familia": "S",
       "total_citas": 7,
@@ -5750,14 +5800,6 @@
       "total_citas": 6,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20"
-      ]
-    },
-    {
-      "id": "DA-CIM.10",
-      "familia": "DA",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {

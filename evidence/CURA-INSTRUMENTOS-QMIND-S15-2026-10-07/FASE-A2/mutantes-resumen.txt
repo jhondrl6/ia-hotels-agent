@@ -1,0 +1,75 @@
+MUTANTES FASE-A2 — AC3/AC4 de CURA-INSTRUMENTOS-QMIND-S15
+
+Los cinco se corrieron sobre `temp/mutantes_a2/mount/scripts/validate_qmind_writeback.py` (copia del
+instrumento vivo mas su archivo de tests y una copia de `scripts/run_all_validations.py`, porque dos
+dientes leen la fuente del runner), nunca sobre el worktree vivo. El arnes es `temp/mutantes_a2/correr_mutantes.py`
+y se borro al terminar (regla c2 del prompt de A2).
+
+sha256 del SCRIPT VIVO antes : 96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+sha256 del SCRIPT VIVO despues: 96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+EL ARBOL VIVO QUEDO INTACTO (script): True
+sha256 del TEST VIVO antes   : 499fbc2725cd2e03339a4e939913b1a631e2b577d736cbc545a1b5f07b657627
+EL ARBOL VIVO QUEDO INTACTO (tests): True
+
+Control previo del montaje: la seleccion COMPLETA sobre la copia intacta dio `43 passed`, `EXIT=0`
+(crudo `montaje-control-seleccion-completa.txt`), asi que ningun rojo de abajo puede atribuirse al montaje.
+
+Forma del archivo: a diferencia de FASE-A1, que archvo una salida por mutante y otra por su control, el
+arnes de A2 escribe el PAR en un solo archivo por mutante, con las dos secciones etiquetadas
+`[A] COPIA INTACTA` y `[B] COPIA MUTADA`. La diferencia es de forma, no de contenido: las dos salidas
+estan archivadas, cada una con su sha256 y su EXIT.
+
+[M1-slug-al-prefijo-truncado]  ancla unica count(old)==1
+  mutacion: '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo'  ->  '    return prefijo[:NOMBRE_INSTANEA_MAXIMO] + ".md"'
+  grupo -k: (dos_publicaciones_del_mismo_plan or tercer_titulo_de_prefijo_comun)
+  intacta sha 96fe9257eddb EXIT=0 | 2 passed, 41 deselected
+  mutada  sha ee8c349e48c1 EXIT=1 | 2 failed, 41 deselected
+  asercion que pierde: `assert len(nombres) == len(set(nombres)) == 2` -> `assert 2 == 1` (dos entradas, un solo
+        nombre distincto) y la segunda copia pisa los bytes de la primera
+  restauracion por sha256: True
+
+[M2-huella-fuera-del-nombre]  ancla unica count(old)==1
+  mutacion: '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo'  ->  '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + ".md"'
+  grupo -k: (huella_del_nombre_es_el_sha256 or conserva_el_prefijo_legible)
+  intacta sha 96fe9257eddb EXIT=0 | 2 passed, 41 deselected
+  mutada  sha 7aee42c9d04a EXIT=1 | 2 failed, 41 deselected
+  asercion que pierde: `assert entrada["instanea"].endswith("--" + entrada["sha256"][:vw.HUELLA_INSTANEA] + ".md")`
+        -> `assert False` con el nombre `PLAN-A-2026-09-01--10-analisis_PLAN-A_cierre_v2_.md`, y en el otro diente
+        la misma `endswith` del nombre contra `--<huella>.md`
+  restauracion por sha256: True
+
+[M3-parseo-como-JSON]  ancla unica count(old)==1
+  mutacion: el cuerpo de `fuente_id_de_tabla()` (bucle `Key: value`) -> `json.loads(output).get("id", "")`
+  grupo -k: (puebla_fuente_id_en_la_rama_explicita or rama_por_defecto or respuesta_json)
+  intacta sha 96fe9257eddb EXIT=0 | 3 passed, 40 deselected
+  mutada  sha db98df5103dc EXIT=1 | 3 failed, 40 deselected
+  asercion que pierde: `assert entrada["fuente_id"] and vw.ID_RE.match(entrada["fuente_id"]), "la entrada nace
+        con su id"` -> `assert ('')` en las dos ramas (la tabla real no es JSON), y en el diente contrario
+        `assert "id no capturado" in salida` porque un parser de JSON si captura el id de la respuesta fabricada
+  restauracion por sha256: True
+  NOTA DE INSTRUMENTO: la primera corrida de este mutante salio `EXIT=4` en los dos lados porque la expresion -k
+        llevaba la conjuncion en espanol ('o' en lugar de 'or') y pytest no ejecuto nada. El par rojo/verde no
+        distingue ese caso (los dos lados "fallan"), y lo que lo detecta es exigir que el lado INTACTO salga
+        `EXIT=0`. Corregido y re-corrido; es la segunda corrida del arnes y se declara con su motivo.
+
+[M4-resubir-ante-parseo-fallido]  ancla unica count(old)==1
+  mutacion: `    if not fuente_id:
+        print("[AVISO] id no capturado:`  ->  se inserta `upload_source(notebook_id, origen, titulo)` antes del aviso
+  grupo -k: (tabla_degenerada_declara_id_no_capturado or censo_que_no_responde or censo_que_no_la_ve)
+  intacta sha 96fe9257eddb EXIT=0 | 3 passed, 40 deselected
+  mutada  sha a9713f852345 EXIT=1 | 3 failed, 40 deselected
+  asercion que pierde: `assert len(falso.subidas) == 1, "una segunda subida ante parseo fallido es el duplicado
+        que DA-CIM.3 prohibe"` -> `assert 2 == 1`, con las dos tuplas registradas por el doble
+        `('10-analisis: PLAN-A (cierre v2)', b'# cuerpo con tabla sin id\n')`
+  restauracion por sha256: True
+
+[M5-fuente_id-en-una-sola-rama]  ancla unica count(old)==1
+  mutacion: en la rama por defecto, el argumento `out` de `publicar_en_registro(...)` -> la cadena vacia
+  grupo -k: fuente_id_tambien_en_la_rama_por_defecto
+  intacta sha 96fe9257eddb EXIT=0 | 1 passed, 42 deselected
+  mutada  sha fe8ab60df077 EXIT=1 | 1 failed, 42 deselected
+  asercion que pierde: `assert entrada["fuente_id"] and vw.ID_RE.match(entrada["fuente_id"]), "la otra rama no
+        puede seguir entregando la cadena vacia"` -> `assert ('')`
+  restauracion por sha256: True
+
+SENSIBILIDAD DEMOSTRADA: 5 de 5 (cada mutante con su intacta en EXIT=0 y su mutada en EXIT=1).

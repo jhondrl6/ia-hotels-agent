@@ -1,0 +1,9 @@
+CONTROL DEL MONTAJE AISLADO
+comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q
+cwd: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount  (copia de scripts/ y tests/, nunca el worktree vivo)
+sha256 copia script: 96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+sha256 script vivo : 96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+EXIT=0
+
+...........................................                              [100%]
+43 passed in 0.85s

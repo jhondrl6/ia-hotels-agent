@@ -1,0 +1,68 @@
+MUTANTE M1-slug-al-prefijo-truncado
+descripcion: devolver el nombre al prefijo trancado a 120 caracteres, sin huella al final
+montaje: C:\Users\Jhond\Github\iah-cli\temp\mutantes_a2\mount (copia; el worktree vivo no se toco)
+seleccion -k: (dos_publicaciones_del_mismo_plan or tercer_titulo_de_prefijo_comun)
+ancla unica: count(old) == 1 (exigido 1)
+
+[A] COPIA INTACTA   sha256=96fe9257eddbae8e7e441cf8f26d0c485039e956c051e3b15b307812b3dc0ae9
+    comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest tests/test_validate_qmind_writeback_escritura.py -q -k '(dos_publicaciones_del_mismo_plan or tercer_titulo_de_prefijo_comun)'
+    EXIT=0
+    | ..                                                                       [100%]
+    | 2 passed, 41 deselected in 0.30s
+
+[B] COPIA MUTADA   sha256=ee8c349e48c14fd3566427cb67e462f9955660f42cbbc69a719d13e3aa5943b7
+    mutacion: '    return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo'  ->  '    return prefijo[:NOMBRE_INSTANEA_MAXIMO] + ".md"'
+    EXIT=1
+    | FF                                                                       [100%]
+    | ================================== FAILURES ===================================
+    | ___ test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos ____
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1650/test_dos_publicaciones_del_mis0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1650/test_dos_publicaciones_del_mis0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028E44A5F100>
+    | 
+    |     def test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos(vw, montaje, monkeypatch):
+    |         """AC3 con la forma que perdio los bytes del padre: dos titulos de prefijo comun y cuerpo distinto.
+    |     
+    |         La asercion que pierde con el slug viejo es la de los **bytes propios** de cada entrada, no la
+    |         existencia del archivo: con el prefijo trancado a 120 caracteres las dos publicaciones compartian
+    |         nombre y la segunda copia pisaba a la primera.
+    |         """
+    |         m = montaje
+    |         una, dos = _copia(vw, m, 1, "# cuerpo de la primera publicacion\n"), _copia(vw, m, 2, "# cuerpo de la segunda\n")
+    |         _subir_explicito(vw, m, QmindFalso([], {}), TITULO_LARGO_1, una, monkeypatch)
+    |         _subir_explicito(vw, m, QmindFalso([], {}), TITULO_LARGO_2, dos, monkeypatch)
+    |         datos = vw.cargar_registro(m["registro"])
+    |         nombres = [e["instanea"] for e in datos["entradas"]]
+    | >       assert len(nombres) == len(set(nombres)) == 2
+    | E       AssertionError: assert 2 == 1
+    | E        +  where 2 = len(['PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'])
+    | E        +  and   1 = len({'PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'})
+    | E        +    where {'PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'} = set(['PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'])
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:789: AssertionError
+    | _____ test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores ______
+    | 
+    | vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\temp\\mutantes_a2\\mount\\scripts\\validate_qmind_writeback.py'>
+    | montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1650/test_un_tercer_titulo_de_prefi0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1650/test_un_tercer_titulo_de_prefi0')}
+    | monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000028E44A5D5B0>
+    | 
+    |     def test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores(vw, montaje, monkeypatch):
+    |         """AC3: tres publicaciones seguidas del mismo plan dejan tres archivos, no tres punteros a uno."""
+    |         m = montaje
+    |         copias = tuple(_copia(vw, m, i, f"# cuerpo {i}\n") for i in (1, 2, 3))
+    |         for titulo, copia in zip((TITULO_LARGO_1, TITULO_LARGO_2, TITULO_LARGO_3), copias):
+    |             _subir_explicito(vw, m, QmindFalso([], {}), titulo, copia, monkeypatch)
+    |         datos = vw.cargar_registro(m["registro"])
+    | >       assert len({e["instanea"] for e in datos["entradas"]}) == 3
+    | E       AssertionError: assert 1 == 3
+    | E        +  where 1 = len({'PLAN-A-2026-09-01--10-analisis_PLAN-A-2026-09-01_cierre_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.md'})
+    | 
+    | tests\test_validate_qmind_writeback_escritura.py:804: AssertionError
+    | =========================== short test summary info ===========================
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_dos_publicaciones_del_mismo_plan_dejan_dos_byte_exactos_distintos
+    | FAILED tests\test_validate_qmind_writeback_escritura.py::test_un_tercer_titulo_de_prefijo_comun_tampoco_pisa_los_anteriores
+    | 2 failed, 41 deselected in 0.27s
+
+restauracion verificada por sha256 (copia == intacta otra vez): True
+SENSIBILIDAD DEMOSTRADA: True

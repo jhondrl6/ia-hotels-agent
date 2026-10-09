@@ -50,7 +50,7 @@ huésped no contable se emite en el bloque `DUPLICADO-VIGENTE` de `verificar_con
 **Fuente única de la serie:** las **ocho** decisiones de la preparación, con su rationale y sus alternativas
 rechazadas, están estructuradas en `10-analisis-post-implementacion.md` §Decisiones Arquitectónicas como
 `DA-CIM.1`…`DA-CIM.8`. Aquí se enuncian las que fijan alcance, con los mismos números. A esas ocho se sumaron el
-2026-10-08 **dos decisiones del operador**, `DA-CIM.9` y `DA-CIM.10` (abajo, al final de este §2): no son filas de
+2026-10-08 **dos decisiones del operador**, `DA-CIM.9` y `DA-CIM.10` (abajo, al final de este §2), y al cerrar FASE-A2 su **decisión de diseño propia**, `DA-CIM.11` (el esquema de nombres de la instantánea, que es lo que un humano ve en disco): no son filas de
 aquella tabla —la preparación no las dictó y el censo de la enmienda no la incluye— y por eso el índice del corpus
 las publica como *citadas sin definición*, un estado explícito del escritor y no un rojo. Su fuente canónica es este
 §2 más el contrato §R2 para el presupuesto y el prompt de A3 para el bloque huésped. La serie propia de seguimientos
@@ -126,6 +126,14 @@ la fila de §3 de este maestro; las dos reglas c2 que se adoptan con ella viven 
 (aceptar checkpoints: el número deja de ser señal). La cláusula «un exceso produce checkpoint y fase INCOMPLETA, no
 una segunda fase» queda intacta, y **FASE-C no está nombrada** en la decisión: se queda con 60 hasta que el operador
 la cite si B la abre.
+
+**DA-CIM.11 (decisión de FASE-A2, 2026-10-08): el nombre de la instantánea es `<plan>--<título-saneado>--<huella>.md`**
+y se arma en `slug_de_instantanea()`. Se enuncia aquí porque define lo que un humano ve en `instantaneas/`; su
+rationale y sus alternativas rechazadas viven en `10-analisis-post-implementacion.md` §Decisiones Arquitectónicas.
+La huella son los 16 primeros hexádigitos del `sha256` que la entrada declara y va **al final**, con el presupuesto
+de `NOMBRE_INSTANEA_MAXIMO` (120) reservado desde ese extremo para que el recorte caiga siempre sobre el prefijo.
+Consecuencias que el diseño busca y comprueba por diente: dos publicaciones del mismo plan dejan dos byte-exactos
+distintos, un tercer título de prefijo común tampoco pisa, y ningún nombre generado puede ser `README.md`.
 
 **Fuera de alcance, declarado:** `[18/18]` y su invocación sin `--strict` (deuda S-2 del hermano, maestro §5);
 la limpieza retroactiva de las fuentes duplicadas de `TRIBUNAL-OFFLINE-2026-09-09` (S-4 del hermano); la edición

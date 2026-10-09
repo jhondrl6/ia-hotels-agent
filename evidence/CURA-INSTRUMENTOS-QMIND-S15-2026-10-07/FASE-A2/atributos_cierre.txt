@@ -1,0 +1,88 @@
+# ATRIBUTOS DE CIERRE FASE-A2 - corridos sobre el arbol de trabajo (la fase NO commiteo)
+# tip al abrir: 083e6ab204b5d56d682224db761ed80bccb47b52 (= git ls-remote origin refs/heads/master medido al abrir)
+== 1. git diff --name-only 083e6ab -- .opencode/qmind-writeback/registro.json (esperado: vacio) ==
+-- cero lineas arriba
+
+== 2. git diff --name-only 083e6ab -- .opencode/qmind-writeback/ (desviacion declarada: 1 ruta) ==
+.opencode/qmind-writeback/instantaneas/README.md
+
+== 3. ls -1 .opencode/qmind-writeback/instantaneas/ | wc -l (esperado 2) ==
+2
+
+== 4. fuga de enlaces firmados: grep -cE del patron de object storage, ARMADO por printf para que este crudo no lo contenga literal (esperado 0 en todos) ==
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/00-registro-de-fase.md:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/atributos_cierre.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/barrido_codepoints.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/indice_escritor.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/montaje-control-seleccion-completa.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M1-slug-al-prefijo-truncado.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M2-huella-fuera-del-nombre.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M3-parseo-como-JSON.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M4-resubir-ante-parseo-fallido.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M5-fuente_id-en-una-sola-rama.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-resumen.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/quick_cierre.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/registry_fase_a2.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/registry_fase_enmienda.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/tests_baseline_post.txt:0
+evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/tests_baseline_pre.txt:0
+
+== 5. def test_ en el tip al abrir / en el arbol (esperado 31 / 43) ==
+083e6ab:tests/test_validate_qmind_writeback_escritura.py:31
+43
+
+== 6. git rev-list --count 58dc034..HEAD (rango cubierto por la L3) ==
+8
+
+== 7. censo DA-CIM.9 / DA-CIM.10 en HEAD (el mandato espera 8 y 6, sin mover) ==
+8
+6
+
+== 8. REGISTRY: cabecera y orden de las dos filas ==
+3:> **Ultima actualizacion:** 2026-10-08
+5:> **Total fases completadas:** 518
+12034:## FASE-ENMIENDA - 2026-10-08
+12056:## FASE-A2 - 2026-10-08
+
+== 9. git rev-list --count origin/master..HEAD (0: no hubo commit ni push) ==
+0
+
+== 10. ls-remote vs rev-parse ==
+083e6ab204b5d56d682224db761ed80bccb47b52	refs/heads/master
+083e6ab204b5d56d682224db761ed80bccb47b52
+
+== 11. rutas propias tocadas, sin los 13 ajenos ==
+32
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/01-plan-maestro.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/06-checklist-implementacion.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/09-documentacion-post-proyecto.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md
+ M .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md
+ M .opencode/qmind-writeback/instantaneas/README.md
+ M CHANGELOG.md
+ M docs/GUIA_TECNICA.md
+ M docs/contributing/.last_doc_phase.json
+ M docs/contributing/REGISTRY.md
+ M scripts/validate_qmind_writeback.py
+ M tests/test_validate_qmind_writeback_escritura.py
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/00-registro-de-fase.md
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/atributos_cierre.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/barrido_codepoints.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/indice_escritor.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/montaje-control-seleccion-completa.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M1-slug-al-prefijo-truncado.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M2-huella-fuera-del-nombre.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M3-parseo-como-JSON.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M4-resubir-ante-parseo-fallido.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-M5-fuente_id-en-una-sola-rama.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/mutantes-resumen.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/quick_cierre.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/registry_fase_a2.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/registry_fase_enmienda.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/tests_baseline_post.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-A2/tests_baseline_pre.txt
+EXIT_ATRIBUTOS=0
