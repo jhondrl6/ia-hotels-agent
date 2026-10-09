@@ -111,6 +111,7 @@ Contrafactuales ejecutados (crudo `04-crudo-controfactuales-y-anclas.txt`):
 | `05-cuenta-publicada-vs-cuenta-al-cerrar.txt` | el hallazgo: 145 publicado contra 158 real, y 2 llamadas contra 4 |
 | `06-crudo-cura-b2-1e-y-gates.txt` | los dientes del corte nuevo, su contrafactual M3, el conteo canónico y los dos gates |
 | `07-crudo-atribucion-de-los-dos-rojos.txt` | los dos rojos de la suite grande: el de packs (preexistente, dueño `5249aed`) y el de colección, con su disparador nombrado y su mecanismo medido |
+| `08-crudo-sello-commit-y-gate.txt` | el commit `ec69570`, el gate re-apuntado visto desde HEAD, el quick gate en 13/13 y la paridad antes del push |
 
 Comando con el que se re-emiten `01-` y `02-` (una línea, ejecutado en esta sesión; la segunda corrida
 dio el mismo sha256 en los dos archivos, o sea la re-emisión es byte a byte):
@@ -139,8 +140,7 @@ re-publicarlo (cobrado en la ronda del 2026-10-05: 132 a 137 y EXIT 3).
 - No escribió en `REGISTRY.md`. El registro de fases lo escribe `scripts/log_phase_completion.py` al
   cerrar, y esta hoja aún no está cerrada documentalmente.
 - No corrió `build_lesson_index.py` ni `sync_versions.py`: no hay lección nueva ni versión que mover.
-- No commiteó ni empujó. No llamó a ninguna API: toda la sesión es offline y el guard de sockets del
-  `conftest.py` estuvo armado.
+- No llamó a ninguna API: toda la sesión es offline y el guard de sockets del `conftest.py` estuvo armado. ⟦Sello del commit `ec69570` (2026-10-09): el «No commiteó» de esta viñeta quedó vencido por autorización escrita del operador; el push es acto aparte y se estampa al medirse.⟧
 - No tocó `modules/providers/llm_provider.py`, `requirements.txt` ni `VERSION.yaml`.
 
 ## Los cinco cortes, medidos
@@ -152,6 +152,7 @@ re-publicarlo (cobrado en la ronda del 2026-10-05: 132 a 137 y EXIT 3).
 | El unico rojo del gate no es de esta sesion | **ATRIBUIDO** | `[13/13] Briefing Packs` DIVERGE por `04-contrato-ejecucion.md` del hermano VERIFICADOR-CONTEXTO: el pack versionado espera `39c8b094489b3703ddd707d3` y el arbol del commit trae `1065b1c744b65d54`. Medido con `git show HEAD~4:<ruta>` (39c8b094) contra `git show HEAD:<ruta>` (1065b1c7); la movio `5249aed` (chore de archivado del 07-08) sin re-corrida de packs. Dueño: la tanda que archivo, no esta cura |
 | Cierre documental | **NO HECHO, a proposito** | no se estampan las filas B2-1/B2-1c del `10-analisis` (esa hoja vive publicada en QMind: cada edicion obliga a re-verificar por descarga + sha256 y suma una fuente, 59 → 60), no se escribio leccion nueva, no se toco `REGISTRY.md`, no se movio `AGENTS.md`. Nota de instrumento: `validate_governance_numbers.py` dio **[SIN-HALLAZGOS]** con los 24 tests ya en el arbol, asi que ninguna cifra publicada quedo desfasada por esta sesion |
 | Listo para revision / espera de autorizacion | **AQUI** | el `git commit` no es condicion de ninguno de los cortes anteriores; queda en manos del operador |
+| Commiteado | **HECHO tras destrabar el gate** | `ec69570`, 19 rutas, los 8 checks del hook verdes; el push queda como acto aparte |
 
 ### Hallazgo sobre REL-5 (no curado aquí, con dueño)
 
@@ -166,9 +167,30 @@ orden**: con los dos archivos en orden invertido también cae. La cura hermétic
 REL-5 está declarada terminal por decisión del operador y abrir aquí su sesión excedía este mandato.
 Crudo: `07-`.
 
+## Sello del commit ec69570 (2026-10-09)
+
+Lleva 19 rutas: el runner curado, las dos baterías, los 8 artefactos de esta hoja, `wiring_report.json`
+re-publicado, los 5 packs regenerados del hermano, el hook versionado y sus dos dientes nuevos.
+2089/80 líneas. `git show --stat` en crudo `08-`.
+
+**Lo que hubo que destrabar para poder commitear.** El gate `[8/8]` corría
+`verify_packs_in_committed_tree.py` con su default `--rev HEAD`, y en un pre-commit HEAD es el **padre**
+del commit que se intenta. Como `5249aed` movió la fuente proyectada sin sus derivados, HEAD estaba
+divergente: el gate cortaba **todo** commit del repo, y el commit que repara esa divergencia no podía
+aprobarse a sí mismo. Medido en el árbol staged: `--rev HEAD` → DIVERGE/EXIT 1, y el mismo verificador
+sobre el índice → **5/5 reproducidos, 0 divergentes, EXIT 0**. El hook ahora materializa el árbol del
+índice (`git write-tree` + `git commit-tree -p HEAD`) y, si eso falla, cae a HEAD **con aviso impreso**;
+no se apaga ningún corte. Dos dientes nuevos en `tests/test_hook_precommit_packs_check.py` (8 passed en
+total) con su mutante, y el hook reinstalado con `install_git_hooks.py` (el test de identidad instalado≡
+versionado es el que obliga a reinstalar).
+
+Consecuencia verificada después del commit: `verify_packs_in_committed_tree.py` en su default da
+**5/5 reproducidos en HEAD** y `run_all_validations.py --quick` vuelve a **13/13**. El repo queda
+commiteable para cualquier tanda, que es lo que este gate no podía hacer desde `5249aed`.
+
 ## Cola de autorizaciones (cada una con su puerta, no se infieren entre si)
 
-1. **Commitear la tanda** (9 rutas: `scripts/evaluate_jev_pilot.py`, la bateria nueva de B2-1,
+1. **Commitear la tanda** — **HECHO en `ec69570`** (19 rutas: `scripts/evaluate_jev_pilot.py`, la bateria nueva de B2-1,
    `test_jev_pilot_run_guards.py` con los dientes de B2-1e, los 7 artefactos de esta carpeta y
    `.opencode/wiring_report.json` re-publicado). Ojo: el indice tiene ademas 13 rutas ajenas stageadas
    por un tercero a las 10:43:35 de hoy (`briefing/` del REFACTOR-WHATSAPP y un `captura_stdout.txt`);

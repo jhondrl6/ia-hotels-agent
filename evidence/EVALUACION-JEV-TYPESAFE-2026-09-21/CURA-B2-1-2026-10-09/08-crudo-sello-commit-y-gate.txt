@@ -1,0 +1,31 @@
+# crudo 08: sello del commit ec69570 y el gate re-apuntado
+
+## el commit
+ec69570 fix(jev): cura B2-1/B2-1c/B2-1e en el runner y re-apunta el gate de packs al arbol del indice
+ .../briefing/FASE-A.md                             |  24 +-
+ .../briefing/FASE-B.md                             |  22 +-
+ .../briefing/FASE-C.md                             |  30 +-
+insertiones: 2089 supresiones: 80 | archivos: 19
+
+## [8/8] del hook, sobre el arbol del indice en el pre-commit
+packs en el arbol f860c0c (indice de ese commit): 5/5 reproducidos, 0 divergentes, 0 no evaluables -> EXIT 0
+
+## HEAD ya commiteado, con el verificador en su default
+[OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+## gate completo
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+
+## dientes del hook
+8 passed in 0.07s
+
+## bateria del piloto en HEAD
+173 passed in 2.02s
+
+## lo ajeno, sin tocar
+13
+rutas del REFACTOR-WHATSAPP siguen staged y excluidas del commit (pathspec)
+
+## paridad antes del push
+1	0
