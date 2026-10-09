@@ -1,0 +1,14 @@
+# verificacion sobre el ARBOL DEL COMMIT (L-VCF-15)
+# clon: git clone --no-checkout . temp/post_commit_a2 + core.autocrlf=input + core.longpaths=true + checkout HEAD
+# HEAD del clon: 395f606a48b5277a21a10656ad12bf2d9b845444
+
+...........................................                              [100%]
+43 passed in 0.83s
+EXIT_SELECCION=0
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=353 commit=11 sin_fuente=0
+EXIT_INDICE_CHECK=1
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------

@@ -1,0 +1,21 @@
+# diagnostico del rojo [6/8] en el arbol del commit
+# hipotesis: el par derivado se genera de un corpus que incluye 12 rutas UNTRACKED (briefing/FASE-*.md del plan padre, S-CIM-7),
+#   que el commit no lleva; por eso el --check casa en el worktree y no en el clon.
+
+== --check en el clon, antes de nada ==
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=353 commit=11 sin_fuente=0
+EXIT_ANTES=1
+== censo de rutas escaneadas en cada arbol ==
+worktree .md bajo .opencode/plans: 410
+clon     .md bajo .opencode/plans: 398
+== copio los 12 briefing ajenos al clon (solo lectura hacia el clon; el worktree no se toca) ==
+copiados: 12
+== --check en el clon, ahora con los briefing ==
+[OK] Índice de lecciones fresco (364 IDs)
+[fechas] nombre=353 commit=11 sin_fuente=0
+EXIT_DESPUES=0
+== y la seleccion otra vez en el clon ==
+...........................................                              [100%]
+43 passed in 0.67s

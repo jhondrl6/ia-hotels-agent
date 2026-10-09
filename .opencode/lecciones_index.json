@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 449,
-    "ids_con_definicion": 364,
+    "ids_con_definicion": 365,
     "ids_citados_sin_definicion": 93,
     "fechas_por_fuente": {
-      "nombre": 353,
+      "nombre": 354,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1695,6 +1695,20 @@
       "id": "L-CIM.7",
       "familia": "L",
       "enunciado": "El par rojo/verde de un mutante no detecta un arnés roto: si la selección no se ejecuta, los dos lados «fallan» igual. Lo que distingue el caso es exigir que el lado intacto salga EXIT=0, no que los lados difieran. — La primera corrida del arnés de A2 registró M3 con EXIT=4 en copia intacta y en copia mutada porque la expresión -k llevaba la conjunción en español (o en lugar de or) y pytest no recolectó nada. Un resumen que solo compara «cayó / no cayó» lo habría contado como mutante demostrado; lo que lo desmintió fue la línea de recuento del lado intacto, que ahora viaja archivada en cada crudo del par",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.8",
+      "familia": "L",
+      "enunciado": "Un derivado cuya poblacion incluye rutas untracked no es reproducible desde el arbol del commit: el hook [6/8] mide el worktree, asi que un commit puede llevar un par que su propio arbol no regenera. — Al verificar FASE-A2 sobre el arbol commiteado (L-VCF-15) la seleccion dio 43 passed y el --check del indice salio EXIT=1 en el clon, verde en el worktree. Causa medida por experimento, no por hipotesis: el clon cuenta 398 .md bajo .opencode/plans y el worktree 410; la diferencia son los doce briefing/FASE-*.md ajenos que el maestro parrafo 5 (S-CIM-7) excluye de todo commit, y esos doce entran en la poblacion del derivado. Copiados al clon, el mismo --check volvio EXIT=0. No lo introdujo esta fase y no se tapa regenerando a la baja: queda declarado con dueño (operador / gobierno del hook)",
       "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -4209,7 +4223,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 45,
+      "total_citas": 46,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
@@ -5888,6 +5902,14 @@
       ]
     },
     {
+      "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-E2E-4",
       "familia": "S",
       "total_citas": 5,
@@ -5927,14 +5949,6 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-CIM-7",
-      "familia": "S",
-      "total_citas": 4,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
