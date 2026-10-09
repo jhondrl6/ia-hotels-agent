@@ -1,0 +1,46 @@
+# crudo 07: los dos rojos de la suite grande, atribuidos por medicion
+
+## (1) [13/13] briefing packs: preexistente, dueno = la tanda del archivado
+comandos:
+  git show HEAD~4:.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md | sha256  -> 39c8b094489b3703ddd707d3
+  git show HEAD:.../04-contrato-ejecucion.md | sha256                                                                 -> 1065b1c744b65d54b671d897
+  el pack versionado espera 39c8b094489b3703... (eso es lo que imprime DIVERGE)
+commit que movio la nota: 5249aed chore(context): archivar tres contextos cerrados en Historico y re-anclar 14 refs
+estado git de esa ruta por esta sesion: limpio (`git status --porcelain -- <ruta>` vacio)
+
+## (2) el rojo de coleccion: RE-ATRIBUIDO, no es solo "orden"
+test: tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+esperaba CredencialAusente y obtuvo RedProhibida (o sea: el brazo si intento el envio).
+
+Mediciones, en orden:
+  pytest <el archivo solo>                                   -> 15 passed
+  pytest decision_client + jev_pilot                         -> 268 passed
+  pytest quality_gates --ignore=jev_pilot                    -> 965 passed  (el rojo vive en jev_pilot, necesita ademas un archivo raiz)
+  pytest $(ls quality_gates/*.py) + jev_pilot                -> 1 failed, 506 passed   <-- reproduce
+  biseccion sobre los 26 archivos raiz (subconjuntos)        -> acota a UNO: tests/quality_gates/test_fase_d_veredicto_canonico.py
+  pytest test_fase_d_veredicto_canonico.py + el archivo deepseek  -> 1 failed, 47 passed
+  pytest con el ORDEN INVERTIDO                              -> 1 failed, 47 passed  (no depende del orden: depende de que ambos corran en el mismo proceso)
+
+Mecanismo medido (sin imprimir valores):
+  python -c "import os; print('DEEPSEEK_API_KEY' in os.environ)"                                  -> False
+  python -c "import os; import main; print('DEEPSEEK_API_KEY' in os.environ)"                     -> True
+  main.py:11 `from dotenv import load_dotenv`, main.py:17 `load_dotenv(env_path)`
+El disparador importa `from main import (...)` (linea 23 del archivo), y `main` carga `.env` en
+`os.environ` al importarse. El test del brazo esta escrito sobre la premisa "no hay credencial", que el
+import de otro modulo del mismo proceso rompe. Con la clave leida, el brazo no falla por credencial y
+si intenta enviar: salta el guard de sockets del conftest y la excepcion cambia de nombre.
+
+Consecuencia para REL-5: la fila del TAT dice "rojo dependiente del orden de coleccion" y su criterio
+D5 es "suite completa en verde sin rebajar aserciones". Medido hoy, el disparador es **un nombre** y el
+mecanismo es **dotenv en el import de `main`**, no una casualidad de orden. La cura hermetica cabe en una
+linea (borrar las credenciales de `os.environ` en un fixture autouse de la seleccion, o `monkeypatch.delenv`
+en el test), pero **no se aplico en esta sesion**: REL-5 esta declarada terminal por decision del
+operador y abrirla aqui excede el mandato de B2-1/B2-1c/B2-1e.
+
+## (3) que NO es de esta sesion, medido por posicion de coleccion
+comando: pytest tests/quality_gates -q --collect-only
+  posicion del rojo              : linea 150
+  primer test de la bateria B2-1 : linea 207
+  primer test de run_guards      : linea 267
+Nada de lo agregado aqui corre aguas arriba del rojo. Ademas `scripts/proveedores/deepseek.py` no
+importa `evaluate_jev_pilot` (grep = 0), asi que la cura del runner no esta en su camino.

@@ -278,6 +278,11 @@ def reservar_presupuesto(cuenta: dict, limites: dict) -> dict:
     llamada ante un 429 y esos intentos no estan en el ledger. Un techo de tokens en null solo se
     admite con su autorizacion declarada, porque la corrida que mide el techo no puede exigir el
     techo que todavia no existe.
+
+    B2-1e: un techo por llamada **ya rebasado** en la cuenta corta el siguiente envio. El exceso del
+    intento N no se pudo predecir antes de N (los tokens se conocen despues), pero maestro §115 manda
+    detener cuando la contabilidad ya no acota: seguir enviando con el techo roto acumularia gasto
+    contra un presupuesto que el protocolo declara agotado.
     """
     motivos: list[str] = []
     llamadas = limites.get("llamadas")
@@ -294,12 +299,23 @@ def reservar_presupuesto(cuenta: dict, limites: dict) -> dict:
     if not isinstance(timeout, (int, float)) or isinstance(timeout, bool) or timeout <= 0:
         motivos.append("timeout_ausente")
     autorizacion = limites.get("autorizacion_de_null") or {}
-    for clave in ("tokens_in", "tokens_out"):
-        if limites.get(clave) is None and not autorizacion.get("declarada"):
+    exceso_observado = []
+    for clave, campo in (("tokens_in", "tokens_in_max"), ("tokens_out", "tokens_out_max")):
+        techo = limites.get(clave)
+        if techo is None and not autorizacion.get("declarada"):
             motivos.append(f"techo_de_{clave}_sin_declarar")
+        observado = cuenta.get(campo)
+        # comparacion de tipo y valor: un `True` en la cuenta no es un token de 1 (el guard viejo
+        # tragaba `1 == True`), y un techo null no tiene con que comparar.
+        if (isinstance(techo, int) and not isinstance(techo, bool)
+                and isinstance(observado, int) and not isinstance(observado, bool)
+                and observado > techo):
+            motivos.append(f"techo_rebasado_de_{clave}:{observado}>{techo}")
+            exceso_observado.append({"campo": clave, "techo": techo, "observado": observado})
     restantes = (llamadas - usadas) if (isinstance(llamadas, int)
                                          and isinstance(usadas, int)) else None
-    return {"reservado": not motivos, "motivos": motivos, "llamadas_restantes": restantes}
+    return {"reservado": not motivos, "motivos": motivos, "llamadas_restantes": restantes,
+            "exceso_observado": exceso_observado}
 
 
 def registrar_intento(ledger: dict, *, resultado: str, excepcion=None, usage=None,
@@ -974,6 +990,139 @@ def latencias_por_brazo(filas_brazo: list) -> dict:
                     "de respuesta; se publica aparte con esa etiqueta"}
 
 
+ESTADOS_USAGE_OBSERVADOS = ("observado", "parcial")
+CAMPOS_DE_USAGE = (("input", "input_tokens", "tokens_in"),
+                   ("output", "output_tokens", "tokens_out"))
+
+
+def _entero_o_none(valor):
+    return valor if isinstance(valor, int) and not isinstance(valor, bool) else None
+
+
+def _numero_o_none(valor):
+    return valor if (isinstance(valor, (int, float)) and not isinstance(valor, bool)) else None
+
+
+def columna_de_tokens(filas_brazo: list, campo: str) -> dict:
+    """Una columna de tokens observados, por campo, sin convertir la ausencia en cero.
+
+    `n_observaciones` es el denominador de la columna: una fila con `estado` sin_usage o desconocido
+    hizo un envio y no dejo medida, asi que se cuenta aparte y no se suma como cero.
+    """
+    valores, observadas, sin_medida = [], 0, {}
+    for fila in filas_brazo:
+        uso = fila.get("usage_normalized") or {}
+        entero = _entero_o_none(uso.get(campo))
+        estado = str(uso.get("estado") or "sin_estado")
+        if estado not in ESTADOS_USAGE_OBSERVADOS:
+            sin_medida[estado] = sin_medida.get(estado, 0) + 1
+            continue
+        observadas += 1
+        if entero is not None:
+            valores.append({"pair_id": fila.get("pair_id"), "valor": entero})
+    return {"suma": sum(v["valor"] for v in valores) if valores else None,
+            "maximo_por_llamada": max((v["valor"] for v in valores), default=None),
+            "n_observaciones": len(valores), "n_filas_con_envio": observadas,
+            "filas_sin_medida_por_estado": dict(sorted(sin_medida.items())),
+            "valores_por_fila": valores}
+
+
+def contabilidad_de_coste(filas_brazo: list, protocolo: dict) -> dict:
+    """AC4 en tres columnas separadas y el veredicto de exceso contra los techos (deuda B2-1/B2-1c).
+
+    Tokens observados, coste calculado y cargo facturado son preguntas distintas: ninguna se deriva
+    de las otras y ninguna se rellena con un cero favorable. Medido el 2026-10-09,
+    `config/provider_registry.yaml` no registra tarifa para `jev-1.13.0` ni para el brazo DeepSeek,
+    asi que `cost_calculated` sale NO-EVALUABLE con la tarifa nombrada en vez de un dolar inventado;
+    el dia que el protocolo congele `precios_por_mtok` la misma funcion lo calcula.
+    """
+    gastos = protocolo.get("limites_gasto") or {}
+    precios = gastos.get("precios_por_mtok") or {}
+    columnas = {alias: columna_de_tokens(filas_brazo, campo)
+                for alias, campo, _techo in CAMPOS_DE_USAGE}
+
+    techo_de = {"input": gastos.get("tokens_in"), "output": gastos.get("tokens_out")}
+    contra_techos, excedidos, no_evaluables = {}, [], []
+    for alias, _campo, nombre_techo in CAMPOS_DE_USAGE:
+        techo = _entero_o_none(techo_de.get(alias))
+        maximo = columnas[alias]["maximo_por_llamada"]
+        fuera = [v for v in columnas[alias]["valores_por_fila"]
+                 if techo is not None and v["valor"] > techo]
+        if techo is None:
+            veredicto, motivo = "NO-EVALUABLE", (f"`limites_gasto.{nombre_techo}` es null en el "
+                                                 "protocolo: no hay techo que rebasar")
+            no_evaluables.append(alias)
+        elif maximo is None:
+            veredicto, motivo = "NO-EVALUABLE", ("ningun envio dejo medida de este campo: la "
+                                                 "comparacion no se puede hacer con ceros")
+            no_evaluables.append(alias)
+        else:
+            veredicto, motivo = ("EXCESO" if fuera else "DENTRO"), ""
+            if fuera:
+                excedidos.append({"campo": alias, "techo": techo,
+                                  "filas": [f"{v['pair_id']}={v['valor']}" for v in fuera]})
+        contra_techos[alias] = {
+            "techo_congelado": techo, "clave_del_techo": nombre_techo,
+            "medido_maximo_por_llamada": maximo,
+            "exceso_sobre_el_techo": ((maximo - techo) if fuera else None),
+            "margen_restante_bajo_el_techo": ((techo - maximo) if (techo is not None and maximo
+                                                                    is not None and not fuera)
+                                              else None),
+            "filas_fuera_del_techo": [v["pair_id"] for v in fuera],
+            "veredicto": veredicto, "motivo": motivo,
+        }
+    if excedidos:
+        veredicto_global = "EXCESO"
+    elif no_evaluables:
+        veredicto_global = "NO-EVALUABLE"
+    else:
+        veredicto_global = "DENTRO"
+
+    precio_in = _numero_o_none(precios.get("input"))
+    precio_out = _numero_o_none(precios.get("output"))
+    if precio_in is None or precio_out is None:
+        cost_calculated = {
+            "usd": None, "estado": "NO-EVALUABLE",
+            "tarifa_por_mtok": {"input": precio_in, "output": precio_out},
+            "motivo": ("el protocolo congelado no declara `limites_gasto.precios_por_mtok` y "
+                       "config/provider_registry.yaml no tiene entrada para estos dos modelos "
+                       "(medido 2026-10-09): sin tarifa no hay coste calculable, y un cero no es "
+                       "un calculo")}
+    elif not columnas["input"]["n_observaciones"] and not columnas["output"]["n_observaciones"]:
+        cost_calculated = {
+            "usd": None, "estado": "NO-EVALUABLE",
+            "tarifa_por_mtok": {"input": precio_in, "output": precio_out},
+            "motivo": ("hay tarifa pero ningun envio dejo tokens observados: calcular sobre una suma "
+                       "vacia daria un cero que no es un coste")}
+    else:
+        cost_calculated = {
+            "usd": round((columnas["input"]["suma"] or 0) / 1e6 * precio_in
+                         + (columnas["output"]["suma"] or 0) / 1e6 * precio_out, 8),
+            "estado": "CALCULADO",
+            "tarifa_por_mtok": {"input": precio_in, "output": precio_out},
+            "base": {"suma_input": columnas["input"]["suma"],
+                     "suma_output": columnas["output"]["suma"]},
+            "motivo": ("calculado sobre las sumas observadas; las filas sin medida no entran en la "
+                       "suma y se ven en `tokens.*.filas_sin_medida_por_estado`")}
+    cobrados = [f.get("cargo_facturado") for f in filas_brazo
+                if _numero_o_none(f.get("cargo_facturado")) is not None]
+    cost_billed = {
+        "usd": (round(sum(cobrados), 6) if cobrados else None),
+        "estado": "OBSERVADO" if cobrados else "NO-OBSERVADO",
+        "n_filas_con_cargo": len(cobrados),
+        "motivo": ("" if cobrados else "ningun registro persistido trae `cargo_facturado`: el cargo "
+                                      "lo dice el proveedor, no el ledger del piloto, y sin "
+                                      "observacion la columna se declara no observada en vez de 0"),
+    }
+    return {"unidad_de_comparacion": ("maximo observado por llamada contra el techo congelado, que es "
+                                      "la unidad con la que se escribieron los techos (ver "
+                                      "`limites_gasto.motivo` del protocolo)"),
+            "filas": len(filas_brazo),
+            "tokens": {alias: columnas[alias] for alias, _c, _t in CAMPOS_DE_USAGE},
+            "contra_techos": contra_techos, "veredicto_exceso": veredicto_global,
+            "cost_calculated": cost_calculated, "cost_billed": cost_billed}
+
+
 def fallos_de_contabilidad(filas: list, protocolo: dict) -> list:
     """FALLIDO por contabilidad: filas que contradicen el presupuesto congelado del protocolo.
 
@@ -1035,6 +1184,20 @@ def senales_mecanicas(informe: dict) -> list:
                             "consecuencia": "su propuesta es el conjunto de candidatos, asi que el "
                                             "recall dentro de candidatos vale 1.0 por construccion y "
                                             "no es una comparacion de calidad entre brazos"})
+    for b in brazos:
+        coste = por_brazo[b]["contabilidad"].get("coste") or {}
+        if coste.get("veredicto_exceso") == "EXCESO":
+            senales.append({"id": "S6", "senal": f"{b}: un techo de tokens congelado se rebaso",
+                            "base": {"excedido_por": [
+                                {"campo": c, "techo": coste["contra_techos"][c]["techo_congelado"],
+                                 "medido": coste["contra_techos"][c]["medido_maximo_por_llamada"],
+                                 "exceso": coste["contra_techos"][c]["exceso_sobre_el_techo"],
+                                 "filas": coste["contra_techos"][c]["filas_fuera_del_techo"]}
+                                for c, v in sorted(coste["contra_techos"].items())
+                                if v["veredicto"] == "EXCESO"]},
+                            "consecuencia": "AC4 y AC8: el techo se paso y la corrida no lo publicaba; "
+                                            "se publica aqui y la decision de detener o seguir es del "
+                                            "operador, no del informe"})
     return senales
 
 
@@ -1080,6 +1243,7 @@ def report(*, respuestas: Path, etiquetas: Path, muestra: Path, protocolo: Path,
                 "modelos_efectivos": sorted({f.get("modelo_efectivo") for f in filas_brazo
                                              if f.get("modelo_efectivo")}),
                 "usage_por_fila": [f.get("usage_normalized") for f in filas_brazo],
+                "coste": contabilidad_de_coste(filas_brazo, protocolo_datos),
                 "request_ids": sorted({f.get("request_id") for f in filas_brazo
                                        if f.get("request_id")}),
                 "fallos_de_contabilidad": fallos_de_contabilidad(filas_brazo, protocolo_datos),

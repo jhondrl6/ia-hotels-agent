@@ -1,0 +1,7 @@
+# crudo: ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -q
+# (re-capturado tras la cura B2-1e; la version anterior decia 165)
+
+........................................................................ [ 41%]
+........................................................................ [ 83%]
+.............................                                            [100%]
+173 passed in 1.54s

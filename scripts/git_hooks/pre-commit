@@ -162,13 +162,26 @@ if [ "${CAP_EXIT:-0}" -ne 0 ]; then
 fi
 echo "[7/8] OK: Lesson capitalization PASSED"
 
-# [8/8] Packs de briefing reproducibles en el árbol commiteado (S19 — producto, no fuentes)
+# [8/8] Packs de briefing reproducibles en el arbol que este commit va a convertir en HEAD
+# (S19 — producto, no fuentes). Re-anclado 2026-10-09: el verificador corria con su default `--rev HEAD`,
+# y durante un pre-commit HEAD es el PADRE del commit que se esta intentando. Con eso, un commit que
+# repara unos packs regenerados no puede ser aprobado por el gate que los exige (medido el 2026-10-09:
+# sobre un arbol staged con 5/5 packs reproducidos y EXIT 0, `--rev HEAD` dava DIVERGE y cortaba
+# cualquier commit del repo, no solo el que traia la cura). Se evalua el arbol del INDICE, que es
+# literalmente lo que este commit va a convertir en tip. Si no se puede materializar, se cae a HEAD
+# con aviso explicito: el gate se debilita declarandose, nunca en silencio.
 echo "[8/8] Checking briefing packs in committed tree..."
-PACKS_OUT=$($PYTHON_CMD scripts/verify_packs_in_committed_tree.py 2>&1) || PACKS_EXIT=$?
+PACKS_TREE=$(git write-tree 2>/dev/null || echo "")
+PACKS_REV=$([ -n "$PACKS_TREE" ] && git commit-tree "$PACKS_TREE" -p HEAD -m "pre-commit: arbol del indice para los packs" 2>/dev/null || echo "")
+if [ -z "$PACKS_REV" ]; then
+    echo "[8/8] AVISO: no se materializo el arbol del indice; se evalua HEAD (la lectura mas debil del check)."
+    PACKS_REV=HEAD
+fi
+PACKS_OUT=$($PYTHON_CMD scripts/verify_packs_in_committed_tree.py --rev "$PACKS_REV" 2>&1) || PACKS_EXIT=$?
 echo "$PACKS_OUT"
 if [ "${PACKS_EXIT:-0}" -ne 0 ]; then
     echo ""
-    echo "FAIL: el árbol de HEAD no reproduce sus packs de briefing (EXIT ${PACKS_EXIT:-?})."
+    echo "FAIL: el arbol evaluado (${PACKS_REV:0:7}) no reproduce sus packs de briefing (EXIT ${PACKS_EXIT:-?})."
     echo ""
     echo "1 = DIVERGE: una fuente proyectada o el escritor se movieron sin sus derivados."
     echo "Es un artefacto generado: NO lo edites a mano. Regenera con la cola canónica y"

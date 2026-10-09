@@ -88,6 +88,41 @@ def test_el_hook_instalado_es_identico_al_versionado_en_esta_maquina():
         "el hook instalado diverge del versionado: python scripts/install_git_hooks.py")
 
 
+def test_el_bloque_de_packs_evalua_el_arbol_del_indice_y_no_head():
+    """El gate tiene que aprobar el arbol que este commit va a convertir en tip.
+
+    Medido 2026-10-09: con el default `--rev HEAD` del verificador, HEAD es el PADRE del commit que se
+    intenta, asi que el commit que repara unos packs regenerados no puede pasar el check que los exige,
+    y el repo entero queda sin poder commitear. La caida a HEAD existe, pero avisada: no se apaga en
+    silencio.
+    """
+    src = _texto_hook()
+    bloque = src.split("[8/8] Checking briefing packs", 1)[1].split("All checks PASSED", 1)[0]
+    assert "git write-tree" in bloque, "el bloque perdio la materializacion del arbol del indice"
+    assert "git commit-tree" in bloque and "-p HEAD" in bloque, (
+        "el arbol del indice no se convierte en commit: clon_fiel exige una revision tipo commit")
+    assert re.search(r'--rev "\$PACKS_REV"', bloque), (
+        "el verificador vuelve a correr con su default HEAD: el gate reapunta al padre del commit")
+    assert "PACKS_REV=HEAD" in bloque and "AVISO" in bloque, (
+        "la caida a HEAD dejo de declararse: un indice no materializable daria un verde debil y mudo")
+
+
+def test_mutante_sin_rev_del_indice_hace_cair_el_diente_de_apuntado():
+    """Sensibilidad del diente anterior: una copia que quita el `--rev` pierde la asercion."""
+    scratch = Path(tempfile.mkdtemp(prefix="hook-rev-mutante-"))
+    try:
+        src = _texto_hook()
+        mutado = src.replace('--rev "$PACKS_REV"', '')
+        assert mutado != src, "el hook ya no pasa --rev: no hay nada que mutar"
+        ruta = scratch / "pre-commit"
+        ruta.write_text(mutado, encoding="utf-8")
+        bloque = mutado.split("[8/8] Checking briefing packs", 1)[1].split("All checks PASSED", 1)[0]
+        assert not re.search(r'--rev "\$PACKS_REV"', bloque), (
+            "la mutacion no quito el apuntado: el diente no estaria midiendo nada")
+    finally:
+        shutil.rmtree(scratch, ignore_errors=True)
+
+
 def test_mutante_sin_invocacion_hace_cair_la_primera_diente():
     """Los dientes tienen sensibilidad: una copia sin el nombre del verificador pierde diente [1]."""
     scratch = Path(tempfile.mkdtemp(prefix="hook-mutante-"))

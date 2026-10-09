@@ -1,0 +1,24 @@
+# crudo: ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_report_coste_b2_1.py -q -k mutante or apagar or cuentan
+
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 24 items / 22 deselected / 2 selected
+
+tests/quality_gates/jev_pilot/test_jev_pilot_report_coste_b2_1.py::test_las_filas_sin_medida_se_cuentan_por_estado_no_como_cero PASSED [ 50%]
+tests/quality_gates/jev_pilot/test_jev_pilot_report_coste_b2_1.py::test_apagar_la_comparacion_contra_el_techo_pierde_el_diente PASSED [100%]
+
+====================== 2 passed, 22 deselected in 0.11s =======================
+
+# crudo: las dos anclas al arbol versionado, con el numero que la deuda no publicaba
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 24 items / 22 deselected / 2 selected
+
+tests/quality_gates/jev_pilot/test_jev_pilot_report_coste_b2_1.py::test_sobre_los_registros_versionados_de_C_los_dos_brazos_excedieron_el_techo PASSED [ 50%]
+tests/quality_gates/jev_pilot/test_jev_pilot_report_coste_b2_1.py::test_sobre_C_decide_sigue_emitiendo_decision_null PASSED [100%]
+
+====================== 2 passed, 22 deselected in 0.08s =======================

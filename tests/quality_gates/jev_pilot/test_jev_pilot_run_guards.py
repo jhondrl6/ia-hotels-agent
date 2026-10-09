@@ -471,5 +471,154 @@ def test_una_leccion_importante_ausente_de_candidatos_baja_la_recuperacion(tmp_p
     assert medida["motivo"] == "" and medida["presentes"] == []
 
 
+# ------------------------------------------------ B2-1e: el techo ya rebasado corta el siguiente envio
+
+def _limites(techo_in=1834, techo_out=139, declarada=True):
+    return {"llamadas": 12, "tokens_in": techo_in, "tokens_out": techo_out, "usd": None,
+            "max_reintentos": 0, "timeout_s": 30,
+            "autorizacion_de_null": {"declarada": declarada, "motivo": "medicion"}}
+
+
+def _cuenta(uso_in=1778, uso_out=145, llamadas=1):
+    return {"llamadas_usadas": llamadas, "intentos": llamadas, "usage_estados": [],
+            "tokens_in_max": uso_in, "tokens_out_max": uso_out}
+
+
+@pytest.fixture
+def runner_fresco_b21e():
+    """Modulo recargado por test: el mutante apaga un simbolo y no puede compartir instancia con
+    los que leen el arbol versionado (leccion del conftest de la seleccion hermana)."""
+    import importlib.util
+
+    ruta = Path(__file__).resolve().parents[3] / "scripts" / "evaluate_jev_pilot.py"
+    spec = importlib.util.spec_from_file_location("evaluate_jev_pilot_mutante_guards", ruta)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_un_techo_rebasado_en_la_cuenta_corta_el_siguiente_envio(runner):
+    """B2-1e: 145 contra el techo congelado de 139 agota la reserva ANTES del proximo intento.
+
+    Maestro §115: si la contabilidad ya no acota, la corrida se detiene. El exceso del envio N no se
+    podia predecir antes de N, pero dejar pasar el N+1 es gastar contra un presupuesto rebasado.
+    """
+    reserva = runner.reservar_presupuesto(_cuenta(), _limites())
+    assert reserva["reservado"] is False
+    assert reserva["motivos"] == ["techo_rebasado_de_tokens_out:145>139"], reserva["motivos"]
+    assert reserva["exceso_observado"] == [{"campo": "tokens_out", "techo": 139, "observado": 145}]
+    assert reserva["llamadas_restantes"] == 11, "las llamadas no se agotaron: lo que se agoto fue el techo"
+
+
+def test_el_valor_igual_al_techo_no_es_exceso(runner):
+    """Frontera `>` y no `>=`: 139 contra 139 reserva. Un `>=` cortaria una corrida legal."""
+    assert runner.reservar_presupuesto(_cuenta(uso_out=139), _limites())["reservado"] is True
+
+
+def test_techo_null_no_inventa_un_corte(runner):
+    """Sin techo no hay rebasamiento que declarar: la cuenta con 145 sigue reservando."""
+    reserva = runner.reservar_presupuesto(_cuenta(), _limites(techo_in=None, techo_out=None))
+    assert reserva["reservado"] is True
+    assert reserva["motivos"] == [] and reserva["exceso_observado"] == []
+
+
+def test_un_booleen_en_la_cuenta_no_es_un_token_de_uno(runner):
+    """El mismo error de tipo que el guard de preflight ya curó: `True` no es 1 token."""
+    cuenta = _cuenta(uso_in=None, uso_out=None)
+    cuenta["tokens_out_max"] = True
+    reserva = runner.reservar_presupuesto(cuenta, _limites(techo_out=1))
+    assert reserva["reservado"] is True, "un flag no es una medida de tokens"
+
+
+def test_los_dos_campos_rebasados_se_publican_los_dos(runner):
+    """No se corta por el primero y se olvida el segundo: la reserva nombra los dos techos rotos."""
+    reserva = runner.reservar_presupuesto(_cuenta(uso_in=2000, uso_out=145),
+                                          _limites(techo_in=1834, techo_out=139))
+    assert reserva["motivos"] == ["techo_rebasado_de_tokens_in:2000>1834",
+                                  "techo_rebasado_de_tokens_out:145>139"], reserva["motivos"]
+    assert [e["campo"] for e in reserva["exceso_observado"]] == ["tokens_in", "tokens_out"]
+
+
+def test_el_segundo_par_se_niega_cuando_el_primero_paso_el_techo(tmp_path, runner):
+    """El guard existe si alguien lo dispara: con `enviar` inyectado, el par 2 queda NO-EJERCITADO.
+
+    Poblacion a mano: dos pares (`dev,eval`), techo de salida 139, el transporte falso devuelve 145
+    en cada envio. Esperable: 1 envio, 1 fila negada con su motivo, cuenta en 1 llamada.
+    """
+    kwargs = _armar(tmp_path, runner, protocolo=_protocolo(tokens_in=1834, tokens_out=139))
+    kwargs["splits"] = "dev,eval"
+    vistos = {"llamadas": 0}
+
+    def enviar(state, questions, modelo):
+        vistos["llamadas"] += 1
+        return _payload(out=145)
+
+    resultado = runner.run(**kwargs, enviar=enviar)
+    assert resultado["status"] == "OK" and resultado["envios"] == 1
+    assert vistos["llamadas"] == 1, "el segundo par no pudo llamar al transporte"
+    assert resultado["cuenta"]["llamadas_usadas"] == 1
+    assert resultado["cuenta"]["tokens_out_max"] == 145
+    filas = [json.loads(l) for l in (tmp_path / "out" / "ledger.jsonl")
+             .read_text(encoding="utf-8").splitlines() if l]
+    assert len(filas) == 2
+    assert filas[0]["estado"] == "EJERCITADO" and filas[0]["usage_normalized"]["output_tokens"] == 145
+    assert filas[1]["estado"] == "NO-EJERCITADO"
+    assert filas[1]["motivos"] == ["techo_rebasado_de_tokens_out:145>139"], filas[1]["motivos"]
+
+
+def test_una_cuenta_persistida_con_techo_rebasado_negada_toda_la_corrida(tmp_path, runner):
+    """El corte also vive entre sesiones: `consumo.json` con 145 contra techo 139 niega el `run` entero."""
+    kwargs = _armar(tmp_path, runner, protocolo=_protocolo(tokens_in=1834, tokens_out=139))
+    out = kwargs["out_dir"]
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "consumo.json").write_text(json.dumps(_cuenta(uso_in=1778, uso_out=145, llamadas=2)),
+                                      encoding="utf-8")
+    enviados = {"n": 0}
+
+    def enviar(state, questions, modelo):
+        enviados["n"] += 1
+        return _payload(out=100)
+
+    resultado = runner.run(**kwargs, enviar=enviar)
+    assert resultado["status"] == "NEGADO" and resultado["envios"] == 0
+    assert resultado["motivos"] == ["techo_rebasado_de_tokens_out:145>139"]
+    assert enviados["n"] == 0, "NEGADO tiene que ser cero transporte, no una etiqueta"
+    assert not (out / "ledger.jsonl").exists(), "negado antes de cualquier fila"
+
+
+def test_si_el_protocolo_no_lleva_los_techos_el_corte_muere(runner_fresco_b21e, tmp_path):
+    """Contrafactual de cableado (M3): si `limites_desde_protocolo` no baja los techos, el guard es letra muerta.
+
+    Se apaga el transportador y el segundo par se envia: asi el diente de arriba prueba el corte y
+    este prueba que el corte depende del traslado, no de una casualidad del fixture.
+    """
+    import copy
+
+    def limites_ciegos(protocolo, *, autorizacion_de_null=None):
+        return {"llamadas": 12, "tokens_in": None, "tokens_out": None, "usd": None,
+                "max_reintentos": 0, "timeout_s": 30,
+                "autorizacion_de_null": {"declarada": True, "motivo": "medicion"}}
+
+    original = copy.copy(runner_fresco_b21e.limites_desde_protocolo)
+    runner_fresco_b21e.limites_desde_protocolo = limites_ciegos
+    try:
+        kwargs = _armar(tmp_path, runner_fresco_b21e,
+                        protocolo=_protocolo(tokens_in=1834, tokens_out=139))
+        kwargs["splits"] = "dev,eval"
+        vistos = {"llamadas": 0}
+
+        def enviar(state, questions, modelo):
+            vistos["llamadas"] += 1
+            return _payload(out=145)
+
+        resultado = runner_fresco_b21e.run(**kwargs, enviar=enviar)
+        assert vistos["llamadas"] == 2, "sin techos trasladados el guard no corta nada"
+        assert resultado["envios"] == 2
+    finally:
+        runner_fresco_b21e.limites_desde_protocolo = original
+    restaurado = runner_fresco_b21e.reservar_presupuesto(_cuenta(), _limites())
+    assert restaurado["reservado"] is False, "la restauracion se verifica, no se asume"
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))

@@ -1,0 +1,30 @@
+# crudo 06: CURA B2-1e - el corte por techo ya rebasado, con su par verde/rojo
+# comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py -v -k techo or par or cuenta or booleen or techos or limites
+
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_techo_de_tokens_null_sin_autorizacion_bloquea_y_conella_se_envia PASSED [ 11%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_la_segunda_corrida_en_la_misma_cuenta_para_por_presupuesto PASSED [ 22%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_un_techo_rebasado_en_la_cuenta_corta_el_siguiente_envio PASSED [ 33%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_el_valor_igual_al_techo_no_es_exceso PASSED [ 44%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_techo_null_no_inventa_un_corte PASSED [ 55%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_un_booleen_en_la_cuenta_no_es_un_token_de_uno PASSED [ 66%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_el_segundo_par_se_niega_cuando_el_primero_paso_el_techo PASSED [ 77%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_una_cuenta_persistida_con_techo_rebasado_negada_toda_la_corrida PASSED [ 88%]
+tests/quality_gates/jev_pilot/test_jev_pilot_run_guards.py::test_si_el_protocolo_no_lleva_los_techos_el_corte_muere PASSED [100%]
+====================== 9 passed, 33 deselected in 0.15s =======================
+
+# comando: ./venv/Scripts/python.exe -m pytest tests/quality_gates/jev_pilot -q
+.............................                                            [100%]
+173 passed in 1.43s
+
+# conteo canonico (funciones test)
+run_guards en HEAD  : 23
+run_guards en disco : 31
+bateria B2-1 nueva  : 24
+
+# gate
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest 65b7a629d907)
+[OK] Wiring: 174 llamadas descubiertas en 714 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=157 versionada=0, venv bruto=7610 versionada=0
+EXIT=0
+  TOTAL: 12/13 validations passed
+  STATUS: 1 VALIDATION(S) FAILED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico

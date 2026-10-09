@@ -1,0 +1,23 @@
+# crudo 05: la cuenta publicada por `run` contra la cuenta que cerro el brazo comparador
+# comando: medicion en esta sesion, leyendo los tres artefactos versionados de FASE-C
+
+techos congelados            : tokens_in=1834 tokens_out=139 llamadas=12
+consumo.json (publicado)     : llamadas_usadas=2 intentos=2 tokens_in_max=1778 tokens_out_max=145
+run_resumen.json (jev)       : {"llamadas_usadas": 2, "intentos": 2, "usage_estados": ["no_intentada"], "tokens_in_max": 1778, "tokens_out_max": 145}
+registro deepseek al ENTRAR  : {"llamadas_usadas": 2, "intentos": 2, "usage_estados": ["no_intentada"], "tokens_in_max": 1778, "tokens_out_max": 145}
+registro deepseek al SALIR   : {"llamadas_usadas": 4, "intentos": 4, "usage_estados": ["no_intentada"], "tokens_in_max": 1778, "tokens_out_max": 158}
+
+hallazgo: el artefacto que la deuda B2-1c citaba como cuenta de la corrida (consumo.json)
+trae la foto del brazo jev. La cuenta con la que cerro el brazo comparador es distinta y
+ningun artefacto de FASE-C la estampo:
+  llamadas reales al cerrar   : 4 (consumo.json dice 2)
+  tokens_out_max al cerrar    : 158 (consumo.json dice 145)
+
+exceso contra el techo de 139, medido por brazo desde el informe nuevo:
+  capa_fria  medido=None veredicto=NO-EVALUABLE exceso=None filas=[]
+  deepseek   medido=158 veredicto=EXCESO exceso=19 filas=['REFACTOR-WHATSAPP-ENTREGA-2026-09-18::D-AJUST.1', 'EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4']
+  jev        medido=145 veredicto=EXCESO exceso=6 filas=['EVALUACION-JEV-TYPESAFE-2026-09-21::D-AJUST.4']
+
+lectura: la deuda publicaba un exceso (jev 145, +6). Medido hoy son dos brazos:
+jev 145 (+6) y deepseek 158 (+19). El mayor de los dos nunca estuvo publicado por ningun
+instrumento, y la cuenta de llamadas que quedo en disco se quedo en la mitad.
