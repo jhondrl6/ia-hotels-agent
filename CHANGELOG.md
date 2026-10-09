@@ -26,6 +26,15 @@
   maestro §3 (y enunciada en maestro §2); los prompts de A2, A3 y B citan ahora el valor con su fuente, sin
   re-transcribir la decisión. Rechazada c3 (aceptar checkpoints: el número deja de ser señal). **FASE-C no está
   nombrada** en la decisión y se queda con 60: abierta al operador si B la abre.
+- **Cierre documental de la sesión (lo que quedaba del ejecutor).** El acta de la enmienda estaba desordenada por una
+  inserción propia — «Estampa de la corrida» caía después de «Sello», «Erratas» y «Addenda» — y se re-ordenó **moviendo
+  secciones completas**, con prueba de permutación: 446 líneas y 20 encabezados idénticas antes y después,
+  `sorted(líneas)` igual en los dos estados y el mismo sha256 del multiset. Tres lecciones nuevas entran en la serie
+  `L-CIM` del `10-analisis` (L-CIM.3 la unidad de los atributos que cuentan rutas, L-CIM.4 la noción de «sin revisar»
+  es por sesión, L-CIM.5 `git add` con ruta de directorio padre absorbe trabajo ajeno), cada una con lo que la produjo
+  medido. Y se registra el defecto de la propia reparación: el primer intento de anotar fue un `Edit` con
+  `old_string` y `new_string` que solo diferían en un salto de línea, y lo que hizo fue pegar dos líneas de la
+  conclusión — visible en el `tail`, no en el diff.
 - **Reglas c2 adoptadas dentro del prompt de A2.** (i) congelar el código antes de abrir el cierre documental, con el
   POST y los mutantes re-tomados **una** sola vez al final; (ii) los reemplazos documentales del cierre se ejecutan
   con **un solo script de bytes bajo `temp/`**, `count(old) == 1` por ancla, borrado al terminar.

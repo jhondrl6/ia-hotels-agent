@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `18` análisis de plan + `39` archivos de `.opencode/context/`. `449` `.md` en total como corpus de **citas**.
-- 358 IDs con definición detectada; 93 IDs citados sin definición (ver última sección).
+- 361 IDs con definición detectada; 93 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `347` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `350` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 206 |
+| `L-*` | Lecciones aprendidas | 209 |
 | `DA-*` | Decisiones / reglas de alineación | 51 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
 | — | Citados sin definición | 93 |
 
-## `L-*` — Lecciones aprendidas (206)
+## `L-*` — Lecciones aprendidas (209)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -58,6 +58,9 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-C4` | Promesa de servicios y lista de assets son superficies distintas: hacer dinámica una no limpia la otra *(FASE-C)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 2 (solo el plan dueño) |
 | `L-CIM.1` | Cuando un verificador tiene dos guardas locales que emiten la misma etiqueta, la guarda que se conserva tiene que seguir nombrando lo que afirma el diente viejo: si no, el diente muerde por la rama… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
 | `L-CIM.2` | La abstención se publica por entrada, no por corrida: un resumen que dice «no goberna ninguna publicación» con población mixta miente sobre la cobertura que el propio verificador acaba de medir. — La… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
+| `L-CIM.3` | Un atributo de cierre que cuenta rutas de un ID queda vencido por el par derivado versionado: los lugares de estampado no son rutas, y todo ID de familia indexada aparece además en LECCIONES-INDEX.md… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
+| `L-CIM.4` | La noción de «commits sin revisar» de la revisión profunda es por sesión, no por rango: una corrida aprobada no cubre los commits que la misma sesión crea después, y reintentarla con la autorización… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
+| `L-CIM.5` | git add con ruta de directorio padre no es un atajo: es un alcance implícito que absorbe trabajo ajeno declarado excluido. El stage se verifica antes del git commit, no después. — git add <acta>… | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
 | `L-D1` | «Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 18 (solo el plan dueño) |
 | `L-D2` | La evidencia también se fosiliza: un log capturado antes de estabilizar los tests miente *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-D3` | Un baseline numérico hace que cumplir el plan cuente como violación *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 64 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
@@ -454,6 +457,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-CIM` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-14` | 4 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B2` | 4 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `S-CIM-7` | 4 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-10` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F5` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F8` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -465,7 +469,6 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B3` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B4` | 3 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-CIM-1` | 3 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
-| `S-CIM-7` | 3 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-E2E-2` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-3` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-7` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |

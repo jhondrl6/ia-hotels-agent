@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 18,
     "archivos_contexto_escaneados": 39,
     "archivos_md_escaneados": 449,
-    "ids_con_definicion": 358,
+    "ids_con_definicion": 361,
     "ids_citados_sin_definicion": 93,
     "fechas_por_fuente": {
-      "nombre": 347,
+      "nombre": 350,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1611,6 +1611,48 @@
       "id": "L-CIM.2",
       "familia": "L",
       "enunciado": "La abstención se publica por entrada, no por corrida: un resumen que dice «no goberna ninguna publicación» con población mixta miente sobre la cobertura que el propio verificador acaba de medir. — La migración 1.0 introdujo una población donde unas entradas se dictaminan y otras se abstienen; el resumen de [17/18] conservaba la frase del caso vacío. Se bifurcó el texto y el [CONTADOR] publica los cuatro conteos con su suma",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.3",
+      "familia": "L",
+      "enunciado": "Un atributo de cierre que cuenta rutas de un ID queda vencido por el par derivado versionado: los lugares de estampado no son rutas, y todo ID de familia indexada aparece además en LECCIONES-INDEX.md y lecciones_index.json cuando el escritor hace su trabajo. — La enmienda estampó dos decisiones en cinco y dos lugares, y el atributo del mandato pedía «exactamente 5» y «exactamente 2». Medido sobre HEAD: 8 y 6 rutas, porque dos lugares comparten 01-plan-maestro.md y el par derivado aporta dos. Y la unidad del conteo también mintió: grep -cF da líneas con coincidencia, no coincidencias — sobre el mismo literal 9 contra 10 de git grep -oF, que emite una por coincidencia. La cura es la regla de unidad del contrato §Cierre, no forzar el número dejando de regenerar el derivado",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.4",
+      "familia": "L",
+      "enunciado": "La noción de «commits sin revisar» de la revisión profunda es por sesión, no por rango: una corrida aprobada no cubre los commits que la misma sesión crea después, y reintentarla con la autorización literal del operador tampoco la abre. — Tres negaciones seguidas sobre f4ceada, 89485b4 y los posteriores, con el motivo impreso «no existen commits nuevos sin revisar», desmentido por git rev-list --count 58dc034..HEAD = 2 primero y 7 al cierre. Consecuencia de diseño: los sellos y addendas se commitean después de la última L3, o se declara la cobertura por rango en el documento — nunca se afirma «tanda limpia» sobre bytes que la herramienta no miró",
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
+      "fecha_plan": "2026-10-07",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CIM.5",
+      "familia": "L",
+      "enunciado": "git add con ruta de directorio padre no es un atajo: es un alcance implícito que absorbe trabajo ajeno declarado excluido. El stage se verifica antes del git commit, no después. — git add <acta> temp/../.opencode resolvió la segunda ruta a .opencode completo y metió los doce briefing/FASE-*.md de S-CIM-7 en el commit local 92e5543 (13 rutas en vez de 1). Reparación sin pérdida y sin --hard: medir con git show --stat, probar que nada ajeno viajó en lo empujado con git log --oneline origin/master -- <ruta> (0), git reset --soft HEAD~1, git restore --staged <ruta ajena> y git diff --cached --name-only antes de recomitear",
       "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -5846,6 +5888,14 @@
       ]
     },
     {
+      "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-E2E-10",
       "familia": "S",
       "total_citas": 4,
@@ -5932,14 +5982,6 @@
     },
     {
       "id": "S-CIM-1",
-      "familia": "S",
-      "total_citas": 3,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
-      ]
-    },
-    {
-      "id": "S-CIM-7",
       "familia": "S",
       "total_citas": 3,
       "planes_que_lo_citan": [

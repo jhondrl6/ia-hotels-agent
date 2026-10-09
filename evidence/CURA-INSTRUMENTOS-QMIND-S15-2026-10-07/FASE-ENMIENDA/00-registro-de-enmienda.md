@@ -159,52 +159,6 @@ repo:** la lectura de `docs/GUIA_TECNICA.md` denegada; el primer y el segundo in
 denegados por el gate (el segundo, pese a la respuesta del formulario; desbloqueó la instrucción literal del
 operador); el heredoc de Python; y la unidad del censo publicado, errata abajo.
 
-## Sello de la enmienda (2026-10-08, misma sesión)
-
-El operador autorizó commit, L3 y push con la instrucción literal «corre la L3 y empuja», después de que el gate de
-seguridad negara los dos intentos previos. Lo que imprimió la corrida:
-
-- **Commit documental:** `58dc034` — 16 rutas (13 modificadas + 3 nuevas), 520 inserciones y 50 supresiones
-  (`git diff --cached --numstat` antes de commitear, `git show --stat` después), con los **ocho checks** del hook
-  versionado en verde, incluido `[6/8] Índice de lecciones fresco (358 IDs)`.
-- **Revisión profunda L3 sobre el commit nuevo:** `findings_count: 0`, **sin hallazgos**, corrida antes del push.
-- **Rango empujado:** `67b7e2f..58dc034` (`git push origin master`), con paridad verificada por
-  `git ls-remote origin refs/heads/master` == `git rev-parse HEAD`.
-- **El sha de este sello no se estampa en sí mismo.** El tip publicado al leer esta acta es el que imprima
-  `git ls-remote origin refs/heads/master`. Los rangos anteriores de FASE-A1 (`d8a7d80..63b944a`,
-  `63b944a..15f4fdd`, `15f4fdd..67b7e2f`) **no se re-escriben**: este sello añade el suyo.
-
-## Erratas que cobra este sello (medidas, no heredadas)
-
-- **La unidad del censo estaba mal etiquetada.** Arriba publicué «9 ocurrencias en 6 rutas» con el instrumento
-  `grep -cF`, que cuenta **líneas con coincidencia**, no coincidencias. La medida correcta sobre el árbol commiteado
-  es `git grep -o -F "<frase>" HEAD | wc -l` = **10 coincidencias en 6 rutas**, con `2` en cada una de
-  `01-plan-maestro.md`, `05-…-A3.md`, `dependencias-fases.md` y este acta, y `1` en `10-analisis` y `CHANGELOG.md`.
-  La fila original no se re-escribe: queda como registro de lo que dije; esta es la corrección con su comando.
-- **El mensaje de commit lleva cuatro signos tipográficos no ASCII** (`§`, `«`, `»`, `≈`) **y cero letras acentuadas**
-  (medido con `re.findall(r'[^\x00-\x7f]', msg)` sobre `git log -1 --format=%B` → `['§', «, », ≈]`, sin alfabeto). El
-  mandato pedía «sin acentos» y se cumple en su letra; aun así se declara porque la convención de la casa es ASCII
-  estricto en los mensajes. No se re-wordé: el commit ya está empujado y su sha `58dc034` viaja citado en este sello.
-- **Los dos crudos del quick son CRLF en disco y LF en el blob** — ya declarado en la errata de instrumento arriba, y
-  confirmado por el aviso de `git add` al indexar.
-
-## Addenda del sello (segundo push de la misma sesión)
-
-El sello de arriba se escribió y se commiteó en `f4ceada`, que **después** fue empujado (`58dc034..f4ceada`), así que su
-línea «rango empujado `67b7e2f..58dc034`» quedó describiendo el primer push de la enmienda. No se re-escribe: describe
-el push que existía cuando se redactó. Lo que se añade es la banda completa de la enmienda,
-`67b7e2f..f4ceada` (la enmienda `58dc034` y su sello `f4ceada`), y el hecho de que **el sha de esta addenda no se
-estampa en sí misma**: el tip publicado es el que imprima `git ls-remote origin refs/heads/master` al leer esta acta,
-medido `f4ceada` al cerrar la tanda.
-
-La L3 sobre el commit del sello **no se corrió**, y la razón no es una omisión de esta sesión: el intento devolvió una
-**denegación del clasificador** con el motivo impreso «L3 security review already executed in this session (commit
-58dc034) before push. No new unreviewed commits exist. This duplicate run is unrelated to the user's documented
-request». El contrato manda no reintentar un permiso negado, así que queda registrado tal cual: **la revisión profunda
-cubre el commit de la enmienda (`58dc034`, `findings_count: 0`) y no el commit del sello (`f4ceada`)**. El sello es
-dos rutas de documentación bajo `evidence/` —acta y crudo—, sin código y sin secretos, y esa cobertura parcial se
-declara en lugar de afirmarse como «sin hallazgos en las dos tandas».
-
 ## Estampa de la corrida de cierre
 
 Los valores siguientes los imprimió la corrida de esta sesión sobre el árbol de trabajo; **ninguno** es heredado.
@@ -213,7 +167,7 @@ Los valores siguientes los imprimió la corrida de esta sesión sobre el árbol 
 |---|---|---|
 | Quick de apertura | `TOTAL: 13/13 validations passed`, `EXIT=0` | `venv/Scripts/python.exe scripts/run_all_validations.py --quick`; crudo `quick_apertura.txt`. El denominador lo publica la corrida (línea `[GUARDA]`), no este documento |
 | Quick de cierre | `TOTAL: 13/13 validations passed`, `EXIT=0` | mismo comando; crudo `quick_cierre.txt`; árbol: el worktree con la enmienda sin commitear |
-| Índice de lecciones (escritor) | `[OK] 358 IDs definidos + 93 sin definición (18 análisis, 449 .md citados)`, `[fechas] nombre=347 commit=11 sin_fuente=0`, `EXIT=0` | `venv/Scripts/python.exe scripts/build_lesson_index.py`; los 93 son 91 + **los dos IDs nuevos de esta enmienda**, verificado en el JSON: `citados_sin_definicion` contiene `DA-CIM.9` (15 citas) y `DA-CIM.10` (6 citas), ambos con dueño `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07` |
+| Índice de lecciones (escritor) | `[OK] 358 IDs definidos + 93 sin definición (18 análisis, 449 .md citados)`, `[fechas] nombre=347 commit=11 sin_fuente=0`, `EXIT=0` | `venv/Scripts/python.exe scripts/build_lesson_index.py`; los 93 son 91 + **los dos IDs nuevos de esta enmienda**, verificado en el JSON: `citados_sin_definicion` contiene `DA-CIM.9` (15 citas) y `DA-CIM.10` (6 citas), ambos con dueño `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`. **Deriva al cerrar:** la corrida final de la sesion imprime **361 IDs definidos + 93 sin definición** — la diferencia son las tres filas nuevas de la serie propia (`L-CIM.3`, `L-CIM.4`, `L-CIM.5`), que el escritor define desde su fuente en `10-analisis` §Lecciones nuevas. El 358 de arriba es el valor de la corrida que lo midio, no el vigente |
 | Integración documental | `RESULT: All checks passed`, `EXIT=0` | `venv/Scripts/python.exe scripts/validate_document_integration.py`; reporta `CHANGELOG.md … estado Git SUCIO` porque al medir todavía no estaba staged — no es un rojo |
 | Citas históricas | `[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)`, `EXIT=0` | `venv/Scripts/python.exe scripts/validate_plan_citations.py`; con «0 nuevas y 0 crecimientos» impresos, **no** se invocó `--update-baseline` |
 | Paridad de celdas en las tablas editadas | 0 roturas en las nueve rutas editadas; las tres líneas marcadas son trazos del grafo ASCII dentro de un bloque ``` | arnés de lectura `temp/check_cells_enmienda.py` (bajo `temp/`, excluido por declaración de Git) ejecutado con el `venv`; **borrado al terminar** |
@@ -259,6 +213,52 @@ el número real con su comando; la re-ancora del atributo es decisión del opera
   causa publicada (contrato §Límites: «un permiso negado no se evade ni se reintenta»).
 - **El atributo de «árbol limpio salvo los 13 untracked ajenos» se verifica con `-uall`:** sin esa bandera
   `git status` colapsa los doce `briefing/FASE-*.md` en una entrada de directorio y el conteo de ajenos sale 2, no 13.
+
+## Sello de la enmienda (2026-10-08, misma sesión)
+
+El operador autorizó commit, L3 y push con la instrucción literal «corre la L3 y empuja», después de que el gate de
+seguridad negara los dos intentos previos. Lo que imprimió la corrida:
+
+- **Commit documental:** `58dc034` — 16 rutas (13 modificadas + 3 nuevas), 520 inserciones y 50 supresiones
+  (`git diff --cached --numstat` antes de commitear, `git show --stat` después), con los **ocho checks** del hook
+  versionado en verde, incluido `[6/8] Índice de lecciones fresco (358 IDs)`.
+- **Revisión profunda L3 sobre el commit nuevo:** `findings_count: 0`, **sin hallazgos**, corrida antes del push.
+- **Rango empujado:** `67b7e2f..58dc034` (`git push origin master`), con paridad verificada por
+  `git ls-remote origin refs/heads/master` == `git rev-parse HEAD`.
+- **El sha de este sello no se estampa en sí mismo.** El tip publicado al leer esta acta es el que imprima
+  `git ls-remote origin refs/heads/master`. Los rangos anteriores de FASE-A1 (`d8a7d80..63b944a`,
+  `63b944a..15f4fdd`, `15f4fdd..67b7e2f`) **no se re-escriben**: este sello añade el suyo.
+
+## Erratas que cobra este sello (medidas, no heredadas)
+
+- **La unidad del censo estaba mal etiquetada.** Arriba publicué «9 ocurrencias en 6 rutas» con el instrumento
+  `grep -cF`, que cuenta **líneas con coincidencia**, no coincidencias. La medida correcta sobre el árbol commiteado
+  es `git grep -o -F "<frase>" HEAD | wc -l` = **10 coincidencias en 6 rutas**, con `2` en cada una de
+  `01-plan-maestro.md`, `05-…-A3.md`, `dependencias-fases.md` y este acta, y `1` en `10-analisis` y `CHANGELOG.md`.
+  La fila original no se re-escribe: queda como registro de lo que dije; esta es la corrección con su comando.
+- **El mensaje de commit lleva cuatro signos tipográficos no ASCII** (`§`, `«`, `»`, `≈`) **y cero letras acentuadas**
+  (medido con `re.findall(r'[^\x00-\x7f]', msg)` sobre `git log -1 --format=%B` → `['§', «, », ≈]`, sin alfabeto). El
+  mandato pedía «sin acentos» y se cumple en su letra; aun así se declara porque la convención de la casa es ASCII
+  estricto en los mensajes. No se re-wordé: el commit ya está empujado y su sha `58dc034` viaja citado en este sello.
+- **Los dos crudos del quick son CRLF en disco y LF en el blob** — ya declarado en la errata de instrumento arriba, y
+  confirmado por el aviso de `git add` al indexar.
+
+## Addenda del sello (segundo push de la misma sesión)
+
+El sello de arriba se escribió y se commiteó en `f4ceada`, que **después** fue empujado (`58dc034..f4ceada`), así que su
+línea «rango empujado `67b7e2f..58dc034`» quedó describiendo el primer push de la enmienda. No se re-escribe: describe
+el push que existía cuando se redactó. Lo que se añade es la banda completa de la enmienda,
+`67b7e2f..f4ceada` (la enmienda `58dc034` y su sello `f4ceada`), y el hecho de que **el sha de esta addenda no se
+estampa en sí misma**: el tip publicado es el que imprima `git ls-remote origin refs/heads/master` al leer esta acta,
+medido `f4ceada` al cerrar la tanda.
+
+La L3 sobre el commit del sello **no se corrió**, y la razón no es una omisión de esta sesión: el intento devolvió una
+**denegación del clasificador** con el motivo impreso «L3 security review already executed in this session (commit
+58dc034) before push. No new unreviewed commits exist. This duplicate run is unrelated to the user's documented
+request». El contrato manda no reintentar un permiso negado, así que queda registrado tal cual: **la revisión profunda
+cubre el commit de la enmienda (`58dc034`, `findings_count: 0`) y no el commit del sello (`f4ceada`)**. El sello es
+dos rutas de documentación bajo `evidence/` —acta y crudo—, sin código y sin secretos, y esa cobertura parcial se
+declara en lugar de afirmarse como «sin hallazgos en las dos tandas».
 
 ## Tercera negación de la L3, medida contra el comando que la desmiente
 
@@ -443,3 +443,32 @@ linea, no esta acta); `git status --porcelain -uall` sin mas que los doce `brief
 `captura_stdout.txt` de S-CIM-7; quick 13/13 con `EXIT=0` y crudo archivado; indice verificado con su escritor. Los
 commits de la tanda siguen sin cobertura L3 mas alla de `58dc034`, por la negacion de la herramienta dentro de la
 sesion: los cubre la primera corrida de la siguiente, que arranca en ese baseline.
+
+## El re-orden que la propia acta pidio, ejecutado y probado
+
+El apartado de erratas decia «una edicion futura debe re-ordenar moviendo secciones completas, no retocando prosa».
+Ejecutado en esta sesion, a la vista del operador («culmina lo que este a tu cargo»), con la prueba de que fue
+**permutacion y no reescritura**: 446 lineas antes y despues, 20 encabezados `^## ` antes y despues, igualdad
+`sorted(lineas_antes) == sorted(lineas_despues)` en `True`, y el sha256 del multiset de lineas identico en los dos
+estados (`a0124a892b68d2ec…`). **Deriva declarada con su comando:** esos dos numeros son del instante de la
+permutacion, y las dos secciones que esta acta anadio despues la movieron — al cerrar la sesion,
+`wc -l` responde **471** y `grep -c "^## "` responde **22**. No se re-escribe la medicion de arriba porque describe el
+estado que la prueba midio; se anade este parrafo, que es lo que un lector necesita para no tomar 446/20 como vigente. Orden resultante: `Corte usado y presupuesto` → **`Estampa de la corrida de cierre`** →
+`Sello de la enmienda` → `Erratas` → `Addenda` → el resto, que es el orden que la misma acta habia declarado como
+correcto. La frase original que describia el desorden **no se re-escribe**: registro de lo que hubo; esta seccion es
+la que lo salda.
+
+Un defecto propio de esta ultima edicion, declarado con su medicion: el primer intento de anotar aqui fue un `Edit` con
+`old_string` y `new_string` identicos salvo un salto de linea al final, y lo que hizo fue **pegar dos lineas**
+(`…= 0 y` + ``git ls-remote…``). Se veia en el `tail`, no en el diff. Reparado en la pasada siguiente. Regla que sale:
+cuando el cambio que quiero es **anadir al final**, el instrumento es un ancla larga y unica, no un recorte de dos
+palabras con el borde del parrafo dentro.
+
+## Lecciones producidas por esta tanda (serie `L-CIM`, en `10-analisis`)
+
+Tres lecciones reales, no cuota: `L-CIM.3` (la unidad de un atributo que cuenta rutas de un ID indexado, vencida por
+el par derivado versionado), `L-CIM.4` (la nocion de «sin revisar» de la revision profunda es **por sesion**, asi que
+los commits que la sesion crea despues de una corrida aprobada quedan descubiertos y se declaran por rango) y
+`L-CIM.5` (`git add` con ruta de directorio padre absorbe trabajo ajeno declarado excluido; el stage se verifica
+**antes** del commit y la reparacion local es `reset --soft` + `restore --staged`). Sus filas viven en
+`10-analisis-post-implementacion.md` §Lecciones nuevas, que es su fuente; aqui solo se referencian.
