@@ -721,7 +721,7 @@ Antecedente (el texto con el que la orden abrió su primera sesión, 2026-09-22 
 era exacto entonces y hoy solo describe lo que falta):
 
 ```text
-Revisa .opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md en
+Revisa .opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md en
 C:/Users/Jhond/Github/iah-cli. Es una propuesta, no autorización de implementación.
 Re-mide git status y solo las anclas/dependencias necesarias para el bloque que se vaya a aprobar.
 Preserva trabajo ajeno y evidencia histórica; no recrees un kit de planes ni repitas toda la auditoría.

@@ -6,7 +6,7 @@
 
 **Objetivo:** eliminar bloqueos espurios por promesas WhatsApp imposibles, impedir botones sin destino o sin verificación, conservar causas/evidencia de bloqueo y certificar el resultado con una sola ejecución final para Hotel Don Alfonso. No prometer READY a costa de ocultar bloqueos legítimos.
 
-Fuente de partida: `.opencode/context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md`. Workflow canónico: `.agents/workflows/phased_project_executor.md` v2.24.0. La ruta recibida con directorio `iahcli` no existe; se usa `iah-cli`. No se altera el contexto histórico.
+Fuente de partida: `.opencode/context/Historico/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md`. Workflow canónico: `.agents/workflows/phased_project_executor.md` v2.24.0. La ruta recibida con directorio `iahcli` no existe; se usa `iah-cli`. No se altera el contexto histórico.
 
 ## 1. Revalidación y correcciones al contexto
 

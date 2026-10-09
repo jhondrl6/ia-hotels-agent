@@ -279,7 +279,7 @@ aplica al `--report` del futuro `triage_lesson_relevance.py`: antes de correr un
 
 > **[Rectificada el 2026-09-23; reescrita el 2026-09-24 para no dejar dos instrucciones contrapuestas.]**
 > Ese default de escritura fue
-> corregido por el **bloque A** de `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`
+> corregido por el **bloque A** de `.opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`
 > (commit **`fdd397f`**, ajeno a este plan) y su aceptación está registrada en
 > `dependencias-fases.md` §Conciliación. Medido de nuevo aquí sobre el árbol vigente:
 > `python scripts/validate_governance_numbers.py --report` **sin destino imprime y no escribe** —

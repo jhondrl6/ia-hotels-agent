@@ -67,7 +67,7 @@ si no, deja checkpoint. Nunca se promueve un resultado parcial a éxito del cier
 
 ## Enmiendas prospectivas ya resueltas para FASE-C (registradas el 2026-09-23)
 
-Fuente: `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.C, fila `CONTEXTO/C`, con
+Fuente: `.opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.C, fila `CONTEXTO/C`, con
 autorización local del operador sobre **este** plan y solo sobre **estas** cinco decisiones. **Ninguna
 se implementó todavía**: son contrato para la sesión de C, no trabajo hecho. No acompañan cambio de
 versión, de `REGISTRY.md` ni de configuración central.

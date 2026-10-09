@@ -750,7 +750,7 @@ si no, deja checkpoint. Nunca se promueve un resultado parcial a éxito del cier
 
 ## Enmiendas prospectivas ya resueltas para FASE-C (registradas el 2026-09-23)
 
-Fuente: `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.C, fila `CONTEXTO/C`, con
+Fuente: `.opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md` §4.C, fila `CONTEXTO/C`, con
 autorización local del operador sobre **este** plan y solo sobre **estas** cinco decisiones. **Ninguna
 se implementó todavía**: son contrato para la sesión de C, no trabajo hecho. No acompañan cambio de
 versión, de `REGISTRY.md` ni de configuración central.
@@ -1333,7 +1333,7 @@ explícito, que da el mismo `HALLAZGOS` (A1–A4, 24 instancias, `exit 1`) sin t
 
 **Qué se acepta y de dónde viene (procedencia, no atribución a esta sesión).** Las dos deudas
 nacidas del commit de FASE-B fueron corregidas **fuera de este plan**, por las cuatro sesiones
-autorizadas del **bloque A** de `.opencode/context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, y el
+autorizadas del **bloque A** de `.opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md`, y el
 código corregido entró al repo en **`fdd397f`** sobre la superficie
 `scripts/decision_client.py`, `scripts/validate_governance_numbers.py`,
 `tests/quality_gates/decision_client/` y `tests/quality_gates/governance_numbers/`. El resumen de esa
