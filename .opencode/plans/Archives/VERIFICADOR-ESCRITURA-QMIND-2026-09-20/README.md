@@ -15,7 +15,12 @@ está implementada: `scripts/validate_qmind_writeback.py` sigue sin `--title` ni
 aquí como dato para no re-descubrirlo — las banderas propias del writer son `--nb`, `--strict` y `--upload`;
 los `--title`/`--file` que aparecen en el archivo son los que `upload_source()` pasa al CLI `qmind`, no del
 writer. `is_ingested()` decide por título, y `run_all_validations.py::_check_qmind_writeback()` lo invoca
-**sin** `--strict`. La etiqueta vigente del check es `[17/18]`⟧. Lo que cambió no es el estado de la fase sino su
+**sin** `--strict`. La etiqueta vigente del check es `[17/18]`⟧. ⟦**Re-medido el 2026-10-10: esa cláusula quedó refutada por el código, y se conserva como
+registro de la sesión que la midió.** El writer **sí** tiene `--title` y `--file` desde `b66d6a1` (2026-10-07, la FASE-UNICA de este
+mismo plan), `is_ingested()` sigue decidiendo por título pero ya no es la única capa —`verificar_contenido()` dictamina por cuerpo—, y
+`_check_qmind_writeback()` **sí** lo invoca con `--strict` dentro del modo completo (governado por
+`test_el_check_del_runner_invoca_con_strict_y_trata_el_dos_como_estado_propio`). La línea «Ninguna línea de este plan está implementada»
+describe el árbol del 2026-09-24, no el vigente.⟧. Lo que cambió no es el estado de la fase sino su
 **estructura de aceptación**: **entrega offline verificable** (maestro §6) frente a **aceptación remota**,
 que es la que necesita red, autorización y presupuesto propios. Este mini-plan **no consume ni toca el
 presupuesto `v4complete` de ningún otro plan.**

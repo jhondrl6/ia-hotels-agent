@@ -1,0 +1,3 @@
+[SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 9 | historica-congelada 10 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 5 (total 18) | hook 8 pasos || familias no cubiertas: 4
+  medido 2026-10-10 con: python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA  S12)

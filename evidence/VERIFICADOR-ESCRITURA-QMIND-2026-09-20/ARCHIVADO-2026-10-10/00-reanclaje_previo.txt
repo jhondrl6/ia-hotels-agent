@@ -1,0 +1,15 @@
+# 00: re-anclaje del cuerpo antes de congelar
+# (re-toma: el intento anterior nombraba mal el archivo del arnes: 'reanclar_verificador_qmind.py' no existe; el correcto es temp/reanclar_verificador_escritura.py. EXIT=2 del interprete, ninguna escritura ocurrio: el sha del cuerpo seguia siendo b7b18d31...)
+# comando: PYTHONUTF8=1 ./venv/Scripts/python.exe temp/reanclar_verificador_escritura.py
+[OK] cuerpo y README re-anclados antes de congelar
+ocurrencias de la ruta de raiz en el cuerpo: 0
+EXIT=0
+## barrido de identidades de cliente (marcadores del repo, ERE valida)
+coincidencias: 0
+## ruta de raiz restante en el cuerpo (debe ser 0): 0
+## cuerpo a publicar: bytes / CR / sha256 (= sha_cuerpo que grabara el registro)
+24752
+0
+6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639
+## secciones nuevas del cuerpo
+196:## H. Cierre documental y archivado (2026-10-10)

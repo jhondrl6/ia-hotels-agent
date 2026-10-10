@@ -1,0 +1,32 @@
+# 02: orden R2.10 del archivado (pasos 2-6)
+# sha del cuerpo publicado antes del git mv: 6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639
+## paso 2: indice (plan cerrado, consultable)
+[OK] 374 IDs definidos + 96 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+## paso 3: git mv
+git mv OK (5 rutas)
+## paso 3b: indice otra vez (publica la ruta nueva)
+[OK] 374 IDs definidos + 96 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+## paso 4: refs --fix
+  [FIX] 05-prompt-inicio-sesion.md: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 -> .opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  [FIX] CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 -> .opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  [FIX] ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 -> .opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+[FIX] 4 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+## paso 5: citas --update-baseline (acto visible)
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+## prueba de congelamiento en la ruta nueva
+antes: 6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639
+despues: 6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639
+identico: SI
+## paso 6: quick
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+## dictamen tras el archivado (el plan ya cuenta en el denominador)
+EXIT_STRICT=1
+[OK] QMind Write-back: 16/16 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [FRESCO] VERIFICADOR-ESCRITURA-QMIND-2026-09-20 :: 10-analisis: VERIFICADOR-ESCRITURA-QMIND-2026-09-20 (lecciones aprendidas y decisiones): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [CONTADOR] 4 vigente(s): 3 dictaminada(s) por cuerpo, 2 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 3+1+0==4; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+[FAIL] qmind write-back: titulo OK | contenido: DUPLICADO-VIGENTE

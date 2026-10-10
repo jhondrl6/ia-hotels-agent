@@ -41,6 +41,16 @@
       "sha_cuerpo": "349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0",
       "instanea": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07--10-analisis_CURA-INSTRUMENTOS-QMIND-S15-2026-10-07_cierre_4--349b85c5b7a6f3e4.md",
       "publicado": "2026-10-09"
+    },
+    {
+      "plan": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+      "titulo": "10-analisis: VERIFICADOR-ESCRITURA-QMIND-2026-09-20 (lecciones aprendidas y decisiones)",
+      "estado": "vigente",
+      "fuente_id": "01a125a0-b956-7e49-aaa1-2bac6b3acd34",
+      "sha256": "6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639",
+      "sha_cuerpo": "6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639",
+      "instanea": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20--10-analisis_VERIFICADOR-ESCRITURA-QMIND-2026-09-20_leccione--6b4180374eec4443.md",
+      "publicado": "2026-10-10"
     }
   ]
 }

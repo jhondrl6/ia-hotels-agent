@@ -1,0 +1,9 @@
+[OK] QMind Write-back: 16/16 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [AVISO] descarga 01a12247-f791-7944-832e-13f5cad68f3e salió 1: error: QMind network request failed
+  [NO-EVALUABLE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la entrada no grabo sha_cuerpo (registro schema 1.1), es anterior a la cura y no se rellena hacia atras; no es VENCIDO ni verde
+  [DUPLICADO-VIGENTE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la fuente 01a0bfc9-5f5a... (10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones...) con sha_metadata 87b9b6664f94... nombra al plan y no esta marcada como reemplazada: dos fuentes vigentes del mismo plan
+  [NO-EVALUABLE] EVALUACION-JEV-TYPESAFE-2026-09-21 :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09): 1 fuente(s) cuyo metadata casa no bajaron; sin observacion no hay VENCIDO
+  [FRESCO] CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 :: 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [FRESCO] VERIFICADOR-ESCRITURA-QMIND-2026-09-20 :: 10-analisis: VERIFICADOR-ESCRITURA-QMIND-2026-09-20 (lecciones aprendidas y decisiones): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [CONTADOR] 4 vigente(s): 3 dictaminada(s) por cuerpo, 2 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 3+1+0==4; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+[FAIL] qmind write-back: titulo OK | contenido: DUPLICADO-VIGENTE

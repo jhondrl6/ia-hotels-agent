@@ -229,6 +229,19 @@ Unidad y comando: `git show --name-status --diff-filter=AMR` sobre los veintidó
 
 ## [Sin publicar] - FASE-UNICA del plan VERIFICADOR-ESCRITURA-QMIND-2026-09-20 - 2026-10-07
 
+> **Addenda 2026-10-10 (publicación y archivado, sin versión).** El plan quedó **archivado** bajo
+> `.opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/` y su `10-analisis` se publicó con el writer ya
+> curado por `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`, en el orden R2.10 y **con el plan aún en raíz**: `--upload` →
+> índice → `git mv` → índice → `refs --fix` (4 referencias reparadas, **ninguna** en el cuerpo congelado) →
+> `citations --update-baseline` → quick. Entrada nueva en `registro.json` con `fuente_id`
+> `01a125a0-b956-7e49-aaa1-2bac6b3acd34`, `sha_cuerpo` = `sha256` = `6b4180374eec4443…` (24.752 B, 0 sustituciones:
+> el barrido de identidades de cliente dio 0 coincidencias) y verificación por **descarga + sha256** con la racha
+> contada (intento 1 falló por red, intento 2 byte-exacto). Consecuencia sobre el gate: `[17/18]` pasó de
+> `15/15` a **`16/16` 10-analisis archivados ingestaos** y dicta **`[FRESCO]` por cuerpo** sobre este plan.
+> **No se le dio encabezado de versión a este bloque**: el código viaja dentro de 4.79.0 porque `b66d6a1` es ancestro
+> de `83a6dc2` —ancestria, no acreditación—; acreditarlo a una versión y el **tag** siguen siendo decisión del
+> operador. Crudos: `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/ARCHIVADO-2026-10-10/`.
+
 ### Write-back de QMind actualizable y verificado por contenido (AC1–AC5 y AC6-entrega; momento A offline)
 
 - **Qué cambia.** `scripts/validate_qmind_writeback.py` dejaba de ser un verificador que decidía **por título**

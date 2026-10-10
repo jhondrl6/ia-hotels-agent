@@ -22,7 +22,7 @@ de AC6-entrega).
 | AC4 | **CUMPLE en su parte offline; su parte remota queda en el momento B** | El registro versionado es la contabilidad de qué título está vigente y cuál `reemplazada`. Toda fuente que nombra al plan y no está contable corta `[DUPLICADO-VIGENTE]` (`test_dos_fuentes_vigentes_sin_marca_de_reemplazo_cortan`, mutación M3). La comprobación de que el marcado **llegó** al notebook es aceptación remota. |
 | AC5 | **CUMPLE** | `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/mutation_report.json`: 3/3 aplicadas, 3/3 rojas por el guard, 3/3 con la aserción esperada en el rojo, 0 invalidadas por sintaxis o import, `arbol_restaurado_sin_pendencias: true` (sha256 de pre-imagen `50d1a7f8…` re-casado tras cada mutación). Instrumento: `temp/mutaciones_writeback_fase_unica.py`. |
 | AC6-entrega | **CUMPLE** | `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/ac6-entrega-diff-prompt-release.txt` (es `git diff` del prompt de FASE-RELEASE del padre): el texto ahora **manda el writer** con `--file`/`--title`, resuelve la decisión marcar-vs-borrar hacia **marcar**, y declara que `[17/18]` sale NO-EVALUABLE mientras el registro no tenga entradas. Incluye la errata de símbolo: el prompt citaba `run()` del runner, que no existe; vigente `run_all()`. |
-| AC6-aceptación | **DIFERIDA con dueño y disparador** | Dueño: **FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`** (momento B del maestro §6). Disparador: su ingesta de cierre por el writer con `--title`. Verificación exigida: descarga byte a byte + sha256 contra la instantánea, nunca el título. Queda declarada pendiente, no omitida. |
+| AC6-aceptación | **DIFERIDA con dueño y disparador** | Dueño: **FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18`** (momento B del maestro §6). Disparador: su ingesta de cierre por el writer con `--title`. Verificación exigida: descarga byte a byte + sha256 contra la instantánea, nunca el título. Queda declarada pendiente, no omitida. ⟦**CERRADA el 2026-10-10 por consumo del disparador**, no por esta línea: el RELEASE del padre publicó su cierre con el writer (medido con el lector del instrumento: `is_ingested(REFACTOR-WHATSAPP-ENTREGA-2026-09-18)` = **True** y `registro.json` guarda sus dos entradas). **Matiz que no se puede omitir:** la verificación exigida sobre la primera de esas entradas es hoy **NO-EVALUABLE**, porque nació sin `sha_cuerpo` (abstención de migración, AC1 del plan CURA) y sus byte-exactos se perdieron con el slug que pisó la instantánea (deuda S-CIM-3 del mismo plan). Lo que sí se midió por descarga + sha256 fue la publicación del plan CURA (2026-10-09) y la de este propio análisis (2026-10-10).⟧ |
 
 ## B. Qué se construyó
 
@@ -54,7 +54,7 @@ de AC6-entrega).
 | Citas de plan al abrir | 745 históricas, 0 nuevas, 0 crecimientos | `validate_plan_citations.py` |
 | Índice de lecciones al abrir | fresco, 344 IDs | `build_lesson_index.py --check` |
 | Firma del writer al abrir | solo `--nb`, `--strict`, `--upload` | `validate_qmind_writeback.py --help` |
-| Batería al cerrar | 64 passed (23 de esta fase + 36 del hermano de frescura + 5 del denominador por modo) | `pytest -q`, crudo en `tests_baseline_post.txt` |
+| Batería al cerrar | 64 passed (23 de esta fase + 36 del hermano de frescura + 5 del denominador por modo) | `pytest -q`, crudo en `tests_baseline_post.txt`. ⟦**Re-medido 2026-10-10:** la familia de este archivo está en **57 funciones** (los dientes que sumaron FASE-A1/A2/A3 del plan CURA sobre `tests/test_validate_qmind_writeback_escritura.py`) y el control S15 de la familia hermana en **8** (FASE-B). La selección literal de las dos da **65 passed, `EXIT=0`** en `0f50ea4` y en el tip `1896376`. Los 23 dientes originales siguen verdes: ninguna aserción vieja se re-bajó.⟧ |
 | Mutaciones | 3 aplicadas / 3 rojas por el guard / 3 con la aserción esperada | `temp/mutaciones_writeback_fase_unica.py` |
 | sha256 pre-imagen del archivo mutado | `50d1a7f870134d96e9ae6fcf1f094524bba2396a855c09301118ca015f7a43cf` | re-casado tras cada mutación. **Es el sha del archivo tal como estaba durante la corrida de mutación**: después se retiró la constante `ARCHIVES_DIR`, que quedó sin lector al resolver la población bajo `--plans-dir`, así que quien re-mida el archivo hoy obtendrá otro sha y no un discrepancy |
 
@@ -87,7 +87,7 @@ volver a ejecutar nada (re-correr un validador para verificar su propio conteo l
   reescribió su escritor, no esta sesión.
   Comando: `git status --porcelain -- scripts/validate_qmind_writeback.py scripts/run_all_validations.py
   CHANGELOG.md docs/GUIA_TECNICA.md .opencode/qmind-writeback tests/test_validate_qmind_writeback_escritura.py
-  evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 .opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
   ".opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md"`.
 - **Corridas con crudo conservado:** la lista nominal, no una cifra suelta — quick de arranque y tres de cierre,
   cinco de pytest y dos del harness de mutación, más los validadores documentales. Los crudos quedan en `temp/`
@@ -127,7 +127,7 @@ enumerable. Las dos formas conviven en el corpus; la de esta fase es la más est
    verde») y su consecuencia se publica: **el modo completo corta `[17/18]` en rojo hasta que la primera
    publicación por `--upload` registre una entrada.** No es una regresión de esta fase: es el verde hueco
    que AC3 vino a cerrar, y se apaga solo en el momento B. Esta sesión certificó el quick (que no corre
-   el check) y no corrió el modo completo, que incluye pytest de producto.
+   el check) y no corrió el modo completo, que incluye pytest de producto. **⟦Consumido:** la primera publicación por `--upload` llegó el 2026-10-07 con el cierre del padre, y el modo completo del plan CURA (2026-10-09 y 2026-10-10) dictamina ya **por cuerpo**. Este propio `10-analisis` se publicó el 2026-10-10 con el writer curado: es la entrada que apagaba el hueco que esta predicción describía.⟧
 4. **`--strict` conserva dientes propios:** sin él la ausencia es abstención declarada (2), con él es
    fallo (1). En ambos casos deja de ser PASS. El parámetro `strict` que `do_upload()` recibía sin usar
    se retiró con la firma nueva.
@@ -157,7 +157,7 @@ enumerable. Las dos formas conviven en el corpus; la de esta fase es la más est
 | # | Hallazgo | Dueño | Disparador |
 |---|---|---|---|
 | S-1 | AC6-aceptación: `[17/18]` verde sobre el plan padre tras su ingesta de cierre, verificada por descarga + sha256 | FASE-RELEASE de `REFACTOR-WHATSAPP-ENTREGA-2026-09-18` (momento B) | su write-back por el writer con `--title` |
-| S-2 | El mismo verde por ausencia que AC3 cazó en `[17/18]` sigue vivo en `[18/18]`: `_check_context_freshness()` invoca al hermano sin `--strict` | operador / siguiente mandato sobre los verificadores QMind (maestro §3 lo declara fuera de alcance) | una AC nueva con su propio disparador |
+| S-2 | El mismo verde por ausencia que AC3 cazó en `[17/18]` sigue vivo en `[18/18]`: `_check_context_freshness()` invoca al hermano sin `--strict` | operador / siguiente mandato sobre los verificadores QMind (maestro §3 lo declara fuera de alcance) | una AC nueva con su propio disparador. ⟦**Viva y rebautizada:** es `S-CIM-1` del plan `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07` (su maestro §5), nombrada allí para que nadie la re-descubra. Sigue **fuera de alcance**; en la corrida del modo completo del 2026-10-09 se imprimió verde, que es exactamente el hueco que esta fila describe.⟧ |
 | S-3 | La errata de símbolo `run()` → `run_all()` vive también en el `10-analisis` del padre (fila L-ENT.14), archivo sucio por el cierre de VERIFY | FASE-RELEASE del padre al tocar su `10-analisis` | esa edición |
 | S-4 | Limpieza retroactiva de las dos fuentes vigentes de `TRIBUNAL-OFFLINE-2026-09-09` en el notebook | operador (decisión escrita: tocar contenido publicado) | mandato expreso |
 | S-5 | `04-contrato-ejecucion.md` del padre, paso 5, sigue diciendo «acordar título nuevo antes de subir»; con el writer actualizado el título se **pasa** por bandera, no se acuerda en prosa | FASE-RELEASE del padre | su edición del contrato |
@@ -193,9 +193,27 @@ fase no libera versión: `--release` es exclusivo del RELEASE del padre y `VERSI
 **cualquier operación remota a QMind**, que es el momento B (maestro §6). Los cinco cortes se sostuvieron sin
 commit durante toda la sesión y el commit llegó después, por orden: ninguno quedó «no consumado».
 
+## H. Cierre documental y archivado (2026-10-10)
+
+Este plan quedó **archivado** bajo `.opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/` en el orden **R2.10** del executor:
+`--upload` con el plan aún en raíz → `build_lesson_index.py` → `git mv` → `build_lesson_index.py` → `validate_opencode_refs.py --fix` →
+`validate_plan_citations.py --update-baseline` → `run_all_validations.py --quick`. La publicación se hizo con el writer **ya curado** por
+el plan `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07` (por eso la entrada lleva `sha_cuerpo` y `fuente_id` poblados) y con **cero sustituciones**
+de identidad: el barrido por los marcadores de cliente no dio coincidencias en este cuerpo, así que se subió tal cual, con la prueba
+inversa reducida a identidad de sha.
+
+Dos cosas quedan dichas antes de congelar, porque después no se pueden corregir sin vencer el cuerpo:
+
+1. **Este archivo está congelado desde su publicación.** AC2 compara su sha contra el `sha_cuerpo` del registro; editarlo lo deja
+   `VENCIDO`, y esa es la puerta que el plan CURA curó. Todo hecho posterior a esta tanda se escribe en
+   `evidence/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/ARCHIVADO-2026-10-10/`, que es la fuente de la subida, de la verificación por
+   descarga con su racha y del dictamen `[FRESCO]` o de su abstención con motivo.
+2. **La ruta de este plan ya estaba pre-anclada a `Archives/`** en la única ocurrencia del comando de la §C cuando se publicó, para que
+   el `refs --fix` posterior al `git mv` no tuviera nada que reescribir aquí. El `git mv` mueve la ruta; no debe mover bytes.
+
 **Ofrecido, no ejecutado:** commit aparte de `CHANGELOG.md` y `docs/GUIA_TECNICA.md`, que cargan además la prosa
 ya cerrada de FASE-VERIFY de otra sesión. Mientras ese commit no exista, la clausura documental de esta fase
-está completa en disco e incompleta en el histórico.
+está completa en disco e incompleta en el histórico. **⟦Consumado, medido 2026-10-10:** `git grep -c "VERIFICADOR-ESCRITURA-QMIND-2026-09-20" HEAD -- CHANGELOG.md docs/GUIA_TECNICA.md` devuelve **4 y 2** coincidencias, o sea que el commit aparte existió y el histórico ya no está incompleto. **Lo que sigue pendiente es el tag:** este mini-plan no liberó versión. Su código viaja dentro de **4.79.0** porque `b66d6a1` es ancestro de `83a6dc2`, pero eso es ancestria, no acreditación: su bloque del CHANGELOG vive bajo `## [Sin publicar]` y acreditarlo a una versión es decisión del operador, no de esta línea.⟧
 
 La apertura de esta sesión ya encontraba el árbol sucio con **36 entradas ajenas** (el cierre documental de
 FASE-VERIFY del padre y la recuperación AC6/AC10 en curso). Esa es la razón del recorte A: lo ajeno se describió
