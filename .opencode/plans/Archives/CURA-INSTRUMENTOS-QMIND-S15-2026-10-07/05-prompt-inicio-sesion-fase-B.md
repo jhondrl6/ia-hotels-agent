@@ -155,7 +155,7 @@ el mensaje de commit.
 
 Lee 01-plan-maestro.md §1 y §4, 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md, 05-prompt-inicio-sesion-fase-B.md y el workflow canónico.
 
-Ejecuta SOLO FASE-B del plan .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07.
+Ejecuta SOLO FASE-B del plan .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07.
 
 OBJETIVO: estabilizar el control S15 sin perder su diente, publicando la causa con su medicion y no con su hipotesis.
 

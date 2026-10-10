@@ -75,7 +75,7 @@ el mensaje de commit.
 
 Lee 01-plan-maestro.md §1 y §4, 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md, 05-prompt-inicio-sesion-fase-C.md y el workflow canónico.
 
-Ejecuta SOLO FASE-C del plan .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo si FASE-B abrio esta
+Ejecuta SOLO FASE-C del plan .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo si FASE-B abrio esta
 fase con su medicion; si no se abrio, cierra la sesion declarando que la fase no aplica.
 
 OBJETIVO: curar la clasificacion en scripts/build_lesson_index.py como codigo de producto, con su AC, su mutacion

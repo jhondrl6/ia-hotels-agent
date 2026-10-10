@@ -1,0 +1,64 @@
+# Orden R2.10 (executor R2.5 y contrato §Cierre): write-back -> indice -> git mv -> indice -> refs -> citas -> quick
+## paso 2: build_lesson_index (plan cerrado, consultable)
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=363 commit=11 sin_fuente=0
+EXIT=0
+## paso 3: git mv del plan a Archives/ (14 rutas renombradas en el indice)
+EXIT=0
+## paso 3b: build_lesson_index otra vez (publica la ruta NUEVA)
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=363 commit=11 sin_fuente=0
+EXIT=0
+## paso 4: validate_opencode_refs --fix
+  [FIX] 05-prompt-inicio-sesion-fase-B.md: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 -> .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07
+  [FIX] 05-prompt-inicio-sesion-fase-C.md: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 -> .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07
+  [FIX] 05-prompt-inicio-sesion-fase-RELEASE.md: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 -> .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07
+  [FIX] dependencias-fases.md: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 -> .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07
+[FIX] 7 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+EXIT=0
+## paso 5: validate_plan_citations --update-baseline (acto visible, declarado)
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT=0
+## prueba de congelamiento: el cuerpo publicado no debe haber movido ni un byte
+sha antes: 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0
+sha256sum: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md: No such file or directory
+sha ahora: 
+## paso 6: quick
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 loaded correctly
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1397 tracked files + staged + 1208 salidas en output/ y logs/ (excluidos declarados: 1 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 3765 rutas contra 4 marcadores (1 grandfathered con dueño)
+  [-] Document Integration: Cross-document validation failed
+      - [FAIL] DOMAIN_PRIMER vs VERSION.yaml
+      -    [!] Version mismatch: DOMAIN_PRIMER=4.79.0, VERSION.yaml=4.80.0
+      -    [!] Release date mismatch: DOMAIN_PRIMER=2026-10-07, VERSION.yaml=2026-10-09
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=161 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 12/13 validations passed
+============================================================
+  STATUS: 1 VALIDATION(S) FAILED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+EXIT_QUICK=0
+## re-toma del dictamen con el plan ya archivado (fidelidad remota y [CONTADOR])
+[OK] QMind Write-back: 15/15 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [AVISO] descarga 01a12247-f791-7944-832e-13f5cad68f3e salió 1: error: QMind network request failed
+  [NO-EVALUABLE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la entrada no grabo sha_cuerpo (registro schema 1.1), es anterior a la cura y no se rellena hacia atras; no es VENCIDO ni verde
+  [DUPLICADO-VIGENTE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la fuente 01a0bfc9-5f5a... (10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones...) con sha_metadata 87b9b6664f94... nombra al plan y no esta marcada como reemplazada: dos fuentes vigentes del mismo plan
+  [NO-EVALUABLE] EVALUACION-JEV-TYPESAFE-2026-09-21 :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09): 1 fuente(s) cuyo metadata casa no bajaron; sin observacion no hay VENCIDO
+  [FRESCO] CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 :: 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [CONTADOR] 3 vigente(s): 2 dictaminada(s) por cuerpo, 1 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 2+1+0==3; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+[FAIL] qmind write-back: titulo OK | contenido: DUPLICADO-VIGENTE
+EXIT_STRICT=0

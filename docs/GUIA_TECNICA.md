@@ -1,7 +1,7 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.79.0 (WhatsApp verificado, orden real y entrega única de Don Alfonso)
-**Última actualización:** 2026-10-07
+**Versión:** v4.80.0 (Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado)
+**Última actualización:** 2026-10-09
 
 ---
 
@@ -1976,6 +1976,19 @@ Financial Evidence Engine + Regional Benchmark Fallback + Evidence-Based Channel
 
 ------
 
+## Notas de Cambios v4.80.0 — instrumentos de lecciones (plan CURA-INSTRUMENTOS-QMIND-S15)
+
+**Módulos afectados:** `scripts/validate_qmind_writeback.py` (único código tocado por el plan), `scripts/build_lesson_index.py` (**no** editado), `tests/test_validate_qmind_writeback_escritura.py`, `tests/test_build_lesson_index_s15_fecha_versionada.py`, `.opencode/qmind-writeback/` (registro + instantáneas), `scripts/run_all_validations.py` (**no** editado: sus dos dientes que leen la fuente del runner siguen verdes).
+
+**Problema.** El verificador de write-back comparaba el sha de la instantánea contra el sha del cuerpo **crudo**, así que ninguna publicación saneada podía dar verde; y el control S15 del índice pineaba un par de `mtime` que quedaba por encima del piso de fechas-en-nombre del corpus, así que perdía según el árbol.
+
+**Solución.** (1) Separar las dos preguntas: vigencia = `sha_cuerpo` publicado contra sha del cuerpo actual; fidelidad remota = `metadata.fileSha256` y, si hubo descarga, la descarga. Registro en schema **1.1** con campo `sha_cuerpo`; las entradas `1.0` salen `NO-EVALUABLE por instrumento` y está **prohibido el back-fill**. (2) Nombre de instantánea `<plan>--<título-saneado>--<huella>.md` con el presupuesto reservado desde el extremo de la firma, para que dos publicaciones del mismo plan no se pisen y ninguna pueda llamarse `README.md`. (3) `fuente_id` parseada de la **tabla** `Key: value` que responde el CLI, con verificación por censo y **cero re-subidas**. (4) `ruta_del_upload()` + `sin_directorio()`: el rojo de ruta se dicta antes de la primera llamada remota, y `cuerpo_del_plan()` resuelve las dos raíces (raíz y `Archives/`). (5) El bloque de fuente huésped se extrae a `_huespedes_sin_contabilidad()` y se recorre **también** en la rama de migración (DA-CIM.9), que es lo que hace alcanzable el rojo de la era G. (6) En el control S15 el par de `mtime` se **deriva** del corpus (`_piso_y_techo()`, `_par_de_mtimes()`) y el clon fija su config dentro del árbol.
+
+**Semántica del registro para quien lea `.opencode/qmind-writeback/registro.json`:** `sha256` es el de la instantánea (lo que recibió el servidor) y `sha_cuerpo` el del cuerpo del plan en el momento de publicar. Un cuerpo editado después de publicar queda `VENCIDO` por diseño; una entrada sin `sha_cuerpo` no es VENCIDO ni verde.
+
+**Backwards compatibility.** No hay cambio de API pública: las banderas `--upload`, `--file`, `--title`, `--nb`, `--strict`, `--registro` y `--plans-dir` son las que el propio `--help` imprime (verificadas antes de usarlas, L-VUP-9). El pipeline `v4complete` no se toca en ninguna fase del plan. Las entradas `1.0` del padre se leen sin re-escribirse.
+
+**Tests.** Dos familias gobernadas por el plan; la resta por fase, sus mutantes y sus crudos viven en `09-documentacion-post-proyecto.md` §D del plan archivado y en `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/`, no en esta guía.
 ## Notas de Cambios
 
 ### v4.57.0 — Financial Coherence & Asset Semantics Rescue

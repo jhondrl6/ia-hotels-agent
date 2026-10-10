@@ -31,6 +31,16 @@
       "sha_cuerpo": "b88e3e08a70da45f2d87a5e1c34419a6f5165e13daf6f1dbd786198995b28d05",
       "instanea": "EVALUACION-JEV-TYPESAFE-2026-09-21--10-analisis_EVALUACION-JEV-TYPESAFE-2026-09-21_cura_B2-1_B2-1c_--b88e3e08a70da45f.md",
       "publicado": "2026-10-09"
+    },
+    {
+      "plan": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+      "titulo": "10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10)",
+      "estado": "vigente",
+      "fuente_id": "01a1239b-f8a2-7456-bbdb-f7d932a70b6e",
+      "sha256": "349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0",
+      "sha_cuerpo": "349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0",
+      "instanea": "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07--10-analisis_CURA-INSTRUMENTOS-QMIND-S15-2026-10-07_cierre_4--349b85c5b7a6f3e4.md",
+      "publicado": "2026-10-09"
     }
   ]
 }

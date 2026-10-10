@@ -1,0 +1,18 @@
+# FASE-RELEASE: congelado del cuerpo y copia versionada (AC10, paquete offline)
+# comando: PYTHONUTF8=1 ./venv/Scripts/python.exe temp/stamp_cuerpo_release.py
+# interprete: venv 3.13 con PYTHONUTF8=1 declarado (S-CIM-10)
+# HEAD al cerrar: 0f50ea4
+# sustituciones aplicadas: 0 (el operador dicto la publicacion «sin sustituciones» en esta sesion)
+cuerpo : sha256 547fdd4c7c70196d22c8077140501a7825e4cde4261a0c3f2ea255660d4041da  40869 B
+copia  : sha256 547fdd4c7c70196d22c8077140501a7825e4cde4261a0c3f2ea255660d4041da  40869 B
+[FIDELIDAD] OK - sustituciones = 0 (el operador dicto «sin sustituciones»); invertir el conjunto vacio reproduce el cuerpo byte a byte
+pendientes ⬜ restantes en el cuerpo: 1
+lineas del cuerpo: 131
+EXIT=0
+# re-toma: la fila FASE-A2 se re-ancoro DESPUES del primer stamp (el script escribio antes de ese rep); cuerpo recongelado y copia reconstruida
+547fdd4c7c70196d22c8077140501a7825e4cde4261a0c3f2ea255660d4041da *.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+547fdd4c7c70196d22c8077140501a7825e4cde4261a0c3f2ea255660d4041da *evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/qmind-upload-10-analisis-cierre-4.80.0.md
+2
+# re-toma 2: FASE-A2 re-ancorada y cuerpo recongelado; el unico ⬜ restante es la columna Status de H-8 (deuda S-CIM-9 abierta por caracterizacion, no una fila de fase pendiente)
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/qmind-upload-10-analisis-cierre-4.80.0.md

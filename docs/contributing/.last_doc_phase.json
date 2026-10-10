@@ -320,5 +320,7 @@
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md": "FASE-A3",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md": "FASE-A3",
   "tests/test_validate_qmind_writeback_escritura.py": "FASE-A3",
-  "docs/contributing/.last_doc_phase.json": "FASE-A3"
+  "docs/contributing/.last_doc_phase.json": "FASE-A3",
+  "45 rutas: 14 renombradas por el git mv de Archives/": "FASE-RELEASE",
+  "12 modificadas y 19 nuevas de evidencia; unidad y comando en E/FASE-RELEASE/07-medicion_rutas.txt": "FASE-RELEASE"
 }

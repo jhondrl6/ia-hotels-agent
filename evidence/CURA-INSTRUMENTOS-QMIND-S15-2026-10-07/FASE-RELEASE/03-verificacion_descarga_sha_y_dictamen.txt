@@ -1,0 +1,32 @@
+# AC10: verificacion por DESCARGA + sha256 del cuerpo publicado (no por titulo, no por SKIP)
+# instrumento: descargar_fuente() del propio writer, sobre la fuente_id publicada
+# racha contada, sin reintento en bucle mas alla de 3 intentos
+Traceback (most recent call last):
+  File "<string>", line 12, in <module>
+    ok=w.descargar_fuente(nb,fid,dest)
+  File "C:\Users\Jhond\Github\iah-cli\scripts\validate_qmind_writeback.py", line 213, in descargar_fuente
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    ^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'parent'
+EXIT_DESCARGA=1
+
+# dictamen [17/18] del verificador curado, con --strict
+[OK] QMind Write-back: 14/14 10-analisis archivados ingested en 'iah-cli-lecciones'
+  [AVISO] descarga 01a12247-f791-7944-832e-13f5cad68f3e salió 1: error: QMind network request failed
+  [AVISO] descarga 01a1239b-f8a2-7456-bbdb-f7d932a70b6e salió 1: error: QMind network request failed
+  [NO-EVALUABLE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la entrada no grabo sha_cuerpo (registro schema 1.1), es anterior a la cura y no se rellena hacia atras; no es VENCIDO ni verde
+  [DUPLICADO-VIGENTE] REFACTOR-WHATSAPP-ENTREGA-2026-09-18 :: 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas): la fuente 01a0bfc9-5f5a... (10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones...) con sha_metadata 87b9b6664f94... nombra al plan y no esta marcada como reemplazada: dos fuentes vigentes del mismo plan
+  [NO-EVALUABLE] EVALUACION-JEV-TYPESAFE-2026-09-21 :: 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09): 1 fuente(s) cuyo metadata casa no bajaron; sin observacion no hay VENCIDO
+  [NO-EVALUABLE] CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 :: 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10): 1 fuente(s) cuyo metadata casa no bajaron; sin observacion no hay VENCIDO
+  [CONTADOR] 3 vigente(s): 2 dictaminada(s) por cuerpo, 0 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 2+1+0==3; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+[FAIL] qmind write-back: titulo OK | contenido: DUPLICADO-VIGENTE
+EXIT_STRICT=1
+
+# RETOMA de la seccion de descarga: el intento anterior paso una ruta str donde descargar_fuente() exige pathlib.Path (AttributeError en la linea 213 del instrumento). Bug del arnes de esta sesion, no del writer: el crash ocurrio antes de tocar la red. Se re-ejecuta con el tipo correcto y la racha contada.
+  intento 1: OK  40970 B  sha=349b85c5b7a6f3e4e87d  casa=True
+[VERIFICACION POR DESCARGA] byte-exacto contra el cuerpo publicado: True
+[RAZON DE LA ABSTENCION si anterior es False] fidelidad remota NO EVALUABLE por red; la vigencia POR CUERPO no depende de la descarga y ya fue dictaminada por el verificador
+EXIT=0
+
+# dictamen del cuerpo local: no se re-edito tras la subida
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md

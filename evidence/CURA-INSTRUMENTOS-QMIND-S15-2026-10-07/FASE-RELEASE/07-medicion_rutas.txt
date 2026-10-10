@@ -1,0 +1,17 @@
+# 07: medicion de rutas de ESTA fase y fila de REGISTRY
+## como estampo la fase anterior (formato del campo)
+388:## FASE-B - 2026-03-25
+389-
+390-**Descripcion:** Fix optimization_guide template - eliminate generic placeholders
+391-
+--
+1532:## FASE-B - 2026-04-06 (Document Quality Gate + Content Scrubber)
+1533-
+1534-**Descripcion:** Validacion de calidad post-generacion y limpieza de contenido LLM para documentos comerciales.
+## rutas movidas por esta sesion, EXCLUIR las 13 staged del hermano (S-CIM-7)
+total rutas propias: 45
+     12  M
+     19 ??
+      2 R 
+     12 RM
+## las 13 ajenas siguen staged, intactas: 13

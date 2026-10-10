@@ -1,15 +1,36 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.79.0"
-codename: "WhatsApp verificado, orden real y entrega única de Don Alfonso"
-release_date: "2026-10-07"
+version: "4.80.0"
+codename: "Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado"
+release_date: "2026-10-09"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-10-07"
+date: "2026-10-09"
 plan_maestro_version: "v2.6.0"
+
+# v4.80.0 - CURA-INSTRUMENTOS-QMIND-S15 (2026-10-09)
+# Plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, cerrado por su FASE-RELEASE: los dos instrumentos de lecciones
+# del repo dictaminan sobre su propio cuerpo. Sin codigo de producto, sin pipeline y sin FASE-VERIFY.
+# FASE-A1 (AC1, AC2): el registro pasa a schema 1.1 con `sha_cuerpo` y la puerta de vigencia compara
+#         cuerpo contra cuerpo. Las entradas 1.0 salen NO-EVALUABLE por instrumento; back-fill prohibido.
+# FASE-A2 (AC3, AC4): el nombre de la instantanea lleva la huella del sha al final del presupuesto, asi que
+#         dos publicaciones del mismo plan no se pisan, y `fuente_id` sale de la tabla real del CLI sin re-subir.
+# FASE-A3 (AC5, AC6, DA-CIM.9): el rojo de ruta del `--upload` se dicta antes de la primera llamada remota y
+#         el bloque de fuente huesped se recorre tambien en la rama de migracion. La era G queda roja
+#         DECLARADA con dueno y disparador (S-CIM-2), no tapada.
+# FASE-B (AC7, AC8): el control S15 deriva su par de `mtime` del corpus que el propio generador recorre,
+#         fija la config del clon dentro del arbol y conserva el control negativo anclado a la revision fija
+#         `6b02532`. FASE-C (AC9) se declara NO APLICA por la medicion de AC7, no por economia.
+# FASE-RELEASE (AC10): el `10-analisis` de este plan se publica con el writer ya curado y `[17/18]` lo
+#         dictamina por cuerpo. Su registro, su verificacion por descarga y sus crudos viven en
+#         `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/`.
+# LIMITES que esta entrada publica: `[18/18]` sigue invocado sin `--strict` y esta fuera de alcance
+#         (S-CIM-1); el rojo de la era G es un hallazgo verdadero con dueno; el modo completo de esta
+#         maquina requiere PYTHONUTF8=1 (S-CIM-10). Fuente unica de las metricas por fase:
+#         `09-documentacion-post-proyecto.md` §D del plan archivado.
 
 # v4.79.0 - REFACTOR-WHATSAPP-ENTREGA (2026-10-07)
 # Plan REFACTOR-WHATSAPP-ENTREGA-2026-09-18, cerrado por su FASE-RELEASE: fases C, D, E, F, H,

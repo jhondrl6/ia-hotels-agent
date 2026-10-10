@@ -1,0 +1,7 @@
+# PRE seleccion literal de la familia del plan, medido al abrir FASE-RELEASE
+# interprete: ./venv/Scripts/python.exe (3.13) con PYTHONUTF8=1 declarado (S-CIM-10)
+# comando: python -m pytest tests/test_validate_qmind_writeback_escritura.py tests/test_build_lesson_index_s15_fecha_versionada.py -q
+# HEAD: 0f50ea4c4f1c4c58af573e0d15154d6ff9ce4555
+.................................................................        [100%]
+65 passed in 44.16s
+EXIT=0

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-09
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 520
+> **Total fases completadas:** 521
 
 ---
 
@@ -12204,6 +12204,27 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 4 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE - 2026-10-09
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: release 4.80.0, write-back propio AC10 con el writer curado y archivado R2.10
+**Nota:** fase documental: no anade tests (resta 0 sobre la misma seleccion literal, PRE 65 passed y POST 65 passed, ambos EXIT=0); sin commit autorizado (el operador autorizo solo la subida), el archivado queda como rename staged y las 13 rutas staged del hermano siguen intactas
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| (esta fila se re-escribió a mano, con errata visible: el escritor partió el texto descriptivo de `--archivos-mod` por comas y lo trató como lista de rutas; re-correr el escritor apilaría una entrada duplicada, que la regla de cierre prohíbe) | VER `E/FASE-RELEASE/07-medicion_rutas.txt` |
+| 61 rutas propias de la sesión, **re-medidas al cierre definitivo** (la primera estampada decía 45 y la segunda 59; ambas quedaron vencidas por los crudos que la propia tanda siguió produciendo — el contador de esta fila es un número que el resto de la fila no puede congelar): 14 renombradas por el `git mv` a `Archives/`, 14 modificadas y 33 nuevas de evidencia. Las modificadas son el par de encabezados (`VERSION.yaml`, `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `CHANGELOG.md`), el par derivado del índice (`.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json`), `DOMAIN_PRIMER.md`, y los dos artefactos que escribieron sus propios escritores (`.opencode/qmind-writeback/registro.json`, `docs/contributing/REGISTRY.md` con `.last_doc_phase.json`). Ningún archivo bajo `scripts/` ni `tests/` fue tocado por esta fase | unidad y comando: `git status --porcelain -uall` excluyendo las 13 rutas staged del hermano (S-CIM-7); el inventario la publica `ls -1 evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/` |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

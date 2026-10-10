@@ -1,8 +1,8 @@
-<!-- agents_version: v4.79.0 | last_update: 2026-10-07 -->
+<!-- agents_version: v4.80.0 | last_update: 2026-10-09 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.79.0 -- WhatsApp verificado, orden real y entrega única de Don Alfonso COMPLETADO**
+> **v4.80.0 -- Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado COMPLETADO**
 
 ---
 

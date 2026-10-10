@@ -1,0 +1,108 @@
+# 08: fila de REGISTRY de FASE-RELEASE (primera vez que ESTA fase se registra: no es re-registro)
+## pre-chequeo: FASE-RELEASE de este plan NO estaba registrada
+30
+3:> **Ultima actualizacion:** 2026-10-09
+1449:| `docs/contributing/REGISTRY.md` | Ultima actualizacion y version actual |
+## corrida del escritor
+============================================================
+LOG PHASE COMPLETION: FASE-RELEASE
+============================================================
+
+[VERSION GATE] Release detectado: 4.80.0
+
+============================================================
+VERSION SYNC GATE
+============================================================
+  Release version: 4.80.0
+  CHANGELOG.md:    4.80.0
+  VERSION.yaml:    4.80.0
+  (OK) CHANGELOG y VERSION.yaml sincronizados en 4.80.0
+
+[SYNC] Ejecutando sync_versions.py...
+============================================================
+VERSION SYNC
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.80.0
+  codename: Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado
+  date: 2026-10-09
+
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+
+============================================================
+Result: All files in sync
+
+
+[CHECK MANUAL DOCS] (R) No se detectaron cambios arquitectonicos.
+   GUIA_TECNICA.md no requiere actualizacion para esta fase.
+
+[1/2] Actualizando REGISTRY.md...
+       (R) C:\Users\Jhond\Github\iah-cli\docs\contributing\REGISTRY.md
+
+============================================================
+POR_HACER: Documentacion Manual
+============================================================
+
+Segun CONTRIBUTING.md (R8, estos archivos se actualizan manualmente:
+
+  (T) CHANGELOG.md
+     Cuando: Nueva release (registro historico de cambios)
+
+  (T) GUIA_TECNICA.md
+     Cuando: Cambios arquitectonicos o tecnicos
+
+  (T) ROADMAP.md
+     Cuando: Cambios en estrategia de monetizacion
+
+  (T) .agents/workflows/README.md
+     Cuando: Agregar o eliminar skills
+
+  (T) .agent/knowledge/DOMAIN_PRIMER.md
+     Cuando: Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)
+
+============================================================
+Recordatorio: Editar CHANGELOG.md al final de release
+============================================================
+
+============================================================
+DOCUMENTATION AUDIT - Documentacion Huérfana
+============================================================
+
+  (OK) Todos los archivos de documentacion mencionan la fase
+       No se detectaron gaps
+
+
+[2/2] Checklist final:
+       (X) Actualizar CHANGELOG.md (al final del release)
+       (X) Actualizar GUIA_TECNICA.md (si hay cambios arquitectonicos)
+       (X) Verificar sync_versions.py si es release
+       (X) Ejecutar: python scripts/run_all_validations.py --quick
+       (X) Version Sync Gate: PASSED (4.80.0)
+
+(R) Fase registrada exitosamente
+EXIT_ESCRITOR=0
+## la fila escrita
+12212:## FASE-RELEASE - 2026-10-09
+12213-**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: release 4.80.0, write-back propio AC10 con el writer curado y archivado R2.10
+12214-**Nota:** fase documental: no anade tests (resta 0 sobre la misma seleccion literal, PRE 65 passed y POST 65 passed, ambos EXIT=0); sin commit autorizado (el operador autorizo solo la subida), el archivado queda como rename staged y las 13 rutas staged del hermano siguen intactas
+12215-
+12216-### Archivos Nuevos
+12217-_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+12218-
+12219-### Archivos Modificados
+12220-| Archivo | Cambio |
+12221-|---------|--------|
+12222-| `45 rutas: 14 renombradas por el git mv de Archives/` | 45 Rutas: 14 Renombradas Por El Git Mv De Archives |
+12223-| `12 modificadas y 19 nuevas de evidencia; unidad y comando en E/FASE-RELEASE/07-medicion_rutas.txt` | 07-Medicion Rutas |
+12224-
+## derivados y quick otra vez (el escritor toco docs)
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED

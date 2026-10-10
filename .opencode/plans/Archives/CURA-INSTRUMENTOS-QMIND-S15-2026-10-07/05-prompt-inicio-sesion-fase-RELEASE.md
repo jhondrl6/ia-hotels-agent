@@ -81,7 +81,7 @@ que conserve el stem del plan, sha del cuerpo. Con autorización literal, y **co
 ```bash
 ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --upload CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 --file <copia saneada versionada> --title <titulo nuevo>
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
-git mv .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 .opencode/plans/Archives/
+git mv .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 .opencode/plans/Archives/
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix
 ./venv/Scripts/python.exe scripts/validate_plan_citations.py --update-baseline
@@ -142,7 +142,7 @@ el mensaje de commit.
 
 Lee 01-plan-maestro.md §1 y §4, 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md, 05-prompt-inicio-sesion-fase-RELEASE.md y el workflow canónico.
 
-Ejecuta SOLO FASE-RELEASE del plan .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo con todas las
+Ejecuta SOLO FASE-RELEASE del plan .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo con todas las
 fases previas cerradas.
 
 OBJETIVO: publicar la documentacion oficial, usar el writer curado para publicar el analisis de este propio plan y

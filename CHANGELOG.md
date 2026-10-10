@@ -1,8 +1,75 @@
 # Changelog
 
-## [Sin publicar] - FASE-B del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-09
+## [4.80.0] - Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado — 2026-10-09
 
-### AC7 y AC8: el control S15 deja de fallar según el entorno sin perder su diente
+### Objetivo
+
+Cerrar el plan `CURA-INSTRUMENTOS-QMIND-S15-2026-10-07`: que los dos instrumentos de lecciones del repo puedan **decir la verdad sobre sí mismos**. El verificador de write-back de QMind (`scripts/validate_qmind_writeback.py`) ya puede dictaminar la vigencia de un plan cuyo cuerpo publicado fue saneado —antes era estructuralmente imposible— y el control S15 del índice de lecciones deja de fallar según el entorno sin perder el diente que lo justifica. Estado terminal: **los dos instrumentos curados y el plan publicado con su propio writer (AC10)**, con dos rojos que siguen vivos porque son hallazgos verdaderos, no defectos de esta release.
+
+**Lo que se demostró.** AC1–AC8 landed con dientes y mutantes sobre el instrumento versionado; AC10 usó el writer ya curado para publicar el `10-analisis` de este propio plan, que es el caso que `[17/18]` no podía dictaminar. **Lo que no.** `[18/18]` sigue invocado sin `--strict` (S-CIM-1, fuera de alcance por mandato) y la fuente de la era G sigue siendo un rojo **declarado** con dueño (S-CIM-2, AC6 opción b): esta release no lo apaga.
+
+### Límites publicados
+
+- **Un rojo verdadero queda en el árbol.** El modo completo cortará `[17/18]` por contabilidad de la era G mientras el registro no contenga esa fuente; es el diseño funcionando (DA-CIM.4), no una regresión, y solo se apaga por la vía (a) `vigente-historica` con autorización literal o por una decisión sobre contenido publicado.
+- **La instantánea congela el cuerpo.** Desde la publicación de AC10, el `10-analisis` de este plan no se re-edita: re-escribir sus shas vencería su propio cuerpo por la puerta que este plan acabó de curar.
+- **Nada de código de producto.** El plan no toca el pipeline `v4complete`, los gates ni los umbrales; no ejecutó `v4complete` ni `v4audit` en ninguna fase y por eso no activó FASE-VERIFY (maestro §3, criterio 2).
+- **FASE-C (AC9) no se ejecutó**, declarada NO APLICA por la medición de AC7, no por economía de sesión.
+- **El modo completo de esta máquina requiere `PYTHONUTF8=1`** (S-CIM-10): el runner moría decodificando un subprocess con cp1252 antes de imprimir su primera etiqueta. No lo introdujo este plan y no se cura aquí.
+- **Presupuesto por fase (DA-CIM.10):** 90 `tool_use` para A2/A3/B/C y 60 para RELEASE, con la cláusula de exceso → checkpoint intacta. Cada fase cerró con auto-reporte en la unidad usada; el instrumento canónico sigue fuera de servicio.
+
+### Cambios Implementados
+
+- **Registro schema 1.1 con `sha_cuerpo` y puerta cuerpo-contra-cuerpo (FASE-A1, AC1+AC2)**: la vigencia se responde comparando el sha grabado al publicar contra el sha del cuerpo actual del repo; la fidelidad remota sigue en `metadata.fileSha256` y la descarga. Las entradas `1.0` salen `NO-EVALUABLE por instrumento` con su motivo — back-fill prohibido — y el resumen publica su `[CONTADOR]`.
+- **Nombre de instantánea con huella y `fuente_id` desde la tabla real del CLI (FASE-A2, AC3+AC4)**: `slug_de_instantanea()` reserva el presupuesto al extremo de la firma, así que dos publicaciones del mismo plan dejan dos byte-exactos distintos y ninguna puede llamarse `README.md`; `fuente_id_de_tabla()` + `verificar_por_censo()` publican el id sin re-subir nunca.
+- **Ruta archivada y fuente huésped dictada (FASE-A3, AC5+AC6+DA-CIM.9)**: el rojo `[FAIL] Upload: el directorio no existe` se dicta **antes** de la primera llamada remota, y `_huespedes_sin_contabilidad()` se recorre también en la rama de migración, que es lo que hace visible el rojo de la era G. `causas_del_rojo()` nombra las causas que la corrida imprimió.
+- **Reloj del control S15 gobernado y fidelidad del clon (FASE-B, AC7+AC8)**: el par de `mtime` se **deriva** del piso y techo de fechas del corpus que el propio generador recorre, el clon fija su config dentro del árbol (patrón S20) y la no-materialización sale `NO-EVALUABLE` nombrando la ruta. El control negativo sigue anclado a la revisión fija `6b02532`.
+- **Línea base estampada (FASE-ENMIENDA, DA-CIM.9 y DA-CIM.10)**: las dos decisiones del operador quedaron escritas en toda la línea base, con el censo de rutas publicado con su unidad y su comando.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `.opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/` (14 rutas) | El expediente del plan: maestro, contrato, lecciones, checklist, los cinco prompts de fase, 09, 10, README y dependencias |
+| `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/` (89 rutas en FASE-0/A1/A2/A3/B/ENMIENDA/RELEASE) | Crudos de PRE/POST, mutantes con su restauración por sha256, censos remotos de solo lectura y actas de cada corte |
+
+Unidad y comando: `git show --name-status --diff-filter=AMR` sobre los veintidós commits del plan, deduplicado por primera aparición → **114 rutas = 103 nuevas + 11 modificadas**, cero renombradas. Ninguna nueva es código de producto ni test: las dos familias de tests ya existían.
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/validate_qmind_writeback.py` | El instrumento curado por A1/A2/A3: `sha_cuerpo`, schema 1.1, `slug_de_instantanea()`, `fuente_id_de_tabla()`, `verificar_por_censo()`, `ruta_del_upload()`, `_huespedes_sin_contabilidad()`, `causas_del_rojo()` |
+| `tests/test_validate_qmind_writeback_escritura.py` | Dientes de las tres fases, aditivo: ninguna aserción vieja re-bajada |
+| `tests/test_build_lesson_index_s15_fecha_versionada.py` | El reloj derivado del corpus, la config del clon dentro del árbol y el diente que afirma la revisión fija |
+| `.opencode/qmind-writeback/instantaneas/README.md` | Prosa de la semántica nueva (viajó con el commit de la cura, L-G3) |
+| `.opencode/qmind-writeback/registro.json` | Escrito solo por el escritor: schema 1.1 y las entradas con `sha_cuerpo` y `fuente_id` |
+| `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` | El par derivado, regenerado con su escritor al cierre de cada fase (R2.10) |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Regenerado por su escritor, nunca a mano |
+| `docs/contributing/REGISTRY.md` + `.last_doc_phase.json` | Las entradas por fase, escritas por `log_phase_completion.py` |
+| `CHANGELOG.md`, `docs/GUIA_TECNICA.md` | Nota por fase bajo «Sin publicar» y, en esta release, el encabezado de versión |
+| `VERSION.yaml`, `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` | La fuente única de versión y los encabezados que propaga `scripts/sync_versions.py`, con el número dictado por el operador en esta sesión |
+
+### Tests
+
+- Suite del plan (selección literal de las dos familias, misma unidad en PRE y POST): el `--quick` y el modo completo de esta release con su crudo archivan el estado de cada check; la resta por fase y su instrumento viven en `09-documentacion-post-proyecto.md` §D del plan y en `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/`.
+- Canónico de la cifra por archivo: `git grep -c -E "^\s*def test_" HEAD -- <ruta>`. El denominador del quick y el modo completo lo imprime la corrida, no este documento.
+- Regresiones: las que aparecen en la corrida se atribuyen por causa en su crudo; no se prellena «0 regresiones».
+
+### FASE-RELEASE del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 — 2026-10-09
+
+- **Qué cerró (AC10).** El `10-analisis` de **este propio plan** se publicó con el writer ya curado, con el plan aún en raíz y con el cuerpo congelado antes de la subida. El verificador lo dicta **`[FRESCO] ... 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256`** y su `[CONTADOR]` pasa de `0 con fidelidad remota medida` a **`1`** (`2 dictaminada(s) por cuerpo, 1 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; 2+1+0==3`). Es la prueba de que el plan cerró su propia meta: sin AC1 ni AC2 landed este caso no puede dar verde.
+- **Paquete offline y unidad.** Copia versionada `E/FASE-RELEASE/qmind-upload-10-analisis-cierre-4.80.0.md`, **byte-idéntica** al cuerpo (0 sustituciones, dictado del operador), con la prueba inversa del conjunto vacío y sha256 del cuerpo `349b85c5b7a6f3e4…` (40.970 B). Publicada con título nuevo; `fuente_id` `01a1239b-f8a2-7456-bbdb-f7d932a70b6e`; la instantánea con la huella al final del nombre (AC3) y `sha_cuerpo == sha256` (AC1). Verificación por **descarga + sha256**, racha **1/1**, no por título ni por `SKIP`.
+- **Orden R2.10 completo y probado.** La subida se hizo con el plan en raíz; luego índice, git mv, índice otra vez (publica la ruta nueva), validate_opencode_refs.py --fix (7 referencias reparadas, **ninguna** de ellas en el cuerpo congelado), validate_plan_citations.py --update-baseline (81 archivos, 745 citas: acto visible declarado) y quick. Prueba de congelamiento: el sha del cuerpo bajo Archives/ es **idéntico** al sha_cuerpo publicado, o sea el git mv movió la ruta, no los bytes (AC5 landed y ejercida por el caso real).
+- **Version y derivado vencido por el bump.** `VERSION.yaml` 4.79.0 → **4.80.0** con el codename dictado; `sync_versions.py` propagó a `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md` y `docs/GUIA_TECNICA.md`, y el checker cerró `TODO SINCRONIZADO` sin `(!)`. El bump dejó vencido el derivado `DOMAIN_PRIMER.md` (rojo `Document Integration`, el mismo que el padre) y se regeneró **con su escritor**, nunca a mano.
+- **Los rojos que no se tapan.** `--strict` cierra `[FAIL] ... contenido: DUPLICADO-VIGENTE` por la fuente de la era G: hallazgo **verdadero** declarado con dueño (operador) y disparador (S-CIM-2, AC6 opción b). Y `[18/18]` sigue invocado sin `--strict` (S-CIM-1, fuera de alcance por mandato). Ninguno se apaga en esta release.
+- **Dos yerros de esta sesión, escritos con su re-toma.** (1) El arnés de la descarga pasó una ruta `str` donde `descargar_fuente()` exige `Path`: el `AttributeError` salió **antes** de tocar la red, se declaró en el crudo y la re-toma casó byte-exacta en el intento 1. (2) Los `EXIT=` del crudo de R2.10 salía del `tail` por ir con tubería: se re-midieron sin tubería (quick `EXIT=0`, strict `EXIT=1`).
+- **Límites de la tanda.** El operador autorizó **solo** la subida de AC10: no hay commit, ni L3 ni push en esta sesión, así que el archivado queda en el índice como rename staged y los cinco cortes cierran en «espera de autorización». Las 13 rutas staged del hermano REFACTOR-WHATSAPP (S-CIM-7) no se tocaron.
+
+
+
+### FASE-B del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-09
+
+#### AC7 y AC8: el control S15 deja de fallar según el entorno sin perder su diente
 
 - **Qué se midió (AC7, sin tocar nada).** El rojo de `tests/test_build_lesson_index_s15_fecha_versionada.py` no era el entorno ni el archivado del plan padre: el fixture pineaba `mtime 2020-01-02 / 2031-06-06` y **2031 queda por encima del piso de fechas-en-nombre del corpus** (medido: 2026-07-06; 48 de 72 dueños traen fecha). Como `_plan_date()` de la revisión fija `6b02532` alimenta con ese `mtime` también el **desempate de dueño** (`build()` ordena por fecha ascendente), en el árbol B siete de los once IDs divergentes perdían el dueño y salían con `fuente_fecha = nombre`. Banda medida contra el HEAD de la sesión (`77e64ca`) y reproducida contra `98c190e` y `086ce65`: la misma banda y el mismo piso en las tres revisiones; la medición del mandato queda como antecedente, no como resultado. Crudos `evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-B/`.
 - **Qué se curó (AC8, dentro del test).** El par de `mtime` se **deriva** del corpus que el propio generador recorre (`_piso_y_techo()` y `_par_de_mtimes()`, con el `_sources`/`DATE_RE` del instrumento, no reimplementados), así que lo único que puede divergir entre los dos árboles es la fecha de `mtime`. La otra firma —la inversión de dueño— no se barrió: quedó ejercitada en `test_un_par_en_horqueta_invierte_el_dueno_y_es_el_rojo_que_se_gobierna` (modo `horqueta`). El clon fija su config **dentro** del árbol (patrón S20; medido: pasar `-c core.autocrlf=input` solo a `git clone` no gobierna el `checkout` posterior y los 438 `.md` se materializaban CRLF), su fidelidad se verifica por bytes contra el blob, y la no-materialización sale `NO-EVALUABLE` nombrando la ruta sin afirmar divergencia.
@@ -10,9 +77,9 @@
 - **Hermanas y generador.** `tests/test_build_lesson_index.py` **18 passed** (16 funciones por el conteo canónico; los 2 casos extra vienen de dos parametrizados) y `tests/test_verify_qmind_context_freshness.py` **36 passed**, ambas intactas por `git diff --stat`. `scripts/build_lesson_index.py` **no se editó**: AC7 midió que la cura cabe en el fixture, así que **FASE-C (AC9) se declara «no aplica»**. El `[fechas]` del writer se re-midió en las dos vías: `nombre=361 commit=11 sin_fuente=0` con `EXIT=0` y con `EXIT=1`; el par versionado, regenerado al cerrar el cierre documental, publica `nombre=363 commit=11 sin_fuente=0` (las dos unidades nuevas son `L-CIM.12` y `L-CIM.13`, definidas en los documentos de esta fase). Lecciones nuevas: `L-CIM.12`, `L-CIM.13`.
 
 
-## [Sin publicar] - FASE-A3 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-09
+### FASE-A3 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-09
 
-### AC5: la ruta del `--upload` con el plan archivado, fijada por diente; AC6 y DA-CIM.9: la fuente huésped
+#### AC5: la ruta del `--upload` con el plan archivado, fijada por diente; AC6 y DA-CIM.9: la fuente huésped
 
 - **Qué cura.** (1) `main()` resolvía el notebook **antes** de componer la ruta de `--upload`, así que un `--upload <PLAN>` con el plan bajo `Archives/` respondía el motivo del lector remoto y no la ruta buscada. Ahora `ruta_del_upload()` arma la ruta y el rojo `[FAIL] Upload: el directorio no existe: <ruta>` se dicta **antes** de la primera llamada remota, con un solo emisor del texto (`sin_directorio()`, también usado por `do_upload()`). La composición con prefijo (`--upload Archives/<PLAN>`) ya funcionaba: lo que aporta esta fase es el diente, no la construcción, y su verde es que la clave del registro sigue siendo `plan_dir.name`. (2) El bloque `[DUPLICADO-VIGENTE]` era código suelto al final del bucle: las entradas `1.0` salían por `continue` en la guarda de migración y **nunca** lo recorrían, así que el dictamen de la era G era inalcanzable. Se extrajo a `_huespedes_sin_contabilidad(datos, fuentes, plan)` —DA-CIM.9, decisión del operador del 2026-10-08— y la llaman los dos caminos; la capa D2 **no** se levanta para entradas `1.0` (siguen en abstención, nunca `[FRESCO]`). La línea del rojo ahora publica `sha_metadata` del censo, y una fuente sin promesa dice `sin-sha-en-el-censo`. (3) `causas_del_rojo()`: el resumen agregado listaba `contenido: VENCIDO` para cualquier rojo; ahora nombra las causas que la corrida imprimió (L-CIM.9).
 - **Dientes.** Selección literal de `tests/test_validate_qmind_writeback_escritura.py`: PRE **43 passed**, POST **57 passed**, resta **14** = dientes de esta fase, con el mismo intérprete y `PYTHONUTF8=1` declarado en el crudo; los 43 viejos siguen verdes y el diff no elimina ninguna línea `assert` (medido: 0). Los tres dientes de DA-CIM.9: huésped roja sobre entrada `1.0` con `descargas == 0`; rojo + abstención de migración conviviendo con `EXIT` del rojo; `[CONTADOR]` cuadrando (`cuerpo+migracion+local==N`) con la huésped reportada **fuera** de la suma.
@@ -20,9 +87,9 @@
 - **Censo y dictamen remotos, solo lectura.** `qmind source list` respondió en el **primer** intento: 62 fuentes, 3 nombran al plan padre y **1** (`01a0bfc9-5f5a-783e-9492-16367bbff596`, `sha_metadata` `87b9b6664f945ac6…`, 39.422 B) no tiene entrada contable. AC6 se cerró por la **opción (b)**: el rojo queda declarado con dueño (operador) y disparador (decisión sobre contenido publicado); la vía (a) `vigente-historica` no se ejecutó por falta de autorización literal. Cero `source upload`, cero `source delete`, `registro.json` intacto (`git status --porcelain` vacío sobre la ruta) y ningún enlace firmado persistido en los crudos.
 - **Límites declarados con diente propio.** Concurrence en la misma entrada: una `1.1` VENCIDA por cuerpo termina en `continue` antes del bloque huésped, así que su huésped no se evalúa (deuda S-CIM-9, con diente de caracterización). Y el modo completo de esta máquina moría decodificando un subprocess con cp1252; se re-tomó con `PYTHONUTF8=1` (deuda S-CIM-10).
 
-## [Sin publicar] - FASE-A2 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+### FASE-A2 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 
-### AC3: nombre de instantánea con huella, y AC4: `fuente_id` saliendo de la tabla real del CLI
+#### AC3: nombre de instantánea con huella, y AC4: `fuente_id` saliendo de la tabla real del CLI
 
 - **Qué cura.** Dos defectos del escritor `scripts/validate_qmind_writeback.py`, medidos por el plan padre y
   cerrados aquí. (1) `registrar_publicacion()` nombraba la copia versionada con el prefijo saneado trancado a 120
@@ -60,9 +127,9 @@
 
 ---
 
-## [Sin publicar] - FASE-ENMIENDA del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+### FASE-ENMIENDA del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 
-### Las dos decisiones del operador estampadas en la línea base: el bloque huésped en migración y el presupuesto por fase
+#### Las dos decisiones del operador estampadas en la línea base: el bloque huésped en migración y el presupuesto por fase
 
 - **Qué consolidar.** Esta enmienda no cura código: estampa **dos decisiones del operador del 2026-10-08** en todos
   los documentos que las piden, para que FASE-A2 arranque con presupuesto real y regla de congelación, FASE-A3
@@ -126,9 +193,9 @@
   README, anclado por posición y hoy desplazado) y tres caracteres de otro alfabeto inyectados en prosa española,
   cazados solo por `unicodedata.name()` — ningún check del hook los ve.
 
-## [Sin publicar] - FASE-A1 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
+### FASE-A1 del plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 - 2026-10-08
 
-### Las dos identidades del registro y la puerta de vigencia cuerpo contra cuerpo (AC1, AC2)
+#### Las dos identidades del registro y la puerta de vigencia cuerpo contra cuerpo (AC1, AC2)
 
 - **Qué cambia.** `scripts/validate_qmind_writeback.py` no podía dictaminar vigencia de un plan cuyo `10-analisis`
   fue **saneado**: `verificar_contenido()` comparaba `sha256(instantánea)` contra el cuerpo crudo del repo, y como

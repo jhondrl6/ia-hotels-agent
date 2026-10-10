@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.79.0 | **Codename**: WhatsApp verificado, orden real y entrega única de Don Alfonso
-> **Release date**: 2026-10-07 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.80.0 | **Codename**: Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado
+> **Release date**: 2026-10-09 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-10 | v4.79.0 WhatsApp verificado, orden real y entrega única de Don Alfonso*
+*Auto-generado: 2026-10-10 | v4.80.0 Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

@@ -1,0 +1,12 @@
+# AC10: publicacion del 10-analisis de ESTE plan con el writer curado (autorizacion literal del operador en esta sesion)
+# comando: ./venv/Scripts/python.exe scripts/validate_qmind_writeback.py --upload CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 --file <copia versionada> --title <titulo nuevo>
+# plan en RAIZ al subir (R2.10); sustituciones de identidad: 0 (dictado «sin sustituciones»)
+# cuerpo antes de subir: 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0
+[UP] 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10) <- qmind-upload-10-analisis-cierre-4.80.0.md
+[OK] Registrada instantanea CURA-INSTRUMENTOS-QMIND-S15-2026-10-07--10-analisis_CURA-INSTRUMENTOS-QMIND-S15-2026-10-07_cierre_4--349b85c5b7a6f3e4.md sha256=349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 fuente_id=01a1239b-f8a2-7456-bbdb-f7d932a70b6e
+
+[RESUMEN] upload=1 skip=0 fail=0
+EXIT=0
+# cuerpo despues de subir: 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0
+# redaccion: lineas con originUrl/originalFileUri/Signature/X-Amz = 0
+0

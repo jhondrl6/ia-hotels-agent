@@ -1,0 +1,27 @@
+# 05: correcciones de la corrida anterior, con los codigos leidos SIN TUBERIA
+# (a) Los EXIT= del crudo 04 salieron del tail, no del verificador: [-] con pipe come el codigo. Se re-miden aqui (leaccion propia: el $? del verificador se lee sin tuberia).
+# (b) El bump de VERSION.yaml dejo vencido el derivado DOMAIN_PRIMER (4.79.0 vs 4.80.0): se regenera CON SU ESCRITOR, nunca a mano, como hizo el padre con el mismo rojo.
+
+## DOMAIN_PRIMER con su escritor
+EXIT_REGENERAR=0
+[OK] DOMAIN_PRIMER.md regenerado en .agent\knowledge\DOMAIN_PRIMER.md
+     210 archivos Python, 395 clases en 25 modulos (24 en modules/, 1 root)
+
+## prueba de congelamiento en la RUTA NUEVA (el git mv movio el archivo, no sus bytes)
+sha_cuerpo publicado : 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0
+cuerpo hoy (Archives): 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0
+## quick, codigo real sin tuberia
+EXIT_QUICK=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+## estricto del write-back, codigo real sin tuberia
+EXIT_STRICT=1
+  [FRESCO] CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 :: 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10): 1 fuente(s) que casan por metadata del servidor, promesa verificada por descarga+sha256
+  [CONTADOR] 3 vigente(s): 2 dictaminada(s) por cuerpo, 1 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 2+1+0==3; 1 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma
+[FAIL] qmind write-back: titulo OK | contenido: DUPLICADO-VIGENTE

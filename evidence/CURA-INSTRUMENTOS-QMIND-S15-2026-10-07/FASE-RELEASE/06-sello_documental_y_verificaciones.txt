@@ -1,0 +1,66 @@
+# 06: sello documental de FASE-RELEASE (CHANGELOG 4.80.0, GUIA_TECNICA, 09 A/B/D/E, 06, README, dependencias, 00)
+# arnes: temp/sello_release.py (bytes, assert de ocurrencia por ancla, regla c2 de DA-CIM.10)
+  File "C:\Users\Jhond\Github\iah-cli\temp\sello_release.py", line 68
+    "`cuerpo_del_plan()` resuelve las dos ra\u00edces (ra\u00ez y `Archives/`). (5) El bloque de fuente hu\u00e9sped se extrae a "
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 52-56: truncated \uXXXX escape
+EXIT_SELO=1
+## POST de la seleccion literal (misma seleccion, mismo interprete que el PRE)
+EXIT_POST=0
+.................................................................        [100%]
+65 passed in 43.57s
+## verificadores del cierre, codigos leidos SIN tuberia
+EXIT_CONTEXT=0
+------------------------------------------------------------
+RESULT: All validations passed
+
+EXIT_INTEGRACION=0
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT_GOBERNANZA=0
+  poblacion: 19 instancia(s) | viva-hallazgo 0 en 0 asercion(es) | viva-correcta 9 | historica-congelada 10 | no-resuelta 0 || fuentes: quick 13 checks | solo-completo 5 (total 18) | hook 8 pasos || familias no cubiertas: 4
+  medido 2026-10-09 con: python scripts/validate_governance_numbers.py --report  (imprime; para persistir, --report RUTA  S12)
+## corregir el acento suelto que el arnes escribio en 00 (cerru -> cerro)
+ocurrencias del acento: 0
+## derivados como ULTIMO paso (el sello anadio .md que nombran IDs)
+  -> .opencode/lecciones_index.json
+[fechas] nombre=363 commit=11 sin_fuente=0
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+## prueba final de congelamiento del cuerpo publicado
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+# 06b: re-toma del sello. El arnes fallo por un escape unicode truncado (ra\u00ez por ra\u00edz) que hacia SyntaxError antes de ejecutar cualquier escritura: EXIT_SELO=1 y NINGUN documento fue tocado (medido por sha de CHANGELOG antes y despues del intento fallido).
+  File "<string>", line 6
+    t=t.replace('ra\u00ez','ra\u00edz')
+                ^^^^^^^^^^
+SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 2-6: truncated \uXXXX escape
+## ejecucion del sello
+  File "C:\Users\Jhond\Github\iah-cli\temp\sello_release.py", line 68
+    "`cuerpo_del_plan()` resuelve las dos ra\u00edces (ra\u00ez y `Archives/`). (5) El bloque de fuente hu\u00e9sped se extrae a "
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 52-56: truncated \uXXXX escape
+EXIT_SELO=1
+## derivados como ultimo paso y quick con codigo real (sin tuberia)
+EXIT_INDICE=0
+EXIT_CITAS=0
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+## cuerpo publicado sigue intacto
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+# 06c: re-toma 2 del sello con el escape truncado corregido por edicion directa del arnes
+[OK] arnes compila
+[OK] CHANGELOG y GUIA_TECNICA sellados
+[OK] 09, 06, README y dependencias sellados
+[OK] 00 lecciones: seis filas y §4 con la aplicacion real
+EXIT_SELO=0
+## derivados como ultimo paso
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+[PASS] OpenCode References: todas las referencias existen
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+## quick con codigo real
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+## cuerpo publicado intacto
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md

@@ -167,7 +167,7 @@ el mensaje de commit.
 
 Lee 01-plan-maestro.md §1 y §4, 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md, 05-prompt-inicio-sesion-fase-A1.md y el workflow canónico.
 
-Ejecuta SOLO FASE-A1 del plan .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07. No empieces A2.
+Ejecuta SOLO FASE-A1 del plan .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07. No empieces A2.
 
 OBJETIVO: que la puerta de vigencia del verificador de write-back compare cuerpo contra cuerpo y el registro
 guarde las dos identidades, sin tocar el notebook.

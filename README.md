@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.79.0** -- WhatsApp verificado, orden real y entrega única de Don Alfonso | Actualizado 7 Octubre 2026
+**v4.80.0** -- Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado | Actualizado 9 Octubre 2026
 
 ---
 
@@ -190,7 +190,7 @@ Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRI
 
 ---
 
-## Estado del Proyecto (v4.79.0 -- WhatsApp verificado, orden real y entrega única de Don Alfonso) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
+## Estado del Proyecto (v4.80.0 -- Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 

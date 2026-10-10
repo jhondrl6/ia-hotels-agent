@@ -65,14 +65,13 @@ literal de la subida.⟧ **FASE-A3 cerró el 2026-10-09** contra HEAD `b32a5ad`:
 | FASE-A2 | AC3, AC4 | ✅ CERRADA 2026-10-08 contra `083e6ab`; L3 sin hallazgos sobre `58dc034..083e6ab`. El tip vigente y su banda empujada los imprime `git ls-remote origin refs/heads/master` |
 | FASE-A3 | AC5, AC6 | ✅ CERRADA 2026-10-09, commiteada (`4fec5d0`) y empujada (`b32a5ad..4fec5d0`, L3 con 0 hallazgos) el mismo día |
 | FASE-B | AC7, AC8 | ✅ CERRADA 2026-10-09 (sin commit; árbol en «espera de autorización») | ⟦**Sello 2026-10-09, tanda «Git Commit + L3 + Push».** La autorización literal del operador llegó después del cierre documental y se ejecutó: commit `d7b3815` (30 rutas: 15 modificadas + 15 nuevas; 1.631 inserciones y 98 supresiones) con los **8/8 checks** del hook versionado en verde, incluido `[8/8] Briefing packs in committed tree` (5/5 reproducidos, 0 divergentes, 0 no evaluables) sobre el árbol del pathspec. Commit **por pathspec**, con las 13 rutas staged del hermano REFACTOR-WHATSAPP (S-CIM-7) fuera del commit y **sin des-stagear** (medido: 0 rutas ajenas dentro del commit y 13 siguen staged). Verificación repetida sobre el **árbol del commit** (L-VCF-15): selección literal `8 passed`, `EXIT=0`, con `git diff HEAD` vacío sobre el test curado y sobre el generador (crudo `E/FASE-B/10-post_commit_verificacion.txt`). La revisión profunda L3 devolvió **0 hallazgos** sobre `77e64ca..d7b3815` y el push publicó ese rango con paridad `origin/master..HEAD` = **0** (tip confirmado por `git ls-remote origin refs/heads/master`). **El sha de este sello no se estampa a sí mismo:** lo cubre la corrida L3 de esta misma tanda y, si faltara, la primera de la siguiente.⟧
-| FASE-C | AC9 | ⬜ Condicional (la abre B) |
-| FASE-RELEASE | AC10 | ⬜ Pendiente |
+| FASE-C | AC9 | ✅ **NO APLICA**, declarada por B el 2026-10-09 con su medición (el generador no se editó) |
+| FASE-RELEASE | AC10 | ✅ CERRADA 2026-10-09 **sin commit** (autorizada solo la subida): versión 4.80.0 dictada y sincronizada, AC10 publicada con el writer curado y verificada por descarga + sha256, plan archivado (R2.5) |
 | FASE-VERIFY | — | **No aplica** (executor §4.6, criterio 2: cero ejecuciones E2E) |
 
 ## Cómo continuar
 
-Una fase por sesión (R1). La siguiente sesión abre con el contenido de
-`05-prompt-inicio-sesion-fase-A3.md` (bloque «Prompt de ejecución») —A1 y A2 ya cerraron— y
+Una fase por sesión (R1). El plan está **archivado y cerrado**: no queda ninguna fase por ejecutar. Si el operador autoriza el commit, se abre con el `git status` de este árbol (rename staged del plan + las 13 rutas del hermano S-CIM-7, que no se tocan) y se commitea **por pathspec**, con los derivados regenerados como último paso. Y
 **re-mide** HEAD, paridad, status y el quick antes de escribir la primera línea: dos filas del mandato caducaron
 entre su redacción y esta preparación, y la tercera puede caducar entre sesiones. La referencia de presupuesto y su
 base medida viven en `04-contrato-ejecucion.md` §R2.

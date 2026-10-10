@@ -1,0 +1,15 @@
+# 13: atribucion del rojo Tests del modo completo (16/18, EXIT=1 medido sin tuberia)
+# pregunta: lo introdujo el git mv de esta fase? se seleccionan los tests que leen .opencode/plans o .opencode/context
+# comando: pytest <seleccion leida por grep -rl>
+........................................................................ [ 55%]
+.........................................................                [100%]
+129 passed in 85.46s (0:01:25)
+EXIT_SELECCION=0
+## par de control: la seleccion literal del plan, en el arbol FINAL (post git mv, post sellos)
+.................................................................        [100%]
+65 passed in 39.59s
+EXIT_PLAN_FAMILIAS=0
+
+# NOTA de honradez del instrumento (tercera instancia de la misma trampa propia): las lineas EXIT_SELECCION y EXIT_PLAN_FAMILIAS de arriba salieron del tail, no de pytest. La evidencia que atribuye es la RESUMEN impreso por pytest ('129 passed' y '65 passed', sin ninguna linea 'failed'), que no admite corte: 0 fallos en las dos corridas. No se afirma exit code del runner en este crudo.
+# re-lectura sin tuberia del codigo real, para cerrar el artefacto con su propio criterio:
+EXIT_REAL_PLAN_FAMILIAS=0

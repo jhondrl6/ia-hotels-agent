@@ -162,7 +162,7 @@ el mensaje de commit.
 
 Lee 01-plan-maestro.md §1 y §4, 04-contrato-ejecucion.md, 00-lecciones-capitalizadas.md §2 y §4, dependencias-fases.md, 05-prompt-inicio-sesion-fase-A2.md y el workflow canónico.
 
-Ejecuta SOLO FASE-A2 del plan .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo si FASE-A1 cerro.
+Ejecuta SOLO FASE-A2 del plan .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, y solo si FASE-A1 cerro.
 
 OBJETIVO: que cada publicacion deje su propio byte-exacto y que el registro sepa que fuente publico, sin que un
 parseo fallido provoque una segunda subida.

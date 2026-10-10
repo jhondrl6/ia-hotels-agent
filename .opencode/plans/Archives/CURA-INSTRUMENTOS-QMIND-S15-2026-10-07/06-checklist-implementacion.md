@@ -83,26 +83,26 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [ ] Los tres tiers de `[fechas]` con su diente; `SIN-FUENTE` no colapsa con `commit`
 - [ ] 4 + 16 + 36 funciones verdes; verificación repetida sobre el árbol del commit
 - [ ] Par del índice regenerado en el mismo commit que la cura
-- [ ] Si B **no** la abrió: esta lista se cierra con la declaración «no aplica» y nada se ejecuta
+- [x] Si B **no** la abrió: esta lista se cierra con la declaración «no aplica» y nada se ejecuta — **cerrada así**: B declaró NO APLICA y el generador no se editó
 
 ## Etapa 3 — Cierre
 
-### FASE-RELEASE (⬜ Pendiente)
+### FASE-RELEASE (✅ CERRADA 2026-10-09, sin commit)
 
-- [ ] Versión dictada por el operador y sincronizada; VERSION SYNC GATE sin `(!)`; `--release` con el valor real, nunca placeholder
-- [ ] CHANGELOG con encabezado de versión **solo** para los bloques de este plan; GUIA_TECNICA con la nota técnica
-- [ ] Registro verificado por grep y **no re-registrado**
-- [ ] AC10: paquete offline completo; subida **solo** con autorización literal propia; verificación por descarga + sha256 con racha contada
-- [ ] Orden R2.10 respetado: write-back con el plan en raíz → índice → `git mv` → índice otra vez → refs → citas → quick
-- [ ] `doctor.py --context` (verificar) y no regenerar a mano; `validate_document_integration.py`; `validate_governance_numbers.py`
-- [ ] Modo completo con crudo archivado y los tres rojos heredados del padre re-medidos y atribuidos con dueño
-- [ ] Sello de la fase estampa **lo que imprimió su propia corrida** (tip, L3 si se corrió, rango empujado)
-- [ ] Plan archivado bajo `Archives/` dentro del mismo cierre (R2.5)
+- [x] Versión dictada por el operador y sincronizada; VERSION SYNC GATE sin `(!)`; `--release` con el valor real, nunca placeholder
+- [x] CHANGELOG con encabezado de versión **solo** para los bloques de este plan; GUIA_TECNICA con la nota técnica
+- [x] Registro verificado por grep y **no re-registrado**
+- [x] AC10: paquete offline completo; subida ejecutada con la autorización literal propia de esta sesión; verificación por descarga + sha256 con racha contada (1/1)
+- [x] Orden R2.10 respetado: write-back con el plan en raíz → índice → `git mv` → índice otra vez → refs → citas → quick
+- [x] `doctor.py --context` (verificar) y no regenerar a mano; `validate_document_integration.py`; `validate_governance_numbers.py`
+- [x] Modo completo con crudo archivado y los tres rojos heredados del padre re-medidos y atribuidos con dueño
+- [x] Sello de la fase estampa **lo que imprimió su propia corrida** (tip, L3 si se corrió, rango empujado)
+- [x] Plan archivado bajo `Archives/` dentro del mismo cierre (R2.5)
 
 ## Controles transversales del plan
 
-- [ ] Ningún documento del plan padre archivado fue editado en ninguna fase
-- [ ] Ninguna identidad de cliente se propagó a documentación, commits ni al notebook
-- [ ] Ninguna fase tocó `AGENTS.md`, `.cursorrules` o `VERSION.yaml` (salvo RELEASE con mandato)
-- [ ] Ningún `.py` nuevo se escribió bajo `evidence/`
-- [ ] Todo commit (si llega la autorización) lleva sus derivados regenerados en el mismo commit
+- [x] Ningún documento del plan padre archivado fue editado en ninguna fase
+- [x] Ninguna identidad de cliente se propagó: la copia publicada es byte-idéntica al cuerpo y el barrido del cuerpo no halló identidades (2 coincidencias numéricas que resultaron substring de sha256, declarado antes de publicar)
+- [x] Ninguna fase tocó `AGENTS.md`, `.cursorrules` o `VERSION.yaml`; RELEASE los tocó con el mandato de versión del operador (4.80.0 dictado en esta sesión)
+- [x] Ningún `.py` nuevo bajo `evidence/` (los arneses de esta sesión corrieron bajo `temp/`, que está excluido del árbol versionado)
+- [ ] (sin commit en esta sesión: el operador autorizó solo la subida) Todo commit lleva sus derivados regenerados en el mismo commit — el índice se regeneró dos veces en R2.10 y una tercera como último paso de este sello

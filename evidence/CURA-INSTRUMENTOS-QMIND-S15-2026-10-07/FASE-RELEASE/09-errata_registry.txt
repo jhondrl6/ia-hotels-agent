@@ -1,0 +1,20 @@
+# 09: errata de la fila de REGISTRY y deuda nueva
+<string>:11: SyntaxWarning: invalid escape sequence '\`'
+[OK] fila de REGISTRY corregida con errata
+## estado de la fila corregida
+## FASE-RELEASE - 2026-10-09
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: release 4.80.0, write-back propio AC10 con el writer curado y archivado R2.10
+**Nota:** fase documental: no anade tests (resta 0 sobre la misma seleccion literal, PRE 65 passed y POST 65 passed, ambos EXIT=0); sin commit autorizado (el operador autorizo solo la subida), el archivado queda como rename staged y las 13 rutas staged del hermano siguen intactas
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| (esta fila se re-escribi6 a mano, con errata visible: el escritor parti6 el texto descriptivo de `--archivos-mod` por comas y lo trate6 como lista de rutas; re-correr el escritor apilaría una entrada duplicada, que la regla de cierre prohíbe) | VER `E/FASE-RELEASE/07-medicion_rutas.txt` |
+| 45 rutas propias de la sesión: 14 renombradas por el `git mv` a `Archives/`, 12 modificadas (`VERSION.yaml`, `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `CHANGELOG.md`, `.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json`, `.opencode/qmind-writeback/registro.json`, `.agent/knowledge/DOMAIN_PRIMER.md`, `docs/contributing/REGISTRY.md`) y 19 nuevas de evidencia | unidad y comando: `git status --porcelain -uall` excluyendo las 13 rutas staged del hermano (S-CIM-7), medido después de los fixers derivados |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)

@@ -1,0 +1,35 @@
+# 10: tipos de la errata, deuda S-CIM-11 y derivados finales
+docs/contributing/REGISTRY.md: line 3: actualizacion:**: command not found
+docs/contributing/REGISTRY.md: line 4: actual:**: command not found
+docs/contributing/REGISTRY.md: line 5: fases: command not found
+docs/contributing/REGISTRY.md: line 7: ---: command not found
+docs/contributing/REGISTRY.md: line 11: syntax error near unexpected token `('
+docs/contributing/REGISTRY.md: line 11: `**Descripcion:** Voice Readiness Proxy — score basado en PROXY (inputs que alimentan asistentes de voz) en lugar de medicion directa Siri/Alexa. Mide los FACTORES que determinan si voz te menciona, no lo que voz responde.'
+/usr/bin/bash: line 13: fuente_id: command not found
+/usr/bin/bash: line 13: sha_cuerpo: command not found
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+    fix(R+'/01-plan-maestro.md',[('| S-CIM-10 |',deuda+'| S-CIM-10 |',1)])
+        ^
+NameError: name 'R' is not defined
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT_QUICK_FINAL=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+## cuerpo publicado: ultima prueba de congelamiento
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+# 10b: deuda S-CIM-11 con arnes en archivo (los escapes y backticks en python -c bajo Git Bash se los come la shell: la corrida anterior perdio el comando por eso, no por el instrumento)
+[OK] S-CIM-11 en maestro §5 y dos filas en 09 §E
+maestro tiene S-CIM-11: 1
+EXIT=0
+## errata del REGISTRY tras la correccion de acentos
+1
+0
+## derivados y quick
+[OK] 374 IDs definidos + 96 sin definición (18 análisis, 450 .md citados)
+[PASS] OpenCode References: todas las referencias existen
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED

@@ -1,0 +1,45 @@
+============================================================
+DOCUMENT INTEGRATION VALIDATOR
+============================================================
+Project: C:\Users\Jhond\Github\iah-cli
+
+[PASS] Cross-References (executor <-> CONTRIBUTING)
+      Executor section refs: 18
+      CONTRIBUTING section name entries: 7
+      Executor line refs (§LNN-MM): 0
+
+[PASS] CHANGELOG format consistency
+      Checked 3 recent entries
+      Last entry uses em-dash separator (correct)
+
+[PASS] Version headers with 'v' prefix
+      EXECUTOR: version v2.27.0 (OK)
+      TEMPLATE: version v1.7.0 (OK)
+      AGENTS.md: version v4.80.0 (OK)
+
+[PASS] Python path consistency (WSL)
+      phased_project_executor.md: python path OK
+
+[PASS] AGENTS.md cross-reference table
+      Cross-reference table has 6 entries
+
+[PASS] DOMAIN_PRIMER vs VERSION.yaml
+      Version aligned: 4.80.0
+      Release date aligned: 2026-10-09
+
+[PASS] README.md numerical counts vs code
+      Test files: no claim found in README
+      Publication gates: no claim found in README
+      Pain narratives: 20 (OK)
+
+[PASS] Line endings (bytes reales LF)
+      CONTRIBUTING.md: docs/CONTRIBUTING.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      phased_project_executor.md: .agents/workflows/phased_project_executor.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      DOMAIN_PRIMER.md: .agent/knowledge/DOMAIN_PRIMER.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      AGENTS.md: AGENTS.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+      prompt-fase-template.md: .agents/workflows/templates/prompt-fase-template.md: git almacena i/lf, arbol de trabajo w/lf; estado Git LIMPIO; bytes reales LF
+      CHANGELOG.md: CHANGELOG.md: git almacena i/lf, arbol de trabajo w/lf; estado Git SUCIO; bytes reales LF
+
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
