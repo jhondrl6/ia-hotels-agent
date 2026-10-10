@@ -1308,15 +1308,17 @@ def test_el_resumen_lista_la_causa_del_rojo_y_no_inventa_un_vencido(vw, montaje,
     assert "2+0+0==2" in contador2 and "1 fuente(s) huesped(s)" in contador2, contador2
 
 
-def test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado(vw, montaje,
-                                                                                          monkeypatch):
-    """Caracterizacion del limite que deja DA-CIM.9, con su dueno: la concurrence no se gobierna aqui.
+def test_un_vencido_por_cuerpo_en_la_mesma_entrada_tambien_evalua_a_su_huesped(vw, montaje, monkeypatch):
+    """Re-anclaje gobernado por AC-N1: el limite que caracterizaba la deuda S-CIM-9 dejo de existir.
 
-    El bloque huesped vive al final del bucle y la puerta de vigencia termina en `continue`, asi que una
-    entrada `1.0` y una `1.1` VENCIDA son dos casos distintos: la primera ya evalua a su huesped (subtarea 3b)
-    y la segunda no. La especificacion del operador del 2026-10-08 recorto la cura a la rama de migracion y no
-    abrio los demas `continue`, asi que este diente **aserta el comportamiento vigente** y se pone rojo el dia
-    que un AC gobierne la concurrence (deuda S-CIM-9 del maestro §5, dueño operador).
+    Este diente se llamaba `test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite_declarado`
+    y asertaba el comportamiento vigente de entonces, con su docstring diciendo que se pondria rojo el dia que un
+    AC gobernara la concurrence. Ese dia es AC-N1 de `CURA-BLOQUE-HUESPED-QMIND-2026-10-10`, asi que las dos
+    aserciones que fijaban el limite se **invierten aqui con su justificacion** y el diente no se borra: sigue
+    probando que el `VENCIDO` por cuerpo y el rojo de contabilidad coexisten en la misma entrada, que era lo que
+    el limite impedia ver. Las referencias al nombre viejo viven en documentos archivados del plan hermano y en su
+    instantanea publicada, que son frozen por diseño; la equivalencia de nombres queda declarada en el
+    `10-analisis-post-implementacion.md` de este plan.
     """
     m = montaje
     _publicar(vw, m, TITULO_CIERRE)
@@ -1327,6 +1329,62 @@ def test_un_vencido_por_cuerpo_en_la_mesma_entrada_no_evalua_a_su_huesped_limite
                                 {contable["id"]: CUERPO, huesped["id"]: CUERPO})
     assert salio == 1
     assert "[VENCIDO]" in salida and "sha_cuerpo=" in salida
-    assert "[DUPLICADO-VIGENTE]" not in salida, "limite vigente: el continue de vigencia no llega a la huesped"
-    assert "0 fuente(s) huesped(s)" in salida
-    assert "contenido: VENCIDO" in salida, "la etiqueta lista solo las causas que se imprimieron"
+    # Invertida por AC-N1: antes exigia la ausencia, porque el `continue` de vigencia saltaba el bloque.
+    assert "[DUPLICADO-VIGENTE]" in salida, "AC-N1: el return de vigencia ya no salta el bloque huesped"
+    assert TITULO_HISTORICO[:60] in salida, "la linea nombra a la fuente huesped, no solo la etiqueta"
+    # Invertida por AC-N1: el contador pasaba de 0 a 1 con el mismo censo.
+    assert "1 fuente(s) huesped(s)" in salida
+    assert "contenido: VENCIDO+DUPLICADO-VIGENTE" in salida, "la etiqueta lista las causas que se imprimieron"
+
+
+def test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad(vw, montaje, monkeypatch):
+    """AC-N1: la abstencion por bajada fallida ya no se lleva puesto el hallazgo de contabilidad.
+
+    Es la reproduccion de la varianza dictaminada en `evidence/DIAGNOSTICO-HUESPEDES-JEV-2026-10-10/00-acta.md`
+    (config B de su matriz offline): mismo registro, mismo censo, y la unica variable es que `source download`
+    no responde. Antes de la cura la corrida imprimia `0 fuente(s) huesped(s)` y salia 2, o sea que un rojo de
+    contabilidad era **suprimible por la red** y el contador publicaba un cero que se leia como dato del censo
+    (DA-C3, R2.9). El ancla es el titulo de la fuente y no su id: `_lineas_huesped()` recorta el id a trece
+    caracteres y todos los ids del montaje comparten ese prefijo, asi que anclar por id no discriminaria nada.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    contable = _fuente(_id(70), TITULO_CIERRE, CUERPO)
+    # La huesped lleva **otros bytes** a proposito: si compartiera el cuerpo casaria por `sha_metadata` y
+    # entraria en `prometidas`, con lo que la corrida intentaria dos bajadas y el diente dejaria de medir la
+    # ruta que nombra. (El primer POST de esta fase cayo por eso: `descargas == 2`.)
+    huesped = _fuente(_id(71), TITULO_HISTORICO, CUERPO + b"\notra fuente del mismo plan\n")
+    salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, huesped], {})
+    assert falso.descargas == 1, "la bajada se intento: lo que falla es el servicio, no el montaje"
+    assert "no bajaron" in salida, "la abstencion de fidelidad remota se publica igual"
+    assert "[NO-EVALUABLE]" in salida and "[VENCIDO]" not in salida
+    assert salio == 1, "el rojo de contabilidad manda sobre la abstencion (contrato D2)"
+    assert "[DUPLICADO-VIGENTE]" in salida and TITULO_HISTORICO[:60] in salida
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "1 fuente(s) huesped(s)" in contador, contador
+    assert "contenido: DUPLICADO-VIGENTE" in salida, "la etiqueta nombra la causa que la corrida imprimio"
+
+
+def test_el_contador_publica_su_denominador_de_observacion(vw, montaje, monkeypatch):
+    """AC-N2: el `[CONTADOR]` dice sobre cuantas entradas corrio el bloque huesped, contado y no derivado.
+
+    Dos entradas vigentes y **ninguna** baja: una toma la ruta de la bajada fallida (la que antes cortaba antes
+    del bloque) y la otra la abstencion de migracion. El denominador tiene que ser `2/2`. Si volviera a contarse
+    solo en las rutas favorables imprimiria `1/2`, y entonces un `0 fuente(s) huesped(s)` dejaria de
+    distinguirse de una corrida que no miro: ese es el colapso que DA-C3 prohibe y el que L-D5 manda contar en el
+    sitio donde se mide, no derivar de `len(vigentes)`.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    viejo = CUERPO + b"\nentrada sin sha_cuerpo\n"
+    _entrada_de_migracion(vw, m, PLAN_VIEJO, TITULO_VIEJO, viejo, "instanea-migrada.md")
+    contable = _fuente(_id(72), TITULO_CIERRE, CUERPO)
+    contable_vieja = _fuente(_id(73), TITULO_VIEJO, viejo)
+    salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, contable_vieja], {})
+    assert falso.descargas == 1, "solo la entrada 1.1 intenta bajar; la 1.0 se abstiene por migracion"
+    assert salio == 2, "sin huesped no hay rojo: el denominador no inventa un VENCIDO ni un DUPLICADO"
+    assert "[DUPLICADO-VIGENTE]" not in salida and "[VENCIDO]" not in salida
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "2/2 entrada(s) con su bloque huesped recorrido" in contador, contador
+    assert "0 fuente(s) huesped(s)" in contador, "el cero ahora es legible: salio de una corrida que si miro"
+    assert "1+1+0==2" in contador, "la particion de la vigencia no se mueve con el denominador nuevo"

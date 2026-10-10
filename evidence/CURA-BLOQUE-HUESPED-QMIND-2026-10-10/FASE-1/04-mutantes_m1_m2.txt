@@ -1,0 +1,73 @@
+MUTATION CHECKS R2.8 de AC-N1 y AC-N2 (dos salidas por AC: rojo con el guard apagado, verde restaurado)
+sha256 original del guard = 926a5319f9a1a5e722f8a0d45eaa63a2bb6fb0041f0aebdff49508fa4525ff33
+dientes bajo prueba: test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad, test_el_contador_publica_su_denominador_de_observacion, test_un_vencido_por_cuerpo_en_la_mesma_entrada_tambien_evalua_a_su_huesped
+
+== MUTANTE M1 (AC-N1): la red vuelve a decidir si se cuenta la huesped aplicado | sha256=a64b7b9a03d4254f ==
+--- M1 rojo esperado | EXIT=1 ---
+    
+        Es la reproduccion de la varianza dictaminada en `evidence/DIAGNOSTICO-HUESPEDES-JEV-2026-10-10/00-acta.md`
+        (config B de su matriz offline): mismo registro, mismo censo, y la unica variable es que `source download`
+        no responde. Antes de la cura la corrida imprimia `0 fuente(s) huesped(s)` y salia 2, o sea que un rojo de
+        contabilidad era **suprimible por la red** y el contador publicaba un cero que se leia como dato del censo
+        (DA-C3, R2.9). El ancla es el titulo de la fuente y no su id: `_lineas_huesped()` recorta el id a trece
+        caracteres y todos los ids del montaje comparten ese prefijo, asi que anclar por id no discriminaria nada.
+        """
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        contable = _fuente(_id(70), TITULO_CIERRE, CUERPO)
+        # La huesped lleva **otros bytes** a proposito: si compartiera el cuerpo casaria por `sha_metadata` y
+        # entraria en `prometidas`, con lo que la corrida intentaria dos bajadas y el diente dejaria de medir la
+        # ruta que nombra. (El primer POST de esta fase cayo por eso: `descargas == 2`.)
+        huesped = _fuente(_id(71), TITULO_HISTORICO, CUERPO + b"\notra fuente del mismo plan\n")
+        salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, huesped], {})
+        assert falso.descargas == 1, "la bajada se intento: lo que falla es el servicio, no el montaje"
+        assert "no bajaron" in salida, "la abstencion de fidelidad remota se publica igual"
+        assert "[NO-EVALUABLE]" in salida and "[VENCIDO]" not in salida
+>       assert salio == 1, "el rojo de contabilidad manda sobre la abstencion (contrato D2)"
+E       AssertionError: el rojo de contabilidad manda sobre la abstencion (contrato D2)
+E       assert 2 == 1
+
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad
+1 failed, 2 passed, 56 deselected in 0.43s
+
+== arbol restaurado | sha256=926a5319f9a1a5e7 | coincide_con_el_original=True ==
+
+== MUTANTE M2 (AC-N2): el denominador se cuenta solo en la ruta favorable aplicado | sha256=8e9409e5a6ea7076 ==
+--- M2 rojo esperado | EXIT=1 ---
+        """AC-N2: el `[CONTADOR]` dice sobre cuantas entradas corrio el bloque huesped, contado y no derivado.
+    
+        Dos entradas vigentes y **ninguna** baja: una toma la ruta de la bajada fallida (la que antes cortaba antes
+        del bloque) y la otra la abstencion de migracion. El denominador tiene que ser `2/2`. Si volviera a contarse
+        solo en las rutas favorables imprimiria `1/2`, y entonces un `0 fuente(s) huesped(s)` dejaria de
+        distinguirse de una corrida que no miro: ese es el colapso que DA-C3 prohibe y el que L-D5 manda contar en el
+        sitio donde se mide, no derivar de `len(vigentes)`.
+        """
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        viejo = CUERPO + b"\nentrada sin sha_cuerpo\n"
+        _entrada_de_migracion(vw, m, PLAN_VIEJO, TITULO_VIEJO, viejo, "instanea-migrada.md")
+        contable = _fuente(_id(72), TITULO_CIERRE, CUERPO)
+        contable_vieja = _fuente(_id(73), TITULO_VIEJO, viejo)
+        salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, contable_vieja], {})
+        assert falso.descargas == 1, "solo la entrada 1.1 intenta bajar; la 1.0 se abstiene por migracion"
+        assert salio == 2, "sin huesped no hay rojo: el denominador no inventa un VENCIDO ni un DUPLICADO"
+        assert "[DUPLICADO-VIGENTE]" not in salida and "[VENCIDO]" not in salida
+        contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+>       assert "2/2 entrada(s) con su bloque huesped recorrido" in contador, contador
+E       AssertionError:   [CONTADOR] 2 vigente(s): 1 dictaminada(s) por cuerpo, 0 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, 0 sin observacion local; cuerpo y remota son preguntas distintas y pueden solaparse: 1+1+0==2; 0 fuente(s) huesped(s) sin contabilidad, reportadas aparte y fuera de la suma, dictaminadas sobre 0/2 entrada(s) con su bloque huesped recorrido
+E       assert '2/2 entrada(s) con su bloque huesped recorrido' in '  [CONTADOR] 2 vigente(s): 1 dictaminada(s) por cuerpo, 0 con fidelidad remota medida, 1 NO-EVALUABLE por migracion, ... contabilidad, reportadas aparte y fuera de la suma, dictaminadas sobre 0/2 entrada(s) con su bloque huesped recorrido'
+
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_el_contador_publica_su_denominador_de_observacion
+1 failed, 2 passed, 56 deselected in 0.37s
+
+== arbol restaurado | sha256=926a5319f9a1a5e7 | coincide_con_el_original=True ==
+
+--- verde restaurado (los tres dientes) | EXIT=0 ---
+...                                                                      [100%]
+3 passed, 56 deselected in 0.18s
+
+RESUMEN: M1 exit=1 (se espera distinto de 0) | M2 exit=1 (distinto de 0) | verde=0 (0)
+sha256 final del archivo = 926a5319f9a1a5e722f8a0d45eaa63a2bb6fb0041f0aebdff49508fa4525ff33
+MUTATION CHECK OK: los dos mutantes caen y el arbol queda intacto por sha

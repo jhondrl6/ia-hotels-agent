@@ -2,13 +2,13 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 18,
+    "archivos_analysis_escaneados": 19,
     "archivos_contexto_escaneados": 40,
-    "archivos_md_escaneados": 450,
-    "ids_con_definicion": 374,
-    "ids_citados_sin_definicion": 96,
+    "archivos_md_escaneados": 456,
+    "ids_con_definicion": 377,
+    "ids_citados_sin_definicion": 107,
     "fechas_por_fuente": {
-      "nombre": 363,
+      "nombre": 366,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -639,10 +639,11 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 21,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -1564,6 +1565,48 @@
       "redefiniciones": []
     },
     {
+      "id": "L-BH.1",
+      "familia": "L",
+      "enunciado": "Un hallazgo que no necesita la observación que falta no puede vivir detrás de la rama que la espera: se coloca donde sus insumos están disponibles, no donde el flujo alcanza a llegar. — AC-N1. La forma elegida (ámbito propio + bloque al final del bucle) hace inalcanzable el salto; repetir la llamada en cada rama habría dejado ocho sitios donde olvidarla",
+      "plan": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan",
+      "fecha_plan": "2026-10-10",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-BH.2",
+      "familia": "L",
+      "enunciado": "Un contador que publica un cero tiene que publicar también sobre cuántos casos miró, y ese denominador se cuenta donde se mide: si se deriva del total, un salto futuro no lo baja y nadie se entera. — AC-N2. El mutante M2 lo demuestra: contando solo en la ruta favorable el denominador impreso bajó a 0/2 y el diente cayó",
+      "plan": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan",
+      "fecha_plan": "2026-10-10",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-BH.3",
+      "familia": "L",
+      "enunciado": "Un ancla que no discrimina no ancla nada: si el instrumento trunca el identificador que la aserción usa, todos los candidatos comparten el prefijo y el diente pasa por la razón equivocada. — DA-BH.4. Se ancla por el dato que el instrumento sí distingue (el título recortado a sesenta caracteres)",
+      "plan": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "E. Lecciones definidas por este plan",
+      "fecha_plan": "2026-10-10",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "L-C1",
       "familia": "L",
       "enunciado": "Un parafraseo de una fuente en tu propia evidencia se convierte en premisa *(FASE-C)*",
@@ -1875,10 +1918,11 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
+        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -2158,9 +2202,10 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
         "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": [
@@ -3198,12 +3243,13 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 107,
+      "total_citas": 108,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3259,13 +3305,14 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 112,
+      "total_citas": 113,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3330,9 +3377,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
+      "total_citas": 10,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3346,9 +3394,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 10,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3362,9 +3411,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -3433,7 +3483,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 91,
+      "total_citas": 92,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -4015,10 +4065,11 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 5,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
+        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -5801,9 +5852,10 @@
     {
       "id": "DA-CIM.9",
       "familia": "DA",
-      "total_citas": 32,
+      "total_citas": 35,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -5823,12 +5875,30 @@
       ]
     },
     {
+      "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 14,
+      "planes_que_lo_citan": [
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
       "id": "S-B10",
       "familia": "S",
       "total_citas": 13,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01"
+      ]
+    },
+    {
+      "id": "S-CIM-9",
+      "familia": "S",
+      "total_citas": 13,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5869,14 +5939,6 @@
       "total_citas": 12,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-CIM-7",
-      "familia": "S",
-      "total_citas": 12,
-      "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -5929,6 +5991,15 @@
       ]
     },
     {
+      "id": "S-CIM-2",
+      "familia": "S",
+      "total_citas": 7,
+      "planes_que_lo_citan": [
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
       "id": "S-E2E-1",
       "familia": "S",
       "total_citas": 7,
@@ -5974,14 +6045,6 @@
       "total_citas": 6,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-CIM-2",
-      "familia": "S",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -6039,11 +6102,11 @@
       ]
     },
     {
-      "id": "S-CIM-9",
+      "id": "S-BH-1",
       "familia": "S",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -6060,6 +6123,14 @@
       "total_citas": 5,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "DA-BH.1",
+      "familia": "DA",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -6086,6 +6157,30 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-BH-2",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
+      "id": "S-BH-3",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
+      "id": "S-BH-5",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -6156,6 +6251,22 @@
       ]
     },
     {
+      "id": "DA-BH.2",
+      "familia": "DA",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
+      "id": "DA-BH.3",
+      "familia": "DA",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
       "id": "L-QW",
       "familia": "L",
       "total_citas": 3,
@@ -6180,6 +6291,23 @@
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+      ]
+    },
+    {
+      "id": "S-BH-4",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
+      "id": "S-CIM-5",
+      "familia": "S",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -6239,11 +6367,27 @@
       ]
     },
     {
+      "id": "DA-BH.4",
+      "familia": "DA",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+      ]
+    },
+    {
       "id": "DA-T4B.3",
       "familia": "DA",
       "total_citas": 2,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
+      ]
+    },
+    {
+      "id": "L-BH",
+      "familia": "L",
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {
@@ -6337,14 +6481,6 @@
       ]
     },
     {
-      "id": "S-CIM-5",
-      "familia": "S",
-      "total_citas": 2,
-      "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
-      ]
-    },
-    {
       "id": "S-CIM-8",
       "familia": "S",
       "total_citas": 2,
@@ -6398,6 +6534,14 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
+      ]
+    },
+    {
+      "id": "DA-BH.5",
+      "familia": "DA",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {

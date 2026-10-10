@@ -1,0 +1,33 @@
+.........................................................F.........      [100%]
+================================== FAILURES ===================================
+______ test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad ______
+
+vw = <module 'validate_qmind_writeback_bajo_prueba' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\validate_qmind_writeback.py'>
+montaje = {'cuerpo': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1784/test_una_bajada_que_falla_no_s0/...), 'tmp': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1784/test_una_bajada_que_falla_no_s0')}
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019E3ACCBBD0>
+
+    def test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad(vw, montaje, monkeypatch):
+        """AC-N1: la abstencion por bajada fallida ya no se lleva puesto el hallazgo de contabilidad.
+    
+        Es la reproduccion de la varianza dictaminada en `evidence/DIAGNOSTICO-HUESPEDES-JEV-2026-10-10/00-acta.md`
+        (config B de su matriz offline): mismo registro, mismo censo, y la unica variable es que `source download`
+        no responde. Antes de la cura la corrida imprimia `0 fuente(s) huesped(s)` y salia 2, o sea que un rojo de
+        contabilidad era **suprimible por la red** y el contador publicaba un cero que se leia como dato del censo
+        (DA-C3, R2.9). El ancla es el titulo de la fuente y no su id: `_lineas_huesped()` recorta el id a trece
+        caracteres y todos los ids del montaje comparten ese prefijo, asi que anclar por id no discriminaria nada.
+        """
+        m = montaje
+        _publicar(vw, m, TITULO_CIERRE)
+        contable = _fuente(_id(70), TITULO_CIERRE, CUERPO)
+        huesped = _fuente(_id(71), TITULO_HISTORICO, CUERPO)
+        salio, falso, salida = _corrida(vw, monkeypatch, m, [contable, huesped], {})
+>       assert falso.descargas == 1, "la bajada se intento: lo que falla es el servicio, no el montaje"
+E       AssertionError: la bajada se intento: lo que falla es el servicio, no el montaje
+E       assert 2 == 1
+E        +  where 2 = <test_validate_qmind_writeback_escritura.QmindFalso object at 0x0000019E3B4A0F50>.descargas
+
+tests\test_validate_qmind_writeback_escritura.py:1355: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_validate_qmind_writeback_escritura.py::test_una_bajada_que_falla_no_suprime_a_su_huesped_de_contabilidad
+1 failed, 66 passed in 45.09s
+EXIT=1

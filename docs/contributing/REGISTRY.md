@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-09
+> **Ultima actualizacion:** 2026-10-10
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 521
+> **Total fases completadas:** 522
 
 ---
 
@@ -12225,6 +12225,42 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-1 - 2026-10-10 (CURA-BLOQUE-HUESPED-QMIND-2026-10-10)
+**Descripcion:** AC-N1 y AC-N2: el bloque huesped de verificar_contenido() corre en las 12 rutas (antes 4) y el [CONTADOR] publica su denominador de observacion
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/00-lecciones-capitalizadas.md` | NUEVO | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/01-plan-maestro.md` | NUEVO | 01-Plan-Maestro |
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/05-prompt-inicio-sesion-fase-1.md` | NUEVO | 05-Prompt-Inicio-Sesion-Fase-1 |
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/09-documentacion-post-proyecto.md` | NUEVO | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/10-analisis-post-implementacion.md` | NUEVO | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/README.md` | NUEVO | Readme |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/01-pre_seleccion_dos_familias.txt` | NUEVO | 01-Pre Seleccion Dos Familias |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/02-post_seleccion_dos_familias.txt` | NUEVO | 02-Post Seleccion Dos Familias |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/03-post_seleccion_final.txt` | NUEVO | 03-Post Seleccion Final |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/04-mutantes_m1_m2.txt` | NUEVO | 04-Mutantes M1 M2 |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/05-modo_completo_post.txt` | NUEVO | 05-Modo Completo Post |
+| `evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/06-quick_post.txt` | NUEVO | 06-Quick Post |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/validate_qmind_writeback.py` | Validate Qmind Writeback |
+| `tests/test_validate_qmind_writeback_escritura.py` | Test Validate Qmind Writeback Escritura |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `docs/contributing/REGISTRY.md` | Registry |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 2 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -432,11 +432,12 @@ def _fuente_nombral(fuente: dict, plan: str) -> bool:
 def _huespedes_sin_contabilidad(datos: dict, fuentes: list, plan: str) -> list:
     """Las fuentes del censo que nombran al plan y no tienen título contable en su registro (AC6).
 
-    DA-CIM.9: antes era código suelto al final del bucle, así que solo lo recorrían las entradas con
-    `sha_cuerpo`. Extraída, la llaman los dos caminos —el de las entradas `1.1` y el de la abstención de
-    migración— y el `continue` de la abstención sigue donde estaba: lo que se añade es la evaluación de la
-    huésped, no una dictaminación de vigencia que el registro `1.0` no puede sostener (la capa D2 **no** se
-    levanta para esas entradas).
+    AC-N1: la llama el bucle **una vez por entrada vigente**, después del dictamen y fuera de su ámbito, así que
+    ninguna ruta puede saltarla — tampoco las dos abstenciones por bajada fallida, que antes suprimían el rojo de
+    contabilidad y bajaban el EXIT de la corrida de 1 a 2. DA-CIM.9 la había añadido únicamente a la rama de
+    migración; esa llamada particular ya no existe porque ahora es universal. Lo que sigue sin hacer: no
+    dictamina vigencia de una entrada `1.0`, que el registro no puede sostener (la capa D2 **no** se levanta para
+    esas entradas).
 
     Está contable un título que aparece en **cualquier** entrada del plan, incluida la marcada como
     `reemplazada`: esa es la semántica con la que la cura de AC3 dejó de duplicar, y no se re-baja aquí.
@@ -502,22 +503,31 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
 
     rojo = 0
     abstencion = 0
-    contador = {"cuerpo": 0, "remoto": 0, "migracion": 0, "local": 0, "huespedes": 0}
-    for e in vigentes:
-        etiqueta = f"{e['plan']} :: {e['titulo']}"
+    contador = {"cuerpo": 0, "remoto": 0, "migracion": 0, "local": 0, "huespedes": 0,
+                "huesped_evaluadas": 0}
+
+    def _dictaminar(e: dict, etiqueta: str) -> None:
+        """El veredicto de una entrada sobre su vigencia y su fidelidad remota.
+
+        Todo lo que antes cortaba el bucle con `continue` retorna aquí, y el bloque huésped vive **fuera** de
+        este ámbito: por construcción no hay ruta que lo salte (AC-N1, DA-BH.2 del maestro). La forma importa
+        más que el resultado observable —una llamada repetida en cada rama habría dejado ocho sitios donde un
+        cambio futuro puede volver a olvidarla.
+        """
+        nonlocal rojo, abstencion
         instanea = resolver_instanea(e, ruta_registro)
         cuerpo = cuerpo_del_plan(e["plan"], base)
         if not instanea.is_file():
             abstencion = 2
             contador["local"] += 1
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la instantanea registrada no esta en {instanea}")
-            continue
+            return
         if cuerpo is None:
             abstencion = 2
             contador["local"] += 1
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: el cuerpo del plan no resuelve bajo {base} "
                           f"(movido o archivado): re-fijar su ruta en el registro; no es VENCIDO")
-            continue
+            return
 
         sha_inst = sha256_de(instanea)
         sha_cuerpo_ahora = sha256_de(cuerpo)
@@ -527,27 +537,22 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
             lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la entrada no grabo sha_cuerpo (registro schema "
                           f"{datos.get('schema_version') or 'sin_version'}), es anterior a la cura y no se "
                           f"rellena hacia atras; no es VENCIDO ni verde")
-            # DA-CIM.9: la abstencion de vigencia no puede tapar el hallazgo de contabilidad. La fuente que
-            # nombra al plan sin entrada contable se dictamina tambien aqui, antes del continue, y el rojo
-            # manda sobre la abstencion (contrato D2, R2.9).
-            huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])
-            contador["huespedes"] += len(huesped)
-            if huesped:
-                rojo = 1
-                lineas.extend(_lineas_huesped(etiqueta, huesped))
-            continue
+            # DA-CIM.9 curaba esta rama en particular llamando al bloque huésped antes de su `continue`.
+            # AC-N1 la vuelve innecesaria: el bloque corre para toda entrada una vez que el dictamen retorna,
+            # así que ninguna abstención de vigencia puede tapar el hallazgo de contabilidad.
+            return
         contador["cuerpo"] += 1
         if e["sha_cuerpo"] != sha_cuerpo_ahora:
             rojo = 1
             lineas.append(f"  [VENCIDO] {etiqueta}: la instantanea publicada sobre otra version del cuerpo: "
                           f"el registro grabo sha_cuerpo={e['sha_cuerpo'][:12]}... y el cuerpo del repo "
                           f"({cuerpo}) hoy es {sha_cuerpo_ahora[:12]}...: re-publicar con titulo nuevo")
-            continue
+            return
         if e.get("sha256") and e["sha256"] != sha_inst:
             rojo = 1
             lineas.append(f"  [VENCIDO] {etiqueta}: la instantanea publicada en disco ({sha_inst[:12]}...) no "
                           f"casa con el sha256={e['sha256'][:12]}... que declara el registro")
-            continue
+            return
 
         prometidas = [f for f in fuentes if f["sha_metadata"] and f["sha_metadata"] == sha_inst]
         if prometidas:
@@ -571,12 +576,12 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                     lineas.append(f"  [PROMESA-ROTA] {etiqueta}: {fuente['id'][:13]}... declara "
                                   f"fileSha256={fuente['sha_metadata'][:12]}... y su descarga dio "
                                   f"{bajo[:12]}...: el indice y los bytes del servidor no casan")
-                continue
+                return
             else:
                 abstencion = 2
                 lineas.append(f"  [NO-EVALUABLE] {etiqueta}: {len(sin_bajar)} fuente(s) cuyo metadata casa "
                               f"no bajaron; sin observacion no hay VENCIDO")
-                continue
+                return
         else:
             candidatas = [f for f in fuentes if f["title"] == e["titulo"]]
             if not candidatas:
@@ -590,20 +595,29 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                     abstencion = 2
                     lineas.append(f"  [NO-EVALUABLE] {etiqueta}: la fuente {candidatas[0]['id'][:13]}... "
                                   f"no bajó; la comparacion de contenido no ocurrio")
-                    continue
+                    return
                 if bajo != sha_inst:
                     rojo = 1
                     contador["remoto"] += 1
                     lineas.append(f"  [VENCIDO] {etiqueta}: titulo coincidente con contenido distinto "
                                   f"(publicado {sha_inst[:12]}... ingerido {bajo[:12]}...)")
-                    continue
+                    return
                 contador["remoto"] += 1
                 lineas.append(f"  [FRESCO] {etiqueta}: descarga+sha256 casa "
                               f"({sha_inst[:12]}...) con {candidatas[0]['id'][:13]}...")
 
-        # Vigencia (AC4): toda fuente que nombra al plan debe estar contable en el registro.
+    for e in vigentes:
+        etiqueta = f"{e['plan']} :: {e['titulo']}"
+        _dictaminar(e, etiqueta)
+        # AC-N1: el hallazgo de contabilidad corre para toda entrada, incluidas las que terminaron en
+        # abstención o en rojo. No necesita la descarga —`_huespedes_sin_contabilidad()` lee el registro y el
+        # censo, y el censo es el mismo para todas las rutas porque `main()` lo lee una vez por corrida—, así
+        # que una bajada fallida ya no puede suprimir el rojo ni cambiar el EXIT por esa vía.
         huesped = _huespedes_sin_contabilidad(datos, fuentes, e["plan"])
         contador["huespedes"] += len(huesped)
+        # AC-N2: el denominador se cuenta aquí, donde el bloque corre, y no se deriva de `len(vigentes)`: si un
+        # cambio futuro volviera a saltarlo, este número bajaría y un diente lo vería (L-D5, DA-C3).
+        contador["huesped_evaluadas"] += 1
         if huesped:
             rojo = 1
             lineas.extend(_lineas_huesped(etiqueta, huesped))
@@ -612,7 +626,8 @@ def verificar_contenido(nb: str, fuentes: list, datos: dict, scratch: Path,
                   f"por migracion, {contador['local']} sin observacion local; cuerpo y remota son preguntas "
                   f"distintas y pueden solaparse: {contador['cuerpo']}+{contador['migracion']}"
                   f"+{contador['local']}=={len(vigentes)}; {contador['huespedes']} fuente(s) huesped(s) sin "
-                  f"contabilidad, reportadas aparte y fuera de la suma")
+                  f"contabilidad, reportadas aparte y fuera de la suma, dictaminadas sobre "
+                  f"{contador['huesped_evaluadas']}/{len(vigentes)} entrada(s) con su bloque huesped recorrido")
     return (rojo or abstencion), lineas
 
 
