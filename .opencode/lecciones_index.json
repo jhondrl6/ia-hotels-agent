@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 40,
     "archivos_md_escaneados": 456,
     "ids_con_definicion": 377,
-    "ids_citados_sin_definicion": 107,
+    "ids_citados_sin_definicion": 108,
     "fechas_por_fuente": {
       "nombre": 366,
       "commit": 11,
@@ -3483,7 +3483,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 92,
+      "total_citas": 93,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -6630,6 +6630,14 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/ONBOARDING-INJECTION-GAP-2026-07-29"
+      ]
+    },
+    {
+      "id": "S-BH-6",
+      "familia": "S",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
     {

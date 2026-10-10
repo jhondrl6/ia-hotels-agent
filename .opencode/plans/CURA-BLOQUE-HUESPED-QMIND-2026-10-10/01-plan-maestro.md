@@ -1,8 +1,11 @@
 # Plan maestro — CURA-BLOQUE-HUESPED-QMIND-2026-10-10
 
-**Estado: FASE-1 abierta el 2026-10-10.** HEAD al concebir: `01013ef` (paridad `0 0` con `origin/master`,
-verificado por `git ls-remote`). Plan de **una sola fase**: la medición de §1 colapsó la FASE-2 dentro de la
-FASE-1. No libera versión: `VERSION.yaml` publica `4.80.0` y la decisión de bump es del operador (§5, `S-BH-3`).
+**Estado: FASE-1 cerrada y publicada el 2026-10-10** en el commit `c6a47c2`, empujado a `origin/master`.
+⟦Re-anchado por el sello: esta cabecera decía «FASE-1 abierta» y «HEAD al concebir `01013ef`», y la venció el
+propio push de la tanda que el operador autorizo despues. `01013ef` queda como el HEAD de concepcion, no como el
+estado del plan.⟧ HEAD al concebir: `01013ef` (paridad `0 0` con `origin/master`, verificado por `git ls-remote`).
+Plan de **una sola fase**: la medición de §1 colapsó la FASE-2 dentro de la FASE-1. No libera versión:
+`VERSION.yaml` publica `4.80.0` y la decisión de bump es del operador (§5, `S-BH-3`).
 
 **Objetivo:** que el hallazgo de contabilidad del write-back de QMind deje de depender de la red. Hoy el bloque
 que emite `[DUPLICADO-VIGENTE]` por fuente huésped solo se recorre en 4 de las 12 rutas del bucle de
@@ -93,6 +96,7 @@ cambia el veredicto de contabilidad (eso es justamente AC-N1).
 | `S-BH-3` | Sin bump de versión: este plan cambia un instrumento, no una capacidad de producto | operador | Decidir `4.81.0` en el cierre, o dejar la versión del plan hermano |
 | `S-BH-4` | Las cuatro fuentes huésped del plan JEV siguen vigentes en el notebook y la era G sigue sin marcar | operador | Decisión sobre contenido publicado: marcar reemplazo, o publicar el cierre que las reemplace |
 | `S-BH-5` | La capa QMind quedó sin observación en el Paso 0 (lector fallido en la consulta corpus-wide) | operador | Que el servicio responda; entonces re-ejecutar la consulta y completar `00-lecciones-capitalizadas.md` §1 |
+| `S-BH-6` | **Hallazgo del sello**: la frescura del índice de lecciones no la goberna `scripts/run_all_validations.py` —0 coincidencias de `build_lesson_index`/`LECCIONES-INDEX` en su código—, así que el quick puede decir 13/13 con el índice vencido y el corte lo da solo el check `[6/8]` del hook. Medido en el primer intento de `c6a47c2`, que el hook corto por esa vía después de tres quicks verdes | operador | Que el runner adopte el check (con su etiqueta y su denominador impresos por la corrida) o que el executor declare el gate en el hook, al modo en que R2.7 y R2.8 nacieron sin verificador mecánico y lo escribieron en su propio texto (política L-R.4) |
 
 ## 6. Presupuesto y política de subagentes
 

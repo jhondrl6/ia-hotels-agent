@@ -77,5 +77,9 @@ siguen vigentes en el notebook: decisión de contenido publicado), `S-BH-5` (cap
 ## Cierre del plan
 
 **COMPLETADO.** FASE-1 cerró los dos AC con sus dientes y sus mutantes; el rojo vivo de la era G sigue rojo por
-diseño (este plan no borra fuentes ni marca reemplazos) y su dueño sigue siendo el operador. El árbol queda en
-«listo para revisión» y en espera de autorización: sin `git commit`, sin L3 y sin push.
+diseño (este plan no borra fuentes ni marca reemplazos) y su dueño sigue siendo el operador. Al cerrar la fase el
+árbol **quedó** en «listo para revisión» y en espera de autorización, sin commit ni push; esa espera terminó con la
+orden del operador del mismo 2026-10-10, que publicó la fase en `c6a47c2` tras una L3 de cero hallazgos y el push
+`01013ef..c6a47c2`. ⟦Este renglón estaba escrito en presente —«sin `git commit`, sin L3 y sin push»— y lo venció el
+propio push que registraba; el sello lo re-ancla con fecha y queda así, sin borrar la espera que efectivamente
+ocurrió.⟧

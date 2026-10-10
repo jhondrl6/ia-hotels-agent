@@ -1,0 +1,61 @@
+# 09 - sello del commit c6a47c2 (FASE-1 de CURA-BLOQUE-HUESPED-QMIND-2026-10-10)
+
+Orden del operador, literal: «commitea y empuja un sello del commit c6a47c2 por pathspec del plan
+CURA-BLOQUE-HUESPED-QMIND-2026-10-10, con la correccion de los dos vencimientos, el crudo del sello y la fila
+S-BH-6». Este archivo se escribe antes de existir el commit del sello, así que no puede estampar su propio sha:
+ese lo declara el mensaje de la sesión.
+
+## 1. El commit sellado (medido con `git show --stat --oneline c6a47c2`)
+
+| Concepto | Dato |
+|----------|------|
+| SHA | `c6a47c2aefa63950325f5fa8e188cdbbcac11b77` (abreviado `c6a47c2`) |
+| Padre | `01013ef` (el sello anterior de la sesión de diagnóstico) |
+| Subject | `fix(qmind): el bloque huesped corre en las doce rutas y el contador publica su denominador (CURA-BLOQUE-HUESPED FASE-1)` |
+| Forma | `git add <8 pathspecs>` + `git commit -m ... -- <8 pathspecs>`: el plan, su evidencia, los dos archivos de código, el par del índice, `REGISTRY.md` y `.last_doc_phase.json`. Ningún commit sin pathspec en este índice |
+| Contenido | 20 archivos: 6 documentos del plan, 8 crudos de `evidence/.../FASE-1/`, `scripts/validate_qmind_writeback.py`, `tests/test_validate_qmind_writeback_escritura.py`, `.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json`, `docs/contributing/REGISTRY.md`, `docs/contributing/.last_doc_phase.json` |
+| Índice ajeno intacto | `git status --porcelain=v1 \| grep -c "^A "` = **13** después del commit; restos sin commitear = **0** |
+| L3 deep review | **cero hallazgos** sobre el rango `origin/master..master` que cubrió `c6a47c2` |
+| Push | `01013ef..c6a47c2  master -> master`; `git ls-remote origin refs/heads/master` = HEAD; paridad `0 0`; sin tag |
+
+## 2. Lo que el primer intento de commit dejó ver (deuda `S-BH-6`)
+
+El **primer** `git commit` con este mismo pathspec fue **cortado por el hook**:
+
+```
+[6/8] Checking lesson index freshness...
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+```
+
+La causa es mía y está fechada: después del último quick edité dos documentos de `plans/` (la fila del modo
+completo en `09-` y la de la confirmación en vivo en `10-`) sin regenerar el índice. El fix es el que manda el
+propio hook —regenerar y re-stagear, nunca editar el derivado a mano— y el reintento fue un commit nuevo: el
+primero no ocurrió, así que no hubo nada que revertir ni un `--amend` en el índice con trabajo ajeno staged.
+
+**Lo medible del corte:** los tres quicks previos dijeron `13/13, EXIT=0` con el índice vencido.
+`grep -nEi "lesson_index|LECCIONES-INDEX|build_lesson_index|índice de lecciones" scripts/run_all_validations.py`
+devuelve **0 coincidencias**: ni el quick ni el modo completo gobernan esa frescura. El invariante R2.10 lo
+imprime solo el hook `[6/8]`, y por eso queda como deuda `S-BH-6` en el maestro §5, dueño operador.
+
+Detalle del instrumento, también declarado: `python scripts/build_lesson_index.py --check` termina con una línea
+`[fechas] nombre=... commit=... sin_fuente=...` que **se imprime igual en verde que en rojo**; leer solo la
+última línea no distingue los dos estados. Hay que leer la línea de veredicto.
+
+## 3. Los dos vencimientos que este sello corrige
+
+| Documento | Qué decía | Qué dice ahora |
+|---|---|---|
+| `01-plan-maestro.md`, cabecera | «Estado: FASE-1 abierta el 2026-10-10. HEAD al concebir: `01013ef`» | «FASE-1 cerrada y publicada el 2026-10-10 en el commit `c6a47c2`», con nota de re-anchaje: `01013ef` queda como HEAD de concepción, no como estado del plan |
+| `10-analisis-post-implementacion.md`, §Cierre del plan | «El árbol queda en listo para revisión y en espera de autorización: sin `git commit`, sin L3 y sin push» | En pasado: el árbol **quedó** así al cerrar la fase y la espera terminó con la orden que publicó `c6a47c2` tras la L3 y el push. La espera ocurrió y no se borra |
+
+**No se re-escribieron, a propósito:** el §7 del maestro (regla del flujo de los cinco cortes) y las tres líneas
+del `05-prompt-inicio-sesion-fase-1.md` que fijaban el corte autorizado. Son regla e instrucción del momento en
+que la fase se diseñó, no afirmaciones de estado; re-escribirlas falsearía la historia.
+
+## 4. Estado de la evidencia tras el sello
+
+El quick y los validadores documentales del árbol con el sello se corren después de escribir este archivo y se
+declaran en la sesión. El índice de lecciones se regenera **dentro** del commit del sello: este sello añade la fila
+`S-BH-6` y el identificador `L-R.4` citado en ella, así que toca los `.md` de `plans/` y el derivado debe viajar
+en el mismo commit.

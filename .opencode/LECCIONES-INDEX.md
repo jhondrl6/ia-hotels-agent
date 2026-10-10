@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `19` análisis de plan + `40` archivos de `.opencode/context/`. `456` `.md` en total como corpus de **citas**.
-- 377 IDs con definición detectada; 107 IDs citados sin definición (ver última sección).
+- 377 IDs con definición detectada; 108 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -34,7 +34,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-*` | Decisiones / reglas de alineación | 53 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 62 |
-| — | Citados sin definición | 107 |
+| — | Citados sin definición | 108 |
 
 ## `L-*` — Lecciones aprendidas (223)
 
@@ -178,7 +178,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-R.1` | R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 61 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.2` | Hay campos que ningún writer escribe y ningún reader valida. docs/contributing/REGISTRY.md seguía publicando > Version actual: v4.66.0 con VERSION.yaml = 4.76.0. Medido: grep -rln "Version actual"… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 4 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-R.3` | El gate anti-contradicción de R2.5 tiene cobertura medida del 12,5 %. validate_plan_closure.py dispara solo si el 10-analisis-post-implementacion.md de un plan vivo tiene a la vez un heading que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 62 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/EVALUACION-JEV-TYPESAFE-2026-09-21, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
-| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 92 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 93 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-SR1` | Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes. / Qué pasó: el fallback FASE-D S7 con logger inexistente convivió con el código desde su fase sin detonar hasta una prueba… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 24 en Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-SR2` | La identidad de memoria debe derivarse de la URL canónica, no de la raw. / Qué pasó: los UTM params llegaron íntegros al target_id, fragmentando la memoria del mismo hotel en N identidades según cómo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 17 en Archives/SR-PIPELINE-FIXES-2026-08-27 |
 | `L-SR3` | Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio. / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 69 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -433,7 +433,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (107)
+## Citados sin definición (108)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -500,4 +500,4 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-E2E-3` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-7` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-8` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| … | +47 más en el JSON | |
+| … | +48 más en el JSON | |
