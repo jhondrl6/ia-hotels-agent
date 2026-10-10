@@ -1,0 +1,60 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 4 items
+
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_dos_checkouts_con_mtimos_distintos_publican_bytes_identicos PASSED [ 25%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_control_defectuoso_de_la_revision_publicada_si_diverge FAILED [ 50%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_un_copiar_fuera_del_repo_publica_sin_fuente_y_no_una_aproximacion PASSED [ 75%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_check_declara_de_que_fuente_salen_las_fechas PASSED [100%]
+
+================================== FAILURES ===================================
+_______ test_el_control_defectuoso_de_la_revision_publicada_si_diverge ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x000001DFBFAE42B0>, _basetemp=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1768'), _retention_count=3, _retention_policy='all')
+
+    @SIN_GIT
+    def test_el_control_defectuoso_de_la_revision_publicada_si_diverge(tmp_path_factory):
+        """El rojo que la cura quito: con `6b02532` los dos checkouts publicaban dos fechas."""
+        base = tmp_path_factory.mktemp("s15_defecto")
+        a, b = _pareja_de_checkouts(base)
+        _mtimos_divergen(a, b)
+    
+        defectuoso = _fuente_commiteada(REV_CONTROL_DEFECTUOSO, SCRIPT_REL)
+        assert "st_mtime" in defectuoso, (
+            f"la revision anclada {REV_CONTROL_DEFECTUOSO} ya no contiene el defecto: el control "
+            "perdio su rojo y hay que re-anclarlo")
+        assert defectuoso != SOURCE_CURADO.read_text(encoding="utf-8"), (
+            "el control y la cura son el mismo archivo: no hay comparacion posible")
+    
+        _escribir(a / SCRIPT_REL, defectuoso)
+        _escribir(b / SCRIPT_REL, defectuoso)
+        ra, rb = _correr(a / SCRIPT_REL, base / "out_A"), _correr(b / SCRIPT_REL, base / "out_B")
+        assert ra.returncode == 0 and rb.returncode == 0, [ra.stdout, ra.stderr, rb.stdout, rb.stderr]
+    
+        la = {e["id"]: e for e in _leer_json(base / "out_A" / "lecciones_index.json")["lecciones"]}
+        lb = {e["id"]: e for e in _leer_json(base / "out_B" / "lecciones_index.json")["lecciones"]}
+        assert la.keys() == lb.keys(), "las dos revisiones del control poblaron el indice distinto"
+        distintos = {i for i in la if la[i] != lb[i]}
+        assert distintos, (
+            "el control negativo no ejercito el defecto: hasta la version commiteada dio bytes "
+            "identicos, asi que la prueba de arriba pasa sobre cualquier cosa")
+        # Y nombra lo que desaparece, para que el rojo sea atribuible (L-V2.1): la diferencia son las
+        # dos fechas del reloj del sistema de cada arbol, no el conjunto de lecciones.
+        for i in distintos:
+>           assert la[i]["fuente_fecha"] == "mtime" and lb[i]["fuente_fecha"] == "mtime"
+E           AssertionError: assert ('mtime' == 'mtime'
+E             
+E               mtime and 'nombre' == 'mtime'
+E             
+E             - mtime
+E             + nombre)
+
+tests\test_build_lesson_index_s15_fecha_versionada.py:210: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_control_defectuoso_de_la_revision_publicada_si_diverge
+======================== 1 failed, 3 passed in 22.55s =========================
+EXIT=1

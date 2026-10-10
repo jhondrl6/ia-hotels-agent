@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-09
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 519
+> **Total fases completadas:** 520
 
 ---
 
@@ -12182,6 +12182,28 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 14 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B - 2026-10-09
+**Descripcion:** CURA-INSTRUMENTOS-QMIND-S15: diagnostico medido del control S15 y cura con diente intacto
+**Nota:** Unidad: rutas contadas por git status --porcelain -uall al momento de escribir la fila (mod=13 + nuevas=15 de evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-B/), sin contar las 13 rutas staged ajenas (S-CIM-7); el propio escritor suma 2 al commit (REGISTRY.md y .last_doc_phase.json). --fecha es la real de la fase (2026-10-09); el bloque de post-ejecucion del prompt decia 2026-10-08, fecha de redaccion. Tests: 4 funciones nuevas (4 -> 8 por grep -cE del metodo canonico); PRE 1 failed/3 passed, POST 8 passed EXIT=0.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `15` | NUEVO | 15 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `13` | 13 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 4 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

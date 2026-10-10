@@ -1,0 +1,95 @@
+comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest C:\Users\Jhond\Github\iah-cli\temp\test_s15_mutante.py -k "control_defectuoso or bajo_el_piso" -v --no-header -rA
+interprete: 3.13.3 (venv)
+arbol del verde/rojo declarado: arbol de trabajo con mutante sobre COPIA (el original no se toco)
+EXIT=1
+
+============================= test session starts =============================
+collecting ... collected 8 items / 6 deselected / 2 selected
+
+temp/test_s15_mutante.py::test_el_control_defectuoso_de_la_revision_publicada_si_diverge FAILED [ 50%]
+temp/test_s15_mutante.py::test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel FAILED [100%]
+
+================================== FAILURES ===================================
+_______ test_el_control_defectuoso_de_la_revision_publicada_si_diverge ________
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x0000023A68A443E0>, _basetemp=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1770'), _retention_count=3, _retention_policy='all')
+
+    @SIN_GIT
+    def test_el_control_defectuoso_de_la_revision_publicada_si_diverge(tmp_path_factory):
+        """El rojo que la cura quito: con `6b02532` los dos checkouts publicaban dos fechas."""
+        base = tmp_path_factory.mktemp("s15_defecto")
+        a, b, mto_a, mto_b = _pareja_de_checkouts(base)
+        _mtimos_divergen(a, b)
+    
+        defectuoso = _fuente_commiteada(REV_CONTROL_DEFECTUOSO, SCRIPT_REL)
+        assert "st_mtime" in defectuoso, (
+            f"la revision anclada {REV_CONTROL_DEFECTUOSO} ya no contiene el defecto: el control "
+            "perdio su rojo y hay que re-anclarlo")
+        assert defectuoso != SOURCE_CURADO.read_text(encoding="utf-8"), (
+            "el control y la cura son el mismo archivo: no hay comparacion posible")
+    
+        _escribir(a / SCRIPT_REL, defectuoso)
+        _escribir(b / SCRIPT_REL, defectuoso)
+        ra, rb = _correr(a / SCRIPT_REL, base / "out_A"), _correr(b / SCRIPT_REL, base / "out_B")
+        assert ra.returncode == 0 and rb.returncode == 0, [ra.stdout, ra.stderr, rb.stdout, rb.stderr]
+    
+        la = {e["id"]: e for e in _leer_json(base / "out_A" / "lecciones_index.json")["lecciones"]}
+        lb = {e["id"]: e for e in _leer_json(base / "out_B" / "lecciones_index.json")["lecciones"]}
+        assert la.keys() == lb.keys(), "las dos revisiones del control poblaron el indice distinto"
+        distintos = {i for i in la if la[i] != lb[i]}
+        assert distintos, (
+            "el control negativo no ejercito el defecto: hasta la version commiteada dio bytes "
+            "identicos, asi que la prueba de arriba pasa sobre cualquier cosa")
+        # Y nombra lo que desaparece, para que el rojo sea atribuible (L-V2.1): la diferencia son las
+        # dos fechas del reloj del sistema de cada arbol, no el conjunto de lecciones.
+        for i in distintos:
+>           assert la[i]["fuente_fecha"] == "mtime" and lb[i]["fuente_fecha"] == "mtime"
+E           AssertionError: assert ('mtime' == 'mtime'
+E             
+E               mtime and 'nombre' == 'mtime'
+E             
+E             - mtime
+E             + nombre)
+
+temp\test_s15_mutante.py:318: AssertionError
+__ test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x0000023A68A443E0>, _basetemp=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1770'), _retention_count=3, _retention_policy='all')
+
+    @SIN_GIT
+    def test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel(tmp_path_factory):
+        """La gobernanza del reloj (AC8) y del arbol (S20), con su piso medido.
+    
+        Sin esta prueba el par derivado seria una cifra que nadie mira: lo que sostiene el rojo del
+        control es que **ambos** mtimes queden antes de la fecha-en-nombre mas antigua del corpus. Y
+        lo que sostiene el corte positivo es que el clon materializa el arbol del commit, no uno
+        re-escrito por el `core.autocrlf` del ambito system.
+        """
+        base = tmp_path_factory.mktemp("s15_piso")
+        a, b, mto_a, mto_b = _pareja_de_checkouts(base)
+        piso, techo = _piso_y_techo(a)
+        fechas = _duenos_con_fecha(a)
+        assert fechas, "piso sin poblacion: el helper tenia que abstenerse, no llegar aqui"
+>       assert date.fromisoformat(mto_a[:10]) < date.fromisoformat(piso) and \
+            date.fromisoformat(mto_b[:10]) < date.fromisoformat(piso), (
+            f"el reloj del fixture no queda bajo el piso del corpus ({piso}): mtime podria perder el "
+            f"dueno contra un plan cerrado y la divergencia dejaria de ser solo la fecha ({mto_a}, "
+            f"{mto_b})")
+E       AssertionError: el reloj del fixture no queda bajo el piso del corpus (2026-07-06): mtime podria perder el dueno contra un plan cerrado y la divergencia dejaria de ser solo la fecha (2026-07-04 03:04:05, 2026-10-11 03:04:05)
+E       assert (datetime.date(2026, 7, 4) < datetime.date(2026, 7, 6) and datetime.date(2026, 10, 11) < datetime.date(2026, 7, 6))
+E        +  where datetime.date(2026, 7, 4) = <built-in method fromisoformat of type object at 0x00007FFC85F435B0>('2026-07-04')
+E        +    where <built-in method fromisoformat of type object at 0x00007FFC85F435B0> = date.fromisoformat
+E        +  and   datetime.date(2026, 7, 6) = <built-in method fromisoformat of type object at 0x00007FFC85F435B0>('2026-07-06')
+E        +    where <built-in method fromisoformat of type object at 0x00007FFC85F435B0> = date.fromisoformat
+E        +  and   datetime.date(2026, 10, 11) = <built-in method fromisoformat of type object at 0x00007FFC85F435B0>('2026-10-11')
+E        +    where <built-in method fromisoformat of type object at 0x00007FFC85F435B0> = date.fromisoformat
+E        +  and   datetime.date(2026, 7, 6) = <built-in method fromisoformat of type object at 0x00007FFC85F435B0>('2026-07-06')
+E        +    where <built-in method fromisoformat of type object at 0x00007FFC85F435B0> = date.fromisoformat
+
+temp\test_s15_mutante.py:433: AssertionError
+=========================== short test summary info ===========================
+FAILED temp/test_s15_mutante.py::test_el_control_defectuoso_de_la_revision_publicada_si_diverge
+FAILED temp/test_s15_mutante.py::test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel
+====================== 2 failed, 6 deselected in 16.76s =======================
+
+

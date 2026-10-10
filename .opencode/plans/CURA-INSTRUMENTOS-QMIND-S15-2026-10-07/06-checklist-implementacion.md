@@ -64,17 +64,17 @@ aquí: viven en `09-documentacion-post-proyecto.md` §D, en su test o en su crud
 - [x] Nada borrado en el notebook; modo completo corrido con crudo archivado, sin auditarse con el check recién curado
 - [ ] Cierre incremental con registro propio y quick verde
 
-### FASE-B — AC7 y AC8 (⬜ Pendiente)
+### FASE-B — AC7 y AC8 (✅ CERRADA 2026-10-09 contra HEAD `77e64ca` (== `origin/master`, medido por `git rev-parse` y `git ls-remote`); árbol **sin commitear** — no hubo instrucción literal de commit en el chat. FASE-C declarada «no aplica» con su medición)
 
-- [ ] Diagnóstico publicado **por cada `i` divergente**: tupla `fuente_fecha` de A y B, documento dueño, tier ganador
-- [ ] Tres hipótesis candidatas medidas (reloj del corpus / entorno del clon / cambio de población) con su confirmada y sus dos descartadas
-- [ ] Banda reproducida contra el HEAD de la sesión, no contra la medición del mandato
-- [ ] Cura sin tocar `scripts/build_lesson_index.py`; si la exige, se abre FASE-C y B no edita el generador
-- [ ] `REV_CONTROL_DEFECTUOSO` sigue anclado a la revisión fija; ninguna aserción convertida en pertenencia; ningún baseline re-fijado
-- [ ] Mutante que apaga la gobernanza nueva devuelve el rojo; restauración por sha256
-- [ ] Cortes de entorno declarados NO-EVALUABLE con la ruta buscada, no como divergencia hallada
-- [ ] Hermandades re-corridas (16 y 36 funciones) con par pre/post y resta comprobada
-- [ ] Cierre incremental con registro propio y quick verde
+- [x] Diagnóstico publicado **por cada `i` divergente**: tupla `fuente_fecha` de A y B, documento dueño, tier ganador → `E/FASE-B/diagnostico.md` §2 (11 IDs con sus dos dueños y su firma; M6 del crudo lista los tres dueños que compiten por `S-1`)
+- [x] Tres hipótesis candidatas medidas (reloj del corpus / entorno del clon / cambio de población) con su confirmada y sus dos descartadas → **confirmada la 1**; la 2 descartada como causa pero declarada como premisa falsa del fixture (`clon_fiel` S20 ya la gobierna, el fixture no: `core.autocrlf='true'` heredado del ámbito *system*, 438 `.md` divergiendo de su blob) y neutralizada por medición (JSON idéntico en árbol CRLF y LF, `sha ace923719d40d883…`, 0 entradas con tier/fecha/dueño distintos); la 3 descartada (`98c190e` y `086ce65` dan la misma banda y el mismo piso)
+- [x] Banda reproducida contra el HEAD de la sesión, no contra la medición del mandato → `77e64ca`: 11 divergentes / 7 inversiones de dueño, piso 2026-07-06, techo 2026-10-09
+- [x] Cura sin tocar `scripts/build_lesson_index.py`; si la exige, se abre FASE-C y B no edita el generador → generador **intacto** (`git diff --stat` vacío sobre la ruta); **FASE-C no aplica**: no se obtuvo la frase «la cura está en `_plan_date`/`build()` porque <razón medida>»
+- [x] `REV_CONTROL_DEFECTUOSO` sigue anclado a la revisión fija; ninguna aserción convertida en pertenencia; ningún baseline re-fijado → constante sin cambios y **diente nuevo en contra** (`test_la_revision_fija_del_control_no_se_re_ancra_a_head`); la aserción `… == "mtime" and … == "mtime"` literalmente intacta (HEAD :210 → curado :318); 22 `assert` agregados, 2 eliminadas y re-emitidas, ambas nombradas en `E/FASE-B/baseline-pre-post.md`
+- [x] Mutante que apaga la gobernanza nueva devuelve el rojo; restauración por sha256 → 2 de 2 sobre copia aislada (`temp/s15_mutantes_faseb.py`): M1 clamp del piso apagado (cae el control por `'nombre' == 'mtime'` **y** el diente del piso), M2 clon sin config dentro (cae con `NO-EVALUABLE` + `core.autocrlf`); sha256 del test vivo idéntico antes y después (`f913afb86b20c8be…`)
+- [x] Cortes de entorno declarados NO-EVALUABLE con la ruta buscada, no como divergencia hallada → `_revisar_materializacion()` / `_piso_y_techo()` / `_revisar_clon_fiel()`, con su diente y corte positivo sobre el árbol real
+- [x] Hermandades re-corridas (16 y 36 funciones) con par pre/post y resta comprobada → 18 casos (16 funciones) y 36, ambas `EXIT=0`, ambas intactas; la resta de la fase (4) se comprueba sobre su propia selección. **Divergencia declarada con el denominador del prompt:** «16 funciones» es el conteo de `def test_`; la corrida emite 18 casos por dos parametrizados — los dos números viajan con su instrumento
+- [x] Cierre incremental con registro propio y quick verde → `E/FASE-B/00-registro-de-fase.md`; quick `EXIT=0` con el denominador que imprime la corrida (`08-quick_cierre.txt`)
 
 ### FASE-C — AC9 (⬜ Condicional: solo si B la abre con su fila escrita)
 

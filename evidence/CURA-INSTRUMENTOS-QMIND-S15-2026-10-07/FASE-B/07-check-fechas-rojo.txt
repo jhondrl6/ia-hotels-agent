@@ -1,0 +1,5 @@
+comando: --check con el MD generado vencido (directorio temporal, nunca el versionado)
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_ROJO=1

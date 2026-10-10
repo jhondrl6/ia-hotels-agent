@@ -1,0 +1,19 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 8 items
+
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_dos_checkouts_con_mtimos_distintos_publican_bytes_identicos PASSED [ 12%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_control_defectuoso_de_la_revision_publicada_si_diverge PASSED [ 25%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_un_copiar_fuera_del_repo_publica_sin_fuente_y_no_una_aproximacion PASSED [ 37%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_check_declara_de_que_fuente_salen_las_fechas PASSED [ 50%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_la_revision_fija_del_control_no_se_re_ancra_a_head PASSED [ 62%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel PASSED [ 75%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_un_par_en_horqueta_invierte_el_dueno_y_es_el_rojo_que_se_gobierna PASSED [ 87%]
+tests/test_build_lesson_index_s15_fecha_versionada.py::test_el_clon_que_no_materializa_declara_no_evaluable_con_la_ruta PASSED [100%]
+
+============================= 8 passed in 36.22s ==============================
+EXIT=0

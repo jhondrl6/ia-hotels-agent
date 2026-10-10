@@ -1,0 +1,8 @@
+comando: ./venv/Scripts/python.exe scripts/build_lesson_index.py --out-dir temp/s15_check  (genera) y con --check (verifica)
+[OK] 372 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> temp/s15_check/LECCIONES-INDEX.md
+  -> temp/s15_check/lecciones_index.json
+[fechas] nombre=361 commit=11 sin_fuente=0
+[OK] Índice de lecciones fresco (372 IDs)
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_VERDE=0

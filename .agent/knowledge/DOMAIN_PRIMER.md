@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-08 | v4.79.0 WhatsApp verificado, orden real y entrega única de Don Alfonso*
+*Auto-generado: 2026-10-10 | v4.79.0 WhatsApp verificado, orden real y entrega única de Don Alfonso*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

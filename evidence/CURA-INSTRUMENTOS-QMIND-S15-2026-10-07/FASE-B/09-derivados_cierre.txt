@@ -1,0 +1,25 @@
+### 1 build_lesson_index (escritor del par)
+[OK] 374 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=363 commit=11 sin_fuente=0
+EXIT=0
+### 2 validate_opencode_refs --fix
+[PASS] OpenCode References: todas las referencias existen
+EXIT=0
+### 3 doctor --regenerate-domain-primer
+[OK] DOMAIN_PRIMER.md regenerado en .agent\knowledge\DOMAIN_PRIMER.md
+     210 archivos Python, 395 clases en 25 modulos (24 en modules/, 1 root)
+EXIT=0
+### 4 validate_plan_citations --check
+[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+EXIT=0
+### 5 validate_wiring --check
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest beaa7dfb88ca)
+[OK] Wiring: 174 llamadas descubiertas en 715 archivos | gobernadas 75 (conformes 21, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 25 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=155 versionada=155, temp bruto=160 versionada=0, venv bruto=7610 versionada=0
+EXIT=0
+### 6 validate_document_integration
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT=0

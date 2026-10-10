@@ -1,6 +1,10 @@
 # FASE-B — Estabilizar el control S15 del índice de lecciones (AC7, AC8)
 
 **ID:** CURA-INSTRUMENTOS-QMIND-S15 / FASE-B
+**Estado:** ✅ **CERRADA 2026-10-09** contra HEAD `77e64ca` (== `origin/master`), árbol **sin commitear** (no hubo
+instrucción literal de commit). AC7 landed con la causa medida y sus dos hipótesis descartadas; AC8 landed con el
+reloj derivado del corpus, el clon fiel por patrón S20 y sus 2 mutantes. **FASE-C declarada «no aplica»**. Acta:
+`evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-B/00-registro-de-fase.md`; diagnóstico: `…/diagnostico.md`.
 **Objetivo:** que `tests/test_build_lesson_index_s15_fecha_versionada.py` deje de fallar según el entorno **sin
 perder el diente**: el control tiene que seguir perdiendo cuando el generador está en su revisión defectuosa, y
 seguir ganando cuando está curado, con la divergencia esperada gobernada.
@@ -127,13 +131,13 @@ derivados con su escritor, quick, auto-reporte.
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] AC7 publicado con medición: la causa confirmada, las dos descartadas, y la banda de IDs divergentes contra el HEAD de la sesión
-- [ ] AC8 sin aserción rebajada: la cita literal del control antes/después aparece en la evidencia
-- [ ] El mutante de gobernanza devuelve el rojo y su restauración está verificada por sha256
-- [ ] Ningún verde de esta fase depende de `.opencode/` ajeno: los untracked de otra sesión se declaran y no se tocan
-- [ ] Las dos hermanas re-corridas con par pre/post y resta comprobada (R2.7)
-- [ ] Si la cura exige el generador, FASE-B **no** lo edita: cierra con la fila de FASE-C abierta y su razón
-- [ ] Post-ejecución completo; quick verde; derivados regenerados
+- [x] AC7 publicado con medición: la causa confirmada (reloj del fixture contra el piso de fechas-en-nombre del corpus, 2026-07-06), las dos descartadas (entorno del clon —pero su premisa de árbol fiel sí estaba rota—, cambio de población —misma banda en `98c190e` y `086ce65`—), y la banda de IDs divergentes medida contra el HEAD de esta sesión (`77e64ca`: 11, con 7 inversiones de dueño)
+- [x] AC8 sin aserción rebajada: la cita literal del control antes/después aparece en la evidencia (`E/FASE-B/baseline-pre-post.md`: la aserción `mtime`/`mtime` intacta; 2 `assert` eliminadas, ambas re-emitidas y nombradas; 22 agregadas)
+- [x] El mutante de gobernanza devuelve el rojo y su restauración está verificada por sha256 (M1 clamp apagado y M2 clon sin config, ambos `EXIT=1` con la firma nombrada; sha256 del test vivo idéntico antes y después)
+- [x] Ningún verde de esta fase depende de `.opencode/` ajeno: las 13 rutas staged del hermano REFACTOR-WHATSAPP (S-CIM-7) no se tocaron ni entraron en conteo; el `--check` en las dos vías se corrió con `--out-dir temp/s15_check`
+- [x] Las dos hermanas re-corridas con par pre/post y resta comprobada (R2.7): 18 casos (16 funciones) y 36, `EXIT=0`, ambas intactas por `git diff --stat`; la resta de la fase (4) se comprueba sobre su propia selección
+- [x] Si la cura exige el generador, FASE-B **no** lo edita: cierra con la fila de FASE-C abierta y su razón → **no lo exigió**; FASE-C cierra en «no aplica» con la frase contraria escrita y su medición (`diagnostico.md` §5)
+- [x] Post-ejecución completo; quick verde; derivados regenerados (`log_phase_completion.py`, `build_lesson_index.py`, `validate_opencode_refs.py --fix`, `doctor.py --regenerate-domain-primer`, `validate_document_integration.py`, quick)
 
 ## Restricciones
 

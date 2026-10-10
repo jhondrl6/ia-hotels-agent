@@ -1,0 +1,11 @@
+== receta flags-clone (arbol CRLF): autocrlf dentro del clon='true' longpaths rc=1=''
+   bytes del .md del fixture: 24149 B, CRLF=True | sha blob HEAD=db6929dac2d19da7 sha disco=49e4e9d4e180233f identical=False
+== receta s20 (arbol LF): autocrlf dentro del clon='input' longpaths rc=0='true'
+   bytes del .md del fixture: 23622 B, CRLF=False | sha blob HEAD=db6929dac2d19da7 sha disco=db6929dac2d19da7 identical=True
+
+== JSON publicado CRLF vs LF: identico=True (sha ace923719d40d883 vs ace923719d40d883)
+== MD publicado CRLF vs LF: identico=True (sha ced6fce8b6b95643 vs ced6fce8b6b95643)
+== entradas con tier/fecha/dueno distintos entre los dos arboles: 0
+== tiers CRLF: Counter({'nombre': 361, 'commit': 11})
+== tiers LF: Counter({'nombre': 361, 'commit': 11})
+EXIT=0

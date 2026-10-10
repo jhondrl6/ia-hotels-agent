@@ -1,0 +1,608 @@
+== instrumento versionado: 6b02532:scripts/build_lesson_index.py (20223 B, sha256=6442305f22296dcf…) ==
+== HEAD medido: 77e64ca94158266e9ed6c95836cf04c3dc718112 ==
+
+===== H2 · ENTORNO DEL CLON =====
+git config --get core.autocrlf (dentro del clon): rc=0 valor='true'
+git config --get core.longpaths  (dentro del clon): rc=1 valor=''
+git config --global core.autocrlf: ''
+.md materializados en el clon: 438 | divergen del blob de HEAD: 438
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/03-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/04-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/05-prompt-fase-4.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/06-prompt-fase-5.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/07-prompt-fase-6-release.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/08-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/README.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-1.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-5.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/gh-issue-bug4a-body.md
+  DIVERGE: .opencode/plans/Archives/BUGFIX-LUXOR-2026-07-06/README.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/02-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/03-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/04-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/05-prompt-fase-4.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/06-prompt-fase-5-release.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/BUGS-ONBOARDING-ADR-2026-07-22/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/02-prompt-fase-A.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/03-prompt-fase-B.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/04-prompt-fase-C-A.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/06-prompt-fase-D.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/07-prompt-fase-E.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/08-prompt-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/09-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/11-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/README.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-E2E-ZIONE.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-A.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-B.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P0-C.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-A.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-B.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-C.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P1-D.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-A.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-P2-B.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/CREDIBILIDAD-NUMERICA-2026-08-20/README.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/02-prompt-fase-A.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/03-prompt-fase-B.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/04-prompt-fase-C.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/05-prompt-fase-D.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/06-prompt-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/README.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/02-prompt-fase-A.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/03-prompt-fase-B.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/04-prompt-fase-C.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/05-prompt-fase-D.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/06-prompt-fase-E.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/DT-1-DELIVERY-CONTRACT-2026-07-23/README.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/02-prompt-fase-A.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/03-prompt-fase-B.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/04-prompt-fase-C.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/05-prompt-fase-D.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/06-prompt-fase-E.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/07-prompt-fase-F.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/08-prompt-fase-release.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/09-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24/README.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/02-prompt-fase-0.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/03-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/04-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/05-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/06-prompt-fase-release.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/DT-3-TECH-DEBT-2026-07-25/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/02-prompt-fase-0.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/03-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/04-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/05-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/06-prompt-fase-4.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/07-prompt-fase-release.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/08-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/09-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/DT-4-ROOT-CAUSE-2026-07-25/evidence/BLOCKED_BY_GATES.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-1.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-5.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-6.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-analisis-fases-1-4--OBSOLETO.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/evidence/FASE-6/BLOCKED_BY_GATES.md
+  DIVERGE: .opencode/plans/Archives/DT4-RESIDUAL-FIXES/README.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-D.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-E.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-F.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-G.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-H.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-HOTFIX-PRE-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-I.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/README.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/04-contrato-ejecucion.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/README.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/02-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/03-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/04-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/05-prompt-fase-4.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/06-prompt-fase-5.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/07-prompt-fase-release.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/08-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/09-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/10-dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/control-sin-onboarding/BLOCKED_BY_GATES.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260731_164842.md
+  DIVERGE: .opencode/plans/Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31/evidence/FASE-5/zione/02_PROPUESTA_COMERCIAL_20260731_164842.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/02-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/03-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/04-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/05-prompt-fase-4.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/06-prompt-fase-5-release.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/HOOK-PDF-2026-07-09/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/02-prompt-fase-0-a.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/03-prompt-fase-0-b.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/03-prompt-fase-1.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/04-prompt-fase-2.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/05-prompt-fase-3.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/06-prompt-fase-release-a.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/07-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/07-prompt-fase-release-b.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/08-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/08-prompt-fase-release-c.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/ONBOARDING-INJECTION-GAP-2026-07-29/evidence/FASE-RELEASE-A/01_DIAGNOSTICO_Y_OPORTUNIDAD_20260730_143715.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/05-prompt-inicio-sesion-fase-V2.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/05-prompt-inicio-sesion-fase-V3.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-D.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-E.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-F.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/README.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-1.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-A.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-B.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-C.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-D.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-E.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-R0-F.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22/README.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-0.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1A.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-1B.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-5.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-6.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-7.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-PENDIENTE-V4.58.0/README.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/04-contrato-ejecucion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-0.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-D.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-E2E.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-F.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-G.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-H.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/README.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-1.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-5.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/05-prompt-inicio-sesion-fase-6.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/ROICRII/README.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-1.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-5.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-6-v4complete.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ROICRIII/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-1A.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-1B.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-2.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-3.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-4.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/ROICRIIIF/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-A.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-B.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-C.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-D.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-E.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-F.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-G.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-SR-H2.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/SR-PIPELINE-FIXES-2026-08-27/README.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P1.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P2.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P3-A.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P3-B.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P4.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P5.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-P6.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/README.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-E2E.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T1.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-A.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-B.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T2-C.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T4-A.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-T4-B.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/TRIBUNAL-OFFLINE-2026-09-09/README.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-D.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/05-prompt-inicio-sesion-fase-VERIFY.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/VALIDADOR-URL-PROPIA-2026-08-30/README.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/01-plan-maestro.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/04-contrato-ejecucion.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-A.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-D.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-C.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md
+  DIVERGE: .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/README.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/01-plan-maestro.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/04-contrato-ejecucion.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-A1.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-A2.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-A3.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-B.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-C.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/05-prompt-inicio-sesion-fase-RELEASE.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/06-checklist-implementacion.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/09-documentacion-post-proyecto.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md
+  DIVERGE: .opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md
+  DIVERGE: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/00-lecciones-capitalizadas.md
+  DIVERGE: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/01-plan-maestro.md
+  DIVERGE: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/05-prompt-inicio-sesion.md
+  DIVERGE: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md
+  DIVERGE: .opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/README.md
+  DIVERGE: .opencode/context/CONTEXT-JEV-CURA-B2-1-2026-10-09.md
+  DIVERGE: .opencode/context/Historico/AUDIT-BUG-1-FORENSIC-2026-07-22.md
+  DIVERGE: .opencode/context/Historico/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22.md
+  DIVERGE: .opencode/context/Historico/bugs_no_onboarding_luxor_2026-07-06.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DT-4.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-DT4-RESIDUAL-FIXES.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md
+  DIVERGE: .opencode/context/Historico/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19.md
+  DIVERGE: .opencode/context/Historico/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION.md
+  DIVERGE: .opencode/context/Historico/INVESTIGACION_CONTEXTO.md
+  DIVERGE: .opencode/context/Historico/INVESTIGACION_RESULTADOS.md
+  DIVERGE: .opencode/context/Historico/LUXOR-RECALIBRACION-FINANCIERA.md
+  DIVERGE: .opencode/context/Historico/MODULO-HOOK-PDF.md
+  DIVERGE: .opencode/context/Historico/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22.md
+  DIVERGE: .opencode/context/Historico/PENDIENTE-IMP-03-CAPEX-BREAKDOWN.md
+  DIVERGE: .opencode/context/Historico/Pendiente.md
+  DIVERGE: .opencode/context/Historico/RegrasiónII.md
+  DIVERGE: .opencode/context/Historico/Regresión.md
+  DIVERGE: .opencode/context/Historico/roadmap-enrichlabs-vertical-hotels-strategy.md
+  DIVERGE: .opencode/context/Historico/ROICRIII-fase-6-resultado-y-faltantes.md
+  DIVERGE: .opencode/context/Historico/ROICRIII.md
+  DIVERGE: .opencode/context/Historico/sync-versions-cli-note.md
+  DIVERGE: .opencode/context/Historico/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23.md
+  DIVERGE: .opencode/context/Refuerzo.md
+materializa .opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md: True
+materializa .opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md: True
+
+===== M2 · POBLACION DE DUENOS EN EL HEAD DEL CLON =====
+archivos md leidos=438 | duenos totales=72 | con fecha en el nombre=48
+piso (min fecha en nombre) = 2026-07-06 | techo (max) = 2026-10-09
+-- duenos SIN fecha en el nombre (candidatos a tier 2 / mtime) --
+  Archives/DT4-RESIDUAL-FIXES
+  Archives/REFACTOR-CAPEX-BREAKDOWN-V4.60.0
+  Archives/REFACTOR-PENDIENTE-V4.58.0
+  Archives/ROICRII
+  Archives/ROICRIII
+  Archives/ROICRIIIF
+  context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL
+  context/CONTEXT-DT-3-TECH-DEBT-POST-DT2
+  context/CONTEXT-DT-4
+  context/CONTEXT-DT4-RESIDUAL-FIXES
+  context/DT-1-README-DELIVERY-PRESENT-IN-PRODUCTION
+  context/INVESTIGACION_CONTEXTO
+  context/INVESTIGACION_RESULTADOS
+  context/LUXOR-RECALIBRACION-FINANCIERA
+  context/MODULO-HOOK-PDF
+  context/PENDIENTE-IMP-03-CAPEX-BREAKDOWN
+  context/Pendiente
+  context/ROICRIII
+  context/ROICRIII-fase-6-resultado-y-faltantes
+  context/Refuerzo
+  context/RegrasiónII
+  context/Regresión
+  context/roadmap-enrichlabs-vertical-hotels-strategy
+  context/sync-versions-cli-note
+-- duenos CON fecha en el nombre, ordenados (completo, sin head) --
+  2026-07-06  Archives/BUGFIX-LUXOR-2026-07-06
+  2026-07-06  context/bugs_no_onboarding_luxor_2026-07-06
+  2026-07-09  Archives/HOOK-PDF-2026-07-09
+  2026-07-22  Archives/BUGS-ONBOARDING-ADR-2026-07-22
+  2026-07-22  context/AUDIT-BUG-1-FORENSIC-2026-07-22
+  2026-07-22  context/BUGS-ONBOARDING-ADR-TEMPLATE-2026-07-22
+  2026-07-23  Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23
+  2026-07-23  Archives/DT-1-DELIVERY-CONTRACT-2026-07-23
+  2026-07-23  context/ZIONE-PROPOSAL-ASSET-ALIGNMENT-BLOCK-2026-07-23
+  2026-07-24  Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24
+  2026-07-25  Archives/DT-3-TECH-DEBT-2026-07-25
+  2026-07-25  Archives/DT-4-ROOT-CAUSE-2026-07-25
+  2026-07-25  context/CONTEXT-BUGS-VS-DT3-CLASIFICACION-2026-07-25
+  2026-07-25  context/CONTEXT-DT-3-POST-ANALYSIS-VALIDATED-2026-07-25
+  2026-07-28  context/CONTEXT-ONBOARDING-INJECTION-GAP-2026-07-28
+  2026-07-29  Archives/ONBOARDING-INJECTION-GAP-2026-07-29
+  2026-07-30  context/CONTEXT-EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-30
+  2026-07-31  Archives/EVIDENCE-TIER-FALSE-CONFIDENCE-IAO-2026-07-31
+  2026-08-01  Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01
+  2026-08-01  context/CONTEXT-DELIVERY-ZIP-PACKAGING-BROKEN-2026-08-01
+  2026-08-02  context/CONTEXT-DIAGNOSTICO-COHERENCIA-MODULO-ENTREGA-2026-08-02
+  2026-08-03  Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03
+  2026-08-04  Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04
+  2026-08-04  context/CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04
+  2026-08-19  context/CONTEXT-VALIDACION-COMERCIAL-CODIGO-VIVO-2026-08-19
+  2026-08-20  Archives/CREDIBILIDAD-NUMERICA-2026-08-20
+  2026-08-22  Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22
+  2026-08-22  context/CONTEXT-REFACTOR-COHERENCIA-NARRATIVA-FUGAS-WHATSAPP-2026-08-22
+  2026-08-27  Archives/SR-PIPELINE-FIXES-2026-08-27
+  2026-08-27  context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27
+  2026-08-29  context/CONTEXT-DECISION-PRE-COMMIT-FRAMEWORK-2026-08-29
+  2026-08-29  context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29
+  2026-08-30  Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  2026-09-01  context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01
+  2026-09-03  Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03
+  2026-09-03  context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03
+  2026-09-09  Archives/TRIBUNAL-OFFLINE-2026-09-09
+  2026-09-11  Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11
+  2026-09-12  Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12
+  2026-09-17  context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17
+  2026-09-18  Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18
+  2026-09-20  Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+  2026-09-20  VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  2026-09-21  Archives/EVALUACION-JEV-TYPESAFE-2026-09-21
+  2026-09-21  context/CONTEXT-JEV-TYPESAFE-CASOS-DE-USO-2026-09-21
+  2026-09-22  context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22
+  2026-10-07  CURA-INSTRUMENTOS-QMIND-S15-2026-10-07
+  2026-10-09  context/CONTEXT-JEV-CURA-B2-1-2026-10-09
+
+===== H1 · BARRIDO DE PARES DE MTIMES (corpus = HEAD) =====
+
+-- par «literal del control (2020-01-02 / 2031-06-06)»: mtimes 2020-01-02 / 2031-06-06 | divergentes=11 | fuentes presentes=['mtime', 'nombre'] | todos por solo-fecha-mtime=False | S-1 en banda=True | S-11 en banda=True
+   S-1: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-10: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-11: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-2: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-3: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-4: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-5: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-6: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-7: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-8: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-9: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+
+-- par «ambos bajo el piso del corpus»: mtimes 2026-07-04 / 2026-07-05 | divergentes=11 | fuentes presentes=['mtime'] | todos por solo-fecha-mtime=True | S-1 en banda=True | S-11 en banda=True
+   S-1: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-10: A[mtime 2026-07-04 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-11: A[mtime 2026-07-04 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-2: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-3: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-4: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-5: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-6: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-7: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-8: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-9: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-07-05 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+
+-- par «ambos sobre el techo del corpus»: mtimes 2026-10-11 / 2026-10-12 | divergentes=4 | fuentes presentes=['mtime'] | todos por solo-fecha-mtime=True | S-1 en banda=False | S-11 en banda=True
+   S-10: A[mtime 2026-10-11 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-10-12 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-11: A[mtime 2026-10-11 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-10-12 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-8: A[mtime 2026-10-11 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-10-12 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-9: A[mtime 2026-10-11 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-10-12 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+
+-- par «horqueta (bajo piso / sobre techo)»: mtimes 2026-07-04 / 2026-10-11 | divergentes=11 | fuentes presentes=['mtime', 'nombre'] | todos por solo-fecha-mtime=False | S-1 en banda=True | S-11 en banda=True
+   S-1: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-10: A[mtime 2026-07-04 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-10-11 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-11: A[mtime 2026-07-04 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] B[mtime 2026-10-11 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md] OK-solo-fecha
+   S-2: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-3: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-4: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-5: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-6: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-7: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20/10-analisis-post-implementacion.md] DIVERGE-DE-DUEÑO
+   S-8: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-10-11 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+   S-9: A[mtime 2026-07-04 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] B[mtime 2026-10-11 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md] OK-solo-fecha
+
+===== H3 · BANDA DE DIVERGENTES POR REVISION DEL CORPUS =====
+
+-- corpus 98c190e: ids totales=348 divergentes=11 fuentes=['mtime', 'nombre'] | piso del corpus=2026-07-06 techo=2026-09-22 duenos_con_fecha=46
+   S-1: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-10: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] OK-solo-fecha
+   S-11: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] OK-solo-fecha
+   S-2: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-3: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-4: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-5: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-6: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-7: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-8: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] OK-solo-fecha
+   S-9: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] OK-solo-fecha
+
+-- corpus 086ce65: ids totales=348 divergentes=11 fuentes=['mtime', 'nombre'] | piso del corpus=2026-07-06 techo=2026-09-22 duenos_con_fecha=46
+   S-1: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-10: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] OK-solo-fecha
+   S-11: A[mtime 2020-01-02 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] B[mtime 2031-06-06 owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2] OK-solo-fecha
+   S-2: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-3: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-4: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-5: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-6: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-7: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[nombre 2026-09-20 owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20] DIVERGE-DE-DUEÑO
+   S-8: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] OK-solo-fecha
+   S-9: A[mtime 2020-01-02 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] B[mtime 2031-06-06 owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL] OK-solo-fecha
+
+===== M6 · DEFINICIONES COMPETIDORAS DE S-1 Y S-11 (corpus HEAD) =====
+   S-1: owner=VERIFICADOR-ESCRITURA-QMIND-2026-09-20 archivo=10-analisis-post-implementacion.md seccion=F. Deuda y seguimientos con dueño origen=plan
+   S-1: owner=context/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL archivo=CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md seccion=5. Criterios de éxito para el plan DT-2 origen=contexto
+   S-1: owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2 archivo=CONTEXT-DT-3-TECH-DEBT-POST-DT2.md seccion=6. Criterios de éxito (DoD) origen=contexto
+   S-11: owner=context/CONTEXT-DT-3-TECH-DEBT-POST-DT2 archivo=CONTEXT-DT-3-TECH-DEBT-POST-DT2.md seccion=6. Criterios de éxito (DoD) origen=contexto
+EXIT=0

@@ -1,0 +1,59 @@
+comando: C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe -m pytest C:\Users\Jhond\Github\iah-cli\temp\test_s15_mutante.py -k "bajo_el_piso" -v --no-header -rA
+interprete: 3.13.3 (venv)
+arbol del verde/rojo declarado: arbol de trabajo con mutante sobre COPIA (el original no se toco)
+EXIT=1
+
+============================= test session starts =============================
+collecting ... collected 8 items / 7 deselected / 1 selected
+
+temp/test_s15_mutante.py::test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel FAILED [100%]
+
+================================== FAILURES ===================================
+__ test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel __
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x0000015DDE4B43E0>, _basetemp=WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1771'), _retention_count=3, _retention_policy='all')
+
+    @SIN_GIT
+    def test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel(tmp_path_factory):
+        """La gobernanza del reloj (AC8) y del arbol (S20), con su piso medido.
+    
+        Sin esta prueba el par derivado seria una cifra que nadie mira: lo que sostiene el rojo del
+        control es que **ambos** mtimes queden antes de la fecha-en-nombre mas antigua del corpus. Y
+        lo que sostiene el corte positivo es que el clon materializa el arbol del commit, no uno
+        re-escrito por el `core.autocrlf` del ambito system.
+        """
+        base = tmp_path_factory.mktemp("s15_piso")
+>       a, b, mto_a, mto_b = _pareja_de_checkouts(base)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+temp\test_s15_mutante.py:424: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+temp\test_s15_mutante.py:217: in _pareja_de_checkouts
+    _revisar_clon_fiel(a, DOC_SIN_FECHA)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+clon = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1771/s15_piso0/A')
+docs = ['.opencode/context/Historico/CONTEXT-DT-2-DELIVERY-CONTRACT-RESIDUAL.md', '.opencode/context/Historico/CONTEXT-DT-3-TECH-DEBT-POST-DT2.md']
+
+    def _revisar_clon_fiel(clon: Path, docs: list[str]) -> None:
+        """El arbol del clon tiene que ser byte a byte el del commit (patrón S20).
+    
+        Medido en FASE-B (`…/FASE-B/02-h2-crlf-del-clon.txt`): pasar `-c core.autocrlf=input` solo a
+        `git clone` no persiste nada — el `checkout` corre dentro del clon y lee la config **del clon**,
+        que hereda el `true` del ambito *system* de Windows. Con la config fijada dentro, el documento
+        del fixture casa con su blob de HEAD; con las flags sueltas no (24.149 B en disco contra 23.622
+        B commiteados).
+        """
+        autocrlf = subprocess.run(["git", "config", "--get", "core.autocrlf"], cwd=str(clon),
+                                  capture_output=True, text=True, encoding="utf-8").stdout.strip()
+        if autocrlf != "input":
+>           pytest.fail(f"{NO_EVALUABLE}: `core.autocrlf` dentro del clon {clon} es {autocrlf!r}, no "
+                        "'input': el arbol materializado no es el del commit")
+E           Failed: NO-EVALUABLE: `core.autocrlf` dentro del clon C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1771\s15_piso0\A es 'true', no 'input': el arbol materializado no es el del commit
+
+temp\test_s15_mutante.py:170: Failed
+=========================== short test summary info ===========================
+FAILED temp/test_s15_mutante.py::test_el_par_de_mtimes_se_deriva_bajo_el_piso_del_corpus_y_el_clon_es_fiel
+======================= 1 failed, 7 deselected in 5.11s =======================
+
+
