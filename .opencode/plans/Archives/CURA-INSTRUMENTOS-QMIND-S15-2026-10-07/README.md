@@ -71,7 +71,7 @@ literal de la subida.⟧ **FASE-A3 cerró el 2026-10-09** contra HEAD `b32a5ad`:
 
 ## Cómo continuar
 
-Una fase por sesión (R1). El plan está **archivado y cerrado**: no queda ninguna fase por ejecutar. Si el operador autoriza el commit, se abre con el `git status` de este árbol (rename staged del plan + las 13 rutas del hermano S-CIM-7, que no se tocan) y se commitea **por pathspec**, con los derivados regenerados como último paso. Y
+Una fase por sesión (R1). El plan está **archivado, cerrado, commiteado (`ee28a50`), revisado con L3 (0 hallazgos) y empujado**: no queda ninguna fase por ejecutar. Si el operador autoriza el commit, se abre con el `git status` de este árbol (rename staged del plan + las 13 rutas del hermano S-CIM-7, que no se tocan) y se commitea **por pathspec**, con los derivados regenerados como último paso. Y
 **re-mide** HEAD, paridad, status y el quick antes de escribir la primera línea: dos filas del mandato caducaron
 entre su redacción y esta preparación, y la tercera puede caducar entre sesiones. La referencia de presupuesto y su
 base medida viven en `04-contrato-ejecucion.md` §R2.

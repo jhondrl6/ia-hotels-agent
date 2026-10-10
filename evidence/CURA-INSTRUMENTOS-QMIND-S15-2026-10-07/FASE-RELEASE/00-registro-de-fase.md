@@ -68,6 +68,18 @@ nueva) → `validate_opencode_refs.py --fix` (7 referencias reparadas, **ninguna
 Después del sello documental, el índice y las citas se volvieron a generar como **último paso** (374 IDs
 definidos; `S-CIM-11` viaja como *citado sin definición*, estado explícito del escritor, no un rojo).
 
+## Sello de la tanda «Git Commit + L3 + Push» (2026-10-09, despues de este acta)
+
+El literal del operador llego al cerrar el corte documental y se ejecuto en el orden del contrato (commit → L3 → push):
+
+- **Commit `ee28a50`** por **pathspec**, con 58 rutas: **14 renombradas** por el `git mv` del archivado, 14 modificadas y 30 nuevas de evidencia. Medido sobre el propio commit: **0 rutas ajenas dentro** y **0 archivos bajo `scripts/`, `tests/` o `modules/`**. Las 13 rutas staged del hermano REFACTOR-WHATSAPP (S-CIM-7) siguen staged y intactas, sin des-stagear.
+- **El hook pre-commit no lo bloqueo**: la existencia del commit es la evidencia, y se declara que su stdout no se capturo en un crudo, asi que **no** se afirma el desglose por check de los ocho pasos.
+- **L3 deep review sobre `0f50ea4..ee28a50`: 0 hallazgos.**
+- **Push `0f50ea4..ee28a50`** con `EXIT=0`; paridad `origin/master..HEAD` = **0** y tip confirmado por `git ls-remote origin refs/heads/master` = `ee28a505e113dda7a7efa6129871c6d783afb581`.
+- **Verificacion en el arbol del commit (L-VCF-15), ahora si hecha**: en un clon limpio de `ee28a50` (fuera del workspace, con `core.longpaths` y `core.autocrlf=input` dentro, y borrado despues) el cuerpo publicado sigue dando `349b85c5b7a6f3e4…` — o sea el commit no normalizo un byte del cuerpo, con `core.autocrlf=input` activo y **CR=0** en el archivo; el blob indexado y el blob de HEAD casan con el `sha_cuerpo` publicado. La seleccion literal re-corrida sobre el tip: **65 passed, `EXIT=0`** (el control S15 se autoclona HEAD, asi que esa corrida ejercita el arbol commiteado); quick **13/13 `EXIT=0`**; `--strict` **`EXIT=1`** con `[FRESCO]` de este plan y el rojo era-G declarado. Crudos `15-`, `15b-`, `15c-`, `15d-`, `16-`.
+- **Yerro declarado de esta sub-tanda:** el primer clon de verificacion no traia interprete (el `venv/` esta excluido del repositorio), asi que la corrida de pytest dentro del clon no ocurrio y el fallback tampoco reso; se re-tomo la verificacion desde el worktree sobre el tip y seconserva la evidencia del sha en el clon. Tres archivos de 0 bytes (`**Total`, `**Ultima`, `**Version`) aparecieron en la raiz por el comando mangado de una tanda anterior (sustitucion de la shell dentro de un `python -c`): se borraron, eran de esta sesion, nunca estuvieron en el repo y su origen esta escrito en el crudo `13-`.
+- **El sha de este sello no se estampa a si mismo**: lo cubre la primera corrida L3 de la siguiente tanda.
+
 ## Presupuesto (auto-reporte con unidad declarada)
 
 **≈95 `tool_use` contados a mano sobre el transcript**, contra la referencia de **60** dictada por DA-CIM.10

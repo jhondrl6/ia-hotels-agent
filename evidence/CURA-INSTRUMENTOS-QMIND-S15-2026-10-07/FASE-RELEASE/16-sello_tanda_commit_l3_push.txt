@@ -1,0 +1,33 @@
+# 16: sello de la tanda commit + L3 + push
+## evidencia de la tanda
+commit: ee28a50 | rango empujado: 0f50ea4..ee28a50 | paridad: 0
+tip remoto: ee28a505e113dda7a7efa6129871c6d783afb581	refs/heads/master
+contenido del commit: 58 rutas | renames 14 | ajenas 0 | codigo 0
+L3 deep review: 0 hallazgos (findings_count 0) sobre el rango
+verificacion en el arbol del commit: cuerpo 349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 == sha_cuerpo publicado
+strays de la sesion eliminados: **Total, **Ultima, **Version (0 bytes, nunca versionados)
+## sello documental (no toca el 10-analisis congelado)
+[OK] arnes compila
+[OK] sello estampado en acta, dependencias, CHANGELOG y README
+EXIT_SELO=0
+## derivados como ultimo paso
+[OK] 374 IDs definidos + 96 sin definición (18 análisis, 450 .md citados)
+[PASS] OpenCode References: todas las referencias existen
+[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+## cuerpo congelado, ultima medicion
+349b85c5b7a6f3e4e87d5d85dbe64c8b8de25d5c9d263ad8daa1ef46f0ffaef0 *.openc
+## rutas sucias para el sello
+ M .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md
+ M .opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md
+ M .opencode/plans/plan_citations_baseline.json
+ M CHANGELOG.md
+ M evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/00-registro-de-fase.md
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/15-verificacion_arbol_commit.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/15b-post_commit_seleccion.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/15c-quick_post_commit.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/15d-strict_post_commit.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/16-sello_tanda_commit_l3_push.txt
+?? evidence/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/FASE-RELEASE/16b-quick_post_sello.txt
