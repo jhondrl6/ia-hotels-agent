@@ -1,0 +1,12 @@
+inteprete: 3.13.3 | CLI: C:\Users\Jhond\AppData\Roaming\npm\qmind.CMD
+llamada: 1 x source list | reintentos: 0 (una sola corrida, sin bucle)
+EXIT_LLAMADA=0
+CENSO_TOTAL=64
+claves_de_cabecera: ['currentPage', 'pageSize', 'totalSize']
+FUENTES_QUE_NOMBRAN_AL_JEV=5
+01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5 | status=ready | sha=34e2a95195b2ddb4 | bytes=15144 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)
+01a10853-6da2-7820-b2a3-fa1cb5ccb4ba | status=ready | sha=424b5828e34145fb | bytes=21249 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)
+01a10e39-1625-71b1-8ca6-73cbdb1c6a94 | status=ready | sha=d1b8ff00b51144ad | bytes=30655 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)
+01a10ec9-8113-7875-a806-2eec6521d37a | status=ready | sha=ee40f5ee52ffd6a2 | bytes=32551 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)
+01a12247-f791-7944-832e-13f5cad68f3e | status=ready | sha=b88e3e08a70da45f | bytes=37874 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-
+NOTA: originUrl y originalFileUri NO se imprimen (enlaces firmados, redaccion mandate)
