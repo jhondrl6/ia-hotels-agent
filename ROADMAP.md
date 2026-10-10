@@ -103,7 +103,7 @@ ROADMAP es un documento estratégico y **no se sincroniza automáticamente** (de
 | Gates de publicación y su severidad | `modules/quality_gates/publication_gates.py` (docstring) | lectura directa |
 | Workflows activos | `.agents/workflows/` | `ls` |
 | Pipeline comercial y prospectos | `evidence/Ingresos/` | lectura directa |
-| Contexto de refuerzo y prioridades de sesión | `.opencode/context/Refuerzo.md` | lectura directa |
+| Contexto de refuerzo y prioridades de sesión (archivado el 2026-10-10: su letra es de 2026-09-21 y el marco rector es este propio ROADMAP) | `.opencode/context/Historico/Refuerzo.md` | lectura directa |
 
 **Regla**: si un dato puede desfasarse, no vive aquí; vive en su fuente y este documento la referencia.
 

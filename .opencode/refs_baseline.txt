@@ -1,3 +1,7 @@
 # Referencias históricas rotas congeladas (validate_opencode_refs.py)
 # Formato: archivo|referencia — una por línea.
-.opencode/plans/Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03/09-documentacion-post-proyecto.md|.opencode/plans/plan_citations_baseline.json
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md|.opencode/context/Refuerzo.md
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md|.opencode/context/Refuerzo.md
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md|.opencode/context/Refuerzo.md
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-RELEASE.md|.opencode/context/Refuerzo.md
+.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md|.opencode/context/Refuerzo.md
