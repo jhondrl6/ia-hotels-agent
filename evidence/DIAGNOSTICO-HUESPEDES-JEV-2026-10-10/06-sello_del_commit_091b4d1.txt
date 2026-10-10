@@ -1,0 +1,69 @@
+# 06 - sello de la tanda commit + L3 + push del DIAGNOSTICO-HUESPEDES-JEV (2026-10-10)
+
+Orden del operador, literal: «commitea y empuja un sello del commit 091b4d1 por pathspec de
+evidence/DIAGNOSTICO-HUESPEDES-JEV-2026-10-10/, con la L3 de cero hallazgos y el EOL declarado».
+Nada fuera de ese pathspec entra en el commit: ni `CHANGELOG.md`, ni `VERSION.yaml`, ni documentos de planes
+archivados. Tipo de sesion: diagnostico FASE-UNICA, sin fase y sin release.
+
+## 1. El commit sellado (medido con `git show --stat --oneline 091b4d1`)
+
+| Concepto | Dato |
+|----------|------|
+| SHA | `091b4d1111e393d9aeaf344bb8ce8c132c1ce0ce` (abreviado `091b4d1`) |
+| Padre | `4d35a42` |
+| Subject | `docs(qmind): acta del diagnostico huesped JEV - el hueco se dicta por flujo y red, mandato AC-N.1 sin curar` |
+| Contenido | 6 archivos, 422 inserciones, **todos** bajo `evidence/DIAGNOSTICO-HUESPEDES-JEV-2026-10-10/` (`00-acta.md` 240 lineas, `01` 3, `02` 44, `03` 12, `04` 79, `05` 44) |
+| Forma | `git add <dir>` + `git commit -m ... -- <dir>` (pathspec): ningun `git commit` sin pathspec en este indice |
+| Indice ajeno | las 13 rutas staged AJENAS (deuda S-CIM-7) siguen `A ` y **no entraron**, contado despues del commit: `git status -uall --porcelain=v1 | grep -c "^A "` = 13 |
+
+## 2. Hook pre-commit del commit 091b4d1
+
+8/8 en verde (`All checks PASSED - Commit allowed`). Datos que publico la propia corrida: `[1/8]` VERSION.yaml y
+CHANGELOG en `4.80.0`, REGISTRY ultima fase `FASE-A3`; `[6/8]` indice de lecciones fresco (374 IDs;
+`[fechas] nombre=363 commit=11 sin_fuente=0`); `[7/8]` 6 planes en alcance sobre 32 archivados, con su nota de
+exencion; `[8/8]` packs en el arbol de `0a20c01c92cb5f5e4b003d53a57a70ec7b9094a1` = 5/5 reproducidos por el
+escritor, 0 divergentes, 0 no evaluables. El `[8/8]` goberno el arbol materializado del indice, no `HEAD`.
+
+## 3. L3 deep review
+
+La revision profunda del rango `origin/master..master` que cubrio el commit `091b4d1` devolvio **cero hallazgos**.
+Ese es el resultado que la orden del operador manda estampar aqui. La L3 que corresponde **a este sello** se corre
+despues de commitearlo y antes de empujarlo; por construccion no puede figurar en este archivo, que se escribio
+antes de existir ese commit, y su resultado se declara en el mensaje de la sesion.
+
+## 4. EOL declarado y MEDIDO (cotejo disco a disco, no `git show` contra `status`)
+
+Metodo: `len(bytes)` y `sha256(bytes)` del archivo de trabajo contra `git show 091b4d1:<ruta>`. `git` reporta el
+arbol limpio y eso **no** prueba identidad de bytes. `core.autocrlf` del repo = `input`.
+
+| Archivo | disco B | blob B | pares CRLF (disco/blob) | sha256 casa |
+|---------|---------|--------|-------------------------|-------------|
+| `00-acta.md` | 19286 | 19286 | 0 / 0 (LF/LF) | **SI** |
+| `01-pre_seleccion_dos_familias.txt` | 109 | 107 | 2 / 0 | NO |
+| `02-quick_pre.txt` | 3183 | 3140 | 43 / 0 | NO |
+| `03-censo_solo_lectura.txt` | 1316 | 1304 | 12 / 0 | NO |
+| `04-repro_offline_2x2.txt` | 9969 | 9890 | 79 / 0 | NO |
+| `05-quick_post_acta.txt` | 3183 | 3140 | 43 / 0 | NO |
+
+El delta de tamano de cada crudo es **exactamente** su numero de pares CRLF (2, 43, 12, 79, 43), y el acta no
+deriva. Consecuencia gobernada: el mandato «crudos archivados sin re-codificar» se cumplio en disco; quien
+verifique estos crudos contra una promesa de sha debe hacerlo **disco a disco**, porque el blob commiteado esta
+normalizado a LF. `rev-parse HEAD:<ruta>` da SHA-1 de git, no el sha256 del cuerpo: tampoco sirve como cotejo.
+
+## 5. Vencimientos que este sello registra (no re-escribe el acta)
+
+- `00-acta.md` §8 y §10 afirman, en tiempo de la sesion, «sin `git commit`… en espera de autorizacion». Redactado
+  al cortar la sesion, **vencido** por la tanda que el operador ordeno despues el mismo 2026-10-10: el acta esta
+  commiteada en `091b4d1` y empujada. El acta versionada **no se re-escribe** (un resultado, una fuente; el
+  registro aparte es este sello), asi que su §8 hay que leerlo con fecha: describe el quinto corte al cerrar la
+  medicion, no el estado final del arbol.
+- §9 del acta cuenta 47 tool_use **hasta el cierre de la sesion**; la tanda de cierre (commit, verificacion, L3,
+  push, y este sello) anade 12 invocaciones mas, total 59 sobre un presupuesto de 90 = 66 %, sin exceso.
+- La varianza del `[CONTADOR]` sigue siendo **no curada** por mandato: el AC-N.1, su diente y su mutante quedan
+  escritos en `00-acta.md` §7 para una fase futura que esta sesion no abre. El rojo vivo de la era G
+  (`--strict`, EXIT=1) conserva su dueño operador.
+
+## 6. Estado despues de la tanda
+
+`git ls-remote origin refs/heads/master` = HEAD local; paridad `0 0` medida tras el empuje; sin tag. El unico
+trabajo sin versionar en el arbol sigue siendo el de las 13 rutas staged ajenas, que no se tocan.
