@@ -97,3 +97,9 @@ del instrumento).
 **NO aplica a esta fase**: no hubo commit, así que no existe árbol propio que verificar. Todos los verdes de arriba
 corresponden al **árbol de trabajo** de `77e64ca`, y esa etiqueta está en cada crudo. Si el operador autoriza el
 commit, la verificación se repite sobre el árbol del commit antes de estampar paridad.
+
+## Sello de la tanda «Git Commit + L3 + Push» (2026-10-09, misma sesión)
+
+**Sello 2026-10-09, tanda «Git Commit + L3 + Push».** La autorización literal del operador llegó después del cierre documental y se ejecutó: commit `d7b3815` (30 rutas: 15 modificadas + 15 nuevas; 1.631 inserciones y 98 supresiones) con los **8/8 checks** del hook versionado en verde, incluido `[8/8] Briefing packs in committed tree` (5/5 reproducidos, 0 divergentes, 0 no evaluables) sobre el árbol del pathspec. Commit **por pathspec**, con las 13 rutas staged del hermano REFACTOR-WHATSAPP (S-CIM-7) fuera del commit y **sin des-stagear** (medido: 0 rutas ajenas dentro del commit y 13 siguen staged). Verificación repetida sobre el **árbol del commit** (L-VCF-15): selección literal `8 passed`, `EXIT=0`, con `git diff HEAD` vacío sobre el test curado y sobre el generador (crudo `E/FASE-B/10-post_commit_verificacion.txt`). La revisión profunda L3 devolvió **0 hallazgos** sobre `77e64ca..d7b3815` y el push publicó ese rango con paridad `origin/master..HEAD` = **0** (tip confirmado por `git ls-remote origin refs/heads/master`). **El sha de este sello no se estampa a sí mismo:** lo cubre la corrida L3 de esta misma tanda y, si faltara, la primera de la siguiente.
+
+La frase «árbol **sin commitear**» de la sección de cinco cortes **no se re-escribe**: registra el estado al cerrar el documento. Los cinco cortes quedaron: implementación terminada → verificación terminada → cierre documental → listo para revisión → autorización recibida y ejecutada (commit + L3 + push). El sha de este sello no se estampa a sí mismo.

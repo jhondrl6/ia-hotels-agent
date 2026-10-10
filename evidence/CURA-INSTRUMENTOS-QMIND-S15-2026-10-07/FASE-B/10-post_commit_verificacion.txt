@@ -1,0 +1,36 @@
+# Verificacion en el arbol del commit (L-VCF-15) - tanda Git Commit + L3 + Push, 2026-10-09
+
+## Alcance del commit
+
+- `git show --name-only --format="" HEAD | wc -l` = **30** rutas.
+- Rutas ajenas dentro del commit (`grep -c REFACTOR-WHATSAPP-ENTREGA-2026-09-18`) = **0**.
+- Rutas ajenas que siguen staged despues del commit (`git diff --cached --name-only | wc -l`) = **13** (S-CIM-7, sin des-stagear).
+- Arbol sucio restante (excluidas las staged ajenas) = **0**.
+
+HEAD del commit: `d7b3815734f1ad609539091635a801da57cf174b` (rango empujado `77e64ca..d7b3815`, 1 commit).
+
+## Seleccion literal repetida sobre el arbol commiteado
+
+Comando: `./venv/Scripts/python.exe -m pytest tests/test_build_lesson_index_s15_fecha_versionada.py -q`
+Interprete: venv Python 3.13.3. Equivalencia con el arbol del commit medida por `git diff HEAD --stat --
+tests/test_build_lesson_index_s15_fecha_versionada.py scripts/build_lesson_index.py` = **vacio** (disco == HEAD).
+
+Salida: `........      [100%]` / **8 passed in 41.07s** (EXIT=0).
+
+## Hook pre-commit (tree del pathspec)
+
+`[6/8] lesson index --check`, `[7/8] Lesson capitalization` y `[8/8] Briefing packs in committed tree`
+(5/5 reproducidos, 0 divergentes, 0 no evaluables sobre el arbol `acbd572689634c2f33602fa18b403c60eb76a933`),
+con el cierre `All checks PASSED - Commit allowed` y el commit `d7b3815` creado: **30 files changed,
+1631 insertions(+), 98 deletions(-)**.
+
+## Revision profunda L3
+
+Estado normalizado del host: `l3_enabled=true`. Corrida sobre el conjunto commiteado sin revisar:
+**0 hallazgos**.
+
+## Push
+
+`git push origin master` -> `77e64ca..d7b3815  master -> master`.
+`git ls-remote origin refs/heads/master` = `d7b3815734f1ad609539091635a801da57cf174b` (igual a `git rev-parse HEAD`);
+`git rev-list --count origin/master..HEAD` = **0**.

@@ -4349,7 +4349,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 51,
+      "total_citas": 56,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
@@ -5880,6 +5880,14 @@
       ]
     },
     {
+      "id": "S-CIM-7",
+      "familia": "S",
+      "total_citas": 11,
+      "planes_que_lo_citan": [
+        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
       "id": "S-B1",
       "familia": "S",
       "total_citas": 9,
@@ -5970,14 +5978,6 @@
     },
     {
       "id": "S-CIM-2",
-      "familia": "S",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
-      ]
-    },
-    {
-      "id": "S-CIM-7",
       "familia": "S",
       "total_citas": 6,
       "planes_que_lo_citan": [

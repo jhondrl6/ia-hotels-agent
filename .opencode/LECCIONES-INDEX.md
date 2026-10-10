@@ -233,7 +233,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-VCF-12` | Al re-medir AC6/A1–A4 para escribir este barrido, python scripts/validate_governance_numbers.py --report sobrescribió la evidencia commiteada de FASE-A: la ruta de escritura está hardcodeada como… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 62 en context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
 | `L-VCF-13` | El primer diseño del triaje no podía perder: el pool de candidatos se construía excluyendo por definición las filas ya ancladas en §2, así que removed: [] era cierto sobre un conjunto donde no… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 15 (solo el plan dueño) |
 | `L-VCF-14` | El check de frescura propio de C reventó con AttributeError: 'str' object has no attribute 'get' sobre un JSON de prueba que sí existía y sí se parseaba, pero cuya clave lecciones no era lista. Es… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
-| `L-VCF-15` | Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO.… (+1 redefiniciones) | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 51 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
+| `L-VCF-15` | Al commitear solo las 37 rutas propias de FASE-C, git archive HEAD extraído a un árbol limpio dio 14 failed / 16 passed / 26 errors en la suite de esta misma fase, todos con SueloNoLeible: VENCIDO.… (+1 redefiniciones) | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 56 en CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22 |
 | `L-VCF-16` | El primer ancla del mutante de AC23 no atribuyó: apagado GUARD_NO_TRUNCAMIENTO_ACTIVO, el pack de FASE-RELEASE perdía el bloque de declaración pero la aserción nombra_la_fuente_pedida seguía en True… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 13 (solo el plan dueño) |
 | `L-VCF-17` | Escribir los packs rompió un gate ajeno: docs/CONTRIBUTING.md entraba al pack por una sección declarada, y la regla de la fase era «el pack se escribe dentro del plan». Copiarlo a… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 26 (solo el plan dueño) |
 | `L-VCF-18` | FASE-D publicó en 09 §D un par def test_ 4.360 → 4.404 («medido al abrir la fase»). Al cerrar, el mismo comando canónico no dio 4.360 sobre ningún árbol: disco 4.557, git grep sobre HEAD 4.470, y… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 11 (solo el plan dueño) |
@@ -447,6 +447,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B12` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B15` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `L-P2.4` | 11 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
+| `S-CIM-7` | 11 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-B1` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-F6` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `DA-CIM.10` | 8 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
@@ -459,7 +460,6 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B13` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B14` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-CIM-2` | 6 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
-| `S-CIM-7` | 6 | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `D-1` | 5 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24, CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `DA-T4B.1` | 5 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
 | `S-12` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
