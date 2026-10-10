@@ -7,7 +7,7 @@ fuente única; el análisis y el maestro los referencian.
 
 Ninguno. El plan no crea módulos ni paquetes: cura un símbolo existente y lo dientes.
 
-Archivos nuevos que no son código: el directorio del plan (`.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/`
+Archivos nuevos que no son código: el directorio del plan (`.opencode/plans/Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/`
 con `00-lecciones-capitalizadas.md`, `01-plan-maestro.md`, `05-prompt-inicio-sesion-fase-1.md`, `README.md`,
 `09-documentacion-post-proyecto.md`, `10-analisis-post-implementacion.md`) y su evidencia
 (`evidence/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/FASE-1/`).
@@ -46,7 +46,8 @@ con `00-lecciones-capitalizadas.md`, `01-plan-maestro.md`, `05-prompt-inicio-ses
   `scripts/build_lesson_index.py` en el mismo árbol que los `.md` del plan (invariante R2.10).
 - `docs/contributing/REGISTRY.md` — escrito por `scripts/log_phase_completion.py --fase FASE-1`, que es su único
   escritor.
-- **No actualizados, con motivo:** `VERSION.yaml` y `CHANGELOG.md` (sin bump: deuda `S-BH-3`, decisión del
-  operador), `AGENTS.md` y `.cursorrules` (no cambian capacidades ni comandos), y ningún documento de planes
+- **No actualizados, con motivo:** `VERSION.yaml` y `CHANGELOG.md` (sin bump: **decisión del operador del
+  2026-10-10**, `S-BH-3` cerrada; ningún check lo exige), `AGENTS.md` y `.cursorrules` (no cambian capacidades ni
+  comandos), y ningún documento de planes
   archivados ni la instantánea publicada del plan hermano (frozen por diseño; la equivalencia del diente
   renombrado se declara en el análisis).

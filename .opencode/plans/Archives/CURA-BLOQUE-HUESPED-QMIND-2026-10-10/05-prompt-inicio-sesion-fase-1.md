@@ -2,7 +2,7 @@
 
 ## 1. Encabezado
 
-- **Plan:** `CURA-BLOQUE-HUESPED-QMIND-2026-10-10` (`.opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/01-plan-maestro.md`)
+- **Plan:** `CURA-BLOQUE-HUESPED-QMIND-2026-10-10` (`.opencode/plans/Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/01-plan-maestro.md`)
 - **Fase:** FASE-1, única fase del plan. Ejecuta **AC-N1** y **AC-N2**.
 - **Sesión:** una. Presupuesto 90 `tool_use`, con checkpoint declarado si se excede.
 - **Corte autorizado:** «listo para revisión», sin commit. `git commit`, L3 y push solo con literal del operador.
@@ -87,7 +87,7 @@ línea (R2.2).
 ## 8. Prompt de ejecución
 
 ```
-Lee .opencode/plans/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/01-plan-maestro.md y ejecuta su FASE-1 completa: PRE
+Lee .opencode/plans/Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10/01-plan-maestro.md y ejecuta su FASE-1 completa: PRE
 medido, AC-N1 y AC-N2 sobre scripts/validate_qmind_writeback.py, los dos dientes nuevos y el re-anclaje gobernado
 en tests/test_validate_qmind_writeback_escritura.py, un mutante por AC con restauración verificada por sha256,
 POST, cierre documental con 10-analisis y log_phase_completion.py, índice de lecciones regenerado, y los cinco

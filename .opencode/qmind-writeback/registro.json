@@ -51,6 +51,16 @@
       "sha_cuerpo": "6b4180374eec4443d39246d35a304884612f86dc0166ffa8d5007e8814eb0639",
       "instanea": "VERIFICADOR-ESCRITURA-QMIND-2026-09-20--10-analisis_VERIFICADOR-ESCRITURA-QMIND-2026-09-20_leccione--6b4180374eec4443.md",
       "publicado": "2026-10-10"
+    },
+    {
+      "plan": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
+      "titulo": "10-analisis: CURA-BLOQUE-HUESPED-QMIND-2026-10-10 (cierre FASE-1, huesped universal y denominador de observacion)",
+      "estado": "vigente",
+      "fuente_id": "01a126a1-6b36-7d74-9127-9ef24b6855bb",
+      "sha256": "6b738f1c0785afd169315cada2ae1f6aad6de94a42361583ec1bfbda161f81e6",
+      "sha_cuerpo": "6b738f1c0785afd169315cada2ae1f6aad6de94a42361583ec1bfbda161f81e6",
+      "instanea": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10--10-analisis_CURA-BLOQUE-HUESPED-QMIND-2026-10-10_cierre_FASE---6b738f1c0785afd1.md",
+      "publicado": "2026-10-10"
     }
   ]
 }
