@@ -32,6 +32,9 @@ con `00-lecciones-capitalizadas.md`, `01-plan-maestro.md`, `05-prompt-inicio-ses
 | Quick | 13/13, EXIT=0 (PRE y POST, y otra vez tras escribir el registro) | `…/FASE-1/06-quick_post.txt`, `…/FASE-1/07-quick_post_registro.txt` |
 | Modo completo | **16/18**, EXIT=1: los dos rojos son `Tests` (deprecación de Pydantic, preexistente) y `QMind Write-back` (el `DUPLICADO-VIGENTE` deseado de la era G). Ningún check documental salió vencido pese a que la corrida empezó antes de existir los documentos del plan | `…/FASE-1/05-modo_completo_post.txt` |
 | Confirmación en vivo del verificador curado | 1 `source list` + sus bajadas, **0 escrituras remotas**; una descarga fallida y aun así `5 fuente(s) huesped(s)` con denominador `4/4 entrada(s) con su bloque huesped recorrido` | `…/FASE-1/08-verificador_curado_en_vivo.txt` |
+| **Inventario final de la fase, dos commits** | **21** archivos únicos: 20 en `c6a47c2` más el crudo del sello en `700945e` (el maestro, el análisis y el par del índice fueron re-editados por el sello) | `git show --name-only` sobre los dos commits |
+| **Fila del registro vs árbol, delta declarado** | La fila `## FASE-1 - 2026-10-10` declara **17** rutas y el árbol tiene **21**: faltan `docs/contributing/.last_doc_phase.json` y los crudos `07-quick_post_registro.txt`, `08-verificador_curado_en_vivo.txt` y `09-sello_del_commit_c6a47c2.txt`. La fila **no se re-estampa**: `log_phase_completion.py` es aditivo y se niega si la cabecera ya existe, y editar el registro fuera de su escritor está prohibido. Este delta queda aquí como la fuente del dato final | comparación de las rutas de la tabla de la entrada contra `git ls-files` de los directorios de la fase, re-ejecutable |
+| Quick del sello | 13/13, EXIT=0, con el árbol del sello y el delta ya declarado | `…/FASE-1/10-quick_del_sello.txt` |
 
 ## Sección E: Archivos afiliados actualizados
 
