@@ -1,0 +1,18 @@
+# FASE-A3 - derivados del sello (el indice se re-corre como ULTIMO paso: R2.10 y [6/8] del hook)
+# comando: PYTHONUTF8=1 ./venv/Scripts/python.exe scripts/build_lesson_index.py && --check && validate_document_integration.py && run_all_validations.py --quick
+
+EXIT_INDICE=0
+[OK] 372 IDs definidos + 95 sin definición (18 análisis, 450 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_CHECK=0
+[OK] Índice de lecciones fresco (372 IDs)
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_INTEG=0
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico

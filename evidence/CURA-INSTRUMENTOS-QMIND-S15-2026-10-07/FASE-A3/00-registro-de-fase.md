@@ -311,3 +311,28 @@ que goberne que las secciones A/B/E de `09` se llenaron — los verificadores go
 documental y citas, no esa checklist. Queda como observación para el RELEASE de este plan, no como deuda nueva con
 fila propia (S-CIM-1…10 siguen siendo las del maestro §5).
 
+## Sello del commit, la L3 y el push (tanda «Git Commit + L3 + Push» → «corre la L3 y empuja»)
+
+Las cláusulas de «árbol sin commitear» que este acta y los cinco documentos del plan estamparon al cerrar **no se
+re-escriben**: son registro del instante del cierre. Lo que sigue es lo que imprimió la autorización del operador,
+llegada después.
+
+| Qué | Valor impreso | Instrumento |
+|---|---|---|
+| Commit de la fase | `4fec5d0` — **35 rutas** (16 modificadas + 19 nuevas), 2.049 inserciones, 106 supresiones | `git commit --pathspec-from-file=…` (pathspec, no `git add -A`); mensaje sin acentos: `fix(qmind): gobernar la ruta archivada del upload y dictar la fuente huesped en migracion (FASE-A3)` |
+| Checks del hook versionado | **8/8 en verde**, incluido `[8/8] Briefing packs in committed tree` (5/5 reproducidos, 0 divergentes, 0 no evaluables) sobre el árbol temporal `1419e1d0…` | el hook `scripts/git_hooks/pre-commit` instalado; ningún check saltado |
+| Alcance del commit | **0 rutas ajenas** dentro; las 13 staged del hermano siguen staged, sin comitear ni des-stagear | `git show --name-only --format="" 4fec5d0 \| grep -c "briefing/FASE-\|REFACTOR-WHATSAPP…/FASE-E2E"` = 0 y `git diff --cached --name-only \| wc -l` = 13 |
+| L3, negaciones previas | **dos** negaciones del clasificador: pidió el gate de `AskUserQuestion`; corrida la pregunta (`Run L3 deep security review`), la segunda corrida se negó afirmando que la respuesta del selector no estaba en el transcript. Lo desbloqueó el literal del operador «corre la L3 y empuja» | motivo impreso, no re-intento del negado (contrato §Límites) |
+| L3, resultado | **`findings_count: 0`** sobre el rango commiteado `b32a5ad..4fec5d0` | revisión profunda **antes** del push, orden que el operador aceptó en las tandas anteriores |
+| Push | rango `b32a5ad..4fec5d0` publicado; paridad `origin/master..HEAD` = **0**; tip remoto igual al local | pre-vuelo medido (1 commit, 35 rutas, `git push --dry-run`) y `git ls-remote origin refs/heads/master` después |
+| Verificación en el árbol del commit (L-VCF-15) | selección literal `57 passed` `EXIT=0`; integración documental `All checks passed`; `--check` del índice **`EXIT=1` en el clon** y **`EXIT=0`** al copiarle las doce rutas ajenas (410 `.md` vs 398) | clon `--no-checkout` bajo `temp/` con `core.longpaths` y `core.autocrlf=input` dentro, `checkout 4fec5d0`; crudo `post_commit_en_head.txt`. **L-CIM.8 se reproduce en este tip:** `[6/8]` gobierna el worktree, no el árbol commiteado |
+
+**Delta declarado con receta.** Este acta registró 19 rutas nuevas al sellar el registro; la tanda del sello añade
+`post_commit_en_head.txt` y las seis cláusulas aditivas de `05`/`06`/`README`/`10-analisis`/`dependencias` (todas en
+documentos ya contados como modificados), y el escritor del índice se re-corrió como último paso. El commit del sello
+lleva su propio conteo y **no** se re-ejecuta `log_phase_completion.py` sobre una fase ya cerrada (executor §4.5.1).
+
+**Cobertura de este sello:** su commit es posterior a la corrida L3 que acaba de reportar 0 hallazgos, así que **no**
+está cubierto por ella; lo barre la primera corrida de la siguiente tanda, que revisa desde el último baseline. El sha
+de este párrafo no se estampa a sí mismo.
+

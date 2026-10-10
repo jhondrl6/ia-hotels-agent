@@ -1,0 +1,36 @@
+# FASE-A3 - verificacion repetida sobre el ARBOL DEL COMMIT 4fec5d0 (L-VCF-15)
+# arnés: clon local bajo temp/verifica_a3, creado con --no-checkout y, DENTRO del clon, core.longpaths=true y core.autocrlf=input (S20); checkout 4fec5d0
+# interprete: el venv del repo padre (el clon no trae venv), corridas con cwd en el clon y PYTHONUTF8=1
+
+=== seleccion literal de la fase ===
+.........................................................                [100%]
+57 passed in 1.05s
+EXIT_TESTS=0
+
+=== integracion documental ===
+------------------------------------------------------------
+RESULT: All checks passed
+------------------------------------------------------------
+EXIT_INTEG=0
+
+=== --check del indice (se espera el rojo conocido de L-CIM.8: la poblacion del worktree incluye las 12 rutas ajenas untracked) ===
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=361 commit=11 sin_fuente=0
+EXIT_INDICE=0
+
+=== poblaciones comparadas ===
+md bajo .opencode/plans en el clon: 398
+md bajo .opencode/plans en el worktree: 410
+
+=== re-toma del --check del indice SIN TUBERIA (el EXIT de arriba salio detras de | tail y no es el del verificador) ===
+EXIT_REAL_CHECK_INDICE_EN_CLON=1
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=361 commit=11 sin_fuente=0
+
+=== control de causa (L-CIM.8, ya publicado por FASE-A2): copiar las 12 rutas ajenas untracked al clon ===
+md en el clon tras la copia: 410
+EXIT_REAL_CHECK_CON_12_COPIADAS=0
+[OK] Índice de lecciones fresco (372 IDs)
+[fechas] nombre=361 commit=11 sin_fuente=0

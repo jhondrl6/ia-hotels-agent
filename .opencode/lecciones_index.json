@@ -1729,7 +1729,7 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -4321,7 +4321,7 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 46,
+      "total_citas": 50,
       "planes_que_lo_citan": [
         "CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"

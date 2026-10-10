@@ -151,7 +151,7 @@ Conforme al contrato §cierre, sin `--release`:
 - [x] Los dientes de A1 y A2 siguen verdes; delta explicado por adiciones de ESTA fase
 - [x] Contador publicado y crudo del modo completo archivado con el estado de cada check
 - [x] Post-ejecución completo; quick verde; derivados regenerados con su escritor
-    > *(el post-ejecución quedó en `listo para revisión`: el commit no se autorizó en el chat de esta sesión)*
+    > *(el post-ejecución quedó en `listo para revisión`: el commit no se autorizó en el chat de esta sesión)* ⟦**Sello:** la autorización llegó después — commit `4fec5d0`, L3 con **0 hallazgos** sobre `b32a5ad..4fec5d0` y push con paridad **0**. La frase de arriba no se re-escribe: registra el instante del cierre.⟧
 
 > **Sello de la sesión (2026-10-09).** AC5 landed con 5 dientes y AC6 cerrada por la **opción (b)**: el rojo
 > queda impreso con su id, su título truncado y su `sha_metadata` del censo, y su dueño escrito está en
