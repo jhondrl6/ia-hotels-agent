@@ -244,6 +244,81 @@ class ValidationRunner:
             (r'pplx-[A-Za-z0-9]{20,}', "Perplexity key (pplx-...)"),
         ]
 
+    # --- Barrido por FORMA DE FRAGMENTO de credencial --------------------------------------
+    # La politica vive en config/secret_fragment_policy.yaml (prefijos anclados y grandfathered
+    # con duenio y condicion de salida). Este archivo se excluye de su propio barrido porque su
+    # cabecera cita el ejemplo que detecta; la exclusion esta declarada, no inferida.
+    _FRAGMENT_POLICY = "secret_fragment_policy.yaml"
+    _FRAGMENT_SELF_EXCLUDE = frozenset({"config/" + _FRAGMENT_POLICY})
+
+    def _fragment_policy(self):
+        """Lee la politica de fragmentos. `None` = ausente o ilegitible (el llamador lo declara)."""
+        try:
+            import yaml
+            datos = yaml.safe_load((ROOT_DIR / "config" / self._FRAGMENT_POLICY).read_text(encoding="utf-8"))
+        except Exception:
+            return None
+        if not isinstance(datos, dict) or not datos.get("prefijos"):
+            return None
+        return datos
+
+    @staticmethod
+    def _fragment_regex(prefijos) -> "re.Pattern[str]":
+        """`sk-b` `…` `5a12`: prefijo de familia + recorte + cola corta.
+
+        Se ancla en el prefijo, no en la etiqueta `*_API_KEY:`: la etiqueta caza placeholders de
+        guia (`.env.template` tiene `OPENAI_API_KEY=your_o…here` y no es una credencial), medido el
+        2026-10-11. Las formas completas de `_secret_patterns()` no sirven para el recorte porque
+        exigen >=20 / >=30 chars y el fragmento es mas corto que el patron que deberia cazarlo.
+        """
+        alternativas = [re.escape(p) + r"[A-Za-z0-9_\-]{0,8}\.\.\.[A-Za-z0-9_\-]{3,10}"
+                        for p in prefijos]
+        return re.compile("(?:" + "|".join(alternativas) + ")")
+
+    def _lineas_fragmento(self, content: str, regex) -> list:
+        return [i for i, linea in enumerate(content.splitlines(), 1) if regex.search(linea)]
+
+    def _barrido_fragmentos(self, rutas: list, regex, abuelos: dict, ya_flagged: set):
+        """Barre `rutas` por la forma de fragmento. Devuelve (violaciones, abuelos_ok, leidos).
+
+        Un abuelado solo vale si sus lineas casan EXACTAMENTE con las declaradas: si el archivo
+        gana un fragmento nuevo, el contador descuerda y el check va a rojo en vez de tragarlo.
+        """
+        viol, abuelos_ok, leidos = [], 0, 0
+        for path in rutas:
+            try:
+                rel = path.relative_to(self.repo_root).as_posix()
+            except (ValueError, OSError):
+                continue
+            if rel.lower() in self._FRAGMENT_SELF_EXCLUDE or rel in ya_flagged:
+                continue
+            try:
+                if path.is_symlink() or not path.is_file():
+                    continue
+                if path.suffix.lower() in self._KNOWN_BINARY_EXTS:
+                    continue
+                if path.stat().st_size > self._MAX_SCAN_BYTES:
+                    continue
+                raw = path.read_bytes()
+            except (PermissionError, OSError):
+                continue
+            if b"\x00" in raw[:8192]:
+                continue
+            leidos += 1
+            hit = self._lineas_fragmento(raw.decode("utf-8", errors="ignore"), regex)
+            if not hit:
+                continue
+            declarado = abuelos.get(rel.lower())
+            if declarado is not None and sorted(hit) == sorted(declarado):
+                abuelos_ok += 1
+                continue
+            if declarado is not None:
+                viol.append(f"{rel} (fragmento: {len(hit)} lineas halladas contra "
+                            f"{len(declarado)} declaradas en la politica)")
+            else:
+                viol.append(f"{rel} (fragmento de credencial en {len(hit)} linea(s))")
+        return viol, abuelos_ok, leidos
+
     def _git_tracked_files(self) -> list:
         """Archivos versionados (index). Fallback a _walk si git falla."""
         try:
@@ -299,6 +374,13 @@ class ValidationRunner:
         pero se declaran en el mensaje; lo no clasificable es NO_CUBIERTO y bloquea
         (L-PF6: ningún verde por no-leer). Estados NR8: SIN_HALLAZGOS / BLOCKING /
         NO_LEGIBLE / NO_CUBIERTO. Salida redactada: nunca imprime el valor del secreto.
+
+        Dos patas, no una. Las formas COMPLETAS se buscan en tracked no exento + staged +
+        salidas (los directorios de cuarentena se exemptan porque su propósito es contener
+        referencias). La forma FRAGMENTO (`sk-b…5a12`) recorre además esos exentos, con su
+        propia política en `config/secret_fragment_policy.yaml` y su grandfathered por linea:
+        la exención existía para no asustarse con nombres de variable, no para publicar
+        prefijo y sufijo de una credencial en un repo público.
         """
         print("[4/13] Checking for hardcoded secrets (tracked + staged + salidas en output/ y logs/)...")
 
@@ -379,7 +461,33 @@ class ValidationRunner:
                     violations.append(f"{rel_path} ({description}, salida sin versionar)")
                     break  # Un archivo = una violacion max
 
-        # 4. Reportar con estados NR8
+        # 4. Barrido por FORMA DE FRAGMENTO. Recorre lo que el paso 1 exempta (los directorios de
+        #    cuarentena) junto con lo no exento y las salidas, con los prefijos y el grandfathered
+        #    de config/secret_fragment_policy.yaml. Sin esta pata un `sk-b…5a12` podia vivir
+        #    versionado para siempre: las formas completas exigen >=20 / >=30 chars y el recorte es
+        #    mas corto que el patron que deberia cazarlo (medido 2026-10-11 en faseI_run.txt:24).
+        abuelos_ok = 0
+        fragmentos_leidos = 0
+        politica_frag = self._fragment_policy()
+        if politica_frag is None:
+            non_covered.append("barrido de fragmentos: config/" + self._FRAGMENT_POLICY
+                               + " ausente o ilegitible (no puede informar «sin hallazgos»)")
+        else:
+            if set(politica_frag.get("directorios_exentos_barridos", [])) != allowed_dirs:
+                violations.append(
+                    "config/" + self._FRAGMENT_POLICY + " (la politica y el check discrepan sobre "
+                    "que directorios estan exentos: el barrido perderia alcance en silencio)")
+            else:
+                regex_frag = self._fragment_regex(politica_frag["prefijos"])
+                abuelos = {str(g.get("ruta", "")).lower(): list(g.get("lineas", []) or [])
+                           for g in politica_frag.get("grandfathered", []) or []}
+                ya_flagged = {v.split(" (", 1)[0].replace("\\", "/") for v in violations}
+                rutas_frag = list(self._git_tracked_files()) + self._untracked_output_files()
+                fv, abuelos_ok, fragmentos_leidos = self._barrido_fragmentos(
+                    rutas_frag, regex_frag, abuelos, ya_flagged)
+                violations.extend(fv)
+
+        # 5. Reportar con estados NR8
         if violations:
             self.results.append(ValidationResult(
                 name="Secrets Check",
@@ -407,6 +515,8 @@ class ValidationRunner:
                 passed=True,
                 message=(f"SIN_HALLAZGOS: {scanned_count} tracked files + staged "
                          f"+ {untracked_scanned} salidas en output/ y logs/ "
+                         f"+ {fragmentos_leidos} leidos por forma fragmento "
+                         f"({abuelos_ok} grandfathered con lineas cuadadas) "
                          f"(excluidos declarados: {binaries_excluded} binarios conocidos, "
                          f"{symlinks_excluded} symlinks)")
             ))
