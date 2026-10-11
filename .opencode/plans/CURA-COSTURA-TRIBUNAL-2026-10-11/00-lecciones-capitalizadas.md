@@ -1,0 +1,41 @@
+# Lecciones Capitalizadas — CURA-COSTURA-TRIBUNAL-2026-10-11
+
+> **Creado**: 2026-10-11 (Paso 0 del executor, ANTES del plan maestro).
+> **Fuente del mandato**: `.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md` (versionado en `a8c356b`), con su re-verificación aditiva §10 del 2026-10-11.
+
+## 1. Consultas literales (re-ejecutables)
+
+| # | Capa | Consulta / comando |
+|---|------|--------------------|
+| Q1 | Corpus-wide (índice frío) | `grep -nE "llm_extractor\|PromiseExtractor\|_parse_response\|cache_key\|finish_reason" .opencode/LECCIONES-INDEX.md` |
+| Q2 | Corpus-wide (índice frío) | `grep -nE "onboarding\|PYTHONUTF8\|P6\.2\|NOT_EVALUABLE\|evidence_tier\|contradiction" .opencode/LECCIONES-INDEX.md` |
+| Q3 | QMind (capa tibia) | `retrieve(notebookId=01a04d98-b7bd-778c-8441-26fdc7e35f45, query="extractor LLM tribunal promesas verbales cache sha256 parseo JSON lista vacía colapso de estados ilegible NO-EVALUABLE recibo usage proveedor")` |
+| Q4 | QMind (capa tibia) | `retrieve(notebookId=01a04d98-b7bd-778c-8441-26fdc7e35f45, query="v4complete corrida completa Hotel evidencia output onboarding observations datos operativos Tier A PYTHONUTF8 modo completo")` |
+| Q5 | Memoria caliente | `MEMORY.md` del proyecto: entradas «Costura semántica viva en v4complete», «Modo completo pide PYTHONUTF8=1», «El primer rojo oculta el resto del test», «Controles negativos ejercitan el instrumento versionado», «Nunca imprimir un secreto al verificar su ancla» |
+
+## 2. Lecciones capitalizadas (cada una nombra qué cambia en este plan)
+
+| ID | Lección (una línea) | Definida en | Qué cambia en este plan |
+|----|---------------------|---------------------------|-------------------------|
+| L-T4A.3 | La cache SHA256 de extracciones LLM usa `cache_dir=tmp_path` en tests; la cache de producción `.cache/tribunal/` es decisión declarada del corpus | Archives/TRIBUNAL-OFFLINE-2026-09-09 | T3 de FASE-A: todos los tests de cache inyectan `tmp_path`; la cache de producción no se migra (las claves viejas quedan inalcanzables por la clave versionada) — lo certifica AC4 |
+| L-T4A.5 | Un test puede pasar sin ejecutar la rama que dice certificar; el cruce de artefactos debe cubrir ambas direcciones | Archives/TRIBUNAL-OFFLINE-2026-09-09 | T1/T2 de FASE-B: los tests de AC8/9 exigen datos que alcancen la rama de estado no-OK y el cruce cubre promesa→matriz y matriz→promesa; prohíbe el test vacuo con extractor vacío |
+| L-T4A.1 | El protocolo PromiseExtractor debe ser runtime_checkable para isinstance() en tests y validaciones | Archives/TRIBUNAL-OFFLINE-2026-09-09 | T1 de FASE-A: al cambiar la firma del contrato, `PromiseExtractor` conserva `@runtime_checkable` — AC1. **Con la corrección de la auditoría**: eso solo prueba presencia de métodos y **no** es evidencia del contrato; la evidencia son los tests por causa sobre el objeto devuelto |
+| L-T4A.2 | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable; su «aplicación futura» publicada dice «…considerar extraer a utilidad compartida si hay terceros consumidores» | Archives/TRIBUNAL-OFFLINE-2026-09-09 (definida en FASE-T4-A) | T1 de FASE-A: **el mapeo de estados y el des-cercado de fences viven en una utilidad compartida, no dentro de `LLMPromiseExtractor`**. Entra como capitalización porque este plan declara la precondición de terceros consumidores (maestro §4, «fuera de alcance: integración Jev/TypeSafe como tercera implementación») y porque la propia fase re-escribe `_parse_response`, que es el sitio que la lección gobierna. Lo certifica AC1 en su forma checked (tests por causa sobre el objeto devuelto, no el decorator) |
+| DA-T4A | PromiseExtractor es la interfaz de extracción: LLM real vs mock intercambiables sin cambiar el llamador | Archives/TRIBUNAL-OFFLINE-2026-09-09 | T1 de FASE-A: el contrato de cuatro estados se define EN la interfaz (`PromiseExtractor` + `MockPromiseExtractor` actualizados); este plan no añade implementaciones nuevas — DEC-A1 |
+| L-VERIFY.4 | El acta de Don Alfonso mostró P6.2/P6.5 NOT_EVALUABLE mientras Bot 2/Bot 4 corrían y producían hallazgos | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | T2 de FASE-C: el texto del finding de P6.2 deja de negar al revisor que corrió (AC12); la decisión de cláusula se registra con dueño, no se cambia `T1_CERTIFIABLE_CLAUSES` sin autorización |
+| L-VUP-13 | El estado de onboarding se confirmó empíricamente: «Using defaults (no fresh onboarding data found)» en el log | Archives/VALIDADOR-URL-PROPIA-2026-08-30 | T0 de FASE-E2E: sonda read-only de `_load_latest_onboarding_data` ANTES del run, publicando `campos_confirmados` y el estado de `ONBOARDING_FRESHNESS_HOURS`; AC14 exige «Onboarding data loaded» en el stdout; decisión del operador 2026-10-11: URL canónica `https://www.donalfonsohotel.com/`. **Corregida la vía**: el onboarding entra por el **YAML derivado** (DEC-A4), no por alinear el warehouse — medida, la rama del warehouse no casa con esta URL porque su `website` es `https://hoteldonalfonso.com/` |
+| S-H13 | cache_key de _identify_brechas usa id(audit_result), reciclable tras GC — riesgo de servir el caché de otro objeto | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | T3 de FASE-A: `_compute_cache_key` se construye de contenido+contrato (versión de prompt, sha del **prompt compuesto**, **proveedor configurado** declarado, sha256 del texto), nunca de identidad de objetos. El **modelo no entra** en la clave: el extractor no lo conoce antes de llamar y lo registra en el recibo — AC4 |
+| L-V.2 | Las notas de fases upstream pueden ser inexactas; VERIFY debe re-leer los artefactos, no heredar conclusiones | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY: cada AC se certifica leyendo el artefacto real (acta JSON, gate report, recibo, stdout en evidence/), no la nota de la fase que lo produjo |
+
+## 3. Candidatos descartados (mínimo 3, con motivo)
+
+| # | Descarte | Motivo |
+|---|----------|--------|
+| 1 | L-T4A.4 (matching difuso por `service_hint` es deliberado) | El sobre-encaje inverso (promesa encajada en la entrada equivocada por substring) no está medido (§10.5 del contexto); tocar `_find_matrix_entry` ampliaría el alcance sin AC propio. Queda como seguimiento del `10-analisis` |
+| 2 | Candidato §4.2 del contexto (contradiction_engine con clasificador tipado Jev) | Solo entra N8 (modo de fallo silencioso de reglas HARD); la sustitución por clasificador exige la decisión `modules/`→`scripts/` y muestra etiquetada (§7 del contexto: «D no») |
+| 3 | Métricas advisory (`citability_scorer`, `ia_readiness_calculator`) como destino de decisión tipada | Contra-recomendación expresa del §4 del contexto: no tocan gates y son aritmética estructural |
+| 4 | Integrar el brazo Jev como tercera implementación de `PromiseExtractor` | Fuera de alcance (§0 y §7 del contexto): este plan deja el contrato listo como precondición; la comparación de proveedores es un plan nuevo con pre-registro propio (regla del §Pre-registro del piloto JEV) |
+
+## 4. Cobertura declarada
+
+El verificador mecánico de este archivo es `scripts/validate_lesson_capitalization.py` (`[7/8]` del hook pre-commit versionado y un check de `run_all_validations.py --quick`; el ordinal vigente lo imprime la corrida). Verifica **forma** (C1-C8): existencia, §1-§4, consulta corpus-wide copy-pasteable, AC existente en el maestro, ≥3 descartes, declaración de cobertura, IDs definidos y atribuidos al dueño que publica el índice, ≥2 dueños. **NO verifica la pertinencia**: que las filas de §2 sean lecciones realmente aplicadas lo declara quien ejecuta cada fase en la columna «Qué cambia» (post-ejecución, paso 5 del template). El índice consultado es `.opencode/LECCIONES-INDEX.md` regenerado el 2026-10-11; los contadores vigentes los imprime `python scripts/build_lesson_index.py`, no este archivo.

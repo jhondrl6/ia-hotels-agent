@@ -2,13 +2,13 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 19,
+    "archivos_analysis_escaneados": 20,
     "archivos_contexto_escaneados": 41,
-    "archivos_md_escaneados": 457,
-    "ids_con_definicion": 377,
-    "ids_citados_sin_definicion": 108,
+    "archivos_md_escaneados": 470,
+    "ids_con_definicion": 378,
+    "ids_citados_sin_definicion": 110,
     "fechas_por_fuente": {
-      "nombre": 366,
+      "nombre": 367,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1233,9 +1233,13 @@
       "seccion": "Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ],
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "DA-T4A.2",
@@ -1964,10 +1968,11 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 22,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
@@ -3811,11 +3816,14 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 3,
       "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-T4A.2",
@@ -3827,12 +3835,15 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 10,
       "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-T4A.3",
@@ -3844,12 +3855,15 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 5,
       "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-T4A.4",
@@ -3861,8 +3875,9 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 5,
       "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
@@ -3878,16 +3893,18 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 106,
+      "total_citas": 111,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-T4B.1",
@@ -4159,12 +4176,15 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 25,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-V.3",
@@ -4545,9 +4565,13 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "total_citas": 9,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ],
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-VUP-1",
@@ -4755,14 +4779,17 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
-      "redefiniciones": []
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "L-VUP-14",
@@ -5195,6 +5222,20 @@
       "redefiniciones": []
     },
     {
+      "id": "S-CST-1",
+      "familia": "S",
+      "enunciado": "El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos severity/type por los que el gate filtra, y la clave alternativa hard_contradictions_count no tiene productor — Operador",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Deudas definidas por este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 19,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "S-E1",
       "familia": "S",
       "enunciado": "✅ Resuelto en la fase — Desviación de §4: E1/E2 no eran paralelizables. §4 y el prompt de E declaraban dos subagentes que «no comparten archivo», pero ambos tracks editan main.py (E1 persiste en FASE 0E tras crear v4_audit_dir; E2 añade \"path\" a los dicts de assets_for_quality). Ejecutados secuenciales en una sola sesión citando L-D1/S-B15; §4 y dependencias-fases.md corregidos con anotación ⚠️ — FASE-E, al verificar las regiones citadas antes de editar (regla L-A6/S15)",
@@ -5463,9 +5504,13 @@
       "seccion": "5. Seguimientos abiertos",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
-      "redefiniciones": []
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ],
+      "redefiniciones": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
     },
     {
       "id": "S-H14",
@@ -6205,6 +6250,15 @@
       ]
     },
     {
+      "id": "S-CIM-10",
+      "familia": "S",
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
+    },
+    {
       "id": "S-E2E-10",
       "familia": "S",
       "total_citas": 4,
@@ -6320,14 +6374,6 @@
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
-      ]
-    },
-    {
-      "id": "S-CIM-10",
-      "familia": "S",
-      "total_citas": 3,
-      "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ]
     },
     {
@@ -6573,6 +6619,14 @@
       ]
     },
     {
+      "id": "L-CST-n",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
+    },
+    {
       "id": "L-H1..L-H7",
       "familia": "L",
       "total_citas": 1,
@@ -6610,6 +6664,14 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+      ]
+    },
+    {
+      "id": "L-T4A.x",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
