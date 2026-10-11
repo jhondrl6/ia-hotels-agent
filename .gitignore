@@ -160,5 +160,12 @@ evidence/FASE-E2E/
 # informe de observacion.
 evidence/FASE-P4/corrida/
 
+# REFACTOR-WHATSAPP (2026-10-07, S-E2E-6): la captura cruda del FASE-E2E lleva cuatro API keys
+# impresas como prefijo...sufijo por el viejo chequeo de configuracion. La tanda ya la excluyo del
+# versionado y publico `captura_stdout_saneada.txt`; la ruta se ignora para que un `git add -A` no
+# la devuelva al indice. Sigue en disco sin tocar, con su sha256 citado entre los 35 de
+# `run_control.json`. Mismo criterio que las dos reglas de arriba: el remoto es publico.
+evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-E2E/captura_stdout.txt
+
 # Configuración local del CLI (permisos por máquina)
 .qoder/settings.local.json
