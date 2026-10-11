@@ -3,8 +3,8 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 19,
-    "archivos_contexto_escaneados": 40,
-    "archivos_md_escaneados": 456,
+    "archivos_contexto_escaneados": 41,
+    "archivos_md_escaneados": 457,
     "ids_con_definicion": 377,
     "ids_citados_sin_definicion": 108,
     "fechas_por_fuente": {
@@ -2507,8 +2507,10 @@
       "seccion": "1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-10-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
+      ],
       "redefiniciones": []
     },
     {
@@ -2535,8 +2537,10 @@
       "seccion": "1. Lecciones capitalizadas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-10-09",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
+      ],
       "redefiniciones": []
     },
     {
@@ -2549,8 +2553,10 @@
       "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
       "fecha_plan": "2026-09-21",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
+      ],
       "redefiniciones": []
     },
     {
@@ -2563,9 +2569,10 @@
       "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
       "fecha_plan": "2026-09-21",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -2593,8 +2600,10 @@
       "seccion": "Lecciones nuevas de este plan (sesión FASE-RELEASE)",
       "fecha_plan": "2026-09-21",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
-      "planes_que_lo_citan": [],
+      "total_citas": 2,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
+      ],
       "redefiniciones": []
     },
     {
@@ -3835,9 +3844,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3851,9 +3861,10 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": []
     },
@@ -3867,13 +3878,14 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 105,
+      "total_citas": 106,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": []
     },
