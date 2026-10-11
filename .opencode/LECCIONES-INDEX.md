@@ -12,8 +12,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `20` análisis de plan + `41` archivos de `.opencode/context/`. `470` `.md` en total como corpus de **citas**.
-- 378 IDs con definición detectada; 110 IDs citados sin definición (ver última sección).
+- Corpus de **definiciones**: `20` análisis de plan + `42` archivos de `.opencode/context/`. `471` `.md` en total como corpus de **citas**.
+- 380 IDs con definición detectada; 110 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `367` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `369` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 223 |
+| `L-*` | Lecciones aprendidas | 225 |
 | `DA-*` | Decisiones / reglas de alineación | 53 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 63 |
 | — | Citados sin definición | 110 |
 
-## `L-*` — Lecciones aprendidas (223)
+## `L-*` — Lecciones aprendidas (225)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -66,7 +66,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-CIM.5` | git add con ruta de directorio padre no es un atajo: es un alcance implícito que absorbe trabajo ajeno declarado excluido. El stage se verifica antes del git commit, no después. — git add <acta>… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
 | `L-CIM.6` | Un fixture que modela mal la interfaz del servicio hace el verde inaccesible, no falso: las pruebas pueden estar todas verdes y ninguna tocar la rama que se pretendía gobernar. — QmindFalso respondía… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
 | `L-CIM.7` | El par rojo/verde de un mutante no detecta un arnés roto: si la selección no se ejecuta, los dos lados «fallan» igual. Lo que distingue el caso es exigir que el lado intacto salga EXIT=0, no que los… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 1 (solo el plan dueño) |
-| `L-CIM.8` | Un derivado cuya poblacion incluye rutas untracked no es reproducible desde el arbol del commit: el hook [6/8] mide el worktree, asi que un commit puede llevar un par que su propio arbol no regenera.… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 4 (solo el plan dueño) |
+| `L-CIM.8` | Un derivado cuya poblacion incluye rutas untracked no es reproducible desde el arbol del commit: el hook [6/8] mide el worktree, asi que un commit puede llevar un par que su propio arbol no regenera.… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 5 en context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 |
 | `L-CIM.9` | El resumen agregado de un verificador puede nombrar una causa que la corrida no imprimió: una etiqueta fija para «el código de salida fue 1» convierte cualquier rojo en el rojo que el instrumento… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 2 (solo el plan dueño) |
 | `L-CIM.10` | Un mutante que tumba casi toda la batería no ancla un AC: demuestra que el símbolo está en el camino común. El ancla es la aserción unitaria del lector, y la predicción del mandato se mide, no se… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
 | `L-CIM.11` | Una corrida de cierre puede morir por la codificación del lector, no por el árbol: un subprocess que decodifica con la cp1252 de la consola aborta antes de que el instrumento dictamine nada, y su… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 0 (solo el plan dueño) |
@@ -179,6 +179,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-R.2` | Hay campos que ningún writer escribe y ningún reader valida. docs/contributing/REGISTRY.md seguía publicando > Version actual: v4.66.0 con VERSION.yaml = 4.76.0. Medido: grep -rln "Version actual"… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 4 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-R.3` | El gate anti-contradicción de R2.5 tiene cobertura medida del 12,5 %. validate_plan_closure.py dispara solo si el 10-analisis-post-implementacion.md de un plan vivo tiene a la vez un heading que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 62 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/EVALUACION-JEV-TYPESAFE-2026-09-21, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 93 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-SECF.1` | El recorte prefijo…sufijo de una credencial no es anónimo: es más corto que los patrones que redactan, y un escáner que exempta los directorios donde vive no puede fiscalizarlo — este §1 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 2 (solo el plan dueño) |
+| `L-SECF.2` | git commit -- <ruta> ignora las rutas untracked y una salida filtrada con grep lo borra del radar: la evidencia del commit es el árbol, no la stdout — este §2 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 2 (solo el plan dueño) |
 | `L-SR1` | Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes. / Qué pasó: el fallback FASE-D S7 con logger inexistente convivió con el código desde su fase sin detonar hasta una prueba… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 24 en Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-SR2` | La identidad de memoria debe derivarse de la URL canónica, no de la raw. / Qué pasó: los UTM params llegaron íntegros al target_id, fragmentando la memoria del mismo hotel en N identidades según cómo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 17 en Archives/SR-PIPELINE-FIXES-2026-08-27 |
 | `L-SR3` | Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio. / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 69 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -454,13 +456,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B15` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `L-P2.4` | 11 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `S-B1` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
+| `S-E2E-6` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 |
 | `S-F6` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `DA-CIM.10` | 8 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-F7` | 8 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-B` | 7 | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 |
 | `S-CIM-2` | 7 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-E2E-1` | 7 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-E2E-6` | 7 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-A-QUICK-TRECE` | 6 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
 | `S-B8` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B13` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |

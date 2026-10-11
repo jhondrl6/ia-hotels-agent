@@ -3,12 +3,12 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 20,
-    "archivos_contexto_escaneados": 41,
-    "archivos_md_escaneados": 470,
-    "ids_con_definicion": 378,
+    "archivos_contexto_escaneados": 42,
+    "archivos_md_escaneados": 471,
+    "ids_con_definicion": 380,
     "ids_citados_sin_definicion": 110,
     "fechas_por_fuente": {
-      "nombre": 367,
+      "nombre": 369,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1776,8 +1776,10 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
-      "planes_que_lo_citan": [],
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11"
+      ],
       "redefiniciones": []
     },
     {
@@ -3506,6 +3508,34 @@
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-SECF.1",
+      "familia": "L",
+      "enunciado": "El recorte prefijo…sufijo de una credencial no es anónimo: es más corto que los patrones que redactan, y un escáner que exempta los directorios donde vive no puede fiscalizarlo — este §1",
+      "plan": "context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11",
+      "origen": "contexto",
+      "archivo": "CONTEXT-FRAGMENTOS-SECRETO-2026-10-11.md",
+      "seccion": "3. Tabla de definiciones",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-SECF.2",
+      "familia": "L",
+      "enunciado": "git commit -- <ruta> ignora las rutas untracked y una salida filtrada con grep lo borra del radar: la evidencia del commit es el árbol, no la stdout — este §2",
+      "plan": "context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11",
+      "origen": "contexto",
+      "archivo": "CONTEXT-FRAGMENTOS-SECRETO-2026-10-11.md",
+      "seccion": "3. Tabla de definiciones",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
@@ -6016,6 +6046,15 @@
       ]
     },
     {
+      "id": "S-E2E-6",
+      "familia": "S",
+      "total_citas": 9,
+      "planes_que_lo_citan": [
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11"
+      ]
+    },
+    {
       "id": "S-F6",
       "familia": "S",
       "total_citas": 9,
@@ -6058,14 +6097,6 @@
     },
     {
       "id": "S-E2E-1",
-      "familia": "S",
-      "total_citas": 7,
-      "planes_que_lo_citan": [
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-E2E-6",
       "familia": "S",
       "total_citas": 7,
       "planes_que_lo_citan": [
