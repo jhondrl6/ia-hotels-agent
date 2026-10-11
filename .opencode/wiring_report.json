@@ -1,7 +1,7 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 715,
-    "archivos_excluidos_por_rol": 8530,
+    "archivos_en_alcance": 716,
+    "archivos_excluidos_por_rol": 8538,
     "archivos_excluidos_por_rol_versionado": 167,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-09T19:25:40+00:00",
-  "git_sha": "fb13108",
+  "generado": "2026-10-11T21:53:11+00:00",
+  "git_sha": "b46a7b3",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",

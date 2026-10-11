@@ -121,12 +121,17 @@ class ConfigChecker:
                             f"{var} parece un placeholder ({len(value.strip())} chars) - no cuenta como clave configurada"
                         )
                         continue
-                    # Mostrar solo primeros y ultimos 4 caracteres por seguridad
-                    masked = f"{value[:4]}...{value[-4:]}"
-                    self.checks.append((f"[OK] {var}: {masked}", "ok"))
+                    # Un fragmento `value[:4]...value[-4:]` no era anonimo: las formas de
+                    # modules/utils/redaction.py exigen >=16 chars tras `sk-` y >=25 tras `AIzaSy`,
+                    # asi que el recorte sobrevivía al sumidero e identificaba la clave.
+                    self.checks.append(
+                        (f"[OK] {var}: configurada ({len(value.strip())} chars)", "ok")
+                    )
                     api_keys_found += 1
                 else:
-                    self.checks.append((f"[OK] {var}: {value}", "ok"))
+                    self.checks.append(
+                        (f"[OK] {var}: definido ({len(value.strip())} chars)", "ok")
+                    )
             elif required == 'required':
                 self.errors.append(f"Variable de entorno requerida faltante: {var}")
             else:
