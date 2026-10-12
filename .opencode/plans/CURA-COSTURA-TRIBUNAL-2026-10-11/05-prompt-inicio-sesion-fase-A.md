@@ -64,6 +64,7 @@ La costura de juicio semántico del Tribunal (`LLMPromiseExtractor`, instanciada
 - [ ] La capa de proveedor expone `finish_reason` de la respuesta (hoy ninguna ruta lo inspecciona).
 - [ ] Respuesta con truncamiento (finish_reason de longitud) produce estado `NO_EVALUABLE` con motivo «respuesta truncada», nunca una lista parcial.
 - [ ] Test con respuesta cortada sintética que antes producía `[]` envenenada.
+- [ ] El techo `max_tokens=2000` del extractor sale de esta fase con **decisión registrada**: se sube con la medida que lo justifique, o se pide salida compacta al proveedor, o se mantiene con el riesgo declarado y su dueño. Motivo medido (AC14): las propuestas reales van de 13.334 a 14.690 caracteres, así que sin decisión la corrida única tiende a `NO_EVALUABLE` y el camino OK de la cura nunca se ejercitaría. La decisión se escribe en `10-analisis` (Decisiones Arquitectónicas o Seguimientos), no en un comentario del código.
 
 ### Tarea 3 — Cache versionada y sin envenenamiento (AC2, AC4)
 
@@ -73,9 +74,10 @@ La costura de juicio semántico del Tribunal (`LLMPromiseExtractor`, instanciada
 - `modules/quality_gates/tribunal/llm_extractor.py`
 
 **Criterios de aceptación**:
-- [ ] `_compute_cache_key` = `VERSION_PROMPT` (constante `VERSION_PROMPT` del módulo, bump en cada cambio semántico del prompt) + sha256 del **prompt compuesto** + sha256 del texto + **proveedor configurado** (`LLM_PROVIDER` declarado, no el resuelto en vivo). El **modelo NO entra en la clave** — el extractor no puede conocerlo antes de llamar; entra en el recibo (AC5, AC4).
+- [ ] `_compute_cache_key` = `VERSION_PROMPT` (constante `VERSION_PROMPT` del módulo, bump en cada cambio semántico del prompt) + sha256 del **prompt compuesto** + sha256 del texto + **proveedor configurado** resuelto por **lectura pura de configuración sin construir cliente**: `LLM_PROVIDER` si está declarada; si no `deepseek` si hay `DEEPSEEK_API_KEY`, `anthropic` si hay `ANTHROPIC_API_KEY`, `sin-credencial` si ninguna — **nunca el literal `auto`**, que `_initialize_provider` resuelve a dos proveedores servidos distintos según qué clave exista (medido el 2026-10-11: `.env` declara `LLM_PROVIDER` y trae solo `DEEPSEEK_API_KEY`). El **modelo NO entra en la clave** — el extractor no puede conocerlo antes de llamar; entra en el recibo (AC5, AC4).
 - [ ] `_save_to_cache` rechaza estados no-OK; `_load_from_cache` solo devuelve entradas OK. **Mutation check**: revertir el guard → los tests de envenenamiento quedan rojos → reactivar → verdes; las DOS salidas se guardan en `evidence/FASE-A/`.
 - [ ] Escritura atómica del artefacto de cache (cura N10) y sin techo de crecimiento declarado como seguimiento (no feature nueva).
+- [ ] El default de `cache_dir` queda **anclado a la raíz del repo**, no al CWD del proceso. Motivo medido: el constructor hace `cache_dir or Path(".cache/tribunal")` — ruta relativa, así que un run lanzado desde otro directorio lee y escribe **otra** cache (y con ella, otros recibos). Si se decide no anclarlo, el residuo se registra como seguimiento con dueño; ninguna de las dos salidas es «no declarado».
 - [ ] Prompt distinto → clave distinta (test N4: si Bot 4 recibiera prompt propio mañana, no le sirven respuestas de Bot 2). **Este test es el que demuestra que una constante de módulo no basta**: con solo `VERSION_PROMPT`, dos prompts distintos de la misma versión casan la misma clave.
 - [ ] Test de que **un hit de cache no construye proveedor**: la ruta del hit corre **sin credencial** en el entorno y no levanta `ProviderAdapter()`. Medido: hoy ningún test de `test_llm_extractor.py` ejercita la rama `self.provider is None`, que solo en miss construye el adapter — y ese constructor lee `SecureConfigManager`, imprime `[INFO] Using…` y **lanza `ValueError` sin credencial**.
 - [ ] Sin migración: las entradas viejas quedan inalcanzables (declarado en maestro §4).
