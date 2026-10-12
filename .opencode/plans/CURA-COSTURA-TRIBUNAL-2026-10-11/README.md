@@ -8,7 +8,7 @@
 |------|--------|
 | Preparación (esta sesión) | ✅ 2026-10-11 |
 | Preparación-2 (auditoría aplicada) | ✅ 2026-10-11 — 6 fallos que rompían la ejecución + 9 de diseño corregidos en los 13 `.md`; sin código ni pytest. El commit no era parte de la tanda de edición: llegó después, el mismo 2026-10-11, en `359ac57` (empujado a `origin/master` tras una L3 con 0 hallazgos) |
-| FASE-A | ⬜ |
+| FASE-A | ✅ 2026-10-11 — contrato de cuatro estados (`extract_checked`), cache versionada sin envenenamiento con mutation check, recibo por extracción y frontera de dato en el prompt. +46 funciones de test (delta R2.3 verificado restando), quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
 | FASE-B | ⬜ |
 | FASE-C | ⬜ |
 | FASE-E2E (run único Don Alfonso) | ⬜ |

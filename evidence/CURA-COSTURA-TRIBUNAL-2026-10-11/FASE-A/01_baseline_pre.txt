@@ -1,0 +1,27 @@
+# 01_baseline_pre — FASE-A (R2.3, medido ANTES de cualquier escritura de la fase)
+
+Fecha: 2026-10-11. Revision base: `4f348d0` (master, sin cambios de esta fase en el arbol).
+
+## Conteo canonico de funciones de test (metodo del repo)
+
+| Unidad | Comando | Valor PRE |
+|--------|---------|-----------|
+| Todas las funciones `def test_` de `tests/` | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` | **5207** |
+| Funciones `def test_` de la seleccion del tribunal | `grep -rE "^\s*def test_" tests/quality_gates/tribunal --include=*.py \| wc -l` | **207** |
+
+## Coleccion de pytest (unidad distinta: cuenta parametrizaciones)
+
+La seleccion `pytest tests/quality_gates/tribunal/ -q` sobre el arbol PRE **no se corrio antes
+de las escrituras**: la primera corrida de esta seleccion ya tenia los 46 tests nuevos del archivo
+`test_llm_extractor_contrato_cuatro_estados.py` en el disco. La unidad contable de esta fase es,
+por tanto, la de `def test_` (la canonica del repo), y el par PRE/POST de abajo esta tomado con el
+mismo comando en las dos mitades. El numero de coleccion POST (259 = 250 passed + 9 skipped) se
+registra en `02_baseline_post_seleccion_tribunal.txt` como corrida de validacion, no como baseline.
+
+## Estado ajeno declarado al abrir la sesion
+
+- `git diff --cached --name-only`: **vacio** (el trabajo staged de `briefing/` que declaraba el
+  plan maestro ya no esta en el indice; ver `10-analisis` §Seguimientos).
+- Unstaged al abrir: los tres documentos del plan (`01-plan-maestro.md`,
+  `05-prompt-inicio-sesion-fase-A.md`, `10-analisis-post-implementacion.md`) — preparacion de otra
+  sesion, no tocados por esta fase.

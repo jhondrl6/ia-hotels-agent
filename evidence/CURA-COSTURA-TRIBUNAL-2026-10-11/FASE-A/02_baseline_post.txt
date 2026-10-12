@@ -1,0 +1,61 @@
+# 02_baseline_post — FASE-A (R2.3, mismo comando que la mitad PRE)
+
+Fecha: 2026-10-11. Arbol: `4f348d0` + las escrituras de esta fase (sin commit).
+
+## Delta con la suma y la resta publicadas
+
+| Unidad | Comando | PRE | POST | Delta |
+|--------|---------|-----|------|-------|
+| Funciones `def test_` de `tests/` | `grep -rE "^\s*def test_" tests --include=*.py \| wc -l` | 5207 | **5253** | **+46** |
+| Funciones `def test_` de `tests/quality_gates/tribunal/` | idem, ruta tribunal | 207 | **253** | **+46** |
+
+```
+suma_post(5253) − suma_pre(5207) = 46 = funciones de test nuevas de ESTA fase
+resta de la seleccion del tribunal: 253 − 207 = 46   (identico: todo el delta vive ahi)
+46 = def test_ de tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py (grep -c, sin parametrizaciones)
+```
+
+La resta **no** es cero: el baseline PRE no estaba contaminado con los tests nuevos.
+
+## Paralelismo de la coleccion de pytest (unidad distinta, declarada)
+
+`pytest tests/quality_gates/tribunal/ -q` (crudo en `06_seleccion_tribunal_post.txt`):
+**250 passed, 9 skipped, 0 failed** sobre 259 recopilados. La diferencia contra los 253 de
+`def test_` son 6 parametrizaciones de archivos preexistentes, por eso la coleccion PRE derivada
+es 259 − 46 = 213. El `skipped` es 9 en la primera corrida de esta fase (con los 30 rojos del
+principio) y 9 ahora: **identico**, como exige R2.3.
+
+## Fallos ajenos a la fase
+
+Suite completa (`pytest tests/ -q --continue-on-collection-errors`, 2026-10-11, con esta fase ya
+escrita): **2 failed, 5356 passed, 42 skipped, 4 xfailed en 464 s**. Los dos rojos se midieron
+ajenos y así quedan:
+
+1. `tests/config/test_config_integration.py::test_all_config_files_have_description` — rojo
+   **directo en HEAD**: le falta el campo `description` a `config/secret_fragment_policy.yaml`,
+   archivo que entró en `08f08c9` (sesión anterior). Reproducido en aislamiento.
+2. `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic` —
+   **solo bajo corrida combinada**: verde en aislamiento, rojo cuando la batería del tribunal corre
+   antes. Atribución medida: con `--ignore` de los DOS archivos de extractor de esta fase la falla
+   se reproduce igual (`1 failed, 203 passed`), así que la fuga de entorno (`load_dotenv()` que deja
+   `DEEPSEEK_API_KEY` poblada en el proceso) no la produce esta fase. Debida a otra batería del
+   tribunal; registrada como seguimiento con dueño en `10-analisis` §Seguimientos.
+
+Además, dos módulos de `tests/quality_gates/` fallan la **recolección** con
+`ImportError: cannot import name 'ElementNotInteractableException' from 'selenium.common.exceptions'`
+(`test_alignment_contract.py`, `test_alignment_result.py`). No es rojo de esta fase: la cadena de
+imports (`asset_generation/__init__` → `preflight_checks` → `providers/benchmark_cross_validator` →
+`scrapers/gbp_factory` → `selenium_driver`) no toca `llm_extractor.py` ni `llm_provider.py`, y el
+mismo error se reproduce con la selección sin ningún archivo de esta fase.
+
+## Mutation check AC2 (par rojo/verde)
+
+- `03_mutation_check_AC2_guard_retirado_rojo.txt`: **3 failed** con el guard de `_save_to_cache`
+  sustituido por `if False:`.
+- `04_mutation_check_AC2_guard_reactivado_verde.txt`: **3 passed** tras restaurar, con el arbol
+  intacto por sha256 (`43fd975dae0c06520bdad95d25c6377aa4d04ca08bdf98ee903955ae0427a445` antes y
+  despues del mutante).
+- **Lección del propio mutante**: la primera versión de esta fase tenía además un
+  `if outcome.is_ok:` en el llamador, así que el guard de `_save_to_cache` era inalcanzable y el
+  mutante daba VERDE (3 passed con el guard retirado). El rojo deliberado es lo que obligó a mover
+  la única decisión de cacheado dentro de la función que la AC nombra.

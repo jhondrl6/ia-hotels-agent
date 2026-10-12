@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-10
+> **Ultima actualizacion:** 2026-10-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 522
+> **Total fases completadas:** 523
 
 ---
 
@@ -12261,6 +12261,41 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 2 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-A - 2026-10-11 (CURA-COSTURA-TRIBUNAL-2026-10-11)
+**Descripcion:** Contrato 4 estados + cache versionada + recibo en LLMPromiseExtractor
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py` | NUEVO | Test Llm Extractor Contrato Cuatro Estados |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-A/` | NUEVO | Fase-A |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/llm_extractor.py` | Llm Extractor |
+| `modules/providers/llm_provider.py` | Llm Provider |
+| `tests/quality_gates/tribunal/test_llm_extractor.py` | Test Llm Extractor |
+| `tests/quality_gates/tribunal/test_alignment_reviewer.py` | Test Alignment Reviewer |
+| `tests/quality_gates/tribunal/test_honesty_reviewer.py` | Test Honesty Reviewer |
+| `tests/test_p6r_full_flow_matrix.py` | Test P6R Full Flow Matrix |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/README.md` | Readme |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 46 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -211,13 +211,11 @@ def mock_extractor():
             text="soluciones verificadas para su hotel",
             service_hint="general",
             location="Introducción",
-            confidence=0.9,
         ),
         VerbalPromise(
             text="datos confirmados del mercado",
             service_hint="whatsapp_bot",
             location="Alcance",
-            confidence=0.85,
         ),
     ]
     return MockPromiseExtractor(promises)
@@ -327,7 +325,6 @@ def test_tier_mismatch_detected(tmp_path):
             text="datos con tier A de evidencia",
             service_hint="general",
             location="Intro",
-            confidence=0.9,
         ),
     ]
     mock_ext = MockPromiseExtractor(promises)

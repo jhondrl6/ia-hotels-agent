@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CURA-COSTURA-TRIBUNAL-2026-10-11
 
-> **Estado**: Preparación completada 2026-10-11 — plan creado; implementación pendiente.
+> **Estado**: FASE-A completada 2026-10-11 **sin commit** (corte: listo para revisión). FASE-B/C/E2E/VERIFY/RELEASE pendientes.
 > **Plan**: CURA-COSTURA-TRIBUNAL-2026-10-11
 > **Versión objetivo**: 4.81.0
 > **Origen**: `.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md` (§3 defectos 1-6, §10.2 hallazgos N1-N10, §10.3 blast radius, §10.4 causas raíz)
@@ -11,7 +11,8 @@
 |------|--------|--------|----------------------------------|---------------|-------|
 | Preparación | 2026-10-11 | ✅ | (auto-reporte de esta sesión) | No (directo) | Paso 0 + maestro + 6 prompts + checklist + 09/10 |
 | Preparación-2 (auditoría aplicada) | 2026-10-11 | ✅ | 12 archivos `.md` editados; 180 líneas nuevas y 120 ajustadas (unidad contable en disco, reproducible con `diff` contra la pre-imagen; al publicarse la tanda quedó versionada en `359ac57`, así que desde entonces `git` también la mide con `git show --stat 359ac57`) | No (directo) | Rename `JEV-` → `CURA-`; AC13 partida y deuda `S-CST-1`; re-enunciadas AC1, AC4, AC5, AC10, AC11, AC13, AC14; AC17 y AC18 nuevas; `outcome.py` y `acta_writer.py` obligatorios en FASE-B con su orden T3→T2→T1→T4; T0 de E2E sustituido por YAML derivado con el warehouse inmutable; L-T4A.2 capitalizada. **Sin código ni pytest; el commit fue un acto posterior de la misma sesión (`359ac57`, empujado con L3 previa de 0 hallazgos)** |
-| FASE-A | | ⬜ | | No (decisión arquitectónica) | |
+| Preparación-2b (adenda: 4 ajustes residuales) | 2026-10-11 | ✅ | Los 4 ajustes residuales aplicados sobre 3 archivos `.md` (la cuenta de líneas la imprime `git diff --numstat` sobre la carpeta del plan mientras la tanda no esté publicada; después la imprime `git show --stat <sha>` con su pathspec) | No (directo) | AC4 define el componente de proveedor por **lectura pura de configuración** y prohíbe el literal `auto`; FASE-A T2 obliga a decidir el techo `max_tokens=2000` con su medida; FASE-A T3 ancla `cache_dir` a la raíz del repo (hoy es relativa al CWD del proceso); filas 6 y 12 de la matriz re-escritas hacia el lector. Sin código y sin pytest. Esta celda no afirma estado de commit: quien publique la tanda la re-ancla con su sha |
+| FASE-A | 2026-10-11 | ✅ (sin commit) | ~60 tool calls al cerrar (auto-reporte de la sesión; unidad declarada, no comparable con las líneas `.md` de Preparación-2). **Presupuesto ~55 EXCEDIDO en ~5 llamadas (≈9 %)**, declarado en lugar de recalibrado: la desviación la consumió el mutation check de AC2, que dio verde la primera vez porque el guard era inalcanzable y obligó a mover la decisión de cacheado a `_save_to_cache` y a re-corred todo el par rojo/verde | No (decisión arquitectónica DEC-A1, en directo) | Contrato de cuatro estados en la API checked + utilidad compartida + cache versionada con mutation check + recibo. AC2..7 legibles en sus artefactos de `evidence/…/FASE-A/`; **AC1 queda pendiente de cierre en FASE-B con AC15** porque DEC-A1 conserva el wrapper. Delta R2.3: +46 (5207→5253). Quick 13/13 tras regenerar `wiring_report.json` |
 | FASE-B | | ⬜ | | No (costura compartida) | |
 | FASE-C | | ⬜ | | No | |
 | FASE-E2E | | ⬜ | | Sí (run v4complete, timeout 900) | Run único; parent hace pre-vuelo/evidencia/docs |
@@ -27,13 +28,13 @@
 | 3 | Defecto 3 (+N4): cache sin versión de contrato | Clave = `VERSION_PROMPT` + sha del prompt compuesto + sha del texto + **proveedor configurado** declarado (el modelo **no** entra); prompt distinto → clave distinta, medido con el test que lo exige | | |
 | 4 | Defecto 4 (+N9): sin recibo | Recibo con digest del texto, digest del prompt compuesto, versión, proveedor servido, modelo **pedido** y **firmado** (si difieren), latencia, usage, digest respuesta cruda, estado y motivo | | |
 | 5 | Defecto 5: contenido no-confiable sin frontera | Prompt delimita la propuesta como dato; test de forma | | |
-| 6 | Defecto 6: modo auto sin registro de cuál sirvió | Proveedor **servido** en el recibo (`get_provider_name()`) y proveedor **configurado declarado** (`LLM_PROVIDER`) en la clave — no el resuelto en vivo | | |
+| 6 | Defecto 6: modo auto sin registro de cuál sirvió | Proveedor **servido** en el recibo (`get_provider_name()`) y proveedor **configurado** en la clave, resuelto por lectura pura de config (`deepseek` / `anthropic` / `sin-credencial`) — **nunca el literal `auto`**, que colapsa dos proveedores servidos bajo una sola clave | | |
 | 7 | N5: regex de verificación solo sobre citas del LLM | Detección sobre texto completo; cita omitida aún detectada | | |
 | 8 | N6: dos precedencias de evidence_tier | Símbolo compartido; mismas combinaciones para Juez y Bot 4 (par rojo/verde) | | |
 | 9 | N7: falso positivo CRITICAL por «total» | Superficie medida **con el patrón del código** (`verification_patterns`), publicando ocurrencias literales y coincidencias matcheadas por separado; frontera del `%` curada (`\b` tras `%` no matchea ninguno de los 5 literales `100%` de la propuesta del 2026-10-07) y par rojo/verde | | |
 | 10 | N8: reglas HARD y SOFT tragan excepciones con print | **Cuatro** sitios de captura visibles (`detect_conflicts()` en sus dos bloques, `detect_hard_conflicts()`, `detect_soft_conflicts()`) con par rojo/verde. El cableado motor→gate **no** se cura aquí: es `S-CST-1` en Seguimientos, y el verde del gate no prueba la ausencia | | |
 | 11 | P6.2: acta niega al revisor que corrió | Texto verdadero; decisión de cláusula con dueño en Seguimientos | | |
-| 12 | §10.3: acta se ve sana con extracción fallida | Bot 2/Bot 4 publican estado no evaluado; nunca OK_NO_FINDINGS ante no-OK (AC17 es la pata del acta) | | |
+| 12 | §10.3: acta se ve sana con extracción fallida | El **lector** no fabrica salud: `collect_reviewer_reports` mapea un estado de extracción no-OK a un `ReviewerStatus` con `blocks_approval=True`, y el acta lo publica con su etiqueta. Se lee en `reviewer_reports[].status` y en el `verdict` del acta (AC17), no en el report del revisor | | |
 | 13 | AC14: run Don Alfonso | Onboarding inyectado por YAML derivado (warehouse con sha256 igual antes/después) + coherence ≥ 0.8 + acta + recibo en la corrida E2E + **estado de la extracción leído del recibo** con su motivo | | |
 | 14 | AC16: no-regresión | Delta R2.3 por fase; resta verificada; quick verde | | |
 | 15 | AC17: el acta ante extracción no-OK | `collect_reviewer_reports` + `_compute_verdict` atravesados por test: estado no-OK con `findings: []` no produce `OK_NO_FINDINGS` ni `APROBADO-PARA-ENTREGA`; el miembro nuevo tiene etiqueta en `acta_writer._STATUS_LABELS`; par rojo/verde en `evidence/FASE-B/` | | |
@@ -47,19 +48,22 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 
 | Lección | Aplicación en este plan |
 |---------|-------------------------|
-| L-T4A.3 | Cache de tests con tmp_path (FASE-A T3) — resultado real: (completar) |
+| L-T4A.3 | Cache de tests con tmp_path (FASE-A T3) — resultado real: los 46 tests nuevos inyectan `tmp_path`; el default de producción quedó **anclado a la raíz del repo** (`RAIZ_REPO/.cache/tribunal`) en vez del CWD del proceso, y las 3 entradas viejas son inertes: `_load_from_cache` devuelve `None` ante el formato de lista, medido en `test_entrada_de_formato_viejo_es_inalcanzable` |
 | L-T4A.5 | Tests que alcancen la rama; cruce bidireccional (FASE-B T1/T2) — resultado real: (completar) |
-| L-T4A.1 | Protocol runtime_checkable (FASE-A T1) — resultado real: (completar) |
-| L-T4A.2 | Utilidad compartida para el mapeo de estados y el des-cercado de fences, no dentro de `LLMPromiseExtractor` (FASE-A T1, capitalizada en Preparación-2) — resultado real: (completar) |
-| DA-T4A | Contrato en la interfaz; sin implementaciones nuevas (DEC-A1) — resultado real: (completar) |
+| L-T4A.1 | Protocol runtime_checkable (FASE-A T1) — resultado real: el decorator sigue dando `isinstance` en los dos extractores y **no** se usó como evidencia; la evidencia son los tests por causa sobre el objeto devuelto (un estado por test, con su `motivo` afirmado) |
+| L-T4A.2 | Utilidad compartida para el mapeo de estados y el des-cercado de fences, no dentro de `LLMPromiseExtractor` (FASE-A T1, capitalizada en Preparación-2) — resultado real: `strip_markdown_fences`, `decode_promises_response` e `is_valid_promise` son funciones de módulo; la clase solo clasifica el `finish_reason` y consume. El dedent de indentación variable pasó a test propio, que antes no existía |
+| DA-T4A | Contrato en la interfaz; sin implementaciones nuevas (DEC-A1) — resultado real: `extract_checked` se declaró en `PromiseExtractor` y `MockPromiseExtractor` lo implementa; cero implementaciones nuevas. El wrapper viejo sobrevive con un comentario que apunta a FASE-B |
 | L-VERIFY.4 | Texto P6.2 verdadero (FASE-C T2) — resultado real: (completar) |
 | L-VUP-13 | Sonda de onboarding pre-vuelo (FASE-E2E T0) — resultado real: (completar) |
-| S-H13 | Clave de cache de contenido, no de identidad (FASE-A T3) — resultado real: (completar) |
+| S-H13 | Clave de cache de contenido, no de identidad (FASE-A T3) — resultado real: `VERSION_PROMPT` + sha(prompt compuesto) + sha(texto) + proveedor configurado por lectura pura de config. Ni `id()` ni el modelo entran: el test del hit con modelo firmado distinto prueba que la clave no lo mira |
 | L-V.2 | VERIFY re-lee artefactos — resultado real: (completar) |
 
 ### Lecciones nuevas de este plan
 
-(Registrar al cierre de cada fase; numeración L-CST-n si aplica.)
+| ID | Lección (qué pasó / por qué / qué lo previene) | Pertinencia |
+|----|---------------------------------------------|-------------|
+| `L-CST-1` | **Un guard duplicado en dos capas hace que el mutation check dé verde y la AC quede sin dueño.** La primera versión de FASE-A tenía `if outcome.is_ok` en el llamador **y** el guard en `_save_to_cache`; al retirar el de `_save_to_cache` los tres tests de envenenamiento siguieron VERDES, porque el código muerto nunca se ejecuta. AC2 nombra `_save_to_cache` como el sitio de la regla, así que el mutante correcto es el que obliga a mover la única decisión a ese sitio. Por qué importa: un verde de mutation check con el mutante mal apuntado certifica un guard que nadie dispara. Qué lo previene: el par rojo/verde versionado (`03_`/`04_` en `evidence/FASE-A/`) y la regla de la casa «un guard que nadie dispara no existe» | INCLUIR — es de superficie del fix, no del síntoma |
+| `L-CST-2` | **Nombre de delimitador dentro de la instrucción rompe la forma del prompt compuesto.** La instrucción de frontera citaba los dos marcadores literales, así que el prompt compuesto contenía `<<<FIN_DATO_NO_CONFIABLE>>>` dos veces y el test de forma (AC7) falló por desambiguación, no por falta de frontera. La regla se escribió sin imprimir los literales. Qué lo previene: `test_la_propuesta_solo_aparece_dentro_de_los_delimitadores` exige cuenta 1 de cada marcador | INCLUIR |
 
 ## Deudas definidas por este plan
 
@@ -76,7 +80,10 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | Dirección `modules/` → `scripts/` y SDK fuera del venv | Diferida con dueño (operador) | Plan de integración Jev (maestro §5) |
 | Comparación de proveedores con recibo (opción C del contexto) | Diferida | Plan nuevo con pre-registro propio |
 | Sobre-encaje inverso del matching difuso (L-T4A.4) | Sin medir | Medición propia si un incidente lo pide |
-| Techo de crecimiento de la cache del extractor | (completar según lo que declare FASE-A) | Decisión con dueño o seguimiento |
+| Techo de crecimiento de la cache del extractor | **Abierta con dueño: Operador** (declarada por FASE-A el 2026-10-11, sin feature nueva) | La clave versionada acumula un archivo por (prompt, texto, proveedor) y no hay TTL ni purga; solo la escritura es atómica. Cerrar con una política de retención o un `--purge` cuando el directorio pese |
+| Recolección de pytest rota por selenium en `tests/quality_gates/test_alignment_contract.py` y `test_alignment_result.py` | **Abierta con dueño: Operador** (rojo preexistente, no de este plan; declarado en `evidence/…/FASE-A/02_baseline_post.txt`) | `ImportError: cannot import name 'ElementNotInteractableException' from 'selenium.common.exceptions'` en la cadena `asset_generation → providers → scrapers → selenium_driver`. Afecta al modo completo; no toca `llm_extractor` ni `llm_provider` |
+| Fuga de entorno entre la batería del tribunal y el brazo DeepSeek del piloto (`test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic` cae solo bajo corrida combinada) | **Abierta con dueño: Operador** — **no es rojo de FASE-A**: medido con `--ignore` de los dos archivos de extractor de esta fase, la falla se reproduce igual (1 failed, 203 passed). Mecanismo declarado: algn otro test del tribunal provoca `load_dotenv()` y deja `DEEPSEEK_API_KEY` poblada en `os.environ` del proceso, y el guard del brazo lee el entorno del proceso | Correr la batería del piloto en proceso aparte o limpiar el entorno en el fixture del brazo; no re-ancclar el test a un orden de recolección |
+| Neutralización de delimitadores dentro del dato | **Cerrada en FASE-A con su diente** | `_compose_prompt` sustituye cualquier ocurrencia de los dos marcadores en la propuesta por `NEUTRALIZADOR_DELIMITADOR`, de modo que el contenido no puede cerrar su propio bloque (`test_un_delimitador_dentro_de_la_propuesta_no_escapa_del_bloque`) |
 
 ## Métricas de Ejecución (referencias, no copias)
 
@@ -92,6 +99,8 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | DEC-A2 | `outcome.py` y `acta_writer.py` son **edición obligatoria** de FASE-B (antes: «si el estado exige publicarse») | Medido: `collect_reviewer_reports` computa `OK_NO_FINDINGS` **solo desde `findings_count`** y `_compute_verdict` decide con `status.blocks_approval`; sin ellos, un report con `extraccion: NO_EVALUABLE` y `findings: []` deja el acta sana y el veredicto aprobable — la cura quedaría sin efecto (AC17) | Dejar el acta como espejo del conteo de hallazgos (es el defecto); publicar el estado solo en el report del revisor y no en el acta (el humano lee el acta) | FASE-B |
 | DEC-A3 | `llm_provider` se extiende **por vía aditiva** (método o metadatos nuevos), sin cambiar el tipo de retorno de `chat_completion` | Medido con `grep -rn "unified_request(" --include=*.py modules/ main.py scripts/ agent_harness/ data_validation/` (sin la definición): 6 sitios de producción delegan en `chat_completion` fuera del tribunal y ninguno consume `finish_reason`/`usage`/modelo firmado; cambiar el retorno obligaría a tocar 4 módulos ajenos al alcance de este plan | Romper el retorno y adaptar los 6 consumidores en FASE-A (viola R3 y mezcla superficies); que el extractor lea el objeto crudo del proveedor por la puerta de atrás (contrato implícito sin test) | FASE-A |
 | DEC-A4 | El warehouse `data/hotel_observations/observations.json` es **fuente inmutable**; el onboarding del run entra por el YAML derivado con el productor versionado de FASE-H | El loader mira primero `clientes_dir` y solo después el warehouse, así que editar `website` era innecesario y falsificaba la procedencia; el registro del warehouse tiene otro dominio (`https://hoteldonalfonso.com/`) y su rama no casaría con la URL del run; `tests/test_fase_h_onboarding_procedencia.py` ya declara la rama YAML como la única favorable y el warehouse como inmutable (sha256 antes/después) | Alinear el campo `website` del warehouse + `validate.py` (la formulación anterior de T0); copiar el YAML sin procedencia ni sha; rellenar el dato a mano en el run | FASE-E2E |
+
+| DEC-A5 | El techo `max_tokens` del extractor sube de **2000 a 4000** (`MAX_TOKENS_EXTRACCION`) con la medida declarada, y el truncamiento deja de ser silencioso | Medido en AC14: las propuestas reales van de 13.334 a 14.690 caracteres, así que con 2000 el camino normal de una corrida era `NO_EVALUABLE` por recorte y el camino OK de la cura nunca se ejercitaría en la corrida única. Con AC3 encendido el recorte ya es detectable (`finish_reason`), así que el techo es un parámetro y no un encubrimiento. El `usage` de la corrida única queda en el recibo y re-ancla el número si 4000 resulta insuficiente | Mantener 2000 con el riesgo declarado (la corrida única habría sido casi con seguridad `NO-EVALUABLE`); pedir salida compacta al proveedor (no hay medida de que un prompt más corto reduzca el número de promesas); quitar el techo (expone la corrida a un costo sin cota) | FASE-A |
 
 ## Checklist de Cierre (llenar en FASE-RELEASE-4.81.0)
 

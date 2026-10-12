@@ -1,0 +1,74 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+_ TestCacheSinEnvenenamiento.test_no_evaluable_no_persiste_nada_en_el_directorio_de_cache _
+
+self = <quality_gates.tribunal.test_llm_extractor_contrato_cuatro_estados.TestCacheSinEnvenenamiento object at 0x0000022EFDCE5450>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_no_evaluable_no_persiste_0')
+
+    def test_no_evaluable_no_persiste_nada_en_el_directorio_de_cache(self, tmp_path):
+        ext, _ = extractor("esto no es JSON", tmp_path)
+        ext.extract_checked("texto")
+>       assert list(tmp_path.glob("*.json")) == []
+E       AssertionError: assert [WindowsPath(...8224ab.json')] == []
+E         
+E         Left contains one more item: WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_no_evaluable_no_persiste_0/b073bd8d99b807d5fe9c9ce003b630f9d877c58a5af5d5028c97d42d6b8224ab.json')
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_llm_extractor_contrato_cuatro_estados.py:263: AssertionError
+________ TestRecibo.test_estado_no_ok_deja_recibo_aunque_no_deje_cache ________
+
+self = <quality_gates.tribunal.test_llm_extractor_contrato_cuatro_estados.TestRecibo object at 0x0000022EFDC8BA80>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_estado_no_ok_deja_recibo_0')
+
+    def test_estado_no_ok_deja_recibo_aunque_no_deje_cache(self, tmp_path):
+        ext, _ = extractor("esto no es JSON", tmp_path)
+        ext.extract_checked("texto")
+>       assert list(tmp_path.glob("*.json")) == []
+E       AssertionError: assert [WindowsPath(...8224ab.json')] == []
+E         
+E         Left contains one more item: WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_estado_no_ok_deja_recibo_0/b073bd8d99b807d5fe9c9ce003b630f9d877c58a5af5d5028c97d42d6b8224ab.json')
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_llm_extractor_contrato_cuatro_estados.py:340: AssertionError
+_ TestWrapperTransicional.test_wrapper_devuelve_lista_vacia_en_no_evaluable_sin_cachearla _
+
+self = <quality_gates.tribunal.test_llm_extractor_contrato_cuatro_estados.TestWrapperTransicional object at 0x0000022EFDCE5590>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_wrapper_devuelve_lista_va0')
+
+    def test_wrapper_devuelve_lista_vacia_en_no_evaluable_sin_cachearla(self, tmp_path):
+        ext, _ = extractor("esto no es JSON", tmp_path)
+        assert ext.extract_verbal_promises("texto") == []
+>       assert list(tmp_path.glob("*.json")) == []
+E       AssertionError: assert [WindowsPath(...8224ab.json')] == []
+E         
+E         Left contains one more item: WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1806/test_wrapper_devuelve_lista_va0/b073bd8d99b807d5fe9c9ce003b630f9d877c58a5af5d5028c97d42d6b8224ab.json')
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_llm_extractor_contrato_cuatro_estados.py:170: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py::TestCacheSinEnvenenamiento::test_no_evaluable_no_persiste_nada_en_el_directorio_de_cache
+FAILED tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py::TestRecibo::test_estado_no_ok_deja_recibo_aunque_no_deje_cache
+FAILED tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py::TestWrapperTransicional::test_wrapper_devuelve_lista_vacia_en_no_evaluable_sin_cachearla
+3 failed, 8 warnings in 1.21s

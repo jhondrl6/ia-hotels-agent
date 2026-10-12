@@ -112,7 +112,7 @@ class TestAlignmentReviewer:
     def test_promise_without_matrix_detected(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Mock extrae 'implementación de chatbot' → no está en matriz → PROMESA-SIN-MATRIZ."""
         promises = [
-            VerbalPromise("implementación de chatbot", "chatbot", "Intro", 0.9),
+            VerbalPromise("implementación de chatbot", "chatbot", "Intro"),
         ]
         mock_extractor = MockPromiseExtractor(promises)
 
@@ -131,7 +131,7 @@ class TestAlignmentReviewer:
     def test_aligned_service_not_flagged(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Servicio con brecha + entrada en matriz → ALINEADO."""
         promises = [
-            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro", 0.95),
+            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro"),
         ]
         mock_extractor = MockPromiseExtractor(promises)
 
@@ -148,7 +148,7 @@ class TestAlignmentReviewer:
     def test_no_breach_associated_detected(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Entrada LINKED en matriz sin pain_id → SIN-BRECHA-ASOCIADA."""
         promises = [
-            VerbalPromise("Página de FAQ", "faq", "Entregables", 0.85),
+            VerbalPromise("Página de FAQ", "faq", "Entregables"),
         ]
         mock_extractor = MockPromiseExtractor(promises)
 
@@ -164,7 +164,7 @@ class TestAlignmentReviewer:
     def test_present_in_production_aligned(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Servicio PRESENT_IN_PRODUCTION → ALINEADO con nota."""
         promises = [
-            VerbalPromise("Schema Hotel", "schema", "Entregables", 0.9),
+            VerbalPromise("Schema Hotel", "schema", "Entregables"),
         ]
         mock_extractor = MockPromiseExtractor(promises)
 
@@ -213,9 +213,9 @@ class TestAlignmentReviewer:
         Entradas sin promesa: Schema Hotel (PRESENT_IN_PRODUCTION)→ALINEADO.
         """
         promises = [
-            VerbalPromise("WhatsApp", "whatsapp", "Intro", 0.95),
-            VerbalPromise("FAQ", "faq", "Entregables", 0.85),
-            VerbalPromise("Chatbot", "chatbot", "Intro", 0.9),
+            VerbalPromise("WhatsApp", "whatsapp", "Intro"),
+            VerbalPromise("FAQ", "faq", "Entregables"),
+            VerbalPromise("Chatbot", "chatbot", "Intro"),
         ]
         mock_extractor = MockPromiseExtractor(promises)
 
@@ -251,7 +251,7 @@ class TestAlignmentReviewer:
         )
 
         mock_extractor = MockPromiseExtractor([
-            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro", 0.95),
+            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro"),
         ])
         reviewer = AlignmentReviewer(v4_audit_dir)
         report = reviewer.review(extractor=mock_extractor)
@@ -272,7 +272,7 @@ class TestAlignmentReviewer:
         )
 
         mock_extractor = MockPromiseExtractor([
-            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro", 0.95),
+            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro"),
         ])
         reviewer = AlignmentReviewer(v4_audit_dir)
         report = reviewer.review(extractor=mock_extractor)
@@ -295,7 +295,7 @@ class TestAlignmentReviewer:
         )
 
         mock_extractor = MockPromiseExtractor([
-            VerbalPromise("implementación de chatbot IA", "chatbot_ia", "Intro", 0.9),
+            VerbalPromise("implementación de chatbot IA", "chatbot_ia", "Intro"),
         ])
         reviewer = AlignmentReviewer(v4_audit_dir)
         report = reviewer.review(extractor=mock_extractor)
@@ -310,7 +310,7 @@ class TestAlignmentReviewer:
     def test_matrix_entries_covered_without_promise(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Cruce inverso: entradas sin promesa reciben fila con verbal_promise_found=false."""
         mock_extractor = MockPromiseExtractor([
-            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro", 0.95),
+            VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro"),
         ])
         reviewer = AlignmentReviewer(v4_audit_dir)
         report = reviewer.review(extractor=mock_extractor)
@@ -325,7 +325,7 @@ class TestAlignmentReviewer:
     def test_promise_without_matrix_escalates_verdict(self, v4_audit_dir, sample_proposal, sample_matrix):
         """Un solo PROMESA-SIN-MATRIZ escala la recomendación a DEVOLVER-PRUEBAS."""
         mock_extractor = MockPromiseExtractor([
-            VerbalPromise("auditoría de reseñas externas", "tripadvisor_reviews", "Intro", 0.8),
+            VerbalPromise("auditoría de reseñas externas", "tripadvisor_reviews", "Intro"),
         ])
         reviewer = AlignmentReviewer(v4_audit_dir)
         report = reviewer.review(extractor=mock_extractor)

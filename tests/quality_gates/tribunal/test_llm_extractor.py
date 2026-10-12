@@ -1,19 +1,54 @@
 """Tests para llm_extractor.py — protocolo de extracción LLM.
 
-Valida el protocolo PromiseExtractor, la implementación LLM (con mock de provider),
-y el MockPromiseExtractor para tests sin dependencia de LLM real.
+Valida el protocolo PromiseExtractor, la implementación LLM (con un arnés local del
+proveedor, sin red) y el MockPromiseExtractor para tests sin dependencia de LLM real.
+
+Los estados del contrato se prueban en
+`test_llm_extractor_contrato_cuatro_estados.py`; este archivo conserva la superficie
+de siempre sobre el wrapper transicional de DEC-A1.
 """
 
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock
 
+from modules.providers.llm_provider import ChatCompletionDetail
+from modules.quality_gates.tribunal import llm_extractor
 from modules.quality_gates.tribunal.llm_extractor import (
     LLMPromiseExtractor,
     MockPromiseExtractor,
     PromiseExtractor,
     VerbalPromise,
 )
+
+
+@pytest.fixture(autouse=True)
+def configuracion_arnesada(monkeypatch):
+    """La clave de cache se resuelve sin keyring y sin .env real."""
+    monkeypatch.setattr(llm_extractor, "_read_config", lambda nombre: None)
+
+
+class ProveedorFalso:
+    """Arnés mínimo del contrato de proveedor: texto fijo, sin llamada real."""
+
+    def __init__(self, texto):
+        self.texto = texto
+        self.llamadas = []
+
+    def chat_completion(self, prompt, model=None, max_tokens=1000, temperature=0.7):
+        self.llamadas.append(prompt)
+        return self.texto
+
+    def chat_completion_detailed(self, prompt, model=None, max_tokens=1000, temperature=0.7):
+        self.llamadas.append(prompt)
+        return ChatCompletionDetail(
+            text=self.texto,
+            finish_reason="stop",
+            model_requested=model or "deepseek-chat",
+            model_served="deepseek-chat",
+            provider_name="deepseek",
+        )
+
+    def get_provider_name(self):
+        return "deepseek"
 
 
 class TestVerbalPromise:
@@ -24,32 +59,29 @@ class TestVerbalPromise:
             text="Implementaremos un botón de WhatsApp",
             service_hint="whatsapp_bot",
             location="Alcance del Proyecto",
-            confidence=0.95,
         )
         d = promise.to_dict()
         assert d["text"] == "Implementaremos un botón de WhatsApp"
         assert d["service_hint"] == "whatsapp_bot"
         assert d["location"] == "Alcance del Proyecto"
-        assert d["confidence"] == 0.95
 
     def test_from_dict(self):
         data = {
             "text": "FAQ page",
             "service_hint": "faq_page",
             "location": "Entregables",
-            "confidence": 0.85,
         }
         promise = VerbalPromise.from_dict(data)
         assert promise.text == "FAQ page"
         assert promise.service_hint == "faq_page"
-        assert promise.confidence == 0.85
+        assert promise.location == "Entregables"
 
     def test_roundtrip(self):
-        original = VerbalPromise("test", "hint", "loc", 0.9)
+        original = VerbalPromise("test", "hint", "loc")
         restored = VerbalPromise.from_dict(original.to_dict())
         assert restored.text == original.text
         assert restored.service_hint == original.service_hint
-        assert restored.confidence == original.confidence
+        assert restored.location == original.location
 
 
 class TestPromiseExtractorProtocol:
@@ -57,7 +89,7 @@ class TestPromiseExtractorProtocol:
 
     def test_extractor_protocol_compliance(self, tmp_path):
         """LLMPromiseExtractor cumple PromiseExtractor protocol."""
-        extractor = LLMPromiseExtractor(provider=MagicMock(), cache_dir=tmp_path)
+        extractor = LLMPromiseExtractor(provider=ProveedorFalso("[]"), cache_dir=tmp_path)
         assert isinstance(extractor, PromiseExtractor)
 
     def test_mock_extractor_protocol_compliance(self):
@@ -76,8 +108,8 @@ class TestMockPromiseExtractor:
     def test_mock_extractor_used_in_tests(self):
         """MockPromiseExtractor retorna promesas fijas, sin LLM."""
         promises = [
-            VerbalPromise("WhatsApp", "whatsapp_bot", "Intro", 0.9),
-            VerbalPromise("FAQ", "faq_page", "Entregables", 0.85),
+            VerbalPromise("WhatsApp", "whatsapp_bot", "Intro"),
+            VerbalPromise("FAQ", "faq_page", "Entregables"),
         ]
         mock = MockPromiseExtractor(promises)
         result = mock.extract_verbal_promises("cualquier texto")
@@ -87,7 +119,7 @@ class TestMockPromiseExtractor:
 
     def test_mock_extractor_ignores_input(self):
         """MockPromiseExtractor ignora el texto de entrada."""
-        promises = [VerbalPromise("test", "hint", "loc", 0.9)]
+        promises = [VerbalPromise("test", "hint", "loc")]
         mock = MockPromiseExtractor(promises)
         result1 = mock.extract_verbal_promises("texto 1")
         result2 = mock.extract_verbal_promises("texto 2")
@@ -101,48 +133,46 @@ class TestMockPromiseExtractor:
 
 
 class TestLLMPromiseExtractor:
-    """Tests para LLMPromiseExtractor con provider mockeado."""
+    """Tests para LLMPromiseExtractor con proveedor arnesado (sin red)."""
 
     def test_llm_extractor_with_mock_provider(self, tmp_path):
         """LLMPromiseExtractor usa el provider inyectado."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = '[{"text": "WhatsApp", "service_hint": "whatsapp_bot", "location": "Intro", "confidence": 0.9}]'
+        mock_provider = ProveedorFalso('[{"text": "WhatsApp", "service_hint": "whatsapp_bot", "location": "Intro"}]')
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         result = extractor.extract_verbal_promises("texto de propuesta")
 
         assert len(result) == 1
         assert result[0].text == "WhatsApp"
-        mock_provider.chat_completion.assert_called_once()
+        assert len(mock_provider.llamadas) == 1
 
     def test_llm_extractor_cache_hit(self, tmp_path):
         """LLMPromiseExtractor usa cache para el mismo texto."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = '[]'
+        mock_provider = ProveedorFalso("[]")
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         extractor.extract_verbal_promises("texto")
         extractor.extract_verbal_promises("texto")
 
-        assert mock_provider.chat_completion.call_count == 1
+        assert len(mock_provider.llamadas) == 1
 
     def test_llm_extractor_cache_miss(self, tmp_path):
         """LLMPromiseExtractor llama al LLM para textos diferentes."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = '[]'
+        mock_provider = ProveedorFalso("[]")
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         extractor.extract_verbal_promises("texto 1")
         extractor.extract_verbal_promises("texto 2")
 
-        assert mock_provider.chat_completion.call_count == 2
+        assert len(mock_provider.llamadas) == 2
 
     def test_llm_extractor_parses_json_with_markdown(self, tmp_path):
         """LLMPromiseExtractor parsea respuesta con markdown code block."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = """```json
-[{"text": "FAQ", "service_hint": "faq_page", "location": "Entregables", "confidence": 0.85}]
+        mock_provider = ProveedorFalso(
+            """```json
+[{"text": "FAQ", "service_hint": "faq_page", "location": "Entregables"}]
 ```"""
+        )
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         result = extractor.extract_verbal_promises("texto")
@@ -151,9 +181,8 @@ class TestLLMPromiseExtractor:
         assert result[0].text == "FAQ"
 
     def test_llm_extractor_handles_invalid_json(self, tmp_path):
-        """LLMPromiseExtractor retorna [] para JSON inválido."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = "esto no es JSON"
+        """El wrapper transicional (DEC-A1) sigue devolviendo [] al revisor de hoy."""
+        mock_provider = ProveedorFalso("esto no es JSON")
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         result = extractor.extract_verbal_promises("texto")
@@ -162,12 +191,11 @@ class TestLLMPromiseExtractor:
 
     def test_llm_extractor_filters_invalid_promises(self, tmp_path):
         """LLMPromiseExtractor filtra promesas sin campos requeridos."""
-        mock_provider = MagicMock()
-        mock_provider.chat_completion.return_value = """[
-            {"text": "Válida", "service_hint": "hint", "location": "loc", "confidence": 0.9},
-            {"text": "", "service_hint": "hint", "location": "loc", "confidence": 0.9},
-            {"service_hint": "hint", "location": "loc", "confidence": 0.9}
-        ]"""
+        mock_provider = ProveedorFalso("""[
+            {"text": "Válida", "service_hint": "hint", "location": "loc"},
+            {"text": "", "service_hint": "hint", "location": "loc"},
+            {"service_hint": "hint", "location": "loc"}
+        ]""")
 
         extractor = LLMPromiseExtractor(provider=mock_provider, cache_dir=tmp_path)
         result = extractor.extract_verbal_promises("texto")

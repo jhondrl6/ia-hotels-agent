@@ -26,7 +26,7 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
-| Tests nuevos FASE-A | (completar al cerrar, con la unidad del conteo canónico) | FASE-A |
+| Tests nuevos FASE-A | **+46** funciones `def test_` (unidad canónica del repo: `grep -rE "^\s*def test_" tests --include=*.py \| wc -l`; 5207 → 5253, y en la selección del tribunal 207 → 253). La corrida `pytest tests/quality_gates/tribunal/` da 250 passed / 9 skipped / 0 failed sobre 259 recopilados | FASE-A |
 | Tests nuevos FASE-B | (completar) | FASE-B |
 | Tests nuevos FASE-C | (completar) | FASE-C |
 | Coherence del run Don Alfonso | (completar desde el gate report de la corrida) | FASE-E2E |
@@ -38,6 +38,11 @@
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
+| `modules/quality_gates/tribunal/llm_extractor.py` | Contrato de cuatro estados, utilidad compartida de parsing, cache versionada con guard único en `_save_to_cache`, escritura atómica, `cache_dir` anclado a la raíz, recibo por extracción, prompt sin self-confidence y con delimitadores. El wrapper `extract_verbal_promises` queda transicional (DEC-A1) | FASE-A |
+| `modules/providers/llm_provider.py` | `ChatCompletionDetail` + `chat_completion_detailed` **aditivos** (DEC-A3): exponen `finish_reason`, modelo pedido/firmado y usage sin cambiar el retorno de `chat_completion` | FASE-A |
+| `tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py` | **Nuevo**, 46 funciones: estados por causa, truncamiento, clave versionada, hit sin proveedor, recibo, forma del prompt, wrapper | FASE-A |
+| `tests/quality_gates/tribunal/test_llm_extractor.py`, `test_alignment_reviewer.py`, `test_honesty_reviewer.py`, `tests/test_p6r_full_flow_matrix.py` | Re-anclados al DTO sin `confidence` y al arnés de proveedor con la vía detallada (AC6); ninguno perdió aserciones de fondo | FASE-A |
+| `.opencode/wiring_report.json` | Regenerado con `validate_wiring.py --write-report`: el archivo nuevo movió `cobertura.archivos_en_alcance` de 717 a 718 y el `--check` cortaba rojo | FASE-A |
 | `output/<clientes_dir>/hotel_don_alfonso_onboarding.yaml` | **Creado** por `derivar_onboarding.py` (productor versionado de FASE-H): derivado del warehouse con `hotel.url` canónica; no se versiona (`output/*/` en `.gitignore`), su copia y `onboarding_provenance.json` quedan en `evidence/…/FASE-E2E/` | FASE-E2E |
 | `data/hotel_observations/observations.json` | **NO se toca** (DEC-A4): la edición del campo `website` que estaba prevista queda revocada; su sha256 antes y después se publica en `pre-vuelo.md` y debe casar | FASE-E2E |
 | Los 13 `.md` del plan | Auditoría aplicada (Preparación-2, 2026-10-11): rename `JEV-`→`CURA-`, AC13 partida con deuda `S-CST-1`, re-enunciados de AC1/AC4/AC5/AC10/AC11/AC13/AC14, AC17 y AC18 nuevas, FASE-B con orden T3→T2→T1→T4 y `outcome.py`/`acta_writer.py` obligatorios, T0 de E2E sustituido, L-T4A.2 capitalizada | Preparación-2 |

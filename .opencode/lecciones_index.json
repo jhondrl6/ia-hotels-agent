@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 20,
     "archivos_contexto_escaneados": 42,
     "archivos_md_escaneados": 471,
-    "ids_con_definicion": 380,
-    "ids_citados_sin_definicion": 110,
+    "ids_con_definicion": 382,
+    "ids_citados_sin_definicion": 109,
     "fechas_por_fuente": {
-      "nombre": 369,
+      "nombre": 371,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1849,6 +1849,34 @@
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
       "total_citas": 3,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-1",
+      "familia": "L",
+      "enunciado": "Un guard duplicado en dos capas hace que el mutation check dé verde y la AC quede sin dueño. La primera versión de FASE-A tenía if outcome.is_ok en el llamador y el guard en _save_to_cache; al retirar el de _save_to_cache los tres tests de envenenamiento siguieron VERDES, porque el código muerto nunca se ejecuta. AC2 nombra _save_to_cache como el sitio de la regla, así que el mutante correcto es el que obliga a mover la única decisión a ese sitio. Por qué importa: un verde de mutation check con el mutante mal apuntado certifica un guard que nadie dispara. Qué lo previene: el par rojo/verde versionado (03_/04_ en evidence/FASE-A/) y la regla de la casa «un guard que nadie dispara no existe» — INCLUIR — es de superficie del fix, no del síntoma",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-2",
+      "familia": "L",
+      "enunciado": "Nombre de delimitador dentro de la instrucción rompe la forma del prompt compuesto. La instrucción de frontera citaba los dos marcadores literales, así que el prompt compuesto contenía <<<FIN_DATO_NO_CONFIABLE>>> dos veces y el test de forma (AC7) falló por desambiguación, no por falta de frontera. La regla se escribió sin imprimir los literales. Qué lo previene: test_la_propuesta_solo_aparece_dentro_de_los_delimitadores exige cuenta 1 de cada marcador — INCLUIR",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -6647,14 +6675,6 @@
       "total_citas": 1,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09"
-      ]
-    },
-    {
-      "id": "L-CST-n",
-      "familia": "L",
-      "total_citas": 1,
-      "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {

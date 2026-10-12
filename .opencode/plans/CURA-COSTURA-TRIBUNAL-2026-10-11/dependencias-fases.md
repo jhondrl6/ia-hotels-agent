@@ -66,6 +66,19 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 | ¿Alinear el warehouse antes del run? | **NO — revocado por la auditoría 2026-10-11** (DEC-A4 del maestro) | El warehouse es fuente inmutable con su sha256 publicado antes y después en `pre-vuelo.md`. El onboarding entra por el YAML derivado con `derivar_onboarding.py` (productor versionado de FASE-H) y su procedencia copiada a `evidence/`. Volver a editar `observations.json` falsifica la procedencia que `tests/test_fase_h_onboarding_procedencia.py` declara inmutable |
 | ¿Cablear el gate `hard_contradictions` en FASE-C? | **NO — es `S-CST-1`, con dueño Operador** (maestro §5) | Requiere tocar `main.py` (`ValidationSummary.conflicts`), `data_structures.Conflict` (campo de severidad) y `publication_gates.py` en una fase propia. Mientras tanto el gate no puede fallar, y su verde no es evidencia de la cura de N8 |
 
+## Estado de fases
+
+| Fase | Estado | Fecha | Notas |
+|------|--------|-------|-------|
+| Preparación / Preparación-2 / 2b | ✅ | 2026-10-11 | Documental, publicado en `359ac57` |
+| **FASE-A** | ✅ **COMPLETADA (sin commit)** | 2026-10-11 | Contrato de cuatro estados en la API checked + utilidad compartida + cache versionada (mutation check AC2 con par rojo/verde) + recibo por extracción + prompt con frontera de dato. Delta R2.3 **+46** (5207→5253 con el grep canónico); quick 13/13 tras regenerar `wiring_report.json`. AC1 se **cierra en FASE-B** con AC15 (DEC-A1 conserva el wrapper). Evidencia en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-A/`. Decisión nueva DEC-A5 (techo `max_tokens` 2000→4000) y tres seguimientos con dueño en `10-analisis` |
+| FASE-B | ⬜ pendiente — **desbloqueada**: consume `extract_checked` y elimina el wrapper | — | Orden interno obligatorio T3→T2→T1→T4 |
+| FASE-C | ⬜ | — | Depende de B (`honesty_reviewer.py`) |
+| FASE-E2E | ⬜ | — | Run único |
+| FASE-VERIFY | ⬜ | — | |
+| FASE-RELEASE-4.81.0 | ⬜ | — | |
+
+
 ## Riesgos y plan de recuperación
 
 - **Credencial de proveedor ausente en FASE-E2E**: la extracción terminaría `FALLIDO` (estado honesto tras FASE-A) y el veredicto perdería la pata LLM. Pre-vuelo T0 verifica presencia de credencial por nombre de variable y lo publica; si falta, la fase se detiene y consulta antes de gastar el run.

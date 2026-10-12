@@ -52,7 +52,7 @@ GEO_ASSETS = ["hotel_schema_rich.json", "faq_schema_rich.json", "boton_whatsapp_
 
 PROPOSAL = "# PROPUESTA\n\nIncluimos el Botón de WhatsApp para su hotel.\n"
 
-PROMISES = [VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro", 0.95)]
+PROMISES = [VerbalPromise("Botón de WhatsApp", "whatsapp", "Intro")]
 
 
 def _ts():

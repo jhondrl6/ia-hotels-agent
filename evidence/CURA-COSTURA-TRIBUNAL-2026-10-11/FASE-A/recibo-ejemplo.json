@@ -1,0 +1,23 @@
+{
+  "generado": "2026-10-12T00:41:47Z",
+  "origen": "llamada",
+  "cache_key": "dee3b5c24c843458f79cb5d729188d5992ad1e19bc6727856659169235566ce3",
+  "digest_texto": "7ce96ff88239d997fa3b14bb703c68e971e6ed19350e68bcf932618177c6240e",
+  "digest_prompt_compuesto": "c8171093d49d6d47a11400543797ed31cc893e1628e2a859bd9d5af39fda53d6",
+  "version_prompt": "v2",
+  "proveedor_configurado": "deepseek",
+  "proveedor_servido": "deepseek",
+  "modelo_pedido": "deepseek-chat",
+  "modelo_firmado": "deepseek-flash",
+  "finish_reason": "stop",
+  "latencia_ms": 0.0,
+  "usage": {
+    "prompt_tokens": 3900,
+    "completion_tokens": 41,
+    "total_tokens": 3941
+  },
+  "digest_respuesta_cruda": "7af8112080f1176b93b3aadfd582289c3eeb351d2138efd7a98f9ccb5fa2f17e",
+  "estado": "OK_CON_PROMESAS",
+  "motivo": null,
+  "num_promesas": 1
+}

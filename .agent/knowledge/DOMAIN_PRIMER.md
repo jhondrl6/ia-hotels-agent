@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-10 | v4.80.0 Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado*
+*Auto-generado: 2026-10-12 | v4.80.0 Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*
