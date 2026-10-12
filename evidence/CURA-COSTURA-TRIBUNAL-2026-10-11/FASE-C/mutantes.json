@@ -1,0 +1,41 @@
+[
+  {
+    "clave": "M1-inversion-precedencia",
+    "ac": "AC11",
+    "archivo": "modules/quality_gates/tribunal/evidence_tier.py",
+    "ataque": "Invierte la precedencia a MANIFEST-primero (la regla vieja de Bot 4).",
+    "seleccion": "tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py",
+    "ancla_ocurrencias": 1,
+    "sha256_archivo_restaurado": "fa37d94ffc1d0a73bf861233f3f3a779134ca319ad55510a5bcbf709b6126cf3",
+    "exit_rojo": 1,
+    "exit_verde": 0,
+    "rojo_es_rojo": true,
+    "verde_es_verde": true
+  },
+  {
+    "clave": "M2-silencio-sobre-presentacion",
+    "ac": "AC11",
+    "archivo": "modules/quality_gates/tribunal/honesty_reviewer.py",
+    "ataque": "Devuelve el check de sobre-presentacion al silencio cuando el tier no esta declarado.",
+    "seleccion": "tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py",
+    "ancla_ocurrencias": 1,
+    "sha256_archivo_restaurado": "fa020c2feca03332dbf7ba21cca70efcda7a0227181262e3af2f5e7e1486b16b",
+    "exit_rojo": 1,
+    "exit_verde": 0,
+    "rojo_es_rojo": true,
+    "verde_es_verde": true
+  },
+  {
+    "clave": "M3-engine-sin-registrar",
+    "ac": "AC13",
+    "archivo": "data_validation/contradiction_engine.py",
+    "ataque": "Traga la excepcion sin registrar el estado: vuelve el verde silencioso.",
+    "seleccion": "tests/test_contradiction_engine_reglas_no_callan_ac13.py",
+    "ancla_ocurrencias": 1,
+    "sha256_archivo_restaurado": "c3287711d9ebcac0f25069958f8e7ceb514b8c685889abb16f1b8a9f29585754",
+    "exit_rojo": 1,
+    "exit_verde": 0,
+    "rojo_es_rojo": true,
+    "verde_es_verde": true
+  }
+]

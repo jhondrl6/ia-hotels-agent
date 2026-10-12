@@ -4,11 +4,11 @@
   "cobertura": {
     "archivos_analysis_escaneados": 20,
     "archivos_contexto_escaneados": 42,
-    "archivos_md_escaneados": 471,
-    "ids_con_definicion": 384,
+    "archivos_md_escaneados": 472,
+    "ids_con_definicion": 385,
     "ids_citados_sin_definicion": 109,
     "fechas_por_fuente": {
-      "nombre": 373,
+      "nombre": 374,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1058,8 +1058,10 @@
       "seccion": "FASE-P1 (2026-09-14) — decisiones DA-P1.1 … DA-P1.10",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 8,
-      "planes_que_lo_citan": [],
+      "total_citas": 10,
+      "planes_que_lo_citan": [
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ],
       "redefiniciones": []
     },
     {
@@ -1862,7 +1864,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1890,7 +1892,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 0,
+      "total_citas": 2,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1905,6 +1907,20 @@
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
       "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-5",
+      "familia": "L",
+      "enunciado": "Un mutante aplicado sobre el símbolo unificado ya no puede reproducir la divergencia que curó, y la rama «las dos fuentes coinciden» no discrimina el orden. Al escribir el par rojo/verde de AC11 se vio que invertir la precedencia dentro de resolve_evidence_tier deja verdes los dos tests de coincidencia: si escenarios y MANIFEST declaran el mismo valor, cualquier orden devuelve ese valor. Lo que sí cae es la etiqueta de la fuente (fuente/descripcion_fuente) y la rama manifest-sola. Y como desde la cura hay un solo símbolo, ningún mutante local puede volver a la situación N6 (dos consumidores con reglas distintas): esa parte la certifican los dos tests cruzados Juez↔Bot 4, no el mutante. Por qué importa: un ✅ de «mutation check hecho» sobre un mutant que ataca una rama indiferente no certifica nada. Qué lo previene: publicar en la nota de fase qué tests cayeron y qué diente no los cubre (aquí, test_el_motor_ya_no_imprime_por_stdout no detecta M3), y afirmar fuente además del valor — INCLUIR — es de superficie del fix (cómo se demuestra una precedencia compartida), no del síntoma",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -2026,7 +2042,7 @@
       "seccion": "FASE-E2E (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -3979,7 +3995,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 111,
+      "total_citas": 112,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
@@ -5317,7 +5333,7 @@
       "seccion": "Deudas definidas por este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 23,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },

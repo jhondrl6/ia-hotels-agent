@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from .artifact_paths import FINANCIAL_SCENARIOS_PATTERN
+from .evidence_tier import resolve_evidence_tier
 from .outcome import (
     ReviewerReport,
     TribunalOutcome,
@@ -37,9 +38,11 @@ STATUS_NOT_EVALUABLE = "NOT_EVALUABLE"
 # sale condicional, así la razón del acta no miente (AC-F4).
 FIRST_FLOOR_TIERS = {"B", "B+", "C"}
 
-# Cláusulas que el Juez puede certificar en T1. P6.2 se excluye porque el plan
-# la difiere a T4-A (requiere LLM). P6.5 se excluye porque D-T1.3 (opción a)
-# la libera para Bot 4 (honestidad NL); el primer piso vive en first_floor_rule.
+# Cláusulas que el Juez puede certificar en T1. P6.2 se excluye por una decisión de
+# contrato diferida con dueño (maestro §5): Bot 2 corre desde T4-A, pero volver
+# certificable la cláusula exige autorización del operador. P6.5 se excluye porque
+# D-T1.3 (opción a) la libera para Bot 4 (honestidad NL); el primer piso vive en
+# first_floor_rule.
 T1_CERTIFIABLE_CLAUSES = ("P6.1", "P6.3", "P6.4", "P6.6")
 
 # Veredictos que impiden emitir el ZIP. Un solo punto de decisión para main.py.
@@ -182,37 +185,27 @@ class TribunalJudge:
         return None
 
     def _read_evidence_tier(self) -> str:
-        """Lee evidence_tier de la fuente pre-packaging (AC-F2).
+        """Lee evidence_tier por la precedencia compartida del tribunal (AC11, AC-F2).
 
         DA-P1.5: la fuente de verdad es ``financial_scenarios_*.json →
         breakdown.evidence_tier``, escrita por main.py ANTES del bloque del Juez
         y disponible en régimen ZIP-only. MANIFEST.json (post-packaging) es solo
-        fallback; si ninguno aporta tier, "C".
+        fallback; si ninguno aporta tier entra el fallback declarado del módulo
+        compartido, que es EL MISMO que consume Bot 4 — la regla vivía antes en dos
+        sitios con orden inverso (N6).
 
         Además publica en ``_evidence_tier_source`` cuál de las tres vías aportó el
         valor, para que el acta describa el mecanismo que realmente se usó.
         """
         scenarios_path = self._resolve_artifact(FINANCIAL_SCENARIOS_PATTERN)
         scenarios = self._load_json(scenarios_path)
-        if scenarios is not None:
-            tier = scenarios.get("breakdown", {}).get("evidence_tier")
-            if tier:
-                self._evidence_tier_source = (
-                    f"{scenarios_path.name} → breakdown.evidence_tier"
-                )
-                return tier
-
-        manifest = self._resolve_manifest()
-        if manifest is not None:
-            tier = manifest.get("quality_metadata", {}).get("evidence_tier")
-            if tier:
-                self._evidence_tier_source = (
-                    "MANIFEST.json → quality_metadata.evidence_tier (fallback)"
-                )
-                return tier
-
-        self._evidence_tier_source = 'sin fuente de tier: fallback declarado "C"'
-        return "C"
+        resolution = resolve_evidence_tier(
+            scenarios,
+            self._resolve_manifest(),
+            scenarios_name=scenarios_path.name if scenarios_path else None,
+        )
+        self._evidence_tier_source = resolution.descripcion_fuente
+        return resolution.tier
 
     def _resolve_artifact(self, pattern: str) -> Optional[Path]:
         """Resuelve artifact timestamped por glob (más reciente)."""
@@ -284,15 +277,23 @@ class TribunalJudge:
             }
 
     def _evaluate_p6_2(self) -> dict:
-        """P6.2: Alineación de promesas NL — requiere Bot 2 (futuro).
+        """P6.2: Alineación de promesas NL — NOT_EVALUABLE por decisión de contrato (AC12).
 
-        En T1, sin el alignment_reviewer implementado, esta cláusula es
-        NOT_EVALUABLE. T4-A la implementará con extracción LLM.
+        El texto anterior decía «no implementado en T1», y era falso desde FASE-T4-A:
+        Bot 2 corre y el propio acta publica su report en ``reviewer_reports``. El acta
+        negaba al revisor que acababa de correr (L-VERIFY.4). La cláusula sigue
+        NOT_EVALUABLE porque NO está en ``T1_CERTIFIABLE_CLAUSES`` — una decisión de
+        contrato diferida con dueño (maestro §5), no una ausencia del revisor. Cambiar
+        esa tupla exige autorización del operador.
         """
         return {
             "status": STATUS_NOT_EVALUABLE,
-            "source_artifact": "revision_alineacion.json (T4-A)",
-            "finding": "Requiere Bot 2 (alignment_reviewer) — no implementado en T1",
+            "source_artifact": "revision_alineacion.json",
+            "finding": (
+                "Bot 2 (alignment_reviewer) está implementado y su report se publica en "
+                "revision_alineacion.json; la cláusula no se certifica en T1 por decisión "
+                "de contrato (fuera de T1_CERTIFIABLE_CLAUSES), no por ausencia del revisor"
+            ),
         }
 
     def _evaluate_p6_3(self) -> dict:

@@ -10,7 +10,8 @@
 | Preparación-2 (auditoría aplicada) | ✅ 2026-10-11 — 6 fallos que rompían la ejecución + 9 de diseño corregidos en los 13 `.md`; sin código ni pytest. El commit no era parte de la tanda de edición: llegó después, el mismo 2026-10-11, en `359ac57` (empujado a `origin/master` tras una L3 con 0 hallazgos) |
 | FASE-A | ✅ 2026-10-11 — contrato de cuatro estados (`extract_checked`), cache versionada sin envenenamiento con mutation check, recibo por extracción y frontera de dato en el prompt. +46 funciones de test (delta R2.3 verificado restando), quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
 | FASE-B | ✅ 2026-10-11 — Bot 2 y Bot 4 consumen `extract_checked` y publican el estado de su insumo; el acta propaga el no-OK a `ReviewerStatus.INPUT_NOT_EVALUABLE` (AC17) con su etiqueta; sobre-presentación sobre texto completo (AC9/N5); patrón de CRITICAL medido y curado (AC10/N7) con tres mutantes en par rojo/verde; wrapper DEC-A1 eliminado (AC15, **cierra AC1**). Delta R2.3 **+27**, quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
-| FASE-C | ⬜ |
+| FASE-C | ✅ 2026-10-12 — `evidence_tier.py` es el símbolo único de precedencia (escenarios → MANIFEST → fallback `"C"` con `declarado=False`) y lo consumen Juez y Bot 4; Bot 4 **deja de silenciarse** bajo tier no declarado y publica `OVER_PRESENTATION_NO_EVALUABLE` (AC11/N6). El acta generada ya no niega a Bot 2 y la decisión de cláusula queda diferida con dueño (AC12). Los cuatro sitios de captura de `contradiction_engine` publican tri-estado en lugar de `print` (AC13/N8); el cableado motor→gate sigue fuera (`S-CST-1`). Delta R2.3 **+29**, quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
+| FASE-C2 | ⬜ — **AC19, fase nueva por decisión del Operador (2026-10-12)**: el CRITICAL verificado de un revisor bloquea el ZIP aunque su insumo sea no-OK (hoy la fila 2 exige `status.is_ok` y el gate se afloja justo cuando el proveedor falla — medido el 2026-10-12). Corre en sesión nueva **antes de FASE-E2E**, sobre el árbol de FASE-C sin commitear |
 | FASE-E2E (run único Don Alfonso) | ⬜ |
 | FASE-VERIFY | ⬜ |
 | FASE-RELEASE-4.81.0 | ⬜ |
@@ -26,6 +27,7 @@ Detalles vivos: `06-checklist-implementacion.md` y `dependencias-fases.md`.
 | `05-prompt-inicio-sesion-fase-A.md` | Contrato 4 estados + cache versionada + recibo (ALTA, directo) |
 | `05-prompt-inicio-sesion-fase-B.md` | Bot 2/Bot 4 + N5 + N7 + wrapper fuera, con **orden interno obligatorio T3→T2→T1→T4** y AC17/AC18 (ALTA, directo) |
 | `05-prompt-inicio-sesion-fase-C.md` | Precedencia tier + P6.2 + N8 en los cuatro sitios del motor (MEDIA-ALTA, directo) |
+| `05-prompt-inicio-sesion-fase-C2.md` | AC19: enforcement del CRITICAL verificado sin exigir `is_ok` + acción correctiva nombrada; **sin subagente** (MEDIA, directo) |
 | `05-prompt-inicio-sesion-fase-E2E.md` | Run único v4complete Don Alfonso vía subagente, con onboarding por YAML derivado (MEDIA, delegate_task) |
 | `05-prompt-inicio-sesion-fase-VERIFY.md` | Certificación AC1..18 contra output E2E (MEDIA, directo) |
 | `05-prompt-inicio-sesion-fase-RELEASE.md` | Release 4.81.0 + write-back + archivado (BAJA, delegable) |

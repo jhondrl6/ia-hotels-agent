@@ -162,7 +162,7 @@
   "modules/quality_gates/__init__.py": "FASE-0E-DELIVERY-QUALITY",
   "modules/asset_generation/preflight_checks.py": "FASE-2",
   ".opencode/plans/FASE-0-DELIVERY-QUALITY/06-checklist-implementacion.md": "FASE-0H-G8",
-  ".agent/knowledge/DOMAIN_PRIMER.md": "FASE-A",
+  ".agent/knowledge/DOMAIN_PRIMER.md": "FASE-C",
   "scripts/verify_ga4.py": "FASE-B",
   "scripts/validate_structure.py": "FASE-B",
   "modules/quality_gates/delivery_quality_report.py": "FASE-SR-B",
@@ -269,7 +269,7 @@
   "modules/quality_gates/tribunal/acta_writer.py": "FASE-B",
   "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py": "FASE-P3-B",
   "tests/test_asset_path_clave_canonica.py": "FASE-P3-B",
-  "modules/quality_gates/tribunal/judge.py": "FASE-P2",
+  "modules/quality_gates/tribunal/judge.py": "FASE-C",
   "modules/quality_gates/tribunal/asset_reviewer.py": "FASE-P2",
   "modules/quality_gates/tribunal/__init__.py": "FASE-P2",
   "tests/quality_gates/tribunal/test_judge.py": "FASE-P2",
@@ -306,7 +306,7 @@
   "14": "FASE-ENMIENDA",
   "16": "FASE-A2",
   ".opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md": "CURA-B2-1-SESION-2",
-  ".opencode/wiring_report.json": "FASE-A",
+  ".opencode/wiring_report.json": "FASE-C",
   ".opencode/LECCIONES-INDEX.md": "FASE-1",
   ".opencode/lecciones_index.json": "FASE-1",
   ".opencode/qmind-writeback/registro.json": "CURA-B2-1-SESION-2",
@@ -335,5 +335,7 @@
   ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/README.md": "FASE-A",
   ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md": "FASE-A",
   "modules/quality_gates/tribunal/alignment_reviewer.py": "FASE-B",
-  "modules/quality_gates/tribunal/honesty_reviewer.py": "FASE-B"
+  "modules/quality_gates/tribunal/honesty_reviewer.py": "FASE-C",
+  "data_validation/contradiction_engine.py": "FASE-C",
+  "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/": "FASE-C"
 }

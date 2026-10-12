@@ -39,6 +39,11 @@ from modules.quality_gates.tribunal.artifact_paths import (
     read_text,
     resolve_latest,
 )
+from modules.quality_gates.tribunal.evidence_tier import (
+    TIER_FALLBACK,
+    EvidenceTierResolution,
+    resolve_evidence_tier,
+)
 from modules.quality_gates.tribunal.llm_extractor import (
     PromiseExtractor,
     VerbalPromise,
@@ -47,6 +52,7 @@ from modules.quality_gates.tribunal.outcome import bloque_extraccion
 
 
 FINDING_OVER_PRESENTATION = "OVER_PRESENTATION"
+FINDING_OVER_PRESENTATION_NO_EVALUABLE = "OVER_PRESENTATION_NO_EVALUABLE"
 FINDING_TIER_MISMATCH = "TIER_MISMATCH"
 FINDING_CG_WARNING_UNDISCLOSED = "CG_WARNING_UNDISCLOSED"
 FINDING_MISSING_SCENARIO = "MISSING_SCENARIO"
@@ -195,6 +201,7 @@ class HonestyReviewer:
         )
         self._proposal_read = None
         self._manifest_read = None
+        self._tier_resolution: Optional[EvidenceTierResolution] = None
 
     def _resolve_deliveries_dir(self) -> Path:
         """Resuelve deliveries_dir como v4_audit_dir/../deliveries."""
@@ -234,7 +241,12 @@ class HonestyReviewer:
 
         findings = []
 
-        evidence_tier = self._extract_evidence_tier(manifest, financial_scenarios)
+        self._tier_resolution = resolve_evidence_tier(
+            financial_scenarios,
+            manifest,
+            scenarios_name=paths["scenarios"].name if paths["scenarios"] else None,
+        )
+        evidence_tier = self._tier_resolution.tier
         precision_tier = self._extract_precision_tier(manifest, financial_scenarios)
 
         outcome = extractor.extract_checked(proposal_text)
@@ -242,7 +254,7 @@ class HonestyReviewer:
 
         # N5/AC9: la sobre-presentacion se mide sobre el texto completo y no depende
         # de la extraccion, así que un no-OK del LLM ya no silencia este hallazgo.
-        findings.extend(self._scan_sobre_presentacion(proposal_text, evidence_tier))
+        findings.extend(self._scan_sobre_presentacion(proposal_text, self._tier_resolution))
 
         for claim in claims:
             tier_mismatch = self._check_tier_mismatch(claim, evidence_tier, precision_tier)
@@ -273,6 +285,7 @@ class HonestyReviewer:
             "summary": summary,
             "verdict_recommendation": verdict,
             "extraccion": bloque_extraccion(outcome),
+            "tier_resuelto": self._tier_block(),
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
             "review_inputs": self._inputs.reads_report(),
@@ -376,17 +389,20 @@ class HonestyReviewer:
         """Gates crudos de ambos archivos, en orden canónico → diagnóstico."""
         return list((canonical or {}).get("results", [])) + list((diagnostic or {}).get("results", []))
 
-    def _extract_evidence_tier(self, manifest: Optional[dict], financial_scenarios: Optional[dict]) -> str:
-        """Extrae evidence_tier del MANIFEST o financial_scenarios."""
-        if manifest and "quality_metadata" in manifest:
-            tier = manifest["quality_metadata"].get("evidence_tier")
-            if tier:
-                return tier
-        if financial_scenarios and "breakdown" in financial_scenarios:
-            tier = financial_scenarios["breakdown"].get("evidence_tier")
-            if tier:
-                return tier
-        return "UNKNOWN"
+    def _tier_block(self) -> dict:
+        """Proyeccion de la resolucion del tier: que valor se use y si un artefacto lo declaro.
+
+        Sin el flag ``declarado``, un ``C`` de fallback en el report se lee igual que un
+        ``C`` afirmado por el run. La clave del acta no existe aun para esto, así que el
+        estado se publica aqui y en el hallazgo no-evaluable.
+        """
+        resolution = self._tier_resolution or resolve_evidence_tier(None, None)
+        return {
+            "evidence_tier": resolution.tier,
+            "fuente": resolution.fuente,
+            "declarado": resolution.declarado,
+            "motivo_fuente": resolution.descripcion_fuente,
+        }
 
     def _extract_precision_tier(self, manifest: Optional[dict], financial_scenarios: Optional[dict]) -> str:
         """Extrae precision_tier del MANIFEST o financial_scenarios."""
@@ -400,16 +416,21 @@ class HonestyReviewer:
                 return tier
         return "UNKNOWN"
 
-    def _scan_sobre_presentacion(self, proposal_text: str, evidence_tier: str) -> list[dict]:
+    def _scan_sobre_presentacion(self, proposal_text: str,
+                                 resolution: EvidenceTierResolution) -> list[dict]:
         """OVER_PRESENTATION por lenguaje de verificacion en el TEXTO COMPLETO (AC9/N5).
 
         Antes el regex corria solo sobre las citas que el LLM eligio: una promesa
         sobre-presentada que el extractor omitia quedaba sin revisar, y con una
         extraccion no-OK la lista vacia silenciaba el check entero. El texto completo
         no depende del LLM, así que el hallazgo sigue emitiéndose aunque la extraccion
-        falle. Con tier A o UNKNOWN no se emite (la precedencia del tier es AC11).
+        falle. Con tier A declarado no se emite; con un tier que ningun artefacto declaro
+        se publica el estado no-evaluable en vez de callarse (AC11, cura N6).
         """
-        if evidence_tier in ["A", "UNKNOWN"]:
+        evidence_tier = resolution.tier
+        if not resolution.declarado:
+            return [self._finding_sobre_presentacion_no_evaluable(resolution)]
+        if evidence_tier == "A":
             return []
 
         findings = []
@@ -430,6 +451,32 @@ class HonestyReviewer:
                 ),
             })
         return findings
+
+    def _finding_sobre_presentacion_no_evaluable(self, resolution: EvidenceTierResolution) -> dict:
+        """Estado visible cuando el check no pudo juzgarse por falta de tier declarado.
+
+        Es WARNING y no CRITICAL a proposito: emitir un CRITICAL fundado en un tier que
+        ningun artefacto afirmó sería una falso positivo con diente (suprime el ZIP). El
+        hallazgo existe para que el verde deje de ser silencio, no para castigar la
+        ausencia de dato.
+        """
+        return {
+            "finding_type": FINDING_OVER_PRESENTATION_NO_EVALUABLE,
+            "clause": "P6.5",
+            "severity": "WARNING",
+            "verification_group": None,
+            "claim_text": None,
+            "matched_line": None,
+            "evidence_tier_declared": resolution.tier,
+            "evidence_tier_declarado": resolution.declarado,
+            "cg_reference": None,
+            "source_artifact": ARTIFACTO_PROPUESTA,
+            "description": (
+                f"El check de sobre-presentacion no es evaluable: ningun artefacto del run declaro "
+                f"evidence_tier (rige el fallback \"{resolution.tier}\" por {resolution.descripcion_fuente}). "
+                "Se publica el estado no-evaluable en lugar de devolver la lista vacia."
+            ),
+        }
 
     def _check_tier_mismatch(self, claim: VerbalPromise, evidence_tier: str, precision_tier: str) -> Optional[dict]:
         """Detecta TIER_MISMATCH: claim con tier declarado ≠ tier real.
@@ -539,11 +586,15 @@ class HonestyReviewer:
     def _compute_summary(self, findings: list) -> dict:
         """Calcula resumen de hallazgos."""
         over_presentations = sum(1 for f in findings if f.get("finding_type") == FINDING_OVER_PRESENTATION)
+        over_presentaciones_no_evaluables = sum(
+            1 for f in findings if f.get("finding_type") == FINDING_OVER_PRESENTATION_NO_EVALUABLE
+        )
         tier_mismatches = sum(1 for f in findings if f.get("finding_type") == FINDING_TIER_MISMATCH)
         undisclosed_warnings = sum(1 for f in findings if f.get("finding_type") == FINDING_CG_WARNING_UNDISCLOSED)
         missing_scenarios = sum(1 for f in findings if f.get("finding_type") == FINDING_MISSING_SCENARIO)
         return {
             "over_presentations": over_presentations,
+            "over_presentaciones_no_evaluables": over_presentaciones_no_evaluables,
             "tier_mismatches": tier_mismatches,
             "undisclosed_warnings": undisclosed_warnings,
             "missing_scenarios": missing_scenarios,
@@ -574,7 +625,8 @@ class HonestyReviewer:
                 "clause": "P6.5",
                 "severity": "CRITICAL",
                 "claim_text": None,
-                "evidence_tier_declared": "UNKNOWN",
+                "evidence_tier_declared": TIER_FALLBACK,
+                "evidence_tier_declarado": False,
                 "cg_reference": None,
                 "source_artifact": "N/A",
                 "description": message,
@@ -596,6 +648,7 @@ class HonestyReviewer:
                 "total_findings": 1,
             },
             "verdict_recommendation": VERDICT_BLOQUEAR,
+            "tier_resuelto": self._tier_block(),
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
             "review_inputs": self._inputs.reads_report(),

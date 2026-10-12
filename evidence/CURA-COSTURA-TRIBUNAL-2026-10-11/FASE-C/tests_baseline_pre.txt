@@ -1,0 +1,4 @@
+COMANDO: grep -rE "^\s*def test_" tests --include=*.py | wc -l
+MEDIDO: 2026-10-12, antes de escribir codigo de FASE-C (arbol 4df81d3 limpio, 0 rutas sucias)
+RESULTADO: 5280
+NOTA: 5280 es el post de FASE-B (bf5ab2e); la linea base de esta fase no se movio antes de implementar.

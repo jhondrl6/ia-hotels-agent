@@ -1,0 +1,7 @@
+COMANDO: grep -rE "^\s*def test_" tests --include=*.py | wc -l
+RESULTADO: 5309
+DELTA: 5309 - 5280 = 29 == tests_nuevos (12 AC11 + 4 AC12 + 13 AC13)
+ARCHIVOS NUEVOS:
+ tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py 12
+ tests/quality_gates/tribunal/test_acta_p6_2_no_niega_al_revisor_ac12.py 4
+ tests/test_contradiction_engine_reglas_no_callan_ac13.py 13

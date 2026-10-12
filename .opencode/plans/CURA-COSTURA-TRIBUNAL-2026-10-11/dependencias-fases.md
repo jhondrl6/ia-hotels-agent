@@ -16,6 +16,9 @@ Preparacion (esta sesion)
     FASE-C  ── Juez/acta honesta + N8
         │         (judge.py, data_validation/contradiction_engine.py, honesty_reviewer.py*)
         ▼
+    FASE-C2 ── AC19: el CRITICAL verificado bloquea aunque el insumo sea no-OK
+        │         (outcome.py: verified_critical/verified_block + derive_corrective_actions; judge.py solo docstring)
+        ▼
     FASE-E2E ── run UNICO v4complete Don Alfonso + evidencia + verificacion + docs
         │         (sin codigo; YAML de onboarding derivado bajo output/, warehouse intacto)
         ▼
@@ -48,7 +51,7 @@ Preparacion (esta sesion)
 | Docs del plan (`00/01/06/09/10`, `dependencias-fases.md`) | todas | todas | todas | todas | todas | todas |
 | `VERSION.yaml`, `CHANGELOG.md`, `GUIA_TECNICA.md`, `docs/` | — | — | — | — | — | **EDITA** |
 
-No hay dos fases que editen el mismo archivo de producción en paralelo (una fase = una sesión, secuenciales por R1). El único doble-toque es `honesty_reviewer.py` (B→C) y está resuelto por orden.
+No hay dos fases que editen el mismo archivo de producción en paralelo (una fase = una sesión, secuenciales por R1). Los toques repetidos están resueltos por orden: `honesty_reviewer.py` (B→C) y —desde la decisión del Operador del 2026-10-12— `outcome.py` y `judge.py` (C→C2; en C2 el toque de `judge.py` es solo el docstring de la matriz, el predicado vive en `outcome.py`).
 
 **Orden interno de FASE-B: T3 → T2 → T1 → T4** (la numeración de tareas y las ACs no cambian). Razón medida: encender el texto completo de la propuesta en Bot 4 (T2) antes de ajustar el patrón de CRITICAL (T3) mete ≥1 hallazgo espurio sobre la propuesta real del 2026-10-07 — de sus 5 coincidencias del grupo de cuantificadores, 3 son totales financieros o de tabla — y `verified_critical` **suprime el ZIP** en la corrida única de FASE-E2E, que no se puede repetir.
 
@@ -73,7 +76,8 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 | Preparación / Preparación-2 / 2b | ✅ | 2026-10-11 | Documental, publicado en `359ac57` |
 | **FASE-A** | ✅ **COMPLETADA (sin commit)** | 2026-10-11 | Contrato de cuatro estados en la API checked + utilidad compartida + cache versionada (mutation check AC2 con par rojo/verde) + recibo por extracción + prompt con frontera de dato. Delta R2.3 **+46** (5207→5253 con el grep canónico); quick 13/13 tras regenerar `wiring_report.json`. AC1 se **cierra en FASE-B** con AC15 (DEC-A1 conserva el wrapper). Evidencia en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-A/`. Decisión nueva DEC-A5 (techo `max_tokens` 2000→4000) y tres seguimientos con dueño en `10-analisis` |
 | FASE-B | ✅ **COMPLETADA (sin commit)** | 2026-10-11 | Orden interno ejecutado **T3→T2→T1→T4**. AC8/9/10/15/17/18 legibles en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-B/` y **AC1 cerrado con AC15** (el wrapper `extract_verbal_promises` ya no existe: `grep -rn` = 0 ocurrencias en `modules/`). Delta R2.3 **+27** (5253→5280, verificado restando); suite del tribunal 277 passed / 9 skipped / 0 failed; quick 13/13 tras republishar `wiring_report.json` (718→719 por el archivo nuevo). Tres mutantes con par rojo/verde (M1 guard de contexto, M2 frontera del `%`, M3 estado del acta). La medición de AC10 deja **10 coincidencias matcheadas vs 2 emitidas** sobre la propuesta del run de referencia. `outcome.py` y `acta_writer.py` editados como obliga DEC-A2. Presupuesto EXCEDIDO: ~80 tool calls contra ~55 (≈45 %; unidad auto-reportada, sin instrumento que la mida) |
-| FASE-C | ⬜ | — | Depende de B (`honesty_reviewer.py`) — **desbloqueada** |
+| FASE-C | ✅ **COMPLETADA (sin commit)** | 2026-10-12 | AC11/12/13 legibles en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/`. Nace `modules/quality_gates/tribunal/evidence_tier.py` (precedencia escenarios→MANIFEST, fallback `"C"` con `declarado=False`) y lo consumen Juez y Bot 4; `OVER_PRESENTATION_NO_EVALUABLE` sustituye el silencio bajo tier no declarado; el acta generada ya no niega a Bot 2; los cuatro sitios de captura del motor publican tri-estado. Delta R2.3 **+29** (5280→5309, cero re-anclajes); tribunal+data_validation 460 passed / 9 skipped; selección del motor 55 passed; quick 13/13 (wiring 719→723). Tres mutantes en par rojo/verde, con la declaración de que `M1` **no** lo discrimina la rama de coincidencia. Presupuesto EXCEDIDO: ~52 contra ~45. **Dos escalados al Operador**: la cura de «`INPUT_NOT_EVALUABLE` no suprime el ZIP» (sin AC que la cubra, decisión previa a FASE-E2E) y `_extract_precision_tier`, que conserva su regla local fuera de AC11 |
+| FASE-C2 | ⬜ | — | **AC19, fase nueva por decisión del Operador (2026-10-12)**: el CRITICAL verificado bloquea aunque el insumo sea no-OK. Corre en sesión propia **antes de FASE-E2E** (`05-prompt-inicio-sesion-fase-C2.md`); abre sobre el árbol de FASE-C sin commitear (18 rutas) |
 | FASE-E2E | ⬜ | — | Run único |
 | FASE-VERIFY | ⬜ | — | |
 | FASE-RELEASE-4.81.0 | ⬜ | — | |

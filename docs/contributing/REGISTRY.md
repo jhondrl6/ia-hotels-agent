@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-11
+> **Ultima actualizacion:** 2026-10-12
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 524
+> **Total fases completadas:** 525
 
 ---
 
@@ -12319,6 +12319,35 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 27 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-C - 2026-10-12
+**Descripcion:** Precedencia unica de evidence_tier; texto P6.2 verdadero; reglas HARD y SOFT sin fallo silencioso
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/quality_gates/tribunal/evidence_tier.py` | NUEVO | Evidence Tier |
+| `tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py` | NUEVO | Test Evidence Tier Precedencia Unica Ac11 |
+| `tests/quality_gates/tribunal/test_acta_p6_2_no_niega_al_revisor_ac12.py` | NUEVO | Test Acta P6 2 No Niega Al Revisor Ac12 |
+| `tests/test_contradiction_engine_reglas_no_callan_ac13.py` | NUEVO | Test Contradiction Engine Reglas No Callan Ac13 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/judge.py` | Judge |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | Honesty Reviewer |
+| `data_validation/contradiction_engine.py` | Contradiction Engine |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/` | Fase-C |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 29 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

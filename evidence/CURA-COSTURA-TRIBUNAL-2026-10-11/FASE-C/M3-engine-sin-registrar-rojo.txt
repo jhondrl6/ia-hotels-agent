@@ -1,0 +1,209 @@
+..FFFF.FFFFF.                                                            [100%]
+================================== FAILURES ===================================
+___________ test_detect_conflicts_bloque_hard_no_traga_la_excepcion ___________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x0000028038552FD0>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000028038565D30>
+
+    def test_detect_conflicts_bloque_hard_no_traga_la_excepcion(engine, capsys):
+        motor_con(engine, "HARD", [regla_que_revienta])
+    
+        engine.detect_conflicts([])
+    
+        estado = engine.estado_reglas([])
+>       assert estado["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:109: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_conflicts/HARD: RuntimeError: el lector se cayó
+___________ test_detect_conflicts_bloque_soft_no_traga_la_excepcion ___________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x0000028038604E90>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000028038552990>
+
+    def test_detect_conflicts_bloque_soft_no_traga_la_excepcion(engine, capsys):
+        motor_con(engine, "SOFT", [regla_que_revienta])
+    
+        engine.detect_conflicts([])
+    
+        estado = engine.estado_reglas([])
+>       assert estado["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:121: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla SOFT falló en detect_conflicts/SOFT: RuntimeError: el lector se cayó
+____________ test_detect_hard_conflicts_deja_de_devolver_ese_verde ____________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280386049D0>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000028038553110>
+
+    def test_detect_hard_conflicts_deja_de_devolver_ese_verde(engine, capsys):
+        motor_con(engine, "HARD", [regla_que_revienta])
+    
+        conflictos = engine.detect_hard_conflicts([])
+    
+        estado = engine.estado_reglas(conflictos)
+        assert conflictos == []
+>       assert estado["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:134: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_hard_conflicts: RuntimeError: el lector se cayó
+____________ test_detect_soft_conflicts_deja_de_devolver_ese_verde ____________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280385BA570>
+capsys = <_pytest.capture.CaptureFixture object at 0x0000028038604E90>
+
+    def test_detect_soft_conflicts_deja_de_devolver_ese_verde(engine, capsys):
+        motor_con(engine, "SOFT", [regla_que_revienta])
+    
+        conflictos = engine.detect_soft_conflicts([])
+    
+        estado = engine.estado_reglas(conflictos)
+        assert conflictos == []
+>       assert estado["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:146: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla SOFT falló en detect_soft_conflicts: RuntimeError: el lector se cayó
+________________ test_la_falla_nombra_regla_excepcion_y_causa _________________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280385D3570>
+
+    def test_la_falla_nombra_regla_excepcion_y_causa(engine):
+        motor_con(engine, "HARD", [regla_que_revienta])
+    
+        engine.detect_hard_conflicts(claims_whatsapp_contradictorio())
+    
+>       falla = engine.estado_reglas([])["fallas"][0]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:171: IndexError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_hard_conflicts: RuntimeError: el lector se cayó
+______ test_lector_fallido_manda_sobre_los_hallazgos_de_las_reglas_sanas ______
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280385D3240>
+
+    def test_lector_fallido_manda_sobre_los_hallazgos_de_las_reglas_sanas(engine):
+        """Con conflictos legítimos Y una regla rota el estado es LECTOR_FALLIDO, no CON_HALLAZGOS."""
+        motor_con(engine, "HARD", [regla_que_revienta])
+    
+        conflictos = engine.detect_hard_conflicts(claims_whatsapp_contradictorio())
+    
+        assert len(conflictos) > 0
+>       assert engine.estado_reglas(conflictos)["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'CON_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + CON_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:185: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_hard_conflicts: RuntimeError: el lector se cayó
+____ test_has_hard_conflicts_sin_la_regla_que_revento_no_es_un_falso_verde ____
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280386A0250>
+
+    def test_has_hard_conflicts_sin_la_regla_que_revento_no_es_un_falso_verde(engine):
+        """El predicado del gate sigue siendo False; lo que cambia es que el estado lo desmiente."""
+        motor_con(engine, "HARD", [regla_que_revienta])
+    
+        assert engine.has_hard_conflicts([]) is False
+        estado = engine.estado_reglas([])
+>       assert estado["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:194: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_hard_conflicts: RuntimeError: el lector se cayó
+__________ test_el_report_publica_el_estado_junto_al_conteo_de_hard ___________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280386A0550>
+
+    def test_el_report_publica_el_estado_junto_al_conteo_de_hard(engine):
+        """Un `hard_conflicts: []` del JSON ya no se lee solo: viaja con su estado de lectura."""
+        motor_con(engine, "SOFT", [regla_que_revienta])
+        conflictos = engine.detect_conflicts(claims_whatsapp_contradictorio())
+    
+        report = json.loads(json.dumps(engine.generate_conflict_report(conflictos), default=str))
+    
+>       assert report["estado_reglas"]["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'CON_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + CON_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:205: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla SOFT falló en detect_conflicts/SOFT: RuntimeError: el lector se cayó
+__________________ test_el_estado_se_reinicia_entre_corridas __________________
+
+engine = <data_validation.contradiction_engine.ContradictionEngine object at 0x00000280385B14F0>
+
+    def test_el_estado_se_reinicia_entre_corridas(engine):
+        """La falla de la corrida anterior no acusa la siguiente: el estado es por corrida."""
+        motor_con(engine, "HARD", [regla_que_revienta])
+        engine.detect_hard_conflicts([])
+>       assert engine.estado_reglas([])["estado"] == ESTADO_LECTOR_FALLIDO
+E       AssertionError: assert 'SIN_HALLAZGOS' == 'LECTOR_FALLIDO'
+E         
+E         - LECTOR_FALLIDO
+E         + SIN_HALLAZGOS
+
+tests\test_contradiction_engine_reglas_no_callan_ac13.py:214: AssertionError
+------------------------------ Captured log call ------------------------------
+ERROR    data_validation.contradiction_engine:contradiction_engine.py:493 Regla HARD falló en detect_hard_conflicts: RuntimeError: el lector se cayó
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_detect_conflicts_bloque_hard_no_traga_la_excepcion
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_detect_conflicts_bloque_soft_no_traga_la_excepcion
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_detect_hard_conflicts_deja_de_devolver_ese_verde
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_detect_soft_conflicts_deja_de_devolver_ese_verde
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_la_falla_nombra_regla_excepcion_y_causa
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_lector_fallido_manda_sobre_los_hallazgos_de_las_reglas_sanas
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_has_hard_conflicts_sin_la_regla_que_revento_no_es_un_falso_verde
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_el_report_publica_el_estado_junto_al_conteo_de_hard
+FAILED tests/test_contradiction_engine_reglas_no_callan_ac13.py::test_el_estado_se_reinicia_entre_corridas
+9 failed, 4 passed, 8 warnings in 0.34s

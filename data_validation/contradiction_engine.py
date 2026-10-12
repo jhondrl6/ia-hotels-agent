@@ -11,11 +11,52 @@ Uso:
         report = engine.generate_conflict_report(conflicts)
 """
 
+import logging
 import re
 import uuid
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional, Set
+
+
+logger = logging.getLogger(__name__)
+
+# Tri-estado de la corrida de reglas (R2.9, AC13 / cura N8). El estado existe porque
+# antes una excepcion dentro de una regla se descargaba con un `print` y el conteo de
+# conflictos seguia en cero: `hard_contradictions` quedaba verde sin haber evaluado nada.
+# LECTOR_FALLIDO manda sobre los otros dos: tener hallazgos y un lector roto es un
+# lector roto, no una corrida sana.
+ESTADO_SIN_HALLAZGOS = "SIN_HALLAZGOS"
+ESTADO_CON_HALLAZGOS = "CON_HALLAZGOS"
+ESTADO_LECTOR_FALLIDO = "LECTOR_FALLIDO"
+
+# Los cuatro sitios de captura del motor. Viven como constantes porque un test tiene que
+# poder nombrar el suyo: sin identificador, «fallos registrados: 1» no dice cual rama
+# estuvo a punto de tragar.
+SITIO_DETECT_CONFLICTS_HARD = "detect_conflicts/HARD"
+SITIO_DETECT_CONFLICTS_SOFT = "detect_conflicts/SOFT"
+SITIO_DETECT_HARD_CONFLICTS = "detect_hard_conflicts"
+SITIO_DETECT_SOFT_CONFLICTS = "detect_soft_conflicts"
+
+
+@dataclass
+class RuleFailure:
+    """Una regla que revienta, con el sitio de captura que la tragaba."""
+
+    sitio: str
+    grupo: str
+    regla: str
+    excepcion: str
+    causa: str
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "sitio": self.sitio,
+            "grupo": self.grupo,
+            "regla": self.regla,
+            "excepcion": self.excepcion,
+            "causa": self.causa,
+        }
 
 
 class ConflictType(Enum):
@@ -105,6 +146,8 @@ class ContradictionEngine:
         """Inicializa el motor y registra las reglas."""
         self._register_hard_rules()
         self._register_soft_rules()
+        self._rule_failures: List[RuleFailure] = []
+        self._reglas_ejecutadas = 0
 
     def _register_hard_rules(self):
         """Registra todas las reglas HARD."""
@@ -426,6 +469,55 @@ class ContradictionEngine:
 
         return conflicts
 
+    def _ejecutar_regla(
+        self, sitio: str, grupo: str, rule: Callable[[List[Claim]], List[Conflict]], claims: List[Claim]
+    ) -> Optional[List[Conflict]]:
+        """Corre una regla y REGISTRA el fallo en vez de tragárselo con un `print` (AC13).
+
+        Sigue sin lanzar: el contrato publico del motor devuelve listas y los consumers
+        del pipeline no están cableados al gate (deuda S-CST-1). Lo que cambia es que la
+        corrida deja constancia legible de que una rama no evaluó.
+        """
+        self._reglas_ejecutadas += 1
+        try:
+            return rule(claims)
+        except Exception as exc:
+            failure = RuleFailure(
+                sitio=sitio,
+                grupo=grupo,
+                regla=getattr(rule, "__name__", repr(rule)),
+                excepcion=type(exc).__name__,
+                causa=str(exc),
+            )
+            self._rule_failures.append(failure)
+            logger.error(
+                "Regla %s falló en %s: %s: %s", grupo, sitio, failure.excepcion, failure.causa
+            )
+            return None
+
+    def _iniciar_corrida(self) -> None:
+        """Cada método público de detección arranca su propio estado de lectura."""
+        self._rule_failures = []
+        self._reglas_ejecutadas = 0
+
+    def estado_reglas(self, conflictos: Optional[List[Conflict]] = None) -> Dict[str, Any]:
+        """Tri-estado de la última corrida: sin hallazgos / con hallazgos / lector fallido.
+
+        Es el sustituto del `print`: quien quiera saber si el motor evaluó de verdad mira
+        este estado, no el largo de la lista. Un LECTOR_FALLIDO con `conflictos == 0` es
+        exactamente el verde silencioso que esta AC cura, así que se publica aparte.
+        """
+        estado = ESTADO_LECTOR_FALLIDO if self._rule_failures else (
+            ESTADO_CON_HALLAZGOS if conflictos else ESTADO_SIN_HALLAZGOS
+        )
+        return {
+            "estado": estado,
+            "reglas_ejecutadas": self._reglas_ejecutadas,
+            "reglas_fallidas": len(self._rule_failures),
+            "sitios_con_fallo": sorted({f.sitio for f in self._rule_failures}),
+            "fallas": [f.to_dict() for f in self._rule_failures],
+        }
+
     def detect_conflicts(self, claims: List[Claim]) -> List[Conflict]:
         """
         Detecta todos los conflictos (HARD y SOFT) en los claims.
@@ -436,24 +528,20 @@ class ContradictionEngine:
         Returns:
             Lista de todos los conflictos detectados
         """
+        self._iniciar_corrida()
         all_conflicts: List[Conflict] = []
 
         # Ejecutar reglas HARD
         for rule in self.HARD_CONFLICT_RULES:
-            try:
-                conflicts = rule(claims)
-                all_conflicts.extend(conflicts)
-            except Exception as e:
-                # Log error pero no fallar completamente
-                print(f"Error en regla HARD {rule.__name__}: {e}")
+            produced = self._ejecutar_regla(SITIO_DETECT_CONFLICTS_HARD, "HARD", rule, claims)
+            if produced is not None:
+                all_conflicts.extend(produced)
 
         # Ejecutar reglas SOFT
         for rule in self.SOFT_CONFLICT_RULES:
-            try:
-                conflicts = rule(claims)
-                all_conflicts.extend(conflicts)
-            except Exception as e:
-                print(f"Error en regla SOFT {rule.__name__}: {e}")
+            produced = self._ejecutar_regla(SITIO_DETECT_CONFLICTS_SOFT, "SOFT", rule, claims)
+            if produced is not None:
+                all_conflicts.extend(produced)
 
         return all_conflicts
 
@@ -467,13 +555,13 @@ class ContradictionEngine:
         Returns:
             Lista de conflictos HARD
         """
+        self._iniciar_corrida()
         conflicts: List[Conflict] = []
 
         for rule in self.HARD_CONFLICT_RULES:
-            try:
-                conflicts.extend(rule(claims))
-            except Exception as e:
-                print(f"Error en regla HARD {rule.__name__}: {e}")
+            produced = self._ejecutar_regla(SITIO_DETECT_HARD_CONFLICTS, "HARD", rule, claims)
+            if produced is not None:
+                conflicts.extend(produced)
 
         return conflicts
 
@@ -487,13 +575,13 @@ class ContradictionEngine:
         Returns:
             Lista de conflictos SOFT
         """
+        self._iniciar_corrida()
         conflicts: List[Conflict] = []
 
         for rule in self.SOFT_CONFLICT_RULES:
-            try:
-                conflicts.extend(rule(claims))
-            except Exception as e:
-                print(f"Error en regla SOFT {rule.__name__}: {e}")
+            produced = self._ejecutar_regla(SITIO_DETECT_SOFT_CONFLICTS, "SOFT", rule, claims)
+            if produced is not None:
+                conflicts.extend(produced)
 
         return conflicts
 
@@ -575,6 +663,9 @@ class ContradictionEngine:
                 "fields_affected": list(conflicts_by_field.keys()),
                 "can_export": len(hard_conflicts) == 0,
             },
+            # El estado viaja con el reporte: un `hard_conflicts: []` bajo LECTOR_FALLIDO
+            # no es un "sin contradicciones", y quien lea el JSON debe poder verlo.
+            "estado_reglas": self.estado_reglas(conflicts),
             "hard_conflicts": [c.to_dict() for c in hard_conflicts],
             "soft_conflicts": [c.to_dict() for c in soft_conflicts],
             "conflicts_by_field": conflicts_by_field,

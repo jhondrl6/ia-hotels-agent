@@ -1,0 +1,67 @@
+.F......F...                                                             [100%]
+================================== FAILURES ===================================
+___________ test_falta_la_fuente_de_escenarios_y_aporta_el_manifest ___________
+
+    def test_falta_la_fuente_de_escenarios_y_aporta_el_manifest():
+        """Falta una fuente: sin `breakdown`, el MANIFEST declara el tier y se nombra a sí mismo."""
+        resolucion = resolve_evidence_tier(
+            {"scenarios": dict(PROYECTOS)}, {"quality_metadata": {"evidence_tier": "C"}}
+        )
+    
+>       assert (resolucion.tier, resolucion.fuente, resolucion.declarado) == (
+            "C",
+            FUENTE_MANIFEST,
+            True,
+        )
+E       AssertionError: assert ('C', 'escenarios', True) == ('C', 'manifest', True)
+E         
+E         At index 1 diff: 'escenarios' != 'manifest'
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_evidence_tier_precedencia_unica_ac11.py:121: AssertionError
+____________ test_el_manifest_puede_declarar_solo_y_ambos_lo_leen _____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1826/test_el_manifest_puede_declara0')
+
+    def test_el_manifest_puede_declarar_solo_y_ambos_lo_leen(tmp_path):
+        """Rama del MANIFEST (fallback del Juez, segunda de la precedencia): la regla sigue siendo una."""
+        v4_audit, deliveries = construir_run(tmp_path, tier_manifest="B+")
+    
+        acta = enjuiciar(v4_audit, deliveries)
+        report = revisar(v4_audit, deliveries)
+    
+        assert acta["evidence_tier"] == "B+"
+        assert report["tier_resuelto"]["evidence_tier"] == "B+"
+>       assert report["tier_resuelto"]["fuente"] == FUENTE_MANIFEST
+E       AssertionError: assert 'escenarios' == 'manifest'
+E         
+E         - manifest
+E         + escenarios
+
+tests\quality_gates\tribunal\test_evidence_tier_precedencia_unica_ac11.py:209: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py::test_falta_la_fuente_de_escenarios_y_aporta_el_manifest
+FAILED tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py::test_el_manifest_puede_declarar_solo_y_ambos_lo_leen
+2 failed, 10 passed, 8 warnings in 1.26s
