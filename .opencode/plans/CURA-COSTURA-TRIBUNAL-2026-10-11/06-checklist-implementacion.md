@@ -14,6 +14,8 @@
 | 5 | FASE-VERIFY — Certificación AC1..18 contra output E2E | Verificación | Media | DIRECTO (no delegable §4.6; sin código, sin v4complete) | Todas las anteriores | ⬜ Pendiente |
 | 6 | FASE-RELEASE-4.81.0 — Cierre + write-back + archivado | Cierre | Baja | Delegable a subagente (TIP del executor) | FASE-VERIFY ✅ | ⬜ Pendiente |
 
+**Sello de publicación (2026-10-12)**: las celdas «**sin commit**» de las filas 1-3 registran el corte declarado al cerrar cada fase, no el estado del árbol. Estado medido con `git log`: FASE-A `5ed960a`+`af508cd` (empujada), FASE-B `bf5ab2e`+`4df81d3` (empujada), **FASE-C `079f475`**. FASE-C2 sigue pendiente de ejecución.
+
 ## Notas de dependencia
 
 - La secuencia A→B→C es obligatoria: `honesty_reviewer.py` se edita en B (estados, N5, N7, AC18) y en C (N6).

@@ -67,3 +67,10 @@ La unidad no la mide ningún instrumento de la casa.
 
 Implementación terminada → verificación terminada → cierre documental → **listo para revisión** → espera de autorización.
 Ningún `git commit` se ejecutó ni se ejecutará sin autorización explícita del Operador con pathspec.
+
+**Addendum del mismo día (después de este corte)**: el Operador autorizó los commits y la tanda se publicó en
+`079f475` — 33 rutas (las 22 rutas de esta fase expandidas: la carpeta `evidence/…/FASE-C/` son 12 archivos),
+con el hook 8/8 verde y la cifra reproducida **en el árbol del commit** (`git grep -c -E "^\s*def test_" HEAD -- tests` = 5309).
+El commit lleva además el registro documental de FASE-C2 (AC19), porque README, `06`, `dependencias` y
+`10-analisis` contienen en el mismo archivo el cierre de C y el registro de C2 y no son separables por hunk sin
+edición interactiva. **No se empujó**: el literal autorizaba commits, no push.

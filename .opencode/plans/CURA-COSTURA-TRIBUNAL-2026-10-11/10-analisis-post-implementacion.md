@@ -20,6 +20,8 @@
 | FASE-VERIFY | | ⬜ | | No (no delegable §4.6) | |
 | FASE-RELEASE-4.81.0 | | ⬜ | | Delegable | |
 
+**Sello de publicación (2026-10-12)**: las celdas «✅ (sin commit)» de la tabla de abajo describen el corte declarado al cerrar cada fase. Estado medido con `git log`: FASE-A `5ed960a`, FASE-B `bf5ab2e` (ambas empujadas, paridad `0 0`), **FASE-C `079f475`** — tanda que además registra FASE-C2 con su AC19. El registro append-only vive en `docs/contributing/REGISTRY.md`.
+
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY; Expected tomado del contexto de origen)
 
 | # | Hallazgo | Expected | Real | Status |

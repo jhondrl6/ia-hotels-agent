@@ -83,6 +83,8 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 | FASE-RELEASE-4.81.0 | ⬜ | — | |
 
 
+**Sello de publicación (2026-10-12)**: el estado commiteado manda sobre la etiqueta «(sin commit)» de las filas de arriba, que registra el corte declarado al cerrar cada fase. Medido con `git log`: FASE-A `5ed960a`+`af508cd` (empujada), FASE-B `bf5ab2e`+`4df81d3` (empujada, paridad `0 0`), **FASE-C `079f475`** (con el registro documental de FASE-C2 en la misma tanda). El registro append-only es `docs/contributing/REGISTRY.md`.
+
 ## Riesgos y plan de recuperación
 
 - **Credencial de proveedor ausente en FASE-E2E**: la extracción terminaría `FALLIDO` (estado honesto tras FASE-A) y el veredicto perdería la pata LLM. Pre-vuelo T0 verifica presencia de credencial por nombre de variable y lo publica; si falta, la fase se detiene y consulta antes de gastar el run.
