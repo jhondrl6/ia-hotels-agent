@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-11
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 523
+> **Total fases completadas:** 524
 
 ---
 
@@ -12296,6 +12296,29 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 46 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B - 2026-10-11
+**Descripcion:** Bot 2/Bot 4 consumen contrato 4 estados; N5 texto completo; N7 medido y ajustado; wrapper DEC-A1 eliminado
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | Alignment Reviewer |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | Honesty Reviewer |
+| `modules/quality_gates/tribunal/llm_extractor.py` | Llm Extractor |
+| `modules/quality_gates/tribunal/outcome.py` | Outcome |
+| `modules/quality_gates/tribunal/acta_writer.py` | Acta Writer |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 27 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

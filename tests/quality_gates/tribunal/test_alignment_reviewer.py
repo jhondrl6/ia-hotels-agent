@@ -23,6 +23,13 @@ from modules.quality_gates.tribunal.llm_extractor import (
 )
 
 
+class _ExtractoraProhibida:
+    """Extractor que estalla si alguien lo usa: prueba los caminos que no extraen."""
+
+    def extract_checked(self, proposal_text: str):
+        raise AssertionError("el camino de artefacto ausente no debe llegar a la extraccion")
+
+
 @pytest.fixture
 def v4_audit_dir(tmp_path):
     """Directorio temporal con artefactos mínimos para tests."""
@@ -232,7 +239,7 @@ class TestAlignmentReviewer:
     def test_verdict_bloquear_on_critical(self, v4_audit_dir):
         """Veredicto BLOQUEAR cuando falta artefacto crítico."""
         reviewer = AlignmentReviewer(v4_audit_dir)
-        report = reviewer.review()
+        report = reviewer.review(_ExtractoraProhibida())
 
         assert report["verdict_recommendation"] == VERDICT_BLOQUEAR
         assert report["findings"][0]["finding_type"] == "MISSING_ARTIFACT"

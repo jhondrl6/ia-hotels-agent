@@ -1,0 +1,62 @@
+[$] seleccion: pytest tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py -k "tabla or monto or patron_del_codigo or garantia_sigue"
+[$] sha256[:12] del archivo intacto: 4ea3eab03f44
+[$] MUTANTE: se reemplazo la linea calzada por el localizador por:
+    if False:
+[$] RESTAURADO despues de la corrida (sha256 cotejado)
+[$] RESULTADO: 2 failed, 3 passed, 21 deselected, 8 warnings in 1.20s  EXIT=1
+
+FF...                                                                    [100%]
+================================== FAILURES ===================================
+__________________ test_total_de_tabla_deja_de_ser_hallazgo ___________________
+
+    def test_total_de_tabla_deja_de_ser_hallazgo():
+        """Par del anterior: la fila de tabla que el patron viejo contaba como CRITICAL."""
+        texto = "| **Total CAPEX** | **$2.500.000 COP** | Única vez |\n"
+    
+>       assert coincidencias_lenguaje_de_verificacion(texto) == []
+E       AssertionError: assert [{'grupo': 'C...al': 'Total'}] == []
+E         
+E         Left contains one more item: {'grupo': 'CUANTIFICADOR_ABSOLUTO', 'linea': '| **Total CAPEX** | **$2.500.000 COP** | Única vez |', 'literal': 'Total'}
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:253: AssertionError
+___________ test_total_de_una_linea_con_monto_deja_de_ser_hallazgo ____________
+
+    def test_total_de_una_linea_con_monto_deja_de_ser_hallazgo():
+        """El segundo falso positivo medido: el cuantificador dentro de una cifra."""
+        texto = "> **Trazabilidad financiera**: La fuga total estimada es de $21.067.200 COP.\n"
+    
+>       assert coincidencias_lenguaje_de_verificacion(texto) == []
+E       AssertionError: assert [{'grupo': 'C...al': 'total'}] == []
+E         
+E         Left contains one more item: {'grupo': 'CUANTIFICADOR_ABSOLUTO', 'linea': '> **Trazabilidad financiera**: La fuga total estimada es de $21.067.200 COP.', 'literal': 'total'}
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:260: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_total_de_tabla_deja_de_ser_hallazgo
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_total_de_una_linea_con_monto_deja_de_ser_hallazgo
+2 failed, 3 passed, 21 deselected, 8 warnings in 1.20s
+

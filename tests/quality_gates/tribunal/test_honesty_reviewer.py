@@ -241,7 +241,7 @@ def test_cg_whatsapp_lead_detected(sample_v4_audit_dir):
 
     cg_warnings = [
         f for f in report["findings"]
-        if f.get("type") == FINDING_CG_WARNING_UNDISCLOSED
+        if f.get("finding_type") == FINDING_CG_WARNING_UNDISCLOSED
     ]
     assert len(cg_warnings) > 0
     whatsapp_findings = [
@@ -258,7 +258,7 @@ def test_over_presentation_detected(sample_v4_audit_dir, mock_extractor):
 
     over_presentations = [
         f for f in report["findings"]
-        if f.get("type") == FINDING_OVER_PRESENTATION
+        if f.get("finding_type") == FINDING_OVER_PRESENTATION
     ]
     assert len(over_presentations) > 0
     assert over_presentations[0]["evidence_tier_declared"] == "B"
@@ -291,7 +291,7 @@ def test_missing_scenario_detected(tmp_path):
 
     missing = [
         f for f in report["findings"]
-        if f.get("type") == FINDING_MISSING_SCENARIO
+        if f.get("finding_type") == FINDING_MISSING_SCENARIO
     ]
     assert len(missing) == 2
     missing_descriptions = [f["description"].lower() for f in missing]
@@ -334,7 +334,7 @@ def test_tier_mismatch_detected(tmp_path):
 
     mismatches = [
         f for f in report["findings"]
-        if f.get("type") == FINDING_TIER_MISMATCH
+        if f.get("finding_type") == FINDING_TIER_MISMATCH
     ]
     assert len(mismatches) > 0
     assert mismatches[0]["evidence_tier_declared"] == "B"

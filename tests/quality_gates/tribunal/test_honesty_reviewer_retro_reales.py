@@ -47,7 +47,7 @@ def real_report(real_reviewer):
 def test_propuesta_real_resuelta_y_sin_missing_artifact(real_report):
     """D1: la propuesta vive en v4_complete/, no en v4_audit_dir."""
     assert real_report["findings"], "esperaba hallazgos de datos reales"
-    missing = [f for f in real_report["findings"] if f["type"] == FINDING_MISSING_ARTIFACT]
+    missing = [f for f in real_report["findings"] if f["finding_type"] == FINDING_MISSING_ARTIFACT]
     assert missing == [], f"MISSING_ARTIFACT espurio: {missing}"
 
 
@@ -77,7 +77,7 @@ def test_cg_whatsapp_lead_no_divulgado_en_propuesta_real(real_report):
     referenced = {
         f.get("cg_reference")
         for f in real_report["findings"]
-        if f["type"] == FINDING_CG_WARNING_UNDISCLOSED
+        if f["finding_type"] == FINDING_CG_WARNING_UNDISCLOSED
     }
     assert EXPECTED_UNDISCLOSED_GATE in referenced
 
@@ -93,7 +93,7 @@ def test_veredicto_determinado_por_hallazgos_reales(real_report):
     assert real_report["verdict_recommendation"] == "DEVOLVER-PRUEBAS"
     assert real_report["summary"]["total_findings"] == len(real_report["findings"])
     assert real_report["summary"]["undisclosed_warnings"] == len(
-        [f for f in real_report["findings"] if f["type"] == FINDING_CG_WARNING_UNDISCLOSED]
+        [f for f in real_report["findings"] if f["finding_type"] == FINDING_CG_WARNING_UNDISCLOSED]
     )
 
 

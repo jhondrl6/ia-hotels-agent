@@ -152,6 +152,9 @@ class ActaWriter:
         "ARTIFACT_MISSING": "⬜ artefacto ausente",
         "READER_FAILED": "🔴 lector fallido",
         "NOT_RUN": "🚫 no corrió",
+        # AC17: sin esta etiqueta el MD del acta imprimiria el simbolo crudo, que es
+        # lo que hacia la reserva .get(status, status) con un miembro nuevo.
+        "INPUT_NOT_EVALUABLE": "⬜ insumo no evaluable",
     }
 
     def _render_reviewer_reports(self, reviewer_reports: list) -> list:

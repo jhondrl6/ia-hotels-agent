@@ -1,0 +1,59 @@
+[$] comando (harness desechable por stdin; no se versiona ningun .py bajo evidence/ ni tests/ para no mover el gate --check):
+      cd C:/Users/Jhond/Github/iah-cli && PYTHONUTF8=1 ./venv/Scripts/python.exe - <<'PY'
+      import glob, re, sys; sys.path.insert(0,'.')
+      from modules.quality_gates.tribunal import honesty_reviewer as hr
+      for a in sorted(glob.glob('output/**/02_PROPUESTA*.md',recursive=True)+glob.glob('evidence/**/02_PROPUESTA*.md',recursive=True)):
+          texto = open(a, encoding='utf-8').read()
+          literales   = sum(len(re.findall(re.escape(t), texto, re.IGNORECASE)) for t in TOKENS)
+          matcheadas  = len(re.findall(hr.VERIFICATION_GROUP_..., texto, re.IGNORECASE))   # el patron del CODIGO
+          emitidas    = [c for c in hr.coincidencias_lenguaje_de_verificacion(texto)]        # con el filtro AC10
+      PY
+
+[CORPUS] 6 propuestas reales (3 versionadas en evidence/, 3 bajo output/ que esta en .gitignore)
+El run de referencia del plan es la del 2026-10-07 (14.690 caracteres).
+
+
+=== evidence\FASE-E2E\02_PROPUESTA_COMERCIAL_20260911_180006.md  (14323 caracteres)
+  [LENGUAJE] literales=1  matcheadas_con_el_patron_del_codigo=1  emitidas_tras_la_cura_AC10=1
+  [CUANTIFICADOR] literales=8  matcheadas_con_el_patron_del_codigo=8  emitidas_tras_la_cura_AC10=2
+    + LENGUAJE_VERIFICACION :: 'verificados' :: > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regio
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+=== evidence\FASE-F\02_PROPUESTA_COMERCIAL_20260805_154910.md  (13672 caracteres)
+  [LENGUAJE] literales=0  matcheadas_con_el_patron_del_codigo=0  emitidas_tras_la_cura_AC10=0
+  [CUANTIFICADOR] literales=10  matcheadas_con_el_patron_del_codigo=10  emitidas_tras_la_cura_AC10=2
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+=== evidence\FASE-I\corrida\02_PROPUESTA_COMERCIAL_20260904_120413.md  (14296 caracteres)
+  [LENGUAJE] literales=1  matcheadas_con_el_patron_del_codigo=1  emitidas_tras_la_cura_AC10=1
+  [CUANTIFICADOR] literales=8  matcheadas_con_el_patron_del_codigo=8  emitidas_tras_la_cura_AC10=2
+    + LENGUAJE_VERIFICACION :: 'verificados' :: > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regio
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+=== output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\02_PROPUESTA_COMERCIAL_20261007_093402.md  (14690 caracteres)
+  [LENGUAJE] literales=1  matcheadas_con_el_patron_del_codigo=1  emitidas_tras_la_cura_AC10=1
+  [CUANTIFICADOR] literales=10  matcheadas_con_el_patron_del_codigo=10  emitidas_tras_la_cura_AC10=2
+    + LENGUAJE_VERIFICACION :: 'Verificado' :: | Perfil de Empresa en Google | ✅ Día 1 (Verificado) | Ya existe en su web - nosotros lo entregamos |
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+=== output\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\v4_complete\_review_inputs\run_20261007T093402\propuesta\02_PROPUESTA_COMERCIAL_20261007_093402.md  (14690 caracteres)
+  [LENGUAJE] literales=1  matcheadas_con_el_patron_del_codigo=1  emitidas_tras_la_cura_AC10=1
+  [CUANTIFICADOR] literales=10  matcheadas_con_el_patron_del_codigo=10  emitidas_tras_la_cura_AC10=2
+    + LENGUAJE_VERIFICACION :: 'Verificado' :: | Perfil de Empresa en Google | ✅ Día 1 (Verificado) | Ya existe en su web - nosotros lo entregamos |
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+=== output\TAREA7-2026-09-19\v4_complete\02_PROPUESTA_COMERCIAL_20260919_150131.md  (15295 caracteres)
+  [LENGUAJE] literales=1  matcheadas_con_el_patron_del_codigo=1  emitidas_tras_la_cura_AC10=1
+  [CUANTIFICADOR] literales=10  matcheadas_con_el_patron_del_codigo=10  emitidas_tras_la_cura_AC10=2
+    + LENGUAJE_VERIFICACION :: 'verificados' :: > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regio
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ## 🛡️ GARANTÍAS: Protección total para usted
+    + CUANTIFICADOR_ABSOLUTO :: 'total' :: ### 5. Transparencia total
+
+[TOTALES DEL CORPOS]
+  [LENGUAJE] literales=5  matcheadas=5  emitidas=5
+  [CUANTIFICADOR] literales=56  matcheadas=56  emitidas=12

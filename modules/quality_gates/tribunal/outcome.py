@@ -28,6 +28,49 @@ ACTA_FINDING_TEXT_LIMIT = 240
 ACTA_FINDING_CAP = 20
 
 
+# AC17: la clave con la que un revisor que extrae con LLM declara el estado de su
+# insumo, y los estados que cuentan como legibles. Vive aqui porque este modulo es el
+# unico lector que decide el estado del acta a partir de ese bloque.
+EXTRACCION_CLAVE = "extraccion"
+EXTRACCION_ESTADOS_OK = frozenset({"OK_CON_PROMESAS", "OK_SIN_PROMESAS"})
+
+
+def bloque_extraccion(outcome) -> dict:
+    """Proyeccion del ExtractionOutcome al report del revisor (la escriben Bot 2/Bot 4)."""
+    return {
+        "estado": outcome.estado_publicado,
+        "motivo": outcome.reason,
+        "promesas_leidas": len(outcome.promises) if outcome.is_ok else 0,
+        "via": "extract_checked",
+    }
+
+
+def estado_extraccion_del_acta(payload: Mapping[str, Any]) -> Optional[str]:
+    """El estado declarado del insumo, o ``None`` si el revisor no extrae con LLM.
+
+    Un bloque presente pero ilegible NO es «sin extraccion»: se publica como
+    ``BLOQUE_ILEGIBLE`` y cae del lado no-OK, porque ausencia y desperfecto tampoco
+    son aqui «sin hallazgos» (R2.9).
+    """
+    bloque = payload.get(EXTRACCION_CLAVE)
+    if bloque is None:
+        return None
+    if not isinstance(bloque, Mapping):
+        return "BLOQUE_ILEGIBLE"
+    estado = bloque.get("estado")
+    if not isinstance(estado, str) or not estado:
+        return "BLOQUE_ILEGIBLE"
+    return estado
+
+
+def motivo_extraccion_del_acta(payload: Mapping[str, Any]) -> Optional[str]:
+    bloque = payload.get(EXTRACCION_CLAVE)
+    if isinstance(bloque, Mapping):
+        motivo = bloque.get("motivo")
+        return motivo if isinstance(motivo, str) else None
+    return None
+
+
 def _acta_finding_projection(finding: Any) -> Optional[Mapping[str, Any]]:
     """Recorta un hallazgo a las claves que el acta necesita; ``None`` si no es mapeable."""
     if not isinstance(finding, Mapping):
@@ -57,6 +100,7 @@ class ReviewerStatus(str, Enum):
     ARTIFACT_MISSING = "ARTIFACT_MISSING"
     READER_FAILED = "READER_FAILED"
     NOT_RUN = "NOT_RUN"
+    INPUT_NOT_EVALUABLE = "INPUT_NOT_EVALUABLE"
 
     @property
     def is_ok(self) -> bool:
@@ -106,6 +150,8 @@ class ReviewerReport:
     report_path: Optional[str] = None
     clauses: tuple = ()
     findings: list = field(default_factory=list)
+    extraccion_estado: Optional[str] = None
+    extraccion_motivo: Optional[str] = None
 
     def to_dict(self) -> dict:
         """Forma del bloque ``reviewer_reports`` del acta (JSON y MD).
@@ -117,6 +163,9 @@ class ReviewerReport:
         ``findings_omitted`` solo cuando se supera ese tope. Es un cambio de
         serialización, no de veredicto: ``verified_critical``, ``verified_block``
         y demás predicados siguen mirando los mismos campos de siempre.
+
+        AC17: cuando el revisor declara el estado de su insumo, el acta lo proyecta
+        con su motivo. Sin ese bloque el JSON es idéntico al de antes.
         """
         payload = {
             "reviewer": self.reviewer,
@@ -133,6 +182,11 @@ class ReviewerReport:
                 if projected is not None
             ],
         }
+        if self.extraccion_estado is not None:
+            payload["extraccion"] = {
+                "estado": self.extraccion_estado,
+                "motivo": self.extraccion_motivo,
+            }
         omitted = len(self.findings) - min(len(self.findings), ACTA_FINDING_CAP)
         if omitted > 0:
             payload["findings_omitted"] = omitted
@@ -277,19 +331,30 @@ def collect_reviewer_reports(
             continue
 
         findings_count, critical_count, findings = counts
+        # AC17: el estado del acta ya no se computa solo desde findings_count. Un
+        # revisor cuyo insumo no fue evaluable no puede firmar OK_NO_FINDINGS, aunque
+        # hoy mismo haya emitido todos sus hallazgos deterministas.
+        extraccion_estado = estado_extraccion_del_acta(payload)
+        extraccion_no_evaluable = (
+            extraccion_estado is not None and extraccion_estado not in EXTRACCION_ESTADOS_OK
+        )
+        if extraccion_no_evaluable:
+            status = ReviewerStatus.INPUT_NOT_EVALUABLE
+        elif findings_count == 0:
+            status = ReviewerStatus.OK_NO_FINDINGS
+        else:
+            status = ReviewerStatus.OK_WITH_FINDINGS
         reports.append(ReviewerReport(
             reviewer=spec.reviewer,
-            status=(
-                ReviewerStatus.OK_NO_FINDINGS
-                if findings_count == 0
-                else ReviewerStatus.OK_WITH_FINDINGS
-            ),
+            status=status,
             findings_count=findings_count,
             critical_count=critical_count,
             recommendation=payload.get("verdict_recommendation"),
             report_path=path.name,
             clauses=spec.clauses,
             findings=findings,
+            extraccion_estado=extraccion_estado,
+            extraccion_motivo=motivo_extraccion_del_acta(payload),
         ))
 
     return reports

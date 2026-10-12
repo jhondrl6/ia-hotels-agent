@@ -13,7 +13,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 ## Cobertura medida (lo que este índice NO garantiza)
 
 - Corpus de **definiciones**: `20` análisis de plan + `42` archivos de `.opencode/context/`. `471` `.md` en total como corpus de **citas**.
-- 382 IDs con definición detectada; 109 IDs citados sin definición (ver última sección).
+- 384 IDs con definición detectada; 109 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `371` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `373` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 227 |
+| `L-*` | Lecciones aprendidas | 229 |
 | `DA-*` | Decisiones / reglas de alineación | 53 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 63 |
 | — | Citados sin definición | 109 |
 
-## `L-*` — Lecciones aprendidas (227)
+## `L-*` — Lecciones aprendidas (229)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -74,6 +74,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-CIM.13` | Las banderas -c core.autocrlf=… que se pasan a git clone no gobiernan el checkout posterior: el clone no copia el config local de la fuente y el -c solo vive en ese proceso, así que el árbol se… | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase) | 3 (solo el plan dueño) |
 | `L-CST-1` | Un guard duplicado en dos capas hace que el mutation check dé verde y la AC quede sin dueño. La primera versión de FASE-A tenía if outcome.is_ok en el llamador y el guard en _save_to_cache; al… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 1 (solo el plan dueño) |
 | `L-CST-2` | Nombre de delimitador dentro de la instrucción rompe la forma del prompt compuesto. La instrucción de frontera citaba los dos marcadores literales, así que el prompt compuesto contenía… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 1 (solo el plan dueño) |
+| `L-CST-3` | El coste declarado de un re-anclaje se mide, no se hereda: la AC18 prometía 8 lecturas de la clave y eran 10 en 4 archivos. La AC contaba 4+1+3 en tres archivos de Bot 4; un cuarto archivo del… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
+| `L-CST-4` | Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
 | `L-D1` | «Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 18 (solo el plan dueño) |
 | `L-D2` | La evidencia también se fosiliza: un log capturado antes de estabilizar los tests miente *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-D3` | Un baseline numérico hace que cumplir el plan cuente como violación *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 64 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |

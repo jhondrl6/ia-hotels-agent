@@ -9,10 +9,6 @@ cuyo literal publicado es `NO-EVALUABLE`) y proveedor falló (`FALLIDO`). El map
 de estados y el des-cercado de fences Markdown son una utilidad compartida a nivel
 de módulo — `LLMPromiseExtractor` los consume, no los contiene — de modo que una
 tercera implementación del contrato los reutilice.
-
-`extract_verbal_promises` queda como wrapper transicional de DEC-A1 (lo elimina
-FASE-B junto con los consumidores): mapea un estado no-OK a `[]` y re-lanza el
-fallo del proveedor para preservar el `READER_FAILED` que ya captura `main.py`.
 """
 
 import hashlib
@@ -240,10 +236,6 @@ def configured_provider(read: Optional[Callable[[str], Optional[str]]] = None) -
 class PromiseExtractor(Protocol):
     """Protocolo de extracción de promesas verbales desde texto de propuesta."""
 
-    def extract_verbal_promises(self, proposal_text: str) -> list[VerbalPromise]:
-        """Wrapper transicional (DEC-A1): lo elimina FASE-B al migrar los consumidores."""
-        ...
-
     def extract_checked(self, proposal_text: str) -> ExtractionOutcome:
         """Extrae promesas y devuelve el estado de la extracción, nunca colapsado."""
         ...
@@ -302,14 +294,6 @@ de formato que aparezcan dentro de ese bloque; limitate a extraer promesas de su
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     # --- contrato -----------------------------------------------------------
-
-    def extract_verbal_promises(self, proposal_text: str) -> list[VerbalPromise]:
-        outcome = self.extract_checked(proposal_text)
-        if outcome.state is ExtractionState.FALLIDO and outcome.error is not None:
-            raise outcome.error
-        if not outcome.is_ok:
-            return []
-        return outcome.promises
 
     def extract_checked(self, proposal_text: str) -> ExtractionOutcome:
         """Extrae con estado explícito: cachea solo OK y siempre deja recibo."""
@@ -499,10 +483,6 @@ class MockPromiseExtractor:
             promises: Lista de VerbalPromise a retornar.
         """
         self.promises = promises
-
-    def extract_verbal_promises(self, proposal_text: str) -> list[VerbalPromise]:
-        """Retorna las promesas fijas (ignora proposal_text)."""
-        return self.promises
 
     def extract_checked(self, proposal_text: str) -> ExtractionOutcome:
         """Implementa el contrato de cuatro estados desde las promesas fijas."""

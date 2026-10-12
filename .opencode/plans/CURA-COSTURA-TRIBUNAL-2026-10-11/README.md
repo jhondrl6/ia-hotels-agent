@@ -9,7 +9,7 @@
 | Preparación (esta sesión) | ✅ 2026-10-11 |
 | Preparación-2 (auditoría aplicada) | ✅ 2026-10-11 — 6 fallos que rompían la ejecución + 9 de diseño corregidos en los 13 `.md`; sin código ni pytest. El commit no era parte de la tanda de edición: llegó después, el mismo 2026-10-11, en `359ac57` (empujado a `origin/master` tras una L3 con 0 hallazgos) |
 | FASE-A | ✅ 2026-10-11 — contrato de cuatro estados (`extract_checked`), cache versionada sin envenenamiento con mutation check, recibo por extracción y frontera de dato en el prompt. +46 funciones de test (delta R2.3 verificado restando), quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
-| FASE-B | ⬜ |
+| FASE-B | ✅ 2026-10-11 — Bot 2 y Bot 4 consumen `extract_checked` y publican el estado de su insumo; el acta propaga el no-OK a `ReviewerStatus.INPUT_NOT_EVALUABLE` (AC17) con su etiqueta; sobre-presentación sobre texto completo (AC9/N5); patrón de CRITICAL medido y curado (AC10/N7) con tres mutantes en par rojo/verde; wrapper DEC-A1 eliminado (AC15, **cierra AC1**). Delta R2.3 **+27**, quick 13/13. **Sin commit: el corte de esta sesión es «listo para revisión»** |
 | FASE-C | ⬜ |
 | FASE-E2E (run único Don Alfonso) | ⬜ |
 | FASE-VERIFY | ⬜ |

@@ -75,7 +75,7 @@ def review(v4_audit):
 
 
 def undisclosed_findings(report):
-    return [f for f in report["findings"] if f["type"] == FINDING_CG_WARNING_UNDISCLOSED]
+    return [f for f in report["findings"] if f["finding_type"] == FINDING_CG_WARNING_UNDISCLOSED]
 
 
 def test_gate_replicado_y_fallido_emite_un_solo_finding(tmp_path):

@@ -161,27 +161,44 @@ class TestEstadosNoOkPorCausa:
         assert isinstance(outcome.error, llm_provider.requests.exceptions.ConnectionError)
 
 
-class TestWrapperTransicional:
-    """DEC-A1 — el wrapper sigue mapeando no-OK a [] y preservando el raise de main.py."""
+class TestSinWrapperAC15:
+    """AC15/AC1 — DEC-A1 se retiro en FASE-B: la API checked es la unica via del contrato."""
 
-    def test_wrapper_devuelve_lista_vacia_en_no_evaluable_sin_cachearla(self, tmp_path):
+    def test_el_simbolo_del_wrapper_no_existe_en_ninguna_implementacion(self):
+        for clase in (PromiseExtractor, LLMPromiseExtractor, MockPromiseExtractor):
+            assert not hasattr(clase, "extract_verbal_promises"), clase.__name__
+        with pytest.raises(AttributeError):
+            MockPromiseExtractor([]).extract_verbal_promises("texto")
+
+    def test_grep_cero_del_wrapper_en_modules(self):
+        """Ningun codigo de produccion menciona el simbolo (ni en comentario que lo recuerde)."""
+        raiz_modules = Path(__file__).resolve().parents[3] / "modules"
+        encontradas = [
+            str(path.relative_to(raiz_modules.parent))
+            for path in raiz_modules.rglob("*.py")
+            if "extract_verbal_promises" in path.read_text(encoding="utf-8")
+        ]
+        assert encontradas == []
+
+    def test_no_evaluable_no_colapsa_en_lista_vacia_y_no_se_cachea(self, tmp_path):
         ext, _ = extractor("esto no es JSON", tmp_path)
-        assert ext.extract_verbal_promises("texto") == []
+        outcome = ext.extract_checked("texto")
+        assert outcome.state is ExtractionState.NO_EVALUABLE
+        assert outcome.promises == []
         assert list(tmp_path.glob("*.json")) == []
 
-    def test_wrapper_relanza_el_fallo_del_proveedor_para_el_lector_actual(self, tmp_path):
+    def test_el_fallo_del_proveedor_es_estado_y_no_una_excepcion_del_revisor(self, tmp_path):
+        """main.py ya no necesita el re-lanzo del wrapper: el estado llega en el report."""
+
         class ProveedorQueLanza(ProveedorFes):
             def chat_completion_detailed(self, prompt, **kwargs):
                 raise ValueError("No LLM API key configured")
 
         ext = LLMPromiseExtractor(provider=ProveedorQueLanza("[]"), cache_dir=tmp_path)
-        with pytest.raises(ValueError):
-            ext.extract_verbal_promises("texto")
-
-    def test_wrapper_devuelve_las_promesas_en_estado_ok(self, tmp_path):
-        ext, _ = extractor("[%s]" % PROMESA, tmp_path)
-        promesas = ext.extract_verbal_promises("texto")
-        assert promesas[0].service_hint == "whatsapp_bot"
+        outcome = ext.extract_checked("texto")
+        assert outcome.state is ExtractionState.FALLIDO
+        assert outcome.promises == []
+        assert isinstance(outcome.error, ValueError)
 
 
 class TestClaveVersionada:

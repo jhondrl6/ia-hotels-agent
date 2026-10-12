@@ -72,8 +72,8 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 |------|--------|-------|-------|
 | Preparación / Preparación-2 / 2b | ✅ | 2026-10-11 | Documental, publicado en `359ac57` |
 | **FASE-A** | ✅ **COMPLETADA (sin commit)** | 2026-10-11 | Contrato de cuatro estados en la API checked + utilidad compartida + cache versionada (mutation check AC2 con par rojo/verde) + recibo por extracción + prompt con frontera de dato. Delta R2.3 **+46** (5207→5253 con el grep canónico); quick 13/13 tras regenerar `wiring_report.json`. AC1 se **cierra en FASE-B** con AC15 (DEC-A1 conserva el wrapper). Evidencia en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-A/`. Decisión nueva DEC-A5 (techo `max_tokens` 2000→4000) y tres seguimientos con dueño en `10-analisis` |
-| FASE-B | ⬜ pendiente — **desbloqueada**: consume `extract_checked` y elimina el wrapper | — | Orden interno obligatorio T3→T2→T1→T4 |
-| FASE-C | ⬜ | — | Depende de B (`honesty_reviewer.py`) |
+| FASE-B | ✅ **COMPLETADA (sin commit)** | 2026-10-11 | Orden interno ejecutado **T3→T2→T1→T4**. AC8/9/10/15/17/18 legibles en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-B/` y **AC1 cerrado con AC15** (el wrapper `extract_verbal_promises` ya no existe: `grep -rn` = 0 ocurrencias en `modules/`). Delta R2.3 **+27** (5253→5280, verificado restando); suite del tribunal 277 passed / 9 skipped / 0 failed; quick 13/13 tras republishar `wiring_report.json` (718→719 por el archivo nuevo). Tres mutantes con par rojo/verde (M1 guard de contexto, M2 frontera del `%`, M3 estado del acta). La medición de AC10 deja **10 coincidencias matcheadas vs 2 emitidas** sobre la propuesta del run de referencia. `outcome.py` y `acta_writer.py` editados como obliga DEC-A2. Presupuesto EXCEDIDO: ~80 tool calls contra ~55 (≈45 %; unidad auto-reportada, sin instrumento que la mida) |
+| FASE-C | ⬜ | — | Depende de B (`honesty_reviewer.py`) — **desbloqueada** |
 | FASE-E2E | ⬜ | — | Run único |
 | FASE-VERIFY | ⬜ | — | |
 | FASE-RELEASE-4.81.0 | ⬜ | — | |

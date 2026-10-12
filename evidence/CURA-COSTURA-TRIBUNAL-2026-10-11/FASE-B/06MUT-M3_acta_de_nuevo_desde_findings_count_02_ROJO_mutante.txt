@@ -1,0 +1,77 @@
+[$] seleccion: pytest tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py -k "acta or aprobable or etiqueta"
+[$] sha256[:12] del archivo intacto: 3728ba94864c
+[$] MUTANTE: se reemplazo la linea calzada por el localizador por:
+    status = ReviewerStatus.OK_NO_FINDINGS if findings_count == 0 else ReviewerStatus.OK_WITH_FINDINGS
+[$] RESTAURADO despues de la corrida (sha256 cotejado)
+[$] RESULTADO: 2 failed, 3 passed, 21 deselected, 8 warnings in 1.32s  EXIT=1
+
+.F.F.                                                                    [100%]
+================================== FAILURES ===================================
+___________ test_no_evaluable_no_produce_ok_no_findings_en_el_acta ____________
+
+audit_dir = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1820/test_no_evaluable_no_produce_o0/v4_audit')
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1820/test_no_evaluable_no_produce_o0')
+
+    def test_no_evaluable_no_produce_ok_no_findings_en_el_acta(audit_dir, tmp_path):
+        (audit_dir / "proposal_asset_matrix.json").write_text(
+            json.dumps({"entries": []}, ensure_ascii=False), encoding="utf-8"
+        )
+        reporte = AlignmentReviewer(audit_dir).review(no_evaluable())
+        assert reporte["findings"] == []
+    
+        acta, reports = _acta_con_extraccion(audit_dir, reporte, tmp_path)
+    
+        bot2 = next(r for r in reports if r.reviewer == "alignment_reviewer")
+        proyectado = next(r for r in acta["reviewer_reports"] if r["reviewer"] == "alignment_reviewer")
+        assert bot2.findings_count == 0
+>       assert bot2.status is ReviewerStatus.INPUT_NOT_EVALUABLE
+E       AssertionError: assert <ReviewerStatus.OK_NO_FINDINGS: 'OK_NO_FINDINGS'> is <ReviewerStatus.INPUT_NOT_EVALUABLE: 'INPUT_NOT_EVALUABLE'>
+E        +  where <ReviewerStatus.OK_NO_FINDINGS: 'OK_NO_FINDINGS'> = ReviewerReport(reviewer='alignment_reviewer', status=<ReviewerStatus.OK_NO_FINDINGS: 'OK_NO_FINDINGS'>, findings_count...indings=[], extraccion_estado='NO-EVALUABLE', extraccion_motivo='respuesta ilegible: el texto no decodifica como JSON').status
+E        +  and   <ReviewerStatus.INPUT_NOT_EVALUABLE: 'INPUT_NOT_EVALUABLE'> = ReviewerStatus.INPUT_NOT_EVALUABLE
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:438: AssertionError
+_____________ test_el_acta_md_mostra_la_etiqueta_del_estado_nuevo _____________
+
+audit_dir = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1820/test_el_acta_md_mostra_la_etiq0/v4_audit')
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1820/test_el_acta_md_mostra_la_etiq0')
+
+    def test_el_acta_md_mostra_la_etiqueta_del_estado_nuevo(audit_dir, tmp_path):
+        """AC17: sin etiqueta en _STATUS_LABELS el MD imprimia el simbolo crudo."""
+        reporte = AlignmentReviewer(audit_dir).review(no_evaluable())
+        acta, _ = _acta_con_extraccion(audit_dir, reporte, tmp_path)
+    
+        json_ruta, md_ruta = ActaWriter(tmp_path / "acta").write(acta)
+        md = md_ruta.read_text(encoding="utf-8")
+        leido = json.loads(json_ruta.read_text(encoding="utf-8"))
+    
+>       assert "⬜ insumo no evaluable" in md
+E       AssertionError: assert '⬜ insumo no evaluable' in '# Acta de Revisión — Tribunal de Certificación\n\n**Hotel**: hotelx\n**Fecha**: 2026-10-11T20:37:25.981682\n**Veredic...**: Desconocido\n- **Suprimido por el operador**: No\n\n---\n\n*Generado por TribunalJudge v4.80.0 — 2026-10-11 20:37*'
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:487: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_no_evaluable_no_produce_ok_no_findings_en_el_acta
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_el_acta_md_mostra_la_etiqueta_del_estado_nuevo
+2 failed, 3 passed, 21 deselected, 8 warnings in 1.32s
+

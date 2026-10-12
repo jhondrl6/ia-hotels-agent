@@ -1,0 +1,108 @@
+[$] seleccion: pytest tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py -k "frontera or patron_del_codigo or garantia_sigue or baseline"
+[$] sha256[:12] del archivo intacto: 4ea3eab03f44
+[$] MUTANTE: se reemplazo la linea calzada por el localizador por:
+    VERIFICATION_GROUP_CUANTIFICADOR = r"(100%|total|absoluto|definitivo)"
+[$] RESTAURADO despues de la corrida (sha256 cotejado)
+[$] RESULTADO: 4 failed, 1 passed, 21 deselected, 8 warnings in 1.22s  EXIT=1
+
+FFFF.                                                                    [100%]
+================================== FAILURES ===================================
+_ test_frontera_curada_el_cien_por_ciento_de_garantia_vuelve_a_ser_detectable _
+
+    def test_frontera_curada_el_cien_por_ciento_de_garantia_vuelve_a_ser_detectable():
+        """`\b` despues de `%` pedia un caracter de palabra: ningun `100%` matcheaba."""
+        texto = "Le garantizamos una ocupacion del 100% de las habitaciones reservadas."
+    
+>       assert coincidencias_lenguaje_de_verificacion(texto)
+E       AssertionError: assert []
+E        +  where [] = coincidencias_lenguaje_de_verificacion('Le garantizamos una ocupacion del 100% de las habitaciones reservadas.')
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:246: AssertionError
+_________ test_el_absoluto_de_prosa_de_garantia_sigue_siendo_hallazgo _________
+
+    def test_el_absoluto_de_prosa_de_garantia_sigue_siendo_hallazgo():
+        """La cura recorta el falso positivo, no el diente."""
+        texto = "## GARANTIAS: Proteccion total para usted\n"
+    
+        halladas = coincidencias_lenguaje_de_verificacion(texto)
+>       assert [h["grupo"] for h in halladas] == ["CUANTIFICADOR_ABSOLUTO"]
+E       AssertionError: assert [] == ['CUANTIFICADOR_ABSOLUTO']
+E         
+E         Right contains one more item: 'CUANTIFICADOR_ABSOLUTO'
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:268: AssertionError
+________________ test_la_medicion_importa_el_patron_del_codigo ________________
+
+    def test_la_medicion_importa_el_patron_del_codigo():
+        """AC10: la medicion invoca VERIFICATION_PATTERNS, no un regex equivalente.
+    
+        Sobre un texto sin tablas ni montos, aplicar los dos patrones del modulo y recorrer
+        la funcion del revisor tienen que dar el mismo conjunto de literales. Si la cura
+        viviera en un patron re-escrito a mano, aqui se separarian.
+        """
+        import re
+    
+        texto = (
+            "Ofrecemos soluciones verificadas con proteccion total\n"
+            "y una garantia del 100% sobre la entrega.\n"
+        )
+        desde_patrones = sorted(
+            m.group(0).lower()
+            for patron in (VERIFICATION_GROUP_LENGUAJE, VERIFICATION_GROUP_CUANTIFICADOR)
+            for m in re.finditer(patron, texto, re.IGNORECASE)
+        )
+        del_modulo = sorted(h["literal"].lower() for h in coincidencias_lenguaje_de_verificacion(texto))
+    
+        assert desde_patrones == del_modulo
+>       assert desde_patrones == ["100%", "total", "verificadas"]
+E       AssertionError: assert ['verificadas'] == ['100%', 'tot...'verificadas']
+E         
+E         At index 0 diff: 'verificadas' != '100%'
+E         Right contains 2 more items, first extra item: 'total'
+E         Use -v to get more diff
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:301: AssertionError
+_______________ test_bot4_sobre_baseline_real_y_state_del_acta ________________
+
+    @pytestmark_baseline
+    def test_bot4_sobre_baseline_real_y_state_del_acta():
+        """Bot 4 sobre la propuesta real: tres coincidencias medidas, ninguna de tabla."""
+        report = HonestyReviewer(BASELINE_REAL).review(MockPromiseExtractor([]))
+    
+        sobre = _hallazgos(report, FINDING_OVER_PRESENTATION)
+        assert report["extraccion"]["estado"] == "OK_SIN_PROMESAS"
+>       assert len(sobre) == 3
+E       AssertionError: assert 1 == 3
+E        +  where 1 = len([{'cg_reference': None, 'claim_text': 'verificados', 'clause': 'P6.5', 'description': 'La propuesta usa «verificados» ...a sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchmarks regionales (Tie', ...}])
+
+tests\quality_gates\tribunal\test_fase_b_consumidores_contrato.py:507: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_frontera_curada_el_cien_por_ciento_de_garantia_vuelve_a_ser_detectable
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_el_absoluto_de_prosa_de_garantia_sigue_siendo_hallazgo
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_la_medicion_importa_el_patron_del_codigo
+FAILED tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py::test_bot4_sobre_baseline_real_y_state_del_acta
+4 failed, 1 passed, 21 deselected, 8 warnings in 1.22s
+

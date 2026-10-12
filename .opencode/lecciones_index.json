@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 20,
     "archivos_contexto_escaneados": 42,
     "archivos_md_escaneados": 471,
-    "ids_con_definicion": 382,
+    "ids_con_definicion": 384,
     "ids_citados_sin_definicion": 109,
     "fechas_por_fuente": {
-      "nombre": 371,
+      "nombre": 373,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1877,6 +1877,34 @@
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
       "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-3",
+      "familia": "L",
+      "enunciado": "El coste declarado de un re-anclaje se mide, no se hereda: la AC18 prometía 8 lecturas de la clave y eran 10 en 4 archivos. La AC contaba 4+1+3 en tres archivos de Bot 4; un cuarto archivo del tribunal (test_tribunal_propuesta_ubicacion.py, 2 lecturas) también leía la clave del finding de Bot 4 y no estaba en la cuenta. Por qué importa: un coste mal declarado se ejecuta como si fuera completo y el árbol queda con lecturas huérfanas que solo salen rojas cuando alguien las corre. Qué lo previene: el conteo por grep sobre el corpus antes de tocar, y publicar la cifra medida con su comando (como hace 09 §D con el delta) — INCLUIR — es de superficie del fix (el corpus de lectores de una clave), no del síntoma",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-4",
+      "familia": "L",
+      "enunciado": "Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la orden de AC10 («importar el patrón del módulo en lugar de re-escribir un equivalente») no era ejecutable sin tocar el productor. La cura real fue subir los dos patrones a VERIFICATION_GROUP_*/VERIFICATION_SCAN_GROUPS a nivel de módulo; el filtro estructural (tabla/monto) quedó como función del módulo y la medición lo invoca. Por qué importa: si se hubiera medido con un regex copiado del cuerpo del método, las dos cifras de AC10 describirían otro programa. Qué lo previene: el diente test_la_medicion_importa_el_patron_del_codigo, que iguala lo que devuelve el patrón del módulo con lo que emite la función del revisor sobre el mismo texto — INCLUIR — la AC no era realizable sin ese movimiento de superficie",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },

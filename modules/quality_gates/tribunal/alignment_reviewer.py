@@ -4,7 +4,8 @@ Revisor híbrido que extrae promesas verbales de la propuesta y las verifica
 deterministamente contra la matriz. Produce revision_alineacion.json.
 
 Flujo:
-1. LLM extrae promesas verbales de 02_PROPUESTA_COMERCIAL.md
+1. LLM extrae promesas verbales de 02_PROPUESTA_COMERCIAL.md con la API checked
+   (cuatro estados); el estado del insumo se publica en el report clave ``extraccion``
 2. Capa determinista cruza en ambas direcciones: cada promesa contra la matriz
    y cada entrada de matriz sin promesa también se clasifica
 3. Clasifica: ALINEADO / SIN-BRECHA-ASOCIADA / PROMESA-SIN-MATRIZ
@@ -21,10 +22,10 @@ from typing import Optional
 
 from modules.quality_gates.tribunal.review_inputs import KIND_PROPUESTA, ReviewInputs
 from modules.quality_gates.tribunal.llm_extractor import (
-    LLMPromiseExtractor,
     PromiseExtractor,
     VerbalPromise,
 )
+from modules.quality_gates.tribunal.outcome import bloque_extraccion
 
 
 STATUS_ALINEADO = "ALINEADO"
@@ -50,11 +51,13 @@ class AlignmentReviewer:
         )
         self._proposal_read = None
 
-    def review(self, extractor: Optional[PromiseExtractor] = None) -> dict:
+    def review(self, extractor: PromiseExtractor) -> dict:
         """Retorna revision_alineacion.json con service_matrix y findings.
 
         Args:
-            extractor: Extractor de promesas (si es None, usa LLMPromiseExtractor).
+            extractor: Extractor de promesas, obligatorio. No existe un default que
+                instancie el LLM real: un llamador offline que olvidara inyectarlo
+                dispararia una llamada al proveedor desde el camino del acta.
         """
         proposal_text = self._load_proposal()
         matrix = self._load_proposal_matrix()
@@ -71,10 +74,8 @@ class AlignmentReviewer:
         if matrix is None:
             return self._error_report("No se encontró proposal_asset_matrix.json")
 
-        if extractor is None:
-            extractor = LLMPromiseExtractor()
-
-        verbal_promises = extractor.extract_verbal_promises(proposal_text)
+        outcome = extractor.extract_checked(proposal_text)
+        verbal_promises = list(outcome.promises) if outcome.is_ok else []
         matrix_entries = self._build_matrix_lookup(matrix)
 
         service_matrix = []
@@ -100,6 +101,8 @@ class AlignmentReviewer:
                     promise.location,
                 ))
 
+        # El cruce matriz→promesa no depende del LLM: un no-OK en la extraccion no
+        # apaga esta mitad del revisor, que sigue emitiendo SIN_BRECHA_ASOCIADA.
         no_breach_info = self._cover_unmatched_entries(
             matrix_entries, matched_entry_keys, service_matrix, findings
         )
@@ -111,6 +114,9 @@ class AlignmentReviewer:
         summary = self._compute_summary(service_matrix)
         summary["no_breach_info"] = no_breach_info
         verdict = self._compute_verdict(findings)
+        if not outcome.is_ok and verdict == VERDICT_APROBADO:
+            # El revisor no aprueba un insumo que no pudo leer (R2.9, tri-estado).
+            verdict = VERDICT_DEVOLVER
 
         return {
             "reviewer": "alignment_reviewer",
@@ -119,13 +125,14 @@ class AlignmentReviewer:
             "findings": findings,
             "summary": summary,
             "verdict_recommendation": verdict,
+            "extraccion": bloque_extraccion(outcome),
             "info": {"brechas_en_ledger": self._count_ledger_brechas(pain_ledger_resolved)},
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
             "review_inputs": self._inputs.reads_report(),
         }
 
-    def write_report(self, extractor: Optional[PromiseExtractor] = None, output_path: Optional[Path] = None) -> Path:
+    def write_report(self, extractor: PromiseExtractor, output_path: Optional[Path] = None) -> Path:
         """Escribe revision_alineacion.json y retorna la ruta."""
         report = self.review(extractor)
         if output_path is None:

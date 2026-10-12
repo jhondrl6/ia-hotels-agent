@@ -58,7 +58,7 @@ def test_honesty_reviewer_encuentra_propuesta_en_v4_complete(tmp_path):
 
     assert reviewer._load_proposal() is not None
     report = reviewer.review(extractor=MockPromiseExtractor([]))
-    types = {f["type"] for f in report["findings"]}
+    types = {f["finding_type"] for f in report["findings"]}
     assert "MISSING_ARTIFACT" not in types
     assert report["verdict_recommendation"] == "APROBADO"
 
@@ -96,5 +96,5 @@ def test_resolutor_devuelve_none_cuando_realmente_no_existe(tmp_path):
     assert resolve_latest("02_PROPUESTA_COMERCIAL*.md", v4_audit) is None
     reviewer = HonestyReviewer(v4_audit)
     report = reviewer.review(extractor=MockPromiseExtractor([]))
-    assert [f["type"] for f in report["findings"]] == ["MISSING_ARTIFACT"]
+    assert [f["finding_type"] for f in report["findings"]] == ["MISSING_ARTIFACT"]
     assert report["verdict_recommendation"] == "BLOQUEAR"

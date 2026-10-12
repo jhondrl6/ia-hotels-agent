@@ -58,6 +58,7 @@ from modules.quality_gates.tribunal.review_inputs import (
 )
 from modules.quality_gates.tribunal.acta_writer import ActaWriter
 from modules.quality_gates.tribunal.artifact_paths import resolve_latest
+from modules.quality_gates.tribunal.llm_extractor import ExtractionOutcome, ExtractionState
 
 RUN_ID = "run_20261006T120000"
 CATALOGO_ASSETS = ("hotel_schema.json", "faq_schema.json", "whatsapp_setup_guide.md")
@@ -83,10 +84,14 @@ SCENARIOS = {"breakdown": {"evidence_tier": "B"}, "scenarios": {}}
 
 
 class _ExtractoraVacia:
-    """Extractor determinista: no hay LLM en esta bateria y no hace falta."""
+    """Extractor determinista: no hay LLM en esta bateria y no hace falta.
 
-    def extract_verbal_promises(self, text):
-        return []
+    Implementa la API checked (unica via tras AC15); OK_SIN_PROMESAS es un estado
+    legitimo, no un colapso: la bateria mide el resolutor de insumos, no la extraccion.
+    """
+
+    def extract_checked(self, text):
+        return ExtractionOutcome(state=ExtractionState.OK_SIN_PROMESAS)
 
 
 def _run(tmp_path, *, diagnostico=True, propuesta=True, assets=("whatsapp_setup_guide.md",)):

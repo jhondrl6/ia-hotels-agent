@@ -1,0 +1,12 @@
+[$] METODO CANONICO (AGENTS.md):  grep -rE "^\s*def test_" tests --include=*.py | wc -l
+[$] PRE commiteado:  git grep -c -E "^\s*def test_" HEAD -- tests | awk -F: '{s+=$NF} END {print s}'
+
+SUMA PRE  (HEAD 8ee5511, arbol intacto al abrir la sesion): 5253
+SUMA POST (arbol de trabajo con FASE-B):                                          5280
+DELTA: 27
+TESTS NUEVOS DE FASE-B: 26 en test_fase_b_consumidores_contrato.py + 1 neto en TestSinWrapperAC15
+                (4 pruebas nuevas reemplazan las 3 del wrapper: 4 - 3 = +1)
+ASERCION R2.3 / AC16:  delta (27) == tests nuevos (27)  ->  OK
+RE-ANCLADOS, no cuentan como nuevos: 12 llamadas al wrapper en test_llm_extractor.py y
+                10 lecturas de la clave del finding en 4 archivos de Bot 4 (AC18: medido 10, declarado 8).
+

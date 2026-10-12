@@ -266,7 +266,7 @@
   "tests/test_validate_plan_closure.py": "FASE-V2",
   ".agents/workflows/templates/lecciones-capitalizadas-template.md": "FASE-V3",
   ".opencode/plans/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11/06-checklist-implementacion.md": "FASE-V3",
-  "modules/quality_gates/tribunal/acta_writer.py": "FASE-P2",
+  "modules/quality_gates/tribunal/acta_writer.py": "FASE-B",
   "tests/quality_gates/tribunal/test_s_e2_generate_proposal_false.py": "FASE-P3-B",
   "tests/test_asset_path_clave_canonica.py": "FASE-P3-B",
   "modules/quality_gates/tribunal/judge.py": "FASE-P2",
@@ -278,7 +278,7 @@
   "modules/utils/provider_registry.py": "FASE-COSTE-GEMINI",
   "11": "FASE-VERIFY",
   "tests/test_validate_lesson_capitalization.py": "FASE-G",
-  "modules/quality_gates/tribunal/outcome.py": "FASE-0",
+  "modules/quality_gates/tribunal/outcome.py": "FASE-B",
   "tests/quality_gates/tribunal/test_diagnosis_reviewer.py": "FASE-0",
   "tests/quality_gates/tribunal/test_p2_veredicto_enriquecido.py": "FASE-0",
   "22": "FASE-B",
@@ -323,7 +323,7 @@
   "docs/contributing/.last_doc_phase.json": "FASE-A3",
   "45 rutas: 14 renombradas por el git mv de Archives/": "FASE-RELEASE",
   "12 modificadas y 19 nuevas de evidencia; unidad y comando en E/FASE-RELEASE/07-medicion_rutas.txt": "FASE-RELEASE",
-  "modules/quality_gates/tribunal/llm_extractor.py": "FASE-A",
+  "modules/quality_gates/tribunal/llm_extractor.py": "FASE-B",
   "modules/providers/llm_provider.py": "FASE-A",
   "tests/quality_gates/tribunal/test_llm_extractor.py": "FASE-A",
   "tests/quality_gates/tribunal/test_alignment_reviewer.py": "FASE-A",
@@ -333,5 +333,7 @@
   ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md": "FASE-A",
   ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md": "FASE-A",
   ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/README.md": "FASE-A",
-  ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md": "FASE-A"
+  ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md": "FASE-A",
+  "modules/quality_gates/tribunal/alignment_reviewer.py": "FASE-B",
+  "modules/quality_gates/tribunal/honesty_reviewer.py": "FASE-B"
 }

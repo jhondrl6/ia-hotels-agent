@@ -5,8 +5,10 @@ verifica que los 3 escenarios (70/20/10) están presentes, y lee los CG-* repart
 en DOS archivos comerciales (canónico + diagnóstico).
 
 Flujo:
-1. LLM extrae claims de sobre-presentación de la propuesta
-2. Capa determinista verifica cada claim contra: tier labels, escenarios, CG-*
+1. LLM extrae promesas verbales de la propuesta con la API checked (cuatro estados);
+   el estado del insumo se publica en el report clave ``extraccion``
+2. La sobre-presentacion se mide sobre el TEXTO COMPLETO de la propuesta (no depende
+   de las citas que el LLM eligio) y el resto se verifica contra tier labels y CG-*
 3. Clasifica: OVER_PRESENTATION / TIER_MISMATCH / CG_WARNING_UNDISCLOSED / MISSING_SCENARIO
 4. Produce revision_honestidad.json
 
@@ -41,6 +43,7 @@ from modules.quality_gates.tribunal.llm_extractor import (
     PromiseExtractor,
     VerbalPromise,
 )
+from modules.quality_gates.tribunal.outcome import bloque_extraccion
 
 
 FINDING_OVER_PRESENTATION = "OVER_PRESENTATION"
@@ -49,6 +52,35 @@ FINDING_CG_WARNING_UNDISCLOSED = "CG_WARNING_UNDISCLOSED"
 FINDING_MISSING_SCENARIO = "MISSING_SCENARIO"
 
 FINDING_MISSING_ARTIFACT = "MISSING_ARTIFACT"
+
+# Artefacto que declara el hallazgo (contrato de claves del acta, AC18).
+ARTIFACTO_PROPUESTA = "02_PROPUESTA_COMERCIAL.md"
+
+# Patrones de lenguaje de verificacion (AC10, cura N7). Viven a nivel de modulo porque
+# la medicion de la superficie de falso positivo tiene que importar el patron del
+# codigo; un regex equivalente re-escrito a mano mide otra cosa.
+#
+# Frontera curada: la alternante `100%` llevaba `\b` detras del signo, y `\b` despues
+# de un no-palabra exige una palabra al lado, así que NINGUN `100%` del corpus matcheaba.
+# Ahora `100[ \t]*%` matchea tambien en prosa de garantia.
+VERIFICATION_GROUP_LENGUAJE = r"\b(verificad[oa]s?|confirmad[oa]s?|dato real|cifra exacta|validad[oa]s?)\b"
+VERIFICATION_GROUP_CUANTIFICADOR = r"(?<!\d)100[ \t]*%|\b(?:total|absoluto|definitiv[ao]s?)\b"
+VERIFICATION_PATTERNS = (VERIFICATION_GROUP_LENGUAJE, VERIFICATION_GROUP_CUANTIFICADOR)
+
+# Criterio de la cura (medido sobre las 6 propuestas reales del repo, ver
+# evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-B/medicion-falso-positivo.md): el grupo
+# de cuantificadores solo se juzga fuera de fila de tabla y fuera de una linea que
+# declara un monto. Sobre la propuesta del run de referencia (2026-10-07) sus 5
+# coincidencias eran 3 totales financieros o de tabla y 2 absolutos de prosa; el grupo
+# de lenguaje de verificacion conserva la tabla sin filtro: una celda que dice
+# «Verificado» con tier B es justo lo que este bot existe para señalar.
+VERIFICATION_SCAN_GROUPS = (
+    ("LENGUAJE_VERIFICACION", VERIFICATION_GROUP_LENGUAJE, False),
+    ("CUANTIFICADOR_ABSOLUTO", VERIFICATION_GROUP_CUANTIFICADOR, True),
+)
+
+LINEA_DE_TABLA = re.compile(r"^\s*\|.*\|?\s*$")
+MONTO_DECLARADO = re.compile(r"\$\s?\d|(?<![\d.,])\d[\d.]{4,}\s?(?:COP|USD)\b")
 
 VERDICT_APROBADO = "APROBADO"
 VERDICT_DEVOLVER = "DEVOLVER-PRUEBAS"
@@ -93,6 +125,43 @@ DISCLOSURE_PHRASES_BY_GATE = {
 
 
 from modules.quality_gates.tribunal.review_inputs import KIND_PROPUESTA, ReviewInputs
+
+
+def _linea_conteniendo(texto: str, posicion: int) -> str:
+    """La linea completa donde cae una coincidencia: el contexto que decide el filtro."""
+    inicio = texto.rfind("\n", 0, posicion) + 1
+    fin = texto.find("\n", posicion)
+    return texto[inicio:] if fin == -1 else texto[inicio:fin]
+
+
+def _es_contexto_financiero(linea: str) -> bool:
+    """True si la linea es una fila de tabla o declara un monto (exclusion AC10)."""
+    return bool(LINEA_DE_TABLA.match(linea)) or bool(MONTO_DECLARADO.search(linea))
+
+
+def coincidencias_lenguaje_de_verificacion(texto: str) -> list[dict]:
+    """Coincidencias de los dos grupos, con el criterio de la AC10 ya aplicado.
+
+    Devuelve por cada una: grupo, literal y linea. Deduplica por (grupo, literal,
+    linea) porque las plantillas repiten secciones en la misma propuesta.
+    """
+    halladas: list[dict] = []
+    vistas: set = set()
+    for grupo, patron, excluye_financiero in VERIFICATION_SCAN_GROUPS:
+        for coincidencia in re.finditer(patron, texto or "", re.IGNORECASE):
+            linea = _linea_conteniendo(texto, coincidencia.start()).strip()
+            if excluye_financiero and _es_contexto_financiero(linea):
+                continue
+            firma = (grupo, coincidencia.group(0).lower(), linea)
+            if firma in vistas:
+                continue
+            vistas.add(firma)
+            halladas.append({
+                "grupo": grupo,
+                "literal": coincidencia.group(0),
+                "linea": linea,
+            })
+    return halladas
 
 
 class HonestyReviewer:
@@ -168,12 +237,14 @@ class HonestyReviewer:
         evidence_tier = self._extract_evidence_tier(manifest, financial_scenarios)
         precision_tier = self._extract_precision_tier(manifest, financial_scenarios)
 
-        claims = extractor.extract_verbal_promises(proposal_text)
-        for claim in claims:
-            over_presentation = self._check_over_presentation(claim, evidence_tier, proposal_text)
-            if over_presentation:
-                findings.append(over_presentation)
+        outcome = extractor.extract_checked(proposal_text)
+        claims = list(outcome.promises) if outcome.is_ok else []
 
+        # N5/AC9: la sobre-presentacion se mide sobre el texto completo y no depende
+        # de la extraccion, así que un no-OK del LLM ya no silencia este hallazgo.
+        findings.extend(self._scan_sobre_presentacion(proposal_text, evidence_tier))
+
+        for claim in claims:
             tier_mismatch = self._check_tier_mismatch(claim, evidence_tier, precision_tier)
             if tier_mismatch:
                 findings.append(tier_mismatch)
@@ -190,6 +261,9 @@ class HonestyReviewer:
 
         summary = self._compute_summary(findings)
         verdict = self._compute_verdict(findings)
+        if not outcome.is_ok and verdict == VERDICT_APROBADO:
+            # El revisor no aprueba un insumo que no pudo leer (R2.9, tri-estado).
+            verdict = VERDICT_DEVOLVER
 
         return {
             "reviewer": "honesty_reviewer",
@@ -198,6 +272,7 @@ class HonestyReviewer:
             "commercial_gates_read": commercial_gates_read,
             "summary": summary,
             "verdict_recommendation": verdict,
+            "extraccion": bloque_extraccion(outcome),
             "timestamp": datetime.now().isoformat(),
             "artifacts_read": self._list_artifacts_read(),
             "review_inputs": self._inputs.reads_report(),
@@ -325,33 +400,36 @@ class HonestyReviewer:
                 return tier
         return "UNKNOWN"
 
-    def _check_over_presentation(self, claim: VerbalPromise, evidence_tier: str, proposal_text: str) -> Optional[dict]:
-        """Detecta OVER_PRESENTATION: ESTIMATED presentado como verificado.
+    def _scan_sobre_presentacion(self, proposal_text: str, evidence_tier: str) -> list[dict]:
+        """OVER_PRESENTATION por lenguaje de verificacion en el TEXTO COMPLETO (AC9/N5).
 
-        Si evidence_tier es B o C (no A), y el claim usa lenguaje de verificación
-        ("verificado", "confirmado", "dato real"), es sobre-presentación.
+        Antes el regex corria solo sobre las citas que el LLM eligio: una promesa
+        sobre-presentada que el extractor omitia quedaba sin revisar, y con una
+        extraccion no-OK la lista vacia silenciaba el check entero. El texto completo
+        no depende del LLM, así que el hallazgo sigue emitiéndose aunque la extraccion
+        falle. Con tier A o UNKNOWN no se emite (la precedencia del tier es AC11).
         """
         if evidence_tier in ["A", "UNKNOWN"]:
-            return None
+            return []
 
-        verification_patterns = [
-            r"\b(verificad[oa]s?|confirmad[oa]s?|dato real|cifra exacta|validad[oa]s?)\b",
-            r"\b(100%|total|absoluto|definitivo)\b",
-        ]
-
-        claim_text = claim.text.lower()
-        for pattern in verification_patterns:
-            if re.search(pattern, claim_text, re.IGNORECASE):
-                return {
-                    "severity": "CRITICAL",
-                    "type": FINDING_OVER_PRESENTATION,
-                    "claim_text": claim.text,
-                    "evidence_tier_declared": evidence_tier,
-                    "cg_reference": None,
-                    "description": f"Claim con lenguaje de verificación pero evidence_tier={evidence_tier} (no A)",
-                }
-
-        return None
+        findings = []
+        for coincidencia in coincidencias_lenguaje_de_verificacion(proposal_text):
+            findings.append({
+                "finding_type": FINDING_OVER_PRESENTATION,
+                "clause": "P6.5",
+                "severity": "CRITICAL",
+                "verification_group": coincidencia["grupo"],
+                "claim_text": coincidencia["literal"],
+                "matched_line": coincidencia["linea"][:240],
+                "evidence_tier_declared": evidence_tier,
+                "cg_reference": None,
+                "source_artifact": ARTIFACTO_PROPUESTA,
+                "description": (
+                    f"La propuesta usa «{coincidencia['literal']}» ({coincidencia['grupo']}) "
+                    f"con evidence_tier={evidence_tier} (no A) en: {coincidencia['linea'][:120]}"
+                ),
+            })
+        return findings
 
     def _check_tier_mismatch(self, claim: VerbalPromise, evidence_tier: str, precision_tier: str) -> Optional[dict]:
         """Detecta TIER_MISMATCH: claim con tier declarado ≠ tier real.
@@ -373,11 +451,13 @@ class HonestyReviewer:
         for mention, mentioned_tier in tier_mentions.items():
             if mention in claim_text and mentioned_tier != evidence_tier:
                 return {
+                    "finding_type": FINDING_TIER_MISMATCH,
+                    "clause": "P6.5",
                     "severity": "WARNING",
-                    "type": FINDING_TIER_MISMATCH,
                     "claim_text": claim.text,
                     "evidence_tier_declared": evidence_tier,
                     "cg_reference": None,
+                    "source_artifact": ARTIFACTO_PROPUESTA,
                     "description": f"Claim menciona tier {mentioned_tier} pero evidence_tier real es {evidence_tier}",
                 }
 
@@ -391,11 +471,13 @@ class HonestyReviewer:
         for key in SCENARIO_KEYS:
             if key not in scenarios or scenarios[key] is None:
                 findings.append({
+                    "finding_type": FINDING_MISSING_SCENARIO,
+                    "clause": "P6.5",
                     "severity": "CRITICAL",
-                    "type": FINDING_MISSING_SCENARIO,
                     "claim_text": None,
                     "evidence_tier_declared": evidence_tier,
                     "cg_reference": None,
+                    "source_artifact": "financial_scenarios_*.json",
                     "description": f"Falta escenario {SCENARIO_LABELS.get(key, key)}",
                 })
 
@@ -444,20 +526,22 @@ class HonestyReviewer:
             return None
 
         return {
+            "finding_type": FINDING_CG_WARNING_UNDISCLOSED,
+            "clause": "P6.5",
             "severity": "WARNING",
-            "type": FINDING_CG_WARNING_UNDISCLOSED,
             "claim_text": None,
             "evidence_tier_declared": evidence_tier,
             "cg_reference": gate_id,
+            "source_artifact": ARTIFACTO_PROPUESTA,
             "description": f"CG-* WARNING {gate_id} no divulgado en propuesta: {warning.get('message', '')[:100]}",
         }
 
     def _compute_summary(self, findings: list) -> dict:
         """Calcula resumen de hallazgos."""
-        over_presentations = sum(1 for f in findings if f.get("type") == FINDING_OVER_PRESENTATION)
-        tier_mismatches = sum(1 for f in findings if f.get("type") == FINDING_TIER_MISMATCH)
-        undisclosed_warnings = sum(1 for f in findings if f.get("type") == FINDING_CG_WARNING_UNDISCLOSED)
-        missing_scenarios = sum(1 for f in findings if f.get("type") == FINDING_MISSING_SCENARIO)
+        over_presentations = sum(1 for f in findings if f.get("finding_type") == FINDING_OVER_PRESENTATION)
+        tier_mismatches = sum(1 for f in findings if f.get("finding_type") == FINDING_TIER_MISMATCH)
+        undisclosed_warnings = sum(1 for f in findings if f.get("finding_type") == FINDING_CG_WARNING_UNDISCLOSED)
+        missing_scenarios = sum(1 for f in findings if f.get("finding_type") == FINDING_MISSING_SCENARIO)
         return {
             "over_presentations": over_presentations,
             "tier_mismatches": tier_mismatches,
@@ -486,11 +570,13 @@ class HonestyReviewer:
             "reviewer": "honesty_reviewer",
             "clause": "P6.5",
             "findings": [{
+                "finding_type": FINDING_MISSING_ARTIFACT,
+                "clause": "P6.5",
                 "severity": "CRITICAL",
-                "type": FINDING_MISSING_ARTIFACT,
                 "claim_text": None,
                 "evidence_tier_declared": "UNKNOWN",
                 "cg_reference": None,
+                "source_artifact": "N/A",
                 "description": message,
             }],
             "commercial_gates_read": {
