@@ -2,7 +2,7 @@
 
 **ID**: FASE-C2 (plan CURA-COSTURA-TRIBUNAL-2026-10-11; se ejecuta en una sesión NUEVA, entre FASE-C y FASE-E2E)
 **Objetivo**: que un hallazgo CRITICAL de un revisor — o su recomendación `BLOQUEAR` — siga bloqueando el ZIP aunque el estado de extracción de ese revisor sea `INPUT_NOT_EVALUABLE` / `FALLIDO` (AC19). Hoy la fuerza de bloqueo exige `status.is_ok`, así que el gate se afloja justo cuando el proveedor falla.
-**Dependencias**: FASE-C ✅ (2026-10-12) — `judge.py` y `outcome.py` ya fueron tocados por esa fase; el árbol abre con sus 18 rutas **sin commit**.
+**Dependencias**: FASE-C ✅ (2026-10-12), **publicada** el mismo día en `079f475` (+ sellos `84f9a0d` y `6494939`) — `judge.py` y `outcome.py` ya fueron tocados **y versionados** por esa fase; el árbol de apertura está **limpio y en paridad con origin** sobre tip `6494939` (medido 2026-10-12: `SUCIOS=0`, paridad `0 0`).
 **Duración estimada**: 1 sesión.
 **Complejidad**: MEDIA — un predicado compartido por dos consumidores (veredicto y acciones correctivas); nada de I/O nuevo.
 **Skill**: `.agents/workflows/phased_project_executor.md` (workflow canónico).
@@ -26,7 +26,7 @@ Mecanismo: los tres predicados de `ReviewerReport` exigen `status.is_ok` (`outco
 - `S-CST-1` (el gate `hard_contradictions` no puede fallar) sigue abierta con dueño Operador; AC19 vive en el tribunal, no en ese cableado.
 - La extensión a la fila 3 (`verified_return_for_tests` sin `is_ok`, que haría que cualquier extracción fallida bloquee el ZIP aunque no haya hallazgos) se **rechaza** con motivo: hace la entrega del run único sensible a un fallo transitorio del proveedor. Se re-evalúa con la evidencia del run.
 
-**Nota de registro**: `FASE-C2` lleva dígitos, así que el desempate `(fecha, dígitos)` del checker la corona sobre FASE-A/B/C si comparten fecha (la lección del desempate ya capitalizada).
+**Nota de registro**: `FASE-C2` lleva dígitos, así que el desempate `(fecha, dígitos)` del checker la corona sobre FASE-A/B/C si comparten fecha. **Corrección a lo que esta nota afirmaba** («la lección del desempate ya capitalizada»): la lección **no** está capitalizada en el repo — la única ocurrencia de «desempate» es la fila de **deuda** en `10-analisis` §Seguimientos (dueño Operador, tanda propia, con sus cuatro capas). Esta fase no dispara el defecto justamente porque sus dígitos ganan el desempate, así que la deuda sigue esperando a su tanda.
 
 ### Estado de Fases Anteriores
 
@@ -34,7 +34,7 @@ Mecanismo: los tres predicados de `ReviewerReport` exigen `status.is_ok` (`outco
 |------|--------|
 | Preparación / 2 / 2b | ✅ |
 | FASE-A / FASE-B | ✅ (publicadas y empujadas, tip `4df81d3`) |
-| FASE-C | ✅ (2026-10-12, **sin commit**; 18 rutas en el árbol) |
+| FASE-C | ✅ (2026-10-12, **publicada** en `079f475` + sellos `84f9a0d`/`6494939`; árbol de apertura limpio) |
 
 ### Base Técnica Disponible
 
@@ -55,7 +55,7 @@ Mecanismo: los tres predicados de `ReviewerReport` exigen `status.is_ok` (`outco
 
 ### Tarea 0 — Pre-imagen y blast radius (sin editar)
 
-- [ ] `grep -rn "verified_critical\|verified_block\|verified_return_for_tests" tests/ --include=*.py` y el conteo de `INPUT_NOT_EVALUABLE` en tests; publicar la cifra en `evidence/…/FASE-C2/pre-imagen.md` junto al `git status` de apertura (18 rutas de FASE-C) y la selección de tests que va a correr.
+- [ ] `grep -rn "verified_critical\|verified_block\|verified_return_for_tests" tests/ --include=*.py` y el conteo de `INPUT_NOT_EVALUABLE` en tests; publicar la cifra en `evidence/…/FASE-C2/pre-imagen.md` junto al `git status` de apertura (se espera **limpio** sobre tip `6494939`; si aparece alguna ruta sucia, eso es un hallazgo que se declara antes de editar, no un punto de partida) y la selección de tests que va a correr.
 - [ ] Confirmar (o corregir con evidencia) el re-anclaje esperado 0–2 de la base técnica.
 
 ### Tarea 1 — AC19: la fila 2 no exige `is_ok`
@@ -120,7 +120,7 @@ PYTHONUTF8=1 ./venv/Scripts/python.exe scripts/run_all_validations.py --quick
 - [ ] AC19 legible en su artefacto (acta generada + par rojo/verde), no en el string del código
 - [ ] La fila 3 queda sin tocar y su rechazo está escrito con motivo
 - [ ] Delta R2.3 verificado restando; `--quick` verde; `log_phase_completion.py --fase FASE-C2` ejecutado
-- [ ] Cinco cortes declarados; sin commit (requiere autorización + pathspec; el árbol abre con las 18 rutas de FASE-C y se declara si un commit cubre ambas fases)
+- [ ] Cinco cortes declarados; sin commit (requiere autorización + pathspec; el árbol abre limpio y FASE-C ya está publicada, así que el commit de esta fase cubre **solo C2** — no se re-empaqueta trabajo ajeno ya versionado)
 
 ## Restricciones
 
