@@ -16,6 +16,8 @@
 
 **Sello de publicación (2026-10-12)**: las celdas «**sin commit**» de las filas 1-3 registran el corte declarado al cerrar cada fase, no el estado del árbol. Estado medido con `git log`: FASE-A `5ed960a`+`af508cd` (empujada), FASE-B `bf5ab2e`+`4df81d3` (empujada), **FASE-C `079f475`**. FASE-C2 sigue pendiente de ejecución.
 
+**Sello de la segunda tanda (2026-10-12)**: la última frase de arriba quedó **vencida por la propia ejecución**. FASE-C2 se ejecutó ese mismo día y se commiteó en `fa4c93e` (28 archivos, hook 8/8 verde, `git grep -c -E "^\s*def test_" HEAD -- tests` = 5321 reproducido en el árbol del commit). El tip publicado es el que imprime `git ls-remote` al leer esta línea, no el que ella estampa.
+
 ## Notas de dependencia
 
 - La secuencia A→B→C es obligatoria: `honesty_reviewer.py` se edita en B (estados, N5, N7, AC18) y en C (N6).

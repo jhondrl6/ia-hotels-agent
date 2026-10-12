@@ -70,3 +70,21 @@ clases, así que su aporte al primer es nulo y eso se declara en lugar de afirma
 
 **Ninguno**: esta sesión no escribió ningún `CONTEXT-*.md`, así que no hay pregunta de aporte durable
 (item 9 del post-ejecución) que responder.
+
+## Addendum (2026-10-12, segunda pasada de esta misma sesión)
+
+La tabla de arriba quedó **vencida por su propia tanda**: registra el corte declarado («espera de
+autorización, sin commit») y la autorización llegó después con la letra **«Git Commit + L3 + Push»**. No se
+reescribe lo estampado; se estampa al lado, con lo medido:
+
+- `git commit` por pathspec sobre las 12 rutas de arriba → **`fa4c93e`**, padre `cea999a`, **28 archivos**,
+  1217 inserciones / 28 borrados. Antes de stagear: `SIN_ETAPAR=0`, `ETAPADO=28` (las dos rutas nuevas
+  explotaron a 17 archivos de evidencia + 1 test).
+- Hook pre-commit: **«All checks PASSED - Commit allowed»**, los 8 checks, ninguno saltado.
+- La cifra publicada se reprodujo **en el árbol del commit**: `git grep -c -E "^\s*def test_" HEAD -- tests`
+  = **5321**; y `git status --porcelain` quedó en `SUCIOS=0`.
+- Las cuatro notas de sello que este addendum arrastra (`README`, `dependencias-fases`, `06-checklist` y
+  `10-analisis`, más el encabezado de este último) viajaron en un commit **posterior** de la misma tanda: el
+  sha de ese commit de sellos no puede estamparse a sí mismo en esta nota, y **el tip publicado es el que
+  imprime `git ls-remote` al leerla**; la L3 de la tanda se corre sobre el último commit del rango y su
+  cobertura se enuncia con ese rango, nunca como «tanda limpia».

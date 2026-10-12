@@ -85,6 +85,8 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 
 **Sello de publicación (2026-10-12)**: el estado commiteado manda sobre la etiqueta «(sin commit)» de las filas de arriba, que registra el corte declarado al cerrar cada fase. Medido con `git log`: FASE-A `5ed960a`+`af508cd` (empujada), FASE-B `bf5ab2e`+`4df81d3` (empujada, paridad `0 0`), **FASE-C `079f475`** (con el registro documental de FASE-C2 en la misma tanda). El registro append-only es `docs/contributing/REGISTRY.md`.
 
+**Sello de la segunda tanda (2026-10-12)**: **FASE-C2 `fa4c93e`** (padre `cea999a`, 28 archivos, `SUCIOS=0` al cerrar, hook 8/8). La fila de arriba que decía «Sin commit al cierre (requiere autorización)» describe el corte declarado; la autorización llegó después con la letra «Git Commit + L3 + Push». El tip publicado no lo estampa esta nota: es el que imprime `git ls-remote` al leerla.
+
 ## Riesgos y plan de recuperación
 
 - **Credencial de proveedor ausente en FASE-E2E**: la extracción terminaría `FALLIDO` (estado honesto tras FASE-A) y el veredicto perdería la pata LLM. Pre-vuelo T0 verifica presencia de credencial por nombre de variable y lo publica; si falta, la fase se detiene y consulta antes de gastar el run.

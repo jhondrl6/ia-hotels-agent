@@ -18,6 +18,8 @@
 
 **Sello de publicación (2026-10-12)**: FASE-A `5ed960a` (+`af508cd`) y FASE-B `bf5ab2e` (+`4df81d3`) están **empujadas** con paridad `0 0`; **FASE-C quedó commiteada en `079f475`**, tanda que además registra FASE-C2 con su AC19. Las celdas de arriba que dicen «sin commit» describen el **corte declarado al cerrar la fase** (los cinco cortes del executor), no el estado actual del árbol: eso lo miden `git log` y `docs/contributing/REGISTRY.md`.
 
+**Sello de la segunda tanda (2026-10-12)**: **FASE-C2 commiteada en `fa4c93e`** (padre `cea999a`; 28 archivos; 1217+/28−; hook 8/8; la cifra canónica `5321` reproducida en el árbol del commit con `git grep -c -E "^\s*def test_" HEAD -- tests`). El push y su paridad no los estampa esta nota: los imprime `git ls-remote` al leerla.
+
 Detalles vivos: `06-checklist-implementacion.md` y `dependencias-fases.md`.
 
 ## Índice

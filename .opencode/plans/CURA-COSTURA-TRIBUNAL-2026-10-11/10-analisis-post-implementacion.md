@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CURA-COSTURA-TRIBUNAL-2026-10-11
 
-> **Estado**: FASE-A, FASE-B y FASE-C completadas **sin commit** (corte: listo para revisión; FASE-C cerrada 2026-10-12). FASE-E2E/VERIFY/RELEASE pendientes.
+> **Estado**: FASE-A, FASE-B y FASE-C completadas **sin commit** (corte: listo para revisión; FASE-C cerrada 2026-10-12). FASE-C2 ejecutada el 2026-10-12 y **commiteada en `fa4c93e`** (ver el sello de la segunda tanda abajo). FASE-E2E/VERIFY/RELEASE pendientes.
 > **Plan**: CURA-COSTURA-TRIBUNAL-2026-10-11
 > **Versión objetivo**: 4.81.0
 > **Origen**: `.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md` (§3 defectos 1-6, §10.2 hallazgos N1-N10, §10.3 blast radius, §10.4 causas raíz)
@@ -21,6 +21,8 @@
 | FASE-RELEASE-4.81.0 | | ⬜ | | Delegable | |
 
 **Sello de publicación (2026-10-12)**: las celdas «✅ (sin commit)» de la tabla de abajo describen el corte declarado al cerrar cada fase. Estado medido con `git log`: FASE-A `5ed960a`, FASE-B `bf5ab2e` (ambas empujadas, paridad `0 0`), **FASE-C `079f475`** — tanda que además registra FASE-C2 con su AC19. El registro append-only vive en `docs/contributing/REGISTRY.md`.
+
+**Sello de la segunda tanda (2026-10-12)**: la fila de FASE-C2 quedó escrita con «✅ (sin commit)» porque ese era su corte al cerrarse la pasada; la autorización llegó después con la letra **«Git Commit + L3 + Push»**. Medido: **FASE-C2 `fa4c93e`** (padre `cea999a`, 28 archivos, 1217+/28−, hook 8/8 verde, `git status` `SUCIOS=0` al cerrar) y la cifra de su fila se reprodujo **en el árbol del commit**: `git grep -c -E "^\s*def test_" HEAD -- tests` suma **5321**. El tip publicado es el que imprime `git ls-remote`, no el que esta nota puede estampar.
 
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY; Expected tomado del contexto de origen)
 
