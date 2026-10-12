@@ -115,3 +115,22 @@ directorios), `git grep -c -E "^\s*def test_" HEAD -- tests` = **5321** (delta 0
   **~50 tool calls** (unidad `tool calls`, contadas por el agente, sin instrumento del repo que las mida — el mismo hueco
   que declararon FASE-A/B/C). Lo consumió T0(c) con la opción A: tres re-corridas del arnés (una por truncamiento del
   heredoc, una por un `KeyError` propio, una por el criterio del dominio) y la re-medición del dominio con dos clientes.
+
+### 5.2 Addendum del Operador (2026-10-12, posterior al corte)
+
+La línea de arriba —«**Sin `git commit` ejecutado**»— describe el corte declarado al cerrar y sigue siendo verdad para
+ese momento. Después llegó la autorización con la letra **«Git Commit + L3 + Push»**, y la tanda se publicó en
+**`fbdee8e`** (padre `bce67bc`, **49 archivos**, `SUCIOS=0` al terminar, `git grep -c -E "^\s*def test_" HEAD -- tests`
+reproducido en el árbol del commit = **5321**). El mismo commit lleva el contexto
+`CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y el par del índice.
+
+Dos cosas que este addendum declara y que el `git status` del momento no podía:
+
+- **Bytes en disco vs blob**: los sha256 citados en esta nota y en `evidencia-cierre-crudo.txt` son de los **bytes en
+  disco** al medir. Con `core.autocrlf` el blob queda normalizado a LF (34 archivos de la tanda avisaron al etapar), así
+  que un cotejo `git show <sha>:ruta | sha256sum` **no casa** y no es evidencia de alteración: el cotejo de evidencia
+  aquí es disco a disco.
+- **El crudo del quick quedó desplazado**: `quick-cierre.txt` conserva la **re-corrida** (13/13) porque la primera
+  (12/13) se escribió en la misma ruta y fue sobrescrita; su valor queda afirmado en §5.1 y en esta nota, no en el
+  crudo. La corrida con el contexto nuevo ya publicado es `quick-post-contexto.txt` (**13/13, EXIT 0**).
+

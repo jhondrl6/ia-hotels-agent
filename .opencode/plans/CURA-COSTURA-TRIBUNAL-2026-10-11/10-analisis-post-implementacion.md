@@ -104,6 +104,19 @@ Formato: **qué pasó / por qué / qué lo previene** + pertinencia (INCLUIR/EXC
 | El checker de versiones corona la fase **más vieja** cuando dos fases comparten fecha: el hook imprimió `Ultima fase: FASE-A` con FASE-B ya registrada | **Abierta con dueño: Operador, tanda propia** (declarada al publicar FASE-B el 2026-10-11; **no es rojo de este plan** y no gobierna ningún gate: `[2/3]` sale OK igual) | Mecanismo medido: `extract_latest_phase_from_registry` en `scripts/version_consistency_checker.py` arma la clave de orden como `(fecha, dígitos del nombre)`. `FASE-A` y `FASE-B` no traen dígitos, así que empatan en `("2026-10-11", 0)`; el sort es estable, el empate conserva el orden del archivo y REGISTRY es cronológico ascendente, corona la entrada **más vieja**. El comentario de la función promete «tomar el numero mayor» pero la promesa no tiene diente: la rama nunca disparó con datos reales hasta hoy (el verde de FASE-A era vacío por ausencia de caso). Cura en tanda propia, con sus cuatro capas de prevención: (1) test del empate con la forma real del REGISTRY y su mutation check que revierte la clave de orden; (2) el lector imprime la fecha junto a la fase y ante empate nombra los dos candidatos en vez de adivinar; (3) aserto que cruza escritor y lector del mismo campo (`scripts/log_phase_completion.py` contra `extract_latest_phase_from_registry`), familia de la lección ya capitalizada; (4) lección nueva por el Paso 0: un comentario que promete un desempate no es contrato hasta que un test lo dispara |
 | Neutralización de delimitadores dentro del dato | **Cerrada en FASE-A con su diente** | `_compose_prompt` sustituye cualquier ocurrencia de los dos marcadores en la propuesta por `NEUTRALIZADOR_DELIMITADOR`, de modo que el contenido no puede cerrar su propio bloque (`test_un_delimitador_dentro_de_la_propuesta_no_escapa_del_bloque`) |
 
+**Sello de la tercera tanda (2026-10-12)**: la fila de FASE-E2E quedó escrita con «✅ (sin commit)» porque ese era su
+corte al cerrarse; la autorización llegó después con la letra **«Git Commit + L3 + Push»**. Medido: **FASE-E2E
+`fbdee8e`** (padre `bce67bc`, **49 archivos**, `SUCIOS=0` al terminar el commit, 0 rutas adelantadas antes de la tanda)
+y su cifra reproducida **en el árbol del commit**: `git grep -c -E "^\s*def test_" HEAD -- tests` = **5321** (la fase no
+añadió tests). El mismo commit lleva el contexto nuevo
+`CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` — alcance **A + C** dictado por el Operador el 2026-10-12, con B fuera
+por su motivo medido — y el par del índice regenerado, que no es separable porque su estado derivado describe a la vez
+las definiciones de esta fila (`L-CST-6`, `L-CST-7` → 387 IDs) y las citas del contexto. Declaración de bytes: los sha256
+que cita la evidencia son de **los bytes en disco al medir**; con `core.autocrlf` los blobs quedan normalizados a LF
+(34 archivos de la tanda lo avisaron al etapar), así que un cotejo `git show` contra disco no casa por EOL y la
+verificación de evidencia es **disco a disco**. Cláusula de antemano: esta nota no puede estampar su propio sha, y el tip
+publicado es el que imprime `git ls-remote` al leerla.
+
 ## Métricas de Ejecución (referencias, no copias)
 
 - Por fase: **ver `09-documentacion-post-proyecto.md` §D** y los pares `*_baseline_pre/post.txt` de `evidence/FASE-*/`.
