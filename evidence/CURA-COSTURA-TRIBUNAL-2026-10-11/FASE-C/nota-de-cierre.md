@@ -74,3 +74,16 @@ con el hook 8/8 verde y la cifra reproducida **en el árbol del commit** (`git g
 El commit lleva además el registro documental de FASE-C2 (AC19), porque README, `06`, `dependencias` y
 `10-analisis` contienen en el mismo archivo el cierre de C y el registro de C2 y no son separables por hunk sin
 edición interactiva. **No se empujó**: el literal autorizaba commits, no push.
+
+**Segundo addendum (2026-10-12, después del push)**: la frase «No se empujó» de arriba describe el estado al
+momento de escribirse y quedó vencida por la letra siguiente del Operador («L3 del rango `4df81d3..84f9a0d` y
+después push»), que se ejecutó en ese orden: L3 con `findings_count: 0` sobre los **2** commits medidos del rango
+(`git rev-list --count 4df81d3..HEAD`, tip `84f9a0d`) y push fast-forward `4df81d3..84f9a0d`, con paridad `0 0`
+medida por `git fetch` + `rev-list --left-right --count` y `git ls-remote` casando el tip local. No se reescribe
+la línea vencida: se sella encima, que es como la casa lleva sus registros append-only.
+
+**Cláusula de antemano**: este párrafo es un commit nuevo, así que no puede estampar su propio sha ni su propia
+cobertura de escaneo. Lo que rige es el comando: el tip publicado es el que imprima
+`git ls-remote origin -h refs/heads/master` al leer esta línea, y la primera corrida de L3 de la próxima tanda
+barre desde `84f9a0d` hacia adelante por construcción, incluyendo este sello. No se abre un tercer addendum para
+anotar que este fue revisado (corta-bucles de la casa).
