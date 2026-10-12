@@ -12,8 +12,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `20` análisis de plan + `42` archivos de `.opencode/context/`. `472` `.md` en total como corpus de **citas**.
-- 385 IDs con definición detectada; 109 IDs citados sin definición (ver última sección).
+- Corpus de **definiciones**: `20` análisis de plan + `43` archivos de `.opencode/context/`. `473` `.md` en total como corpus de **citas**.
+- 387 IDs con definición detectada; 109 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,19 +24,19 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `374` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `376` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
 | Familia | Significado | IDs |
 |---------|-------------|-----|
-| `L-*` | Lecciones aprendidas | 230 |
+| `L-*` | Lecciones aprendidas | 232 |
 | `DA-*` | Decisiones / reglas de alineación | 53 |
 | `D-*` | Deuda, defectos y decisiones registradas | 39 |
 | `S-*` | Hallazgos y seguimientos de plan | 63 |
 | — | Citados sin definición | 109 |
 
-## `L-*` — Lecciones aprendidas (230)
+## `L-*` — Lecciones aprendidas (232)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -77,6 +77,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-CST-3` | El coste declarado de un re-anclaje se mide, no se hereda: la AC18 prometía 8 lecturas de la clave y eran 10 en 4 archivos. La AC contaba 4+1+3 en tres archivos de Bot 4; un cuarto archivo del… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 2 (solo el plan dueño) |
 | `L-CST-4` | Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
 | `L-CST-5` | Un mutante aplicado sobre el símbolo unificado ya no puede reproducir la divergencia que curó, y la rama «las dos fuentes coinciden» no discrimina el orden. Al escribir el par rojo/verde de AC11 se… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 4 (solo el plan dueño) |
+| `L-CST-6` | Un prompt de fase puede citar un mecanismo que el código no tiene: --force-new no garantiza nada en v4complete. El prompt de FASE-E2E escribía «--force-new para garantizar inyección fresca de… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 3 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
+| `L-CST-7` | Curar el texto de una cláusula no cura la forma del defecto en sus hermanas: P6.5 sigue negando al revisor que corrió. AC12 reescribió la fila de P6.2 para dejar de decir que Bot 2 no existe. El acta… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 6 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
 | `L-D1` | «Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 18 (solo el plan dueño) |
 | `L-D2` | La evidencia también se fosiliza: un log capturado antes de estabilizar los tests miente *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-D3` | Un baseline numérico hace que cumplir el plan cuente como violación *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 64 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
@@ -207,7 +209,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-T2C.4` | Un fix que reactiva código muerto cambia comportamiento de producción y por tanto NO es «sin regresión»: exige un delta fijado por test contra el símbolo real. Los 7 tests originales de S-E2… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T2-C (2026-09-10) | 18 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-T4A.1` | El protocolo PromiseExtractor debe ser runtime_checkable para permitir isinstance(extractor, PromiseExtractor) en tests y validaciones. Sin @runtime_checkable, solo se puede verificar con hasattr()… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 3 en CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4A.2` | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable. El código inicial lines[1:-1] fallaba cuando el bloque iniciaba con json indentado o cuando el cierre no estaba en… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 10 en CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-T4A.3` | La cache SHA256 de extracciones LLM debe usar tmp_path en tests para evitar colisiones entre corridas. Los tests compartían el directorio .cache/tribunal/ y hits de cache de pruebas anteriores… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 5 en CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10 |
+| `L-T4A.3` | La cache SHA256 de extracciones LLM debe usar tmp_path en tests para evitar colisiones entre corridas. Los tests compartían el directorio .cache/tribunal/ y hits de cache de pruebas anteriores… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 6 en CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10 |
 | `L-T4A.4` | La clasificación de promesas verbales contra la matriz requiere matching difuso por service_hint. El LLM puede generar hints como "Optimización para asistentes de voz" mientras la matriz usa… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 5 en CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10 |
 | `L-T4A.5` | Un test puede pasar sin ejecutar la rama que dice certificar: el test_no_breach_not_a_finding original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 112 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4B.1` | Los commercial gates están split en DOS archivos: commercial_gates_report.json (3 gates: CG-ROI-NEGATIVE BLOCKING, CG-OTA-NARRATIVE WARNING, CG-TECH-JARGON WARNING) y… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 2 (solo el plan dueño) |
@@ -396,7 +398,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-C6` | S-B12 re-asignado a FASE-H: los 5 tests rojos de TestAssetQualityTable piden columnas (\ — Nivel \ | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 (solo el plan dueño) |
 | `S-C7` | ProposalAssetMatrix está muerto en producción: 0 call sites fuera de su propio docstring de uso y sus tests; el JSON que se escribe en producción sale de AssetAlignmentMatrix.save() → to_dict() v2.0… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 2 (solo el plan dueño) |
 | `S-C8` | NO_ASSET_MAPPED se satisfizo en otra forma: el dossier y el ROADMAP lo exigían verbatim como estado de AlignmentStatus; C no lo añadió — el descarte vive como side-list not_promised + warning +… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 2 (solo el plan dueño) |
-| `S-CST-1` | El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Deudas definidas por este plan | 23 (solo el plan dueño) |
+| `S-CST-1` | El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos… | CURA-COSTURA-TRIBUNAL-2026-10-11 | Deudas definidas por este plan | 25 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
 | `S-E1` | ✅ Resuelto en la fase — Desviación de §4: E1/E2 no eran paralelizables. §4 y el prompt de E declaraban dos subagentes que «no comparten archivo», pero ambos tracks editan main.py (E1 persiste en FASE… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 12 (solo el plan dueño) |
 | `S-E2` | Defectos latentes preexistentes registrados, NO curados (fuera del perímetro de E): (a) NameError latente de site_presence_report — se asigna solo dentro de if generate_proposal: (main.py:2791 →… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 56 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `S-F1` | Reconciliación del corpus medido: C2 contó 27 corridas sobre output/; el barrido F4 midió 28 primarias + 4 copias de delivery sobre output/ + archives/outputs/, con ~11 ESTIMADAS (~10 en el dossier)… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 6 en Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -449,7 +451,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | ID | Citas | Dónde se cita |
 |----|-------|---------------|
 | `DA-CIM.9` | 35 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
-| `D-T1.3` | 25 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
+| `D-T1.3` | 27 | Archives/TRIBUNAL-OFFLINE-2026-09-09, CURA-COSTURA-TRIBUNAL-2026-10-11 |
 | `S-B11` | 15 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-CIM-7` | 14 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-B10` | 13 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |

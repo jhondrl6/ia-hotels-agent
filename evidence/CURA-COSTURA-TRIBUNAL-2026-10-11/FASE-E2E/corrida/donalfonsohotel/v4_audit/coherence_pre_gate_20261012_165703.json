@@ -1,0 +1,62 @@
+{
+  "is_coherent": true,
+  "overall_score": 0.96,
+  "checks": [
+    {
+      "name": "problems_have_solutions",
+      "passed": true,
+      "score": 1.0,
+      "message": "100% de problemas tienen solución automática",
+      "severity": "info"
+    },
+    {
+      "name": "assets_are_justified",
+      "passed": true,
+      "score": 1.0,
+      "message": "100% de assets justificados",
+      "severity": "info"
+    },
+    {
+      "name": "financial_data_validated",
+      "passed": true,
+      "score": 0.95,
+      "message": "Datos financieros validados (confidence promedio: 0.95)",
+      "severity": "info"
+    },
+    {
+      "name": "whatsapp_verified",
+      "passed": true,
+      "score": 1.0,
+      "message": "No hay asset de WhatsApp button",
+      "severity": "info"
+    },
+    {
+      "name": "price_matches_pain",
+      "passed": true,
+      "score": 0.8,
+      "message": "Precio en límite superior (11.4x) - rango ideal 3.0x-50.0x",
+      "severity": "warning"
+    },
+    {
+      "name": "promised_assets_exist",
+      "passed": true,
+      "score": 1.0,
+      "message": "Todos los assets prometidos están implementados (12 assets verificados en esta pasada via catalogo_estatico)",
+      "severity": "info"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "timestamp": "2026-10-12T16:57:03.641268",
+  "version": "4.2.0",
+  "hotel_url": "https://www.donalfonsohotel.com/",
+  "gate": {
+    "stage": "pre-gate",
+    "threshold": 0.8,
+    "passed": true,
+    "status": "PASSED",
+    "blocks_asset_generation": false
+  },
+  "failed_error_check_names": [],
+  "failed_error_checks": []
+}

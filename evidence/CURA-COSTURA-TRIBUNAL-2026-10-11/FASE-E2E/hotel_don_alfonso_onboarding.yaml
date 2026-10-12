@@ -1,0 +1,20 @@
+hotel:
+  nombre: Hotel Don Alfonso
+  url: https://www.donalfonsohotel.com/
+  ubicacion: eje_cafetero
+datos_operativos:
+  habitaciones: 11
+  reservas_mes: 140
+  valor_reserva_cop: 330000
+  canal_directo_pct: 30.0
+metadatos:
+  fuente: observations_tier_a
+  fecha_captura: '2026-07-22'
+  confidence: 0.95
+  epistemic_status: verified
+  campos_confirmados:
+  - habitaciones
+  - reservas_mes
+  - valor_reserva_cop
+  - canal_directo_pct
+  source_note: Datos de observations.json (Tier A, confidence 0.95)

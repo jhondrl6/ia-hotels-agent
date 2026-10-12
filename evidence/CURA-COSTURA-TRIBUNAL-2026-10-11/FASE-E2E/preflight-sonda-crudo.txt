@@ -1,0 +1,141 @@
+{
+  "spawn_autorizado": true,
+  "n_requisitos": 13,
+  "favorables": 13,
+  "no_favorables": [],
+  "edad_dias": 82,
+  "vence_el": "2026-10-20",
+  "rama": "YAML_DE_DIR_CLIENTES",
+  "campos_confirmados": [
+    "habitaciones",
+    "reservas_mes",
+    "valor_reserva_cop",
+    "canal_directo_pct"
+  ],
+  "credenciales": {
+    "DEEPSEEK_API_KEY": "PRESENTE (valor no impreso)",
+    "ANTHROPIC_API_KEY": "AUSENTE",
+    "LLM_PROVIDER": "PRESENTE, valor no secreto: deepseek",
+    "ONBOARDING_FRESHNESS_HOURS": "AUSENTE"
+  },
+  "identidades": {
+    "hotel_id_del_reporte": "hotel_donalfonsohotel.com",
+    "nombre_del_paquete": "Donalfonsohotel",
+    "identidad_de_memoria": "donalfonsohotel.com"
+  },
+  "permission_mode": "auto",
+  "default_sin_flag": "auto",
+  "force_new": {
+    "en_argv": true,
+    "valor_parseado": true,
+    "unicos_consumidores": [
+      "main.py:773"
+    ],
+    "declaracion": "la bandera la reconoce el parser y su unico consumidor es run_execution_mode (main.py:773); run_v4_complete_mode no la consulta, asi que NO garantiza inyeccion fresca de onboarding. La inyeccion la garantiza el YAML en el clientes_dir efectivo, medido por el requisito rama_efectiva_del_loader."
+  },
+  "dominio": {
+    "url": "https://www.donalfonsohotel.com/",
+    "respondio": true,
+    "status": 200,
+    "url_final": "https://donalfonsohotel.com/",
+    "encadenado": [
+      "https://www.donalfonsohotel.com/"
+    ],
+    "causa": null,
+    "intentos": [
+      {
+        "n": 1,
+        "ok": false,
+        "status": null,
+        "url_final": null,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+        "encadenado": []
+      },
+      {
+        "n": 2,
+        "ok": false,
+        "status": null,
+        "url_final": null,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+        "encadenado": [
+          {
+            "codigo": 301,
+            "destino": "https://donalfonsohotel.com/"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "ok": false,
+        "status": null,
+        "url_final": null,
+        "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+        "encadenado": [
+          {
+            "codigo": 301,
+            "destino": "https://donalfonsohotel.com/"
+          }
+        ]
+      }
+    ],
+    "errores_transitorios": 3,
+    "contraste_requests": {
+      "status": 200,
+      "url_final": "https://donalfonsohotel.com/",
+      "bytes": 142017,
+      "historial": [
+        "https://www.donalfonsohotel.com/"
+      ],
+      "intento_feliz": 1
+    },
+    "sondas_requests": [
+      {
+        "n": 1,
+        "ok": true,
+        "status": 200,
+        "url_final": "https://donalfonsohotel.com/",
+        "bytes": 142017,
+        "error": null,
+        "historial": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      }
+    ],
+    "requests_fallos": 0,
+    "respondio_mecanismo_del_run": true,
+    "host_final": "donalfonsohotel.com",
+    "casa_con_el_derivado": true,
+    "redireccion_de_dominio_distinto": false
+  },
+  "sesiones_que_borraria_cleanup": 2,
+  "analysis_previo": {
+    "encontrado": true,
+    "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\v4_complete"
+  },
+  "sha_warehouse": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+  "sha_yaml_copia": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+  "cache_tribunal_antes": {
+    "existe": true,
+    "ruta": ".cache/tribunal",
+    "archivos": 3,
+    "mas_recientes": [
+      {
+        "ruta": "442e361c8625737aa9f99f8353cc9067b39c4cd2a831c1051d159cd8df3642c8.json",
+        "mtime_iso": "2026-10-07T09:34:09"
+      },
+      {
+        "ruta": "5c4c21462c805d589c11545cc567dde5f37358d75e0ff0bfaaf394d10e47f567.json",
+        "mtime_iso": "2026-09-19T15:01:38"
+      },
+      {
+        "ruta": "00070f04f96dcf607c83f4586af14551757c2d1afbc5c92f58871fa4476756f5.json",
+        "mtime_iso": "2026-09-11T18:00:14"
+      }
+    ]
+  },
+  "output_antes": {
+    "existe": false,
+    "ruta": "output/v4_complete"
+  },
+  "preflight_sha": "de570a2712bd9eb6953bd2ff1098cc2e300a22d262863e87ee99bc4c8ee5c4ca"
+}

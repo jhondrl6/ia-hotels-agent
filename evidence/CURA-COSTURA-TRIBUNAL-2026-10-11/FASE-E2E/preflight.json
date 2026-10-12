@@ -1,0 +1,329 @@
+{
+  "argv_del_parser": [
+    "v4complete",
+    "--url",
+    "https://www.donalfonsohotel.com/",
+    "--force-new"
+  ],
+  "argv_sha256": "21fc009e6ccdaaef780e389b4208ccc6a002099bdb1be0a11fb0bfdf623475aa",
+  "arnes": "opcion A: arnes desechable por stdin (`python - < temp/preflight_e2e.py`), sin .py versionado",
+  "comando_de_T1": "PYTHONUTF8=1 ./venv/Scripts/python.exe main.py v4complete --url https://www.donalfonsohotel.com/ --force-new",
+  "credenciales_por_nombre": {
+    "ANTHROPIC_API_KEY": "AUSENTE",
+    "DEEPSEEK_API_KEY": "PRESENTE (valor no impreso)",
+    "LLM_PROVIDER": "PRESENTE, valor no secreto: deepseek",
+    "ONBOARDING_FRESHNESS_HOURS": "AUSENTE"
+  },
+  "emitido_el": "2026-10-12T21:54:03.446379+00:00",
+  "fase": "FASE-E2E",
+  "intentos": 0,
+  "n_requisitos": 13,
+  "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+  "procedencia_del_derivado": {
+    "copias_a_evidence": [
+      "hotel_don_alfonso_onboarding.yaml",
+      "onboarding_provenance.json"
+    ],
+    "productor_recorrido_sin_banderas": true,
+    "rama_efectiva_impresa_por_el_productor": "YAML_DE_DIR_CLIENTES",
+    "sha256_procedencia_en_clientes_igual_a_la_versionada": true,
+    "sha256_yaml_en_clientes_efectivo": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+    "sha256_yaml_en_output_REFACTOR": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+    "warehouse_sin_cambio": true
+  },
+  "pruebas_de_que_no_se_lanzo_nada": {
+    "cli_real_invocada": false,
+    "control_productivo_creado": false,
+    "red": "cortada con diente durante la sonda del loader; la unica operacion de red posterior es el HEAD de T0(e)"
+  },
+  "requisitos": {
+    "aislamiento_de_memoria": {
+      "analysis_previo": {
+        "consumo_en_la_ruta_de_v4complete": {
+          "asignaciones": 1,
+          "consumos_que_cambian_el_flujo": [],
+          "funcion": "run_v4_complete_mode",
+          "lecturas": 2,
+          "lecturas_como_guard_if": 1,
+          "lecturas_dentro_de_print": 1,
+          "lineas_de_uso": [
+            1736,
+            1737,
+            1738
+          ],
+          "productor_de_reutilizacion": "run_execution_mode: DeliveryContext.from_analysis_json (main.py:806-811), que no es la ruta de v4complete",
+          "solo_se_declara_en_consola": true
+        },
+        "declaracion_de_dependencia": "si E2E no lo excluye, la corrida se declara dependiente del analisis previo y su evidencia se lee con esa marca, no como corrida aislada (L-PF11)",
+        "encontrado": true,
+        "exige_exclusion_explicita_o_declaracion": true,
+        "rectificacion": "el hallazgo existe y se declara; medido por AST, en run_v4_complete_mode la variable solo se imprime. La reutilizacion que describe el prompt vive en run_execution_mode. Aun asi E2E debe excluir el analisis previo o declararlo: la premisa no se hereda (L-V.3)",
+        "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\REFACTOR-WHATSAPP-ENTREGA-2026-09-18\\v4_complete"
+      },
+      "archivos_memoria": 15,
+      "bytes_memoria": 37404,
+      "cumple": true,
+      "nombres_que_borraria": [
+        ".agent/memory/sessions/2026-09-19_3b0f3a94.json",
+        ".agent/memory/sessions/2026-09-19_dfa27c04.json"
+      ],
+      "procedencia": "medicion propia de FASE-E2E: `run_once.inventario_memoria` + `integracion_offline._analysis_previo` sobre el canonical de ESTA fase; cumple=True es el valor que H declara (declarado, no satisfecho)",
+      "sesiones_que_cleanup_borraria": 2
+    },
+    "argv_congelado": {
+      "--permission-mode_existe_en_el_parser": true,
+      "argv_del_parser": [
+        "v4complete",
+        "--url",
+        "https://www.donalfonsohotel.com/",
+        "--force-new"
+      ],
+      "banderas_prohibidas_presentes": [],
+      "cumple": true,
+      "default_sin_el_flag": "auto",
+      "hallazgo_force_new": {
+        "declaracion": "la bandera la reconoce el parser y su unico consumidor es run_execution_mode (main.py:773); run_v4_complete_mode no la consulta, asi que NO garantiza inyeccion fresca de onboarding. La inyeccion la garantiza el YAML en el clientes_dir efectivo, medido por el requisito rama_efectiva_del_loader.",
+        "en_argv": true,
+        "unicos_consumidores": [
+          "main.py:773"
+        ],
+        "valor_parseado": true
+      },
+      "permission_mode_efectivo": "auto",
+      "procedencia": "medicion propia de FASE-E2E: parseo real del argv de ESTA fase con el parser del repo"
+    },
+    "consentimiento_datado_sobre_la_url_viva": {
+      "causa": null,
+      "cumple": true,
+      "detalle": {
+        "declarado_por": "Jhond (operador)",
+        "edad_dias": 82,
+        "fecha_del_consentimiento": "2026-10-12",
+        "limite_dias": 90,
+        "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\CURA-COSTURA-TRIBUNAL-2026-10-11\\FASE-E2E\\consentimiento-corrida.md"
+      },
+      "procedencia": "medicion propia de FASE-E2E: `run_once.evaluar_consentimiento` con `ruta=` al consentimiento de CURA; el bloque de REFACTOR no se usa ni se enmienda"
+    },
+    "control_productivo_intacto": {
+      "cumple": true,
+      "procedencia": "medicion propia de FASE-E2E: anclado a run_control.json de CURA, la ruta que el arnes de REFACTOR no podia comprobar porque sus constantes son de modulo y el chequeo no es --raiz-aware",
+      "ruta": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/run_control.json"
+    },
+    "el_dominio_responde": {
+      "criterio": "decide el cliente que usa el pipeline (`requests`, via modules/utils/http_client.py consumido por modules/scrapers/web_scraper.py); el HEAD de stdlib se publica como contraste con sus fallos",
+      "cumple": true,
+      "medicion": {
+        "casa_con_el_derivado": true,
+        "causa": null,
+        "contraste_requests": {
+          "bytes": 142017,
+          "historial": [
+            "https://www.donalfonsohotel.com/"
+          ],
+          "intento_feliz": 1,
+          "status": 200,
+          "url_final": "https://donalfonsohotel.com/"
+        },
+        "encadenado": [
+          "https://www.donalfonsohotel.com/"
+        ],
+        "errores_transitorios": 3,
+        "host_final": "donalfonsohotel.com",
+        "intentos": [
+          {
+            "encadenado": [],
+            "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+            "n": 1,
+            "ok": false,
+            "status": null,
+            "url_final": null
+          },
+          {
+            "encadenado": [
+              {
+                "codigo": 301,
+                "destino": "https://donalfonsohotel.com/"
+              }
+            ],
+            "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+            "n": 2,
+            "ok": false,
+            "status": null,
+            "url_final": null
+          },
+          {
+            "encadenado": [
+              {
+                "codigo": 301,
+                "destino": "https://donalfonsohotel.com/"
+              }
+            ],
+            "error": "URLError: <urlopen error [Errno 11001] getaddrinfo failed>",
+            "n": 3,
+            "ok": false,
+            "status": null,
+            "url_final": null
+          }
+        ],
+        "redireccion_de_dominio_distinto": false,
+        "requests_fallos": 0,
+        "respondio": true,
+        "respondio_mecanismo_del_run": true,
+        "sondas_requests": [
+          {
+            "bytes": 142017,
+            "error": null,
+            "historial": [
+              "https://www.donalfonsohotel.com/"
+            ],
+            "n": 1,
+            "ok": true,
+            "status": 200,
+            "url_final": "https://donalfonsohotel.com/"
+          }
+        ],
+        "status": 200,
+        "url": "https://www.donalfonsohotel.com/",
+        "url_final": "https://donalfonsohotel.com/"
+      },
+      "procedencia": "medicion propia de FASE-E2E: HEAD/GET real a la URL del run con hasta 3 intentos por cliente y registro de redirecciones (T0 e), despues de restaurar los sockets"
+    },
+    "entorno_venv": {
+      "cumple": true,
+      "procedencia": "predicado reutilizado del arnes de REFACTOR (`run_once.preflight`): Path.is_file()",
+      "ruta": "venv/Scripts/python.exe"
+    },
+    "frescura_fail_closed": {
+      "cumple": true,
+      "edad_dias": 82,
+      "edad_fuente": "computada_contra_la_fecha_del_run",
+      "fecha_captura": "2026-07-22",
+      "procedencia": "medicion propia de FASE-E2E: `run_once.edad_contra_la_emision` contra la fecha del run; ONBOARDING_FRESHNESS_HOURS leida del entorno del proceso tras load_dotenv",
+      "techo_de_dias": 90,
+      "variable_del_loader": "AUSENTE",
+      "vence_el": "2026-10-20"
+    },
+    "fuente_inmutable_intacta": {
+      "cumple": true,
+      "procedencia": "medicion propia de FASE-E2E: sha256 del warehouse antes y despues de re-correr el productor, contrastado con la procedencia versionada",
+      "sha256_declarado_por_la_procedencia": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+      "sha256_medido": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf"
+    },
+    "identidades_fijadas": {
+      "cumple": true,
+      "nombre_efectivo_por": "_extract_hotel_name_from_url (esta corrida no pasa --nombre)",
+      "procedencia": "medicion propia de FASE-E2E: argv de ESTA fase parseado con `main.build_parser` + los tres productores del producto (generate_hotel_id / _normalize_url / _extract_hotel_name_from_url)",
+      "valores": {
+        "hotel_id_del_reporte": "hotel_donalfonsohotel.com",
+        "identidad_de_memoria": "donalfonsohotel.com",
+        "nombre_del_paquete": "Donalfonsohotel"
+      }
+    },
+    "rama_efectiva_del_loader": {
+      "campos_confirmados": [
+        "habitaciones",
+        "reservas_mes",
+        "valor_reserva_cop",
+        "canal_directo_pct"
+      ],
+      "conteo_campos_confirmados": 4,
+      "cumple": true,
+      "devolvio_datos": true,
+      "dir_clientes": "output/clientes",
+      "fecha_captura_leida": "2026-07-22",
+      "fuente_declarada": "observations_tier_a",
+      "procedencia": "medicion propia de FASE-E2E: sonda de `main._load_latest_onboarding_data` sobre el clientes_dir EFECTIVO (output/clientes) + predicado `derivar_onboarding.ramas_del_loader`",
+      "rama": "YAML_DE_DIR_CLIENTES",
+      "rama_aceptable": "YAML_DE_DIR_CLIENTES",
+      "yamls_observados": [
+        "hotel_don_alfonso_onboarding.yaml",
+        "zi-one-luxury_onboarding.yaml"
+      ]
+    },
+    "red_prohibida_y_sin_cli_real": {
+      "cli_real_invocada": false,
+      "cumple": true,
+      "diente_del_corte": true,
+      "procedencia": "medicion propia de FASE-E2E: `integracion_offline.cortar_red` re-ejecutado; la sonda del loader corrio DENTRO del corte y `main.py v4complete` no se invoco. La unica salida de red es el HEAD de T0(e), posterior y restaurados los sockets.",
+      "prueba": "socket.create_connection(('donalfonsohotel.com', 443)) debe levantar AssertionError",
+      "puntos_sustituidos": [
+        "create_connection",
+        "getaddrinfo"
+      ]
+    },
+    "revocacion_de_claves": {
+      "acreditada_por_evidencia_operativa": false,
+      "causa_lectura": null,
+      "cumple": true,
+      "dueno": "operador",
+      "pendientes": [
+        "resto de proveedores configurables (OpenRouter, Perplexity, PageSpeed/Google, DeepSeek)"
+      ],
+      "procedencia": "insumo de FASE-F (plan ajeno) releido: cumple=True es declaracion del operador, no acreditacion operativa"
+    },
+    "selector_unico": {
+      "cumple": true,
+      "excepcion": null,
+      "expresion": "hotel_name == \"Hotel Don Alfonso\"",
+      "observaciones_en_la_fuente": 6,
+      "procedencia": "medicion propia de FASE-E2E: predicado `derivar_onboarding.seleccionar_unicamente` re-ejecutado sobre el warehouse en esta fase"
+    }
+  },
+  "requisitos_favorables": [
+    "aislamiento_de_memoria",
+    "argv_congelado",
+    "consentimiento_datado_sobre_la_url_viva",
+    "control_productivo_intacto",
+    "el_dominio_responde",
+    "entorno_venv",
+    "frescura_fail_closed",
+    "fuente_inmutable_intacta",
+    "identidades_fijadas",
+    "rama_efectiva_del_loader",
+    "red_prohibida_y_sin_cli_real",
+    "revocacion_de_claves",
+    "selector_unico"
+  ],
+  "requisitos_no_favorables": [],
+  "schema": "iah-run-preflight/1.0",
+  "snapshot_previo_cache_tribunal": {
+    "archivos": 3,
+    "existe": true,
+    "mas_recientes": [
+      {
+        "mtime_iso": "2026-10-07T09:34:09",
+        "ruta": "442e361c8625737aa9f99f8353cc9067b39c4cd2a831c1051d159cd8df3642c8.json"
+      },
+      {
+        "mtime_iso": "2026-09-19T15:01:38",
+        "ruta": "5c4c21462c805d589c11545cc567dde5f37358d75e0ff0bfaaf394d10e47f567.json"
+      },
+      {
+        "mtime_iso": "2026-09-11T18:00:14",
+        "ruta": "00070f04f96dcf607c83f4586af14551757c2d1afbc5c92f58871fa4476756f5.json"
+      }
+    ],
+    "ruta": ".cache/tribunal"
+  },
+  "snapshot_previo_output_v4_complete": {
+    "existe": false,
+    "ruta": "output/v4_complete"
+  },
+  "source_hashes": {
+    "data/hotel_observations/observations.json": "31e70a376894dcb91795246b49d6b2eb464d725996713b818afbf653f26b69bf",
+    "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/consentimiento-corrida.md": "dafef45d6171f2ca6fb2252c7cf35825a17fb560bfc05c9d78b9df144cce3376",
+    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py": "eaedb6eb82a4c30fe03e5a473a45624b8e95785e98f535f028809e98d7e97b1f",
+    "evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py": "1efa6cd142b70e3edf91412d2f4cd9d868cb2efc6a797bffcc633920be422f7f",
+    "main.py": "ee59b81583abaf46ecbb187cb6d883071c5cb63476f7d5e1e2f115f1d117bca3",
+    "modules/providers/llm_provider.py": "82eae22dab2138cc7b959b8b050e92158c241293117342da6a92efff15bf443e",
+    "modules/quality_gates/tribunal/acta_writer.py": "246d53f5be12341ecc751de9060aebd57f4388d0c13d1d7f1e26137931f2e7eb",
+    "modules/quality_gates/tribunal/alignment_reviewer.py": "7272d4308a9a3da1c458ee23af54c9e71904dd299d608d52c247dbb3f8f3185a",
+    "modules/quality_gates/tribunal/evidence_tier.py": "fa37d94ffc1d0a73bf861233f3f3a779134ca319ad55510a5bcbf709b6126cf3",
+    "modules/quality_gates/tribunal/honesty_reviewer.py": "fa020c2feca03332dbf7ba21cca70efcda7a0227181262e3af2f5e7e1486b16b",
+    "modules/quality_gates/tribunal/judge.py": "4e5b8efbd01f7bb78ec37731fa146213dd0f9aa999eb3ee009450f04d66f13dc",
+    "modules/quality_gates/tribunal/llm_extractor.py": "09fbca9e68ff1e09e4b871586bd7f824d704fb7aa72690c8fd86b51b8e4343f7",
+    "modules/quality_gates/tribunal/outcome.py": "d8fbf96e57301bb8222fbae26cedfcaefdde02ee5276772a90daca8b239ea2f2",
+    "output/clientes/hotel_don_alfonso_onboarding.yaml": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734"
+  },
+  "spawn_autorizado": true
+}

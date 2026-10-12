@@ -3,12 +3,12 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 20,
-    "archivos_contexto_escaneados": 42,
-    "archivos_md_escaneados": 472,
-    "ids_con_definicion": 385,
+    "archivos_contexto_escaneados": 43,
+    "archivos_md_escaneados": 473,
+    "ids_con_definicion": 387,
     "ids_citados_sin_definicion": 109,
     "fechas_por_fuente": {
-      "nombre": 374,
+      "nombre": 376,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1922,6 +1922,38 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-6",
+      "familia": "L",
+      "enunciado": "Un prompt de fase puede citar un mecanismo que el código no tiene: --force-new no garantiza nada en v4complete. El prompt de FASE-E2E escribía «--force-new para garantizar inyección fresca de onboarding». Medido en T0 con grep de force_new sobre main.py: un solo sitio con código — el guard de run_execution_mode que consulta args.force_new — y el help del propio parser lo dice («for execute command»). run_v4_complete_mode no la consulta. La corrida real lo confirmó por su stdout: [HARNESS] Contexto inyectado: 1 ejecución(es) previa(s) encontrada(s), con análisis previo existente para donalfonsohotel.com. Por qué importa: la bandera no era inocua —su presencia en el comando autorizaba a no mirar el aislamiento de memoria, y el aislamiento es justo lo que el requisito aislamiento_de_memoria de H declara «no satisfecho»—. Qué lo previene: en el preflight, cada bandera del comando se contrasta con grep de su consumidor y se publica la línea que la lee; si no hay consumidor, se declara inerte y se busca el mecanismo real (aquí: el YAML en el clientes_dir efectivo, medido por rama_efectiva_del_loader) — INCLUIR — vale para cualquier fase que lance un comando heredado de otro plan",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
+      ],
+      "redefiniciones": []
+    },
+    {
+      "id": "L-CST-7",
+      "familia": "L",
+      "enunciado": "Curar el texto de una cláusula no cura la forma del defecto en sus hermanas: P6.5 sigue negando al revisor que corrió. AC12 reescribió la fila de P6.2 para dejar de decir que Bot 2 no existe. El acta de la corrida única (2026-10-12) imprime P6.5: NOT_EVALUABLE con source_artifact: null y el texto «Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a» mientras Bot 4 corrió, publicó revision_honestidad.json con 3 findings (clause: P6.5), 2 CRITICAL y recommendation: BLOQUEAR, y el acta proyecta su extraccion: OK_CON_PROMESAS. Por qué importa: la matriz de cláusulas y los reports se contradicen en el mismo archivo, y quien lea solo la matriz concluirá que la honestidad NL no se evaluó en el único run del plan. Ninguna AC de este plan gobierna esa fila, así que no se tocó. Qué lo previene: la lección se formula como regla de superficie —cuando un verificador/escritor de texto se cura por cláusula enumerada, se barre el vecindario (P6.*) con el mismo criterio— y el hallazgo queda con dueño en §Seguimientos — INCLUIR — es de superficie del fix (la matriz de cláusulas del acta), no del síntoma de P6.2",
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Lecciones nuevas de este plan",
+      "fecha_plan": "2026-10-11",
+      "fuente_fecha": "nombre",
+      "total_citas": 6,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
+      ],
       "redefiniciones": []
     },
     {
@@ -3957,7 +3989,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 6,
       "planes_que_lo_citan": [
         "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
@@ -5333,8 +5365,10 @@
       "seccion": "Deudas definidas por este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
-      "planes_que_lo_citan": [],
+      "total_citas": 25,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
+      ],
       "redefiniciones": []
     },
     {
@@ -6020,9 +6054,10 @@
     {
       "id": "D-T1.3",
       "familia": "D",
-      "total_citas": 25,
+      "total_citas": 27,
       "planes_que_lo_citan": [
-        "Archives/TRIBUNAL-OFFLINE-2026-09-09"
+        "Archives/TRIBUNAL-OFFLINE-2026-09-09",
+        "CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {

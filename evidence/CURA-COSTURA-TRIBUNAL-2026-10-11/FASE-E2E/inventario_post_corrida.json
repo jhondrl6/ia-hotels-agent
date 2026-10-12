@@ -1,0 +1,345 @@
+{
+  "archivos": 67,
+  "directorios_recorridos": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete",
+  "errores": [],
+  "faltantes_declarados": [],
+  "inventario": [
+    {
+      "bytes": 18129,
+      "ruta": "v4_complete/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261012_165706.md",
+      "sha256": "0cd101cefcac4280ef90501e41e12eb0ff1e9b329b36fbb4e0dd8630f40681c8"
+    },
+    {
+      "bytes": 15268,
+      "ruta": "v4_complete/02_PROPUESTA_COMERCIAL_20261012_165706.md",
+      "sha256": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728"
+    },
+    {
+      "bytes": 18129,
+      "ruta": "v4_complete/_review_inputs/run_20261012T165706/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261012_165706.md",
+      "sha256": "0cd101cefcac4280ef90501e41e12eb0ff1e9b329b36fbb4e0dd8630f40681c8"
+    },
+    {
+      "bytes": 15268,
+      "ruta": "v4_complete/_review_inputs/run_20261012T165706/propuesta/02_PROPUESTA_COMERCIAL_20261012_165706.md",
+      "sha256": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728"
+    },
+    {
+      "bytes": 5010,
+      "ruta": "v4_complete/donalfonsohotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261012_165705.md",
+      "sha256": "e6aa67b9c67405f7144dd88303b4bb96df2274cf28dfe62bb41ec1115bc3c21c"
+    },
+    {
+      "bytes": 817,
+      "ruta": "v4_complete/donalfonsohotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261012_165705_metadata.json",
+      "sha256": "a3c2d7c1c93ab0ea85a9b613acff65b26b921954abc69a9a84d63c5dcce55889"
+    },
+    {
+      "bytes": 868,
+      "ruta": "v4_complete/donalfonsohotel/faq_page/ESTIMATED_faqs_20261012_165705.json",
+      "sha256": "ca9b43a67d6cb9ca2f5064ba20dac1397cc2d81b637c26f07ef14600b6ddefbc"
+    },
+    {
+      "bytes": 826,
+      "ruta": "v4_complete/donalfonsohotel/faq_page/ESTIMATED_faqs_20261012_165705_metadata.json",
+      "sha256": "c8cca55a48cd0b4db2a53de2b84b2eca0ca4f5a491621102df84112117e484d3"
+    },
+    {
+      "bytes": 1689,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/faq_schema.json",
+      "sha256": "36aa325527fa432b5e0a34c71ea7df07ca7626796f813916c76476d4e8f2e861"
+    },
+    {
+      "bytes": 1011,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/geo_badge.md",
+      "sha256": "948847352f59d18eacd4f6270088d175c6213625a5de02ad7d1df58b9ce7cd0a"
+    },
+    {
+      "bytes": 561,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/geo_checklist_min.md",
+      "sha256": "8745900731af13e85f0df243a59105479121a5e5e0de4f1b3a7ee61b5c8c6868"
+    },
+    {
+      "bytes": 2925,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/geo_dashboard.md",
+      "sha256": "3113e8cfe45b3d6e3bf0bcfa426a1e8a33a6e0e017555fcee3a90854f2a68b1c"
+    },
+    {
+      "bytes": 2418,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/geo_fix_kit.md",
+      "sha256": "55fa480e96445d3197173b4b7d30b127c30c4739bf088dba820f229590220587"
+    },
+    {
+      "bytes": 1073,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/hotel_schema_rich.json",
+      "sha256": "7b27aa24abc03ad5278a294e6eb5f5cd5bbc4894cf6475f20898b1639bdc02bf"
+    },
+    {
+      "bytes": 1065,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/llms.txt",
+      "sha256": "b641054c70ac22166fb634c2ccdb452d93f2a1230566c147e819e92b2e6cee0e"
+    },
+    {
+      "bytes": 1823,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/robots_fix.txt",
+      "sha256": "4122d5933a00eff374684d1fc37288c414bba93ddc403f244f39b9eea559ceea"
+    },
+    {
+      "bytes": 847,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/seo_fix_kit.md",
+      "sha256": "abf6f03848405dd48f14ea07101e23e7347f5aadd72760ca17606b9ea8ddecad"
+    },
+    {
+      "bytes": 959,
+      "ruta": "v4_complete/donalfonsohotel/geo_enriched/sync_report.md",
+      "sha256": "edb621d4e93985b26df15fc7691a392d7ce4f13bee101a3b82b1b0a0cf48e89e"
+    },
+    {
+      "bytes": 938,
+      "ruta": "v4_complete/donalfonsohotel/hotel_schema/hotel_schema_20261012_165705.json",
+      "sha256": "c91df99855c6cbe0191d6619795aa8d7583f7a4ef6677537e11046f7f7aae981"
+    },
+    {
+      "bytes": 892,
+      "ruta": "v4_complete/donalfonsohotel/hotel_schema/hotel_schema_20261012_165705_metadata.json",
+      "sha256": "f28af3688eeeb8d4f8819039ba62b26609e48d7cb7ab8cfd1963da0bf0172a3c"
+    },
+    {
+      "bytes": 5235,
+      "ruta": "v4_complete/donalfonsohotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261012_165705.md",
+      "sha256": "53e92a90fd466057ca23383df9a64ad4603e11abe982c1c4f9b9bc55942e385e"
+    },
+    {
+      "bytes": 836,
+      "ruta": "v4_complete/donalfonsohotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261012_165705_metadata.json",
+      "sha256": "75186cdb91492d1c165392d2d42758ddf71a73601a57ae0ff1d5e703ff5c7439"
+    },
+    {
+      "bytes": 769,
+      "ruta": "v4_complete/donalfonsohotel/llms_txt/llms_20261012_165705.txt",
+      "sha256": "d87d8ebdeae138d14ffdd92f39a0f4f1a40554747f9a95138a112045e33a3f30"
+    },
+    {
+      "bytes": 874,
+      "ruta": "v4_complete/donalfonsohotel/llms_txt/llms_20261012_165705_metadata.json",
+      "sha256": "3f68219652cab32935489ed6075efb42dc6ad69f2340e7be58b7de5eea369700"
+    },
+    {
+      "bytes": 5401,
+      "ruta": "v4_complete/donalfonsohotel/monthly_report/informe_mensual_20261012_165706.md",
+      "sha256": "1778de9aa0cd8e102d6197acf69e27fd35993ab6e084d6f3d69ff94d8d2736c5"
+    },
+    {
+      "bytes": 778,
+      "ruta": "v4_complete/donalfonsohotel/monthly_report/informe_mensual_20261012_165706_metadata.json",
+      "sha256": "a18400721c62d634cf30d21f0f69bf3c7a7502525843932b6499c0218e5bb5a5"
+    },
+    {
+      "bytes": 1630,
+      "ruta": "v4_complete/donalfonsohotel/og_tags_guide/ESTIMATED_guia_og_tags_20261012_165706.md",
+      "sha256": "f4aa83bc7154bf565db2209d378d1ef026ea4819c736143928a74ea48e1a8d70"
+    },
+    {
+      "bytes": 803,
+      "ruta": "v4_complete/donalfonsohotel/og_tags_guide/ESTIMATED_guia_og_tags_20261012_165706_metadata.json",
+      "sha256": "49e02b73666e6ed3a1ab27e89ac8f4ca82b8ca3fca522a0999b042578e1797d5"
+    },
+    {
+      "bytes": 2026,
+      "ruta": "v4_complete/donalfonsohotel/open_graph/open_graph_meta_20261012_165706.html",
+      "sha256": "4c3f6d8c41c015b598ee3912aaba2d61a421de2bd94513580ae70ae45019ced7"
+    },
+    {
+      "bytes": 800,
+      "ruta": "v4_complete/donalfonsohotel/open_graph/open_graph_meta_20261012_165706_metadata.json",
+      "sha256": "2a4ae0eb5c6fbe20d587c31a9c00b658a27da677bcc981e45644bb47ab57681c"
+    },
+    {
+      "bytes": 5360,
+      "ruta": "v4_complete/donalfonsohotel/optimization_guide/ESTIMATED_guia_optimizacion_20261012_165705.md",
+      "sha256": "f75ad9c5746d3c102eaf0ec158f55a879c1bcd85edcb2f79e4f0626f07bfcdda"
+    },
+    {
+      "bytes": 946,
+      "ruta": "v4_complete/donalfonsohotel/optimization_guide/ESTIMATED_guia_optimizacion_20261012_165705_metadata.json",
+      "sha256": "aa1790ed22860c2a9a6464cf73c7848b6b45f69b41ddef350307990fb2d72f25"
+    },
+    {
+      "bytes": 98,
+      "ruta": "v4_complete/donalfonsohotel/org_schema/ESTIMATED_org_schema_20261012_165706.json",
+      "sha256": "a934b3df334b2ba2ede405df338fc50aeebcd68225862f3c958acb6770700f3c"
+    },
+    {
+      "bytes": 829,
+      "ruta": "v4_complete/donalfonsohotel/org_schema/ESTIMATED_org_schema_20261012_165706_metadata.json",
+      "sha256": "a20d1e70ba8ec1a18a37edf5d515e18256fce372caa73fd0f8a5a7436a70e304"
+    },
+    {
+      "bytes": 262,
+      "ruta": "v4_complete/donalfonsohotel/research_33af3fb9da60_Donalfonsohotel.json",
+      "sha256": "483cba3942c858dce85403276b18621e68600ce18981082d5a9341237d4d827f"
+    },
+    {
+      "bytes": 477,
+      "ruta": "v4_complete/donalfonsohotel/review_plan/ESTIMATED_plan_reviews_20261012_165705.md",
+      "sha256": "853341366dd4086c820844dd106bbb42239b761550ee0953ff2182cdc53f3073"
+    },
+    {
+      "bytes": 841,
+      "ruta": "v4_complete/donalfonsohotel/review_plan/ESTIMATED_plan_reviews_20261012_165705_metadata.json",
+      "sha256": "71616d99c3af052828c2b26f868c528ac316a044c3c3b58fbf9e8a9a25508630"
+    },
+    {
+      "bytes": 2932,
+      "ruta": "v4_complete/donalfonsohotel/social_strategy_guide/ESTIMATED_estrategia_social_20261012_165706.md",
+      "sha256": "7355e0dfc59bbbda2a38068cf208521817d99476a3fc2c099becf246fe05a10f"
+    },
+    {
+      "bytes": 823,
+      "ruta": "v4_complete/donalfonsohotel/social_strategy_guide/ESTIMATED_estrategia_social_20261012_165706_metadata.json",
+      "sha256": "c487ba45a409344b9ec3229c98265d8bc61d8cf15da5d1415bf12472c08dd909"
+    },
+    {
+      "bytes": 10813,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/acta_revision.json",
+      "sha256": "700abfbdd0d3b414711d2a38cae8df3fdb8161896dd2828c9bafa7f8c3a1d9d9"
+    },
+    {
+      "bytes": 3269,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/acta_revision.md",
+      "sha256": "0c7417a62cb6b22076961f641849c3f68d46a018f6c4c284aba9f675c9a10503"
+    },
+    {
+      "bytes": 11216,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/asset_generation_report.json",
+      "sha256": "d244aed6e33d4bb5a9efacc06caa4e2ed8ab4ac49688d5e3bffdee79beb8d80d"
+    },
+    {
+      "bytes": 9088,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/audit_report_20261012_165654.json",
+      "sha256": "e84c5e0034e926a9a364290e68c78698cb62cddba60347ea4ad001645e2b2611"
+    },
+    {
+      "bytes": 1657,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/coherence_pre_gate_20261012_165703.json",
+      "sha256": "c6b42e421a2a5072b25560edd9a94f86683deabd7c53421eaf30a7b5306f0946"
+    },
+    {
+      "bytes": 1387,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/coherence_validation.json",
+      "sha256": "c7f29c9ad4e12dcd181f53e62a1ff5973266c7dab67d63bbc6c11b99869aeede"
+    },
+    {
+      "bytes": 1387,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/coherence_validation_post_gen.json",
+      "sha256": "c7f29c9ad4e12dcd181f53e62a1ff5973266c7dab67d63bbc6c11b99869aeede"
+    },
+    {
+      "bytes": 890,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/commercial_gates_report.json",
+      "sha256": "31cfe1eea6c5925bd3f2aa0a2749226faabedd67f483f529a1902d5e307398f5"
+    },
+    {
+      "bytes": 3556,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/commercial_gates_report_diagnostic_20261012_165706.json",
+      "sha256": "ad11f30d5c0f8697e6019e98e933a8574709a6103589cf966a0b9d57aae94359"
+    },
+    {
+      "bytes": 1582,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/delivery_quality_report.json",
+      "sha256": "0432d48c6b5a3f9408f80f19e4d8d58c5003c745b217ceb17bd51cf494d25efd"
+    },
+    {
+      "bytes": 2230,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/financial_scenarios_20261012_165654.json",
+      "sha256": "5de7e4cb8d95c743860dfc2846c24226503066929147ac5b31a0f9740762f447"
+    },
+    {
+      "bytes": 7852,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/gate_report_20261012_165706.json",
+      "sha256": "65d3dfd446d61ac0f1ba5fd9724f65354c601788b0b17f09d72ca314880ddba4"
+    },
+    {
+      "bytes": 4814,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/geo_flow_result.json",
+      "sha256": "86f218a6b6a67fc92a0551472eda8de118404bf2d44e2f940147203847a67bdb"
+    },
+    {
+      "bytes": 688,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/human_checklist.md",
+      "sha256": "b16774da1a122d7d614d69f17025a5f68a70afb003ca38760f0bcaa05f188bcf"
+    },
+    {
+      "bytes": 3385,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/pain_ledger.json",
+      "sha256": "f86d600665d917218c7860c85851f8cc670dd6fd37fd97eb208cef250225b27d"
+    },
+    {
+      "bytes": 3617,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/pain_ledger_resolved.json",
+      "sha256": "599dc451d7488c6cec455679cdbe0a98c2a66779c33aa9e3893eaf3bb77a0c73"
+    },
+    {
+      "bytes": 3040,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/proposal_asset_matrix.json",
+      "sha256": "0658b915292f027bb3e9714a0e7fd120e96839714a0f92a9dc3452de087dd900"
+    },
+    {
+      "bytes": 1377,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/review_input_manifest.json",
+      "sha256": "3c15399551c4e4e376d91e83263bcc56264fb89f6185830da62767e0f642d09b"
+    },
+    {
+      "bytes": 33757,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/revision_alineacion.json",
+      "sha256": "4fe14affd442cdffa57c99115c9e2f5bdfbfb070de5e6d34f47531bcd68db040"
+    },
+    {
+      "bytes": 4070,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/revision_assets.json",
+      "sha256": "944b361d32b58431d4231a2bc47b4a2c456831c6ab492e06dd0c9168413e5d29"
+    },
+    {
+      "bytes": 1243,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/revision_diagnostico.json",
+      "sha256": "5a161193113a66d1fd6e9eadfdafe28c9dac81ebd9dffe117ca28902f1dc2c3b"
+    },
+    {
+      "bytes": 5998,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/revision_honestidad.json",
+      "sha256": "c47404508807af226ff9fac25d8033a0f2e7a6f610b7142671aada3ebecc9231"
+    },
+    {
+      "bytes": 4684,
+      "ruta": "v4_complete/donalfonsohotel/v4_audit/site_presence_snapshot.json",
+      "sha256": "f66276e06cc5639a263db2e6d878aebb5e46eed6d92d885932dc460723df33e6"
+    },
+    {
+      "bytes": 3152,
+      "ruta": "v4_complete/donalfonsohotel/whatsapp_setup_guide/guia_configuracion_whatsapp_20261012_165705.md",
+      "sha256": "1b93ae89d6b25f962fde0b9d4b8c7d3f5a2f8e8dd2a9bed31bd06314b88b034d"
+    },
+    {
+      "bytes": 812,
+      "ruta": "v4_complete/donalfonsohotel/whatsapp_setup_guide/guia_configuracion_whatsapp_20261012_165705_metadata.json",
+      "sha256": "0096b9dcc405b141142a152ad538055b180eedd7841e6e2db131924a6ffb61c2"
+    },
+    {
+      "bytes": 14253,
+      "ruta": "v4_complete/health_dashboard/health_dashboard.html",
+      "sha256": "2b4b2ec58b11014b2072bc20313095591e490422e91a5e2c89a3cc6a60b39ba4"
+    },
+    {
+      "bytes": 1080,
+      "ruta": "v4_complete/health_dashboard/health_dashboard_summary.json",
+      "sha256": "059225070ec31c498df4a42436678fb5c5e88810501d13e73eb17f30f880bed6"
+    },
+    {
+      "bytes": 20960,
+      "ruta": "v4_complete/v4_complete_report.json",
+      "sha256": "ea00b407719ea55be7aea19ee8337e273adae3a234851670db497be29903cb7e"
+    }
+  ],
+  "regla": "se preserva el inventario y sus hashes antes de cualquier analisis; un miembro ausente se nombra, no se infiere",
+  "schema": "iah-fase-h-inventario-post/1.0"
+}

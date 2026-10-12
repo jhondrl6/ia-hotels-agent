@@ -1,0 +1,98 @@
+{
+  "alignment": {
+    "actionable_total": 6,
+    "coverage_ratio": 1.0,
+    "effective_total": 6,
+    "generated_aligned": 6,
+    "message": "6/6 servicios comprometidos cubiertos (6 generados )",
+    "no_breach": 0,
+    "passed": true,
+    "present_assets": [],
+    "present_in_production": 0,
+    "promised_services_total": 6,
+    "unresolved": 0
+  },
+  "alignment_status_version": "1.0",
+  "coverage_ratio": 1.0,
+  "delivery_ready": true,
+  "entries": [
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\optimization_guide\\ESTIMATED_guia_optimizacion_20261012_165705.md",
+      "asset_type": "optimization_guide",
+      "confidence": 0.8,
+      "pain_ids": [
+        "metadata_defaults"
+      ],
+      "service_name": "SEO Local",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\hotel_schema\\hotel_schema_20261012_165705.json",
+      "asset_type": "hotel_schema",
+      "confidence": 1.0,
+      "pain_ids": [
+        "no_hotel_schema"
+      ],
+      "service_name": "Schema Hotel",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\org_schema\\ESTIMATED_org_schema_20261012_165706.json",
+      "asset_type": "org_schema",
+      "confidence": 0.8,
+      "pain_ids": [
+        "no_org_schema"
+      ],
+      "service_name": "Schema Organization",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\faq_page\\ESTIMATED_faqs_20261012_165705.json",
+      "asset_type": "faq_page",
+      "confidence": 0.8,
+      "pain_ids": [
+        "no_faq_schema"
+      ],
+      "service_name": "Página de FAQ",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\open_graph\\open_graph_meta_20261012_165706.html",
+      "asset_type": "open_graph",
+      "confidence": 1.0,
+      "pain_ids": [
+        "no_og_tags"
+      ],
+      "service_name": "Meta Tags Sociales (Open Graph)",
+      "status": "LINKED"
+    },
+    {
+      "alignment": "linked",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\llms_txt\\llms_20261012_165705.txt",
+      "asset_type": "llms_txt",
+      "confidence": 1.0,
+      "pain_ids": [
+        "ai_crawler_blocked"
+      ],
+      "service_name": "Optimización para IA Generativa",
+      "status": "LINKED"
+    }
+  ],
+  "not_promised": [
+    "Botón de WhatsApp"
+  ],
+  "proposal_asset_matrix_version": "2.1",
+  "summary": {
+    "actionable_total": 6,
+    "not_promised": 1,
+    "promised": 6,
+    "unknown": 0,
+    "unresolved": 0
+  },
+  "unknown_services": []
+}

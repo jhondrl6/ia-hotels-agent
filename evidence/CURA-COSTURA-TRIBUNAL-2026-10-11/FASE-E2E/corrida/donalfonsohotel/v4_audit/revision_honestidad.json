@@ -1,0 +1,185 @@
+{
+  "reviewer": "honesty_reviewer",
+  "clause": "P6.5",
+  "findings": [
+    {
+      "finding_type": "OVER_PRESENTATION",
+      "clause": "P6.5",
+      "severity": "CRITICAL",
+      "verification_group": "CUANTIFICADOR_ABSOLUTO",
+      "claim_text": "total",
+      "matched_line": "## 🛡️ GARANTÍAS: Protección total para usted",
+      "evidence_tier_declared": "B+",
+      "cg_reference": null,
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "description": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ## 🛡️ GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "OVER_PRESENTATION",
+      "clause": "P6.5",
+      "severity": "CRITICAL",
+      "verification_group": "CUANTIFICADOR_ABSOLUTO",
+      "claim_text": "total",
+      "matched_line": "### 5. Transparencia total",
+      "evidence_tier_declared": "B+",
+      "cg_reference": null,
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "description": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ### 5. Transparencia total"
+    },
+    {
+      "finding_type": "CG_WARNING_UNDISCLOSED",
+      "clause": "P6.5",
+      "severity": "WARNING",
+      "claim_text": null,
+      "evidence_tier_declared": "B+",
+      "cg_reference": "CG-WHATSAPP-LEAD",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "description": "CG-* WARNING CG-WHATSAPP-LEAD no divulgado en propuesta: WhatsApp no aparece en la sección inicial del diagnóstico. El conflicto de WhatsApp es el gancho emo"
+    }
+  ],
+  "commercial_gates_read": {
+    "canonical_file": "commercial_gates_report.json",
+    "diagnostic_file": "commercial_gates_report_diagnostic_20261012_165706.json",
+    "total_cg_count": 12,
+    "distinct_cg_count": 10,
+    "duplicate_gate_ids": [
+      "CG-OTA-NARRATIVE",
+      "CG-TECH-JARGON"
+    ],
+    "warnings_found": [
+      "CG-WHATSAPP-LEAD"
+    ],
+    "all_gates": [
+      {
+        "gate_id": "CG-ROI-NEGATIVE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-OTA-NARRATIVE",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TECH-JARGON",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-SCENARIO-ORDER",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-SCENARIO-NEGATIVE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-IA-BLOCKED-CLAIM",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-CLAIM-VS-EVIDENCE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-WHATSAPP-LEAD",
+        "severity": "WARNING",
+        "passed": false
+      },
+      {
+        "gate_id": "CG-OTA-NARRATIVE",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TIER-CONSISTENCY",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-EVIDENCE-TIER-CONSISTENCY",
+        "severity": "INFO",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TECH-JARGON",
+        "severity": "WARNING",
+        "passed": true
+      }
+    ]
+  },
+  "summary": {
+    "over_presentations": 2,
+    "over_presentaciones_no_evaluables": 0,
+    "tier_mismatches": 0,
+    "undisclosed_warnings": 1,
+    "missing_scenarios": 0,
+    "total_findings": 3
+  },
+  "verdict_recommendation": "BLOQUEAR",
+  "extraccion": {
+    "estado": "OK_CON_PROMESAS",
+    "motivo": null,
+    "promesas_leidas": 42,
+    "via": "extract_checked"
+  },
+  "tier_resuelto": {
+    "evidence_tier": "B+",
+    "fuente": "escenarios",
+    "declarado": true,
+    "motivo_fuente": "financial_scenarios_20261012_165654.json → breakdown.evidence_tier"
+  },
+  "timestamp": "2026-10-12T16:57:17.390900",
+  "artifacts_read": [
+    "02_PROPUESTA_COMERCIAL*.md",
+    "financial_scenarios_*.json",
+    "commercial_gates_report.json",
+    "commercial_gates_report_diagnostic_*.json",
+    "MANIFEST.json (deliveries_dir)"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261012T165706",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261012.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261012T165706/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261012_165706.md",
+        "sha256": "0cd101cefcac4280ef90501e41e12eb0ff1e9b329b36fbb4e0dd8630f40681c8",
+        "size_bytes": 18129,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      },
+      {
+        "kind": "manifest",
+        "read_status": "OK",
+        "source": "zip",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261012.zip.tmp",
+        "sha256": "a2bee38f7cad554bd7a5faf304925ea977055eba45c3aea364b7b983e6991c9e",
+        "size_bytes": 7803,
+        "disposition": null,
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      },
+      {
+        "kind": "propuesta",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261012T165706/propuesta/02_PROPUESTA_COMERCIAL_20261012_165706.md",
+        "sha256": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728",
+        "size_bytes": 15268,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      }
+    ]
+  }
+}

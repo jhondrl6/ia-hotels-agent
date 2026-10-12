@@ -1,0 +1,285 @@
+{
+  "url": "https://www.donalfonsohotel.com/",
+  "hotel_name": "Donalfonsohotel",
+  "timestamp": "2026-10-12T16:56:54.346332",
+  "schema": {
+    "hotel_schema_detected": false,
+    "hotel_schema_valid": false,
+    "hotel_confidence": "unknown",
+    "faq_schema_detected": false,
+    "faq_schema_valid": false,
+    "faq_confidence": "unknown",
+    "org_schema_detected": false,
+    "total_schemas": 0,
+    "errors": [],
+    "warnings": [
+      {
+        "message": "Schema detection failed (status=ERROR): Failed to fetch URL: HTTPSConnectionPool(host='www.donalfonsohotel.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x00000163C7202210>: Failed to resolve 'www.donalfonsohotel.com' ([Errno 11001] getaddrinfo failed)\")). total_schemas=0 NO es ausencia verificada.",
+        "severity": "ERROR"
+      },
+      {
+        "message": "FAQ schema detection failed (status=ERROR): Failed to fetch URL: HTTPSConnectionPool(host='www.donalfonsohotel.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x00000163C7202490>: Failed to resolve 'www.donalfonsohotel.com' ([Errno 11001] getaddrinfo failed)\"))",
+        "severity": "ERROR"
+      }
+    ],
+    "properties": {},
+    "error_message": "Failed to fetch URL: HTTPSConnectionPool(host='www.donalfonsohotel.com', port=443): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x00000163C7202210>: Failed to resolve 'www.donalfonsohotel.com' ([Errno 11001] getaddrinfo failed)\"))"
+  },
+  "gbp": {
+    "place_found": true,
+    "place_id": "ChIJS9u4_eV9OI4RX-rKafu-iuY",
+    "name": "Hotel Don Alfonso",
+    "rating": 4.6,
+    "reviews": 218,
+    "photos": 10,
+    "phone": "(606) 3146139",
+    "website": "https://www.donalfonsohotel.com/",
+    "address": "Carrera 13 #12-37 Av Alfonso Jaramillo, Cra. 13, Pereira, Risaralda, Colombia",
+    "geo_score": 63,
+    "geo_score_breakdown": {
+      "rating_score": 27.6,
+      "reviews_score": 4.36,
+      "photos_score": 5.0,
+      "hours_score": 10.0,
+      "website_score": 10.0
+    },
+    "confidence": "verified",
+    "lat": 4.8082389,
+    "lng": -75.6892623,
+    "error_type": null,
+    "error_message": null
+  },
+  "performance": {
+    "has_field_data": false,
+    "mobile_score": null,
+    "desktop_score": 43,
+    "lcp": null,
+    "fid": null,
+    "cls": null,
+    "status": "ERROR",
+    "message": "API de PageSpeed no disponible"
+  },
+  "validation": {
+    "whatsapp_status": "estimated",
+    "phone_web": null,
+    "phone_gbp": "(606) 3146139",
+    "adr_status": "estimated",
+    "conflicts": []
+  },
+  "overall": {
+    "confidence": "estimated",
+    "critical_issues": [
+      "No Hotel schema detected - critical for SEO",
+      "PageSpeed API ERROR - performance not measurable (API de PageSpeed no disponible)",
+      "Metadata: El título de la página está vacío",
+      "Metadata: Meta description está vacía"
+    ],
+    "recommendations": [
+      "Implement Hotel schema markup for better search visibility",
+      "Add FAQPage schema to capture rich snippets",
+      "Add more photos to GBP (current: 10, target: 40+)",
+      "API de PageSpeed no disponible"
+    ]
+  },
+  "competitors": [
+    {
+      "nombre": "Sonesta Hotel Pereira",
+      "rating": 4.7,
+      "reviews": 4527,
+      "distancia_km": 13.3,
+      "fotos": 10,
+      "geo_score": 81,
+      "geo_score_formula": {
+        "rating_score": 28.2,
+        "reviews_score": 20.0,
+        "photos_score": 5.0,
+        "hours_score": 10.0,
+        "website_score": 10.0,
+        "total": 81
+      },
+      "place_id": "ChIJ7ZLOXO17OI4RQr5ouy8siEY",
+      "score_source": "places_api_real",
+      "has_hours": true,
+      "has_website": true,
+      "data_source": "places_api"
+    },
+    {
+      "nombre": "GHL Hotel Abadía Plaza",
+      "rating": 4.6,
+      "reviews": 1568,
+      "distancia_km": 1.0,
+      "fotos": 10,
+      "geo_score": 80,
+      "geo_score_formula": {
+        "rating_score": 27.6,
+        "reviews_score": 20.0,
+        "photos_score": 5.0,
+        "hours_score": 10.0,
+        "website_score": 10.0,
+        "total": 80
+      },
+      "place_id": "ChIJa88VTE-HOI4RFX8el7gCYGI",
+      "score_source": "places_api_real",
+      "has_hours": true,
+      "has_website": true,
+      "data_source": "places_api"
+    },
+    {
+      "nombre": "Hotel Soratama de Pereira",
+      "rating": 4.4,
+      "reviews": 1599,
+      "distancia_km": 0.9,
+      "fotos": 10,
+      "geo_score": 79,
+      "geo_score_formula": {
+        "rating_score": 26.4,
+        "reviews_score": 20.0,
+        "photos_score": 5.0,
+        "hours_score": 10.0,
+        "website_score": 10.0,
+        "total": 79
+      },
+      "place_id": "ChIJjbs07kiHOI4RQSg3_DlagS0",
+      "score_source": "places_api_real",
+      "has_hours": true,
+      "has_website": true,
+      "data_source": "places_api"
+    },
+    {
+      "nombre": "Sazagua Pereira Hotel Boutique",
+      "rating": 4.7,
+      "reviews": 827,
+      "distancia_km": 12.6,
+      "fotos": 10,
+      "geo_score": 77,
+      "geo_score_formula": {
+        "rating_score": 28.2,
+        "reviews_score": 16.54,
+        "photos_score": 5.0,
+        "hours_score": 10.0,
+        "website_score": 10.0,
+        "total": 77
+      },
+      "place_id": "ChIJU1ONRAZ8OI4RJiNBx7fN8cE",
+      "score_source": "places_api_real",
+      "has_hours": true,
+      "has_website": true,
+      "data_source": "places_api"
+    },
+    {
+      "nombre": "Ecohotel La Casona",
+      "rating": 4.1,
+      "reviews": 779,
+      "distancia_km": 5.5,
+      "fotos": 10,
+      "geo_score": 72,
+      "geo_score_formula": {
+        "rating_score": 24.6,
+        "reviews_score": 15.58,
+        "photos_score": 5.0,
+        "hours_score": 10.0,
+        "website_score": 10.0,
+        "total": 72
+      },
+      "place_id": "ChIJhevUSWyHOI4R5RQrXdCynvY",
+      "score_source": "places_api_real",
+      "has_hours": true,
+      "has_website": true,
+      "data_source": "places_api"
+    }
+  ],
+  "execution_trace": {
+    "executed": [
+      "schema_validation",
+      "metadata_validation",
+      "gbp_api",
+      "competitor_analysis",
+      "ai_crawler_audit",
+      "citability_audit",
+      "seo_elements_detection",
+      "cross_validation",
+      "aeo_snippet_tracker",
+      "llm_mention_checker"
+    ],
+    "skipped": [
+      "pagespeed_api"
+    ]
+  },
+  "metadata": {
+    "cms_detected": "custom",
+    "has_default_title": true,
+    "title": "<empty>",
+    "has_default_description": true,
+    "description": "<empty>",
+    "has_issues": true,
+    "issues": [
+      {
+        "type": "default_title",
+        "severity": "critical",
+        "message": "El título de la página está vacío"
+      },
+      {
+        "type": "default_description",
+        "severity": "high",
+        "message": "Meta description está vacía"
+      }
+    ],
+    "confidence": "estimated"
+  },
+  "ai_crawlers": {
+    "robots_exists": false,
+    "overall_score": 0.5,
+    "allowed_crawlers": [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "Claude-User",
+      "PerplexityBot",
+      "Google-Extended",
+      "Bytespider",
+      "FacebookBot",
+      "Applebot",
+      "DuckDuckBot",
+      "Baiduspider",
+      "YandexBot",
+      "Bingbot",
+      "Googlebot"
+    ],
+    "blocked_crawlers": [],
+    "recommendations": [
+      "Crear robots.txt para controlar acceso de GPTBot",
+      "Crear robots.txt para controlar acceso de ChatGPT-User",
+      "Crear robots.txt para controlar acceso de ClaudeBot",
+      "Crear robots.txt para controlar acceso de Claude-User",
+      "Crear robots.txt para controlar acceso de PerplexityBot",
+      "Crear robots.txt para controlar acceso de Google-Extended",
+      "Crear robots.txt para controlar acceso de Bytespider",
+      "Crear robots.txt para controlar acceso de FacebookBot",
+      "Crear robots.txt para controlar acceso de Applebot",
+      "Crear robots.txt para controlar acceso de DuckDuckBot",
+      "Crear robots.txt para controlar acceso de Baiduspider",
+      "Crear robots.txt para controlar acceso de YandexBot",
+      "Crear robots.txt para controlar acceso de Bingbot",
+      "Crear robots.txt para controlar acceso de Googlebot"
+    ]
+  },
+  "seo_elements": {
+    "open_graph": false,
+    "imagenes_alt": true,
+    "redes_activas": false,
+    "confidence": "high",
+    "notes": "Detected 0 OG tags, 0 imgs without alt",
+    "open_graph_tags": {},
+    "images_without_alt": 0,
+    "social_links_found": []
+  },
+  "aeo_snippets": {
+    "queries_tested": 5,
+    "snippets_captured": 0,
+    "snippets_competitor": 0,
+    "paa_presence": 0,
+    "snippet_score": 0,
+    "source": "stub",
+    "timestamp": "2026-10-12T16:55:55.868420"
+  }
+}

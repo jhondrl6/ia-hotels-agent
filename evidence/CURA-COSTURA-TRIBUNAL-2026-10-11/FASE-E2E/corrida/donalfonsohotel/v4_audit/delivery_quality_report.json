@@ -1,0 +1,68 @@
+{
+  "status": "WARNING",
+  "blocking": false,
+  "coverage_failure_rate": {
+    "passed": true,
+    "details": {
+      "total_assets": 13,
+      "generated": 13,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": true,
+    "gate": "G9",
+    "aligned": 6,
+    "total": 6,
+    "alignment": {
+      "promised_services_total": 6,
+      "generated_aligned": 6,
+      "present_in_production": 0,
+      "unresolved": 0,
+      "coverage_ratio": 1.0,
+      "present_assets": [],
+      "no_breach": 0,
+      "passed": true,
+      "effective_total": 6,
+      "actionable_total": 6,
+      "message": "6/6 servicios comprometidos cubiertos (6 generados )"
+    }
+  },
+  "asset_specificity_gate": {
+    "passed": false,
+    "details": {
+      "reason": "2 assets below confidence threshold",
+      "avg_confidence": 0.83,
+      "low_confidence_count": 2,
+      "total_assets": 13
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.96
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [],
+  "human_review_items": [
+    "G8: Asset specificity failed — 2 assets below confidence threshold"
+  ],
+  "summary": {
+    "total_gates": 5,
+    "passed": 4,
+    "failed": 1,
+    "not_evaluated": [],
+    "coherence_score": 0.96,
+    "blocking_gates": [],
+    "warning_gates": [
+      "asset_specificity"
+    ]
+  }
+}

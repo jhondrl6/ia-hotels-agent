@@ -1,0 +1,165 @@
+{
+  "snapshot": {
+    "checked_at": "2026-10-12T16:56:54.375808",
+    "faq_page": {
+      "confidence": 0.3,
+      "observation_scope": {
+        "crawl": false,
+        "nivel": "raiz",
+        "routes_inspected": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      },
+      "presence_evidence_kind": "ninguna",
+      "read_status": "NO-APLICABLE",
+      "site_verified": false,
+      "status": "verification_failed"
+    },
+    "hotel_schema": {
+      "confidence": 0.3,
+      "observation_scope": {
+        "crawl": false,
+        "nivel": "raiz",
+        "routes_inspected": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      },
+      "presence_evidence_kind": "ninguna",
+      "read_status": "NO-APLICABLE",
+      "site_verified": false,
+      "status": "verification_failed"
+    },
+    "llms_txt": {
+      "confidence": 0.3,
+      "observation_scope": {
+        "crawl": false,
+        "nivel": "raiz",
+        "routes_inspected": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      },
+      "presence_evidence_kind": "ninguna",
+      "read_status": "OK",
+      "site_verified": false,
+      "status": "verification_failed"
+    },
+    "org_schema": {
+      "confidence": 0.3,
+      "observation_scope": {
+        "crawl": false,
+        "nivel": "raiz",
+        "routes_inspected": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      },
+      "presence_evidence_kind": "ninguna",
+      "read_status": "NO-APLICABLE",
+      "site_verified": false,
+      "status": "verification_failed"
+    },
+    "results": {
+      "faq_page": {
+        "confidence": 0.3,
+        "observation_scope": {
+          "crawl": false,
+          "nivel": "raiz",
+          "routes_inspected": [
+            "https://www.donalfonsohotel.com/"
+          ]
+        },
+        "presence_evidence_kind": "ninguna",
+        "read_status": "NO-APLICABLE",
+        "site_verified": false,
+        "status": "verification_failed"
+      },
+      "hotel_schema": {
+        "confidence": 0.3,
+        "observation_scope": {
+          "crawl": false,
+          "nivel": "raiz",
+          "routes_inspected": [
+            "https://www.donalfonsohotel.com/"
+          ]
+        },
+        "presence_evidence_kind": "ninguna",
+        "read_status": "NO-APLICABLE",
+        "site_verified": false,
+        "status": "verification_failed"
+      },
+      "llms_txt": {
+        "confidence": 0.3,
+        "observation_scope": {
+          "crawl": false,
+          "nivel": "raiz",
+          "routes_inspected": [
+            "https://www.donalfonsohotel.com/"
+          ]
+        },
+        "presence_evidence_kind": "ninguna",
+        "read_status": "OK",
+        "site_verified": false,
+        "status": "verification_failed"
+      },
+      "org_schema": {
+        "confidence": 0.3,
+        "observation_scope": {
+          "crawl": false,
+          "nivel": "raiz",
+          "routes_inspected": [
+            "https://www.donalfonsohotel.com/"
+          ]
+        },
+        "presence_evidence_kind": "ninguna",
+        "read_status": "NO-APLICABLE",
+        "site_verified": false,
+        "status": "verification_failed"
+      },
+      "whatsapp_button": {
+        "confidence": 0.3,
+        "details": {
+          "asset_type": "whatsapp_button",
+          "error_tipo": "ConnectionError",
+          "found": false,
+          "matched_texts": [],
+          "presence_evidence_kind": "ninguna",
+          "read_status": "READ_ERROR"
+        },
+        "observation_scope": {
+          "crawl": false,
+          "nivel": "raiz",
+          "routes_inspected": [
+            "https://www.donalfonsohotel.com/"
+          ]
+        },
+        "presence_evidence_kind": "ninguna",
+        "read_status": "READ_ERROR",
+        "site_verified": false,
+        "status": "verification_failed"
+      }
+    },
+    "site_url": "https://www.donalfonsohotel.com/",
+    "whatsapp_button": {
+      "confidence": 0.3,
+      "details": {
+        "asset_type": "whatsapp_button",
+        "error_tipo": "ConnectionError",
+        "found": false,
+        "matched_texts": [],
+        "presence_evidence_kind": "ninguna",
+        "read_status": "READ_ERROR"
+      },
+      "observation_scope": {
+        "crawl": false,
+        "nivel": "raiz",
+        "routes_inspected": [
+          "https://www.donalfonsohotel.com/"
+        ]
+      },
+      "presence_evidence_kind": "ninguna",
+      "read_status": "READ_ERROR",
+      "site_verified": false,
+      "status": "verification_failed"
+    }
+  },
+  "snapshot_version": "1.0"
+}

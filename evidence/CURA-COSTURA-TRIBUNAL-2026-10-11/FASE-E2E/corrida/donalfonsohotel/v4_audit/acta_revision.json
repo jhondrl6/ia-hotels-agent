@@ -1,0 +1,264 @@
+{
+  "verdict": "BLOQUEADO",
+  "evidence_tier": "B+",
+  "clauses_evaluated": 6,
+  "clauses": {
+    "P6.1": {
+      "status": "PASS",
+      "source_artifact": "gate_report_*.json",
+      "finding": "critical_recall OK: Critical recall at 100.0% (threshold: 90%)"
+    },
+    "P6.2": {
+      "status": "NOT_EVALUABLE",
+      "source_artifact": "revision_alineacion.json",
+      "finding": "Bot 2 (alignment_reviewer) está implementado y su report se publica en revision_alineacion.json; la cláusula no se certifica en T1 por decisión de contrato (fuera de T1_CERTIFIABLE_CLAUSES), no por ausencia del revisor"
+    },
+    "P6.3": {
+      "status": "PASS",
+      "source_artifact": "asset_generation_report.json",
+      "finding": "13/13 assets generados exitosamente"
+    },
+    "P6.4": {
+      "status": "PASS",
+      "source_artifact": "proposal_asset_matrix.json",
+      "finding": "delivery_ready=true: 6 servicios prometidos, 6 linked, 0 en producción"
+    },
+    "P6.5": {
+      "status": "NOT_EVALUABLE",
+      "source_artifact": null,
+      "finding": "Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a"
+    },
+    "P6.6": {
+      "status": "PASS",
+      "source_artifact": "gate_report_*.json",
+      "finding": "coherence=PASS (0.9633333333333333); hard_contradictions=PASS (0)"
+    }
+  },
+  "reviewer_reports": [
+    {
+      "reviewer": "diagnosis_reviewer",
+      "status": "OK_NO_FINDINGS",
+      "findings_count": 0,
+      "critical_count": 0,
+      "recommendation": "APROBADO",
+      "report_path": "revision_diagnostico.json",
+      "findings": []
+    },
+    {
+      "reviewer": "asset_reviewer",
+      "status": "OK_WITH_FINDINGS",
+      "findings_count": 1,
+      "critical_count": 0,
+      "recommendation": "APROBADO",
+      "report_path": "revision_assets.json",
+      "findings": [
+        {
+          "finding_type": "P12_UNVERIFIABLE",
+          "severity": "WARNING",
+          "description": "promised_assets_exist verificó via catálogo estático. P6.3 no verificable desde el artefacto; la verificación real requiere archivos en disco."
+        }
+      ]
+    },
+    {
+      "reviewer": "alignment_reviewer",
+      "status": "OK_WITH_FINDINGS",
+      "findings_count": 33,
+      "critical_count": 0,
+      "recommendation": "DEVOLVER-PRUEBAS",
+      "report_path": "revision_alineacion.json",
+      "findings": [
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal 'Le proponemos un plan integral donde **nosotros implementamos todo** — usted no ' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '**No necesita hacer nada técnico. Nosotros implementamos todo.**' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '| Configuración de WhatsApp | ✅ Día 1 (Activación inicial) | Listo para implemen' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '**Nota sobre Optimización para Asistentes de Voz**: Esta tecnología (Siri, Alexa' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '| **Guía de Configuración Analytics** | En proceso de activación — Semana 2 | In' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '| **Optimización de Tráfico Indirecto** | En proceso de activación — Semana 2 | ' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '**¿Ya tiene fotos?** Envíenoslas y nosotros las optimizamos y subimos.' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal 'Ofrecemos servicio de actualización trimestral por $150.000 COP.' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '**Activos digitales que quedan en su propiedad:**\n- whatsapp_setup_guide\n- hotel' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Día 4**: Implementación de activos Fase 1 (sin datos externos):\n- [ ] Wh' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Semana 2**: Implementación Fase 1 (datos para IA): Whatsapp Setup Guide,' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Semana 3**: Implementación Fase 2 (Contenido y FAQs): Faq Page, Llms Txt' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Semana 3**: Configuración sistema de rastreo (sabemos de dónde viene cad' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Día 30**: Reporte de avance con métricas de visibilidad' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos,' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales): Org Ficha técnica, ' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos r' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60' sin entrada en matriz"
+        },
+        {
+          "finding_type": "PROMESA_SIN_MATRIZ",
+          "severity": "WARNING",
+          "clause": "P6.2",
+          "description": "Promesa verbal '- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales' sin entrada en matriz"
+        }
+      ],
+      "extraccion": {
+        "estado": "OK_CON_PROMESAS",
+        "motivo": null
+      },
+      "findings_omitted": 13
+    },
+    {
+      "reviewer": "honesty_reviewer",
+      "status": "OK_WITH_FINDINGS",
+      "findings_count": 3,
+      "critical_count": 2,
+      "recommendation": "BLOQUEAR",
+      "report_path": "revision_honestidad.json",
+      "findings": [
+        {
+          "finding_type": "OVER_PRESENTATION",
+          "severity": "CRITICAL",
+          "clause": "P6.5",
+          "description": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ## 🛡️ GARANTÍAS: Protección total para usted"
+        },
+        {
+          "finding_type": "OVER_PRESENTATION",
+          "severity": "CRITICAL",
+          "clause": "P6.5",
+          "description": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ### 5. Transparencia total"
+        },
+        {
+          "finding_type": "CG_WARNING_UNDISCLOSED",
+          "severity": "WARNING",
+          "clause": "P6.5",
+          "description": "CG-* WARNING CG-WHATSAPP-LEAD no divulgado en propuesta: WhatsApp no aparece en la sección inicial del diagnóstico. El conflicto de WhatsApp es el gancho emo"
+        }
+      ],
+      "extraccion": {
+        "estado": "OK_CON_PROMESAS",
+        "motivo": null
+      }
+    }
+  ],
+  "first_floor_rule": {
+    "applied": true,
+    "reason": "evidence_tier B+ → máximo condicional",
+    "source_artifact": "financial_scenarios_20261012_165654.json → breakdown.evidence_tier"
+  },
+  "timestamp": "2026-10-12T16:57:06.335973",
+  "hotel_id": "donalfonsohotel",
+  "enforcement": {
+    "blocking_env": "GATE_BLOCKING_ENABLED",
+    "enabled": true,
+    "suppressed_by_operator": false
+  },
+  "corrective_actions": [
+    {
+      "finding_type": "OVER_PRESENTATION",
+      "severity": "CRITICAL",
+      "artifact": "02_PROPUESTA_COMERCIAL.md",
+      "instruction": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ## 🛡️ GARANTÍAS: Protección total para usted",
+      "owner": "comercial"
+    },
+    {
+      "finding_type": "OVER_PRESENTATION",
+      "severity": "CRITICAL",
+      "artifact": "02_PROPUESTA_COMERCIAL.md",
+      "instruction": "La propuesta usa «total» (CUANTIFICADOR_ABSOLUTO) con evidence_tier=B+ (no A) en: ### 5. Transparencia total",
+      "owner": "comercial"
+    }
+  ],
+  "package_evidence": {
+    "suppressed": true,
+    "path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\deliveries\\donalfonsohotel_20261012.zip.tmp",
+    "sha256": "dc00cdb94130552bd8cfa8a3801ddfc4a1e521f1d6ffe79afdb92bb489fc9d12",
+    "member_count": 56
+  }
+}

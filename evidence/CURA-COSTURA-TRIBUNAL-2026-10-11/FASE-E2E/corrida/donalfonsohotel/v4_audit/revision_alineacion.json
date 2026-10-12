@@ -1,0 +1,722 @@
+{
+  "reviewer": "alignment_reviewer",
+  "clause": "P6.2",
+  "service_matrix": [
+    {
+      "service": "implementacion_integral",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Le proponemos un plan integral donde **nosotros implementamos todo** — usted no necesita saber de tecnología, SEO ni Google.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Le proponemos un plan integral donde **nosotros implementamos todo** — usted no '"
+    },
+    {
+      "service": "implementacion_integral",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**No necesita hacer nada técnico. Nosotros implementamos todo.**",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**No necesita hacer nada técnico. Nosotros implementamos todo.**'"
+    },
+    {
+      "service": "seo_local",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**SEO Local** | En proceso de activación — Semana 2 | 80% | — | Para aparecer en las primeras posiciones de Google tradicional",
+      "matrix_entry_found": true,
+      "pain_id": "metadata_defaults",
+      "finding": null
+    },
+    {
+      "service": "schema_hotel",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**Ficha del Hotel en Google e IA** | ✅ Alineado | 100% | #3: Sin Ficha del Hotel en Google e IA ($562.845 COP/mes) | Datos estructurados para Google y IA sobre tu hotel",
+      "matrix_entry_found": true,
+      "pain_id": "no_hotel_schema",
+      "finding": null
+    },
+    {
+      "service": "schema_organizacion",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**Perfil de Empresa en Google** | En proceso de activación — Semana 2 | 80% | #10: Sin Perfil de Empresa en Google ($180.125 COP/mes) | Datos estructurados sobre la organización del hotel",
+      "matrix_entry_found": true,
+      "pain_id": "no_hotel_schema",
+      "finding": null
+    },
+    {
+      "service": "faq_page",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**Página de FAQ** | En proceso de activación — Semana 2 | 80% | #4: Sin Preguntas Frecuentes para Google ($270.011 COP/mes) | Sus huéspedes encuentran respuestas sin salir de su web",
+      "matrix_entry_found": true,
+      "pain_id": "no_faq_schema",
+      "finding": null
+    },
+    {
+      "service": "open_graph",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**Meta Tags Sociales (Vista previa en redes sociales)** | ✅ Alineado | 100% | #9: Sin Vista previa en redes sociales Tags ($180.125 COP/mes) | Sus fotos brillan cuando alguien comparte su link en redes",
+      "matrix_entry_found": true,
+      "pain_id": "no_og_tags",
+      "finding": null
+    },
+    {
+      "service": "optimizacion_ia_generativa",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "**Optimización para IA Generativa** | ✅ Alineado | 100% | — | Aparece cuando clientes preguntan a ChatGPT/asistentes de IA 'dónde hospedarme en [región]'",
+      "matrix_entry_found": true,
+      "pain_id": "ai_crawler_blocked",
+      "finding": null
+    },
+    {
+      "service": "whatsapp_bot",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "| Configuración de WhatsApp | ✅ Día 1 (Activación inicial) | Listo para implementar |",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '| Configuración de WhatsApp | ✅ Día 1 (Activación inicial) | Listo para implemen'"
+    },
+    {
+      "service": "schema_hotel",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "| Ficha del Hotel en Google e IA | ⚠️ Semana 1 (Con sus datos) | Requiere confirmacion post-firma |",
+      "matrix_entry_found": true,
+      "pain_id": "no_hotel_schema",
+      "finding": null
+    },
+    {
+      "service": "schema_organizacion",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "| Perfil de Empresa en Google | ⚠️ Semana 1 (Con sus datos) | Requiere confirmacion post-firma |",
+      "matrix_entry_found": true,
+      "pain_id": "no_hotel_schema",
+      "finding": null
+    },
+    {
+      "service": "faq_page",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "| Página de FAQ | ⚠️ Semana 1 (Con sus datos) | Requiere confirmacion post-firma |",
+      "matrix_entry_found": true,
+      "pain_id": "no_faq_schema",
+      "finding": null
+    },
+    {
+      "service": "open_graph",
+      "status": "ALINEADO",
+      "verbal_promise_found": true,
+      "promise_text": "| Meta Tags Sociales (Vista previa en redes sociales) | ✅ Día 1 (Activación inicial) | Listo para implementar |",
+      "matrix_entry_found": true,
+      "pain_id": "no_og_tags",
+      "finding": null
+    },
+    {
+      "service": "optimizacion_asistentes_voz",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**Nota sobre Optimización para Asistentes de Voz**: Esta tecnología (Siri, Alexa, Google Assistant) se construye sobre Preguntas Frecuentes para Google + Vista previa en redes sociales — ambos incluidos en su kit. No requiere assets adicionales.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**Nota sobre Optimización para Asistentes de Voz**: Esta tecnología (Siri, Alexa'"
+    },
+    {
+      "service": "analytics_setup_guide",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "| **Guía de Configuración Analytics** | En proceso de activación — Semana 2 | Instrucciones paso a paso para conectar Google Analytics 4 y Google Search Console |",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '| **Guía de Configuración Analytics** | En proceso de activación — Semana 2 | In'"
+    },
+    {
+      "service": "optimizacion_trafico_indirecto",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "| **Optimización de Tráfico Indirecto** | En proceso de activación — Semana 2 | Diagnóstico y corrección del tráfico que llega por canales indirectos y no convierte |",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '| **Optimización de Tráfico Indirecto** | En proceso de activación — Semana 2 | '"
+    },
+    {
+      "service": "optimizacion_fotos",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**¿Ya tiene fotos?** Envíenoslas y nosotros las optimizamos y subimos.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**¿Ya tiene fotos?** Envíenoslas y nosotros las optimizamos y subimos.'"
+    },
+    {
+      "service": "actualizacion_fotos_trimestral",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Ofrecemos servicio de actualización trimestral por $150.000 COP.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Ofrecemos servicio de actualización trimestral por $150.000 COP.'"
+    },
+    {
+      "service": "activos_digitales",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**Activos digitales que quedan en su propiedad:**\n- whatsapp_setup_guide\n- hotel_schema\n- faq_page\n- org_schema\n- review_plan\n- llms_txt\n- analytics_setup_guide\n- open_graph\n- social_strategy_guide",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**Activos digitales que quedan en su propiedad:**\n- whatsapp_setup_guide\n- hotel'"
+    },
+    {
+      "service": "implementacion_fase_1",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Día 4**: Implementación de activos Fase 1 (sin datos externos):\n- [ ] Whatsapp Setup Guide\n- [ ] Hotel Ficha técnica\n- [ ] Optimization Guide\n- [ ] Review Plan",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Día 4**: Implementación de activos Fase 1 (sin datos externos):\n- [ ] Wh'"
+    },
+    {
+      "service": "implementacion_fase_1",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Semana 2**: Implementación Fase 1 (datos para IA): Whatsapp Setup Guide, Hotel Ficha técnica, Optimization Guide",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Semana 2**: Implementación Fase 1 (datos para IA): Whatsapp Setup Guide,'"
+    },
+    {
+      "service": "implementacion_fase_2",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Semana 3**: Implementación Fase 2 (Contenido y FAQs): Faq Page, Llms Txt, Analytics Setup Guide",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Semana 3**: Implementación Fase 2 (Contenido y FAQs): Faq Page, Llms Txt'"
+    },
+    {
+      "service": "sistema_rastreo",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Semana 3**: Configuración sistema de rastreo (sabemos de dónde viene cada reserva)",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Semana 3**: Configuración sistema de rastreo (sabemos de dónde viene cad'"
+    },
+    {
+      "service": "publicacion_gbp",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales'"
+    },
+    {
+      "service": "reporte_mensual",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Día 30**: Reporte de avance con métricas de visibilidad",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Día 30**: Reporte de avance con métricas de visibilidad'"
+    },
+    {
+      "service": "optimizacion_assets",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos, descripciones)",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos,'"
+    },
+    {
+      "service": "implementacion_fase_3",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales): Org Ficha técnica, Social Strategy Guide",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales): Org Ficha técnica, '"
+    },
+    {
+      "service": "medicion_impacto",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos reales de Google Search Console)",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos r'"
+    },
+    {
+      "service": "reporte_mensual",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60'"
+    },
+    {
+      "service": "evaluacion_roi",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales'"
+    },
+    {
+      "service": "optimizacion_conversiones",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4'"
+    },
+    {
+      "service": "planificacion_fase_2",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 81-85**: Planificación fase 2 basada en gaps: Org Ficha técnica, Social Strategy Guide",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 81-85**: Planificación fase 2 basada en gaps: Org Ficha técnica, So'"
+    },
+    {
+      "service": "reporte_final",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de resultados",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de re'"
+    },
+    {
+      "service": "analytics_setup_guide",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Cuando configuremos Google Analytics, podremos medir con precision el impacto de cada cambio y optimizar basados en datos reales de su sitio web.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Cuando configuremos Google Analytics, podremos medir con precision el impacto de'"
+    },
+    {
+      "service": "garantia_resultados",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Si en 90 días no ve un aumento del 10% en consultas directas, **le extendemos el servicio 1 mes gratis**. Sin excusas.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Si en 90 días no ve un aumento del 10% en consultas directas, **le extendemos el'"
+    },
+    {
+      "service": "sistema_rastreo",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.'"
+    },
+    {
+      "service": "auditoria_dia_55",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "El **Día 55** de nuestro servicio, nuestra IA ejecuta una auditoría completa de todos los entregables.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'El **Día 55** de nuestro servicio, nuestra IA ejecuta una auditoría completa de '"
+    },
+    {
+      "service": "garantia_dia_55",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**Si no se cumple:** Nota crédito automática del 50% del mes 2\nSin reclamos, sin papeleo, sin llamadas.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**Si no se cumple:** Nota crédito automática del 50% del mes 2\nSin reclamos, sin'"
+    },
+    {
+      "service": "reporte_mensual",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.'"
+    },
+    {
+      "service": "piloto_validacion",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "**Lo que incluye:**\n- Implementación completa del Kit 4 Pilares\n- Reporte de brechas cerradas (evidencia técnica)\n- Primera señal en GSC (consultas orgánicas)",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '**Lo que incluye:**\n- Implementación completa del Kit 4 Pilares\n- Reporte de bre'"
+    },
+    {
+      "service": "garantia_piloto",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "- Si al día 30 no hay +10% en consultas directas gsc → No hay mes 2. Activos quedan en propiedad del cliente.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: '- Si al día 30 no hay +10% en consultas directas gsc → No hay mes 2. Activos que'"
+    },
+    {
+      "service": "transparencia_tecnologica",
+      "status": "PROMESA-SIN-MATRIZ",
+      "verbal_promise_found": true,
+      "promise_text": "El costo de estas consultas\nlo absorbemos nosotros como parte del servicio — usted no paga nada adicional.",
+      "matrix_entry_found": false,
+      "pain_id": null,
+      "finding": "Promesa verbal sin entrada en matriz: 'El costo de estas consultas\nlo absorbemos nosotros como parte del servicio — ust'"
+    },
+    {
+      "service": "Schema Organization",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "no_org_schema",
+      "finding": null
+    }
+  ],
+  "findings": [
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Le proponemos un plan integral donde **nosotros implementamos todo** — usted no ' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huéspedes."
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**No necesita hacer nada técnico. Nosotros implementamos todo.**' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "LA SOLUCIÓN: Nosotros hacemos todo. Usted solo atiende huéspedes."
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '| Configuración de WhatsApp | ✅ Día 1 (Activación inicial) | Listo para implemen' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Estado de los Entregables"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**Nota sobre Optimización para Asistentes de Voz**: Esta tecnología (Siri, Alexa' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Estado de los Entregables"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '| **Guía de Configuración Analytics** | En proceso de activación — Semana 2 | In' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Assets Técnicos Adicionales"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '| **Optimización de Tráfico Indirecto** | En proceso de activación — Semana 2 | ' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Assets Técnicos Adicionales"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**¿Ya tiene fotos?** Envíenoslas y nosotros las optimizamos y subimos.' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Fotos: Lo único que necesitamos de usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Ofrecemos servicio de actualización trimestral por $150.000 COP.' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Fotos: Lo único que necesitamos de usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**Activos digitales que quedan en su propiedad:**\n- whatsapp_setup_guide\n- hotel' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "CAPEX vs OPEX: Lo que es suyo vs. lo que es servicio"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Día 4**: Implementación de activos Fase 1 (sin datos externos):\n- [ ] Wh' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Semana 2**: Implementación Fase 1 (datos para IA): Whatsapp Setup Guide,' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Semana 3**: Implementación Fase 2 (Contenido y FAQs): Faq Page, Llms Txt' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Semana 3**: Configuración sistema de rastreo (sabemos de dónde viene cad' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Semana 4**: Primera publicación posts GBP + revisión métricas iniciales' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Día 30**: Reporte de avance con métricas de visibilidad' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 31-45**: Optimización de assets entregados (A/B testing de títulos,' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 46-50**: Implementación Fase 3 (Guías locales): Org Ficha técnica, ' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 51-55**: Primera medición de impacto en consultas directas (datos r' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 56-60**: Ajustes basados en datos reales + reporte día 60' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 61-75**: Evaluación de ROI a 3 meses con métricas reales' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 76-80**: Optimización de conversiones basada en datos de GA4' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 81-85**: Planificación fase 2 basada en gaps: Org Ficha técnica, So' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- [ ] **Días 86-90**: Revisión de estrategia a largo plazo + reporte final de re' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Plan de Trabajo: 7/30/60/90 Días"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Cuando configuremos Google Analytics, podremos medir con precision el impacto de' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "DATOS DE TRAFICO (Google Analytics)"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Si en 90 días no ve un aumento del 10% en consultas directas, **le extendemos el' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Instalamos tracking propio en el Día 7 — sin necesidad de que tengas GA4.' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'El **Día 55** de nuestro servicio, nuestra IA ejecuta una auditoría completa de ' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**Si no se cumple:** Nota crédito automática del 50% del mes 2\nSin reclamos, sin' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "GARANTÍAS: Protección total para usted"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '**Lo que incluye:**\n- Implementación completa del Kit 4 Pilares\n- Reporte de bre' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "¿Prefiere validar antes de comprometerse?"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal '- Si al día 30 no hay +10% en consultas directas gsc → No hay mes 2. Activos que' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "¿Prefiere validar antes de comprometerse?"
+    },
+    {
+      "finding_type": "PROMESA_SIN_MATRIZ",
+      "clause": "P6.2",
+      "severity": "WARNING",
+      "description": "Promesa verbal 'El costo de estas consultas\nlo absorbemos nosotros como parte del servicio — ust' sin entrada en matriz",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "location": "Transparencia tecnológica"
+    },
+    {
+      "finding_type": "S_C4_TECHNICAL_ASSETS_TABLE",
+      "clause": "P6.2",
+      "severity": "INFO",
+      "description": "Tabla de assets técnicos detectada como tercera superficie de promesa (S-C4)",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md"
+    }
+  ],
+  "summary": {
+    "aligned": 11,
+    "no_breach": 0,
+    "promise_without_matrix": 32,
+    "total": 43,
+    "no_breach_info": 0
+  },
+  "verdict_recommendation": "DEVOLVER-PRUEBAS",
+  "extraccion": {
+    "estado": "OK_CON_PROMESAS",
+    "motivo": null,
+    "promesas_leidas": 42,
+    "via": "extract_checked"
+  },
+  "info": {
+    "brechas_en_ledger": 11
+  },
+  "timestamp": "2026-10-12T16:57:17.360307",
+  "artifacts_read": [
+    "02_PROPUESTA_COMERCIAL*.md",
+    "proposal_asset_matrix.json",
+    "pain_ledger_resolved*.json"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261012T165706",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261012.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261012T165706/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261012_165706.md",
+        "sha256": "0cd101cefcac4280ef90501e41e12eb0ff1e9b329b36fbb4e0dd8630f40681c8",
+        "size_bytes": 18129,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      },
+      {
+        "kind": "manifest",
+        "read_status": "OK",
+        "source": "zip",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261012.zip.tmp",
+        "sha256": "a2bee38f7cad554bd7a5faf304925ea977055eba45c3aea364b7b983e6991c9e",
+        "size_bytes": 7803,
+        "disposition": null,
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      },
+      {
+        "kind": "propuesta",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261012T165706/propuesta/02_PROPUESTA_COMERCIAL_20261012_165706.md",
+        "sha256": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728",
+        "size_bytes": 15268,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261012T165706"
+      }
+    ]
+  }
+}

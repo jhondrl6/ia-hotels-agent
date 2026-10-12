@@ -1,0 +1,214 @@
+{
+  "log": {
+    "crudo_bytes": 17854,
+    "crudo_sha256": "0e26d540c098a610915bc8db20d97f7f4ac0eec6baa5c95b855f51f4e59c9521",
+    "redactado_bytes": 17854,
+    "redactado_sha256": "6aff921880d777776b762b98ac745a95aef8d3a7331ea0b0e9f9d54712a2ab9f",
+    "cambio_por_redaccion": false
+  },
+  "inventario": {
+    "archivos": 67,
+    "faltantes": [],
+    "sha": "e7e657b9d65d694523670671d0e5ad3ba4ecc38846e12e5174b044c5adefda7d",
+    "ruta": "C:\\Users\\Jhond\\Github\\iah-cli\\evidence\\CURA-COSTURA-TRIBUNAL-2026-10-11\\FASE-E2E\\inventario_post_corrida.json"
+  },
+  "copiados": 26,
+  "detalle_copia": [
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261012_165706.md",
+      "bytes": 18129,
+      "sha256": "0cd101cefcac4280ef90501e41e12eb0ff1e9b329b36fbb4e0dd8630f40681c8",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/02_PROPUESTA_COMERCIAL_20261012_165706.md",
+      "bytes": 15268,
+      "sha256": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/acta_revision.json",
+      "bytes": 10813,
+      "sha256": "700abfbdd0d3b414711d2a38cae8df3fdb8161896dd2828c9bafa7f8c3a1d9d9",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/acta_revision.md",
+      "bytes": 3269,
+      "sha256": "0c7417a62cb6b22076961f641849c3f68d46a018f6c4c284aba9f675c9a10503",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/asset_generation_report.json",
+      "bytes": 11216,
+      "sha256": "d244aed6e33d4bb5a9efacc06caa4e2ed8ab4ac49688d5e3bffdee79beb8d80d",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/audit_report_20261012_165654.json",
+      "bytes": 9088,
+      "sha256": "e84c5e0034e926a9a364290e68c78698cb62cddba60347ea4ad001645e2b2611",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_pre_gate_20261012_165703.json",
+      "bytes": 1657,
+      "sha256": "c6b42e421a2a5072b25560edd9a94f86683deabd7c53421eaf30a7b5306f0946",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_validation.json",
+      "bytes": 1387,
+      "sha256": "c7f29c9ad4e12dcd181f53e62a1ff5973266c7dab67d63bbc6c11b99869aeede",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_validation_post_gen.json",
+      "bytes": 1387,
+      "sha256": "c7f29c9ad4e12dcd181f53e62a1ff5973266c7dab67d63bbc6c11b99869aeede",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/commercial_gates_report.json",
+      "bytes": 890,
+      "sha256": "31cfe1eea6c5925bd3f2aa0a2749226faabedd67f483f529a1902d5e307398f5",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/commercial_gates_report_diagnostic_20261012_165706.json",
+      "bytes": 3556,
+      "sha256": "ad11f30d5c0f8697e6019e98e933a8574709a6103589cf966a0b9d57aae94359",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/delivery_quality_report.json",
+      "bytes": 1582,
+      "sha256": "0432d48c6b5a3f9408f80f19e4d8d58c5003c745b217ceb17bd51cf494d25efd",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/financial_scenarios_20261012_165654.json",
+      "bytes": 2230,
+      "sha256": "5de7e4cb8d95c743860dfc2846c24226503066929147ac5b31a0f9740762f447",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/gate_report_20261012_165706.json",
+      "bytes": 7852,
+      "sha256": "65d3dfd446d61ac0f1ba5fd9724f65354c601788b0b17f09d72ca314880ddba4",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/geo_flow_result.json",
+      "bytes": 4814,
+      "sha256": "86f218a6b6a67fc92a0551472eda8de118404bf2d44e2f940147203847a67bdb",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/human_checklist.md",
+      "bytes": 688,
+      "sha256": "b16774da1a122d7d614d69f17025a5f68a70afb003ca38760f0bcaa05f188bcf",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/pain_ledger.json",
+      "bytes": 3385,
+      "sha256": "f86d600665d917218c7860c85851f8cc670dd6fd37fd97eb208cef250225b27d",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/pain_ledger_resolved.json",
+      "bytes": 3617,
+      "sha256": "599dc451d7488c6cec455679cdbe0a98c2a66779c33aa9e3893eaf3bb77a0c73",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/proposal_asset_matrix.json",
+      "bytes": 3040,
+      "sha256": "0658b915292f027bb3e9714a0e7fd120e96839714a0f92a9dc3452de087dd900",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/review_input_manifest.json",
+      "bytes": 1377,
+      "sha256": "3c15399551c4e4e376d91e83263bcc56264fb89f6185830da62767e0f642d09b",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_alineacion.json",
+      "bytes": 33757,
+      "sha256": "4fe14affd442cdffa57c99115c9e2f5bdfbfb070de5e6d34f47531bcd68db040",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_assets.json",
+      "bytes": 4070,
+      "sha256": "944b361d32b58431d4231a2bc47b4a2c456831c6ab492e06dd0c9168413e5d29",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_diagnostico.json",
+      "bytes": 1243,
+      "sha256": "5a161193113a66d1fd6e9eadfdafe28c9dac81ebd9dffe117ca28902f1dc2c3b",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_honestidad.json",
+      "bytes": 5998,
+      "sha256": "c47404508807af226ff9fac25d8033a0f2e7a6f610b7142671aada3ebecc9231",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/donalfonsohotel/v4_audit/site_presence_snapshot.json",
+      "bytes": 4684,
+      "sha256": "f66276e06cc5639a263db2e6d878aebb5e46eed6d92d885932dc460723df33e6",
+      "redaccion": "sin_forma_de_secreto"
+    },
+    {
+      "ruta_evidence": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/v4_complete_report.json",
+      "bytes": 20960,
+      "sha256": "ea00b407719ea55be7aea19ee8337e273adae3a234851670db497be29903cb7e",
+      "redaccion": "sin_forma_de_secreto"
+    }
+  ],
+  "recibos": [
+    {
+      "ruta": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/recibos/d66e95d7d92f46a8-cache-02.json",
+      "bytes": 660,
+      "sha256": "5589f2e6865b201d9180632d43a204fcb98e0751e54846d10bed5abb84c7d529",
+      "mtime": "2026-10-12T16:57:17"
+    },
+    {
+      "ruta": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/recibos/d66e95d7d92f46a8-llamada-01.json",
+      "bytes": 986,
+      "sha256": "a2e2108ea4b2b998d01e0285114dff7596eaf174bc35e024d1cba00c04338b4d",
+      "mtime": "2026-10-12T16:57:17"
+    }
+  ],
+  "entradas_cache": [
+    {
+      "ruta": "00070f04f96dcf607c83f4586af14551757c2d1afbc5c92f58871fa4476756f5.json",
+      "bytes": 2,
+      "sha256_contenido": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mtime": "2026-09-11T18:00:14"
+    },
+    {
+      "ruta": "442e361c8625737aa9f99f8353cc9067b39c4cd2a831c1051d159cd8df3642c8.json",
+      "bytes": 2,
+      "sha256_contenido": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mtime": "2026-10-07T09:34:09"
+    },
+    {
+      "ruta": "5c4c21462c805d589c11545cc567dde5f37358d75e0ff0bfaaf394d10e47f567.json",
+      "bytes": 2,
+      "sha256_contenido": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "mtime": "2026-09-19T15:01:38"
+    },
+    {
+      "ruta": "d66e95d7d92f46a842d572ac97db052da975ec0d6949b50c54a997d92ebd6546.json",
+      "bytes": 11055,
+      "sha256_contenido": "0a838337903d6507326f9f6df745fdde4e66c6acbbfabda8443468559f9ec302",
+      "mtime": "2026-10-12T16:57:17"
+    }
+  ]
+}

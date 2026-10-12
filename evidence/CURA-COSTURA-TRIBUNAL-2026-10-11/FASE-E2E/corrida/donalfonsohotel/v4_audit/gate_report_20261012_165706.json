@@ -1,0 +1,266 @@
+{
+  "generated_at": "2026-10-12T16:57:06.289931",
+  "hotel_url": "https://www.donalfonsohotel.com/",
+  "gate_results": [
+    {
+      "gate_name": "hard_contradictions",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "No hard contradictions detected (count: 0)",
+      "value": 0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "evidence_coverage",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Evidence coverage at 95.0% (threshold: 95%)",
+      "value": 0.95,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "financial_validity",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "All financial data validated - no default values detected",
+      "value": true,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "coherence",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coherence score 0.96 meets threshold 0.8",
+      "value": 0.9633333333333333,
+      "suggestion": "",
+      "details": {
+        "failed_check_names": [],
+        "failed_check_messages": []
+      }
+    },
+    {
+      "gate_name": "critical_recall",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Critical recall at 100.0% (threshold: 90%)",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "critical_issues_count": 5,
+        "recall_basis": "all_critical_issues_detected"
+      }
+    },
+    {
+      "gate_name": "ethics",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Ethics validation passed",
+      "value": null,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "content_quality",
+      "severity": "advisory",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Document quality checks passed: no issues detected",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "asset_confidence",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "WARNING",
+      "message": "2 asset(s) below confidence threshold (0.7)",
+      "value": 0.8307692307692308,
+      "suggestion": "Run enrichment phase to improve asset quality",
+      "details": {
+        "total_assets": 13,
+        "above_threshold": 11,
+        "below_threshold": 2,
+        "low_confidence_assets": [
+          {
+            "type": "review_plan",
+            "score": 0.5
+          },
+          {
+            "type": "social_strategy_guide",
+            "score": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "gate_name": "proposal_asset_alignment",
+      "severity": "advisory",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "6/6 servicios comprometidos cubiertos (6 generados )",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_services": 6,
+        "aligned_count": 6,
+        "missing_count": 0,
+        "low_quality_count": 0,
+        "alignment_percentage": 1.0,
+        "all_covered": true,
+        "all_aligned": true,
+        "aligned": [
+          {
+            "service": "SEO Local",
+            "asset": "optimization_guide",
+            "confidence": 0.8
+          },
+          {
+            "service": "Schema Hotel",
+            "asset": "hotel_schema",
+            "confidence": 1.0
+          },
+          {
+            "service": "Schema Organization",
+            "asset": "org_schema",
+            "confidence": 0.8
+          },
+          {
+            "service": "Página de FAQ",
+            "asset": "faq_page",
+            "confidence": 0.8
+          },
+          {
+            "service": "Meta Tags Sociales (Open Graph)",
+            "asset": "open_graph",
+            "confidence": 1.0
+          },
+          {
+            "service": "Optimización para IA Generativa",
+            "asset": "llms_txt",
+            "confidence": 1.0
+          }
+        ],
+        "missing": [],
+        "low_quality": [],
+        "indeterminate": [],
+        "present_in_production": [],
+        "redundant": [],
+        "alignment": {
+          "promised_services_total": 6,
+          "generated_aligned": 6,
+          "present_in_production": 0,
+          "unresolved": 0,
+          "coverage_ratio": 1.0,
+          "present_assets": [],
+          "no_breach": 0,
+          "passed": true,
+          "effective_total": 6,
+          "actionable_total": 6,
+          "message": "6/6 servicios comprometidos cubiertos (6 generados )"
+        }
+      }
+    },
+    {
+      "gate_name": "tier_c_onboarding_required",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Tier B+: Datos suficientes para propuesta activa.",
+      "value": null,
+      "suggestion": "",
+      "details": {
+        "tier": "B+"
+      }
+    },
+    {
+      "gate_name": "coverage_no_silent_drop",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Coverage completo: 11 en diagnostico/propuesta, 0 justificadas de 11 detectadas",
+      "value": 1.0,
+      "suggestion": "",
+      "details": {
+        "total_detected": 11,
+        "covered": 11,
+        "justified": 0,
+        "uncovered": []
+      }
+    },
+    {
+      "gate_name": "doc_audit_consistency",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "PASSED",
+      "message": "Document consistent with audit data — no contradictions detected",
+      "value": 0,
+      "suggestion": "",
+      "details": {}
+    },
+    {
+      "gate_name": "pricing_compliance",
+      "severity": "blocking",
+      "blocks_publication": false,
+      "passed": true,
+      "status": "WARNING",
+      "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.1574 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)",
+      "value": 0.1574,
+      "suggestion": "pain_ratio is structurally inflated by operational_floor $400,000. Tier 'boutique' allows up to 0.32. No action required; informational only.",
+      "details": {
+        "pain_ratio": 0.1574,
+        "tier": "boutique",
+        "tier_gate_max": 0.32,
+        "operational_floor": 400000.0,
+        "floor_applied": true,
+        "ideal_range": [
+          0.03,
+          0.06
+        ],
+        "monthly_price_cop": 400000.0,
+        "expected_loss_cop": 2541000.0
+      }
+    }
+  ],
+  "readiness": {
+    "status": "READY_FOR_PUBLICATION",
+    "ready": true,
+    "blocking_issues": [],
+    "warnings": [
+      {
+        "gate": "asset_confidence",
+        "message": "2 asset(s) below confidence threshold (0.7)"
+      },
+      {
+        "gate": "pricing_compliance",
+        "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.1574 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)"
+      }
+    ]
+  },
+  "financial_sources": {
+    "adr_cop": "user_provided",
+    "occupancy_rate": "onboarding",
+    "direct_channel_percentage": "onboarding"
+  }
+}
