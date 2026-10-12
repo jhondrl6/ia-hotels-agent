@@ -194,15 +194,26 @@ class ReviewerReport:
 
     @property
     def verified_critical(self) -> bool:
-        """CRITICAL *verificado*: status OK_* con critical_count >= 1 (matriz §2.1 fila 2)."""
-        return self.status.is_ok and self.critical_count >= 1
+        """CRITICAL *verificado*: ``critical_count >= 1`` desde cualquier estado leído.
+
+        AC19 (matriz §2.1 fila 2): el conteo lo produce un escaneo determinista del
+        texto completo, no el LLM (N5), así que exigir ``status.is_ok`` para
+        enforcementarlo aflojaba el gate justo cuando el proveedor falla. Los estados
+        vacíos (``NOT_RUN``/``READER_FAILED``/``ARTIFACT_MISSING``) mantienen
+        conteos 0 y ``recommendation`` None, así que no pueden bloquear por esta vía:
+        ausencia jamás es PASS, pero tampoco inventa bloqueo.
+        """
+        return self.critical_count >= 1
 
     @property
     def verified_block(self) -> bool:
-        return self.status.is_ok and self.recommendation == RECOMMENDATION_BLOCK
+        """Recomendación ``BLOQUEAR`` leída del informe del Bot, sin exigir insumo sano (AC19)."""
+        return self.recommendation == RECOMMENDATION_BLOCK
 
     @property
     def verified_return_for_tests(self) -> bool:
+        """Fila 3: sigue exigiendo ``is_ok`` — extenderla haría la entrega sensible a un
+        fallo transitorio del proveedor (alternativa rechazada en FASE-C2)."""
         return (
             self.status.is_ok
             and self.recommendation == RECOMMENDATION_RETURN_TESTS
@@ -372,14 +383,17 @@ def derive_corrective_actions(
 ) -> list:
     """Un `CorrectiveAction` por hallazgo bloqueante, con dueño (contrato §3.2).
 
+    AC19: un reporte no-OK ya no se salta. Si su CRITICAL bloquea el veredicto, su
+    hallazgo tiene que aparecer nombrado en el acta; saltarlo disfrazaba el bloqueo de
+    ``VEREDICTO_BLOQUEANTE_SIN_HALLAZGO``, que está reservado al caso real de un
+    veredicto bloqueante sin documentación.
+
     Si el bloqueo viene de un gate y ningún revisor lo documentó, se emite la
     acción desde la cláusula: un veredicto bloqueante nunca deja el acta sin
     camino de reparación.
     """
     actions: list = []
     for report in reports:
-        if not report.status.is_ok:
-            continue
         report_blocks = report.verified_critical or report.verified_block or report.verified_return_for_tests
         if not report_blocks:
             continue

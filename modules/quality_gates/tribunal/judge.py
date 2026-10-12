@@ -489,8 +489,10 @@ class TribunalJudge:
         """Matriz §2.1 del contrato P1 — el orden de evaluación ES el contrato.
 
         1. Gate blocking fallido (P6.1/P6.6 en FAIL) → BLOQUEADO
-        2. CRITICAL verificado de un revisor (status OK_* con critical_count>=1) o
-           su recomendación BLOQUEAR → BLOQUEADO
+        2. CRITICAL verificado de un revisor (critical_count>=1) o su recomendación
+           BLOQUEAR → BLOQUEADO, desde cualquier estado leído: la fila no exige
+           ``status.is_ok`` porque el escaneo que produce el hallazgo es
+           determinista y no depende del LLM (AC19 / N5)
         3. CRITICAL de consistencia (DEVOLVER-PRUEBAS con CRITICAL) o P6.3/P6.4 en
            FAIL → DEVOLVER-CORRECCIONES
         4. ARTIFACT_MISSING / READER_FAILED / NOT_RUN: no cambian el veredicto, pero

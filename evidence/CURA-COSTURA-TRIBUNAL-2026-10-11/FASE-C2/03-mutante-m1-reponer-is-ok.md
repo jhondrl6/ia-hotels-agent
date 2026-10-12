@@ -1,0 +1,14 @@
+# 03-mutante-m1-reponer-is-ok
+
+Ancla aplicada sobre `outcome.py` (blob 3a2337da4ea2) y restaurada despues de la corrida.
+
+```
+EXIT=1
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_critical_bloquea_desde_cualquier_estado_leido[INPUT_NOT_EVALUABLE]
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_critical_de_texto_completo_bloquea_bajo_extraccion_no_evaluable
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_critical_de_texto_completo_bloquea_bajo_extraccion_fallida
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_kill_switch_sigue_anulando_el_bloque
+6 failed, 11 passed in 3.35s
+```

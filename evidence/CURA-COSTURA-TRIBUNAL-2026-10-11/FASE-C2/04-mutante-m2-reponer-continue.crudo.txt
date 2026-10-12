@@ -1,0 +1,48 @@
+.........FF......                                                        [100%]
+================================== FAILURES ===================================
+_______ test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok ________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1837/test_la_accion_correctiva_nomb0')
+
+    def test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok(tmp_path):
+        """Sin la cura el BLOQUEADO quedaba disfrazado de la accion generica del veredicto."""
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, judge = _acta_con_bot4(audit, tmp_path)
+        outcome = judge.finalize(acta, reports, blocks=blocks_delivery_zip(acta))
+    
+        tipos = [a.finding_type for a in outcome.corrective_actions]
+>       assert FINDING_OVER_PRESENTATION in tipos
+E       AssertionError: assert 'OVER_PRESENTATION' in ['VEREDICTO_BLOQUEANTE_SIN_HALLAZGO']
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:265: AssertionError
+_________ test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1837/test_el_acta_generada_publica_0')
+
+    def test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada(tmp_path):
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, judge = _acta_con_bot4(audit, tmp_path)
+        judge.finalize(acta, reports, blocks=blocks_delivery_zip(acta))
+        json_ruta, md_ruta = ActaWriter(tmp_path / "acta").write(acta)
+    
+        leido = json.loads(json_ruta.read_text(encoding="utf-8"))
+        md = md_ruta.read_text(encoding="utf-8")
+    
+        assert leido["verdict"] == VERDICT_BLOCKED
+        assert blocks_delivery_zip(leido) is True
+        bot4_acta = next(r for r in leido["reviewer_reports"] if r["reviewer"] == "honesty_reviewer")
+        assert bot4_acta["status"] == "INPUT_NOT_EVALUABLE"
+        assert bot4_acta["critical_count"] == 2
+>       assert any(a["finding_type"] == FINDING_OVER_PRESENTATION for a in leido["corrective_actions"])
+E       assert False
+E        +  where False = any(<generator object test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada.<locals>.<genexpr> at 0x000002019EC63AC0>)
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:292: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada
+2 failed, 15 passed in 2.78s

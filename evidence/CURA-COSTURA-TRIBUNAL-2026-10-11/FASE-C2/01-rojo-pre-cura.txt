@@ -1,0 +1,136 @@
+.F....FF.FF.....F                                                        [100%]
+================================== FAILURES ===================================
+_ test_el_critical_bloquea_desde_cualquier_estado_leido[INPUT_NOT_EVALUABLE] __
+
+estado = <ReviewerStatus.INPUT_NOT_EVALUABLE: 'INPUT_NOT_EVALUABLE'>
+
+    @pytest.mark.parametrize(
+        "estado",
+        [
+            ReviewerStatus.OK_WITH_FINDINGS,
+            ReviewerStatus.INPUT_NOT_EVALUABLE,
+        ],
+    )
+    def test_el_critical_bloquea_desde_cualquier_estado_leido(estado):
+        """Mismo hallazgo CRITICAL, solo cambia el estado: el predicado no se afloja."""
+        report = ReviewerReport(
+            reviewer="honesty_reviewer",
+            status=estado,
+            findings_count=2,
+            critical_count=1,
+            recommendation="BLOQUEAR",
+            report_path="revision_honestidad.json",
+            clauses=("P6.5",),
+        )
+    
+>       assert report.verified_critical is True
+E       AssertionError: assert False is True
+E        +  where False = ReviewerReport(reviewer='honesty_reviewer', status=<ReviewerStatus.INPUT_NOT_EVALUABLE: 'INPUT_NOT_EVALUABLE'>, findin...report_path='revision_honestidad.json', clauses=('P6.5',), findings=[], extraccion_estado=None, extraccion_motivo=None).verified_critical
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:165: AssertionError
+____ test_critical_de_texto_completo_bloquea_bajo_extraccion_no_evaluable _____
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1834/test_critical_de_texto_complet0')
+
+    def test_critical_de_texto_completo_bloquea_bajo_extraccion_no_evaluable(tmp_path):
+        """Bot 4 emite el CRITICAL por el scan de texto completo con el insumo NO-EVALUABLE."""
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, _ = _acta_con_bot4(audit, tmp_path)
+        bot4 = _bot4(reports)
+    
+        assert bot4.extraccion_estado == "NO-EVALUABLE"
+        assert bot4.status is ReviewerStatus.INPUT_NOT_EVALUABLE
+        assert bot4.critical_count == 2
+>       assert acta["verdict"] == VERDICT_BLOCKED
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'BLOQUEADO'
+E         
+E         - BLOQUEADO
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:219: AssertionError
+_______ test_critical_de_texto_completo_bloquea_bajo_extraccion_fallida _______
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1834/test_critical_de_texto_complet1')
+
+    def test_critical_de_texto_completo_bloquea_bajo_extraccion_fallida(tmp_path):
+        """El segundo estado no-OK del proveedor (FALLIDO) cae del mismo lado."""
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(fallido()))
+    
+        acta, reports, _ = _acta_con_bot4(audit, tmp_path)
+        bot4 = _bot4(reports)
+    
+        assert bot4.extraccion_estado == "FALLIDO"
+        assert bot4.status is ReviewerStatus.INPUT_NOT_EVALUABLE
+        assert bot4.critical_count == 2
+>       assert acta["verdict"] == VERDICT_BLOCKED
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'BLOQUEADO'
+E         
+E         - BLOQUEADO
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:234: AssertionError
+_______ test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok ________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1834/test_la_accion_correctiva_nomb0')
+
+    def test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok(tmp_path):
+        """Sin la cura el BLOQUEADO quedaba disfrazado de la accion generica del veredicto."""
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, judge = _acta_con_bot4(audit, tmp_path)
+        outcome = judge.finalize(acta, reports, blocks=blocks_delivery_zip(acta))
+    
+        tipos = [a.finding_type for a in outcome.corrective_actions]
+>       assert FINDING_OVER_PRESENTATION in tipos
+E       AssertionError: assert 'OVER_PRESENTATION' in []
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:264: AssertionError
+_________ test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1834/test_el_acta_generada_publica_0')
+
+    def test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada(tmp_path):
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, judge = _acta_con_bot4(audit, tmp_path)
+        judge.finalize(acta, reports, blocks=blocks_delivery_zip(acta))
+        json_ruta, md_ruta = ActaWriter(tmp_path / "acta").write(acta)
+    
+        leido = json.loads(json_ruta.read_text(encoding="utf-8"))
+        md = md_ruta.read_text(encoding="utf-8")
+    
+>       assert leido["verdict"] == VERDICT_BLOCKED
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'BLOQUEADO'
+E         
+E         - BLOQUEADO
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:286: AssertionError
+________________ test_el_kill_switch_sigue_anulando_el_bloque _________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1834/test_el_kill_switch_sigue_anul0')
+
+    def test_el_kill_switch_sigue_anulando_el_bloque(tmp_path):
+        """GATE_BLOCKING_ENABLED=0 conserva su escape: blocks_publish False con suppressed True."""
+        audit = _directorio(tmp_path / "v4_audit", PROPUESTA_CON_CITA_OMITIDA)
+        _bot4_escrito_en_disco(audit, HonestyReviewer(audit).review(no_evaluable()))
+    
+        acta, reports, judge = _acta_con_bot4(audit, tmp_path)
+>       assert blocks_delivery_zip(acta) is True
+E       AssertionError: assert False is True
+E        +  where False = blocks_delivery_zip({'clauses': {'P6.1': {'finding': 'gate_report no disponible', 'source_artifact': 'gate_report_*.json', 'status': 'NOT_...B → máximo condicional', 'source_artifact': 'financial_scenarios_20260904_120000.json → breakdown.evidence_tier'}, ...})
+
+tests\quality_gates\tribunal\test_fase_c2_ac19_critical_bloquea_sin_is_ok.py:386: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_critical_bloquea_desde_cualquier_estado_leido[INPUT_NOT_EVALUABLE]
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_critical_de_texto_completo_bloquea_bajo_extraccion_no_evaluable
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_critical_de_texto_completo_bloquea_bajo_extraccion_fallida
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_la_accion_correctiva_nombra_el_hallazgo_bajo_insumo_no_ok
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_acta_generada_publica_bloqueo_y_la_accion_nombrada
+FAILED tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py::test_el_kill_switch_sigue_anulando_el_bloque
+6 failed, 11 passed in 3.24s
