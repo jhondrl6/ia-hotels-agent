@@ -2,8 +2,9 @@
 
 > **Estado**: FASE-A, FASE-B, FASE-C y FASE-VERIFY cerradas **sin commit** en su pasada (corte: listo para revisión).
 > Medido con `git log`: FASE-A `5ed960a`, FASE-B `bf5ab2e`, FASE-C `079f475`, FASE-C2 `fa4c93e`, FASE-E2E `fbdee8e` (tercera
-> tanda, ver su sello abajo). **FASE-VERIFY ejecutada el 2026-10-14**: certificación de AC1..AC19 contra el output E2E real,
-> matriz de verificación completa y seguimientos re-midos; su corte es «listo para revisión, sin commit». Queda
+> tanda, ver su sello abajo) y **FASE-VERIFY `e0f9456`** (cuarta tanda, ver su sello abajo). La certificación de
+> FASE-VERIFY —AC1..AC19 contra el output E2E real, matriz completa y seguimientos re-midos— se cerró el 2026-10-14 con
+> corte «listo para revisión, sin commit»; la autorización llegó después con la letra «Git Commit + L3 + Push». Queda
 > FASE-RELEASE-4.81.0.
 > **Plan**: CURA-COSTURA-TRIBUNAL-2026-10-11
 > **Versión objetivo**: 4.81.0
@@ -120,6 +121,20 @@ que cita la evidencia son de **los bytes en disco al medir**; con `core.autocrlf
 (34 archivos de la tanda lo avisaron al etapar), así que un cotejo `git show` contra disco no casa por EOL y la
 verificación de evidencia es **disco a disco**. Cláusula de antemano: esta nota no puede estampar su propio sha, y el tip
 publicado es el que imprime `git ls-remote` al leerla.
+
+**Sello de la cuarta tanda (2026-10-14)**: la fila de FASE-VERIFY quedó escrita con «✅ (sin commit)» porque ese era su
+corte al cerrarse; la autorización llegó después con la letra **«Git Commit + L3 + Push»**. Medido: **FASE-VERIFY
+`e0f9456`** (padre `82ec9a4`, **17 rutas**, 388+/54−, hook **8/8** verde con el `[8/8]` materializando el índice
+`3d676b44…`, `SUCIOS=0` al terminar el commit) y su cifra reproducida **en el árbol del commit**:
+`git grep -c -E "^\s*def test_" HEAD -- tests` = **5321** (delta R2.3 de esta fase **0**: no añadió código ni tests).
+El mismo commit lleva las **cinco actualizaciones datadas** del `CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y el par
+del índice regenerado (387 IDs), que viaja con la tanda porque las definiciones nuevas de esta nota cambian su estado
+derivado. **El orden de la L3 se declara, no se redondea**: la revisión se lanzó en segundo plano y el push aterrizó
+**antes** de que volviera el resultado (el Operador reenvió «push the commit»), así que esta tanda es la variante
+**«L3 retroactiva»** que la casa ya documentó, no una L3 previa al push. Su alcance sí cubre el tip empujado porque la
+corrida arrancó después del commit, y devolvió EXIT 0 con `{"layer":"l3","findings_count":0,"findings":[]}`. Paridad
+después del push: `rev-list --left-right --count origin/master...HEAD` = **0 0** y `git ls-remote` casando
+`e0f94566b8c6aac9…` con el local. Cláusula de antemano: el sello de esta tanda tampoco estampa su propio sha.
 
 ## Métricas de Ejecución (referencias, no copias)
 
