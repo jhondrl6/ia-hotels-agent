@@ -1892,14 +1892,14 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
+      "total_citas": 4,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
     {
       "id": "L-CST-4",
       "familia": "L",
-      "enunciado": "Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la orden de AC10 («importar el patrón del módulo en lugar de re-escribir un equivalente») no era ejecutable sin tocar el productor. La cura real fue subir los dos patrones a VERIFICATION_GROUP_*/VERIFICATION_SCAN_GROUPS a nivel de módulo; el filtro estructural (tabla/monto) quedó como función del módulo y la medición lo invoca. Por qué importa: si se hubiera medido con un regex copiado del cuerpo del método, las dos cifras de AC10 describirían otro programa. Qué lo previene: el diente test_la_medicion_importa_el_patron_del_codigo, que iguala lo que devuelve el patrón del módulo con lo que emite la función del revisor sobre el mismo texto — INCLUIR — la AC no era realizable sin ese movimiento de superficie",
+      "enunciado": "Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la orden de AC10 («importar el patrón del módulo en lugar de re-escribir un equivalente») no era ejecutable sin tocar el productor. La cura real fue subir los dos patrones a VERIFICATION_GROUP_*/VERIFICATION_SCAN_GROUPS a nivel de módulo; el filtro estructural (tabla/monto) quedó como función del módulo y la medición lo invoca. Por qué importa: si se hubiera medido con un regex copiado del cuerpo del método, las dos cifras de AC10 describirían otro programa. Qué lo previene: el diente test_la_medicion_importa_el_patron_del_codigo, que iguala lo que devuelve el patrón del módulo con lo que emite la función del revisor sobre el mismo texto. Real FASE-VERIFY (2026-10-14) — la lección no estaba completa: importar el símbolo tampoco basta, porque las banderas viven en la llamada. El arnés de esta fase recorrió VERIFICATION_SCAN_GROUPS con re.finditer(patron, texto) y sin re.IGNORECASE, que es la bandera que el revisor sí pasa. Dio 8 literales donde el código ve 10, y un falso «0» en el grupo de lenguaje del documento de 2026-10-07 (su coincidencia es «Verificado», en mayúscula). Ese 0 falso iba a certificarse como «la corrida no contiene lenguaje de verificación» cuando en realidad describía otro programa. Qué lo previene ahora: medir invocando la función del revisor (coincidencias_lenguaje_de_verificacion), no los patrones sueltos, y publicar en el crudo la pasada equivocada con su contraste — INCLUIR — la AC no era realizable sin ese movimiento de superficie, y su medición sigue siendo frágil si se re-implementa la llamada",
       "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -1934,7 +1934,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 5,
       "planes_que_lo_citan": [
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
@@ -1950,7 +1950,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
@@ -4310,7 +4310,7 @@
       "seccion": "FASE-VERIFY (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 26,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "CURA-COSTURA-TRIBUNAL-2026-10-11",
@@ -5365,7 +5365,7 @@
       "seccion": "Deudas definidas por este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 25,
+      "total_citas": 28,
       "planes_que_lo_citan": [
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
@@ -6054,10 +6054,11 @@
     {
       "id": "D-T1.3",
       "familia": "D",
-      "total_citas": 27,
+      "total_citas": 28,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ]
     },
     {

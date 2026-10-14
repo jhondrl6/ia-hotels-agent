@@ -118,6 +118,12 @@ demuestre que la propuesta renderizada con tier B+ **no** produce `OVER_PRESENTA
 apagado por diseño (no por accidente), y (iii) decidir qué pasa con `diagnostico_v6_template.md` (5 candidatas) — Bot 4
 escanea la propuesta, pero el diagnóstico viaja en el mismo paquete y su texto también llega al hotel.
 
+**Medición nueva (2026-10-14, FASE-VERIFY).** Sobre la propuesta renderizada de la corrida, el barrido del revisor
+(patrón del módulo y bandera de su llamada) da **10 literales** del grupo de cuantificadores, **6** descartados por el
+filtro estructural —fila de tabla o línea con monto— y **2 emitidos**: exactamente las dos líneas de prosa de garantía
+que §0 nombra. Ese `10 → 6 → 2` es el objetivo mínimo del diente de (ii): la propuesta renderizada con tier B+ debe
+emitir **0**, y la resta es la prueba de que no se logró apagando el escáner.
+
 ### C — Nombre del veredicto condicional
 
 `APROBADO-CONDICIONAL-PENDING-ONBOARDING` describe mal el caso que gobierna hoy: para Don Alfonso el onboarding **sí**
@@ -161,6 +167,33 @@ conflicto que `dependencias-fases.md` existe para evitar.
 de que CURA cierre** (FASE-VERIFY + FASE-RELEASE-4.81.0), o arranca con el conflicto de archivos declarado y el orden
 fijado por el Operador.
 
+**Actualización (2026-10-14).** FASE-VERIFY quedó ejecutada (19/19 AC certificadas, corte: listo para revisión, sin
+commit; árbol medido con tip `82ec9a4` y 10 rutas sucias de la propia fase). El portón baja a
+**FASE-RELEASE-4.81.0**, que es la única fase pendiente de `CURA-COSTURA-TRIBUNAL-2026-10-11`.
+
+**Insumo para el plan: `P6.5` con su mecanismo medido (2026-10-14).** Para que la cláusula vecina entre al plan como
+decisión y no como nota, queda definida así:
+
+- **Mecanismo.** La fila `P6.5` está **hardcodeada** en el mapa de cláusulas de `judge.py`: status
+  `NOT_EVALUABLE`, sin `source_artifact`, texto «Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a»; su etiqueta
+  humana espejo vive en `acta_writer` («Honestidad Comercial (NL) — reservada Bot 4»); y `T1_CERTIFIABLE_CLAUSES` la
+  excluye con su motivo escrito, igual que a `P6.2` — el veredicto máximo exige que las cláusulas de esa tupla estén en
+  `PASS`, así que la exclusión es también una decisión de veredicto.
+- **Contradicción medida, forma completa.** En el acta del run único el `verdict` es `BLOQUEADO`, con 2 CRITICAL y
+  **las 2 acciones correctivas originadas en el revisor cuya fila dice "Reservada"** (report_path a
+  `revision_honestidad.json`, `clause: P6.5`). No es solo texto vencido: la cláusula declarada no evaluable es la
+  fuente del bloqueo.
+- **Dos direcciones de cura, con coste distinto.** (a) Texto + `source_artifact` con el productor real: la familia de
+  la cura de `P6.2`, barata y sin tocar gates. (b) Hacer la fila **derivada del report del revisor** en vez de literal
+  — exige autorización para tocar `T1_CERTIFIABLE_CLAUSES`, ACs propias, y decidir si un insumo no-OK puede dejar la
+  cláusula en `NOT_EVALUABLE` mientras el bloqueo de ese mismo revisor sigue vigente. Viajan pegadas a la decisión ya
+  diferida «¿`P6.2` pasa a cláusula evaluable?»: son la misma familia.
+- **Frontera de alcance.** `S-CST-1` (el gate blocking `hard_contradictions` no puede fallar en producción) queda
+  **fuera** de este contexto: su superficie es `main.py`, `publication_gates.py` y `Conflict`, no el par
+  `judge.py`/`acta_writer.py`. Su enunciado completo vive en el maestro §5 y en la deuda del
+  `10-analisis-post-implementacion.md` del plan de origen; el plan que nazca de aquí no debe absorberlo sin una
+  decisión propia del Operador.
+
 ---
 
 ## 6. Lo que la sesión nueva debe medir antes de planificar
@@ -178,6 +211,13 @@ fijado por el Operador.
 6. **El árbol**: re-medir HEAD y rutas sucias. Al escribir esto, FASE-E2E estaba cerrada **sin commit**; si la tanda ya
    se publicó, las cifras de §2 siguen siendo del código, no del commit.
 
+**Aviso de instrumento (2026-10-14, FASE-VERIFY).** «Con el comando que las produjo» no basta si se copia el patrón:
+en el revisor las **banderas viven en la llamada** (`re.IGNORECASE`), no en el patrón. Medido al certificar: sin la
+bandera, el mismo barrido dio **8** literales donde el código ve **10** y un **falso 0** en el grupo de lenguaje del
+documento de 2026-10-07 (su coincidencia, «Verificado», va en mayúscula). El inventario de §6.3 se mide **invocando la
+función del revisor** (`coincidencias_lenguaje_de_verificacion`), no los patrones sueltos, y el crudo debe publicar la
+pasada equivocada con su contraste.
+
 ---
 
 ## 7. Lo que no se hizo en esta sesión, declarado
@@ -192,6 +232,14 @@ fijado por el Operador.
   que corrió (`L-CST-7`), la fila nueva de AC19 no ejercitada en flujo real (la extracción salió `OK_CON_PROMESAS`), y
   la celda «(Verificado)» que no salió CRITICAL donde la medición de FASE-B anticipaba que saldría. Pertenecen a
   FASE-VERIFY o a su tanda propia.
+
+**Actualización (2026-10-14, FASE-VERIFY ejecutada).** El **cuarto ítem quedó cerrado sin hallazgo**: la propuesta del
+run contiene **0** literales del grupo de lenguaje de verificación —re-medido con el patrón del módulo y la bandera de
+su llamada— y la predicción de FASE-B estaba bien medida sobre **otro** documento, la propuesta del 2026-10-07, que sí
+contiene «Verificado». No es detección perdida ni filtro estructural: es el dato. Los ítems 1, 2 y 3 siguen abiertos:
+los dos primeros con dueño Operador, y la fila de AC19 re-confirmada como límite declarado —ejercitarla en producción
+exigiría otra inferencia pagada, y su prueba sigue siendo el par rojo/verde de FASE-C2—. Evidencia de la certificación
+(19/19 AC legibles, 0 fallos) en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-VERIFY/`.
 
 ---
 

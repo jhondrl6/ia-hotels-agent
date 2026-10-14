@@ -1,0 +1,34 @@
+PATRON DEL CODIGO (VERIFICATION_SCAN_GROUPS, con re.IGNORECASE como lo aplica la funcion del revisor):
+   LENGUAJE_VERIFICACION | filtro_financiero= False | \b(verificad[oa]s?|confirmad[oa]s?|dato real|cifra exacta|validad[oa]s?)\b
+   CUANTIFICADOR_ABSOLUTO | filtro_financiero= True | (?<!\d)100[ \t]*%|\b(?:total|absoluto|definitiv[ao]s?)\b
+
+==== RUN unico Don Alfonso 2026-10-12 
+     archivo: evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/corrida/02_PROPUESTA_COMERCIAL_20261012_165706.md len = 14559
+  literales LENGUAJE_VERIFICACION   =   0   distintos = []
+  literales CUANTIFICADOR_ABSOLUTO  =  10   distintos = ['100%', 'total']
+  EMITIDAS por el revisor (coincidencias_lenguaje_de_verificacion) = 2
+     - CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+     - CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+
+==== REFERENCIA 2026-10-07 (la que predijo 3) 
+     archivo: output/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/v4_complete/02_PROPUESTA_COMERCIAL_20261007_093402.md len = 14690
+  literales LENGUAJE_VERIFICACION   =   1   distintos = ['verificado']
+  literales CUANTIFICADOR_ABSOLUTO  =  10   distintos = ['100%', 'total']
+  EMITIDAS por el revisor (coincidencias_lenguaje_de_verificacion) = 3
+     - LENGUAJE_VERIFICACION | 'Verificado' | | Perfil de Empresa en Google | ✅ Día 1 (Verificado) | Ya existe en su web - n
+     - CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+     - CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+
+CONTRASTE CON LA NOTA DE FASE-B (medicion-falso-positivo.md):
+  FASE-B midio el run de referencia 2026-10-07: LENGUAJE 1 literal/1 matcheada/1 emitida,
+  CUANTIFICADOR 10 literales/10 matcheadas/2 emitidas  ->  total emitido 3.
+  El run unico 2026-10-12 tiene 0 literales del grupo LENGUAJE: la celda
+  «✅ Día 1 (Verificado)» del timeline NO esta en esta propuesta. Por eso emite 2.
+  No es una deteccion perdida: el grupo de lenguaje no lleva filtro estructural (DEC-B1),
+  asi que la diferencia es del dato, no del patron.
+TRAMPA MEDIDA EN ESTA PROPIA SESION (por eso el crudo usa el patron del modulo):
+  Una primera pasada del arnes recorrio VERIFICATION_SCAN_GROUPS sin re.IGNORECASE y dio
+  8 literales del grupo CUANTIFICADOR en el run (vs 10 con la bandera del codigo), y 0 en el
+  grupo LENGUAJE del run de referencia (vs 1: «Verificado» va en mayuscula). El «0 literales»
+  del run nuevo se re-confirmo con la bandera correcta: sigue siendo 0.
+

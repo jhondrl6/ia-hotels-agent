@@ -1,0 +1,36 @@
+# 01 greps residuales — FASE-VERIFY (Paso 4 del prompt) · medido 2026-10-14 sobre el arbol de trabajo
+# Revision base: 82ec9a4 · SUCIOS al medir: 1
+
+## G1 — wrapper DEC-A1 `extract_verbal_promises` (AC15: 0 en consumidores)
+$ grep -rn "extract_verbal_promises" --include=*.py modules/ main.py scripts/ data_validation/ agent_harness/
+  coincidencias = 0
+$ grep -rn "extract_verbal_promises" --include=*.py tests/
+tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py:392:    assert not hasattr(LLMPromiseExtractor, "extract_verbal_promises")
+tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py:169:            assert not hasattr(clase, "extract_verbal_promises"), clase.__name__
+tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py:171:            MockPromiseExtractor([]).extract_verbal_promises("texto")
+tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py:179:            if "extract_verbal_promises" in path.read_text(encoding="utf-8")
+  coincidencias = 4  (las cuatro son dientes que afirman la AUSUNCIA: test_llm_extractor_contrato_cuatro_estados y test_fase_b_consumidores_contrato)
+
+## G2 — campo `confidence` del DTO/prompt (AC6)
+$ grep -rniE "\"confidence\"|'confidence'|confidence:" modules/quality_gates/tribunal/llm_extractor.py
+  coincidencias = 0
+$ grep -nA6 "class VerbalPromise" modules/quality_gates/tribunal/llm_extractor.py | grep -c confidence
+  0 — el DTO solo tiene text / service_hint / location
+
+## G3 — `print` silencioso en el motor de contradicciones (AC13)
+$ grep -n "print(" data_validation/contradiction_engine.py
+  coincidencias = 0
+
+## G4 — `return []` como valor de estado no-OK (AC1)
+$ grep -nE "return \[\]" modules/quality_gates/tribunal/llm_extractor.py
+  coincidencias = 0
+
+## G5 — clave `"type"` en los findings de Bot 4 (AC18)
+$ grep -nE "\"type\"" modules/quality_gates/tribunal/honesty_reviewer.py
+  coincidencias = 0
+
+## G6 — cifras de no-regresion (AC16)
+$ git grep -c -E "^\s*def test_" HEAD -- tests | awk -F: "{s+=\$3} END {print s}"
+  HEAD   = 5321
+$ grep -rE "^\s*def test_" tests --include=*.py | wc -l
+  ARBOL  = 5321

@@ -22,7 +22,7 @@ Preparacion (esta sesion)
     FASE-E2E ── run UNICO v4complete Don Alfonso + evidencia + verificacion + docs
         │         (sin codigo; YAML de onboarding derivado bajo output/, warehouse intacto)
         ▼
-    FASE-VERIFY ── certificacion AC1..18 contra output E2E (sin codigo)
+    FASE-VERIFY ── certificacion AC1..19 contra output E2E (sin codigo)
         │
         ▼
     FASE-RELEASE-4.81.0 ── version bump + docs oficiales + write-back + archivado
@@ -79,7 +79,7 @@ No hay dos fases que editen el mismo archivo de producción en paralelo (una fas
 | FASE-C | ✅ **COMPLETADA (sin commit)** | 2026-10-12 | AC11/12/13 legibles en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/`. Nace `modules/quality_gates/tribunal/evidence_tier.py` (precedencia escenarios→MANIFEST, fallback `"C"` con `declarado=False`) y lo consumen Juez y Bot 4; `OVER_PRESENTATION_NO_EVALUABLE` sustituye el silencio bajo tier no declarado; el acta generada ya no niega a Bot 2; los cuatro sitios de captura del motor publican tri-estado. Delta R2.3 **+29** (5280→5309, cero re-anclajes); tribunal+data_validation 460 passed / 9 skipped; selección del motor 55 passed; quick 13/13 (wiring 719→723). Tres mutantes en par rojo/verde, con la declaración de que `M1` **no** lo discrimina la rama de coincidencia. Presupuesto EXCEDIDO: ~52 contra ~45. **Dos escalados al Operador**: la cura de «`INPUT_NOT_EVALUABLE` no suprime el ZIP» (sin AC que la cubra, decisión previa a FASE-E2E) y `_extract_precision_tier`, que conserva su regla local fuera de AC11 |
 | FASE-C2 | ✅ (2026-10-12) | — | **AC19 ejecutada el 2026-10-12**: la fila 2 de la matriz §2.1 ya no exige `status.is_ok`, así que un CRITICAL verificado (o su recomendación `BLOQUEAR`) suprime el ZIP también bajo `INPUT_NOT_EVALUABLE`/`FALLIDO`, y la acción correctiva nombra el hallazgo. Consumió la decisión del Operador del mismo día (la escalada de FASE-B/FASE-C queda **cerrada** en Seguimientos). Corrió en sesión propia **antes de FASE-E2E** (`05-prompt-inicio-sesion-fase-C2.md`), sobre el árbol limpio de FASE-C (`cea999a`, `SUCIOS=0`, paridad `0 0`) — no sobre «el árbol sin commitear» que aún prometía esta fila: FASE-C quedó publicada en `079f475`. Delta +12 funciones, tribunal 331 passed / 9 skipped, quick 13/13, dos mutantes. Sin commit al cierre (requiere autorización) |
 | FASE-E2E | ✅ **EJECUTADA el 2026-10-12** (corte declarado: «sin commit al cerrar»; la autorización llegó después y quedó en `fbdee8e`, ver el sello de la tercera tanda) | 2026-10-12 | Run único de `v4complete` para Don Alfonso: **EXIT 0 en ~94 s**, pre-vuelo **13/13** con opción A (arnés por stdin, cuatro insumos re-medidos, columna de procedencia), warehouse inmutable con sha igual antes y después, YAML derivado reproducido y **colocado en el `clientes_dir` efectivo**. AC14 leída en artefactos (`Onboarding data loaded: 4 campos`, coherence 0.96, `READY_FOR_PUBLICATION`, recibo `deepseek` con pedido `deepseek-chat` / firmado `deepseek-flash`, estado **`OK_CON_PROMESAS`**). Veredicto **`BLOQUEADO`** con el ZIP **suprimido** y dos acciones nombradas `OVER_PRESENTATION`/`comercial`. Delta R2.3 **0** (sin código). **Tres abiertos con dueño** en `10-analisis` §Seguimientos: AC19 no se ejercitó en flujo real (extracción OK), la celda «Verificado» no salió CRITICAL, y `P6.5` niega al revisor que corrió. Evidencia en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/` |
-| FASE-VERIFY | ⬜ | — | Su disparador está cumplido: hay output E2E real que releer |
+| **FASE-VERIFY** | ✅ **EJECUTADA el 2026-10-14** (corte declarado: «sin commit al cerrar», requiere autorización) | 2026-10-14 | Certificación de **AC1..AC19** contra el output E2E real y la evidencia de FASE-A/B/C/C2, en modo DIRECTO, sin código, sin `v4complete` y sin templates. Resultado: **19/19 ✅ legible en artefacto, 0 ❌**; una rama ⚠️ por diseño (AC11, desacuerdo MANIFEST↔escenarios no producible en régimen ZIP-only) y cuatro AC certificadas **solo por suite** (AC3, rama no-OK de AC8/AC9, AC17, AC19) porque el run único salió con extracción `OK_CON_PROMESAS`. Greps residuales G1..G5 con **0** coincidencias. AC16 re-verificada por resta: HEAD **5321** == árbol **5321**. AC10 re-medida con el patrón **y** la bandera de la llamada del revisor, y eso **cierra** el seguimiento «2 vs 3 CRITICAL»: la propuesta del run no contiene lenguaje de verificación, la predicción se midió sobre otro documento. Quedan abiertos con dueño: `P6.5` (re-confirmado, y agrava: su cláusula `NOT_EVALUABLE` convive con el `BLOQUEADO` que ese revisor produjo) y AC19 en producción (exigiría otra inferencia pagada). Delta R2.3 **0**; corridas de sustentación y matriz por AC en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-VERIFY/` |
 | FASE-RELEASE-4.81.0 | ⬜ | — | |
 
 
@@ -94,8 +94,9 @@ corte declarado, y la autorización llegó después con la letra «Git Commit + 
 nuevo `.opencode/context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` (alcance **A + C** dictado por el Operador el
 2026-10-12, con B fuera con su motivo medido) y el par del índice regenerado (387 IDs), que viaja con la tanda porque su
 estado derivado describe a la vez las definiciones nuevas de `10-analisis` y las citas del contexto. Estado de la
-cadena: **FASE-VERIFY** sigue ⬜ y es la siguiente sesión; su disparador ya está cumplido porque hay output E2E real que
-releer en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/`.
+cadena al estampar: **FASE-VERIFY** seguía ⬜ y era la siguiente sesión; su disparador ya estaba cumplido porque había
+output E2E real que releer en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/`. **(Vencido el 2026-10-14: FASE-VERIFY
+está ejecutada — ver su fila arriba; la cadena queda en FASE-RELEASE-4.81.0.)**
 
 ## Riesgos y plan de recuperación
 

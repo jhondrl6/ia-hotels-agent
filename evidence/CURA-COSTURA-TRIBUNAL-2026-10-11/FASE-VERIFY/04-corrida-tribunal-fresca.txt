@@ -1,0 +1,10 @@
+# 04 corrida de tests que sustenta la certificacion (FASE-VERIFY, 2026-10-14)
+# Comando: PYTHONUTF8=1 ./venv/Scripts/python.exe -m pytest tests/quality_gates/tribunal/ tests/test_fase_0_ac20_evidencia_veredicto.py -q
+# Seleccion identica a la publicada al cerrar FASE-C2 (331 passed / 9 skipped)
+# ACs que sustenta en arbol vivo: 1,2,3,4,6,7,8,9,10,11,12,13(parcial),15,17,18,19
+
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+331 passed, 9 skipped, 8 warnings in 5.24s
+# EXIT=0 (impreso sin tuberia abajo)
+EXIT_REAL=0
