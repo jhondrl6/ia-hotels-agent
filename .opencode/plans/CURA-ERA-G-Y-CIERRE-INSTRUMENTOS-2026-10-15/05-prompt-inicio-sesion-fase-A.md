@@ -2,7 +2,7 @@
 
 **ID**: FASE-A (plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15)
 **Objetivo**: cerrar el documental de la tanda ya empujada (`2e048e6` + `1f95e84`): commitear las 4 rutas del registro `D-QW-1`/`D-QW-2`, persistir los crudos de la sesión bajo evidencia versionada, dejar el acta del cierre con los shas, y verificar el árbol del commit. **No toca código de producción. No ejecuta el modo completo sin `PYTHONUTF8=1`.**
-**Dependencias**: ninguna (primera fase; el árbol trae los 4 archivos sin commitear).
+**Dependencias**: ninguna (primera fase; el árbol trae los 4 archivos sin commitear). **Sello 2026-10-15**: esas cuatro rutas y los 11 archivos del plan quedaron versionados en `85ab952`; la frase de arriba describe el árbol al concebir la fase y no se re-escribe — abrir re-midiendo.
 **Duración estimada**: 1 sesión corta.
 **Complejidad**: BAJA — comandos ya corridos y verdes; el único paso con puerta es el commit, que **requiere autorización escrita del Operador en la sesión**.
 **Skill**: `.agents/workflows/phased_project_executor.md` (workflow canónico).
@@ -21,7 +21,7 @@ La deuda era-G (el rojo `[DUPLICADO-VIGENTE]` del writer) es de FASE-B/C y **no 
 
 ### Base Técnica Disponible
 
-- Rutas del registro `D-QW` (sin commitear): `.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` (nuevo), `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/14-deuda-writer-context-sin-registro.txt` (nuevo), `.opencode/LECCIONES-INDEX.md` y `.opencode/lecciones_index.json` (modificados; el par ya está regenerado y `--check` verde).
+- Rutas del registro `D-QW` (sin commitear): `.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` (nuevo), `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/14-deuda-writer-context-sin-registro.txt` (nuevo), `.opencode/LECCIONES-INDEX.md` y `.opencode/lecciones_index.json` (modificados; el par ya está regenerado y `--check` verde). **Vencido el 2026-10-15**: las cuatro rutas quedaron versionadas en `85ab952` con `git add` previo y pathspec explícito.
 - Crudos en `temp/` (gitignored): `14-frescura-post-cura.txt`, `15-frescura-segunda-corrida.txt`, `16-indice-antes.txt`, `17-opencode-refs.txt`, `18-quick-post-cura.txt`, `19-writeback-post-cura.txt`, `20-commit2-hook.txt`, `21-quick-tras-deuda.txt`, `msg-c1.txt`, `msg-c2.txt`, `l3-out.json`.
 - Instrumentos: `scripts/build_lesson_index.py` (`--check`), `scripts/validate_opencode_refs.py`, `scripts/run_all_validations.py --quick`, `scripts/log_phase_completion.py`.
 - Commits de la tanda: `2e048e6` (44 rutas) y `1f95e84` (8 rutas, hook 8/8 impreso). L3 sobre `5341e15..1f95e84` = 2 commits, 0 hallazgos. Paridad con `origin/master` 0/0 al cerrar la sesión.
@@ -140,6 +140,7 @@ OBJETIVO: cerrar el documental de la tanda empujada: persistir los crudos bajo e
 CONTEXTO:
 - Fases previas: Preparación ✅ (esta fase no toca código ni el notebook)
 - El árbol trae sin commitear: CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md, 14-deuda-writer-context-sin-registro.txt y el par del índice
+  (vencido 2026-10-15: esas rutas y la carpeta del plan están en 85ab952; re-medir el árbol en T0 antes de fiar esta línea)
 - Commits de la tanda: 2e048e6 y 1f95e84 (empujados; paridad 0/0 medida al cerrar la sesión previa)
 - El commit y el push requieren autorización escrita del Operador EN ESTA SESIÓN, y siempre con pathspec
 

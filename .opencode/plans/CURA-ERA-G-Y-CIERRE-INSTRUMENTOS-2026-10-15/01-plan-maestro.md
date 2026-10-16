@@ -47,6 +47,7 @@ Cada AC declara **dónde se lee** (R2.4: un ✅ cuyo único respaldo es «el str
 - **Citas**: símbolos, nunca `archivo:línea` (R2.2) — el plan nace sin citas numéricas y así no entra al inventario de `plan_citations_baseline.json`.
 - **Cinco cortes sin commit**: implementación terminada → verificación terminada → cierre documental → listo para revisión → espera de autorización. Ningún prompt de este plan autoriza commit por sí mismo; cada commit requiere la letra del Operador y **pathspec explícito** (L-SECF.2: `git commit -- <ruta>` no toma untracked).
 - **Trabajo ajeno**: al concebir este plan el árbol trae los 4 archivos del registro `D-QW` sin commitear. Son de este plan: FASE-A los commitea con pathspec.
+- **Sello de la tanda 2026-10-15** (additivo, no re-escribe la fila de arriba): las cuatro rutas y los 11 archivos del plan quedaron versionados en `85ab952` — 15 rutas, `git add` previo y pathspec explícito, hook 8/8 y quick 13/13 con el staged en el índice. En `26bd0f5` los dos contexto cerrados pasaron a `context/Historico/` con un mv de bytes intactos y las 7 roturas absorbidas en `refs_baseline.txt` (5 entradas por par). Lo que la fase sigue debiendo son sus crudos y el acta.
 - **Modo completo** (`run_all_validations.py` sin `--quick`) exige `PYTHONUTF8=1` (S-CIM-10).
 - **Fuera de alcance**: la rama por defecto del writer (`D-QW-1`/`D-QW-2`), el cableado del gate `hard_contradictions` (`S-CST-1`), `P6.5` del Tribunal, el plan que nazca del contexto plantilla-tier y cualquier cambio de producto.
 

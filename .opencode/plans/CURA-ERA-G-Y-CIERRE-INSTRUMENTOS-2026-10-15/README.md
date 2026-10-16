@@ -14,7 +14,7 @@
 
 ## Cabos que este plan cierra
 
-1. **El registro `D-QW` está sin commitear** (contexto raíz + crudo `14-` + par del índice regenerado) y los crudos de la tanda viven en `temp/` (gitignored). → FASE-A.
+1. **El registro `D-QW` está sin commitear** (contexto raíz + crudo `14-` + par del índice regenerado) y los crudos de la tanda viven en `temp/` (gitignored). → FASE-A. **Vencido en su primera mitad el 2026-10-15**: el registro quedó versionado en `85ab952`; los crudos de `temp/` siguen sin persistir, así que el cabo lo conserva FASE-A.
 2. **La deuda era-G no tiene censo ni decisiones**: 5 fuentes publicadas antes de que existiera la marca de reemplazo, y 5 huéspedes sin contabilidad. Resolverlo exige la decisión escrita del Operador por fuente (borrar es irreversible). → FASE-B + FASE-C.
 3. **No hay entrada de versión** para la tanda ya empujada (`2e048e6`, `1f95e84`): el CHANGELOG la publica junto a era-G en 4.81.1. → FASE-RELEASE.
 

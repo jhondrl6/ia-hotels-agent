@@ -36,7 +36,7 @@ Preparacion (sesion del 2026-10-15: Paso 0 + maestro + prompts)
 
 ## Conflictos con trabajo ajeno
 
-- Al concebir este plan el árbol trae **4 rutas sin commitear** que son de este plan (el contexto `D-QW`, el crudo `14-` y el par del índice): FASE-A las commitea con pathspec y autorización. No hay trabajo de terceros pendiente.
+- Al concebir este plan el árbol trae **4 rutas sin commitear** que son de este plan (el contexto `D-QW`, el crudo `14-` y el par del índice): FASE-A las commitea con pathspec y autorización. No hay trabajo de terceros pendiente. **Vencido el 2026-10-15**: esas cuatro rutas y la carpeta del plan quedaron versionadas en `85ab952` con pathspec y hook 8/8; la fase sigue debiendo sus crudos y el acta.
 - `temp/` (gitignored) contiene los crudos de la sesión previa: FASE-A los persiste bajo evidencia **antes** de que nadie los borre; ninguna fase los borra sin orden del Operador.
 - El `10-analisis` de CURA y los dos CONTEXT publicados están **congelados** (DEC-2/DEC-3): editar cualquiera de los tres los deja VENCIDO en el notebook.
 
