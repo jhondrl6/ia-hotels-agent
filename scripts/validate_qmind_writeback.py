@@ -28,7 +28,9 @@ Uso:
         # write-back con ruta absoluta
     python scripts/validate_qmind_writeback.py --upload <PLAN> --file <copia saneada> --title <titulo>
         # actualización explícita: sube ese archivo con ese título, guarda la instantánea
-        # versionada y marca como `reemplazada` la fuente vigente anterior del mismo plan.
+        # versionada y marca como `reemplazada` la fuente vigente anterior del MISMO documento (la clave
+        # es el titulo sin cierre ni fecha final, no el plan: un plan puede publicar su `10-analisis` y
+        # varios `CONTEXT` y todos quedan vigentes y auditados).
         # Con --file o --title presentes solo se publica ese documento (los CONTEXT no entran);
         # sin ellos --upload se comporta exactamente como siempre.
 
@@ -297,9 +299,24 @@ def slug_de_instantanea(plan: str, titulo: str, sha: str) -> str:
     return prefijo[:NOMBRE_INSTANEA_MAXIMO - len(sufijo)] + sufijo
 
 
+def clave_de_documento(titulo: str) -> str:
+    """La identidad del documento que una publicacion reemplaza: el titulo sin su cierre ni su fecha final.
+
+    El reemplazo era **por plan**, y un plan puede publicar mas de un documento (su `10-analisis` y cada
+    `CONTEXT` que aporte): la primera subida de un `CONTEXT` marcaba reemplazada la entrada vigente del
+    `10-analisis`, y como `verificar_contenido` solo recorre vigentes ese cuerpo publicado se quedaba sin
+    auditoria de vigencia ni de fidelidad remota (medido 2026-10-15 sobre el registro de
+    `CURA-COSTURA-TRIBUNAL-2026-10-11`). La casa ya distingue los documentos por el prefijo del titulo
+    (`10-analisis:` / `CONTEXT:` / `L-XXX.1:`) y al re-publicar conserva el stem y anade el cierre entre
+    parentesis, asi que el stem recortado de cierre y de fecha final es la clave.
+    """
+    base = norm(titulo or "").split(" (", 1)[0].strip()
+    return TRAILING_DATE.sub("", base).lower()
+
+
 def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: str,
                           archivo: Path, fuente_id: str, fecha: str, cuerpo: Path) -> dict:
-    """Copia la instantánea al repo, la registra como vigente y marca la anterior del mismo plan.
+    """Copia la instantánea al repo, la registra como vigente y marca la anterior del mismo documento.
 
     `sha256` es el de la instantánea (lo que el servidor recibió) y `sha_cuerpo` el del cuerpo del plan en el
     momento de publicar (lo que el repo prometió): dos identidades, dos preguntas (AC1). Con `--file` las dos
@@ -315,8 +332,9 @@ def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: s
     destino = directorio_de_instantaneas(ruta_registro) / slug
     destino.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(archivo, destino)
+    clave = clave_de_documento(titulo)
     for entrada in entradas_del_plan(datos, plan):
-        if entrada.get("estado") == ESTADO_VIGENTE:
+        if entrada.get("estado") == ESTADO_VIGENTE and clave_de_documento(entrada.get("titulo", "")) == clave:
             entrada["estado"] = ESTADO_REEMPLAZADA
             entrada["reemplazada_por"] = titulo
     entrada = {"plan": plan, "titulo": titulo, "estado": ESTADO_VIGENTE,

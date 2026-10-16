@@ -61,6 +61,36 @@
       "sha_cuerpo": "6b738f1c0785afd169315cada2ae1f6aad6de94a42361583ec1bfbda161f81e6",
       "instanea": "CURA-BLOQUE-HUESPED-QMIND-2026-10-10--10-analisis_CURA-BLOQUE-HUESPED-QMIND-2026-10-10_cierre_FASE---6b738f1c0785afd1.md",
       "publicado": "2026-10-10"
+    },
+    {
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "titulo": "10-analisis: CURA-COSTURA-TRIBUNAL-2026-10-11 (lecciones aprendidas y decisiones)",
+      "estado": "vigente",
+      "fuente_id": "01a141aa-807a-7171-b9af-1d39ef9d32cb",
+      "sha256": "5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365",
+      "sha_cuerpo": "5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365",
+      "instanea": "CURA-COSTURA-TRIBUNAL-2026-10-11--10-analisis_CURA-COSTURA-TRIBUNAL-2026-10-11_lecciones_aprendidas--5c54f5ed3cb9345e.md",
+      "publicado": "2026-10-15"
+    },
+    {
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "titulo": "CONTEXT: CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12",
+      "estado": "vigente",
+      "fuente_id": "01a1423b-0c83-7855-ae0f-280ab7d22611",
+      "sha256": "f6e14e735e5104da50fe29087edb21da5c8c4efa7d429a1ce3492958d0935603",
+      "sha_cuerpo": "5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365",
+      "instanea": "CURA-COSTURA-TRIBUNAL-2026-10-11--CONTEXT_CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12--f6e14e735e5104da.md",
+      "publicado": "2026-10-15"
+    },
+    {
+      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "titulo": "CONTEXT: CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10",
+      "estado": "vigente",
+      "fuente_id": "01a1423b-48c7-7d44-b057-fab47f7bb74e",
+      "sha256": "3cebfeb58e48b92822d77f5db7c3fcaafa36b8a7c54057f57393071b5ea42996",
+      "sha_cuerpo": "5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365",
+      "instanea": "CURA-COSTURA-TRIBUNAL-2026-10-11--CONTEXT_CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10--3cebfeb58e48b928.md",
+      "publicado": "2026-10-15"
     }
   ]
 }

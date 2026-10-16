@@ -26,7 +26,13 @@ Poblacion (se publica en la salida, con sus exclusiones y su razon):
   1. `CONTEXT-*.md` de la raiz de `--context-dir` **que autodeclaren** una leccion durable. El detector
      acepta las dos grafias vivas (linea suelta y encabezado); la copia del write-back solo ve la primera,
      y asi perdio al de JEV (medido 2026-09-27: `scan_context_declarations()` = 0 sobre ese archivo).
-  2. Mas los `CONTEXT-*` que citen los planes archivados y que resuelvan en esa misma raiz.
+  2. Mas los `CONTEXT-*` que citen los planes archivados y que resuelvan en esa misma raiz. La grafia del
+     plan puede llevar `.md` o no: se recorta un sufijo `.md` exacto antes de componer la ruta. Hasta
+     2026-10-15 la via recomponia la extension sobre lo capturado y buscaba `…md.md`, o sea que goberna
+     solo grafias sin extension —que la casa no escribe— y no disparaba ni una vez en el corpus entero
+     (hallazgo `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt`). El
+     recorte sigue siendo exacto: `CONTEXT-FOO.md.` (punto de frase) y las abreviaturas del corpus no
+     gobernan nada.
   Fuera, con su razon medida: los que no declaran (la politica del write-back es por aporte declarado,
   executor v2.18.0) y todo `Historico/` (contenido congelado: R2.5 y la nota «QMind y archivado»).
 
@@ -219,7 +225,13 @@ def declara_durable(ruta: Path) -> bool:
 
 
 def citados_por_planes_archivados(plans_dir: Path, context_dir: Path) -> list[Path]:
-    """`CONTEXT-*` mencionados por los planes archivados, resueltos SOLO dentro de `context_dir`."""
+    """`CONTEXT-*` mencionados por los planes archivados, resueltos SOLO dentro de `context_dir`.
+
+    La captura lleva la extension cuando la grafia la escribe (la clase de `NOMBRE_CONTEXT` admite el
+    punto), y la casa cita SIEMPRE con `.md`: por eso se recorta un sufijo `.md` EXACTO antes de componer.
+    Recorte exacto, no `rstrip(".")`: una grafia terminada en punto de frase (`CONTEXT-FOO.md.`) y las
+    abreviaturas del corpus (`CONTEXT-JEV-…md`, `CONTEXT-...-2026-08-04.md`) siguen sin gobernar nada.
+    """
     archives = plans_dir / "Archives"
     if not archives.is_dir():
         return []
@@ -233,7 +245,7 @@ def citados_por_planes_archivados(plans_dir: Path, context_dir: Path) -> list[Pa
             nombres.update(NOMBRE_CONTEXT.findall(ruta.read_text(encoding="utf-8", errors="replace")))
     resueltos = []
     for nombre in sorted(nombres):
-        candidato = context_dir / f"{nombre}.md"
+        candidato = context_dir / f"{nombre[:-3] if nombre.endswith('.md') else nombre}.md"
         if candidato.is_file():
             resueltos.append(candidato)
     return resueltos

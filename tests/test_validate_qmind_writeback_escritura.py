@@ -35,6 +35,9 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "validate_qmind_writeback.py"
 REV_SIN_ACTUALIZACION = "21ade6c"
+# Tip publicado antes de la cura de la clave de documento (paridad 0/0 con origin/master, medida el
+# 2026-10-15): su `registrar_publicacion` marcaba reemplazada a toda entrada vigente del mismo plan.
+REV_SIN_CLAVE_DE_DOCUMENTO = "5341e15"
 NB = "01a04d98-b7bd-778c-8441-26fdc7e35f45"
 PLAN = "PLAN-A-2026-09-01"
 TITULO_HISTORICO = "10-analisis: PLAN-A-2026-09-01 (lecciones aprendidas y decisiones)"
@@ -1388,3 +1391,126 @@ def test_el_contador_publica_su_denominador_de_observacion(vw, montaje, monkeypa
     assert "2/2 entrada(s) con su bloque huesped recorrido" in contador, contador
     assert "0 fuente(s) huesped(s)" in contador, "el cero ahora es legible: salio de una corrida que si miro"
     assert "1+1+0==2" in contador, "la particion de la vigencia no se mueve con el denominador nuevo"
+
+
+# ======================= una entrada vigente por DOCUMENTO, no por plan (CURA-SEGUNDA-VIA, 2026-10-15)
+#
+#   El ciclo de publicacion que manda `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-` sube DOS
+#   `CONTEXT` bajo el plan `CURA-COSTURA-TRIBUNAL-2026-10-11`. Medido en un sandbox del registro (sin red):
+#   `registrar_publicacion` marcaba reemplazada a TODA entrada vigente del mismo plan, asi que la primera
+#   subida se comio la entrada del `10-analisis` congelado y la segunda al primer `CONTEXT`. Como
+#   `verificar_contenido` solo recorre vigentes, el cuerpo publicado el 2026-10-15 se quedaba sin auditoria
+#   de vigencia ni de fidelidad remota.
+#
+#   La cota que se cura es la identidad del documento, no el plan. La casa ya distingue los documentos por el
+#   prefijo del titulo (`10-analisis:` / `CONTEXT:` / `L-XXX.1:`) y al re-publicar **conserva el stem** y
+#   anade el cierre entre parentesis, asi que el stem recortado de cierre y de fecha final es la clave. El
+#   diente de reemplazo viejo (`test_upload_explicito_registra_instanea_y_marca_la_anterior`) sigue verde:
+#   `10-analisis: PLAN-A-2026-09-01 (…)` y `10-analisis: PLAN-A (cierre v2)` comparten clave.
+
+CONTEXT_FOO = "CONTEXT: CONTEXT-FOO-2026-01-01"
+CONTEXT_BAR = "CONTEXT: CONTEXT-BAR-2026-02-02"
+CONTEXT_FOO_CIERRE = "CONTEXT: CONTEXT-FOO-2026-01-01 (cierre 2026-03-03)"
+
+
+def _publicar_copia(vw, m, titulo: str, cuerpo: bytes, nombre: str) -> dict:
+    """Publica una copia distinta del documento `titulo` bajo el MISMO plan, sin red y sin CLI."""
+    copia = m["tmp"] / nombre
+    copia.write_bytes(cuerpo)
+    datos = vw.cargar_registro(m["registro"])
+    return vw.registrar_publicacion(datos, m["registro"], PLAN, titulo, copia, "", "2026-10-15",
+                                    m["cuerpo"])
+
+
+def _estados(vw, m) -> dict:
+    return {e["titulo"]: e["estado"] for e in vw.cargar_registro(m["registro"])["entradas"]}
+
+
+def test_publicar_un_context_no_reemplaza_al_10_analisis_del_mismo_plan(vw, montaje):
+    """Dos documentos de un plan conviven vigentes: la publicacion de un `CONTEXT` no toca al `10-analisis`.
+
+    ROJO antes de la cura: el reemplazo era por plan y la subida del `CONTEXT` marcaba `reemplazada` la
+    entrada del `10-analisis`, que es justo lo que dejaba a ese cuerpo sin capa de contenido.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_HISTORICO)
+    _publicar_copia(vw, m, CONTEXT_FOO, b"# CONTEXT foo\n\nLeccion durable: una por documento\n",
+                    "copia-foo.md")
+    estados = _estados(vw, m)
+    assert estados[TITULO_HISTORICO] == vw.ESTADO_VIGENTE, estados
+    assert estados[CONTEXT_FOO] == vw.ESTADO_VIGENTE, estados
+
+
+def test_dos_context_distintos_del_mismo_plan_no_se_reemplazan_entre_si(vw, montaje):
+    """El segundo `CONTEXT` del plan no deja sin auditoria al primero: son documentos, no versiones.
+
+    Es el caso que el mandato publica (plantilla-tier y JEV-costura bajo CURA). ROJO antes de la cura.
+    """
+    m = montaje
+    _publicar_copia(vw, m, CONTEXT_FOO, b"# CONTEXT foo\n\nLeccion durable: la primera\n", "copia-foo.md")
+    _publicar_copia(vw, m, CONTEXT_BAR, b"# CONTEXT bar\n\nLeccion durable: la segunda\n", "copia-bar.md")
+    estados = _estados(vw, m)
+    assert estados[CONTEXT_FOO] == vw.ESTADO_VIGENTE, estados
+    assert estados[CONTEXT_BAR] == vw.ESTADO_VIGENTE, estados
+
+
+def test_republicar_el_mismo_documento_con_cierre_si_la_reemplaza(vw, montaje):
+    """La mitad que impide el verde vacio: stem igual + cierre nuevo = misma clave, si hay reemplazo.
+
+    Sin esta asercion la cura podia simplemente apagar la marca de reemplazo y dejar las dos pruebas de
+    arriba verdes. Verde antes y despues de la cura: es el contrato viejo, no un diente nuevo.
+    """
+    m = montaje
+    _publicar_copia(vw, m, CONTEXT_FOO, b"# CONTEXT foo\n\nversion inicial\n", "copia-foo.md")
+    _publicar_copia(vw, m, CONTEXT_FOO_CIERRE, b"# CONTEXT foo\n\nversion con cierre\n",
+                    "copia-foo-cierre.md")
+    datos = vw.cargar_registro(m["registro"])
+    estados = _estados(vw, m)
+    assert estados[CONTEXT_FOO] == vw.ESTADO_REEMPLAZADA, estados
+    assert estados[CONTEXT_FOO_CIERRE] == vw.ESTADO_VIGENTE, estados
+    anterior = next(e for e in datos["entradas"] if e["titulo"] == CONTEXT_FOO)
+    assert anterior["reemplazada_por"] == CONTEXT_FOO_CIERRE, anterior
+
+
+def test_control_negativo_el_writer_versionado_se_comia_la_entrada_del_plan(vw, tmp_path):
+    """`5341e15` marca `reemplazada` el `10-analisis` al publicar un `CONTEXT`; el arbol curado no.
+
+    Se lee y se ejecuta la copia versionada (`git show`, solo lectura), anclada a una revision publicada y
+    fija (paridad 0/0 con `origin/master`, medida el 2026-10-15), nunca a HEAD. Sin el diferencial el rojo
+    de arriba podria ser del montaje y no del guion.
+    """
+    proc = subprocess.run(
+        ["git", "show", f"{REV_SIN_CLAVE_DE_DOCUMENTO}:scripts/validate_qmind_writeback.py"],
+        cwd=str(ROOT), capture_output=True)
+    assert proc.returncode == 0, proc.stderr.decode("utf-8", errors="replace")
+    viejo_src = proc.stdout.decode("utf-8")
+    assert "def clave_de_documento" not in viejo_src, (
+        "la revision anclada ya tiene la clave de documento: el control dejo de ser anterior a la cura y "
+        "hay que re-ancalarlo a una revision previa")
+    ruta_vieja = tmp_path / "writer_versionado.py"
+    ruta_vieja.write_text(viejo_src, encoding="utf-8", newline="\n")
+    viejo = _cargar("vw_versionado", ruta_vieja)
+
+    plans = tmp_path / "plans"
+    cuerpo = plans / "Archives" / PLAN / "10-analisis-post-implementacion.md"
+    cuerpo.parent.mkdir(parents=True)
+    cuerpo.write_bytes(CUERPO)
+    for modulo in (viejo, vw):
+        registro = tmp_path / f"registro-{modulo.__name__}.json"
+        registro.write_text(json.dumps({"schema_version": "1.1", "entradas": []}), encoding="utf-8")
+        copia = tmp_path / f"copia-{modulo.__name__}.md"
+        copia.write_bytes(b"# CONTEXT foo\n\nLeccion durable: una por documento\n")
+        datos = modulo.cargar_registro(registro)
+        modulo.registrar_publicacion(datos, registro, PLAN, TITULO_HISTORICO, cuerpo, "", "2026-10-15",
+                                     cuerpo)
+        datos = modulo.cargar_registro(registro)
+        modulo.registrar_publicacion(datos, registro, PLAN, CONTEXT_FOO, copia, "", "2026-10-15", cuerpo)
+        estados = {e["titulo"]: e["estado"] for e in modulo.cargar_registro(registro)["entradas"]}
+        if modulo is viejo:
+            assert estados[TITULO_HISTORICO] == viejo.ESTADO_REEMPLAZADA, (
+                f"el writer versionado ya no se come la entrada del plan ({estados}): el control perdio su "
+                "premissa y hay que re-leer la cura antes de afirmar que el reemplazo era por plan")
+        else:
+            assert estados[TITULO_HISTORICO] == vw.ESTADO_VIGENTE, (
+                f"el instrumento actual tampoco distingue documentos ({estados}): no hay differential y la "
+                "prueba no afirma la cura")

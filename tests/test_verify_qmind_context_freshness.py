@@ -36,6 +36,11 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "verify_qmind_context_freshness.py"
 REV_HERMANO_VERSIONADO = "7737347"
+# Revision publicada y fija del ultimo commit ANTES de la cura de la segunda via (2026-10-15): su
+# `verify_qmind_context_freshness.py` ya tenia la via de las citas, pero la compone con la extension que
+# capturo. El contrafactual se ancla aqui, por la misma razon de arriba: HEAD no puede ser el ancla del
+# arbol que la prueba esta cambiando.
+REV_SIN_RECORTE_DE_EXTENSION = "5341e15"
 NB = "01a04d98-b7bd-778c-8441-26fdc7e35f45"
 
 # Revision publicada y fija del cierre documental de FASE-B: su `verify_qmind_context_freshness.py` ya tenia
@@ -849,3 +854,154 @@ def test_el_rojo_de_un_gobernado_manda_sobre_la_abstencion_de_otro(vq, monkeypat
     assert "[NO-EVALUABLE]" in salida, salida
     assert "[VENCIDO]" in salida, salida
     assert salio == 1, f"la abstencion tapo al vencido (salio {salio}): " + salida
+
+
+# =========================================== la segunda via y su extension (CURA-SEGUNDA-VIA, 2026-10-15)
+#
+#   El hallazgo `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt` mide que
+#   la segunda via (los CONTEXT que citan los planes archivados) no dispara NI UNA VEZ en el corpus entero:
+#   `NOMBRE_CONTEXT` lleva el punto en su clase y por tanto captura `CONTEXT-FOO-2026-10-12.md` con la
+#   extension, y `citados_por_planes_archivados()` compone `context_dir / f"{nombre}.md"` sobre lo capturado,
+#   o sea `CONTEXT-FOO-2026-10-12.md.md`, que no existe. La casa escribe TODAS las citas de plan con `.md`
+#   dentro de backticks, asi que la via estaba muerta por construccion: gobernar solo una grafia sin
+#   extension, que nadie escribe.
+#
+#   La decision de diseno que gobierna estos dientes es **recortar un sufijo `.md` exacto**, no quitar el
+#   punto de la clase. Medido: con la clase sin punto, `CONTEXT-FOO.md.` (punto de frase pegado, sin
+#   backticks) capturaria `CONTEXT-FOO` y gobernar —la via se volveria a tragar grafias que no nombran
+#   ninguna ruta. Con el recorte exacto, lo unico que cambia es la grafia terminada en `.md`.
+
+# Un archivo que existe en la raiz pero NO autodeclara: si entra en la poblacion es solo por la cita.
+PUNTEADA = "CONTEXT-PUNTO-DE-FRASE-2026-01-01.md"
+# Las dos grafias deformes medidas en el corpus, con su procedencia:
+#   - `CONTEXT-...-2026-08-04.md`  -> Archives/RC1-RC2-ENTREGA-COHERENTE-2026-08-04/dependencias-fases.md:196
+#   - `CONTEXT-JEV-` (los puntos van en Unicode y la clase los corta)
+#     -> Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/dependencias-fases.md:445
+# Son ABREVIATURAS de rutas reales. Se montan los referidos completos para que la unica razon de que la
+# abreviatura no gobierne sea la exactitud del resolver, y no un verde vacio.
+ABREVIATURA = "CONTEXT-...-2026-08-04.md"
+NOMBRE_COMPLETO = "CONTEXT-VALIDACION-COHERENCIA-PLAN-ENTREGA-2026-08-04.md"
+TRUNCADA = "CONTEXT-JEV-"
+JEV_COMPLETO = "CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md"
+
+
+def _plan_que_cita(tmp_path: Path, citas: list[str], *, plan: str = "PLAN-SV-2026-10-15") -> Path:
+    """`plans/Archives/<plan>/10-analisis...` citando `citas` con la grafia de la casa (backticks)."""
+    plans = tmp_path / "plans"
+    destino = plans / "Archives" / plan / "10-analisis-post-implementacion.md"
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    cuerpo = "".join(f"El plan se apoya en `{c}` para esa decision.\n" for c in citas)
+    destino.write_text(cuerpo, encoding="utf-8", newline="\n")
+    return plans
+
+
+def _contexto_con_secundos(tmp_path: Path) -> tuple[Path, Path]:
+    """El contexto de la casa (UNO autodeclara) mas los archivos que NO declaran que cada grafia podria arrastrar."""
+    contexto, plans = _contexto(tmp_path)
+    for nombre in (PUNTEADA, NOMBRE_COMPLETO, JEV_COMPLETO):
+        (contexto / nombre).write_text(f"# {nombre}\n\nnada que declarar aqui\n",
+                                       encoding="utf-8", newline="\n")
+    return contexto, plans
+
+
+def test_una_cita_canonica_con_extension_entra_en_poblacion(vq, tmp_path):
+    """La grafia con la que escribe la casa (`CONTEXT-FOO.md`) goberna al archivo citado.
+
+    ROJO antes de la cura por la causa nombrada: la captura se queda con `.md` y el resolver compone el
+    candidato con la extension otra vez, o sea busca `CONTEXT-SIN-DECLARAR-2026-09-19.md.md`.
+    """
+    contexto, _ = _contexto(tmp_path)
+    assert not (contexto / f"{SIN_DECLARAR}.md").is_file(), (
+        "el candidato duplicado existe en el fixture: el rojo dejaria de atribuirse a la extension")
+    plans = _plan_que_cita(tmp_path, [SIN_DECLARAR])
+    resueltos = vq.citados_por_planes_archivados(plans, contexto)
+    assert [r.name for r in resueltos] == [SIN_DECLARAR], [r.name for r in resueltos]
+    gobernados, excluidos = vq.poblacion_del_context(contexto, plans)
+    assert SIN_DECLARAR in [g.name for g in gobernados], [g.name for g in gobernados]
+    assert SIN_DECLARAR not in {r.name for r, _ in excluidos}, [
+        (r.name, razon) for r, razon in excluidos]
+
+
+def test_la_grafia_terminada_en_punto_de_frase_no_gobierna(vq, tmp_path):
+    """`CONTEXT-FOO.md.` (punto pegado) no entra en la poblacion: el recorte es de un sufijo exacto.
+
+    Trae su mitad positiva en el MISMO corpus, que es lo que le da oportunidad de perder a la ausencia: si
+    la cura se fuera por los puntos finales, la grafia deforme gobernaria y esta asercion corta.
+    """
+    contexto, _ = _contexto_con_secundos(tmp_path)
+    assert (contexto / PUNTEADA).is_file(), "el archivo punteado no esta montado: la ausencia seria vacia"
+    plans = _plan_que_cita(tmp_path, [f"{PUNTEADA}.", SIN_DECLARAR])
+    resueltos = [r.name for r in vq.citados_por_planes_archivados(plans, contexto)]
+    assert resueltos == [SIN_DECLARAR], resueltos
+    gobernados, _ = vq.poblacion_del_context(contexto, plans)
+    assert PUNTEADA not in [g.name for g in gobernados], [g.name for g in gobernados]
+
+
+def test_las_capturas_deformes_del_corpus_no_gobernan_nada(vq, tmp_path):
+    """Las dos grafias deformes medidas en el corpus (`CONTEXT-JEV-…md`, `CONTEXT-...-2026-08-04.md`) descartan.
+
+    No hay filtro especial: descartan porque el resolver es exacto y esa ruta no existe, aunque el nombre
+    abreviado tenga su archivo completo en el disco y la truncada tenga un vecino que empieza igual. La
+    canonica del mismo documento es la mitad positiva del differential.
+    """
+    contexto, _ = _contexto_con_secundos(tmp_path)
+    assert (contexto / NOMBRE_COMPLETO).is_file() and (contexto / JEV_COMPLETO).is_file(), (
+        "sin los referidos completos montados, la ausencia de las deformes no afirmaria exactitud sino vacio")
+    plans = _plan_que_cita(tmp_path, [f"{TRUNCADA}…md", ABREVIATURA, SIN_DECLARAR])
+    resueltos = [r.name for r in vq.citados_por_planes_archivados(plans, contexto)]
+    assert resueltos == [SIN_DECLARAR], resueltos
+    gobernados, _ = vq.poblacion_del_context(contexto, plans)
+    nombres = {g.name for g in gobernados}
+    for referido in (NOMBRE_COMPLETO, JEV_COMPLETO, PUNTEADA):
+        assert referido not in nombres, sorted(nombres)
+
+
+def test_control_de_renormbre_del_plan_citado_sigue_dando_el_mismo_gobernado(vq, tmp_path):
+    """El diente no esta anclado al nombre del plan: renombrar el directorio deja el mismo gobernado.
+
+    Es el control que falta en todo diente de perdida (una asercion que solo mira `SIN_DECLARAR` pasaria
+    tambien si el resolver dependiera de `PLAN-SV-2026-10-15`). Las dos corridas comparan sets, y la
+    membresia se exige en ambas para que el verde no sea un empate en vacio.
+    """
+    contexto, _ = _contexto(tmp_path)
+    plans = _plan_que_cita(tmp_path, [SIN_DECLARAR])
+    antes = sorted(r.name for r in vq.citados_por_planes_archivados(plans, contexto))
+    (plans / "Archives" / "PLAN-SV-2026-10-15").rename(plans / "Archives" / "OTRO-NOMBRE-2026-01-02")
+    despues = sorted(r.name for r in vq.citados_por_planes_archivados(plans, contexto))
+    assert antes == despues == [SIN_DECLARAR], (antes, despues)
+
+
+def test_control_negativo_el_instrumento_versionado_no_ve_la_cita_canonica(tmp_path):
+    """`5341e15` goberna 0 citas con extension sobre el MISMO arbol; el arbol curado goberna 1.
+
+    Se lee y se ejecuta la copia versionada (`git show`, solo lectura), anclada a una revision publicada y
+    fija (paridad 0/0 con `origin/master`, medida el 2026-10-15), nunca a HEAD: HEAD es el arbol que esta
+    prueba ayuda a cambiar. Sin este diferencial el rojo de arriba podria ser del fixture, no del guion.
+    """
+    assert _rev_existe(REV_SIN_RECORTE_DE_EXTENSION), (
+        f"la revision {REV_SIN_RECORTE_DE_EXTENSION} no esta en el repo: re-anclar el control")
+    proc = subprocess.run(
+        ["git", "show",
+         f"{REV_SIN_RECORTE_DE_EXTENSION}:scripts/verify_qmind_context_freshness.py"],
+        capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT))
+    assert proc.returncode == 0, proc.stderr[:200]
+    ruta_vieja = tmp_path / "diente_versionado_extension.py"
+    ruta_vieja.write_text(proc.stdout, encoding="utf-8", newline="\n")
+    viejo = _cargar("vq_versionado_extension", ruta_vieja)
+
+    assert 'candidato = context_dir / f"{nombre}.md"' in proc.stdout, (
+        "la revision anclada ya recorta la extension: el control dejo de ser anterior a la cura y hay que "
+        "re-ancalarlo a una revision previa")
+
+    contexto, _ = _contexto(tmp_path / "sv")
+    plans = _plan_que_cita(tmp_path / "sv", [SIN_DECLARAR])
+    resueltos_viejo = [r.name for r in viejo.citados_por_planes_archivados(plans, contexto)]
+    assert resueltos_viejo == [], (
+        f"el instrumento versionado ya ve la cita con extension ({resueltos_viejo}): el control perdio su "
+        "premissa y hay que re-leer la cura antes de afirmar que la via estaba ciega")
+
+    nuevo = _cargar("vq_contra_diente_extension", SCRIPT)
+    resueltos_nuevo = [r.name for r in nuevo.citados_por_planes_archivados(plans, contexto)]
+    assert resueltos_nuevo == [SIN_DECLARAR], (
+        f"el instrumento actual tampoco la ve: no hay differential y la prueba no afirma la cura "
+        f"({resueltos_nuevo})")
