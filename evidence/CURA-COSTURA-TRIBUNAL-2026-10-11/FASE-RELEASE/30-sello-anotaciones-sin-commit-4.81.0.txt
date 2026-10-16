@@ -1,0 +1,80 @@
+# Sello datado: las anotaciones «sin commit» de FASE-RELEASE-4.81.0, vencidas por su propio cierre
+
+**Fecha de este sello:** 2026-10-16. **Instrumento:** `date "+%Y-%m-%d %H:%M:%S %z"` →
+`2026-10-16 11:59:05 -0500`, medido al escribir (la cabecera de la sesión decía 2026-10-15; ver §2).
+**Sesión:** archivado de los dos contexto cerrados y publicación del conjunto de FASE-A del plan sucesor.
+
+---
+
+## 1. Qué sella
+
+Tres celdas del plan archivado `CURA-COSTURA-TRIBUNAL-2026-10-11` declararon para FASE-RELEASE-4.81.0
+el corte «sin commit — espera de autorización». La tanda de cierre las venció:
+
+| Celda | Texto estampado |
+|---|---|
+| `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/06-checklist-implementacion.md:15` (fila 6) | «… `log_phase_completion.py` registrado. **Sin commit: corte «espera de autorización»**» |
+| `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md:83` (fila FASE-RELEASE-4.81.0) | «✅ **EJECUTADA el 2026-10-15** (corte declarado: «sin commit — espera de autorización»)» |
+| `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md:25` (matriz de fases) | «✅ (sin commit; corte: espera de autorización)» |
+
+Commits que las vencen, medidos con `git log -1 --format="%h %ad %s" --date=iso-local`:
+
+- `2e048e6` — 2026-10-15 21:07:02 -0500 — docs(release): 4.81.0 cierra CURA-COSTURA-TRIBUNAL con su archivado, sus 13 crudos y los derivados
+- `1f95e84` — 2026-10-15 21:08:39 -0500 — fix(qmind): la segunda via de gobernacion recorta la extension y el writer reemplaza por documento
+
+**Por qué vive aquí y no en el cuerpo del plan:** el `10-analisis` está congelado por su publicación
+(`sha_cuerpo` `5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365`, DEC-2 del plan
+sucesor); editarlo rompe el `[FRESCO]` que dicta su `--strict`, y re-subirlo con el mismo título sale
+`[FAIL] «el título ya está vigente»`. Mismo criterio que `11-addendum-tras-congelamiento.txt` y
+`13-segunda-via-ciega.txt`. Esta es exactamente la vía que declara la fila de deudas «Anotaciones
+«sin commit» de FASE-RELEASE 4.81.0 que el push venció» en
+`.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md:61`.
+
+Ninguna de las tres celdas se re-escribe: registran el **corte declarado al cerrar**, que fue verdad
+cuando se estampó. Lo que manda sobre la etiqueta es el estado commiteado, como ya hacen los sellos de
+las cuatro tandas anteriores del propio plan.
+
+## 2. Errata de fecha, declarada sin enmendar
+
+La tanda documental de hoy quedó commiteada y empujada **el 2026-10-16** (`26bd0f5` 09:25:11,
+`85ab952` 10:13:29, `b3899dd` 11:46:43, medido con `git log --date=iso-local`), pero sus mensajes de
+commit y las seis celdas que selló `b3899dd` dicen **2026-10-15**. La causa: la fecha se tomó del
+encabezado de la sesión en lugar de medirla con el reloj, que es la regla que este repo ya pagó antes.
+
+Las celdas son correctas en su contenido (qué rutas, qué shas, qué verificadores, qué queda debiendo) y
+falsas en la fecha del acto. Los tres commits están empujados, así que no se enmiendan: se consigna aquí.
+La próxima edición de cualquiera de esos documentos lleva la fecha medida, no la heredada.
+
+## 3. La tanda que este sello acompaña
+
+- `26bd0f5` — los dos contexto cerrados pasan a `.opencode/context/Historico/` con `git mv` de bytes
+  intactos (`3cebfeb58e48…` y `a4c1e64d485c…`, verificados antes y después). Las 7 roturas de ruta que
+  produjo el mv quedaron absorbidas en `.opencode/refs_baseline.txt` (5 entradas, clave
+  `archivo|referencia`; el archivo pasa de 5 a 10 entradas). **No se corrió `--fix`**: el hook `[3/8]`
+  lo invoca siempre y su `archived_promotion()` habría reescrito 5 de esas 7 refs dentro de documentos
+  byte-publicados, dejándolos VENCIDO. Procedimiento completo:
+  `docs/contributing/leccion-archivar-contexto-baseline-refs.md`.
+- `85ab952` — el conjunto de FASE-A del plan sucesor: 15 rutas (plan, contexto de la deuda del writer,
+  crudo `14-` y par del índice), con `git add` por ruta y pathspec explícito.
+- `b3899dd` — sello aditivo de las seis celdas que `85ab952` venció dentro de los archivos que el mismo
+  commit versionó. El índice no viajó: `build_lesson_index.py --check` siguió fresco en 389 IDs porque
+  las cláusulas del sello no añadieron ninguna ocurrencia de la familia `L-`/`S-`/`D-`/`DA-`.
+- Revisión de seguridad: L3 profunda corrida **después** del último commit y antes del push,
+  `findings_count: 0`, cubriendo los **3** commits medidos con `git rev-list --count 1f95e84..HEAD`.
+  Su crudo está en `31-l3-tanda-documental-2026-10-16.txt`, copia byte-idéntica del scratch de `temp/`
+  (sha256 `a19d77679720612c3ac4e5b789f017a4906b8011b5e13f272a35bb8e13a70bda` en origen y en destino).
+  Push `1f95e84..b3899dd`, paridad `0 0` y `git ls-remote` casando `b3899dd31c3e3049c8398b0a2b93eae141bde311`.
+
+## 4. Numeración
+
+Este archivo ocupa `30-` y su acompañante `31-` a propósito: la Tarea 1 de FASE-A reserva
+«numeración desde `15-`» para los crudos que hoy viven en `temp/`. Nada de ese lote se tocó ni se movió.
+
+## 5. Qué no sostiene este archivo
+
+- No afirma que las celdas del `10-analisis` de CURA puedan editarse: siguen congeladas (DEC-2).
+- No cierra formalmente la fila §5 del maestro del plan sucesor: esa edición es acto de su dueño, y no
+  se toca sin orden. Aquí está el artefacto que la fila pedía.
+- No re-midió el modo completo (cuyos dos rojos preexistentes tienen dueño declarado); lo que la sesión
+  corrió fue `run_all_validations.py --quick`.
+- No toca `scripts/` ni el notebook: es evidencia fechada y una lección de procedimiento.

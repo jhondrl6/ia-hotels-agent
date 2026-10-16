@@ -1,0 +1,5 @@
+{
+  "layer": "l3",
+  "findings_count": 0,
+  "findings": []
+}
