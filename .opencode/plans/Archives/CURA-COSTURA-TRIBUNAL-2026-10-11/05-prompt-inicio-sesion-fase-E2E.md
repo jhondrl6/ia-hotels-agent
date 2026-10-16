@@ -105,7 +105,7 @@ Este run es la línea base real sobre la que FASE-VERIFY certifica AC1..18: es e
       --fase FASE-E2E --fecha <FECHA_DE_CIERRE_DE_ESTA_FASE> \
       --desc "Run unico v4complete Don Alfonso post-cura; onboarding por YAML derivado; evidencia y verificacion AC14" \
       --archivos-nuevos "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/pre-vuelo.md" \
-      --archivos-mod ".opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md,.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md,.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md,.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md" \
+      --archivos-mod ".opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md,.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md,.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md,.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md" \
       --tests "0" --check-manual-docs --force-skip-docs --skip-reason "no-aplica: fase de ejecucion sin cambios de codigo" \
       --plan CURA-COSTURA-TRIBUNAL-2026-10-11
   ```
@@ -145,7 +145,7 @@ Sin código nuevo → sin tests unitarios nuevos. La «prueba» de esta fase es 
 ```
 Actúa como agente orquestador de la fase E2E del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-E2E del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-E2E del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§1 ACs y §4 restricciones), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md (conflictos y riesgos) y el workflow canónico.
 
 OBJETIVO: Una única corrida de v4complete para Hotel Don Alfonso (https://www.donalfonsohotel.com/) con onboarding Tier A inyectado por el YAML derivado (el warehouse de observaciones no se toca); evidencia preservada; verificación de AC14 leyendo artefactos, incluido el estado de la extracción del recibo; análisis post-implementación con lecciones aprendidas en 10-analisis.

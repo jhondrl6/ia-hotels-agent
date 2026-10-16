@@ -1,6 +1,6 @@
 {
   "comando_de_medicion": "grep -rEoh \"[A-Za-z0-9_/]+\\\\.py:[0-9]+\" .opencode/plans --include=*.md | wc -l",
-  "created_at": "2026-10-10T11:25:30",
+  "created_at": "2026-10-15T17:25:25",
   "files": {
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md": 11,
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md": 3,

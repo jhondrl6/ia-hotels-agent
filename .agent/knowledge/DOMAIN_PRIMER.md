@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.80.0 | **Codename**: Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado
-> **Release date**: 2026-10-09 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.81.0 | **Codename**: Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos
+> **Release date**: 2026-10-15 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-12 | v4.80.0 Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado*
+*Auto-generado: 2026-10-15 | v4.81.0 Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

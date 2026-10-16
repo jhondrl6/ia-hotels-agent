@@ -171,6 +171,17 @@ fijado por el Operador.
 commit; árbol medido con tip `82ec9a4` y 10 rutas sucias de la propia fase). El portón baja a
 **FASE-RELEASE-4.81.0**, que es la única fase pendiente de `CURA-COSTURA-TRIBUNAL-2026-10-11`.
 
+**Actualización (2026-10-15): el portón se levantó y el cuerpo del plan quedó congelado.** FASE-RELEASE-4.81.0 quedó
+ejecutada y el plan movido a `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/` — medido en el árbol de
+trabajo: 14 renombres en el índice; al estampar esta línea el HEAD es `5341e15` y la tanda del cierre está **sin
+commit**, corte «espera de autorización del Operador». El write-back del `10-analisis` está publicado y dictado
+**`[FRESCO]`**: fuente `01a141aa-807a-7171-b9af-1d39ef9d32cb`, y el sha256 del archivo en disco
+(`5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365`) es byte-idéntico al `sha_cuerpo` registrado —
+re-medido en esta sesión, no copiado de la nota del cierre. Consecuencia para este archivo y para el plan que nazca de
+él: ese `10-analisis` ya no es editable sin romper el `[17/18]`, y re-subirlo con el mismo título sale
+`[FAIL] «el título ya está vigente»` (exigiría título nuevo que conserve el stem). Las citas y los seguimientos del plan
+de origen, por tanto, no se re-escriben desde aquí: lo que cambió después del congelamiento vive en evidencia.
+
 **Insumo para el plan: `P6.5` con su mecanismo medido (2026-10-14).** Para que la cláusula vecina entre al plan como
 decisión y no como nota, queda definida así:
 
@@ -241,6 +252,28 @@ los dos primeros con dueño Operador, y la fila de AC19 re-confirmada como lími
 exigiría otra inferencia pagada, y su prueba sigue siendo el par rojo/verde de FASE-C2—. Evidencia de la certificación
 (19/19 AC legibles, 0 fallos) en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-VERIFY/`.
 
+**Actualización (2026-10-15): el tercer ítem quedó falseado por los sellos del plan, y su efecto no se produjo.** El
+punto «No se registró nada en los documentos del plan de origen» ya no describe el árbol: esta ruta está nombrada
+**tres veces** en el plan archivado — `10-analisis-post-implementacion.md:116` y `dependencias-fases.md:94`, aportados
+por el sello de FASE-E2E `82ec9a4`, y `10-analisis-post-implementacion.md:129`, aportado por el sello de FASE-VERIFY
+`5341e15` (atribución medida con `git log -S` sobre cada archivo, no por memoria). Las tres grafías llevan la extensión
+`.md`, y esa es justo la forma que el verificador no ve: `NOMBRE_CONTEXT = r"CONTEXT-[A-Za-z0-9._-]+"` se traga el
+`.md` y `citados_por_planes_archivados()` compone después `<nombre>.md`, así que el candidato queda `…md.md` y no
+resuelve. Medido sobre el corpus completo de planes archivados: **12 capturas, 0 resuelven** — la segunda vía no ha
+gobernado nunca un contexto por cita; no es un caso borde de este archivo. Por eso
+`scripts/verify_qmind_context_freshness.py` sigue publicando este contexto como `[EXCLUIDO]` (población: **0
+gobernados**) y su `[18/18]` no corta por esto: las tres corridas del 2026-10-15 (racha 3/3) devolvieron
+`[NO-EVALUABLE]` EXIT 2 por una descarga que flaquea sobre otra entrada, con crudo en
+`evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt`.
+
+**Decisión del Operador (2026-10-15): no publicar este contexto en QMind.** Publicarlo sin gobernanza metería en el
+notebook `iah-cli-lecciones` una fuente que ningún gate compara: el cuerpo local podría divergir de lo publicado sin
+ninguna señal, que es peor que no tenerla. La cura del verificador (recortar la extensión antes de resolver) es
+**tanda propia** y su blast radius está medido: al curar entran a la población gobernada **dos** contextos — este y
+`.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md`, el origen del plan de origen, citado en
+`10-analisis-post-implementacion.md:10`— y **ninguno de los dos está publicado** (medido: `ingested=False` en ambos).
+La cura y las dos publicaciones van en el mismo ciclo, o el `[18/18]` pasa a `VENCIDO`.
+
 ---
 
 ## 8. Insumos y precedentes
@@ -251,7 +284,7 @@ exigiría otra inferencia pagada, y su prueba sigue siendo el par rojo/verde de 
   report, los cuatro `revision_*.json`, los dos documentos comerciales, `v4_complete_report.json`) y `recibos/` con los
   dos recibos de extracción (`proveedor_servido: deepseek`, pedido `deepseek-chat` / firmado `deepseek-flash`, usage
   5250/3190/8440, estado `OK_CON_PROMESAS` con 42 promesas).
-- Plan de origen: `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/` — su maestro (§1 ACs, §4 restricciones y
+- Plan de origen: `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/` — su maestro (§1 ACs, §4 restricciones y
   «fuera de alcance»), `00-lecciones-capitalizadas.md` y `10-analisis-post-implementacion.md` (§Lecciones nuevas
   `L-CST-6` y `L-CST-7`, §Seguimientos).
 - Precedente de formato y de autodeclaración: `.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md`, que

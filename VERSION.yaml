@@ -1,15 +1,34 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.80.0"
-codename: "Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado"
-release_date: "2026-10-09"
+version: "4.81.0"
+codename: "Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos"
+release_date: "2026-10-15"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-10-09"
+date: "2026-10-15"
 plan_maestro_version: "v2.6.0"
+
+# v4.81.0 - CURA-COSTURA-TRIBUNAL (2026-10-15)
+# Plan CURA-COSTURA-TRIBUNAL-2026-10-11, cerrado por su FASE-RELEASE: cura de la costura de juicio
+# semantico del Tribunal (contrato de cuatro estados, cache versionada, recibo, revisores honestos,
+# precedencia unica, acta verdadera, reglas HARD visibles) y validacion con el run unico de Don Alfonso.
+# FASE-A: contrato de cuatro estados en la API checked + cache versionada con recibo (AC1-AC7)
+# FASE-B: consumidores Bot 2/Bot 4 con estados publicados, sobre-presentacion sobre texto completo,
+#         findings con finding_type (AC8-AC10, AC15, AC17, AC18); wrapper transicional eliminado
+# FASE-C: precedencia unica de evidence_tier (evidence_tier.py), acta que no niega a su revisor,
+#         reglas HARD/SOFT sin fallo silencioso (AC11-AC13)
+# FASE-C2: el CRITICAL verificado bloquea aunque el insumo sea no-OK (AC19)
+# FASE-E2E: run unico v4complete Don Alfonso, EXIT 0, coherence 0.96, veredicto BLOQUEADO con
+#         ZIP suprimido y dos acciones correctivas nombradas (AC14)
+# FASE-VERIFY: certificacion AC1..AC19 — 19/19 con legibilidad en artefacto, 0 fallos
+# +114 funciones test canonicas (5.207 -> 5.321, R2.3 por resta); quick 13/13
+# LIMITES que esta entrada publica: cuatro AC certificadas solo por suite (el run salio con
+#         extraccion OK_CON_PROMESAS); S-CST-1 (gate hard_contradictions sin cablear) y P6.5
+#         siguen abiertos con dueno Operador. Fuente unica de las metricas por fase:
+#         `09-documentacion-post-proyecto.md` §D del plan archivado.
 
 # v4.80.0 - CURA-INSTRUMENTOS-QMIND-S15 (2026-10-09)
 # Plan CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, cerrado por su FASE-RELEASE: los dos instrumentos de lecciones

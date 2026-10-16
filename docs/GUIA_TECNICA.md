@@ -1,7 +1,24 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.80.0 (Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado)
-**Última actualización:** 2026-10-09
+**Versión:** v4.81.0 (Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos)
+**Última actualización:** 2026-10-15
+
+---
+
+### Notas de Cambios v4.81.0 — Cura de la costura de juicio semántico del Tribunal
+
+**Fecha:** 2026-10-15
+**Plan:** CURA-COSTURA-TRIBUNAL-2026-10-11 (maestro §1: AC1..AC19; fuente única de métricas por fase: `09-documentacion-post-proyecto.md` §D del plan archivado)
+
+**Módulos afectados**: `modules/quality_gates/tribunal/` — `llm_extractor.py`, `alignment_reviewer.py`, `honesty_reviewer.py`, `outcome.py`, `acta_writer.py`, `judge.py` y el módulo **nuevo** `evidence_tier.py` —, más `modules/providers/llm_provider.py` y `data_validation/contradiction_engine.py`.
+
+**Problema.** La extracción colapsaba cuatro estados en un canal (`extract_verbal_promises → list`): una respuesta ilegible o truncada volvía `[]` — indistinguible de «sin promesas»— y ese estado se cacheaba. La clave de cache no versionaba el contrato (bajo el literal `auto`, dos proveedores servidos distintos podían compartir una misma clave), no había recibo de qué sirvió cada llamada, y el prompt no delimitaba la propuesta como dato no-confiable. En los consumidores: `collect_reviewer_reports` computaba `OK_NO_FINDINGS` solo desde `findings_count`, así que un Bot con extracción `NO_EVALUABLE` dejaba el acta sana y el veredicto aprobable; el regex de sobre-presentación miraba solo las citas elegidas por el LLM (N5) y su frontera `\b` tras `%` jamás matcheaba `100%` (N7); el finding de Bot 4 usaba la clave `type` que el acta y `derive_corrective_actions` no leen (AC18). En el Juez: dos precedencias invertidas de `evidence_tier` en dos archivos (N6) y un finding de `P6.2` que negaba al revisor que sí corrió. En el motor: las reglas HARD/SOFT tragaban excepciones con `print` silencioso (N8).
+
+**Solución.** Un contrato de cuatro estados en la API checked `extract_checked` (`OK_CON_PROMESAS` / `OK_SIN_PROMESAS` / `NO_EVALUABLE` / `FALLIDO`) con truncamiento detectado por `finish_reason` y cache versionada (`VERSION_PROMPT` + sha del prompt compuesto + sha del texto + proveedor configurado por lectura pura de config — el modelo **no** entra, nunca `auto`) que jamás persiste no-OK, con escritura atómica y hit sin construir proveedor. Recibo por extracción en disco con modelo **pedido** y **firmado** por separado (DeepSeek firma `deepseek-flash` al pedir `deepseek-chat`), latencia, usage y estado. Los revisores publican el bloque `extraccion`; el no-OK mapea a `ReviewerStatus.INPUT_NOT_EVALUABLE` (`blocks_approval=True`) con etiqueta legible en el acta (AC17), y un CRITICAL verificado conserva su fuerza de bloqueo aunque el insumo sea no-OK (AC19), con la acción correctiva nombrando el hallazgo. `evidence_tier.py` es el único símbolo de precedencia (escenarios → MANIFEST → fallback `"C"` con `declarado=False`), consumido por Juez y Bot 4, que deja de silenciarse bajo tier no declarado. `contradiction_engine.py` publica tri-estado (`SIN_HALLAZGOS`/`CON_HALLAZGOS`/`LECTOR_FALLIDO`) en los cuatro sitios de captura.
+
+**Backwards compatibility.** La API checked **reemplaza** al wrapper `extract_verbal_promises`, que queda eliminado (AC15): los consumidores internos (Bot 2 y Bot 4) son los **únicos** llamadores y ya migraron — no hay llamadores externos del wrapper. `chat_completion` conserva su tipo de retorno; los metadatos nuevos viven en `chat_completion_detailed` (DEC-A3), así que los 6 sitios de producción que delegan en él no cambian. `T1_CERTIFIABLE_CLAUSES`, los umbrales de gates, `GATE_BLOCKING_ENABLED` y el régimen de delivery quedan intactos. La cache de formato viejo queda **inerte sin migración** (DEC-C1): sus claves son inalcanzables bajo la clave versionada.
+
+**Cómo verificar**: `python -m pytest tests/quality_gates/tribunal/ tests/test_fase_0_ac20_evidencia_veredicto.py -q` (crudos y pares rojo/verde en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/`).
 
 ---
 

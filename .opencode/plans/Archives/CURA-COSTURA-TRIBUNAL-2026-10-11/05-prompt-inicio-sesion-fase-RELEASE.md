@@ -41,7 +41,7 @@ El plan cura la costura de juicio semántico del Tribunal (contrato de cuatro es
 ```bash
 python scripts/validate_qmind_writeback.py --upload CURA-COSTURA-TRIBUNAL-2026-10-11   # 1. con el plan aún en raíz
 python scripts/build_lesson_index.py                                                    # 2. lecciones consultables
-git mv .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 .opencode/plans/Archives/       # 3. archivar al final
+git mv .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 .opencode/plans/Archives/       # 3. archivar al final
 python scripts/build_lesson_index.py                                                    # 3b. índice congela la ruta nueva
 python scripts/validate_opencode_refs.py --fix
 python scripts/validate_plan_citations.py --update-baseline
@@ -89,7 +89,7 @@ Ningún `git commit` sin autorización escrita del operador en la sesión, y **s
 ```
 Actúa como agente de cierre (RELEASE) del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-RELEASE-4.81.0 del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-RELEASE-4.81.0 del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§4 y §5), 00-lecciones-capitalizadas.md (§4), dependencias-fases.md, 09-documentacion-post-proyecto.md (fuente de datos), 10-analisis-post-implementacion.md y el workflow canónico.
 
 OBJETIVO: Release 4.81.0 con documentación oficial, validaciones finales, write-back QMind y archivado del plan en Archives/ con el orden R2.5/R2.10.

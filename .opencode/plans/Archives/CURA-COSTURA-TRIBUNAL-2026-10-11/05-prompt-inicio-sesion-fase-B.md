@@ -156,7 +156,7 @@ FASE-A curó el productor. Hoy los consumidores leen `extract_verbal_promises �
 ```
 Actúa como agente de implementación del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-B del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-B del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§1 ACs y §4 restricciones), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md, 05-prompt-inicio-sesion-fase-A.md (estado heredado de DEC-A1) y el workflow canónico.
 
 OBJETIVO: Bot 2 y Bot 4 consumen el contrato de cuatro estados y dejan de verse sanas ante extracción no-OK; detección de sobre-presentación sobre texto completo; superficie de falso positivo del patrón CRITICAL medida y ajustada; wrapper transicional eliminado.

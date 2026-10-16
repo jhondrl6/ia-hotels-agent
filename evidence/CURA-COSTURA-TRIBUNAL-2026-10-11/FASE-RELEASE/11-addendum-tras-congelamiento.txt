@@ -1,0 +1,47 @@
+# Addendum de cierre — hallazgos tras el congelamiento del cuerpo (2026-10-15)
+
+El cuerpo del `10-analisis-post-implementacion.md` se congeló antes del write-back (sha256
+`5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365`, verificado byte-idéntico al
+`sha_cuerpo` publicado después de `refs --fix`). Estos hallazgos aparecieron DESPUÉS de ese punto y
+por eso viven aquí y no en Seguimientos del plan:
+
+## 1. Variante del bug del checker de versiones (familia ya abierta con dueño Operador)
+
+`scripts/version_consistency_checker.py::extract_latest_phase_from_registry` no puede parsear
+`## FASE-RELEASE-4.81.0 - 2026-10-15`: su regex de nombre es `FASE-[A-Za-z0-9\-']+` y el punto del
+número de versión queda fuera de la clase de caracteres. Consecuencia medida: tras registrar la fase,
+`version_consistency_checker.py` imprime «Ultima fase: FASE-VERIFY» (la última entrada **parseable**),
+aunque el registro sí contiene la entrada `## FASE-RELEASE-4.81.0 - 2026-10-15` en
+`docs/contributing/REGISTRY.md` (medido con grep). El check `[2/3]` sale `REGISTRY OK` igual: el fallo
+es del lector informativo, no del gate.
+
+Esto agrava la fila de Seguimientos «El checker de versiones corona la fase más vieja cuando dos fases
+comparten fecha» (dueño Operador, tanda propia): además del empate por fecha, **cualquier fase cuyo
+nombre lleve versión con puntos es invisible para el lector**. La cura prometida en esa fila (test del
+empate + lector que nombra candidatos + aserto escritor↔lector) debe cubrir también esta variante.
+Este archivo es la evidencia del caso nuevo; no se re-abre el cuerpo congelado del plan.
+
+## 2. Rojo de `[16/18]` del modo completo (Tests) — causas medidas, no heredadas
+
+El check corre `python -m pytest -q --tb=no` sobre la suite completa. Crudo completo de la corrida de
+sustentación: `12-pytest-suite-completa-resumen.txt` — **2 failed / 5434 passed / 37 skipped / 4 xfailed
+en 750.81 s**, y los dos fallos nombrados por el runner son:
+
+1. `tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description`
+   — `config/secret_fragment_policy.yaml` sin campo `description` (visible desde el E1 como `[!!]` del
+   doctor, **antes** de cualquier cambio de esta sesión; este plan no tocó `config/`).
+2. `tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic`
+   — la fuga de entorno entre la batería del tribunal y el brazo DeepSeek del piloto bajo corrida
+   combinada, **ya declarada** en Seguimientos del plan con dueño Operador.
+
+Aclaración medida (corrigiendo la hipótesis previa de esta misma sesión): los errores de recolección
+por selenium **no** aparecieron en esta corrida con el venv canónico; la familia selenium del primer
+diagnóstico era del intérprete `.venv-wsl`. La fase RELEASE no tocó código (delta R2.3 0), así que
+ninguno de los dos rojos es de este plan.
+
+## 3. Rojo declarado que NO se apaga
+
+`--strict` cierra `[FAIL] ... contenido: DUPLICADO-VIGENTE` por las fuentes de la era G
+(REFACTOR-WHATSAPP-ENTREGA y EVALUACION-JEV-TYPESAFE): es el mismo hallazgo verdadero que la release
+4.80.0 publicó con dueño (Operador) y disparador (S-CIM-2). Ninguna lo apaga aquí. Nuestra fuente queda
+`[FRESCO] CURA-COSTURA-TRIBUNAL-2026-10-11 ... promesa verificada por descarga+sha256`.

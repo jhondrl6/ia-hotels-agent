@@ -1,5 +1,70 @@
 # Changelog
 
+## [4.81.0] - Cura de la costura de juicio semántico del Tribunal — 2026-10-15
+
+### Objetivo
+
+Cerrar el plan `CURA-COSTURA-TRIBUNAL-2026-10-11`: curar la costura de juicio semántico del Tribunal — contrato de cuatro estados de la extracción, cache versionada sin envenenamiento, recibo por extracción, revisores que publican estados honestos, precedencia única de `evidence_tier`, acta que no niega a su revisor y reglas HARD/SOFT visibles — y validar la cura con el run único de `v4complete` de Hotel Don Alfonso. El bump es **minor** porque hay cambios de comportamiento en gates y Tribunal. Fuente única de las métricas por fase: `09-documentacion-post-proyecto.md` §D del plan archivado (`Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/`); esta entrada la referencia, no la re-transcribe.
+
+**Lo que se demostró.** La certificación de FASE-VERIFY leyó los artefactos reales: 19 de 19 AC con legibilidad en artefacto, 0 fallos (matriz por AC en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-VERIFY/`). El run único cerró con coherence 0.96, `READY_FOR_PUBLICATION` y el veredicto `BLOQUEADO` que la cura exige: ZIP suprimido y dos acciones correctivas **nombradas** (`OVER_PRESENTATION`, dueño `comercial`), sin `VEREDICTO_BLOQUEANTE_SIN_HALLAZGO`. **Lo que no.** Cuatro AC quedan certificadas solo por suite (el run salió con extracción `OK_CON_PROMESAS`), la rama MANIFEST↔escenarios de AC11 no es producible en régimen ZIP-only, y dos deudas con dueño Operador siguen abiertas — ver Límites.
+
+### Límites publicados
+
+- **Cuatro AC certificadas solo por suite** (AC3, rama no-OK de AC8/AC9, AC17, AC19): el run único no produjo extracción no-OK, así que esas ramas se certifican con el par rojo/verde versionado, no con producción. Ejercitar AC19 en flujo real exigiría otra inferencia pagada con proveedor fallido — decisión del Operador, fuera de este plan.
+- **AC11 con rama ⚠ por diseño**: el desacuerdo MANIFEST↔escenarios no es producible en régimen ZIP-only y no se certifica con fixtures que producción no genera.
+- **Deudas abiertas con dueño Operador**: `S-CST-1` (el gate blocking `hard_contradictions` no puede fallar en producción: `ValidationSummary.conflicts` está hardcoded y `Conflict` no tiene los campos por los que el gate filtra), `P6.5` (el acta niega al revisor que corrió — misma forma del defecto que AC12 curó en `P6.2`), y la decisión sobre `P6.2` como cláusula evaluable.
+- **Rojos preexistentes, no de este plan**: la recolección de pytest rota por selenium en `tests/quality_gates/test_alignment_contract.py`/`test_alignment_result.py`, y la fuga de entorno entre la batería del tribunal y el brazo DeepSeek del piloto bajo corrida combinada.
+- **El modo completo de esta máquina requiere `PYTHONUTF8=1`** (S-CIM-10), preexistente.
+- Sin código de producto tocado en RELEASE; el plan **no** modificó `ROADMAP.md` y la única inferencia pagada fue el run único autorizado de FASE-E2E.
+
+### Cambios Implementados
+
+- **FASE-A — contrato de cuatro estados + cache versionada + recibo**: la API checked `extract_checked` expone `OK_CON_PROMESAS` / `OK_SIN_PROMESAS` / `NO_EVALUABLE` / `FALLIDO` y ningún camino devuelve `[]` como estado no-OK; el truncamiento (`finish_reason` length) es `NO_EVALUABLE`, nunca lista parcial. La clave de cache es `VERSION_PROMPT` + sha del prompt compuesto + sha del texto + proveedor configurado por lectura pura de config (el modelo **no** entra; nunca el literal `auto`); `_save_to_cache` jamás persiste no-OK, escritura atómica, un hit no construye proveedor. Recibo por extracción en disco (digests, proveedor servido, modelo **pedido** y **firmado** por separado — DeepSeek firma `deepseek-flash` al pedir `deepseek-chat` —, latencia, usage, estado y motivo) con la vía del proveedor **aditiva** (`chat_completion_detailed`, DEC-A3). Prompt sin `self-confidence` (DTO limpio) y con la propuesta delimitada como dato no-confiable, neutralizando marcadores dentro del dato.
+- **FASE-B — consumidores honestos**: Bot 2 y Bot 4 consumen `extract_checked` y publican el bloque `extraccion`; bajo extracción no-OK ninguno puede emitir `OK_NO_FINDINGS` ni recomendar `APROBADO`. `collect_reviewer_reports` mapea el no-OK a `ReviewerStatus.INPUT_NOT_EVALUABLE` (`blocks_approval=True`) con su etiqueta en el acta (AC17); los findings de Bot 4 escriben `finding_type`/`clause`/`source_artifact` (AC18) y `derive_corrective_actions` los nombra. La sobre-presentación se escanea sobre el **texto completo** de la propuesta (N5), con la frontera del `%` curada y el patrón medido desde símbolos de módulo; el wrapper transicional `extract_verbal_promises` queda **eliminado** (AC15, cierra AC1).
+- **FASE-C — una sola verdad de tier y de reglas**: nace `modules/quality_gates/tribunal/evidence_tier.py` (`resolve_evidence_tier`, precedencia escenarios→MANIFEST, fallback `"C"` con `declarado=False`) consumido por el Juez y Bot 4, que deja de silenciarse bajo tier no declarado (emite `OVER_PRESENTATION_NO_EVALUABLE`, WARNING). El finding de `P6.2` ya no niega al revisor que corrió (AC12). `data_validation/contradiction_engine.py` publica tri-estado (`SIN_HALLAZGOS`/`CON_HALLAZGOS`/`LECTOR_FALLIDO`) en los **cuatro** sitios de captura de reglas HARD/SOFT, sin `print` silencioso (AC13; el cableado motor→gate queda como deuda `S-CST-1`).
+- **FASE-C2 — AC19**: `verified_critical`/`verified_block` dejan de exigir `status.is_ok`, así que un CRITICAL verificado (o su recomendación `BLOQUEAR`) suprime el ZIP también bajo `INPUT_NOT_EVALUABLE`/`FALLIDO`, y la acción correctiva nombra el hallazgo en vez de `VEREDICTO_BLOQUEANTE_SIN_HALLAZGO`. La fila 3 (`verified_return_for_tests`) conserva su exigencia, con su alternativa rechazada y medida (DEC-C2).
+- **FASE-E2E — run único Don Alfonso**: EXIT 0 en ~94 s, pre-vuelo 13/13, warehouse inmutable (sha igual antes/después), onboarding Tier A por YAML derivado con procedencia (`Onboarding data loaded: 4 campos confirmados`, 0 `Using defaults`), coherence **0.96**, recibo `deepseek` con estado `OK_CON_PROMESAS` (42 promesas), acta con los 4 Bots, veredicto `BLOQUEADO` y ZIP suprimido (56 miembros en cuarentena, `blocks_delivery_zip()` True).
+- **FASE-VERIFY — certificación**: AC1..AC19 dictaminadas contra los artefactos del run y la evidencia de A/B/C/C2; greps residuales G1..G5 con 0 coincidencias; AC16 re-verificada por resta; AC10 re-medida con el patrón y la bandera del código (los 2 CRITICAL del run son verdaderos).
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/quality_gates/tribunal/evidence_tier.py` | Símbolo único de precedencia de `evidence_tier` + fallback declarado (AC11) |
+| `tests/quality_gates/tribunal/test_llm_extractor_contrato_cuatro_estados.py` | Contrato, truncamiento, clave versionada, hit sin proveedor, recibo, forma del prompt (FASE-A) |
+| `tests/quality_gates/tribunal/test_fase_b_consumidores_contrato.py` | Estados por causa de Bot 2/Bot 4, AC17/AC18 y la rama `BLOQUEAR → ZIP suprimido` (FASE-B) |
+| `tests/quality_gates/tribunal/test_evidence_tier_precedencia_unica_ac11.py`, `tests/quality_gates/tribunal/test_acta_p6_2_no_niega_al_revisor_ac12.py`, `tests/test_contradiction_engine_reglas_no_callan_ac13.py` | AC11/AC12/AC13 con sus pares rojo/verde (FASE-C) |
+| `tests/quality_gates/tribunal/test_fase_c2_ac19_critical_bloquea_sin_is_ok.py` | AC19: predicados por estado, fila 3 intacta, diferencial real y kill switch (FASE-C2) |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/` | Expediente de evidencia por fase: pares pre/post, mutantes con restauración por sha256, mediciones, pre-vuelo, artefactos del run y certificación |
+| `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/` (14 rutas) | El expediente del plan: maestro, lecciones capitalizadas, checklist, prompts por fase, 09, 10, dependencias y README |
+| `output/<clientes_dir>/hotel_don_alfonso_onboarding.yaml` (derivado, sin versionar) | Onboarding Tier A derivado del warehouse por `derivar_onboarding.py`, con su procedencia copiada a `evidence/` |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/llm_extractor.py` | Contrato de cuatro estados, cache versionada con guard único, recibo, prompt delimitado; borrado del wrapper `extract_verbal_promises` (AC15) |
+| `modules/providers/llm_provider.py` | `ChatCompletionDetail` + `chat_completion_detailed` aditivos (DEC-A3): `finish_reason`, modelo pedido/firmado y usage sin cambiar el retorno de `chat_completion` |
+| `modules/quality_gates/tribunal/alignment_reviewer.py` | Bot 2 consume `extract_checked`, publica `extraccion`, sin default que dispare llamadas reales |
+| `modules/quality_gates/tribunal/honesty_reviewer.py` | Bot 4 ídem; patrones de sobre-presentación a nivel de módulo; texto completo (N5); findings con `finding_type` (AC18); `OVER_PRESENTATION_NO_EVALUABLE` bajo tier no declarado |
+| `modules/quality_gates/tribunal/outcome.py` | `ReviewerStatus.INPUT_NOT_EVALUABLE` (`blocks_approval=True`), `bloque_extraccion()`; AC19: `verified_critical`/`verified_block` sin `is_ok`, `derive_corrective_actions` sin saltar no-OK |
+| `modules/quality_gates/tribunal/acta_writer.py` | Etiqueta `⬜ insumo no evaluable` en `_STATUS_LABELS` (AC17) |
+| `modules/quality_gates/tribunal/judge.py` | `_read_evidence_tier` delega en el símbolo compartido; texto de `P6.2` verdadero (AC12); docstring de la fila 2 de la matriz (AC19) |
+| `data_validation/contradiction_engine.py` | `RuleFailure` + tri-estado `estado_reglas()` en los cuatro sitios de captura, sin `print` (AC13) |
+| `tests/quality_gates/tribunal/*`, `tests/data_validation/*`, `tests/test_p6r_full_flow_matrix.py` | Re-anclados al contrato nuevo (API checked, claves de finding, DTO sin `confidence`) sin pérdida de aserciones de fondo |
+| `.opencode/wiring_report.json` | Republicado por fase (`--write-report`): cobertura `archivos_en_alcance` 717 → 724 |
+| `VERSION.yaml`, `README.md`, `AGENTS.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md` | Fuente única 4.80.0 → **4.81.0** y encabezados propagados por `scripts/sync_versions.py` |
+| `CHANGELOG.md`, `docs/GUIA_TECNICA.md` | Esta entrada y la nota técnica «Notas de Cambios v4.81.0» |
+| `docs/contributing/REGISTRY.md` + `.last_doc_phase.json` | Entrada de FASE-RELEASE-4.81.0, escritos por `log_phase_completion.py` |
+| `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` | Par derivado regenerado por su escritor (R2.10) |
+
+### Tests
+
+- Unidad canónica del repo (`grep -rE "^\s*def test_" tests --include="*.py" | wc -l`): la cifra **viva** al cerrar esta release es **5321**, idéntica al árbol certificado. El delta del plan y su resta por fase (pares `*_baseline_pre/post.txt`) viven en `09-documentacion-post-proyecto.md` §D y en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/` — no se re-transcriben aquí.
+- Suite que sustenta la certificación (crudo en `evidence/…/FASE-VERIFY/`): `pytest tests/quality_gates/tribunal/ tests/test_fase_0_ac20_evidencia_veredicto.py` → **331 passed / 9 skipped / 0 failed**, EXIT 0.
+- Mutation checks con par rojo/verde versionado por fase (AC2, frontera del `%`, estado del acta, precedencia del tier, AC19 M1/M2), cada mutante con su ceguera declarada.
+- Regresiones: ninguna causada por el plan; los dos rojos preexistentes (selenium, fuga de entorno del piloto) quedan en Seguimientos con dueño, no prellenados como «0 regresiones».
+
 ## [4.80.0] - Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado — 2026-10-09
 
 ### Objetivo

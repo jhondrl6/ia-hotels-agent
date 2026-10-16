@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.80.0** -- Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado | Actualizado 9 Octubre 2026
+**v4.81.0** -- Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos | Actualizado 15 Octubre 2026
 
 ---
 
@@ -190,7 +190,7 @@ Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRI
 
 ---
 
-## Estado del Proyecto (v4.80.0 -- Instrumentos de lecciones que dicen la verdad: write-back por cuerpo y control S15 gobernado) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
+## Estado del Proyecto (v4.81.0 -- Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 
@@ -210,7 +210,7 @@ Formulas y parametros exactos (recovery_factor, ROI cap, degradacion): [docs/GUI
 
 ## Configuracion YAML
 
-**10 archivos YAML** con schema validado; todos los parametros configurables sin tocar codigo. Sin YAML, el sistema usa defaults documentados (backwards compatible).
+**12 archivos YAML** con schema validado; todos los parametros configurables sin tocar codigo. Sin YAML, el sistema usa defaults documentados (backwards compatible).
 
 | Archivo | Contenido |
 |---------|-----------|
@@ -262,14 +262,14 @@ Publicacion protegida por gates de calidad automaticos (coherencia documental, c
 iah-cli/
   main.py                     # CLI entry point (v4complete, hook-pdf, deploy, etc.)
   VERSION.yaml                # Fuente unica de verdad (version)
-  config/                     # Configuracion YAML (10 archivos)
+  config/                     # Configuracion YAML (12 archivos)
   templates/                  # Templates HTML/CSS/MD para generacion
     hook_template.md            #   Template PDF gancho (HTML, 34 placeholders)
     hook_styles.css             #   Estilos A4, 2 paginas, hook figure 28pt
     delivery_readme_template.md #   Template README de entrega
     diagnostico_ejecutivo.md    #   Template diagnostico ejecutivo
     local_content/              #   Templates de contenido local
-  modules/                    # Modulos funcionales (23 directorios)
+  modules/                    # Modulos funcionales (24 directorios)
     data_validation/          #   Validacion cruzada + guard de URL propia (own_site_guard)
     commercial_documents/     #   Diagnostico + Propuesta v4 + PDF gancho (hook-pdf)
     financial_engine/         #   Pricing, scenarios, loss projector
@@ -288,7 +288,7 @@ iah-cli/
     common/                   #   yaml_loader, fallback_loader
     ...                       #   analyzers, generators, monitoring, utils, validation
   agent_harness/              # Core del agente (memoria, routing, self-healing)
-  tests/                      # Suite de pruebas (24 subdirectorios, 21 con pruebas)
+  tests/                      # Suite de pruebas (25 subdirectorios, 21 con pruebas)
   scripts/                    # Scripts de automatizacion y validacion
     sync_versions.py          #   Sincronizacion versiones
     doctor.py                 #   Diagnostico ecosistema

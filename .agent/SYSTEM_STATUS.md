@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-10-07 23:43:09 UTC
+> Auto-generado: 2026-10-15 21:35:29 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.78.0 | VERSION.yaml |
+| Proyecto | 4.81.0 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (1)
@@ -23,15 +23,15 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1318 archivos JSON |
+| Shadow logs | 1336 archivos JSON |
 | Sesiones activas | 4 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20261007_202501_82fd184b.json |
-| Ultima sesion activa | 2026-10-07_d2f46bd4.json |
-| Ultimo contexto actualizado | 2026-10-07T14:32:14.098996+00:00 |
+| Ultimo shadow log | 20261012_004137_8632555f.json |
+| Ultima sesion activa | 2026-10-12_8fd752bf.json |
+| Ultimo contexto actualizado | 2026-10-12T21:55:46.456947+00:00 |
 | Ultima URL procesada | https://www.donalfonsohotel.com/ |
 
-## Config Files (11/11 healthy)
+## Config Files (11/12 healthy)
 
 | Archivo | Estado |
 |---------|--------|
@@ -44,10 +44,11 @@
 | `provider_registry.yaml` | OK |
 | `regional_benchmarks.yaml` | OK |
 | `scenarios.yaml` | OK |
+| `secret_fragment_policy.yaml` | MISSING FIELDS |
 | `settings.yaml` | OK |
 | `url_blocklist.yaml` | OK |
 
-**Total:** 11/11 archivos con version+description
+**Total:** 11/12 archivos con version+description
 
 ## Validaciones
 

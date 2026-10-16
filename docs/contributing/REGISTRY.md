@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-14
+> **Ultima actualizacion:** 2026-10-15
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 528
+> **Total fases completadas:** 529
 
 ---
 
@@ -12441,6 +12441,27 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `.opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md` | Dependencias-Fases |
 | `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
 | `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE-4.81.0 - 2026-10-15
+**Descripcion:** Release 4.81.0 - cura de la costura de juicio semantico del tribunal
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | Version |
+| `CHANGELOG.md` | Changelog |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._

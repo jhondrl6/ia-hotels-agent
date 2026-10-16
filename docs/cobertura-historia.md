@@ -15,6 +15,22 @@
 
 ---
 
+> **Ronda del 2026-10-15 — FASE-RELEASE-4.81.0 del plan CURA-COSTURA-TRIBUNAL-2026-10-11 (la cifra sube a 5,321).**
+> Medido con el metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include="*.py"`
+> = **5,321**), identico al arbol versionado (`git grep -c -E "^\s*def test_" HEAD -- tests` = 5,321: la fase
+> RELEASE no anade tests). El salto desde la ronda previa (4,850) es **+471**, y **no es de una sola ronda**:
+> esta re-medicion cierra el desfase acumulado por rondas intermedias que no aparcaron nota aqui. Atribucion
+> medida: **+114 son de este plan** (46+27+29+12 por resta, `09-documentacion-post-proyecto.md` §D del plan),
+> repartidos en **+101** para la fila `quality_gates` (`tests/quality_gates/tribunal/`: 46+27+16+12) y **+13**
+> para la fila `root test files` (`tests/test_contradiction_engine_reglas_no_callan_ac13.py`). El resto
+> (+357: asset_generation +39, quality_gates +110 fuera de este plan, commercial_documents +4, auditors +1,
+> geo_enrichment +12, utils +49, root +142) es de planes anteriores a esta release cuyas notas de ronda no se
+> escribieron — queda declarado como re-medicion, **sin atribucion por bateria inventada**. Filas movidas en
+> `AGENTS.md`: asset_generation 472→511, quality_gates 993→1204, commercial_documents 363→367, auditors 226→227,
+> geo_enrichment 140→152, utils 60→109, root test files 1086→1241; el resto de las filas cuadraba y no se toco.
+> Cuadre: 4,850 + 471 = 5,321 = suma de la tabla. `validate_agents_md.py::check_2_test_count` lee la primera
+> ocurrencia de `N funciones` (la cabecera), que quedo en **5,321**.
+
 > **Ronda del 2026-10-05 — CIERRE-DE-ABANICO (REL-1 y REL-6 del piloto JEV; la cifra sube a 4,850).**
 > Medido con el metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py`
 > = **4,850**) y contrastado con el arbol versionado del tip previo (`git grep -h -c -E "^\s*def test_"

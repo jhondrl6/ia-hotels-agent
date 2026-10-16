@@ -133,7 +133,7 @@ El Juez lee el tier con una precedencia (escenarios→MANIFEST→fallback `C`) y
 ```
 Actúa como agente de implementación del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-C del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-C del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§1 ACs y §4 restricciones), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md y el workflow canónico.
 
 OBJETIVO: Una precedencia de evidence_tier compartida por Juez y Bot 4; el finding de P6.2 describe el estado real y la decisión de cláusula queda con dueño; las reglas HARD de contradiction_engine no callan sus excepciones.

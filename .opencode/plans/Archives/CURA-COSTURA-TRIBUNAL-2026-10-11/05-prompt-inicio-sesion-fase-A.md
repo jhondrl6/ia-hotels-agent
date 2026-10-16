@@ -160,7 +160,7 @@ La costura de juicio semántico del Tribunal (`LLMPromiseExtractor`, instanciada
 ```
 Actúa como agente de implementación del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-A del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-A del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§1 tabla de ACs y §4 restricciones), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md, ../../context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md (§3 defectos, §10.2 hallazgos N y §10.4 causas raíz) y el workflow canónico.
 
 OBJETIVO: Contrato de extracción con cuatro estados (OK_CON_PROMESAS / OK_SIN_PROMESAS / NO_EVALUABLE / FALLIDO), cache con clave versionada que nunca persista no-OK, y recibo mínimo por extracción.

@@ -1,0 +1,50 @@
+# Auditoría documental E8b — FASE-RELEASE-4.81.0 (2026-10-15)
+
+Unidad y comando de cada cifra (canónico del repo):
+- funciones test: `grep -rE "^\s*def test_" tests --include="*.py" | wc -l`
+- módulos: `find modules/ -name "*.py" ! -path "*__pycache__*" | wc -l`
+- scripts: `find scripts/ -name "*.py" ! -path "*__pycache__*" | wc -l`
+- subdirectorios de tests: `find tests/ -mindepth 1 -maxdepth 1 -type d | wc -l`
+- config YAML: `find config/ -name "*.yaml" | wc -l`
+- directorios de modules/: `find modules/ -mindepth 1 -maxdepth 1 -type d | wc -l`
+- skills: `find .agents/workflows/ -name "*.md" -not -path "*/templates/*" | wc -l`
+- cifra commiteada (sin tocar el árbol): `git grep -c -E "^\s*def test_" HEAD -- tests`
+
+## Medidos el 2026-10-15
+
+- funciones test (árbol): **5321** — idéntico a HEAD (la RELEASE no añade tests)
+- módulos/*.py: 223 | scripts/*.py: 46 | config/*.yaml: **12** | modules/ (dirs): **24** | tests/ (dirs nivel 1): **25** (21 con pruebas) | skills: 2 (phased_project_executor.md + README.md del índice)
+
+## Correcciones aplicadas (desde la fuente, no desde otra copia)
+
+README.md:
+- `**10 archivos YAML**` → `**12 archivos YAML**` (dos sitios: prosa y árbol de estructura)
+- `modules/ (23 directorios)` → `(24 directorios)`
+- `tests/ (24 subdirectorios, 21 con pruebas)` → `(25 subdirectorios, 21 con pruebas)`
+
+AGENTS.md §Cobertura por Modulo (la casa de la cifra; `validate_agents_md.py::check_2_test_count` lee la cabecera):
+- cabecera `4,850 funciones totales` → `5,321 funciones totales`
+- asset_generation 472 → 511 (+39)
+- quality_gates 993 → 1204 (+211; **+101 de este plan**: 46+27+16+12 en tests/quality_gates/tribunal/)
+- commercial_documents 363 → 367 (+4)
+- auditors 226 → 227 (+1)
+- geo_enrichment 140 → 152 (+12)
+- utils 60 → 109 (+49)
+- root test files 1086 → 1241 (+155; **+13 de este plan**: tests/test_contradiction_engine_reglas_no_callan_ac13.py)
+- Cuadre: suma de la tabla = 5321 = 4850 + 471 (delta de la re-medición); del total, +114 son del plan (46+27+29+12 por resta, 09 §D). El resto (+357) es de rondas intermedias sin nota — declarado como re-medición en `docs/cobertura-historia.md`, sin atribución por batería inventada.
+
+.agents/workflows/README.md:
+- `Activo v2.21.0` → `Activo v2.27.0` (desde `version: v2.27.0` del propio skill)
+
+CHANGELOG.md: la entrada 4.81.0 cita la cifra viva 5321 con su comando (regla anti-trampa: no se computa a mano desde la línea base del plan).
+
+## Verificación cruzada
+
+- README == AGENTS == CHANGELOG == grep vivo para el conteo de tests: 5321 en todos (el README delega en AGENTS.md por diseño).
+- `docs/cobertura-historia.md` lleva la nota de ronda 2026-10-15 arriba del todo, con la atribución medida y el cuadre.
+
+## Hallazgos de la sesión (no del plan)
+
+1. Primer quick corriendo con `.venv-wsl/bin/python` (3.11.15): 9/13. Dos rojos eran artefactos del intérprete: `validate_governance_numbers.py` usa un f-string multilínea (PEP 701, Python ≥3.12) y Briefing Packs clonaba con hardlink cross-device a TMPDIR. Con el venv canónico (`venv/Scripts/python.exe`, 3.13.3) ambos pasan. Crudo del intento: `01-quick-crudo-interprete-venv-wsl-3.11-9-de-13.txt`.
+2. El bump vencía el derivado `DOMAIN_PRIMER.md` (Document Integration: 4.80.0 vs 4.81.0): regenerado con su escritor `doctor.py --regenerate-domain-primer` (211 archivos Python, 396 clases en 25 módulos), como hizo la release 4.80.0. El prompt de RELEASE pedía solo verificar con `--context`; el desvío queda declarado.
+3. Wiring «publicado 724 | fresco 723» bajo el intérprete viejo: con el canónico el fresco es 724 y el artefacto publicado cuadra — sin republicar.

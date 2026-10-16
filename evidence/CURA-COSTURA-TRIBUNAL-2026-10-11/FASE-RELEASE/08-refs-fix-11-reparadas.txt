@@ -1,0 +1,26 @@
+[!] 12 referencia(s) rota(s):
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-A.md:163 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-B.md:159 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-C.md:136 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-E2E.md:108 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-E2E.md:108 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-E2E.md:108 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-E2E.md:108 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-E2E.md:148 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-RELEASE.md:44 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-RELEASE.md:92 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\plans\Archives\CURA-COSTURA-TRIBUNAL-2026-10-11\05-prompt-inicio-sesion-fase-VERIFY.md:110 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  .opencode\context\CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md:254 -> .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-A.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-B.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-C.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/09-documentacion-post-proyecto.md
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/dependencias-fases.md
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-RELEASE.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] 05-prompt-inicio-sesion-fase-VERIFY.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+  [FIX] CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md: .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11 -> .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11
+[FIX] 11 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas

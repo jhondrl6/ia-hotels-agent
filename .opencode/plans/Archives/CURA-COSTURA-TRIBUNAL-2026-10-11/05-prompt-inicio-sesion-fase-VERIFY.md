@@ -107,7 +107,7 @@ Activación §4.6: ≥3 fases de implementación ✓, E2E ✓, ACs cross-fase �
 ```
 Actúa como verificador certificador del plan CURA-COSTURA-TRIBUNAL-2026-10-11.
 
-Ejecuta únicamente FASE-VERIFY del plan .opencode/plans/CURA-COSTURA-TRIBUNAL-2026-10-11/
+Ejecuta únicamente FASE-VERIFY del plan .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/
 Lee 01-plan-maestro.md (§1 tabla de ACs y §4), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md, 10-analisis-post-implementacion.md (matriz a completar) y el workflow canónico.
 
 OBJETIVO: Certificar AC1..18 contra el output E2E real de FASE-E2E y la evidencia de FASE-A/B/C; completar la matriz de verificación; registrar lecciones de la verificación.

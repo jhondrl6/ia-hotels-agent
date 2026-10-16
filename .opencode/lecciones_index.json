@@ -6,7 +6,7 @@
     "archivos_contexto_escaneados": 43,
     "archivos_md_escaneados": 473,
     "ids_con_definicion": 387,
-    "ids_citados_sin_definicion": 109,
+    "ids_citados_sin_definicion": 110,
     "fechas_por_fuente": {
       "nombre": 376,
       "commit": 11,
@@ -1060,7 +1060,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 10,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
       "redefiniciones": []
     },
@@ -1237,10 +1237,10 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -1858,7 +1858,7 @@
       "id": "L-CST-1",
       "familia": "L",
       "enunciado": "Un guard duplicado en dos capas hace que el mutation check dé verde y la AC quede sin dueño. La primera versión de FASE-A tenía if outcome.is_ok en el llamador y el guard en _save_to_cache; al retirar el de _save_to_cache los tres tests de envenenamiento siguieron VERDES, porque el código muerto nunca se ejecuta. AC2 nombra _save_to_cache como el sitio de la regla, así que el mutante correcto es el que obliga a mover la única decisión a ese sitio. Por qué importa: un verde de mutation check con el mutante mal apuntado certifica un guard que nadie dispara. Qué lo previene: el par rojo/verde versionado (03_/04_ en evidence/FASE-A/) y la regla de la casa «un guard que nadie dispara no existe» — INCLUIR — es de superficie del fix, no del síntoma",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1872,7 +1872,7 @@
       "id": "L-CST-2",
       "familia": "L",
       "enunciado": "Nombre de delimitador dentro de la instrucción rompe la forma del prompt compuesto. La instrucción de frontera citaba los dos marcadores literales, así que el prompt compuesto contenía <<<FIN_DATO_NO_CONFIABLE>>> dos veces y el test de forma (AC7) falló por desambiguación, no por falta de frontera. La regla se escribió sin imprimir los literales. Qué lo previene: test_la_propuesta_solo_aparece_dentro_de_los_delimitadores exige cuenta 1 de cada marcador — INCLUIR",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1886,7 +1886,7 @@
       "id": "L-CST-3",
       "familia": "L",
       "enunciado": "El coste declarado de un re-anclaje se mide, no se hereda: la AC18 prometía 8 lecturas de la clave y eran 10 en 4 archivos. La AC contaba 4+1+3 en tres archivos de Bot 4; un cuarto archivo del tribunal (test_tribunal_propuesta_ubicacion.py, 2 lecturas) también leía la clave del finding de Bot 4 y no estaba en la cuenta. Por qué importa: un coste mal declarado se ejecuta como si fuera completo y el árbol queda con lecturas huérfanas que solo salen rojas cuando alguien las corre. Qué lo previene: el conteo por grep sobre el corpus antes de tocar, y publicar la cifra medida con su comando (como hace 09 §D con el delta) — INCLUIR — es de superficie del fix (el corpus de lectores de una clave), no del síntoma. Real FASE-C2: el prompt prometía «re-anclaje esperado 0–2 aserciones» y la medición dio 0: los tres consumidores (test_fase_b:473, test_fase_0_ac20:277-278) construyen el report en la familia OK_*, así que retirar is_ok es aditivo para ellos y no había nada que re-anclar. La cifra se publicó en evidence/…/FASE-C2/pre-imagen.md con su comando y su grep -rc por archivo, y corrigió además el blast radius heredado (eran 3 líneas con aserción, no 4: el cuarto hit es un docstring)",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1900,7 +1900,7 @@
       "id": "L-CST-4",
       "familia": "L",
       "enunciado": "Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la orden de AC10 («importar el patrón del módulo en lugar de re-escribir un equivalente») no era ejecutable sin tocar el productor. La cura real fue subir los dos patrones a VERIFICATION_GROUP_*/VERIFICATION_SCAN_GROUPS a nivel de módulo; el filtro estructural (tabla/monto) quedó como función del módulo y la medición lo invoca. Por qué importa: si se hubiera medido con un regex copiado del cuerpo del método, las dos cifras de AC10 describirían otro programa. Qué lo previene: el diente test_la_medicion_importa_el_patron_del_codigo, que iguala lo que devuelve el patrón del módulo con lo que emite la función del revisor sobre el mismo texto. Real FASE-VERIFY (2026-10-14) — la lección no estaba completa: importar el símbolo tampoco basta, porque las banderas viven en la llamada. El arnés de esta fase recorrió VERIFICATION_SCAN_GROUPS con re.finditer(patron, texto) y sin re.IGNORECASE, que es la bandera que el revisor sí pasa. Dio 8 literales donde el código ve 10, y un falso «0» en el grupo de lenguaje del documento de 2026-10-07 (su coincidencia es «Verificado», en mayúscula). Ese 0 falso iba a certificarse como «la corrida no contiene lenguaje de verificación» cuando en realidad describía otro programa. Qué lo previene ahora: medir invocando la función del revisor (coincidencias_lenguaje_de_verificacion), no los patrones sueltos, y publicar en el crudo la pasada equivocada con su contraste — INCLUIR — la AC no era realizable sin ese movimiento de superficie, y su medición sigue siendo frágil si se re-implementa la llamada",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1914,7 +1914,7 @@
       "id": "L-CST-5",
       "familia": "L",
       "enunciado": "Un mutante aplicado sobre el símbolo unificado ya no puede reproducir la divergencia que curó, y la rama «las dos fuentes coinciden» no discrimina el orden. Al escribir el par rojo/verde de AC11 se vio que invertir la precedencia dentro de resolve_evidence_tier deja verdes los dos tests de coincidencia: si escenarios y MANIFEST declaran el mismo valor, cualquier orden devuelve ese valor. Lo que sí cae es la etiqueta de la fuente (fuente/descripcion_fuente) y la rama manifest-sola. Y como desde la cura hay un solo símbolo, ningún mutante local puede volver a la situación N6 (dos consumidores con reglas distintas): esa parte la certifican los dos tests cruzados Juez↔Bot 4, no el mutante. Por qué importa: un ✅ de «mutation check hecho» sobre un mutant que ataca una rama indiferente no certifica nada. Qué lo previene: publicar en la nota de fase qué tests cayeron y qué diente no los cubre (aquí, test_el_motor_ya_no_imprime_por_stdout no detecta M3), y afirmar fuente además del valor — INCLUIR — es de superficie del fix (cómo se demuestra una precedencia compartida), no del síntoma. Real FASE-C2: el par rojo/verde es diferencial de estado (mismo CRITICAL de Bot 4, solo cambia extraccion: OK_CON_PROMESAS / NO-EVALUABLE / FALLIDO, los tres con blocks_delivery_zip True) y cada mutante declara su ceguera: M1 (reponer is_ok en los dos predicados) no puede detectar que derive_corrective_actions siga saltando no-OK — eso lo corta M2, y su rojo cae por la causa nombrada assert 'OVER_PRESENTATION' in ['VEREDICTO_BLOQUEANTE_SIN_HALLAZGO']; M2 no ve el veredicto ni la fila 3; y ninguno de los dos detecta retirar is_ok de verified_return_for_tests, que es el diente de test_la_fila_3_conserva_su_exigencia_de_estado más el control WARNING-only bajo DEVOLVER-PRUEBAS",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1928,7 +1928,7 @@
       "id": "L-CST-6",
       "familia": "L",
       "enunciado": "Un prompt de fase puede citar un mecanismo que el código no tiene: --force-new no garantiza nada en v4complete. El prompt de FASE-E2E escribía «--force-new para garantizar inyección fresca de onboarding». Medido en T0 con grep de force_new sobre main.py: un solo sitio con código — el guard de run_execution_mode que consulta args.force_new — y el help del propio parser lo dice («for execute command»). run_v4_complete_mode no la consulta. La corrida real lo confirmó por su stdout: [HARNESS] Contexto inyectado: 1 ejecución(es) previa(s) encontrada(s), con análisis previo existente para donalfonsohotel.com. Por qué importa: la bandera no era inocua —su presencia en el comando autorizaba a no mirar el aislamiento de memoria, y el aislamiento es justo lo que el requisito aislamiento_de_memoria de H declara «no satisfecho»—. Qué lo previene: en el preflight, cada bandera del comando se contrasta con grep de su consumidor y se publica la línea que la lee; si no hay consumidor, se declara inerte y se busca el mecanismo real (aquí: el YAML en el clientes_dir efectivo, medido por rama_efectiva_del_loader) — INCLUIR — vale para cualquier fase que lance un comando heredado de otro plan",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -1944,7 +1944,7 @@
       "id": "L-CST-7",
       "familia": "L",
       "enunciado": "Curar el texto de una cláusula no cura la forma del defecto en sus hermanas: P6.5 sigue negando al revisor que corrió. AC12 reescribió la fila de P6.2 para dejar de decir que Bot 2 no existe. El acta de la corrida única (2026-10-12) imprime P6.5: NOT_EVALUABLE con source_artifact: null y el texto «Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a» mientras Bot 4 corrió, publicó revision_honestidad.json con 3 findings (clause: P6.5), 2 CRITICAL y recommendation: BLOQUEAR, y el acta proyecta su extraccion: OK_CON_PROMESAS. Por qué importa: la matriz de cláusulas y los reports se contradicen en el mismo archivo, y quien lea solo la matriz concluirá que la honestidad NL no se evaluó en el único run del plan. Ninguna AC de este plan gobierna esa fila, así que no se tocó. Qué lo previene: la lección se formula como regla de superficie —cuando un verificador/escritor de texto se cura por cláusula enumerada, se barre el vecindario (P6.*) con el mismo criterio— y el hallazgo queda con dueño en §Seguimientos — INCLUIR — es de superficie del fix (la matriz de cláusulas del acta), no del síntoma de P6.2",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Lecciones nuevas de este plan",
@@ -2078,7 +2078,7 @@
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
       ],
       "redefiniciones": []
@@ -3952,11 +3952,11 @@
       "fuente_fecha": "nombre",
       "total_citas": 3,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -3971,12 +3971,12 @@
       "fuente_fecha": "nombre",
       "total_citas": 10,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -3991,12 +3991,12 @@
       "fuente_fecha": "nombre",
       "total_citas": 6,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -4011,7 +4011,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 5,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
@@ -4034,10 +4034,10 @@
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -4313,11 +4313,11 @@
       "total_citas": 27,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -4701,10 +4701,10 @@
       "fuente_fecha": "nombre",
       "total_citas": 9,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -4916,13 +4916,13 @@
       "total_citas": 23,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
         "context/CONTEXT-BUG-WHATSAPP-VERIFIED-BLOQUEO-ENTREGA-2026-09-17"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -5359,7 +5359,7 @@
       "id": "S-CST-1",
       "familia": "S",
       "enunciado": "El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos severity/type por los que el gate filtra, y la clave alternativa hard_contradictions_count no tiene productor — Operador",
-      "plan": "CURA-COSTURA-TRIBUNAL-2026-10-11",
+      "plan": "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Deudas definidas por este plan",
@@ -5642,10 +5642,10 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ],
       "redefiniciones": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -6057,7 +6057,7 @@
       "total_citas": 28,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-OFFLINE-2026-09-09",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ]
     },
@@ -6394,7 +6394,7 @@
       "total_citas": 4,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {
@@ -6758,6 +6758,14 @@
       ]
     },
     {
+      "id": "L-CST",
+      "familia": "L",
+      "total_citas": 1,
+      "planes_que_lo_citan": [
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
+      ]
+    },
+    {
       "id": "L-H1..L-H7",
       "familia": "L",
       "total_citas": 1,
@@ -6802,7 +6810,7 @@
       "familia": "L",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
       ]
     },
     {

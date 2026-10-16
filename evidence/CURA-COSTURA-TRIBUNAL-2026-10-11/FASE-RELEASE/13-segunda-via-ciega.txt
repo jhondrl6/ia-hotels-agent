@@ -1,0 +1,133 @@
+# Hallazgo de instrumento — la «segunda vía» del write-back de CONTEXT está ciega (2026-10-15)
+
+**Sesión:** cierre posterior al congelamiento del plan `CURA-COSTURA-TRIBUNAL-2026-10-11` (archivado y con su
+`10-analisis` publicado). Autorización del Operador para esta sesión: **notebook + árbol, sin commit**; nada de esto
+sube ni commitea.
+**Por qué vive aquí y no en `10-analisis` §Seguimientos:** el cuerpo del `10-analisis` se congeló antes del write-back
+(sha256 en disco `5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365`, medido byte-idéntico al
+`sha_cuerpo` registrado). Editarlo rompería el `[FRESCO]` que el propio `--strict` dictamina; re-subirlo con el mismo
+título sale `[FAIL] «el título ya está vigente»`. Mismo criterio que `11-addendum-tras-congelamiento.txt`.
+
+## 1. Lo que se creía gobernar y no se goberna
+
+`scripts/verify_qmind_context_freshness.py` tiene dos vías para meter un `CONTEXT-*.md` en la población gobernada:
+que **autoddeclare** una lección durable (`MARCA_DURABLE`, tres grafías al inicio de línea) o que lo cite un plan
+**archivado** (`citados_por_planes_archivados()`, que recorre `Archives/*/{10-analisis,00-lecciones,dependencias}`).
+La política escrita en el executor y en la cabecera del propio contexto es «aporte declarado, no existencia», y la
+segunda vía existe para los contextos de los que un plan cerrado se apoya.
+
+El contexto `CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` no autodeclara (0 grafías `MARCA_DURABLE` al inicio de
+línea, medido con `grep -cE`). Y está citado desde el plan archivado **tres veces**:
+
+| Cita | Atribución por commit (medida con `git log -S` por archivo) |
+|------|-------------------------------------------------------------|
+| `10-analisis-post-implementacion.md:116` | `82ec9a4` (sello de FASE-E2E) |
+| `dependencias-fases.md:94` | `82ec9a4` (sello de FASE-E2E) |
+| `10-analisis-post-implementacion.md:129` | `5341e15` (sello de FASE-VERIFY) |
+
+Ninguna de las tres gobernó el archivo. **La segunda vía no dispara ni una sola vez en todo el corpus.**
+
+## 2. La causa: el regex se traga la extensión y el resolver la vuelve a poner
+
+- `NOMBRE_CONTEXT = re.compile(r"CONTEXT-[A-Za-z0-9._-]+")` — la clase incluye el punto, así que sobre la grafía
+  canónica de la casa (`` `CONTEXT-FOO-2026-10-12.md` ``) captura **`CONTEXT-FOO-2026-10-12.md`**, extensión incluida.
+- `citados_por_planes_archivados()` resuelve con `candidato = context_dir / f"{nombre}.md"`, o sea
+  `CONTEXT-FOO-2026-10-12.md.md`, que no existe → descarte silencioso.
+
+Solo gobernaría una cita escrita **sin** extensión. La casa no escribe así: todas las citas de plan van con `.md`
+dentro de backticks.
+
+## 3. Crudo de la medición (solo lectura, sin tocar el árbol ni el notebook)
+
+Sonda con las funciones del propio módulo sobre `.opencode/plans/Archives/*/` y los tres documentos gobernados:
+
+```
+capturas: 12 crudas / 10 curadas
+resuelven HOY (0): []
+resolverían CON LA CURA (2): ['CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md',
+                              'CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md']
+NUEVOS gobernados por la cura: ['CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md',
+                                'CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md']
+citados_por_planes_archivados() -> []
+```
+
+Corrida completa del verificador, **tres veces** (racha: 3/3 el mismo dictamen):
+
+```
+poblacion: 0 CONTEXT gobernado(s) (—) | 24 excluido(s)
+  [EXCLUIDO] CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md: no autodeclara una leccion durable: ...
+poblacion declarada: 1 gobernado(s) (10-analisis-post-implementacion.md) | 0 fuera de alcance
+notebook iah-cli-lecciones: 66 fuente(s) publicada(s)
+  [AVISO] descarga 01a12247-f791-7944-832e-13f5cad68f3e salio 1: error: QMind network request failed
+  [NO-EVALUABLE] 10-analisis-post-implementacion.md (Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/...):
+    1 fuente(s) cuyo metadata casa con el disco (01a12247-f791…) no bajaron; ... No es VENCIDO
+[NO-EVALUABLE] frescura de CONTEXT/10-analisis declarados: 0 fresco(s), 0 problema(s)
+EXIT=2
+```
+
+Ingesta por título en el notebook (`validate_qmind_writeback.is_ingested`, lectura):
+
+```
+CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12: ingested=False
+CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10:   ingested=False
+```
+
+Contexto de estado (para no atribuirle a este hallazgo rojos ajenos): `run_all_validations.py --quick` **13/13** sobre
+el árbol ya archivado — corrido dos veces, antes y después de escribir la actualización dateda en el contexto;
+`--strict` del hermano dicta `[FRESCO]` para `CURA-COSTURA-TRIBUNAL-2026-10-11` y
+`[FAIL] … contenido: DUPLICADO-VIGENTE` por las fuentes de la era G, deuda ya publicada con dueño por la release
+4.80.0. El `EXIT=2` de arriba es la racha de descarga que flaquea sobre la población **declarada**, no un rojo que
+introduzca este hallazgo.
+
+Guardas del propio escrito (medidas, no supuestas):
+
+```
+grep -cE '^[[:space:]]*(#{1,6}[[:space:]]*)?(Lección de forma|Lección durable|Lecciones capitalizadas)'
+  -> 0        (la actualización dateda NO volvió gobernado el contexto)
+python -c "CRLF del contexto"  -> 0 (LF conservado) ;  LECCIONES-INDEX: 3/3 pipes por fila en su tabla
+python scripts/validate_opencode_refs.py            -> [PASS] todas las referencias existen, EXIT 0
+python scripts/build_lesson_index.py (tras editar)  -> par byte-idéntico:
+   LECCIONES-INDEX.md sha256 99bcd6bf87860e84…   antes == después
+   lecciones_index.json sha256 f91cc01b6ac31d6e… antes == después
+   [OK] 387 IDs definidos + 110 sin definición | [fechas] nombre=376 commit=11 sin_fuente=0
+```
+
+El `110 sin definición` que imprime la corrida no es de esta sesión: el par ya estaba regenerado así en el árbol
+(109→110 lo movió la tanda del cierre, y `citados_sin_definicion` cuenta **ocurrencias**). Lo que sí prueba el no-op
+es que la actualización dateda no vence el índice derivado.
+
+## 4. Decisión del Operador y su motivo
+
+**No publicar el contexto** (2026-10-15). Motivo medido: mientras el verificador no lo gobierne, una fuente publicada
+en `iah-cli-lecciones` no la compara ningún gate — el sha local puede divergir de lo publicado sin señal. Es un
+respaldo que no respalda. Publicarlo «por si acaso» añade un huésped más al censo del `--strict` (que ya reporta
+5 fuentes huéspedes sin contabilidad) y finge cumplimiento de una política que no se está evaluando.
+
+## 5. Lo que la cura debe traer (tanda propia, no cola de este cierre)
+
+1. **Cura:** recortar un sufijo `.md` final antes de componer `context_dir / f"{nombre}.md"` (o que `NOMBRE_CONTEXT`
+   no capture la extensión). Decisión de diseño pendiente de medir en la tanda: qué pasa con una grafía terminada en
+   punto de frase (`CONTEXT-FOO.md.`) y con las 2 capturas deformes del corpus (`CONTEXT-JEV-`, `CONTEXT-…-2026-08-04.md`
+   con elipsis literal) — ninguna de las dos resuelve a archivo, así que no deben gobernar nada.
+2. **Diente antes que cura:** un control que reproduzca el hueco sobre el instrumento versionado en HEAD — la cita con
+   `.md` debe resolver a gobernado — y que esté **rojo** antes de la cura y verde después. Sin ese diente la cura es un
+   cambio de comportamiento sin oportunidad de perder.
+3. **El ciclo es atómico:** al curar, la población pasa de **0 a 2** gobernados
+   (`CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y `CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md`), y los dos están
+   `ingested=False`. Si se cura sin publicar ambos, `[18/18]` pasa de NO-EVALUABLE a **VENCIDO** en el modo completo de
+   master compartido. Las dos publicaciones van en el mismo ciclo, con verificación por descarga + sha256 (no por
+   título).
+4. **Coste de publicar:** cada contexto publicado congela su cuerpo. El plantilla-tier **aún no tiene plan** (su
+   alcance A+C está decidido, su Paso 0 no se ha corrído), así que sus próximas actualizaciones datadas dejan de ser
+   gratuitas: o se re-publica con título nuevo que conserve el stem, o queda VENCIDO.
+
+## 6. Qué NO sostiene este archivo
+
+- No sostiene que el `[18/18]` esté verde ni rojo por esta causa: las tres corridas de hoy salen NO-EVALUABLE por la
+  descarga de otra entrada, y ese es su estado preexistente (racha 3/3 medida aquí, sin barrido de rachas anteriores).
+- No midió el blast radius **fuera** de `.opencode/plans/Archives/`: la segunda vía sólo recorre esos tres documentos,
+  y las citas desde `docs/`, `ROADMAP.md` o la memoria no entran en la población.
+- No probó que la cura sea correcta para grafías con punto final o con elíipsis: las candidatas deformes están
+  enunciadas en §5.1 como medición pendiente, no como caso resuelto.
+- No tocó `scripts/`, ni subió nada al notebook, ni commiteó: autorización de esta sesión = árbol + notebook sin commit,
+  y la cura es código de instrumento fuera de ella.
