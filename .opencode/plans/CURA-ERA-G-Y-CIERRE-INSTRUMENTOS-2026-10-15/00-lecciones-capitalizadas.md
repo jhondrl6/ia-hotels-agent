@@ -1,0 +1,45 @@
+# Lecciones Capitalizadas — CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+
+> **Creado**: 2026-10-15 (Paso 0 del executor, ANTES del plan maestro).
+> **Fuente del mandato**: la sesión del 2026-10-15 que curó la segunda vía (hallazgo `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt`), con sus commits `2e048e6` (cierre documental 4.81.0 + archivado) y `1f95e84` (las dos curas de instrumentos), empujados a `origin/master`.
+> **Alcance**: cierre documental de esa tanda + la deuda era-G que mantiene el modo completo en rojo.
+
+## 1. Consultas literales (re-ejecutables)
+
+| # | Capa | Consulta / comando | Resultado |
+|---|------|--------------------|-----------|
+| Q1 | Corpus-wide (índice frío) | `grep -nE "write-back\|DUPLICADO-VIGENTE\|huesped\|huésped\|reemplaz\|pathspec\|untracked\|QMind" .opencode/LECCIONES-INDEX.md` | 10 líneas; devuelve `L-QW.1`..`L-QW.4`, `L-SECF.1`, `L-SECF.2`, `L-CST-6`, `D-QW-1`, `D-QW-2`, `D-V2.1` |
+| Q2 | Corpus-wide (índice frío) | `grep -nE "release\|bump\|versi[oó]n\|cobertura" .opencode/LECCIONES-INDEX.md` | 16 líneas (política de versionado y bump en la familia `L-V`) |
+| Q3 | Memoria caliente | `MEMORY.md` del proyecto y de usuario: entradas «Writer: reemplazo por documento, no por plan», «Segunda vía de gobernación: CURADA», «Plan CURA-COSTURA-TRIBUNAL», «Gate `hard_contradictions` vacío en producción», «REVISIÓN L3: flujo y gate», «El push vence citas en la misma sesión» | 6 entradas leídas |
+| Q4 | QMind (capa tibia) | `retrieve(notebookId=01a04d98-b7bd-778c-8441-26fdc7e35f45, query="write-back QMind registro instantanea reemplazada fuente duplicada vigente huesped sin contabilidad borrar fuente del notebook", maxResults=6)` | 6 chunks (score ≥ 0.90): seguimientos de `CURA-INSTRUMENTOS-QMIND-S15` (era-G con dueño Operador, `S-CIM-2`), la serie `L-QW.1..4` de `VERIFICADOR-ESCRITURA-QMIND-2026-09-20`, y las decisiones «marcar, no borrar» del mismo plan |
+| Q5 | Memoria caliente | Límite de la capa QMind: su corpus solo tiene lo publicado; la deuda `D-QW-*` y el crudo `14-` aún **no** están en el notebook (el writer no los ha visto) — se leen del repo | Confirmado |
+
+## 2. Lecciones capitalizadas (cada una nombra qué cambia en este plan)
+
+| ID | Lección (una línea) | Definida en (ruta) | Qué cambia en ESTE plan | Dónde se aplica |
+|----|---------------------|--------------------|-------------------------|-----------------|
+| L-SECF.2 | `git commit -- <ruta>` ignora las rutas untracked y una salida filtrada con `grep` borra el fallo del radar: la evidencia del commit es el árbol, no la stdout | `context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11` | FASE-A: el commit de los 4 archivos del registro `D-QW` se hace **con `git add` explícito por ruta y conteo del índice antes del commit**; los dos untracked (contexto y crudo 14-) viajan por `add` nominal, nunca por `commit -- <ruta>` | AC1; T2 del prompt de FASE-A |
+| D-QW-1 | La rama por defecto de `--upload` sube los CONTEXT declarados y no los registra: escapan de la capa de contenido y del bloque de huéspedes | `context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15` | FASE-B: el censo por el notebook debe declarar si alguna fuente publicada viene de esa rama (invisible a las dos capas) antes de clasificar; y §5 la mantiene diferida con dueño | AC3; §5 del maestro |
+| D-QW-2 | El writer y el verificador de frescura mantienen copias distintas del detector de autodeclaración: gobernar y subir pueden no ser el mismo conjunto | `context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15` | FASE-B: el censo no puede apoyarse en `scan_context_declarations()` como si fuera la población gobernada; declara con qué predicado midió | AC3; T1 del prompt de FASE-B |
+| L-QW.2 | Publicar con título distinto resuelve el SKIP y **crea** el duplicado: sin registro que marque la anterior, el duplicado vuelve a ser la vía fácil | `Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20` | FASE-C: si la decisión es «marcar como reemplazada», la marca se escribe **en el registro** (no se borra del notebook) y su diente exige el par rojo/verde | AC4, AC5 |
+| L-CST-6 | Un prompt de fase puede citar un mecanismo que el código no tiene: `--force-new` no garantiza nada en `v4complete` | `Archives/CURA-COSTURA-TRIBUNAL-2026-10-11` | Los prompts de FASE-B y C **prohíben prometer un primitivo no verificado**: si la cura exige código, FASE-B mide que el símbolo no existe antes y FASE-C lo escribe con su diente; si no lo exige, se declara «cero líneas de código» | AC4, AC5; restricciones de los prompts B y C |
+| L-V.2 | Las notas de fases upstream pueden ser inexactas: la certificación se hace re-leyendo los artefactos, no heredando conclusiones | `Archives/TRIBUNAL-OFFLINE-2026-09-09` | FASE-A: el acta del cierre documental cita **crudos re-corridos** en la sesión (frescura, quick, write-back), no la transcripción de esta sesión de preparación; el sha256 de cada crudo va en el acta | AC2 |
+| D-V2.1 | El instrumento canónico de R2.1 no alcanza el transcript de sesión: el presupuesto se declara en unidad auto-reportada | `Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12` | Cada prompt declara su presupuesto en `tool calls` **como auto-reporte** y su corte; ninguna fase lo presenta como medido por instrumento | Restricciones de los 4 prompts |
+
+## 3. Candidatos evaluados y descartados
+
+| # | Descarte | Por qué NO aplica a este plan |
+|---|----------|-------------------------------|
+| 1 | `L-T4A.3` (cache de extracciones LLM con `tmp_path` en tests) | Este plan no toca el extractor del Tribunal ni ninguna caché LLM; su superficie es el write-back y el cierre documental |
+| 2 | `S-CST-1` (el gate `hard_contradictions` no puede fallar en producción) | Otro dominio (gates de publicación, `main.py`/`publication_gates.py`) y ya tiene dueño Operador con fase propia; incluirlo aquí mezclaría dos unidades de versión |
+| 3 | `L-CST-7` / `P6.5` (el acta niega al revisor que corrió) | Vive en `modules/quality_gates/tribunal/`; fuera del alcance de este plan (higiene del notebook + cierre documental) |
+| 4 | `L-SECF.1` (el recorte `prefijo…sufijo` de una credencial no es anónimo) | El barrido de fragmentos ya quedó curado en su plan y este plan no publica credenciales nuevas ni toca el emisor; la lección hermana `L-SECF.2` sí aplica por la superficie del commit |
+| 5 | `L-QW.1` (idempotencia y frescura son dos propiedades) | Aplica al verificador hermano y ya está capitalizada allí; este plan no cambia el criterio de frescura (la segunda vía quedó curada el 2026-10-15) |
+
+## 4. Cobertura declarada
+
+El verificador mecánico de este archivo es `scripts/validate_lesson_capitalization.py` (`[7/8]` del hook versionado `scripts/git_hooks/pre-commit` y un check de `run_all_validations.py --quick`; el ordinal y el denominador vigentes los imprime la corrida). Comprueba **forma y trazabilidad** (C1–C8): existencia, §1–§4, una consulta corpus-wide copy-pasteable, un AC que existe en el maestro, ≥3 descartes, declaración de cobertura, IDs definidos y atribuidos al dueño que publica el índice, y ≥2 dueños distintos.
+
+**No verifica la pertinencia**: que las filas de §2 sean las lecciones que este plan debía capitalizar —ni que el efecto alegado en «Qué cambia» sea real— lo declara quien ejecuta cada fase en el paso 5 del Post-Ejecución. Un `[OK]` del verificador significa «la forma exigida está», nunca «capitalicé bien». El índice consultado es `.opencode/LECCIONES-INDEX.md` regenerado en esta preparación; sus contadores vigentes los imprime `python scripts/build_lesson_index.py`, no este archivo.
+
+- [ ] Este archivo se actualiza al cierre de cada fase (§2 y §4), y el write-back de QMind del plan se ejecuta **antes** de archivarlo (orden de R2.10).

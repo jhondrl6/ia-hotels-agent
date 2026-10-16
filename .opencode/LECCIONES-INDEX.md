@@ -12,8 +12,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 
 ## Cobertura medida (lo que este índice NO garantiza)
 
-- Corpus de **definiciones**: `20` análisis de plan + `43` archivos de `.opencode/context/`. `473` `.md` en total como corpus de **citas**.
-- 387 IDs con definición detectada; 110 IDs citados sin definición (ver última sección).
+- Corpus de **definiciones**: `21` análisis de plan + `44` archivos de `.opencode/context/`. `485` `.md` en total como corpus de **citas**.
+- 389 IDs con definición detectada; 113 IDs citados sin definición (ver última sección).
 - Familias incluidas: `L-*`, `DA-*`, `D-*`, `S-*`.
 - Excluida a propósito: AC-* (criterios de aceptación por plan)
 - Excluida a propósito: NR*/R2.x (reglas del executor, no del corpus)
@@ -24,7 +24,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 - Detecta definiciones por convención de formato (ID en la primera celda de una
   tabla, o encabezando un título/línea en negrita). Una lección redactada fuera
   de esa convención aparece como «citada sin definición», no se pierde.
-- **Fuente de cada `fecha_plan`**: `376` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
+- **Fuente de cada `fecha_plan`**: `378` del nombre del plan, `11` del último commit que tocó su documento, `0` en estado explícito `SIN-FUENTE`. El `mtime` no es una fuente admitida: dos checkouts del mismo commit publicarían fechas distintas.
 
 ## Sumario
 
@@ -32,9 +32,9 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 |---------|-------------|-----|
 | `L-*` | Lecciones aprendidas | 232 |
 | `DA-*` | Decisiones / reglas de alineación | 53 |
-| `D-*` | Deuda, defectos y decisiones registradas | 39 |
+| `D-*` | Deuda, defectos y decisiones registradas | 41 |
 | `S-*` | Hallazgos y seguimientos de plan | 63 |
-| — | Citados sin definición | 110 |
+| — | Citados sin definición | 113 |
 
 ## `L-*` — Lecciones aprendidas (232)
 
@@ -77,8 +77,8 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-CST-3` | El coste declarado de un re-anclaje se mide, no se hereda: la AC18 prometía 8 lecturas de la clave y eran 10 en 4 archivos. La AC contaba 4+1+3 en tres archivos de Bot 4; un cuarto archivo del… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 4 (solo el plan dueño) |
 | `L-CST-4` | Un verificador que quiere medir «el patrón del código» obliga a que el patrón viva en el código como símbolo exportable. verification_patterns estaba definido dentro del método de Bot 4, así que la… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 0 (solo el plan dueño) |
 | `L-CST-5` | Un mutante aplicado sobre el símbolo unificado ya no puede reproducir la divergencia que curó, y la rama «las dos fuentes coinciden» no discrimina el orden. Al escribir el par rojo/verde de AC11 se… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 4 (solo el plan dueño) |
-| `L-CST-6` | Un prompt de fase puede citar un mecanismo que el código no tiene: --force-new no garantiza nada en v4complete. El prompt de FASE-E2E escribía «--force-new para garantizar inyección fresca de… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 5 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
-| `L-CST-7` | Curar el texto de una cláusula no cura la forma del defecto en sus hermanas: P6.5 sigue negando al revisor que corrió. AC12 reescribió la fila de P6.2 para dejar de decir que Bot 2 no existe. El acta… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 8 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
+| `L-CST-6` | Un prompt de fase puede citar un mecanismo que el código no tiene: --force-new no garantiza nada en v4complete. El prompt de FASE-E2E escribía «--force-new para garantizar inyección fresca de… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 11 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
+| `L-CST-7` | Curar el texto de una cláusula no cura la forma del defecto en sus hermanas: P6.5 sigue negando al revisor que corrió. AC12 reescribió la fila de P6.2 para dejar de decir que Bot 2 no existe. El acta… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Lecciones nuevas de este plan | 9 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `L-D1` | «Una fase por sesión» no es «una sesión por repo»: lo que se comparte es el índice de git *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 18 (solo el plan dueño) |
 | `L-D2` | La evidencia también se fosiliza: un log capturado antes de estabilizar los tests miente *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 6 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-D3` | Un baseline numérico hace que cumplir el plan cuente como violación *(FASE-D)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 64 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
@@ -178,16 +178,16 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-PF10` | QUÉ PASÓ: la corrida E2E final bloqueó con critical_recall BLOCKED "metric not found" — el ÚNICO critical issue del baseline era el falso negativo de schema que SR-E corrigió; al quedar… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 113 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-PF11` | QUÉ PASÓ: la corrida post-hotfix (H2, output salentoreal_final_v4c_h2) encontró el análisis previo de la corrida SR-H (output salentoreal_final_v4c) — directorios distintos, mismo hotel — vía memoria… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 18 en Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `L-PF12` | QUÉ PASÓ: tras el fix de sondas (SR-F), el plan de assets quedó determinista y estable entre corridas (3 pains → 3 assets pain-mapeados + monthly_report estándar en H2), mientras corridas históricas… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales) | 6 en Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
-| `L-QW.1` | Un verificador que comprueba la *clave* de una operación no puede detectar que el contenido | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 10 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-QW.2` | Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 10 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
+| `L-QW.1` | Un verificador que comprueba la *clave* de una operación no puede detectar que el contenido | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 12 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-QW.2` | Publicar con título distinto resuelve el SKIP y *crea* el duplicado: el notebook conserva la | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 14 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `L-QW.3` | Un verde producido por la ausencia del instrumento es un rojo disfrazado. El exit 0 por CLI | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 10 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
-| `L-QW.4` | Un límite conocido y escrito no se cierra solo: la restricción estaba documentada en el corpus | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 15 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
+| `L-QW.4` | Un límite conocido y escrito no se cierra solo: la restricción estaba documentada en el corpus | Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0) | 16 en Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-R.1` | R2.1 era medible y no se midió en 8 de 9 fases. El instrumento canónico corrió sin ningún obstáculo de permisos en esta sesión: ./venv/Scripts/python.exe evidence/FASE-D/measure_iterations.py… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 61 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.2` | Hay campos que ningún writer escribe y ningún reader valida. docs/contributing/REGISTRY.md seguía publicando > Version actual: v4.66.0 con VERSION.yaml = 4.76.0. Medido: grep -rln "Version actual"… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 4 en Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `L-R.3` | El gate anti-contradicción de R2.5 tiene cobertura medida del 12,5 %. validate_plan_closure.py dispara solo si el 10-analisis-post-implementacion.md de un plan vivo tiene a la vez un heading que… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 62 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/EVALUACION-JEV-TYPESAFE-2026-09-21, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-R.4` | Una regla de proceso sin verificador es publicable solo si la regla lo declara. D-V.3 se ejecutó como R2.6 y R2.7 en el executor (v2.21.0); R2.7 se escribió con su propio párrafo "Verificador… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 93 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-SECF.1` | El recorte prefijo…sufijo de una credencial no es anónimo: es más corto que los patrones que redactan, y un escáner que exempta los directorios donde vive no puede fiscalizarlo — este §1 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 2 (solo el plan dueño) |
-| `L-SECF.2` | git commit -- <ruta> ignora las rutas untracked y una salida filtrada con grep lo borra del radar: la evidencia del commit es el árbol, no la stdout — este §2 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 2 (solo el plan dueño) |
+| `L-SECF.1` | El recorte prefijo…sufijo de una credencial no es anónimo: es más corto que los patrones que redactan, y un escáner que exempta los directorios donde vive no puede fiscalizarlo — este §1 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 4 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
+| `L-SECF.2` | git commit -- <ruta> ignora las rutas untracked y una salida filtrada con grep lo borra del radar: la evidencia del commit es el árbol, no la stdout — este §2 | context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 | 3. Tabla de definiciones | 10 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `L-SR1` | Las ramas no ejercitadas por la corrida estándar acumulan defectos latentes. / Qué pasó: el fallback FASE-D S7 con logger inexistente convivió con el código desde su fase sin detonar hasta una prueba… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 24 en Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/VALIDADOR-URL-PROPIA-2026-08-30 |
 | `L-SR2` | La identidad de memoria debe derivarse de la URL canónica, no de la raw. / Qué pasó: los UTM params llegaron íntegros al target_id, fragmentando la memoria del mismo hotel en N identidades según cómo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 17 en Archives/SR-PIPELINE-FIXES-2026-08-27 |
 | `L-SR3` | Promesa, matriz y gate deben compartir UNA fuente de verdad para el estado de un servicio. / Qué pasó: RC1 declara "sin costo", la matriz registra NO_BREACH, y el gate cuenta missing — el mismo… | context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27 | 8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene) | 69 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
@@ -209,7 +209,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-T2C.4` | Un fix que reactiva código muerto cambia comportamiento de producción y por tanto NO es «sin regresión»: exige un delta fijado por test contra el símbolo real. Los 7 tests originales de S-E2… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T2-C (2026-09-10) | 18 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-T4A.1` | El protocolo PromiseExtractor debe ser runtime_checkable para permitir isinstance(extractor, PromiseExtractor) en tests y validaciones. Sin @runtime_checkable, solo se puede verificar con hasattr()… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 3 en Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4A.2` | El parsing de respuestas LLM debe manejar bloques markdown con indentación variable. El código inicial lines[1:-1] fallaba cuando el bloque iniciaba con json indentado o cuando el cierre no estaba en… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 10 en Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `L-T4A.3` | La cache SHA256 de extracciones LLM debe usar tmp_path en tests para evitar colisiones entre corridas. Los tests compartían el directorio .cache/tribunal/ y hits de cache de pruebas anteriores… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 6 en Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10 |
+| `L-T4A.3` | La cache SHA256 de extracciones LLM debe usar tmp_path en tests para evitar colisiones entre corridas. Los tests compartían el directorio .cache/tribunal/ y hits de cache de pruebas anteriores… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 7 en Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `L-T4A.4` | La clasificación de promesas verbales contra la matriz requiere matching difuso por service_hint. El LLM puede generar hints como "Optimización para asistentes de voz" mientras la matriz usa… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 5 en Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10 |
 | `L-T4A.5` | Un test puede pasar sin ejecutar la rama que dice certificar: el test_no_breach_not_a_finding original usaba un extractor vacío y la clasificación nunca recorría entradas NO_BREACH, por lo que la… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-A (2026-09-11) | 112 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-T4B.1` | Los commercial gates están split en DOS archivos: commercial_gates_report.json (3 gates: CG-ROI-NEGATIVE BLOCKING, CG-OTA-NARRATIVE WARNING, CG-TECH-JARGON WARNING) y… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-T4-B (2026-09-11) | 2 (solo el plan dueño) |
@@ -228,7 +228,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `L-V3.3` | Al archivar un plan se consume el testimonial con el que sus propios tests evitaban ser vacíos, y eso rompe la suite en el commit de cierre — El git mv de R2.5 sacó a este plan de plans/ y, con él… | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 2. Lecciones Aprendidas nuevas | 3 (solo el plan dueño) |
 | `L-V4` | Una cita de línea caduca antes de que se certifique el fix: 14 de 16 ya estaban desfasadas *(FASE-VERIFY)* | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 8. Lecciones Aprendidas | 18 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
 | `L-V.1` | La brecha fixture-vs-real tiene un tercer modo además del contenido: el layout. AC8 falló aunque el revisor y sus tests eran correctos en su propio régimen — el fixture T2-B usaba un stub sintético… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY (2026-09-11) | 39 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
-| `L-V.2` | Las notas de fases upstream pueden ser inexactas y VERIFY debe re-leer los artefactos, no heredar conclusiones. El delta E2E (§5.1) afirmaba que financial_scenarios "no declara evidence_tier"; la… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY (2026-09-11) | 27 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
+| `L-V.2` | Las notas de fases upstream pueden ser inexactas y VERIFY debe re-leer los artefactos, no heredar conclusiones. El delta E2E (§5.1) afirmaba que financial_scenarios "no declara evidence_tier"; la… (+1 redefiniciones) | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY (2026-09-11) | 32 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-V.3` | Las predicciones del plan son hipótesis, no hechos. L-T2A.2 predecía que AC6 (recall vacuo) sería test-level porque "el gate ya serializa details"; la corrida real vino con critical_recall.details… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY (2026-09-11) | 22 en Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `L-V.4` | Un AC que falla en VERIFY se documenta con causa raíz + dueño, nunca se arregla en la fase. AC8 ❌ se fijó por sonda read-only (2 capas) y se ruteó a Seguimientos abiertos con owner (futuro… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-VERIFY (2026-09-11) | 44 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 |
 | `L-VCF-1` | El primer mutation check falló nombrando a otra aserción: al apagar el guard de A1 el rojo reportó «se perdió A4» — assertion_id se asigna por orden de aparición (así reproduce la tabla A1–A4 del… | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 | Lecciones nuevas de este plan (L-VCF-1+) | 15 (solo el plan dueño) |
@@ -331,7 +331,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `DA-V5` | Ningún seguimiento se re-asigna a FASE-RELEASE por inercia, aunque RELEASE sea la fase que sigue — La evidencia está en el propio plan: S-C3, S-C4, S-C6, S-E2, S-F2 y S9 llevan re-asignadas C→F→G→H y… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 6. Decisiones Arquitectónicas | 27 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `DA-V6` | El presupuesto por fase se declara no-verificable bajo sandbox y se recalibra ×3 o se retira (recomendación formal al executor) — S22: nueve fases, nueve excesos (8.6×, 2.4×, 3.3×, 2.4×, 4.0×, 3.1×… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 6. Decisiones Arquitectónicas | 13 en context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## `D-*` — Deuda, defectos y decisiones registradas (39)
+## `D-*` — Deuda, defectos y decisiones registradas (41)
 
 | ID | Enunciado | Plan dueño | Sección | Citas |
 |----|-----------|------------|---------|-------|
@@ -355,11 +355,13 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `D-PF6` | SR-F con outcome condicional pre-decidido: si la causa de la varianza es un filtro determinista erróneo → fix mínimo + test; si requiere rediseño mayor → seguimiento documentado (sin agrandar la… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Decisiones Arquitectónicas (pre-registradas en preparación; confirmar implementación en cada fase) | 13 en context/CONTEXT-GAP-URL-NO-PROPIA-SONDA-2026-08-29 |
 | `D-PF7` | Corrida de verificación ÚNICA post-hotfix (desviación pre-registrada al §9 del plan maestro): si T2 del hotfix critical_recall está verde, UNA corrida v4complete adicional con output NUEVO… | Archives/SR-PIPELINE-FIXES-2026-08-27 | Decisiones Arquitectónicas (pre-registradas en preparación; confirmar implementación en cada fase) | 17 (solo el plan dueño) |
 | `D-PRE.1` | «sesión propia antes» se concreta en DOS fases: P5 (seguridad/privacidad) y P6 (generación multi-hotel). Decide el operador al revisar los 9 hallazgos de P4, ante la pregunta de si P5/P6 se… | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 | Actualización del plan (2026-09-15) — decisión D-PRE.1 | 10 (solo el plan dueño) |
+| `D-QW-1` | la rama por defecto de --upload sube los CONTEXT declarados y no los registra: sin entrada escapan de la capa de contenido y del bloque de huéspedes — este §1 | context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15 | 3. Tabla de definiciones | 24 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
+| `D-QW-2` | el writer y el verificador de frescura mantienen copias distintas del detector de autodeclaración, así que gobernar y subir pueden no ser el mismo conjunto — este §2 | context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15 | 3. Tabla de definiciones | 20 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `D-T1.1` | DEVOLVER-CORRECCIONES bloquea el ZIP igual que BLOQUEADO. Antes solo BLOQUEADO interceptaba, así un acta que devuelve el paquete por assets fallidos se entregaba igual. La política vive en un único… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones de contrato — auditoría FASE-T1 (2026-09-10) | 12 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `D-T1.2` | Sin evidencia certificable no hay veredicto máximo. APROBADO-PARA-ENTREGA exige Tier A y que todas las cláusulas certificables de T1 estén en PASS; un NOT_EVALUABLE (artefacto ausente, p. ej. borrado… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones de contrato — auditoría FASE-T1 (2026-09-10) | 6 (solo el plan dueño) |
 | `D-T2C-A1` | el AC de no-regresión del régimen generate_proposal=True no se cumplió tal como fue redactado. Los 3 bloques presence_lookup de v4_proposal_generator.py no se retiraron ni permanecieron muertos: el… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Desvío registrado — auditoría FASE-T2-C (2026-09-11) | 29 (solo el plan dueño) |
 | `D-T4B-A1` | la fase certificó ✅ con una suite verde que nunca ejerció el contrato de lectura sobre artefactos reales. HonestyReviewer devolvía total_cg_count: 0, propuesta cargada: False y un veredicto BLOQUEAR… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | FASE-RELEASE-4.76.0 (2026-09-11) | 12 (solo el plan dueño) |
-| `D-V2.1` | el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 191 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
+| `D-V2.1` | el instrumento canónico de R2.1 no alcanza el transcript de sesión bajo el | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 197 en Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `D-V3.1` | [3/9] Version Sync compara las cabeceras contra datetime.now(): se puso rojo | Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12 | 5. Seguimientos abiertos detectados | 5 (solo el plan dueño) |
 | `D-V.1` | Se autoriza a Bot 3 (asset_reviewer.py) como emisor legítimo de la clave canónica asset_path (AC7 lo nombra explícitamente en el contrato de coverage_by_service[]). La remediación es test-only… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones Arquitectónicas | 43 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
 | `D-V.2` | AC17 pasa ✅ corrigiendo la nota E2E: financial_scenarios_*.json sí declara evidence_tier (en breakdown.evidence_tier: "B"), además de precision_tier: "C" y tier_explanation. El delta E2E solo miró el… | Archives/TRIBUNAL-OFFLINE-2026-09-09 | Decisiones Arquitectónicas | 4 (solo el plan dueño) |
@@ -398,7 +400,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-C6` | S-B12 re-asignado a FASE-H: los 5 tests rojos de TestAssetQualityTable piden columnas (\ — Nivel \ | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 (solo el plan dueño) |
 | `S-C7` | ProposalAssetMatrix está muerto en producción: 0 call sites fuera de su propio docstring de uso y sus tests; el JSON que se escribe en producción sale de AssetAlignmentMatrix.save() → to_dict() v2.0… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 2 (solo el plan dueño) |
 | `S-C8` | NO_ASSET_MAPPED se satisfizo en otra forma: el dossier y el ROADMAP lo exigían verbatim como estado de AlignmentStatus; C no lo añadió — el descarte vive como side-list not_promised + warning +… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 2 (solo el plan dueño) |
-| `S-CST-1` | El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Deudas definidas por este plan | 28 en context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
+| `S-CST-1` | El gate blocking hard_contradictions no puede fallar en producción: el único ValidationSummary del pipeline se construye con conflicts=[] hardcoded, el dataclass Conflict no tiene los campos… | Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 | Deudas definidas por este plan | 32 en CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12 |
 | `S-E1` | ✅ Resuelto en la fase — Desviación de §4: E1/E2 no eran paralelizables. §4 y el prompt de E declaraban dos subagentes que «no comparten archivo», pero ambos tracks editan main.py (E1 persiste en FASE… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 12 (solo el plan dueño) |
 | `S-E2` | Defectos latentes preexistentes registrados, NO curados (fuera del perímetro de E): (a) NameError latente de site_presence_report — se asigna solo dentro de if generate_proposal: (main.py:2791 →… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 56 en Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 | `S-F1` | Reconciliación del corpus medido: C2 contó 27 corridas sobre output/; el barrido F4 midió 28 primarias + 4 copias de delivery sobre output/ + archives/outputs/, con ~11 ESTIMADAS (~10 en el dossier)… | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 6 en Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -443,7 +445,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-V9` | La tabla §4.2 del análisis estaba incompleta: faltaba B3 (dossier §9.2 enumera B1-B5) — FASE-VERIFY (2026-09-04), al pasar el criterio V3 «ningún hallazgo del dossier queda sin estado» | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 3 (solo el plan dueño) |
 | `S-V10` | B4 (palancas de coverage 0.125-0.714) no se re-midió — la fila decía «→ VERIFY/FASE-I» — FASE-VERIFY (2026-09-04) | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 | 5. Seguimientos abiertos | 14 en Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, context/CONTEXT-BOTS-POTENCIALIZACION-IAH-CLI-2026-09-01 |
 
-## Citados sin definición (110)
+## Citados sin definición (113)
 
 > Señal accionable: el ID circula por los planes pero nadie lo redactó con la
 > convención de definición. O está mal formulado, o la lección nunca se escribió.
@@ -462,18 +464,20 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-B12` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B15` | 12 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `L-P2.4` | 11 | Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11 |
+| `D-QW` | 10 | CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `S-B1` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
+| `S-CIM-2` | 9 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-E2E-6` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11 |
 | `S-F6` | 9 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `DA-CIM.10` | 8 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `S-F7` | 8 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-B` | 7 | Archives/EVALUACION-JEV-TYPESAFE-2026-09-21 |
-| `S-CIM-2` | 7 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-E2E-1` | 7 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `D-A-QUICK-TRECE` | 6 | Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20 |
 | `S-B8` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B13` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-B14` | 6 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
+| `S-CIM-1` | 6 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `S-CIM-3` | 6 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
 | `D-1` | 5 | Archives/DT-2-DELIVERY-CONTRACT-RESIDUAL-2026-07-24, Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 |
 | `DA-T4B.1` | 5 | Archives/TRIBUNAL-OFFLINE-2026-09-09 |
@@ -481,6 +485,7 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-13` | 5 | Archives/DT-3-TECH-DEBT-2026-07-25, Archives/DT-4-ROOT-CAUSE-2026-07-25, Archives/ONBOARDING-INJECTION-GAP-2026-07-29 |
 | `S-B6` | 5 | Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03 |
 | `S-BH-1` | 5 | Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
+| `S-CIM-10` | 5 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 |
 | `S-E2E-4` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-11` | 5 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `DA-BH.1` | 4 | Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
@@ -490,8 +495,6 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-BH-2` | 4 | Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-BH-3` | 4 | Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
 | `S-BH-5` | 4 | Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10 |
-| `S-CIM-1` | 4 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20 |
-| `S-CIM-10` | 4 | Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, Archives/CURA-COSTURA-TRIBUNAL-2026-10-11 |
 | `S-E2E-10` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F5` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-F8` | 4 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
@@ -509,5 +512,4 @@ Cada fila apunta al plan dueño, que tiene el texto completo.
 | `S-E2E-2` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-3` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
 | `S-E2E-7` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| `S-E2E-8` | 3 | Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18 |
-| … | +50 más en el JSON | |
+| … | +53 más en el JSON | |

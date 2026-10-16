@@ -1,0 +1,79 @@
+# Deuda de instrumento — la rama por defecto del writer sube CONTEXT y no los registra (2026-10-15)
+
+**Sesión:** tanda `CURA-SEGUNDA-VIA-QMIND`, abierta por `13-segunda-via-ciega.txt` de este mismo expediente.
+Autorización recibida en tres letras: «Git Commit pathspec + L3 + Push». Estado al escribir: `2e048e6` (cierre
+documental 4.81.0) y `1f95e84` (las dos curas) **commiteados y empujados**, L3 sobre `5341e15..1f95e84` = 2 commits
+con 0 hallazgos, paridad `0 0`, árbol limpio.
+**Por qué vive aquí y no en el `10-analisis` del plan:** el `10-analisis` de `CURA-COSTURA-TRIBUNAL-2026-10-11` está
+congelado desde su write-back (`5c54f5ed3cb9345e…` == `sha_cuerpo` registrado, y medido de nuevo en esta sesión:
+`blob(HEAD) == disco`). Editarlo re-abre el `[VENCIDO]`. Mismo criterio que `11-` y `13-`. La deuda se define con su
+ID en `.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md`, que es corpus de definiciones del índice y **no**
+autodeclara lección durable, así que no exige publicación.
+
+## 1. La forma del hueco (leída en el código, no supuesta)
+
+`do_upload()` tiene dos ramas:
+
+- **Explícita** (`--file` / `--title`): sube y llama a `publicar_en_registro()` → instantánea versionada en
+  `.opencode/qmind-writeback/instantaneas/`, entrada en `registro.json` con `sha256` y `sha_cuerpo`, y marca de
+  reemplazo. Es la vía con la que esta tanda publicó los dos CONTEXT, y la que quedó curada (reemplazo por
+  `clave_de_documento()`, no por plan).
+- **Por defecto** (sin `--file`/`--title`): sube el `10-analisis` del plan **y sí** lo registra; después recorre
+  `scan_context_declarations()` y, por cada CONTEXT declarado, llama a `upload_source()`, imprime
+  `[OK] Subido: <archivo>` y **no llama a `publicar_en_registro()` ni a `registrar_publicacion()`**. El bucle termina
+  y `do_upload()` devuelve su resumen.
+
+Consecuencia, por capa:
+
+1. `verificar_contenido()` itera `datos["entradas"]` con `estado == vigente`: una subida sin entrada no existe para la
+   capa de contenido. No hay instantánea que cotejar, no hay `sha_cuerpo`, no hay promesa del servidor verificada por
+   descarga.
+2. El bloque de huéspedes tampoco la ve: `_fuente_nombral()` exige `"10-analisis" in fuente["title"]`, y los títulos que
+   emite esa rama son `CONTEXT: <stem>`. O sea que la fuente publicada no es ni auditada **ni contabilizada como
+   huésped**: sale del `[CONTADOR]` sin dejar rastro.
+3. El reemplazo no aplica: una segunda subida del mismo CONTEXT con título nuevo queda como dos fuentes vigentes en el
+   notebook sin marca de `reemplazada` (la familia del rojo `[DUPLICADO-VIGENTE]` que ya se conoce por la era G).
+
+## 2. Por qué es LATENTE y no roja (medido dos veces)
+
+`scan_context_declarations()` sobre el árbol de esta sesión devuelve **0 declaraciones**. No hay ningún CONTEXT en la
+raíz de `.opencode/context/` que dispare el detector, así que el bucle hoy no sube nada y el hueco no está produciendo
+publicaciones invisibles.
+
+Además hay una **segunda divergencia estructural**, medida por lectura de los dos patrones:
+
+- `CONTEXT_DECLARATION_MARKERS` (writer): `^Lección de forma:`, `^Lección durable:`, `^Lecciones capitalizadas` — ancladas
+  al inicio de línea **sin** permitir `#` delante ni espacios.
+- `MARCA_DURABLE` (hermano de frescura, curado el 2026-09-27): `(?mi)^\s*(?:#{1,6}\s*)?Lecci[oó]n…` — acepta encabezado y
+  sangría.
+
+Las dos copias no son el mismo conjunto. Un CONTEXT que declare en forma de encabezado queda **gobernado** por el
+verificador de frescura (que le exige fuente publicada byte a byte) y **no** lo sube la rama por defecto del writer; y
+uno que declare a línea suelta sí lo sube el writer, y esa subida no se registra. La divergencia está medida por
+comparación de los patrones, no producida por ningún archivo del árbol: hoy ambas devuelven 0 sobre la raíz.
+
+**Disparador que la vuelve activa:** cualquiera de las tres grafías al inicio de línea real en un `CONTEXT-*.md` de la
+raíz (lo que la casa hace al capitalizar), o que alguien unifique el detector del hermano en el writer.
+
+## 3. Coste y dueño de la cura
+
+- **(a) Registrar en el bucle:** llamar a `publicar_en_registro()` por cada CONTEXT subido, con su `cuerpo` resuelto.
+  Pregunta de diseño abierta que hay que decidir antes de escribir código: `sha_cuerpo` de una entrada CONTEXT **es hoy
+  el sha del `10-analisis` del plan** (medido en las dos publicaciones de esta tanda: `5c54f5ed3cb9…` en ambas, mientras
+  los `sha256` propios son `f6e14e735e51…` y `3cebfeb58e48…`). Re-usar ese campo para el CONTEXT movería la pregunta que
+  goberna («¿el plan cambió?»); la alternativa es un campo propio. Dueño: Operador (decide el contrato del registro).
+- **(b) Unificar el detector:** que el writer consuma el mismo predicado que `declara_durable()` del hermano en vez de
+  mantener una copia. Es la cura que cierra (a) por la vía de la población. Dueño: Operador.
+- **Dientes que ambas necesitan:** un control con corpus montado en `tmp` que suba un CONTEXT por la rama por defecto y
+  aserte entrada + instantánea en el registro (rojo antes de la cura sobre el instrumento versionado en `1f95e84`), y un
+  control de divergencia que aserte que los dos patrones aceptan el mismo conjunto de grafías.
+
+## 4. Qué no sostiene este archivo
+
+- No afirma que haya hoy una fuente CONTEXT publicada por esa rama: midió 0 declaraciones y por eso la llama latente.
+- No midió el blast radius de la cura (a): cambiar qué entra en el registro afecta al `[CONTADOR]` y a la puerta de
+  vigencia, y eso requiere su propia tanda con sus dientes.
+- No toca el rojo `[DUPLICADO-VIGENTE]` de la era G ni las 5 fuentes huéspedes sin contabilidad: son otra deuda, ya con
+  dueño desde la release 4.80.0, y esta sesión la dejó declarada sin tocarla.
+- No reescribe el `13-`: ese escrito describe la segunda vía de gobernación; este describe la rama de publicacion del
+  hermano. Son dos huecos distintos en instrumentos distintos.
