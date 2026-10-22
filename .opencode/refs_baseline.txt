@@ -5,6 +5,10 @@
 .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/00-lecciones-capitalizadas.md|.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md
 .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/01-plan-maestro.md|.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md
 .opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/10-analisis-post-implementacion.md|.opencode/context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md|.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-A.md|.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md|.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md|.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md
 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-A.md|.opencode/context/Refuerzo.md
 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-B.md|.opencode/context/Refuerzo.md
 .opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/briefing/FASE-D.md|.opencode/context/Refuerzo.md
