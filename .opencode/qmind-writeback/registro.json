@@ -91,6 +91,51 @@
       "sha_cuerpo": "5c54f5ed3cb9345e20e7078d44ceb235a0d668503c9dbdfd4b3a2bf0b8955365",
       "instanea": "CURA-COSTURA-TRIBUNAL-2026-10-11--CONTEXT_CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10--3cebfeb58e48b928.md",
       "publicado": "2026-10-15"
+    },
+    {
+      "plan": "REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+      "titulo": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)",
+      "estado": "reemplazada",
+      "reemplazada_por": "10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)",
+      "fuente_id": "01a0bfc9-5f5a-783e-9492-16367bbff596",
+      "sha_metadata": "87b9b6664f945ac6279f1efaf9aa7682cac8a1c952e633bfc4ff55ce67a49274",
+      "publicado": "2026-09-20"
+    },
+    {
+      "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)",
+      "estado": "reemplazada",
+      "reemplazada_por": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)",
+      "fuente_id": "01a10ec9-8113-7875-a806-2eec6521d37a",
+      "sha_metadata": "ee40f5ee52ffd6a27ccce262509b235495cbf4feedc03e676cd968c7ace67755",
+      "publicado": "2026-10-05"
+    },
+    {
+      "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)",
+      "estado": "reemplazada",
+      "reemplazada_por": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)",
+      "fuente_id": "01a10e39-1625-71b1-8ca6-73cbdb1c6a94",
+      "sha_metadata": "d1b8ff00b51144ad092d633fc0122d4b7c0fd5b91e6b3eabbc2879ff5ed0fc48",
+      "publicado": "2026-10-05"
+    },
+    {
+      "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)",
+      "estado": "reemplazada",
+      "reemplazada_por": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)",
+      "fuente_id": "01a10853-6da2-7820-b2a3-fa1cb5ccb4ba",
+      "sha_metadata": "424b5828e34145fbaff7e72bf117d4b25a777c8f4f9e30156229aaa0ace81f90",
+      "publicado": "2026-10-04"
+    },
+    {
+      "plan": "EVALUACION-JEV-TYPESAFE-2026-09-21",
+      "titulo": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)",
+      "estado": "reemplazada",
+      "reemplazada_por": "10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)",
+      "fuente_id": "01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5",
+      "sha_metadata": "34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9",
+      "publicado": "2026-09-27"
     }
   ]
 }

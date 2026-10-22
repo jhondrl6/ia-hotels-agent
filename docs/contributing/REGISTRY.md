@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-22
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 531
+> **Total fases completadas:** 532
 
 ---
 
@@ -12542,6 +12542,31 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-C - 2026-10-22 (CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15)
+**Descripcion:** Cura era-G: primitivo registrar_historica() + puerta CLI --mark-historic con 4 dientes (rojo-antes, verde, mutante del guard); 5 fuentes del censo marcadas reemplazadas por el writer (registro 9 a 14); AC5 en la corrida real: 0 [DUPLICADO-VIGENTE] y 0 huespedes sobre 8/8 (racha dirigida de 3 intentos); absorcion documental S-SEC-1 definida en §5 del maestro + par del indice
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/validate_qmind_writeback.py` | Validate Qmind Writeback |
+| `tests/test_validate_qmind_writeback_escritura.py` | Test Validate Qmind Writeback Escritura |
+| `.opencode/qmind-writeback/registro.json` | Registro |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md` | 01-Plan-Maestro |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 4 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

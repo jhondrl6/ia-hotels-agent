@@ -1,0 +1,32 @@
+== Marcaje era-G â€” 5 fuentes del censo FASE-B (decision (a) del Operador, 2026-10-22) ==
+
+-- [1/5] REFACTOR-WHATSAPP (01a0bfc9-5f5a...) --
+[OK] QMind Write-back: marcada como reemplazada — «10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)» por «10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)» (fuente_id 01a0bfc9-5f5a-783e-9492-16367bbff596, sha_metadata 87b9b6664f94...)
+-- [2/5] JEV FASE-RELEASE etiqueta (01a10ec9-8113...) --
+[OK] QMind Write-back: marcada como reemplazada — «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)» por «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)» (fuente_id 01a10ec9-8113-7875-a806-2eec6521d37a, sha_metadata ee40f5ee52ff...)
+-- [3/5] JEV FASE-RELEASE checkpoint (01a10e39-1625...) --
+[OK] QMind Write-back: marcada como reemplazada — «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)» por «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)» (fuente_id 01a10e39-1625-71b1-8ca6-73cbdb1c6a94, sha_metadata d1b8ff00b511...)
+-- [4/5] JEV FASE-B (01a10853-6da2...) --
+[OK] QMind Write-back: marcada como reemplazada — «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)» por «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)» (fuente_id 01a10853-6da2-7820-b2a3-fa1cb5ccb4ba, sha_metadata 424b5828e341...)
+-- [5/5] JEV offline (01a0e4d9-b252...) --
+[OK] QMind Write-back: marcada como reemplazada — «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)» por «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)» (fuente_id 01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5, sha_metadata 34e2a95195b2...)
+
+-- Re-marcaje idempotente de control (fila 5, segunda pasada) --
+[OK] QMind Write-back: ya estaba marcada (idempotente, sin entrada nueva) — «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)» por «10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)» (fuente_id 01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5, sha_metadata 34e2a95195b2...)
+
+-- Registro resultante (leido del disco, no de la memoria del writer) --
+schema 1.1 | entradas 14
+reemplazada | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07)
+vigente | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (cierre 4.79.0, lecciones finales 2026-10-07, rutas archivadas)
+vigente | EVALUACION-JEV-TYPESAFE-2026-09-21 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cura B2-1, B2-1c, B2-1d, B2-1e y sello documental 2026-10-09)
+vigente | CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 | 10-analisis: CURA-INSTRUMENTOS-QMIND-S15-2026-10-07 (cierre 4.80.0, write-back propio AC10)
+vigente | VERIFICADOR-ESCRITURA-QMIND-2026-09-20 | 10-analisis: VERIFICADOR-ESCRITURA-QMIND-2026-09-20 (lecciones aprendidas y decisiones)
+vigente | CURA-BLOQUE-HUESPED-QMIND-2026-10-10 | 10-analisis: CURA-BLOQUE-HUESPED-QMIND-2026-10-10 (cierre FASE-1, huesped universal y denominador de observacion)
+vigente | CURA-COSTURA-TRIBUNAL-2026-10-11 | 10-analisis: CURA-COSTURA-TRIBUNAL-2026-10-11 (lecciones aprendidas y decisiones)
+vigente | CURA-COSTURA-TRIBUNAL-2026-10-11 | CONTEXT: CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12
+vigente | CURA-COSTURA-TRIBUNAL-2026-10-11 | CONTEXT: CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10
+reemplazada | REFACTOR-WHATSAPP-ENTREGA-2026-09-18 | 10-analisis: REFACTOR-WHATSAPP-ENTREGA-2026-09-18 (lecciones aprendidas y decisiones)
+reemplazada | EVALUACION-JEV-TYPESAFE-2026-09-21 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, etiqueta AC5 dictada 2026-10-05)
+reemplazada | EVALUACION-JEV-TYPESAFE-2026-09-21 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-RELEASE, checkpoint documental 2026-10-05)
+reemplazada | EVALUACION-JEV-TYPESAFE-2026-09-21 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre FASE-B, lecciones finales 2026-10-04)
+reemplazada | EVALUACION-JEV-TYPESAFE-2026-09-21 | 10-analisis: EVALUACION-JEV-TYPESAFE-2026-09-21 (cierre offline, lecciones finales 2026-09-27)

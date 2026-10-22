@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 21,
     "archivos_contexto_escaneados": 45,
     "archivos_md_escaneados": 486,
-    "ids_con_definicion": 389,
-    "ids_citados_sin_definicion": 114,
+    "ids_con_definicion": 390,
+    "ids_citados_sin_definicion": 113,
     "fechas_por_fuente": {
-      "nombre": 378,
+      "nombre": 379,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1975,7 +1975,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 12,
       "planes_que_lo_citan": [
         "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
@@ -3529,11 +3529,11 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
@@ -5939,6 +5939,20 @@
       "redefiniciones": []
     },
     {
+      "id": "S-SEC-1",
+      "familia": "S",
+      "enunciado": "El Secrets Check puede publicar SIN_HALLAZGOS sin leer su insumo: la decodificación heredada sin encoding= revienta el hilo lector del diff staged ilegible, run() devuelve stdout=None sin excepción y los guards de _check_staged_content cierran en verde (fail-open). Alcance: los cuatro sitios de run_all_validations.py con el mismo raigambre; fix fail-closed con dientes y par de crudos legible/ilegible en fase propia (dueño Operador)",
+      "plan": "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Seguimientos abiertos",
+      "fecha_plan": "2026-10-15",
+      "fuente_fecha": "nombre",
+      "total_citas": 13,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "S-V1",
       "familia": "S",
       "enunciado": "✅ CERRADO por FASE-HOTFIX-PRE-RELEASE (2026-09-04, commit 736eea8) — Test rojo introducido por FASE-F: tests/delivery/test_delivery_contract.py::TestP05G9Gate — FASE-VERIFY (2026-09-04)",
@@ -6494,14 +6508,6 @@
       "total_citas": 4,
       "planes_que_lo_citan": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
-      ]
-    },
-    {
-      "id": "S-SEC-1",
-      "familia": "S",
-      "total_citas": 4,
-      "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {

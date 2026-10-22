@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-15 | v4.81.0 Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos*
+*Auto-generado: 2026-10-22 | v4.81.0 Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

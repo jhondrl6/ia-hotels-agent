@@ -295,7 +295,7 @@
   "32": "FASE-F",
   "27": "FASE-H",
   "18": "FASE-E2E",
-  "scripts/validate_qmind_writeback.py": "FASE-1",
+  "scripts/validate_qmind_writeback.py": "FASE-C",
   ".opencode/plans/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/05-prompt-inicio-sesion-fase-RELEASE.md": "FASE-UNICA",
   ".opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/README.md": "FASE-UNICA",
   ".opencode/plans/VERIFICADOR-ESCRITURA-QMIND-2026-09-20/01-plan-maestro.md": "FASE-UNICA",
@@ -307,9 +307,9 @@
   "16": "FASE-A2",
   ".opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md": "CURA-B2-1-SESION-2",
   ".opencode/wiring_report.json": "FASE-C2",
-  ".opencode/LECCIONES-INDEX.md": "FASE-A",
-  ".opencode/lecciones_index.json": "FASE-A",
-  ".opencode/qmind-writeback/registro.json": "CURA-B2-1-SESION-2",
+  ".opencode/LECCIONES-INDEX.md": "FASE-C",
+  ".opencode/lecciones_index.json": "FASE-C",
+  ".opencode/qmind-writeback/registro.json": "FASE-C",
   "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md": "CURA-B2-1-SESION-2",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md": "FASE-A3",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/01-plan-maestro.md": "FASE-A3",
@@ -319,7 +319,7 @@
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/10-analisis-post-implementacion.md": "FASE-A3",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/README.md": "FASE-A3",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/dependencias-fases.md": "FASE-A3",
-  "tests/test_validate_qmind_writeback_escritura.py": "FASE-1",
+  "tests/test_validate_qmind_writeback_escritura.py": "FASE-C",
   "docs/contributing/.last_doc_phase.json": "FASE-A3",
   "45 rutas: 14 renombradas por el git mv de Archives/": "FASE-RELEASE",
   "12 modificadas y 19 nuevas de evidencia; unidad y comando en E/FASE-RELEASE/07-medicion_rutas.txt": "FASE-RELEASE",
@@ -343,5 +343,6 @@
   ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md": "FASE-A",
   ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md": "FASE-B",
   ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md": "FASE-B",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md": "FASE-B"
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md": "FASE-C",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md": "FASE-C"
 }

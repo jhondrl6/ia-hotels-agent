@@ -346,6 +346,36 @@ def registrar_publicacion(datos: dict, ruta_registro: Path, plan: str, titulo: s
     return entrada
 
 
+def registrar_historica(datos: dict, ruta_registro: Path, plan: str, titulo: str,
+                        fuente_id: str, sha_metadata: str, fecha: str, reemplazada_por: str) -> dict:
+    """Registra como `reemplazada` una fuente ya publicada, sin instantanea: la marca de la era-G (AC5).
+
+    `registrar_publicacion()` no puede hacer este trabajo: exige `archivo` (le copia la instantanea al repo)
+    y nace `vigente`, y una fuente historica no tiene copia que copiar ni vigencia que sostener. Esta entrada
+    nace `reemplazada` y por eso queda fuera del bucle de `verificar_contenido` (que solo recorre vigentes):
+    no se le piden `instanea`, `sha_cuerpo` ni `sha256`. Si satisface el predicado de contabilidad de
+    `_huespedes_sin_contabilidad`, que acepta el titulo del plan en cualquier entrada, tambien en esta.
+
+    La evidencia de que se marco viaja en la entrada: el titulo exacto (la llave de la contabilidad) mas
+    `fuente_id` y `sha_metadata` del censo. Idempotente: la identidad de la marca es el titulo dentro del
+    plan o su `fuente_id` — re-marcar la misma fuente devuelve la entrada existente y no duplica. Borrar la
+    fuente en el notebook es irreversible y sigue siendo decision escrita del operador (maestro §4): aqui se
+    marca, no se borra.
+    """
+    if not titulo or not reemplazada_por:
+        raise QmindUnavailable("registrar_historica exige titulo y reemplazada_por para escribir la marca")
+    for existente in entradas_del_plan(datos, plan):
+        if existente.get("titulo") == titulo or (fuente_id and existente.get("fuente_id") == fuente_id):
+            return existente
+    entrada = {"plan": plan, "titulo": titulo, "estado": ESTADO_REEMPLAZADA,
+               "reemplazada_por": reemplazada_por, "fuente_id": fuente_id,
+               "sha_metadata": sha_metadata, "publicado": fecha}
+    datos["entradas"].append(entrada)
+    datos["schema_version"] = REGISTRO_ESQUEMA
+    guardar_registro(ruta_registro, datos)
+    return entrada
+
+
 def is_ingested(plan_dir_name: str, titles: list) -> bool:
     """Un plan está ingestado si hay fuente '10-analisis' que lo nombre.
 
@@ -869,7 +899,56 @@ def main(argv=None) -> int:
         "--plans-dir", metavar="RUTA", type=Path, default=PLANS_DIR,
         help="Raiz de planes con la que se resuelve el cuerpo de cada instantanea (default: .opencode/plans)"
     )
+    parser.add_argument(
+        "--mark-historic", action="store_true",
+        help="Marca una fuente ya publicada como reemplazada en el registro (era-G): escribe una entrada "
+             "sin instantanea ni sha_cuerpo. Exige --title, --plan, --source-id, --sha-metadata y "
+             "--reemplazada-por; no toca la red ni el notebook"
+    )
+    parser.add_argument("--plan", metavar="PLAN",
+                        help="Con --mark-historic: plan al que pertenece la entrada que se marca")
+    parser.add_argument("--source-id", metavar="ID",
+                        help="Con --mark-historic: fuente_id de la fuente en el notebook (UUID del censo)")
+    parser.add_argument("--sha-metadata", metavar="SHA",
+                        help="Con --mark-historic: sha de metadata del censo, evidencia de que se marco")
+    parser.add_argument(
+        "--reemplazada-por", metavar="TITULO",
+        help="Con --mark-historic: titulo de la entrada vigente del mismo documento que la reemplaza"
+    )
+    parser.add_argument("--fecha", metavar="YYYY-MM-DD",
+                        help="Con --mark-historic: fecha de la marca (default: hoy)")
     args = parser.parse_args(argv)
+
+    if args.mark_historic:
+        if args.upload:
+            print("[FAIL] QMind Write-back: --mark-historic y --upload son caminos distintos: la marca "
+                  "historica no publica nada")
+            return 1
+        if args.file:
+            print("[FAIL] QMind Write-back: --mark-historic no admite --file: la fuente historica no tiene "
+                  "instantanea que copiar")
+            return 1
+        faltantes = [nombre for nombre, valor in (("--title", args.title), ("--plan", args.plan),
+                                                  ("--source-id", args.source_id),
+                                                  ("--sha-metadata", args.sha_metadata),
+                                                  ("--reemplazada-por", args.reemplazada_por)) if not valor]
+        if faltantes:
+            print(f"[FAIL] QMind Write-back: --mark-historic exige {', '.join(faltantes)}")
+            return 1
+        try:
+            _validar_id(args.source_id, "--source-id")
+            datos = cargar_registro(args.registro)
+        except QmindUnavailable as exc:
+            print(f"[FAIL] QMind Write-back: {exc}")
+            return 1
+        entradas_antes = len(datos["entradas"])
+        entrada = registrar_historica(datos, args.registro, args.plan, args.title, args.source_id,
+                                      args.sha_metadata, args.fecha or _hoy(), args.reemplazada_por)
+        verbo = ("marcada como reemplazada" if len(datos["entradas"]) > entradas_antes
+                 else "ya estaba marcada (idempotente, sin entrada nueva)")
+        print(f"[OK] QMind Write-back: {verbo} — «{entrada['titulo']}» por «{entrada['reemplazada_por']}» "
+              f"(fuente_id {entrada['fuente_id']}, sha_metadata {entrada['sha_metadata'][:12]}...)")
+        return 0
 
     if (args.title or args.file) and not args.upload:
         print("[FAIL] QMind Write-back: --title y --file solo tienen sentido con --upload <PLAN>")

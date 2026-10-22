@@ -1514,3 +1514,155 @@ def test_control_negativo_el_writer_versionado_se_comia_la_entrada_del_plan(vw, 
             assert estados[TITULO_HISTORICO] == vw.ESTADO_VIGENTE, (
                 f"el instrumento actual tampoco distingue documentos ({estados}): no hay differential y la "
                 "prueba no afirma la cura")
+
+
+# ------------------------------------------- era-G: la marca historica con sus tres dientes (FASE-C)
+#
+# Especificacion: censo `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/censo-era-g.md` §5.1
+# (primitivo `registrar_historica()` + wiring CLI). Dientes minimos exigidos: (i) la entrada hace contable
+# su titulo —el huesped desaparece del censo—, (ii) la entrada `reemplazada` no exige instantanea ni
+# `sha_cuerpo` —no entra al dictamen de vigencia—, (iii) idempotencia. El cuarto diente es aditivo: la
+# puerta del CLI (`--mark-historic`) que escribe el registro, que sin dientes seria un edit con mejor fachada.
+
+SHA_METADATA_CENSO = "d1b8ff00b51144ad092d633fc0122d4b7c0fd5b91e6b3eabbc2879ff5ed0fc48"
+FECHA_HISTORICA = "2026-10-05"
+
+
+def _sin_red(vw, monkeypatch):
+    """El marcaje es una escritura del registro: si toca el doble, la prueba muere aqui y no en un assert."""
+
+    def prohibido(args):
+        raise AssertionError(f"el marcaje historico no puede llamar a qmind: {args[:2]}")
+
+    monkeypatch.setattr(vw, "_run_qmind", prohibido)
+
+
+def _marcar_por_cli(vw, monkeypatch, m, *extra) -> tuple:
+    """`main()` completo por la puerta nueva: el wiring es parte del mecanismo, no un adorno."""
+    _sin_red(vw, monkeypatch)
+    buffer = io.StringIO()
+    with redirect_stdout(buffer):
+        salio = vw.main(["--nb", NB, "--plans-dir", str(m["plans"]), "--registro", str(m["registro"]),
+                         "--mark-historic", "--title", TITULO_HISTORICO, "--plan", PLAN,
+                         "--source-id", _id(60), "--sha-metadata", SHA_METADATA_CENSO,
+                         "--reemplazada-por", TITULO_CIERRE, "--fecha", FECHA_HISTORICA, *extra])
+    return salio, buffer.getvalue()
+
+
+def test_la_marca_historica_por_cli_hace_contable_su_titulo_y_el_huesped_desaparece(vw, montaje, monkeypatch):
+    """Diente (i) de la era-G: con la marca escrita, la fuente historica deja de ser huesped.
+
+    El rojo que este diente cierra es el del crudo `01-writeback-rojo-antes.txt` de FASE-B: cinco fuentes
+    publicadas antes de que existiera la marca de reemplazo, `[DUPLICADO-VIGENTE]` y `5 fuente(s)
+    huesped(s)`. El par se cierra aqui con el predicado REAL del instrumento (`_huespedes_sin_contabilidad`,
+    D-QW-2: nada de copias locales del detector) y con la corrida completa del writer, que es la que dicta
+    AC5 — no la lectura del diff (L-V.2).
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    salio, salida_marca = _marcar_por_cli(vw, monkeypatch, m)
+    assert salio == 0, salida_marca
+    assert "reemplazada" in salida_marca and TITULO_HISTORICO in salida_marca
+
+    datos = vw.cargar_registro(m["registro"])
+    marca = [e for e in datos["entradas"] if e["titulo"] == TITULO_HISTORICO]
+    assert len(marca) == 1, "la entrada se escribe por el writer, una sola vez"
+    entrada = marca[0]
+    assert entrada["estado"] == vw.ESTADO_REEMPLAZADA and entrada["reemplazada_por"] == TITULO_CIERRE
+    assert entrada["fuente_id"] == _id(60) and entrada["sha_metadata"] == SHA_METADATA_CENSO
+    assert entrada["publicado"] == FECHA_HISTORICA
+
+    censo = [_fuente(_id(61), TITULO_HISTORICO, CUERPO), _fuente(_id(62), TITULO_CIERRE, CUERPO)]
+    assert vw._huespedes_sin_contabilidad(datos, censo, PLAN) == [], \
+        "la marca satisface el predicado de contabilidad: el titulo ya tiene entrada en el plan"
+    salio, _, salida = _verificar(vw, monkeypatch, m,
+                                  QmindFalso(censo, {c["id"]: CUERPO for c in censo}))
+    assert salio == 0, salida
+    assert "[DUPLICADO-VIGENTE]" not in salida
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "0 fuente(s) huesped(s)" in contador, contador
+
+
+def test_la_entrada_historica_nace_reemplazada_y_no_pide_instantanea_ni_sha_cuerpo(vw, montaje, monkeypatch):
+    """Diente (ii): la marca no entra al bucle de vigencia, que solo recorre las vigentes.
+
+    `registrar_publicacion()` no puede hacer este trabajo (exige archivo para copiar la instantanea y nace
+    `vigente`): una fuente historica no tiene copia que copiar ni vigencia que sostener. Si la entrada naciera
+    `vigente`, el dictamen la pediria todo —`instanea`, `sha_cuerpo`— y la cura crearia cinco NO-EVALUABLE
+    nuevos en vez de cerrar cinco rojos.
+    """
+    m = montaje
+    _publicar(vw, m, TITULO_CIERRE)
+    datos = vw.cargar_registro(m["registro"])
+    entrada = vw.registrar_historica(datos, m["registro"], PLAN, TITULO_HISTORICO, _id(63),
+                                     SHA_METADATA_CENSO, FECHA_HISTORICA, TITULO_CIERRE)
+    assert entrada["estado"] == vw.ESTADO_REEMPLAZADA
+    assert "instanea" not in entrada and "sha_cuerpo" not in entrada and "sha256" not in entrada, \
+        "sin instantanea que copiar ni cuerpo que prometer: son las claves que la marca no puede sostener"
+
+    censo = [_fuente(_id(64), TITULO_HISTORICO, CUERPO)]
+    salio, _, salida = _verificar(vw, monkeypatch, m, QmindFalso(censo, {_id(64): CUERPO}))
+    assert salio == 0, salida
+    assert TITULO_HISTORICO not in salida, \
+        "el titulo historico no recibe etiqueta de dictamen: su entrada no recorre el bucle"
+    assert "instantanea registrada no esta" not in salida and "[NO-EVALUABLE]" not in salida, \
+        "la entrada sin instantánea no puede generar la abstencion que la cura vino a borrar"
+    contador = next(l for l in salida.splitlines() if "[CONTADOR]" in l)
+    assert "1 vigente(s)" in contador, f"la marca historica no se suma a las vigentes: {contador}"
+
+
+def test_re_marcar_la_misma_fuente_no_duplica_la_entrada(vw, montaje):
+    """Diente (iii): el guard de identidad —el titulo dentro del plan, o su fuente_id— es el que hace
+    re-ejecutable el marcaje. Sin él, una segunda pasada (o dos sesiones que se pisen) duplicaria entradas
+    y el registro se llenaria de copias de la misma marca.
+    """
+    m = montaje
+    datos = vw.cargar_registro(m["registro"])
+    primera = vw.registrar_historica(datos, m["registro"], PLAN, TITULO_HISTORICO, _id(65),
+                                     SHA_METADATA_CENSO, FECHA_HISTORICA, TITULO_CIERRE)
+    segunda = vw.registrar_historica(datos, m["registro"], PLAN, TITULO_HISTORICO, _id(65),
+                                     SHA_METADATA_CENSO, FECHA_HISTORICA, TITULO_CIERRE)
+    escritas = vw.cargar_registro(m["registro"])["entradas"]
+    assert [e["titulo"] for e in escritas] == [TITULO_HISTORICO], "re-marcar no puede duplicar la entrada"
+    assert segunda["fuente_id"] == primera["fuente_id"] and segunda == escritas[0]
+    por_otra_via = vw.registrar_historica(datos, m["registro"], PLAN,
+                                          "10-analisis: PLAN-A-2026-09-01 (otro titulo de la misma fuente)",
+                                          _id(65), SHA_METADATA_CENSO, FECHA_HISTORICA, TITULO_CIERRE)
+    assert por_otra_via["titulo"] == TITULO_HISTORICO, \
+        "la fuente_id tambien es identidad: la misma fuente no gana dos marcas por dos titulos"
+
+
+def test_el_marcaje_exige_sus_datos_y_no_escribe_nada_sin_ellos(vw, montaje, monkeypatch):
+    """La puerta del CLI tiene guardas propias: sin los cinco datos no hay entrada, y el registro en disco
+    queda byte a byte como estaba. Un `--mark-historic` incompleto que escribiera una entrada coja dejaria la
+    deuda era-G con la forma de la cura y sin su contabilidad.
+    """
+    m = montaje
+    antes = m["registro"].read_bytes()
+    _sin_red(vw, monkeypatch)
+    base = ["--plans-dir", str(m["plans"]), "--registro", str(m["registro"]), "--mark-historic",
+            "--title", TITULO_HISTORICO, "--plan", PLAN, "--source-id", _id(66),
+            "--sha-metadata", SHA_METADATA_CENSO, "--reemplazada-por", TITULO_CIERRE]
+    for quitar in ("--plan", "--source-id", "--sha-metadata", "--reemplazada-por", "--title"):
+        incompleto = [a for i, a in enumerate(base) if a != quitar and (i == 0 or base[i - 1] != quitar)]
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            salio = vw.main(incompleto)
+        assert salio == 1 and quitar in buffer.getvalue(), buffer.getvalue()
+        assert m["registro"].read_bytes() == antes, f"sin {quitar} no se escribe nada"
+
+    for cruzado, motivo in (
+        (["--mark-historic", "--title", TITULO_HISTORICO, "--plan", PLAN, "--source-id", _id(66),
+          "--sha-metadata", SHA_METADATA_CENSO, "--reemplazada-por", TITULO_CIERRE, "--upload", PLAN],
+         "con --upload"),
+        (["--mark-historic", "--title", TITULO_HISTORICO, "--plan", PLAN, "--source-id", _id(66),
+          "--sha-metadata", SHA_METADATA_CENSO, "--reemplazada-por", TITULO_CIERRE,
+          "--file", str(m["cuerpo"])], "con --file"),
+        (["--mark-historic", "--title", TITULO_HISTORICO, "--plan", PLAN, "--source-id", "no-es-un-uuid",
+          "--sha-metadata", SHA_METADATA_CENSO, "--reemplazada-por", TITULO_CIERRE],
+         "con --source-id invalido")):
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            salio = vw.main(["--plans-dir", str(m["plans"]), "--registro", str(m["registro"])] + cruzado)
+        assert salio == 1 and "[FAIL]" in buffer.getvalue(), buffer.getvalue()
+        assert m["registro"].read_bytes() == antes, f"el marcaje {motivo} no puede escribir el registro"

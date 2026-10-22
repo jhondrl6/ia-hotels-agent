@@ -6,8 +6,8 @@
 |---|------|------|-------------|-------------------|--------------|--------|
 | 0 | Preparación (Paso 0 + maestro + prompts) | Orquestación | Media | DIRECTO (sesión del 2026-10-15) | — | ✅ Completada 2026-10-15 |
 | 1 | FASE-A — Cierre documental de la tanda (commits `D-QW` + crudos + acta) | Cierre documental | Baja | DIRECTO | Preparación | ✅ Completada 2026-10-21 (crudos `77dea21`, hook 8/8; ver acta FASE-A) |
-| 2 | FASE-B — Censo era-G + decisión por fuente (Operador en el bucle) | Investigación | Media | DIRECTO | FASE-A ✅ | ⬜ Pendiente |
-| 3 | FASE-C — Cura era-G (mecanismo decidido; única fase que puede tocar código) | Implementación | Media | DIRECTO | FASE-B ✅ | ⬜ Pendiente |
+| 2 | FASE-B — Censo era-G + decisión por fuente (Operador en el bucle) | Investigación | Media | DIRECTO | FASE-A ✅ | ✅ Completada 2026-10-22 (censo + decisiones en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/censo-era-g.md`; decisión (a) en las 5 fuentes) |
+| 3 | FASE-C — Cura era-G (mecanismo decidido; única fase que puede tocar código) | Implementación | Media | DIRECTO | FASE-B ✅ | ✅ Completada 2026-10-22 (`registrar_historica()` + `--mark-historic`, 4 dientes con rojo-antes y mutante, delta 63→67; 5 marcas por el writer; AC5 0/0 en la corrida real; `S-SEC-1` definida en §5 del maestro; quick 13/13) |
 | 4 | FASE-RELEASE-4.81.1 — Cierre + write-back + archivado | Cierre | Baja | DIRECTO | FASE-C ✅ | ⬜ Pendiente |
 
 ## Notas de dependencia
