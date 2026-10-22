@@ -1,0 +1,89 @@
+# 08 — Repro del guard muerto del Secrets Check (cp1252 vs staged diff) — 2026-10-22
+
+> Reproducción independiente del hallazgo «declarado y no curado» del cierre documental de FASE-B
+> (commits `658601f`/`9bedf66`). Complementa `07-barrido-staged-utf8.txt` (la relectura en bytes del
+> staged real: 3.033 líneas añadidas, 9 patrones, 0 hallazgos). Este crudo fija el mecanismo del fallo
+> del gate, no la limpieza de la evidencia.
+
+## Mecanismo medido (cada fila es salida real de esta sesión)
+
+| Paso | Salida medida |
+|------|---------------|
+| Encoding heredado por `text=True` sin `encoding=` | `encoding por defecto del interprete: cp1252` (Python 3.13, `venv/Scripts/python.exe`) |
+| El hilo lector revienta | `Exception in thread Thread-1 (_readerthread)` → `UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f in position 149: character maps to <undefined>` (la misma excepción se repite en cada hilo lector) |
+| `subprocess.run` se traga la excepción | `text=True -> OK, returncode: 0 \| stdout es None: True \| bytes stdout: 0` |
+| El guard corta en verde | `salida real de _check_staged_content: [] -> [] con diff staged presente = pata muda` (con 1 línea añadida staged) |
+| El modo bytes lee lo que el gate no leyó | `bytes -> OK, bytes del diff: 164 \| lineas anadidas: 1` |
+
+Detonadores: los bytes de las ranuras ilegales de cp1252 (`0x81`, `0x8D`, `0x8F`, `0x90`, `0x9D`);
+los acentos normales decodifican bien — por eso el fallo es intermitente. Fallas de diseño además de la
+decodificación: `except Exception: return []` y `return []` por `returncode != 0` hacen del gate un
+**fail-open** — cualquier problema del insumo se publica como `SIN_HALLAZGOS`. Mismo raigambre en 4
+sitios de `run_all_validations.py` (`_check_staged_content`, `_run_command`, `_git_tracked_files`,
+`_git_staged_paths`); consumidor, modo de fallo y grado activo/latente de cada uno, discriminados en
+`dependencias-fases.md` §Determinación post-FASE-B (fuente única).
+
+## Repro re-ejecutable
+
+Repo scratch con un staged diff que trae el byte `0x8f` (continuación UTF-8, ilegal en cp1252):
+
+```bash
+mkdir -p "$WINTEMP/faseb-repro-guard/repo" && cd "$WINTEMP/faseb-repro-guard/repo"
+git init -q . && git config user.email t@t && git config user.name t
+printf 'ok\n' > base.txt && git add base.txt && git -c commit.gpgsign=false commit -qm base
+printf 'linea con byte raro: \xc5\x8f y acento: \xc3\xa9\n' > staged.txt && git add staged.txt
+```
+
+Script de repro (correr con el venv canónico desde la raíz del repo):
+
+```python
+import subprocess, locale, sys
+sys.path.insert(0, r"C:\Users\Jhond\Github\iah-cli\scripts")
+repo = r"C:\Users\Jhond\AppData\Local\Temp\faseb-repro-guard\repo"
+print("encoding por defecto del interprete:", locale.getpreferredencoding())
+try:
+    res = subprocess.run(["git", "diff", "--cached", "--diff-filter=ACM", "-U0"],
+                         capture_output=True, text=True, cwd=repo, timeout=10)
+    print("text=True -> OK, returncode:", res.returncode,
+          "| stdout es None:", res.stdout is None, "| bytes stdout:", len(res.stdout or ""))
+except Exception as e:
+    print("text=True -> EXCEPCION:", type(e).__name__, str(e)[:140])
+res2 = subprocess.run(["git", "diff", "--cached", "--diff-filter=ACM", "-U0"],
+                      capture_output=True, cwd=repo, timeout=10)
+texto = res2.stdout.decode("utf-8", errors="replace")
+print("bytes -> OK, bytes del diff:", len(res2.stdout),
+      "| lineas anadidas:", sum(1 for l in texto.split("\n") if l.startswith("+") and not l.startswith("+++")))
+import run_all_validations as rav
+clases = [c for n, c in vars(rav).items() if isinstance(c, type) and "_check_staged_content" in vars(c)]
+print("clase con el guard:", [c.__name__ for c in clases])
+class Fake:
+    repo_root = repo
+print("salida real de _check_staged_content:", clases[0]._check_staged_content(Fake(), []),
+      "-> [] con diff staged presente = pata muda")
+```
+
+## Salida literal de la corrida de esta sesión (2026-10-22)
+
+```
+Exception in thread Thread-1 (_readerthread):
+Traceback (most recent call last):
+  ...
+  File "...\Lib\subprocess.py", line 1612, in _readerthread
+    buffer.append(fh.read())
+  File "...\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x8f in position 149: character maps to <undefined>
+Exception in thread Thread-5 (_readerthread):
+  (misma excepción, segundo hilo lector)
+encoding por defecto del interprete: cp1252
+text=True -> OK, returncode: 0 | stdout es None: True | bytes stdout: 0
+bytes -> OK, bytes del diff: 164 | lineas anadidas: 1
+clase con el guard: ['ValidationRunner']
+salida real de _check_staged_content: [] -> [] con diff staged presente = pata muda
+```
+
+## Estado
+
+Hallazgo **declarado y no curado**; la determinación del Operador (2026-10-22) vive en
+`dependencias-fases.md` §Determinación post-FASE-B: se registra como deuda con ID propio
+(absorbida por FASE-C, documental) y su fix (fail-closed + dientes) queda como fase propia.

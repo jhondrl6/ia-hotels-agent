@@ -26,6 +26,7 @@
 - `tests/test_validate_qmind_writeback_escritura.py` (63 funciones; el doble `QmindFalso` responde los cuatro comandos y **cuenta** subidas y bajadas — los dientes nuevos se montan sobre él, sin red).
 - `.opencode/qmind-writeback/registro.json` (schema 1.1) — **solo lo escribe** `registrar_publicacion()` o el primitivo nuevo que esta fase añada; nunca a mano (regla de la casa: la cura es un writer o un verificador, no el edit).
 - El crudo del rojo-antes (FASE-B) y la CLI de QMind si la decisión es borrar.
+- **Absorción pendiente (determinación del Operador 2026-10-22)**: esta fase registra además la deuda del gate de secretos — ver §Determinación post-FASE-B de `dependencias-fases.md` (fuente única) —; es documental y de **cero código para el gate**.
 
 ### Lecciones capitalizadas aplicables a esta fase
 
@@ -73,6 +74,17 @@
 - [ ] `python scripts/log_phase_completion.py --fase FASE-C --fecha <FECHA_DE_CIERRE_DE_ESTA_FASE> --desc "<el mecanismo en una línea>" --archivos-mod "<rutas reales>" --tests <TESTS_NUEVOS> --check-manual-docs`
 - [ ] `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-C/`: par rojo/verde de AC5, pares de delta, mutantes si hubo.
 
+### Tarea 4 — Absorción documental de la determinación del gate de secretos
+
+**Objetivo**: registrar la deuda del gate de secretos con ID propio, tal como determinó el Operador el 2026-10-22. **Cero código para el gate** (su cura es fase propia).
+
+**Especificación**: los 5 pasos de §Determinación post-FASE-B de `dependencias-fases.md` (fuente única — no se re-transcriben aquí). Coste: ~5 tool calls.
+
+**Criterios de aceptación**:
+- [ ] La deuda queda **definida** (ID en primera celda de la fila, §5 del maestro) y no solo citada: `citados_sin_definicion` la deja de listar.
+- [ ] El par `LECCIONES-INDEX.md` + `lecciones_index.json` regenerado y commiteado junto a la fila (`[6/8]` verde).
+- [ ] Prohibido tocar los CONTEXT congelados (DEC-2/DEC-3), el `10-analisis` de CURA y cualquier doc registrado+publicado en el notebook; ningún código del gate.
+
 ## Tests Obligatorios
 
 | Test | Archivo | Criterio de Éxito |
@@ -108,6 +120,7 @@ python scripts/run_all_validations.py --quick
 - [ ] `DOMAIN_PRIMER` regenerado; `log_phase_completion.py` ejecutado
 - [ ] Cinco cortes declarados; commit/push solo con autorización + pathspec
 - [ ] Post-ejecución 1-7 completa
+- [ ] Determinación del gate de secretos absorbida (T4): deuda definida con ID propio + par del índice; cero código para el gate
 
 ## Restricciones
 
@@ -136,6 +149,7 @@ TAREAS:
 1. T1 Diente rojo-antes + implementación del mecanismo (código solo si FASE-B lo especificó; registro escrito solo por el writer)
 2. T2 Corrida real del writer: 0 [DUPLICADO-VIGENTE], 0 huéspedes; par rojo/verde en evidence; delta R2.3 si hubo código; quick verde
 3. T3 Docs de fase + DOMAIN_PRIMER regenerado + log_phase_completion FASE-C
+4. T4 Absorción documental de la determinación del gate de secretos: definir la deuda con ID propio en §5 del maestro + regenerar el par del índice (spec en dependencias-fases.md §Determinación post-FASE-B); cero código para el gate
 
 CRITERIOS:
 - AC5/AC6 legibles en los crudos; el verde lo dicta el instrumento, no el diff

@@ -12527,6 +12527,8 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/05-quick-post-docs.txt` | NUEVO | 05-Quick-Post-Docs |
 | `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/06-quick-precommit.txt` | NUEVO | 06-Quick-Precommit |
 | `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/07-barrido-staged-utf8.txt` | NUEVO | 07-Barrido-Staged-Utf8 |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/08-repro-guard-cp1252.txt` | NUEVO | 08-Repro-Guard-Cp1252 (post-FASE-B; fila declarada a mano — el escritor solo estampa su fase) |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/09-quick-post-determinacion.txt` | NUEVO | 09-Quick-Post-Determinacion (post-FASE-B; fila declarada a mano) |
 
 ### Archivos Modificados
 | Archivo | Cambio |

@@ -57,6 +57,7 @@ Sin lecciones nuevas con ID acuñado en FASE-A (acuñar IDs es decisión del Ope
 | Push de AC1 (rutas del registro) | Pendiente desde FASE-A (2026-10-21) | Operador | Autorizar push con L3 entre el último commit y el push; la paridad con `origin/master` se mide al empujar |
 | Hook `[8/8]` cross-device bajo WSL | Documentado en el acta §2 | Operador | Commitear con `TMPDIR` en el mismo FS que el repo (`/mnt/c/Users/Jhond/AppData/Local/Temp`); quick certificado con `venv/Scripts/python.exe` |
 | Cura era-G (5 marcas `reemplazada` vía `registrar_historica()`) | Listo para FASE-C (2026-10-22): mecanismo y coste especificados en el censo §5.1 | Operador | Ejecutar FASE-C en sesión nueva con `05-prompt-inicio-sesion-fase-C.md` |
+| `S-SEC-1` — guard muerto del Secrets Check (cp1252 + fail-open en la pata staged) | Determinado 2026-10-22: se registra como deuda con ID propio (absorción T4 de FASE-C) y su fix queda como fase propia — spec en `dependencias-fases.md` §Determinación post-FASE-B | Operador | FASE-C define la deuda en §5 del maestro + regenera el par; el fix fail-closed con dientes espera fase propia |
 
 ## Métricas de Ejecución (referencia, no copia)
 
@@ -70,6 +71,7 @@ Sin lecciones nuevas con ID acuñado en FASE-A (acuñar IDs es decisión del Ope
 | DEC-1 | 4.81.1 cubre las tres curas en una sola unidad de versión | Decisión del Operador (2026-10-15) al elegir el plan consolidado: una entrada de CHANGELOG y una nota de ronda por los 9 tests | Dos releases (prompt documental con 4.81.1 ya + plan aparte para era-G) — coste: dos bumps y la segunda vía esperando igual |
 | DEC-4 | Borrar del notebook es decisión escrita del Operador, por fuente | Irreversible sobre contenido publicado; el writer solo marca | Borrar en bloque al medir el censo — rechazada por irreversible y sin autorización por fuente |
 | DEC-B.1 | Las 5 fuentes de la deuda era-G se **marcan como reemplazadas en el registro**, no se borran (decisión del Operador registrada en la sesión, 2026-10-22) | La opción (a) preserva la contabilidad (L-QW.2) y es reversible sobre el registro; además 2 de las 5 fuentes no tienen respaldo byte-exacto medido (censo §5.2), así que el borrado perdería contenido publicado | Borrar las 5 del notebook (irreversible, pierde sin respaldo las filas 1 y 5) y dejarlas declaradas huésped/excepción (normaliza la deuda sin resolverla y el mecanismo por archivo aparte exige código nuevo en el predicado) |
+| DEC-B.2 | El hallazgo del gate de secretos (pata staged que no lee, `S-SEC-1`) se registra como **deuda con ID propio absorbida por FASE-C** (documental) y su fix queda como **fase propia** (decisión del Operador, 2026-10-22) | Deja el verde con dueño sin abrir código en fases de censo/cierre; la acuñación del ID y la definición en §5 evitan la cita sin definición | Curar el script en la fase de cierre (mueve los conteos de tests que AC7 declara para la ronda) y dejarlo solo en el mensaje de commit (sin dueño ni vía de cierre: la casa ya pagó esa lección con las anotaciones que el push venció) |
 
 ## Checklist de Cierre (llenar en FASE-RELEASE)
 
