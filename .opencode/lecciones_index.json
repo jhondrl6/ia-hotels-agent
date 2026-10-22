@@ -6201,19 +6201,19 @@
       ]
     },
     {
+      "id": "D-QW",
+      "familia": "D",
+      "total_citas": 11,
+      "planes_que_lo_citan": [
+        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+      ]
+    },
+    {
       "id": "L-P2.4",
       "familia": "L",
       "total_citas": 11,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
-      ]
-    },
-    {
-      "id": "D-QW",
-      "familia": "D",
-      "total_citas": 10,
-      "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {

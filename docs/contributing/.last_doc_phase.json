@@ -307,8 +307,8 @@
   "16": "FASE-A2",
   ".opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md": "CURA-B2-1-SESION-2",
   ".opencode/wiring_report.json": "FASE-C2",
-  ".opencode/LECCIONES-INDEX.md": "FASE-VERIFY",
-  ".opencode/lecciones_index.json": "FASE-VERIFY",
+  ".opencode/LECCIONES-INDEX.md": "FASE-A",
+  ".opencode/lecciones_index.json": "FASE-A",
   ".opencode/qmind-writeback/registro.json": "CURA-B2-1-SESION-2",
   "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md": "CURA-B2-1-SESION-2",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md": "FASE-A3",
@@ -337,5 +337,11 @@
   "modules/quality_gates/tribunal/alignment_reviewer.py": "FASE-B",
   "modules/quality_gates/tribunal/honesty_reviewer.py": "FASE-C",
   "data_validation/contradiction_engine.py": "FASE-C",
-  "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/": "FASE-C"
+  "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/": "FASE-C",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md": "FASE-A"
 }

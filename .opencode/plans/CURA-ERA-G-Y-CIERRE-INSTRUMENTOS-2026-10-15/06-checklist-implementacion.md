@@ -5,7 +5,7 @@
 | # | Fase | Tipo | Complejidad | Modo de ejecución | Dependencias | Estado |
 |---|------|------|-------------|-------------------|--------------|--------|
 | 0 | Preparación (Paso 0 + maestro + prompts) | Orquestación | Media | DIRECTO (sesión del 2026-10-15) | — | ✅ Completada 2026-10-15 |
-| 1 | FASE-A — Cierre documental de la tanda (commits `D-QW` + crudos + acta) | Cierre documental | Baja | DIRECTO | Preparación | ⬜ Pendiente |
+| 1 | FASE-A — Cierre documental de la tanda (commits `D-QW` + crudos + acta) | Cierre documental | Baja | DIRECTO | Preparación | ✅ Completada 2026-10-21 (crudos `77dea21`, hook 8/8; ver acta FASE-A) |
 | 2 | FASE-B — Censo era-G + decisión por fuente (Operador en el bucle) | Investigación | Media | DIRECTO | FASE-A ✅ | ⬜ Pendiente |
 | 3 | FASE-C — Cura era-G (mecanismo decidido; única fase que puede tocar código) | Implementación | Media | DIRECTO | FASE-B ✅ | ⬜ Pendiente |
 | 4 | FASE-RELEASE-4.81.1 — Cierre + write-back + archivado | Cierre | Baja | DIRECTO | FASE-C ✅ | ⬜ Pendiente |

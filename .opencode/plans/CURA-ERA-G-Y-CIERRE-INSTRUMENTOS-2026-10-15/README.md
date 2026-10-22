@@ -7,14 +7,14 @@
 | Fase | Estado |
 |------|--------|
 | Preparación (Paso 0 + maestro + prompts) | ✅ 2026-10-15 |
-| FASE-A — Cierre documental (commits `D-QW` + crudos + acta) | ⬜ Pendiente |
+| FASE-A — Cierre documental (commits `D-QW` + crudos + acta) | ✅ 2026-10-21 — crudos `15-`…`26-` en `77dea21` (12 rutas, hook 8/8); registro `D-QW` ya en `85ab952`; acta y post-ejecución en el commit `docs(plan)` de la sesión. Sin push (Operador) |
 | FASE-B — Censo era-G + decisión por fuente | ⬜ Pendiente |
 | FASE-C — Cura era-G | ⬜ Pendiente |
 | FASE-RELEASE-4.81.1 — Cierre + write-back + archivado | ⬜ Pendiente |
 
 ## Cabos que este plan cierra
 
-1. **El registro `D-QW` está sin commitear** (contexto raíz + crudo `14-` + par del índice regenerado) y los crudos de la tanda viven en `temp/` (gitignored). → FASE-A. **Vencido en su primera mitad el 2026-10-15**: el registro quedó versionado en `85ab952`; los crudos de `temp/` siguen sin persistir, así que el cabo lo conserva FASE-A.
+1. **El registro `D-QW` está sin commitear** (contexto raíz + crudo `14-` + par del índice regenerado) y los crudos de la tanda viven en `temp/` (gitignored). → FASE-A. **Vencido en su primera mitad el 2026-10-15**: el registro quedó versionado en `85ab952`. **Cerrado del todo el 2026-10-21**: los 12 crudos de `temp/` quedaron versionados en `77dea21`, con sus shas de blob y disco en el acta (métricas por referencia: `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/acta-cierre-documental.md`).
 2. **La deuda era-G no tiene censo ni decisiones**: 5 fuentes publicadas antes de que existiera la marca de reemplazo, y 5 huéspedes sin contabilidad. Resolverlo exige la decisión escrita del Operador por fuente (borrar es irreversible). → FASE-B + FASE-C.
 3. **No hay entrada de versión** para la tanda ya empujada (`2e048e6`, `1f95e84`): el CHANGELOG la publica junto a era-G en 4.81.1. → FASE-RELEASE.
 
@@ -25,6 +25,7 @@
 - Prompts: `05-prompt-inicio-sesion-fase-A.md`, `-fase-B.md`, `-fase-C.md`, `-fase-RELEASE.md`.
 - Contexto del hallazgo de origen: `.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` (define `D-QW-1`/`D-QW-2`) y `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt` (la segunda vía, ya curada).
 - Evidencia del plan: `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/`.
+- Acta del cierre documental (FASE-A): `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/acta-cierre-documental.md` (shas de blob y disco, verdes re-ejecutados, frontera con FASE-B).
 
 ## Cómo se ejecuta
 

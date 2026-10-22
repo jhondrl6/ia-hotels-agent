@@ -1,0 +1,16 @@
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+?? .opencode/context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21.md
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/15-frescura-post-cura.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/16-frescura-segunda-corrida.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/17-indice-antes.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/18-opencode-refs.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/19-quick-post-cura.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/20-writeback-post-cura.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/21-hook-commit-2.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/22-quick-tras-deuda.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/23-quick-plan-nuevo.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/24-mensaje-commit-1.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/25-mensaje-commit-2.txt
+?? evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/26-l3-5341e15-a-1f95e84.json
+?? evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/

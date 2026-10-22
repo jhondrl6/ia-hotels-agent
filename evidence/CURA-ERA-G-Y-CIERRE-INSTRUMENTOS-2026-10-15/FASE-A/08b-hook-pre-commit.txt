@@ -1,0 +1,57 @@
+
+========================================
+Pre-Commit Hook - IA Hoteles Agent
+========================================
+
+[1/8] Checking version consistency...
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.81.0
+  VERSION.yaml:   4.81.0
+  Codename:       Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-VERIFY
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+[1/8] OK: Version consistency PASSED
+[2/8] Checking file synchronization...
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+[2/8] OK: Files synchronized
+[3/8] Checking .opencode references...
+[PASS] OpenCode References: todas las referencias existen
+[3/8] OK: OpenCode references PASSED
+[4/8] Checking plan citations...
+[4/8] OK: Plan citations PASSED
+[5/8] Checking plan closure rows...
+[5/8] OK: Plan closure PASSED
+[6/8] Checking lesson index freshness...
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=378 commit=11 sin_fuente=0
+
+FAIL: el indice de lecciones esta vencido (cambiaron .md de plans/ o context/).
+
+Es un artefacto generado: NO lo edites a mano. Regenera, re-stage y re-commit:
+  python scripts/build_lesson_index.py
+  git add .opencode/LECCIONES-INDEX.md .opencode/lecciones_index.json
+
+COMMIT-EXIT=1

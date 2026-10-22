@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-15
+> **Ultima actualizacion:** 2026-10-21
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 529
+> **Total fases completadas:** 530
 
 ---
 
@@ -12462,6 +12462,47 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 | `VERSION.yaml` | Version |
 | `CHANGELOG.md` | Changelog |
 | `docs/GUIA_TECNICA.md` | Guia Tecnica |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-A - 2026-10-21
+**Descripcion:** Cierre documental de la tanda de instrumentos (D-QW-1/2, crudos, acta)
+**Nota:** Los 12 crudos de verificacion de la sesion viven en evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/ (01-..09-) junto al acta. Commit de crudos: 77dea21 (hook 8/8). Sin push por decision del Operador; AC1 conserva pendiente su palabra 'empujadas'.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/15-frescura-post-cura.txt` | NUEVO | 15-Frescura-Post-Cura |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/16-frescura-segunda-corrida.txt` | NUEVO | 16-Frescura-Segunda-Corrida |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/17-indice-antes.txt` | NUEVO | 17-Indice-Antes |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/18-opencode-refs.txt` | NUEVO | 18-Opencode-Refs |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/19-quick-post-cura.txt` | NUEVO | 19-Quick-Post-Cura |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/20-writeback-post-cura.txt` | NUEVO | 20-Writeback-Post-Cura |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/21-hook-commit-2.txt` | NUEVO | 21-Hook-Commit-2 |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/22-quick-tras-deuda.txt` | NUEVO | 22-Quick-Tras-Deuda |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/23-quick-plan-nuevo.txt` | NUEVO | 23-Quick-Plan-Nuevo |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/24-mensaje-commit-1.txt` | NUEVO | 24-Mensaje-Commit-1 |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/25-mensaje-commit-2.txt` | NUEVO | 25-Mensaje-Commit-2 |
+| `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/26-l3-5341e15-a-1f95e84.json` | NUEVO | 26-L3-5341E15-A-1F95E84 |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/acta-cierre-documental.md` | NUEVO | Acta-Cierre-Documental |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md` | Readme |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._

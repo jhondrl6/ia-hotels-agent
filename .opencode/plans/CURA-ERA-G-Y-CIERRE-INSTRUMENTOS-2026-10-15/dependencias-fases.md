@@ -19,6 +19,16 @@ Preparacion (sesion del 2026-10-15: Paso 0 + maestro + prompts)
     FASE-RELEASE-4.81.1 ── bump + docs + write-back + archivado (orden R2.5/R2.10)
 ```
 
+## Estado de fases
+
+| Fase | Estado |
+|------|--------|
+| Preparación (Paso 0 + maestro + prompts) | ✅ 2026-10-15 |
+| FASE-A | ✅ 2026-10-21 — crudos `15-`…`26-` en `77dea21` (12 rutas, hook 8/8 con `TMPDIR` en el FS del repo); las 4 rutas del registro ya estaban en `85ab952`; acta y post-ejecución en el commit `docs(plan)` de la sesión. Sin push (Operador). Población medida: 1 gobernado (la cifra «2» del prompt está vencida por `26bd0f5`) |
+| FASE-B | ⬜ Pendiente |
+| FASE-C | ⬜ Pendiente |
+| FASE-RELEASE-4.81.1 | ⬜ Pendiente |
+
 ## Conflictos de archivos por fase
 
 | Archivo | FASE-A | FASE-B | FASE-C | RELEASE |
