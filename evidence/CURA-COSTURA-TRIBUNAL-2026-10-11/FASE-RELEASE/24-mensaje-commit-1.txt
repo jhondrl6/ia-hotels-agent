@@ -1,0 +1,20 @@
+docs(release): 4.81.0 cierra CURA-COSTURA-TRIBUNAL con su archivado, sus 13 crudos y los derivados
+
+La FASE-RELEASE del plan queda escrita por su propia sesion: VERSION 4.80.0 -> 4.81.0 (minor,
+porque hay cambios de comportamiento en gates y Tribunal), la entrada del CHANGELOG con sus
+limites publicados (cuatro AC certificadas solo por suite, AC11 con rama no producible en regimen
+ZIP-only, y las deudas S-CST-1 y P6.5 con dono Operador), la fila FASE-RELEASE-4.81.0 del REGISTRY
+y el `git mv` del plan a `.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11/`.
+
+Viajan porque la letra las nombra, no porque las escribio esta tanda: los 13 crudos de
+`evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/` (del `01-` al `13-segunda-via-ciega.txt`,
+que es el escrito que abre la tanda de la segunda via) y los derivados que re-escribio su propio
+escritor - el par `LECCIONES-INDEX.md` / `lecciones_index.json`, `plan_citations_baseline.json`,
+`.last_doc_phase.json`, `SYSTEM_STATUS.md`, `DOMAIN_PRIMER.md`, `AGENTS.md`, `.cursorrules`,
+`README.md`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `docs/cobertura-historia.md` y
+`.agents/workflows/README.md`.
+
+El `10-analisis` del plan queda congelado: su `sha_cuerpo` publicado (5c54f5ed...) casa byte a byte
+con el disco, y editarlo en el futuro lo deja VENCIDO. Su registro y sus instantaneas no viajan aqui
+sino en el commit siguiente, porque ese JSON unico ya lleva las dos entradas de CONTEXT que publico
+la tanda de la segunda via y no es divisible.

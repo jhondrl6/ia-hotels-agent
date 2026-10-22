@@ -1,0 +1,79 @@
+
+========================================
+Pre-Commit Hook - IA Hoteles Agent
+========================================
+
+[1/8] Checking version consistency...
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.81.0
+  VERSION.yaml:   4.81.0
+  Codename:       Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-VERIFY
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+[1/8] OK: Version consistency PASSED
+[2/8] Checking file synchronization...
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+[2/8] OK: Files synchronized
+[3/8] Checking .opencode references...
+[PASS] OpenCode References: todas las referencias existen
+[3/8] OK: OpenCode references PASSED
+[4/8] Checking plan citations...
+[4/8] OK: Plan citations PASSED
+[5/8] Checking plan closure rows...
+[5/8] OK: Plan closure PASSED
+[6/8] Checking lesson index freshness...
+[OK] Índice de lecciones fresco (387 IDs)
+[fechas] nombre=376 commit=11 sin_fuente=0
+[6/8] OK: Lesson index PASSED
+[7/8] Checking lesson capitalization...
+  CURA-BLOQUE-HUESPED-QMIND-2026-10-10: 3 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  CURA-COSTURA-TRIBUNAL-2026-10-11: 4 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  CURA-INSTRUMENTOS-QMIND-S15-2026-10-07: 8 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  EVALUACION-JEV-TYPESAFE-2026-09-21: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09
+  PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18: 5 fuentes capitalizadas -> Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20: 7 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09
+cobertura: 8 plan(es) en alcance (CURA-BLOQUE-HUESPED-QMIND-2026-10-10, CURA-COSTURA-TRIBUNAL-2026-10-11, CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, EVALUACION-JEV-TYPESAFE-2026-09-21, PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20) | 34 archivados en el corpus, 8 de ellos en alcance | 20 exentos por fecha anterior a 2026-09-12 | 6 exentos SIN FECHA PARSEABLE (DT4-RESIDUAL-FIXES, REFACTOR-CAPEX-BREAKDOWN-V4.60.0, REFACTOR-PENDIENTE-V4.58.0, ROICRII, ROICRIII, ROICRIIIF) | descripcion del alcance: regla=cutoff en 2 texto(s) gobernado(s)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+[7/8] OK: Lesson capitalization PASSED
+[8/8] Checking briefing packs in committed tree...
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE.md
+[OK] packs en el árbol de 545c0eb6a89ea1d93f3ddc2e2fa669f1798ae70b (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+[8/8] OK: Briefing packs in committed tree PASSED
+
+========================================
+All checks PASSED - Commit allowed
+========================================
+
+[master 1f95e84] fix(qmind): la segunda via de gobernacion recorta la extension y el writer reemplaza por documento
+ 8 files changed, 1359 insertions(+), 6 deletions(-)
+ create mode 100644 .opencode/qmind-writeback/instantaneas/CURA-COSTURA-TRIBUNAL-2026-10-11--10-analisis_CURA-COSTURA-TRIBUNAL-2026-10-11_lecciones_aprendidas--5c54f5ed3cb9345e.md
+ create mode 100644 .opencode/qmind-writeback/instantaneas/CURA-COSTURA-TRIBUNAL-2026-10-11--CONTEXT_CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12--f6e14e735e5104da.md
+ create mode 100644 .opencode/qmind-writeback/instantaneas/CURA-COSTURA-TRIBUNAL-2026-10-11--CONTEXT_CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10--3cebfeb58e48b928.md

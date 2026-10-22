@@ -1,0 +1,32 @@
+fix(qmind): la segunda via de gobernacion recorta la extension y el writer reemplaza por documento
+
+Dos instrumentos, cada uno con su diente rojo ANTES de la cura (captura con causa en el crudo
+`evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/13-segunda-via-ciega.txt`).
+
+1. `verify_qmind_context_freshness.py` - `NOMBRE_CONTEXT` lleva el punto en su clase, captura la
+   grafia canonica CON extension y el resolver la recomponia: buscaba `CONTEXT-FOO.md.md` y la via
+   de los planes archivados no gobernaba un solo contexto desde que se instrumentó (S34). Se recorta
+   un sufijo `.md` EXACTO antes de componer. Se eligio el recorte y no quitar el punto de la clase
+   porque con la clase sin punto una grafia terminada en punto de frase (`CONTEXT-FOO.md.`) capturaria
+   `CONTEXT-FOO` y gobernaria: la via deberia tragar solo lo que nombra una ruta. Quedan fuera, cada
+   una con su diente, el punto de frase y las dos abreviaturas medidas del corpus
+   (`CONTEXT-JEV-...md`, `CONTEXT-...-2026-08-04.md`), con sus referidos completos montados para que
+   la ausencia afirme exactitud del resolver y no verde vacio. Poblacion real: 0 -> 2 CONTEXT
+   gobernados.
+
+2. `validate_qmind_writeback.py` - `registrar_publicacion` marcaba `reemplazada` a TODA entrada vigente
+   del mismo plan, y `verificar_contenido` solo recorre vigentes: publicar un `CONTEXT` habria dejado
+   el `10-analisis` del plan sin auditoria de vigencia ni de fidelidad remota. Nace `clave_de_documento()`
+   (titulo recortado de cierre y de fecha final) y el reemplazo es entre documentos de la misma clave;
+   el diente viejo de AC3 sigue verde porque `10-analisis: PLAN-A-2026-09-01 (...)` y
+   `10-analisis: PLAN-A (cierre v2)` comparten clave. Registro: 7 -> 9 entradas, 6 -> 8 vigentes.
+
+Dientes: 5 en `tests/test_verify_qmind_context_freshness.py` (41 passed) y 4 en
+`tests/test_validate_qmind_writeback_escritura.py` (63 passed), con dos controles negativos anclados a
+la revision publicada fija `5341e15` y no a HEAD. Tambien viajan su registro y sus tres instantaneas,
+incluida la del `10-analisis` que publico la sesion del cierre: es un unico JSON y no es divisible.
+
+Ciclo atomico cerrado con las dos publicaciones que la poblacion nueva exige - fuente
+`01a1423b-0c83-7855-ae0f-280ab7d22611` (sha `f6e14e735e5104da...`) y
+`01a1423b-48c7-7d44-b057-fab47f7bb74e` (sha `3cebfeb58e48b928...`) - verificadas por descarga+sha256
+sobre los bytes del arbol, no por titulo. Sin bump: la decision 4.81.1 / esperar sigue en el Operador.

@@ -1,0 +1,2 @@
+99bcd6bf87860e84ce6c221c9800fdd621670535588439557a19614e603dc0a5 *.opencode/LECCIONES-INDEX.md
+f91cc01b6ac31d6e5669d7ffe09ae873e6d544ea7640091c470ff372ade26486 *.opencode/lecciones_index.json
