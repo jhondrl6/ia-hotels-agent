@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-21
+> **Ultima actualizacion:** 2026-10-22
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 530
+> **Total fases completadas:** 531
 
 ---
 
@@ -12503,6 +12503,39 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
 | `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
 | `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B - 2026-10-22
+**Descripcion:** Censo de la deuda era-G: 5 fuentes identificadas (id/titulo/sha/fecha/causa), cruce de poblaciones 5/5 identico (rojo DUPLICADO-VIGENTE y contador de huespedes = misma poblacion), 0 huespedes CONTEXT verificado por titulos. Decision del Operador por las 5 fuentes: (a) marcar como reemplazada en el registro; mecanismo especificado con coste medido (primitivo nuevo registrar_historica(), firma propuesta y 3 dentes). Cero codigo. Rojo-antes EXIT 1 crudo guardado (intento 1 de 1). Quick 13/13 venv canonico
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/censo-era-g.md` | NUEVO | Censo-Era-G |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/01-writeback-rojo-antes.txt` | NUEVO | 01-Writeback-Rojo-Antes |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/02-notebook-source-list.json` | NUEVO | 02-Notebook-Source-List |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/02-notebook-source-list.err` | NUEVO | 02-Notebook-Source-List |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/03-respaldos-byte-exactos.txt` | NUEVO | 03-Respaldos-Byte-Exactos |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/04-quick-cierre.txt` | NUEVO | 04-Quick-Cierre |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/05-quick-post-docs.txt` | NUEVO | 05-Quick-Post-Docs |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/06-quick-precommit.txt` | NUEVO | 06-Quick-Precommit |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/07-barrido-staged-utf8.txt` | NUEVO | 07-Barrido-Staged-Utf8 |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md` | Readme |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._

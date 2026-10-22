@@ -338,10 +338,10 @@
   "modules/quality_gates/tribunal/honesty_reviewer.py": "FASE-C",
   "data_validation/contradiction_engine.py": "FASE-C",
   "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-C/": "FASE-C",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md": "FASE-A",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md": "FASE-A",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md": "FASE-B",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md": "FASE-B",
   ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md": "FASE-A",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md": "FASE-A",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md": "FASE-A",
-  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md": "FASE-A"
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md": "FASE-B",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md": "FASE-B",
+  ".opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md": "FASE-B"
 }

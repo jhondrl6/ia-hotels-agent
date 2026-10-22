@@ -1,0 +1,12 @@
+Barrido de los 9 patrones del verificador sobre el staged diff, decodificado utf-8/replace
+Motivo: _check_staged_content usa text=True con encoding por defecto (cp1252) y el diff trae
+bytes 0x8f (UTF-8 multibyte en censo-era-g.md; cp1252 en 01/04/05-*.txt). subprocess.run deja
+stdout=None, el guard 'if not staged_diff: return []' corta y el check imprime SIN_HALLAZGOS
+con 0 lineas leidas por esa pata. Este barrido es la misma lista de patrones, leida si.
+
+bytes del diff staged: 261286
+lineas anadidas leidas: 3033
+patrones aplicados: 9
+hallazgos: 0
+
+contraste con la pata original (text=True, sin encoding): stdout=None -> el verificador lee 0 lineas

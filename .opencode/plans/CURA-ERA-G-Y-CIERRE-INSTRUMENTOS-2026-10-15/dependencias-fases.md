@@ -25,7 +25,7 @@ Preparacion (sesion del 2026-10-15: Paso 0 + maestro + prompts)
 |------|--------|
 | Preparación (Paso 0 + maestro + prompts) | ✅ 2026-10-15 |
 | FASE-A | ✅ 2026-10-21 — crudos `15-`…`26-` en `77dea21` (12 rutas, hook 8/8 con `TMPDIR` en el FS del repo); las 4 rutas del registro ya estaban en `85ab952`; acta y post-ejecución en el commit `docs(plan)` de la sesión. Sin push (Operador). Población medida: 1 gobernado (la cifra «2» del prompt está vencida por `26bd0f5`) |
-| FASE-B | ⬜ Pendiente |
+| FASE-B | ✅ 2026-10-22 — censo + decisiones en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/censo-era-g.md`; rojo-antes `EXIT 1` (intento 1 de 1, crudo `01-`); cruce de poblaciones 5/5 idéntico (el rojo y el contador son la misma población); 0 huéspedes `CONTEXT:` verificado por títulos. Decisión del Operador para las 5 fuentes: **(a) marcar como reemplazada en el registro**. **FASE-C editará exactamente**: `scripts/validate_qmind_writeback.py` (primitivo nuevo `registrar_historica()` + wiring CLI, firma y coste en el censo §5.1), `tests/test_validate_qmind_writeback_escritura.py` (3 dientes: contabilidad, no-vigencia, idempotencia) y `.opencode/qmind-writeback/registro.json` **solo por el writer** (5 entradas `reemplazada`) |
 | FASE-C | ⬜ Pendiente |
 | FASE-RELEASE-4.81.1 | ⬜ Pendiente |
 
@@ -36,9 +36,9 @@ Preparacion (sesion del 2026-10-15: Paso 0 + maestro + prompts)
 | `.opencode/context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` | **COMMITEA** (ya escrito) | — | — | — |
 | `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/15-…` (crudos) | **CREA** | — | — | — |
 | `.opencode/LECCIONES-INDEX.md` + `.opencode/lecciones_index.json` | **COMMITEA** (par ya regenerado) | — | — | **REGENERA** (write-back → `git mv` → regenera) |
-| `.opencode/qmind-writeback/registro.json` | — | — | **EDITA solo por el writer** (si el mecanismo es «marcar») | **EDITA** (entrada del write-back del plan, por el writer) |
-| `scripts/validate_qmind_writeback.py` | — | — | **EDITA — condicional** (primitivo nuevo o política declarada, solo si FASE-B lo especificó) | — |
-| `tests/test_validate_qmind_writeback_escritura.py` | — | — | **EDITA — condicional** (dientes del mecanismo) | — |
+| `.opencode/qmind-writeback/registro.json` | — | — | **EDITA solo por el writer** — mecanismo (a) decidido en FASE-B (2026-10-22): 5 entradas `reemplazada` vía `registrar_historica()` | **EDITA** (entrada del write-back del plan, por el writer) |
+| `scripts/validate_qmind_writeback.py` | — | — | **EDITA** — especificado en FASE-B (2026-10-22): primitivo `registrar_historica()` + wiring CLI (firma propuesta y coste medido en el censo §5.1) | — |
+| `tests/test_validate_qmind_writeback_escritura.py` | — | — | **EDITA** — 3 dientes del mecanismo (contabilidad, no-vigencia, idempotencia; censo §5.1) | — |
 | Notebook `iah-cli-lecciones` | **NO SE TOCA** | **NO SE TOCA** (solo se lista) | **BORRA solo con autorización por fuente** (si la decisión es b) | **SUBE** el 10-analisis del plan (write-back) |
 | `VERSION.yaml`, `CHANGELOG.md`, `docs/GUIA_TECNICA.md`, `docs/cobertura-historia.md`, `AGENTS.md` §Cobertura | — | — | — | **EDITA** |
 | `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/` (docs del plan) | todas | todas | todas | todas (y `git mv` a `Archives/`) |
