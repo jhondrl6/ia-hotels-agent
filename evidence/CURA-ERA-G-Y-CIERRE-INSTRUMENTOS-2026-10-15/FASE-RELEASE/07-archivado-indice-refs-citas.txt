@@ -1,0 +1,24 @@
+# crudo 07 - R2.10 pasos 3, 3b, refs y citas (archivar al final, con el write-back ya hecho)
+# tip: 2e4ba97 | fecha de inicio: 2026-10-22T17:11:12-05:00
+----------------------------------------------------------------------
+## (3) git mv del plan a Archives/
+MV_EXIT=0
+## renombres contados por git:
+11
+## (3b) build_lesson_index.py (congela la ruta nueva)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=379 commit=11 sin_fuente=0
+IDX_EXIT=0
+## validate_opencode_refs.py --fix
+  [FIX] 05-prompt-inicio-sesion-fase-B.md: .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 -> .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+  [FIX] 05-prompt-inicio-sesion-fase-C.md: .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 -> .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+  [FIX] 05-prompt-inicio-sesion-fase-RELEASE.md: .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 -> .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+  [FIX] dependencias-fases.md: .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 -> .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+[FIX] 5 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas
+REFS_EXIT=0
+## validate_plan_citations.py --update-baseline
+Baseline fijado: 81 archivos, 745 citas en C:\Users\Jhond\Github\iah-cli\.opencode\plans
+CITAS_EXIT=0
+# fecha de fin: 2026-10-22T17:11:13-05:00

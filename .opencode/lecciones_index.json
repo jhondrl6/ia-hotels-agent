@@ -336,7 +336,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 27,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -353,7 +353,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 22,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -432,7 +432,7 @@
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20",
         "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
       ],
@@ -1977,7 +1977,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 12,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
       "redefiniciones": []
@@ -1996,7 +1996,7 @@
       "planes_que_lo_citan": [
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ],
       "redefiniciones": []
     },
@@ -3532,7 +3532,7 @@
       "total_citas": 16,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -3551,7 +3551,7 @@
       "total_citas": 15,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
       "redefiniciones": []
@@ -3587,8 +3587,8 @@
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": []
     },
@@ -3679,7 +3679,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 4,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ],
       "redefiniciones": []
     },
@@ -3695,7 +3695,7 @@
       "fuente_fecha": "nombre",
       "total_citas": 10,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ],
       "redefiniciones": []
     },
@@ -4050,8 +4050,8 @@
       "total_citas": 7,
       "planes_que_lo_citan": [
         "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10"
       ],
       "redefiniciones": [
@@ -4375,8 +4375,8 @@
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": [
         "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
@@ -5430,7 +5430,7 @@
       "total_citas": 37,
       "planes_que_lo_citan": [
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
       "redefiniciones": []
@@ -5942,7 +5942,7 @@
       "id": "S-SEC-1",
       "familia": "S",
       "enunciado": "El Secrets Check puede publicar SIN_HALLAZGOS sin leer su insumo: la decodificación heredada sin encoding= revienta el hilo lector del diff staged ilegible, run() devuelve stdout=None sin excepción y los guards de _check_staged_content cierran en verde (fail-open). Alcance: los cuatro sitios de run_all_validations.py con el mismo raigambre; fix fail-closed con dientes y par de crudos legible/ilegible en fase propia (dueño Operador)",
-      "plan": "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+      "plan": "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
       "seccion": "Seguimientos abiertos",
@@ -6219,7 +6219,7 @@
       "familia": "D",
       "total_citas": 11,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {
@@ -6245,7 +6245,7 @@
       "total_citas": 9,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ]
     },
@@ -6272,6 +6272,16 @@
       "total_citas": 8,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+      ]
+    },
+    {
+      "id": "S-CIM-1",
+      "familia": "S",
+      "total_citas": 8,
+      "planes_que_lo_citan": [
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -6328,16 +6338,6 @@
       "total_citas": 6,
       "planes_que_lo_citan": [
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03"
-      ]
-    },
-    {
-      "id": "S-CIM-1",
-      "familia": "S",
-      "total_citas": 6,
-      "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
-        "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ]
     },
     {
@@ -6409,7 +6409,7 @@
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11",
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {
@@ -6883,7 +6883,7 @@
       "familia": "L",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {
@@ -6915,7 +6915,7 @@
       "familia": "L",
       "total_citas": 1,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ]
     },
     {

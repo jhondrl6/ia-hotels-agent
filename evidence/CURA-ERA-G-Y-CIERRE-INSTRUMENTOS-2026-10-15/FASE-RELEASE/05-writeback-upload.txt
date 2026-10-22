@@ -1,0 +1,10 @@
+# crudo 05 - E-write-back (R2.10 paso 1): el plan aun en raiz
+# comando: venv/Scripts/python.exe scripts/validate_qmind_writeback.py --upload CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15
+# tip: 2e4ba9789108ed8ee739ecb4fe3db42069e108f3 | fecha: 2026-10-22T17:09:45-05:00
+# cuerpo publicado: el 10-analisis congelado con esta subida (ver checklist de cierre)
+----------------------------------------------------------------------
+[UP] 10-analisis: CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 (lecciones aprendidas y decisiones)
+[FAIL] Upload falló: error: QMind network request failed
+
+[RESUMEN] upload=0 skip=0 fail=1
+EXIT=1

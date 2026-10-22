@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-22
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 532
+> **Total fases completadas:** 533
 
 ---
 
@@ -12567,6 +12567,76 @@ _Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 4 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE-4.81.1 - 2026-10-22
+**Descripcion:** Release 4.81.1 - instrumentos QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `.opencode/qmind-writeback/instantaneas/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15--10-analisis_CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-1--d35b81786511daaa.md` | NUEVO | Cura-Era-G-Y-Cierre-Instrumentos-2026-10-15--10-Analisis Cura-Era-G-Y-Cierre-Instrumentos-2026-10-1--D35B81786511Daaa |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/01-e1-version-consistency.txt` | NUEVO | 01-E1-Version-Consistency |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/02-cobertura-medida-canonical.txt` | NUEVO | 02-Cobertura-Medida-Canonical |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/03-domain-primer-vencido-y-cura-TRANSCRITO.txt` | NUEVO | 03-Domain-Primer-Vencido-Y-Cura-Transcrito |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/04-modo-completo-PYTHONUTF8.txt` | NUEVO | 04-Modo-Completo-Pythonutf8 |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/05-writeback-upload.txt` | NUEVO | 05-Writeback-Upload |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/05b-writeback-upload-intento-2.txt` | NUEVO | 05B-Writeback-Upload-Intento-2 |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/06-writeback-strict.txt` | NUEVO | 06-Writeback-Strict |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/07-archivado-indice-refs-citas.txt` | NUEVO | 07-Archivado-Indice-Refs-Citas |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/08-quick-cierre.txt` | NUEVO | 08-Quick-Cierre |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/09-log-release.txt` | NUEVO (declarado a mano) | 09-Log-Release - nacio despues de que este escritor estampara su entrada |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/10-quick-post-docs.txt` | NUEVO (declarado a mano) | 10-Quick-Post-Docs - idem; la unidad del cierre se declara en la fila de `REGISTRY.md` de Archivos Modificados |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/11-quick-post-registry.txt` | NUEVO (declarado a mano) | 11-Quick-Post-Registry - el quick que verifica las cuatro filas declaradas a mano; es el ultimo crudo en nacer y cierra la cuenta en 13 entradas nuevas |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.agent/SYSTEM_STATUS.md` | System Status |
+| `.agent/knowledge/DOMAIN_PRIMER.md` | Domain Primer |
+| `.cursorrules` | .Cursorrules |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md` | 01-Plan-Maestro |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-A.md` | 05-Prompt-Inicio-Sesion-Fase-A |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-B.md` | 05-Prompt-Inicio-Sesion-Fase-B |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-C.md` | 05-Prompt-Inicio-Sesion-Fase-C |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-RELEASE.md` | 05-Prompt-Inicio-Sesion-Fase-Release |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md` | Readme |
+| `.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
+| `docs/contributing/REGISTRY.md` | Registro de esta release, escrito por el propio escritor de la entrada (no podia declararse a si mismo). **Unidad del cierre, declarada a mano y reproducible**: 38 rutas por `git diff --name-only --no-renames HEAD` (los 11 renombres cuentan sus dos rutas) mas 13 por `git ls-files --others --exclude-standard` = **51 rutas**, medida el 2026-10-22 sobre el tip `2e4ba97`; 38 filas en la tabla de arriba y 13 en Archivos Nuevos |
+| `docs/contributing/.last_doc_phase.json` | Puntero del escritor de fases, ensuciado por esta misma corrida (declarado a mano) |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md` | 01-Plan-Maestro |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-A.md` | 05-Prompt-Inicio-Sesion-Fase-A |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-B.md` | 05-Prompt-Inicio-Sesion-Fase-B |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-C.md` | 05-Prompt-Inicio-Sesion-Fase-C |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-RELEASE.md` | 05-Prompt-Inicio-Sesion-Fase-Release |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md` | Readme |
+| `.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/plan_citations_baseline.json` | Plan Citations Baseline |
+| `.opencode/qmind-writeback/registro.json` | Registro |
+| `AGENTS.md` | Agents |
+| `CHANGELOG.md` | Changelog |
+| `README.md` | Readme |
+| `VERSION.yaml` | Version |
+| `docs/CONTRIBUTING.md` | Contributing |
+| `docs/GUIA_TECNICA.md` | Guia Tecnica |
+| `docs/cobertura-historia.md` | Cobertura-Historia |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -132,7 +132,7 @@ python scripts/run_all_validations.py --quick
 ```
 Actúa como agente de cierre documental del plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15.
 
-Ejecuta únicamente FASE-A del plan .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
+Ejecuta únicamente FASE-A del plan .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
 Lee 01-plan-maestro.md (§4 y §5), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md y el workflow canónico.
 
 OBJETIVO: cerrar el documental de la tanda empujada: persistir los crudos bajo evidencia con sus shas, commitear las rutas del registro D-QW-1/D-QW-2 con pathspec y autorización, y verificar el árbol del commit.

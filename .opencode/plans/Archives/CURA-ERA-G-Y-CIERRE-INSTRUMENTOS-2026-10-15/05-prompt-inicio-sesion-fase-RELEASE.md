@@ -49,7 +49,7 @@ El plan cierra dos cosas en una sola unidad de versión (DEC-1 del maestro): el 
 ```bash
 python scripts/validate_qmind_writeback.py --upload CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15   # 1. con el plan aún en raíz
 python scripts/build_lesson_index.py                                                              # 2. lecciones consultables
-git mv .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 .opencode/plans/Archives/      # 3. archivar al final
+git mv .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 .opencode/plans/Archives/      # 3. archivar al final
 python scripts/build_lesson_index.py                                                              # 3b. índice congela la ruta nueva
 python scripts/validate_opencode_refs.py --fix
 python scripts/validate_plan_citations.py --update-baseline
@@ -97,7 +97,7 @@ Ningún `git commit` sin autorización escrita del Operador en la sesión, y **s
 ```
 Actúa como agente de cierre (RELEASE) del plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15.
 
-Ejecuta únicamente FASE-RELEASE-4.81.1 del plan .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
+Ejecuta únicamente FASE-RELEASE-4.81.1 del plan .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
 Lee 01-plan-maestro.md (§4 y §5), 00-lecciones-capitalizadas.md (§4), dependencias-fases.md, 09-documentacion-post-proyecto.md (fuente de datos), 10-analisis-post-implementacion.md y el workflow canónico.
 
 OBJETIVO: release 4.81.1 con las tres curas documentadas, nota de ronda, validaciones finales, write-back QMind y archivado del plan con el orden R2.5/R2.10.

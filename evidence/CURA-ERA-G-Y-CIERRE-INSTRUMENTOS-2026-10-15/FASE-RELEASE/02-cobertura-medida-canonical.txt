@@ -1,0 +1,13 @@
+# crudo 02 - E5 cobertura medida con el comando canonico (metodo de AGENTS.md)
+# tip base: 2e4ba97 | fecha: 2026-10-22T17:07:42-05:00
+## arbol de trabajo
+grep -rE '^\s*def test_' tests --include=*.py | wc -l = 5334
+## arbol versionado (mismo predicado, sin tocar el arbol)
+git grep -h -E '^\s*def test_' HEAD -- tests | wc -l = 5334
+## archivos de raiz
+grep -hE '^\s*def test_' tests/*.py | wc -l = 1254
+## atribucion por revision fija (los dos numeros de la ronda)
+revision 2e048e6 : writeback_escritura=59 context_freshness=36 total=5321
+revision 1f95e84 : writeback_escritura=63 context_freshness=41 total=5330
+revision 0f53765 : writeback_escritura=63 context_freshness=41 total=5330
+revision 2e4ba97 : writeback_escritura=67 context_freshness=41 total=5334

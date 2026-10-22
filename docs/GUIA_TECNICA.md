@@ -1,7 +1,26 @@
 # Guía Técnica - IA Hoteles Agent
 
-**Versión:** v4.81.0 (Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos)
-**Última actualización:** 2026-10-15
+**Versión:** v4.81.1 (Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G)
+**Última actualización:** 2026-10-22
+
+---
+
+### Notas de Cambios v4.81.1 — Instrumentos de QMind: la segunda vía, el reemplazo por documento y la marca histórica
+
+**Fecha:** 2026-10-22
+**Plan:** CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 (maestro §1: AC1..AC7; fuente única de métricas por fase: `09-documentacion-post-proyecto.md` §D del plan archivado)
+
+**Módulos afectados**: `scripts/validate_qmind_writeback.py` (el primitivo `registrar_historica()` y su puerta CLI `--mark-historic`) y `.opencode/qmind-writeback/registro.json`, escrito **solo por el writer**. La segunda vía y el reemplazo por documento viven en `scripts/verify_qmind_context_freshness.py` y en el propio writer, ya empujados en `1f95e84`; esta release los publica en versión sin re-escribirlos. Sin código de producto, sin pipeline y sin `v4complete`.
+
+**Problema.** Tres defectos de instrumento, cada uno con su población medida. (1) **Gobernación ciega por extensión**: el verificador de frescura decidía la gobernación de un `context/*.md` por el punto de frase, así que un contexto que no se autodeclaraba con la marca quedaba fuera del censo sin que nadie lo nombrara — y el cotejo `git show` (blob LF) contra disco (CRLF) producía falsos vencidos. (2) **Reemplazo por plan**: el writer identificaba la publicación por el plan, no por el documento, de modo que una segunda fuente del mismo plan (la auditoría del `10-analisis`) se la comía. (3) **Deuda era-G**: cinco fuentes publicadas antes de esas curas nombraban a su plan sin marca de reemplazo; el rojo `[DUPLICADO-VIGENTE]` del writer y el contador de «huéspedes sin contabilidad» señalaban **la misma población** (cruce 5/5 medido en FASE-B), y `registrar_publicacion()` no podía marcarlas porque exige instantánea y nace `vigente`.
+
+**Solución.** El recorte de gobernación se hace sobre el `.md` completo (no por el punto de frase) y la verificación de identidad es **disco a disco**, con `metadata.fileSha256`/`fileSize` decidiendo primero y la descarga como verificación de la promesa del servidor. El reemplazo se keyed por **documento**. Y nace `registrar_historica()`: una entrada que **nace `reemplazada`**, sin instantánea ni `sha_cuerpo`, fuera del bucle de `verificar_contenido` (que solo recorre vigentes) pero dentro del predicado de contabilidad — así cierra los dos rojos de AC5 sin crear una abstención nueva. Lleva su evidencia dentro (`título` + `fuente_id` + `sha_metadata` del censo), es idempotente por título o `fuente_id`, rechaza combinarse con `--upload` y no toca la red. Las cinco marcas las escribió el writer por `--mark-historic`, con el `createdAt` del censo como fecha (el nacimiento de la fuente, no el día del marcaje).
+
+**Backwards compatibility.** El registro conserva **schema 1.1**; las ocho entradas vigentes quedan intactas y el marcaje **no borra** nada del notebook (DEC-4: borrar es irreversible y es decisión escrita por fuente). Las entradas `1.0` de REFACTOR-WHATSAPP sin `sha_cuerpo` conservan su `[NO-EVALUABLE]` por migración — no hay back-fill — y esa abstención estructural mantiene el `EXIT` del writer en 2 aunque las dos poblaciones de AC5 estén en 0. `--mark-historic` es aditivo a la CLI: ningún invocador previo cambia de comportamiento.
+
+**Deuda declarada, no curada**: `S-SEC-1` — el Secrets Check puede publicar `SIN_HALLAZGOS` sin leer su insumo (decodificación heredada sin `encoding=` + guards fail-open en `_check_staged_content`); cuatro sitios comparten el raigambre con **distinto consumidor y modo de fallo**. Definida en maestro §5 con dueño Operador; su spec y alcance, en `dependencias-fases.md` §Determinación post-FASE-B; el fix **fail-closed** es fase propia.
+
+**Cómo verificar**: `python -m pytest tests/test_validate_qmind_writeback_escritura.py -q` (rojo-antes, verde y mutante del guard) y la corrida real `python scripts/validate_qmind_writeback.py` — el verde de AC5 se lee en su `[CONTADOR]` (`0 fuente(s) huesped(s) sin contabilidad` sobre `8/8`) y en la ausencia de líneas `[DUPLICADO-VIGENTE]`, no en el código de salida. Crudos y pares en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-*/`.
 
 ---
 

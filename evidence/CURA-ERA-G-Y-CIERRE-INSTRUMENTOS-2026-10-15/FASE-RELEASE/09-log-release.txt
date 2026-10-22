@@ -1,0 +1,116 @@
+# crudo 09 - log_phase_completion.py de la release
+# unidad: rutas contadas por git (renombrados = dos rutas, con --no-renames)
+# NUEVOS (10):
+.opencode/qmind-writeback/instantaneas/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15--10-analisis_CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-1--d35b81786511daaa.md
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/01-e1-version-consistency.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/02-cobertura-medida-canonical.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/03-domain-primer-vencido-y-cura-TRANSCRITO.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/04-modo-completo-PYTHONUTF8.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/05-writeback-upload.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/05b-writeback-upload-intento-2.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/06-writeback-strict.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/07-archivado-indice-refs-citas.txt
+evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-RELEASE/08-quick-cierre.txt
+# MODIFICADOS (36):
+.agent/SYSTEM_STATUS.md
+.agent/knowledge/DOMAIN_PRIMER.md
+.cursorrules
+.opencode/LECCIONES-INDEX.md
+.opencode/lecciones_index.json
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-A.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-B.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-C.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-RELEASE.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md
+.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/00-lecciones-capitalizadas.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/01-plan-maestro.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-A.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-B.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-C.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/05-prompt-inicio-sesion-fase-RELEASE.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/06-checklist-implementacion.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/09-documentacion-post-proyecto.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/10-analisis-post-implementacion.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/README.md
+.opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/dependencias-fases.md
+.opencode/plans/plan_citations_baseline.json
+.opencode/qmind-writeback/registro.json
+AGENTS.md
+CHANGELOG.md
+README.md
+VERSION.yaml
+docs/CONTRIBUTING.md
+docs/GUIA_TECNICA.md
+docs/cobertura-historia.md
+----------------------------------------------------------------------
+============================================================
+LOG PHASE COMPLETION: FASE-RELEASE-4.81.1
+============================================================
+
+[AUTO-DETECT] FASE-RELEASE detectado: 4.81.1
+  (INFO) Usando --release automatico: 4.81.1
+
+[VERSION GATE] Release detectado: 4.81.1
+
+============================================================
+VERSION SYNC GATE
+============================================================
+  Release version: 4.81.1
+  CHANGELOG.md:    4.81.1
+  VERSION.yaml:    4.81.1
+  (OK) CHANGELOG y VERSION.yaml sincronizados en 4.81.1
+
+[CHECK MANUAL DOCS] (R) No se detectaron cambios arquitectonicos.
+   GUIA_TECNICA.md no requiere actualizacion para esta fase.
+
+[1/2] Actualizando REGISTRY.md...
+       (R) C:\Users\Jhond\Github\iah-cli\docs\contributing\REGISTRY.md
+
+============================================================
+POR_HACER: Documentacion Manual
+============================================================
+
+Segun CONTRIBUTING.md (R8, estos archivos se actualizan manualmente:
+
+  (T) CHANGELOG.md
+     Cuando: Nueva release (registro historico de cambios)
+
+  (T) GUIA_TECNICA.md
+     Cuando: Cambios arquitectonicos o tecnicos
+
+  (T) ROADMAP.md
+     Cuando: Cambios en estrategia de monetizacion
+
+  (T) .agents/workflows/README.md
+     Cuando: Agregar o eliminar skills
+
+  (T) .agent/knowledge/DOMAIN_PRIMER.md
+     Cuando: Semauto via --doctor --regenerate-domain-primer (agregar/eliminar modulos, cambiar clases o flujo)
+
+============================================================
+Recordatorio: Editar CHANGELOG.md al final de release
+============================================================
+
+============================================================
+DOCUMENTATION AUDIT - Documentacion Huérfana
+============================================================
+
+  (OK) Todos los archivos de documentacion mencionan la fase
+       No se detectaron gaps
+
+
+[2/2] Checklist final:
+       (X) Actualizar CHANGELOG.md (al final del release)
+       (X) Actualizar GUIA_TECNICA.md (si hay cambios arquitectonicos)
+       (X) Verificar sync_versions.py si es release
+       (X) Ejecutar: python scripts/run_all_validations.py --quick
+       (X) Version Sync Gate: PASSED (4.81.1)
+
+(R) Fase registrada exitosamente
+REG_EXIT=0

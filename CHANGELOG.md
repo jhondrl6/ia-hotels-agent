@@ -1,5 +1,54 @@
 # Changelog
 
+## [4.81.1] - Instrumentos de QMind: la segunda vía, el reemplazo por documento y la deuda era-G — 2026-10-22
+
+### Objetivo
+
+Cerrar el plan `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15` con **una sola unidad de versión** (DEC-1) que publique las tres curas de los instrumentos de QMind: la **segunda vía de gobernación** del verificador de frescura, el **reemplazo por documento** del write-back y la **cura de la deuda era-G**. El bump es **patch**: cambia el comportamiento observable de dos scripts y del registro que escriben, sin cambios de producto. Fuente única de las métricas por fase: `09-documentacion-post-proyecto.md` §D del plan archivado (`Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/`); esta entrada la referencia, no la re-transcribe.
+
+**Lo que se demostró.** AC5 se lee en la **corrida real** del writer, no en el diff: el par rojo-antes (crudo `01-writeback-rojo-antes.txt` de FASE-B, copiado byte-exacto a `FASE-C/00-`) y verde-después (`FASE-C/08c-writeback-intento-3.txt`) sobre la misma población, con el `[CONTADOR]` declarando `0 fuente(s) huesped(s) sin contabilidad` sobre `8/8`. Las dos curas de la tanda del 2026-10-15 ya estaban ejecutadas y **empujadas** en `2e048e6` (cierre documental 4.81.0 + archivado) y `1f95e84` (la segunda vía y el reemplazo por documento, con sus 9 dientes); lo que este plan cerró es su documental (FASE-A) y la deuda que dejaban roja (era-G).
+
+### Límites publicados
+
+- **`S-SEC-1`, con dueño Operador y fix fuera de este plan**: el Secrets Check puede publicar `SIN_HALLAZGOS` **sin leer su insumo** — la decodificación heredada (sin `encoding=`) revienta el hilo lector del diff staged ilegible, `run()` devuelve `stdout=None` sin excepción y los guards de `_check_staged_content` cierran en verde (fail-open). Definida con ID propio en maestro §5 (absorción T4 de FASE-C); su spec y el alcance de los cuatro sitios viven en `dependencias-fases.md` §Determinación post-FASE-B. El fix **fail-closed** es fase propia: este plan no tocó `run_all_validations.py`.
+- **Abstención estructural de las entradas `1.0`**: las de REFACTOR-WHATSAPP sin `sha_cuerpo` siguen `[NO-EVALUABLE]` por migración y mantienen el `EXIT` del writer en 2 con las dos poblaciones de AC5 ya en 0. «No se rellena hacia atrás» es la regla vigente; su eliminación es decisión propia del Operador.
+- **No se borró nada del notebook** (DEC-4): la cura marca en el registro. Borrar es irreversible sobre contenido publicado y exige decisión escrita por fuente.
+- **Deudas diferidas con dueño Operador, ajenas a este plan**: `D-QW-1`/`D-QW-2` (rama por defecto del `--upload` y detector divergente), `S-CIM-1` (`[18/18]` invocado sin `--strict`), `S-CST-1` (gate `hard_contradictions` sin productor) y `P6.5` (el acta niega al revisor que corrió).
+- **El modo completo de esta máquina requiere `PYTHONUTF8=1`** (S-CIM-10), preexistente.
+- Sin código de producto ni pipeline tocado; ningún `v4complete` ejecutado y `ROADMAP.md` intacto.
+
+### Cambios Implementados
+
+- **FASE-A — cierre documental de la tanda (AC1, AC2)**: los 12 crudos de la sesión del 2026-10-15 quedaron versionados bajo `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/` (numeración `15-`…`26-`, sin colisión con el `14-`, en `77dea21`) y el acta del cierre lleva sus shas de blob y de disco; las cuatro rutas del registro `D-QW` ya estaban en `85ab952`. Sin código.
+- **FASE-B — censo era-G y decisión por fuente (AC3, AC4)**: las **5** fuentes que disparan `[DUPLICADO-VIGENTE]` censadas con id, título, sha de metadata, fecha y **causa medida** de su falta de contabilidad; cruce de poblaciones **5/5 idéntico** — el rojo y el contador de huéspedes son **la misma población**, no dos deudas (`10-analisis` §Lecciones, punto 3). Decisión del Operador: **(a) marcar como reemplazada**, con el mecanismo especificado y su coste (censo §5.1). Sin código, sin borrar, sin subir.
+- **FASE-C — la marca histórica del writer (AC5, AC6)**: nace `registrar_historica()` en `scripts/validate_qmind_writeback.py` y su puerta CLI `--mark-historic`. La entrada **nace `reemplazada`**, sin instantánea ni `sha_cuerpo`, y por eso queda **fuera del bucle de `verificar_contenido`** (que solo recorre vigentes) mientras satisface el predicado de contabilidad — cierra los dos rojos de AC5 sin crear una abstención nueva. Evidencia dentro de la propia entrada: título exacto (la llave de la contabilidad) + `fuente_id` + `sha_metadata` del censo. **Idempotente** por título o `fuente_id`; rechaza `--upload` en el mismo argumento; no toca la red ni el notebook. Las **5** marcas quedaron escritas **por el writer** (registro 9 → 14 entradas, las 8 vigentes intactas). Su fecha es el `createdAt` del censo (el nacimiento de la fuente), no el día del marcaje (DEC-C.1). Cuatro dientes con su rojo-antes y su mutante del guard de idempotencia.
+- **Absorción T4 (`S-SEC-1`)**: la fila con el ID al frente en maestro §5 y su definición mecánica en `10-analisis` §Seguimientos, con el par del índice regenerado — cero código para el gate, tal como decidió el Operador.
+- **FASE-RELEASE (AC7)**: `4.81.1` sincronizada, esta entrada, la nota de ronda en `docs/cobertura-historia.md`, `GUIA_TECNICA`, `SYSTEM_STATUS` y el archivado con el orden R2.5/R2.10 (write-back → índice → `git mv` → índice). `DOMAIN_PRIMER` se **verifica** en RELEASE (`doctor.py --context`); lo regeneró FASE-C por ser de implementación.
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| *(ninguno de código)* | La cura vive en el writer existente; `registrar_historica()` es un primitivo nuevo dentro de `scripts/validate_qmind_writeback.py` |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-C/` | Par rojo/verde de AC5 (racha dirigida de 3 intentos), pares de delta pre/post, mutante del guard y su restauración, marcaje del censo y quick de cierre |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/` | Censo `censo-era-g.md` + rojo-antes + listado del notebook + respaldos byte-exactos + repro del guard cp1252 |
+| `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/` | Acta del cierre documental con los shas de blob y disco de los 12 crudos |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `scripts/validate_qmind_writeback.py` | `registrar_historica()` + puerta `--mark-historic` con sus guardas (FASE-C) |
+| `tests/test_validate_qmind_writeback_escritura.py` | 4 dientes del mecanismo era-G (3 mínimos del censo §5.1 + 1 de la puerta CLI) |
+| `.opencode/qmind-writeback/registro.json` | 5 entradas `reemplazada` escritas **por el writer** (9 → 14; ninguna vigente alterada) |
+| `scripts/verify_qmind_context_freshness.py` + `.opencode/qmind-writeback/` | La segunda vía de gobernación y el reemplazo por documento, ya empujados en `1f95e84` (esta release los publica en versión, no los re-escribe) |
+| `01-plan-maestro.md` §5, `10-analisis-post-implementacion.md` | Definición de `S-SEC-1` con dueño y camino de cierre (T4) |
+| `AGENTS.md` §Cobertura, `docs/cobertura-historia.md`, `docs/GUIA_TECNICA.md`, `VERSION.yaml`, `CHANGELOG.md`, `docs/contributing/REGISTRY.md` | Sync de `4.81.1`, nota de ronda, nota de cambios, registro de release |
+
+### Tests
+
+La nota de ronda vive en `docs/cobertura-historia.md` y la atribución por batería está medida contra revisiones fijas (`1f95e84` y `2e4ba97`); el delta por fase, en `09-documentacion-post-proyecto.md` §D. La cifra canónica no se transcribe aqui: la imprime `grep -rE "^\s*def test_" tests --include=*.py | wc -l` y vive en `AGENTS.md` §Cobertura. Los crudos de la corrida verde de FASE-C, en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-C/02-pytest-verde.txt`.
+
 ## [4.81.0] - Cura de la costura de juicio semántico del Tribunal — 2026-10-15
 
 ### Objetivo

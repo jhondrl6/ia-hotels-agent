@@ -113,7 +113,7 @@ python scripts/run_all_validations.py --quick
 ```
 Actúa como agente de medición y decisión del plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15.
 
-Ejecuta únicamente FASE-B del plan .opencode/plans/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
+Ejecuta únicamente FASE-B del plan .opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/
 Lee 01-plan-maestro.md (§1 AC3/AC4 y §4), 00-lecciones-capitalizadas.md (§2 y §4), dependencias-fases.md, 09-documentacion-post-proyecto.md (fuente de datos) y el workflow canónico.
 
 OBJETIVO: censar las fuentes de la deuda era-G (5 en [DUPLICADO-VIGENTE], 5 huéspedes sin contabilidad) y dejar decisión escrita del Operador por fuente con el mecanismo especificado.

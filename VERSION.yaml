@@ -1,15 +1,40 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.81.0"
-codename: "Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos"
-release_date: "2026-10-15"
+version: "4.81.1"
+codename: "Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G"
+release_date: "2026-10-22"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-10-15"
+date: "2026-10-22"
 plan_maestro_version: "v2.6.0"
+
+# v4.81.1 - CURA-ERA-G-Y-CIERRE-INSTRUMENTOS (2026-10-22)
+# Plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, cerrado por su FASE-RELEASE: una sola unidad de
+# version (DEC-1) para las TRES curas de instrumentos de QMind, sin codigo de producto y sin pipeline.
+# FASE-A (AC1, AC2): cierre documental de la tanda del 2026-10-15 - las 4 rutas del registro D-QW ya
+#         versionadas en `85ab952`, los 12 crudos de la tanda bajo `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-RELEASE/`
+#         (`77dea21`) y el acta con shas de blob y disco. Las dos curas de esa tanda viven en los commits
+#         ya empujados `2e048e6` (cierre 4.81.0 + archivado) y `1f95e84` (fix qmind: segunda via y reemplazo
+#         por documento, con sus 9 dientes).
+# FASE-B (AC3, AC4): censo de la deuda era-G - 5 fuentes con id/titulo/sha/fecha/causa, cruce de
+#         poblaciones 5/5 identico (el rojo `[DUPLICADO-VIGENTE]` y los huespedes son LA MISMA poblacion) y
+#         decision escrita del Operador por fuente: marcar como reemplazada, no borrar (DEC-B.1). Cero codigo.
+# FASE-C (AC5, AC6): `registrar_historica()` + puerta CLI `--mark-historic` en el writer - una entrada que
+#         nace `reemplazada`, sin instantanea ni `sha_cuerpo`, fuera del bucle de vigencia, idempotente por
+#         titulo/`fuente_id` y sin red. 5 marcas escritas por el writer (registro 9 -> 14, 8 vigentes intactas);
+#         AC5 leida en la corrida real: 0 `[DUPLICADO-VIGENTE]` y 0 huespedes sobre 8/8. Absorcion T4:
+#         `S-SEC-1` definida con ID propio en maestro §5.
+# FASE-RELEASE (AC7): bump 4.81.1, CHANGELOG con las tres curas, nota de ronda (+13 funciones: 9 de la
+#         tanda del 15-oct y 4 de FASE-C) y archivado con el orden write-back -> indice -> `git mv` -> indice.
+# LIMITES que esta entrada publica: `S-SEC-1` (el Secrets Check puede publicar `SIN_HALLAZGOS` sin leer su
+#         insumo - fail-open en la pata staged) queda con dueno Operador y fix fail-closed en fase propia,
+#         fuera de este plan; las entradas `1.0` de REFACTOR-WHATSAPP sin `sha_cuerpo` mantienen su
+#         abstencion estructural `[NO-EVALUABLE]` por migracion (no hay back-fill); `D-QW-1`/`D-QW-2`,
+#         `S-CIM-1`, `S-CST-1` y `P6.5` siguen diferidos con dueno. Fuente unica de las metricas por fase:
+#         `09-documentacion-post-proyecto.md` §D del plan archivado.
 
 # v4.81.0 - CURA-COSTURA-TRIBUNAL (2026-10-15)
 # Plan CURA-COSTURA-TRIBUNAL-2026-10-11, cerrado por su FASE-RELEASE: cura de la costura de juicio

@@ -8,7 +8,7 @@
 | 1 | FASE-A — Cierre documental de la tanda (commits `D-QW` + crudos + acta) | Cierre documental | Baja | DIRECTO | Preparación | ✅ Completada 2026-10-21 (crudos `77dea21`, hook 8/8; ver acta FASE-A) |
 | 2 | FASE-B — Censo era-G + decisión por fuente (Operador en el bucle) | Investigación | Media | DIRECTO | FASE-A ✅ | ✅ Completada 2026-10-22 (censo + decisiones en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-B/censo-era-g.md`; decisión (a) en las 5 fuentes) |
 | 3 | FASE-C — Cura era-G (mecanismo decidido; única fase que puede tocar código) | Implementación | Media | DIRECTO | FASE-B ✅ | ✅ Completada 2026-10-22 (`registrar_historica()` + `--mark-historic`, 4 dientes con rojo-antes y mutante, delta 63→67; 5 marcas por el writer; AC5 0/0 en la corrida real; `S-SEC-1` definida en §5 del maestro; quick 13/13) |
-| 4 | FASE-RELEASE-4.81.1 — Cierre + write-back + archivado | Cierre | Baja | DIRECTO | FASE-C ✅ | ⬜ Pendiente |
+| 4 | FASE-RELEASE-4.81.1 — Cierre + write-back + archivado | Cierre | Baja | DIRECTO | FASE-C ✅ | ✅ Completada 2026-10-22 (bump 4.81.1 sincronizado; CHANGELOG con las tres curas y los shas `2e048e6`/`1f95e84`; nota de ronda +13 atribuida contra revisiones fijas (5.321 → 5.330 → 5.334) con cabecera y fila de `AGENTS.md` movidas; GUIA_TECNICA; SYSTEM_STATUS y DOMAIN_PRIMER regenerado por el bump (crudo `03-`: sin eso el quick cae 12/13) y verificado con `--context`; quick 13/13 y modo completo 16/18 con `PYTHONUTF8=1` con sus dos rojos dueñados; cierre R2.5/R2.10 en orden: write-back (`--strict` `[FRESCO]`, 0 huéspedes sobre 9/9) → índice → `git mv` a `Archives/` (11 renombres) → índice → refs `--fix` → citas `--update-baseline` → quick. **Plan CERRADO**, sin commit (letra del Operador) |
 
 ## Notas de dependencia
 

@@ -136,6 +136,16 @@
       "fuente_id": "01a0e4d9-b252-7ca0-bf4c-9a9ecc7448f5",
       "sha_metadata": "34e2a95195b2ddb44c6770d9c76cfca4bced6349320c37c48353411b9484d9b9",
       "publicado": "2026-09-27"
+    },
+    {
+      "plan": "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+      "titulo": "10-analisis: CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 (lecciones aprendidas y decisiones)",
+      "estado": "vigente",
+      "fuente_id": "01a165aa-5e5d-7ba5-9171-06aa78b41e10",
+      "sha256": "d35b81786511daaa2b4a557294f3ae34337b73835fe819fc3d8a6f852fdaa100",
+      "sha_cuerpo": "d35b81786511daaa2b4a557294f3ae34337b73835fe819fc3d8a6f852fdaa100",
+      "instanea": "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15--10-analisis_CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-1--d35b81786511daaa.md",
+      "publicado": "2026-10-22"
     }
   ]
 }

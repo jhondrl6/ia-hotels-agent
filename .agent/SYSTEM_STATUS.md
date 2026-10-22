@@ -1,6 +1,6 @@
 # System Status Dashboard
 
-> Auto-generado: 2026-10-15 21:35:29 UTC
+> Auto-generado: 2026-10-22 21:55:03 UTC
 > Fuente de verdad para version: VERSION.yaml en raiz del proyecto
 > REGENERAR CON: python scripts/doctor.py --status
 > NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente
@@ -9,7 +9,7 @@
 
 | Componente | Version | Fuente |
 |------------|---------|--------|
-| Proyecto | 4.81.0 | VERSION.yaml |
+| Proyecto | 4.81.1 | VERSION.yaml |
 | Ecosystem Convention | 1.0.0 | .agent/CONVENTION.md |
 
 ## Skills Activas (1)
@@ -23,10 +23,10 @@
 
 | Metrica | Valor |
 |---------|-------|
-| Shadow logs | 1336 archivos JSON |
+| Shadow logs | 1340 archivos JSON |
 | Sesiones activas | 4 |
 | Sesiones archivadas | 6 |
-| Ultimo shadow log | 20261012_004137_8632555f.json |
+| Ultimo shadow log | 20261015_222627_337acfc1.json |
 | Ultima sesion activa | 2026-10-12_8fd752bf.json |
 | Ultimo contexto actualizado | 2026-10-12T21:55:46.456947+00:00 |
 | Ultima URL procesada | https://www.donalfonsohotel.com/ |

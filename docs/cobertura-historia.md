@@ -15,6 +15,36 @@
 
 ---
 
+> **Ronda del 2026-10-22 — FASE-RELEASE-4.81.1 del plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15 (la cifra sube a 5,334).**
+> Medido con el metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include=*.py`
+> = **5,334**) y contrastado con el arbol versionado del mismo tip (`git grep -h -E "^\s*def test_" HEAD -- tests`
+> = **5,334**; el arbol estaba limpio al abrir la fase, o sea nada viene heredado sin commitear). El delta desde
+> la ronda previa (5,321) es **+13** y es la nota que este cierre debia pagar (AC7 y DEC-1: una sola nota por los
+> 9 tests de la tanda de instrumentos **y** por lo que añada FASE-C). Atribucion medida contra **revisiones fijas**,
+> no narrada:
+>
+> * **+9 en la tanda de instrumentos del 2026-10-15**, commiteada en `1f95e84` (medido contra su padre `2e048e6`,
+>   donde el total es 5,321): **+5** en `tests/test_verify_qmind_context_freshness.py` (36 → 41) y **+4** en
+>   `tests/test_validate_qmind_writeback_escritura.py` (59 → 63).
+> * **+4 en FASE-C de este plan**, commiteada en `2e4ba97` (medido contra su padre `0f53765`): los 4 dientes del
+>   mecanismo era-G en `tests/test_validate_qmind_writeback_escritura.py` (63 → 67) — contabilidad, no-vigencia,
+>   idempotencia y la puerta CLI `--mark-historic`. Su par rojo-antes/verde esta en
+>   `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-C/01-` y `02-`, y el mutante del guard de
+>   idempotencia con su restauracion, en `03-` y `04-`.
+>
+> Los dos archivos son de raiz, asi que **una sola fila se mueve**: `root test files` 1241 → 1254. Ningun otro
+> modulo gana ni pierde funciones (la fase RELEASE no escribe codigo ni tests; FASE-C toco unicamente ese archivo).
+> Cuadre: 5,321 + 13 = **5,334** = suma de la tercera columna de la tabla de `AGENTS.md`. La cabecera
+> `### Cobertura por Modulo (N funciones totales)` queda en **5,334**, que es la primera ocurrencia de `N funciones`
+> y por tanto la que lee `scripts/validate_agents_md.py::check_2_test_count`.
+>
+> **Autocritica del instrumento**: el conteo por archivo no ve re-escrituras. Las +4 de la tanda en el archivo del
+> write-back viajaron en el mismo commit que las +5 de frescura y **no** son la misma bateria que las +4 de FASE-C
+> (una curo la segunda via y el reemplazo por documento; la otra nace del marcaje historico); por eso la nota
+> separa por **revision fija**, no por total. Y el `wc -l` de `git grep -h` es el mismo predicado del metodo
+> canonico aplicado al arbol commiteado: si manana un `git mv` de evidencia toca `tests/`, la cifra se re-mide,
+> no se re-copica de aqui.
+
 > **Ronda del 2026-10-15 — FASE-RELEASE-4.81.0 del plan CURA-COSTURA-TRIBUNAL-2026-10-11 (la cifra sube a 5,321).**
 > Medido con el metodo canonico sobre el arbol de trabajo (`grep -rE "^\s*def test_" tests --include="*.py"`
 > = **5,321**), identico al arbol versionado (`git grep -c -E "^\s*def test_" HEAD -- tests` = 5,321: la fase
