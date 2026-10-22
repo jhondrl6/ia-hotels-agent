@@ -1,0 +1,91 @@
+
+========================================
+Pre-Commit Hook - IA Hoteles Agent
+========================================
+
+[1/8] Checking version consistency...
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.81.0
+  VERSION.yaml:   4.81.0
+  Codename:       Cura de la costura de juicio semantico del Tribunal: contrato de cuatro estados, cache versionada, recibo y revisores honestos
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-A
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+[1/8] OK: Version consistency PASSED
+[2/8] Checking file synchronization...
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+[2/8] OK: Files synchronized
+[3/8] Checking .opencode references...
+[PASS] OpenCode References: todas las referencias existen
+[3/8] OK: OpenCode references PASSED
+[4/8] Checking plan citations...
+[4/8] OK: Plan citations PASSED
+[5/8] Checking plan closure rows...
+[5/8] OK: Plan closure PASSED
+[6/8] Checking lesson index freshness...
+[OK] Índice de lecciones fresco (389 IDs)
+[fechas] nombre=378 commit=11 sin_fuente=0
+[6/8] OK: Lesson index PASSED
+[7/8] Checking lesson capitalization...
+  CURA-BLOQUE-HUESPED-QMIND-2026-10-10: 3 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  CURA-COSTURA-TRIBUNAL-2026-10-11: 4 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  CURA-INSTRUMENTOS-QMIND-S15-2026-10-07: 8 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20
+  EVALUACION-JEV-TYPESAFE-2026-09-21: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09
+  PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  REFACTOR-WHATSAPP-ENTREGA-2026-09-18: 5 fuentes capitalizadas -> Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30
+  VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20: 7 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-COHERENCIA-NARRATIVA-2026-08-22, Archives/SR-PIPELINE-FIXES-2026-08-27, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VALIDADOR-URL-PROPIA-2026-08-30, Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20
+  VERIFICADOR-ESCRITURA-QMIND-2026-09-20: 5 fuentes capitalizadas -> Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18, Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11, Archives/TRIBUNAL-OFFLINE-2026-09-09
+  CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15: 6 fuentes capitalizadas -> Archives/CURA-COSTURA-TRIBUNAL-2026-10-11, Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, Archives/TRIBUNAL-OFFLINE-2026-09-09, Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20, context/CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15, context/CONTEXT-FRAGMENTOS-SECRETO-2026-10-11
+cobertura: 9 plan(es) en alcance (CURA-BLOQUE-HUESPED-QMIND-2026-10-10, CURA-COSTURA-TRIBUNAL-2026-10-11, CURA-INSTRUMENTOS-QMIND-S15-2026-10-07, EVALUACION-JEV-TYPESAFE-2026-09-21, PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12, REFACTOR-WHATSAPP-ENTREGA-2026-09-18, VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20, VERIFICADOR-ESCRITURA-QMIND-2026-09-20, CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15) | 34 archivados en el corpus, 8 de ellos en alcance | 20 exentos por fecha anterior a 2026-09-12 | 6 exentos SIN FECHA PARSEABLE (DT4-RESIDUAL-FIXES, REFACTOR-CAPEX-BREAKDOWN-V4.60.0, REFACTOR-PENDIENTE-V4.58.0, ROICRII, ROICRIII, ROICRIIIF) | descripcion del alcance: regla=cutoff en 2 texto(s) gobernado(s)
+[OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+[7/8] OK: Lesson capitalization PASSED
+[8/8] Checking briefing packs in committed tree...
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-A.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-B.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-C.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-D.md
+[OK] VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20/FASE-RELEASE.md
+[OK] packs en el árbol de 3ca151b26ef5515893eb6719cad07363030018ab (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+[8/8] OK: Briefing packs in committed tree PASSED
+
+========================================
+All checks PASSED - Commit allowed
+========================================
+
+[master 6999a79] docs(plan): FASE-A cierra el documental de la tanda: acta, post-ejecucion y registro de fase
+ 23 files changed, 626 insertions(+), 32 deletions(-)
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/01-lesson-index-check.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/02-opencode-refs.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/03-quick.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/03b-quick-venv-canonico.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/04-poblacion-arbol.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/05-git-status-pre-commit.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/06-staged-listado.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/07-shas-blob-vs-disco.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/08-hook-pre-commit.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/08b-hook-pre-commit.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/08c-hook-pre-commit.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/09-poblacion-arbol-commit.txt
+ create mode 100644 evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-A/acta-cierre-documental.md
+COMMIT-EXIT=0
