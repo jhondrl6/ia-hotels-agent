@@ -3,8 +3,8 @@
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
     "archivos_analysis_escaneados": 21,
-    "archivos_contexto_escaneados": 44,
-    "archivos_md_escaneados": 485,
+    "archivos_contexto_escaneados": 45,
+    "archivos_md_escaneados": 486,
     "ids_con_definicion": 389,
     "ids_citados_sin_definicion": 113,
     "fechas_por_fuente": {
@@ -274,8 +274,10 @@
       "seccion": "Decisiones Arquitectónicas (pre-registradas en preparación; confirmar implementación en cada fase)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
-      "planes_que_lo_citan": [],
+      "total_citas": 3,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
+      ],
       "redefiniciones": []
     },
     {
@@ -332,9 +334,10 @@
       "seccion": "3. Tabla de definiciones",
       "fecha_plan": "2026-10-15",
       "fuente_fecha": "nombre",
-      "total_citas": 24,
+      "total_citas": 26,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
     },
@@ -348,9 +351,10 @@
       "seccion": "3. Tabla de definiciones",
       "fecha_plan": "2026-10-15",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 22,
       "planes_que_lo_citan": [
-        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
+        "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
     },
@@ -408,8 +412,10 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
-      "planes_que_lo_citan": [],
+      "total_citas": 15,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
+      ],
       "redefiniciones": []
     },
     {
@@ -1869,8 +1875,10 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 2,
-      "planes_que_lo_citan": [],
+      "total_citas": 5,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
+      ],
       "redefiniciones": []
     },
     {
@@ -1984,8 +1992,9 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 9,
+      "total_citas": 16,
       "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12",
         "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ],
@@ -2303,9 +2312,10 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 11,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
       "redefiniciones": []
@@ -2873,11 +2883,12 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 11,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
     },
@@ -2891,10 +2902,11 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 7,
+      "total_citas": 8,
       "planes_que_lo_citan": [
         "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27",
-        "Archives/SR-PIPELINE-FIXES-2026-08-27"
+        "Archives/SR-PIPELINE-FIXES-2026-08-27",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
     },
@@ -2908,7 +2920,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 110,
+      "total_citas": 113,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
@@ -3092,8 +3104,10 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
-      "planes_que_lo_citan": [],
+      "total_citas": 4,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
+      ],
       "redefiniciones": []
     },
     {
@@ -3515,9 +3529,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
@@ -3694,9 +3709,10 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 24,
+      "total_citas": 27,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ],
       "redefiniciones": []
@@ -3727,14 +3743,14 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 69,
+      "total_citas": 72,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "context/CONTEXT-AUDITORIA-BRECHAS-VS-MODULOS-SALENTOREAL-2026-09-03"
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -4182,8 +4198,10 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 6,
-      "planes_que_lo_citan": [],
+      "total_citas": 10,
+      "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
+      ],
       "redefiniciones": []
     },
     {
@@ -5409,8 +5427,9 @@
       "seccion": "Deudas definidas por este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 32,
+      "total_citas": 37,
       "planes_que_lo_citan": [
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
       ],
