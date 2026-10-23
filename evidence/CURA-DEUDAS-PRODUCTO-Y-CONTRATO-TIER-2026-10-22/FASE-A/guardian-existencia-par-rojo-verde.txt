@@ -1,0 +1,11 @@
+=== VERDE: arbol actual (sitios vigilados) ===
+  main.py: SIN VIOLACIONES (verde)
+  gap_analyzer.py: SIN VIOLACIONES (verde)
+
+=== ROJO: mutante con atributo inventado (R2.8) ===
+Mutante: _MUTANTE_FASE_A = FinancialFactors.ATTR_INVENTADA_FASE_A
+Inyectado en la fuente real de gap_analyzer.py (sitio del defecto original).
+
+  VIOLACION: gap_analyzer.py(mutante):498: FinancialFactors.ATTR_INVENTADA_FASE_A no existe sobre modules.utils.financial_factors.FinancialFactors
+
+RESULTADO MUTANTE: ROJO (detectado)

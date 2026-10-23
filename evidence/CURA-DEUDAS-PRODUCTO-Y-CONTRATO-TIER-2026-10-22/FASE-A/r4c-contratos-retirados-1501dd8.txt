@@ -1,0 +1,19 @@
+-            brecha = self._pain_to_brecha(pain)
+-            content = re.sub(pattern, interpolated, content, flags=flags)
+-            roi_ratio = 5.0
+-        benchmark_score = 58  # Promedio regional hotels pequenos
+-        calculated_price = min(max(int(expected_monthly * 0.02), 800000), 2500000)
+-        expected_monthly = int(conservative * 0.70 + realistic * 0.20 + optimistic * 0.10)
+-        minimal_improvement = 0.05
+-        moderate_shift = 0.10  # 10% shift from OTA to direct
+-        optimistic_shift = 0.20  # 20% shift from OTA to direct
+-        pain_ratio = getattr(self, '_current_pain_ratio', 0.20)
+-        score = diagnostic_summary.score_tecnico if diagnostic_summary.score_tecnico is not None else 50
+-    DEFAULTS = {
+-    GATE_IDEAL_RATIO = 0.045  # 4.5%
+-    GATE_MAX_RATIO = 0.06  # 6%
+-    GATE_MIN_RATIO = 0.03  # 3%
+-    SUPERPOSITION_FACTOR = 0.7
+-    TIER_CONFIG = {
+-    def _build_guarantees_section(self) -> str:
+-    def _pain_to_brecha(self, pain) -> Optional[Dict[str, Any]]:

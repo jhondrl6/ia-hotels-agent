@@ -50,7 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
         nargs="?",
         default="audit",
         choices=["audit", "v4audit", "v4complete", "stage", "spark", "execute", "deploy", "setup", "onboard", "validate-guarantee", "hook-pdf"],
-        help="Comando a ejecutar: setup (configuración inicial), audit (diagnóstico legacy), v4audit (auditoría v4.0 con APIs), v4complete (flujo completo v4.0 con Meta-Skills), stage (pasos manuales), spark (diagnóstico rápido <5min), execute (implementación paquete), deploy (despliegue remoto), onboard (captura datos operativos), validate-guarantee (valida garantía Día 55)",
+        help="Comando a ejecutar: setup (configuración inicial), audit (diagnóstico legacy), v4audit (auditoría v4.0 con APIs), v4complete (flujo completo v4.0 con Meta-Skills), stage (pasos manuales), spark (RETIRADO: informa el retiro y sale 0; ver D19), execute (implementación paquete), deploy (despliegue remoto), onboard (captura datos operativos), validate-guarantee (valida garantía Día 55)",
     )
     parser.add_argument("--url", required=False, help="URL del hotel a analizar")
     parser.add_argument("--output", default="./output", help="Directorio de salida base")
@@ -323,254 +323,26 @@ def _audit_handler(payload: dict, context) -> dict:
     }
 
 
-def _map_audit_to_spark_data(audit_result):
-    """Mapea V4AuditResult → (GeoStageResult, IAStageResult) para SparkGenerator."""
-    from modules.generators.spark_generator import GeoStageResult, IAStageResult
-
-    gbp = audit_result.gbp
-    schema = audit_result.schema
-
-    # GeoStageResult
-    geo_result = GeoStageResult(
-        hotel_data={
-            "nombre": audit_result.hotel_name,
-            "ubicacion": gbp.address or "",
-            "url": audit_result.url,
-        },
-        gbp_data={
-            "score": gbp.geo_score,
-            "reviews": gbp.reviews,
-            "rating": gbp.rating,
-            "photos": gbp.photos,
-            "phone": gbp.phone,
-            "address": gbp.address,
-        },
-        schema_data={
-            "hotel_schema_detected": schema.hotel_schema_detected,
-            "hotel_schema_valid": schema.hotel_schema_valid,
-            "faq_schema_detected": schema.faq_schema_detected,
-            "faq_schema_valid": schema.faq_schema_valid,
-            "total_schemas": schema.total_schemas,
-        },
-        competitors_data=[
-            {"nombre": c.get("name", ""), "rating": c.get("rating", 0)}
-            for c in (audit_result.competitors or [])
-        ],
-    )
-
-    # IAStageResult
-    ia_test = {}
-    llm_analysis = {}
-    if audit_result.llm_report:
-        llm_rpt = audit_result.llm_report
-        ia_test = {
-            "mentioned": llm_rpt.total_mentions > 0,
-            "mention_rate": llm_rpt.mention_rate,
-            "mention_score": llm_rpt.mention_score,
-            "avg_ranking": llm_rpt.avg_ranking,
-            "share_of_voice": llm_rpt.share_of_voice,
-        }
-        # Calcular pérdida mensual estimada si hay datos suficientes
-        if gbp.rating > 0 and gbp.reviews > 0:
-            from modules.utils.financial_factors import FinancialFactors
-            ff = FinancialFactors()
-            region_key = _detect_financial_region(gbp.address or "")
-            config = ff.get_config(region_key)
-            revpar = config.revpar_cop
-            hab = 20  # estimación conservadora para hoteles boutique
-            aila = llm_rpt.mention_rate if llm_rpt.mention_rate < 1 else config.factor_captura_aila
-            perdida = revpar * hab * 30 * (1 - aila) * (
-                config.comision_ota_base + config.penalizacion_invisibilidad_ia
-            ) * FinancialFactors.SUPERPOSITION_FACTOR
-            llm_analysis = {"perdida_mensual_total": round(perdida)}
-
-    ia_result = IAStageResult(
-        ia_test=ia_test,
-        llm_analysis=llm_analysis,
-        roi_data={},
-        current_provider="deepseek",
-        decision_result={},
-        region=_detect_region_from_address(gbp.address or ""),
-    )
-
-    return geo_result, ia_result
-
-
-def _detect_financial_region(address: str) -> str:
-    """Detecta región financiera (keys de FinancialFactors) desde dirección."""
-    addr = address.lower()
-    if any(k in addr for k in ["armenia", "pereira", "manizales", "caldas", "risaralda", "quindío", "salento"]):
-        return "eje_cafetero"
-    elif any(k in addr for k in ["cartagena", "santa marta", "barranquilla", "bolívar", "atlántico"]):
-        return "caribe"
-    elif any(k in addr for k in ["medellín", "envigado", "rionegro", "antioquia"]):
-        return "antioquia"
-    return "default"
-
-
-def _detect_region_from_address(address: str) -> str:
-    """Detecta región legible de una dirección."""
-    addr = address.lower()
-    region_map = {
-        "Eje Cafetero": ["armenia", "pereira", "manizales", "caldas", "risaralda", "quindío"],
-        "Caribe": ["cartagena", "santa marta", "barranquilla", "bolívar", "atlántico"],
-        "Antioquia": ["medellín", "envigado", "rionegro", "antioquia"],
-        "Bogotá/Cundinamarca": ["bogotá", "cundinamarca"],
-    }
-    for region, keywords in region_map.items():
-        if any(k in addr for k in keywords):
-            return region
-    return "Colombia"
-
-
-def _spark_handler(payload: dict, context) -> dict:
-    """Harness-compatible handler for spark command."""
-    from modules.auditors.v4_comprehensive import V4ComprehensiveAuditor
-    from modules.generators.spark_generator import SparkGenerator
-
-    output_dir = Path(payload.get("output", "./output")).resolve() / "spark"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    url = payload["url"]
-    print(f"[SPARK] Ejecutando auditoría v4 sobre: {url}")
-
-    auditor = V4ComprehensiveAuditor()
-    audit_result = auditor.audit(url)
-
-    print("[SPARK] Mapeando datos para SparkGenerator...")
-    geo_result, ia_result = _map_audit_to_spark_data(audit_result)
-
-    print("[SPARK] Generando reportes spark...")
-    spark_gen = SparkGenerator(provider_type=payload.get("provider", "auto"))
-    spark_gen.generate_spark_report(geo_result, ia_result, output_dir)
-
-    return {
-        "hotel_name": geo_result.hotel_data.get("nombre", "Hotel"),
-        "gbp_score": geo_result.gbp_data.get("score", 0),
-        "monthly_loss": ia_result.llm_analysis.get("perdida_mensual_total", 0),
-        "output_dir": str(output_dir),
-        "geo_result": geo_result.hotel_data,
-        "gbp_data": geo_result.gbp_data,
-    }
-
-
 def run_spark_mode(args: argparse.Namespace) -> None:
-    """Maneja el comando 'spark' para diagnóstico rápido (<5 minutos)."""
-    # Check for bypass mode (legacy)
-    if getattr(args, "bypass_harness", False):
-        _run_spark_legacy(args)
-        return
-    
-    # Harness-enabled mode
-    from agent_harness import AgentHarness, AgentTask
-    
+    """Comando ``spark`` RETIRADO (FASE-A, plan CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER).
+
+    La ruta de estimación spark estaba deprecada y rota: referenciaba el atributo
+    ``FinancialFactors.SUPERPOSITION_FACTOR``, inexistente desde el refactor
+    ``1501dd8`` (que lo convirtió en ``get_superposition_factor()``). Decisión del
+    Operador (DA-PLAN-4): se retira, no se repara. El producto usa ``v4complete``.
+    ``D19`` queda cerrada por retiro, sin promesa de cifra nueva.
+
+    El comando se conserva como centinela de retiro: informa y sale con código 0
+    para que ningún consumidor reciba un ``AttributeError`` ni una estimación rota.
+    """
     print("=" * 60)
-    print("MODO SPARK - Diagnóstico Rápido (<5 minutos)")
-    print("[HARNESS] Modo Agentico Activo")
+    print("MODO SPARK - RUTA RETIRADA")
     print("=" * 60)
-    
-    harness = AgentHarness(verbose=args.debug or True)
-    harness.register_handler("spark", _spark_handler)
-    
-    task = AgentTask(
-        name="spark",
-        payload={
-            "url": args.url,
-            "output": args.output,
-            "provider": args.provider,
-            "mode": args.mode,
-            "skip_posts": args.skip_posts,
-            "posts_max_wait": args.posts_max_wait,
-            "skip_competitors": args.skip_competitors,
-            "debug": args.debug,
-        },
-    )
-    
-    result = harness.run_task(task)
-    
-    if not result.success:
-        print(f"\n[ERROR] {result.error}")
-        sys.exit(1)
-    
-    # Display summary
-    data = result.data
-    print("\n" + "=" * 60)
-    print("SPARK REPORT GENERADO")
-    print("=" * 60)
-    print(f"\nArchivos creados en: {data.get('output_dir', 'output')}/")
-    print(f"  ✓ spark_report.md (1 página, 3 métricas)")
-    print(f"  ✓ whatsapp_script.txt (guion 60 segundos)")
-    print(f"  ✓ quick_win_action.md (acción gratuita)")
-    print(f"  ✓ metrics_summary.json (datos para CRM)")
-    
-    print(f"\n📊 RESUMEN PARA {data.get('hotel_name', 'Hotel')}:")
-    print(f"   Pérdida estimada: ${data.get('monthly_loss', 0):,.0f} COP/mes")
-    print(f"   GBP Score: {data.get('gbp_score', 0)}/100")
-    
-    print(f"\n🚀 PRÓXIMO PASO:")
-    print(f"   1. Copia el guion de: whatsapp_script.txt")
-    print(f"   2. Graba video Loom (2 minutos)")
-    print(f"   3. Envía video + spark_report.md por WhatsApp")
-    print(f"   4. Cuando muestre interés, presenta el piloto de $800K")
-
-
-def _run_spark_legacy(args: argparse.Namespace) -> None:
-    """Legacy spark mode (bypass harness). Usa V4ComprehensiveAuditor directamente."""
-    from modules.auditors.v4_comprehensive import V4ComprehensiveAuditor
-    from modules.generators.spark_generator import SparkGenerator
-
-    print("=" * 60)
-    print("MODO SPARK - Diagnóstico Rápido (<5 minutos)")
-    print("[LEGACY] Modo CLI Sin Harness")
-    print("=" * 60)
-
-    url = args.url
-    print(f"\nEjecutando auditoría v4 sobre: {url}")
-
-    try:
-        auditor = V4ComprehensiveAuditor()
-        audit_result = auditor.audit(url)
-
-        print("\nMapeando datos para SparkGenerator...")
-        geo_result, ia_result = _map_audit_to_spark_data(audit_result)
-
-        output_dir = Path(args.output).resolve() / "spark"
-        output_dir.mkdir(parents=True, exist_ok=True)
-
-        print("\nGenerando Spark Report...")
-        spark_gen = SparkGenerator(provider_type=args.provider)
-        spark_gen.generate_spark_report(geo_result, ia_result, output_dir)
-
-        print("\n" + "=" * 60)
-        print("SPARK REPORT GENERADO")
-        print("=" * 60)
-        print(f"\nArchivos creados en: {output_dir}/")
-        print(f"  ✓ spark_report.md (1 página, 3 métricas)")
-        print(f"  ✓ whatsapp_script.txt (guion 60 segundos)")
-        print(f"  ✓ quick_win_action.md (acción gratuita)")
-        print(f"  ✓ metrics_summary.json (datos para CRM)")
-
-        hotel_name = geo_result.hotel_data.get("nombre", "Hotel")
-        monthly_loss = ia_result.llm_analysis.get("perdida_mensual_total", 0)
-        gbp_score = geo_result.gbp_data.get("score", 0)
-
-        print(f"\n📊 RESUMEN PARA {hotel_name}:")
-        print(f"   Pérdida estimada: ${monthly_loss:,.0f} COP/mes")
-        print(f"   GBP Score: {gbp_score}/100")
-        print(f"   Competidores analizados: {len(geo_result.competitors_data) if geo_result.competitors_data else 0}")
-
-        print(f"\n🚀 PRÓXIMO PASO:")
-        print(f"   1. Copia el guion de: whatsapp_script.txt")
-        print(f"   2. Graba video Loom (2 minutos)")
-        print(f"   3. Envía video + spark_report.md por WhatsApp")
-        print(f"   4. Cuando muestre interés, presenta el piloto de $800K")
-
-    except Exception as error:
-        print(f"\nERROR: {error}")
-        if getattr(args, "debug", False):
-            import traceback
-            traceback.print_exc()
-        sys.exit(1)
+    print("El comando 'spark' fue retirado (D19 cerrada por retiro, no por reparacion).")
+    print("La estimacion spark estaba rota y la ruta esta deprecada:")
+    print("el producto usa 'v4complete'.")
+    print("No se genera ninguna estimacion.")
+    print("Siguiente paso: python main.py v4complete --url <url>")
 
 
 def _run_execution_legacy(args: argparse.Namespace) -> None:
@@ -1446,7 +1218,6 @@ def main() -> None:
         sys.exit(0)
     
     if args.command == "spark":
-        maybe_run_config_check(args)
         run_spark_mode(args)
         sys.exit(0)
 

@@ -1,0 +1,8 @@
+cb1442d docs(plan): corrige la estrategia de CURA-DEUDAS-PRODUCTO y añade E2E-PRE
+53fe9ed docs(context): revalidacion de las 14 deudas contra el codigo vivo, con 7 hallazgos nuevos y el par del indice al dia
+084232c cleanup: Eliminar archivos temporales y evidence de sesiones previas
+425dfb0 feat: scoring transparency — breakdown visible + excluded factors + methodology doc (v4.39.0)
+1501dd8 RELEASE 4.38.0: FEATURE-CONFIG-EXTRACTION — 31 hardcodes → 6 YAML + sync fix + 60 config tests. 7 root causes corrected. Backwards compatible.
+4d374af feat: FASE-1A/1B/1B-PATCH - site_presence_report call chain + content_quality regex fix
+7903c6c [FIX] FASE-SPARK-FIX: Reparación comando spark (TypeError → V4ComprehensiveAuditor bridge)
+d5b48d2 chore: v0.1.0 initial commit for IA Hotels Agent

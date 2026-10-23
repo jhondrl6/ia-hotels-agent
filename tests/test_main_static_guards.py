@@ -18,6 +18,7 @@ Prevención permanente (decisión D-PF5 del plan SR-PIPELINE-FIXES-2026-08-27):
 """
 
 import ast
+import importlib
 import py_compile
 from pathlib import Path
 
@@ -64,4 +65,88 @@ def test_main_py_has_no_forbidden_symbols():
         "Guardián L-SR1 (clase de bug H1): main.py referencia símbolos "
         "prohibidos — probablemente en una rama no ejercitada por la corrida "
         "estándar:\n" + "\n".join(violations)
+    )
+
+
+# ---------------------------------------------------------------------------
+# FASE-A (N7 / D-PF5 / L-CIM.12): guardián por EXISTENCIA de atributo.
+#
+# El guardián de arriba solo caza nombres prohibidos; pasaba en verde sobre un
+# `AttributeError` latente (FinancialFactors.SUPERPOSITION_FACTOR, inexistente
+# desde el refactor 1501dd8). Este bloque lo extiende a existencia: todo
+# `Clase.atributo` sobre una clase vigilada debe existir realmente sobre la
+# clase IMPORTADA. La comprobación es AST + import — no un grep de menciones.
+# ---------------------------------------------------------------------------
+
+GUARDED_CLASSES = {
+    "FinancialFactors": ("modules.utils.financial_factors", "FinancialFactors"),
+}
+
+GUARDED_SITES = [
+    MAIN_PY,
+    MAIN_PY.parent / "modules" / "analyzers" / "gap_analyzer.py",
+]
+
+
+def check_attribute_existence(source: str, filename: str = "main.py"):
+    """Devuelve violaciones de existencia de `Clase.atributo` (AST + import).
+
+    Cubre `Clase.atributo` cuando `Clase` está en GUARDED_CLASSES. Accesos sobre
+    instancias (objeto.atributo) quedan fuera: no son resolubles por AST sin
+    inferencia de tipos.
+    """
+    tree = ast.parse(source, filename=filename)
+    classes = {
+        name: getattr(importlib.import_module(mod), cls)
+        for name, (mod, cls) in GUARDED_CLASSES.items()
+    }
+    violations = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+            cls = classes.get(node.value.id)
+            if cls is None:
+                continue
+            if not hasattr(cls, node.attr):
+                violations.append(
+                    f"{filename}:{node.lineno}: {node.value.id}.{node.attr} no existe "
+                    f"sobre {cls.__module__}.{cls.__name__}"
+                )
+    return violations
+
+
+def test_guarded_sites_sin_atributos_inexistentes():
+    """Árbol actual → verde: ningún `Clase.atributo` inexistente en los sitios vigilados.
+
+    Sitios vigilados: main.py y gap_analyzer.py — las dos superficies del
+    contrato `FinancialFactors` tocadas por el refactor 1501dd8 (AC5).
+    """
+    violations = []
+    for site in GUARDED_SITES:
+        violations += check_attribute_existence(
+            site.read_text(encoding="utf-8"), filename=site.name
+        )
+    assert not violations, (
+        "Guardián de existencia (N7): atributo inexistente sobre la clase "
+        "importada — rama latente lista para AttributeError:\n" + "\n".join(violations)
+    )
+
+
+def test_mutante_con_atributo_inventado_es_rojo():
+    """Mutation check (R2.8) sobre el símbolo real del guard → rojo.
+
+    Inyecta un atributo inventado sobre la clase vigilada en la fuente real de
+    gap_analyzer.py (el sitio donde vivió el defecto `factor_superposicion`) y
+    exige que el guardián lo detecte. Sin este rojo, el verde de arriba no
+    certifica la propiedad que nombra (L-CIM.12).
+    """
+    real_src = GUARDED_SITES[1].read_text(encoding="utf-8")
+    mutante_src = (
+        real_src
+        + "\n# mutante FASE-A (R2.8): atributo inventado sobre la clase importada\n"
+        + "_MUTANTE_FASE_A = FinancialFactors.ATTR_INVENTADA_FASE_A\n"
+    )
+    violations = check_attribute_existence(mutante_src, filename="gap_analyzer.py")
+    assert violations, (
+        "El guardián de existencia NO detectó un atributo inventado: "
+        "el control verde no mediría la propiedad que nombra (L-CIM.12)"
     )

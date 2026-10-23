@@ -1,0 +1,115 @@
+./evidence/FASE-A/faseA_narratives_audit.py:5:  2. narratives = las 16 claves del dict en _pain_to_brecha
+./evidence/FASE-A/faseA_narratives_audit.py:46:print("2. narratives (_pain_to_brecha)         :", len(narratives_keys))
+./evidence/FASE-B/faseB_narratives_audit.py:20:    conductual que llama a `_pain_to_brecha` y observa si devuelve None)
+./evidence/FASE-B/faseB_narratives_audit.py:74:print("A. DESCARTE REAL = emitido por detect_pains Y `_pain_to_brecha` devuelve None")
+./main.py:330:    ``FinancialFactors.SUPERPOSITION_FACTOR``, inexistente desde el refactor
+./modules/commercial_documents/v4_diagnostic_generator.py:625:        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+./modules/commercial_documents/v4_diagnostic_generator.py:2810:        _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+./modules/commercial_documents/v4_diagnostic_generator.py:3331:            brecha = self._pain_to_brecha(pain, region=self._region,
+./modules/commercial_documents/v4_diagnostic_generator.py:3374:    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+./modules/financial_engine/pricing_calculator.py:36:_DEFAULT_TIER_CONFIG: Dict[str, Dict[str, Any]] = {
+./modules/financial_engine/pricing_calculator.py:136:            defaults = _DEFAULT_TIER_CONFIG[tier_key]
+./modules/financial_engine/pricing_calculator.py:180:            "tiers": _DEFAULT_TIER_CONFIG,
+./modules/financial_engine/pricing_calculator.py:196:            "tiers": _DEFAULT_TIER_CONFIG,
+./modules/financial_engine/pricing_calculator.py:306:        # Build TIER_CONFIG from YAML (with room bounds baked in from defaults)
+./modules/financial_engine/pricing_calculator.py:307:        self.TIER_CONFIG: Dict[HotelTier, Dict[str, Any]] = {}
+./modules/financial_engine/pricing_calculator.py:315:            defaults = _DEFAULT_TIER_CONFIG[tier_key]
+./modules/financial_engine/pricing_calculator.py:316:            self.TIER_CONFIG[tier_enum] = {
+./modules/financial_engine/pricing_calculator.py:339:        self.GATE_MIN_RATIO: float = cfg["gates"]["min_ratio"]
+./modules/financial_engine/pricing_calculator.py:340:        self.GATE_MAX_RATIO: float = cfg["gates"]["max_ratio"]
+./modules/financial_engine/pricing_calculator.py:341:        self.GATE_IDEAL_RATIO: float = cfg["gates"]["ideal_ratio"]
+./modules/financial_engine/pricing_calculator.py:364:        config = self.TIER_CONFIG[tier]
+./modules/financial_engine/pricing_calculator.py:375:        is_compliant = self.GATE_MIN_RATIO <= pain_ratio <= self.GATE_MAX_RATIO
+./modules/financial_engine/pricing_calculator.py:390:                "gate_min": self.GATE_MIN_RATIO,
+./modules/financial_engine/pricing_calculator.py:391:                "gate_max": self.GATE_MAX_RATIO,
+./modules/financial_engine/pricing_calculator.py:415:            gate_max_ratio=self.GATE_MAX_RATIO,
+./modules/financial_engine/pricing_calculator.py:420:        is_compliant = self.GATE_MIN_RATIO <= pain_ratio <= self.GATE_MAX_RATIO
+./modules/financial_engine/pricing_calculator.py:442:                "gate_min": self.GATE_MIN_RATIO,
+./modules/financial_engine/pricing_calculator.py:443:                "gate_max": self.GATE_MAX_RATIO,
+./modules/financial_engine/pricing_calculator.py:471:            "valid": self.GATE_MIN_RATIO <= ratio <= self.GATE_MAX_RATIO,
+./modules/financial_engine/pricing_calculator.py:473:            "min_allowed": self.GATE_MIN_RATIO,
+./modules/financial_engine/pricing_calculator.py:474:            "max_allowed": self.GATE_MAX_RATIO,
+./modules/financial_engine/pricing_calculator.py:475:            "within_ideal": abs(ratio - self.GATE_IDEAL_RATIO) < 0.01,
+./modules/utils/financial_factors.py:51:    SUPERPOSITION_FACTOR: Factor de corrección (0.7) para evitar doble conteo
+./temp/adopcion-2026-10-01_fila17_generador_mutante.py:625:        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+./temp/adopcion-2026-10-01_fila17_generador_mutante.py:2810:        _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+./temp/adopcion-2026-10-01_fila17_generador_mutante.py:3331:            brecha = self._pain_to_brecha(pain, region=self._region,
+./temp/adopcion-2026-10-01_fila17_generador_mutante.py:3374:    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+./temp/adopcion-2026-10-01_fila17_generador_renombre.py:625:        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+./temp/adopcion-2026-10-01_fila17_generador_renombre.py:2810:        _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+./temp/adopcion-2026-10-01_fila17_generador_renombre.py:3331:            brecha = self._pain_to_brecha(pain, region=self._region,
+./temp/adopcion-2026-10-01_fila17_generador_renombre.py:3374:    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+./temp/adopcion-2026-10-01_fila17_generador_rev7fa8d5c.py:625:        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+./temp/adopcion-2026-10-01_fila17_generador_rev7fa8d5c.py:2810:        _pain_to_brecha) — nunca hardcoded ni inventada (D-NC3, D-NC6).
+./temp/adopcion-2026-10-01_fila17_generador_rev7fa8d5c.py:3331:            brecha = self._pain_to_brecha(pain, region=self._region,
+./temp/adopcion-2026-10-01_fila17_generador_rev7fa8d5c.py:3374:    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+./temp/faseA_narratives_audit.py:5:  2. narratives = las 16 claves del dict en _pain_to_brecha
+./temp/faseA_narratives_audit.py:43:print("2. narratives (_pain_to_brecha)         :", len(narratives_keys))
+./temp/fase_d_backup/main.py:362:            ) * FinancialFactors.SUPERPOSITION_FACTOR
+./temp/fase_f_recovery_backup/main.py:362:            ) * FinancialFactors.SUPERPOSITION_FACTOR
+./temp/rc2_backup/v4_diagnostic_generator.py:574:        # Store region for use in _identify_brechas -> _pain_to_brecha (FASE-CONFIG-5)
+./temp/rc2_backup/v4_diagnostic_generator.py:3017:            brecha = self._pain_to_brecha(pain, region=self._region,
+./temp/rc2_backup/v4_diagnostic_generator.py:3031:    def _pain_to_brecha(self, pain, region: str = "eje_cafetero",
+./temp/release-2026-10-07/CHANGELOG.pre.py:1251:- **FASE-B — biyección triple mapa ↔ emisión ↔ narrativa**: `_pain_to_brecha` ya no descarta en silencio (el `return None` se reemplazó por derivación de Capa 1 ⟹ capa narrativa **total 26/26**, 0 entradas escritas a mano). 3 pains ganan señal verificable (`missing_llmstxt`, `missing_alt_text`, `no_social_links`) con guard «vacío vs ausente»; `no_ga4_enhanced` se **retira** (guardia insatisfacible) ⟹ Capa 1 27 → **26**; 6 pains se difieren con decisión registrada. Delta: emisiones 18 → 20, **DESCARTE REAL 2 → 0**.
+./temp/release-2026-10-07/CHANGELOG.pre.py:1290:| `modules/commercial_documents/v4_diagnostic_generator.py` | A: IDs fantasma corregidos · B: `_pain_to_brecha` derivado de Capa 1 · H: estados `BRECHAS_STATE_*`, aviso `NOT_EVALUATED`, `MANUAL_ATTENTION_TABLE_HEADER`, rama de performance (3715 → 3843 líneas) |
+./temp/release-2026-10-07/CHANGELOG.pre.py:1527:- `modules/commercial_documents/v4_diagnostic_generator.py` — Quick Win Schema/WhatsApp condicionado a `whatsapp_conflict` (B2); nuevo método `_build_fugas_principales_section()` que reutiliza narrativa dinámica de `_pain_to_brecha()` (B1, D-NC6); título "LAS {N} FUGAS PRINCIPALES" dinámico con pluralización (B4, D-NC1); helper `_has_whatsapp_conflict()` extraído (B3, D-NC4); variables `seccion_1_canales` + `seccion_1_whatsapp_clausula` inyectadas en render dict (B3+B5)
+./temp/release-2026-10-07/CHANGELOG.pre.py:1986:- **FASE-A** (D1+D2): Contenido veraz — `_pain_to_brecha` usa `pain.name`/`description` del mapper; detección unica de brechas con `_identify_brechas`; template con conteo dinámico `${brechas_*_count}`; pesos sobre N real.
+./temp/release-2026-10-07/CHANGELOG.pre.py:3550:| config/pricing.yaml | TIER_CONFIG, GATE ratios, floor_price unificado |
+./temp/release-2026-10-07/CHANGELOG.pre.py:3565:| modules/financial_engine/pricing_calculator.py | CR-4: TIER_CONFIG + GATE ratios → YAML |
+./temp/release-2026-10-07/CHANGELOG.pre.py:3568:| modules/utils/financial_factors.py | CR-4: DEFAULTS + SUPERPOSITION_FACTOR → YAML |
+./temp/release-2026-10-07/CHANGELOG.pre.py:3647:- `modules/utils/financial_factors.py`: N-11 (SUPERPOSITION_FACTOR 0.7), N-11b (DEFAULTS 12 valores) → YAML
+./tests/commercial_documents/test_pain_map_bijection.py:8:segunda mitad: `narratives` en `_pain_to_brecha` solo tiene 16 claves y
+./tests/commercial_documents/test_pain_map_bijection.py:14:inerte: los pains llegaban a `_pain_to_brecha` y rebotaban. De ahí que la biyección sea
+./tests/commercial_documents/test_pain_map_bijection.py:25:descarte silencioso: ningún pain de Capa 1 puede rebotar en `_pain_to_brecha`, de modo que
+./tests/commercial_documents/test_pain_map_bijection.py:178:    """Claves literales del dict `narratives` en `_pain_to_brecha`."""
+./tests/commercial_documents/test_pain_map_bijection.py:214:    dentro de `_pain_to_brecha`. Por eso este conjunto ya no sirve para medir cobertura
+./tests/commercial_documents/test_pain_map_bijection.py:222:    """Sonda conductual: qué pain_ids puede narrar realmente `_pain_to_brecha`.
+./tests/commercial_documents/test_pain_map_bijection.py:233:        brecha = generador._pain_to_brecha(
+./tests/commercial_documents/test_pain_map_bijection.py:283:    """N-A1: sin narrativa el pain rebota en `_pain_to_brecha` y no llega al documento.
+./tests/commercial_documents/test_pain_map_bijection.py:294:        "PAIN_SOLUTION_MAP declara pain_ids que `_pain_to_brecha` no sabe narrar: "
+./tests/commercial_documents/test_pain_map_bijection.py:318:        f"detect_pains emite pain_ids que `_pain_to_brecha` descarta en silencio: "
+./tests/commercial_documents/test_pain_map_bijection.py:381:    """Capa 1 menos las claves del dict literal: los que `_pain_to_brecha` narra derivando.
+./tests/commercial_documents/test_pain_map_bijection.py:397:    Se construye el Pain **sin** nombre ni descripción a propósito: `_pain_to_brecha` hace
+./tests/commercial_documents/test_pain_map_bijection.py:403:    brecha = V4DiagnosticGenerator()._pain_to_brecha(
+./tests/config/test_config_commercial.py:71:    def test_no_build_guarantees_section_hardcode(self):
+./tests/config/test_config_commercial.py:72:        """v4_proposal_generator.py NO contiene 'def _build_guarantees_section' hardcodeado"""
+./tests/config/test_config_commercial.py:77:        assert 'def _build_guarantees_section' not in content, \
+./tests/config/test_config_commercial.py:78:            "v4_proposal_generator.py no debe tener _build_guarantees_section hardcodeado"
+./tests/config/test_config_pricing.py:65:        """pricing_calculator.py NO contiene TIER_CONFIG = { (dict hardcodeado)"""
+./tests/config/test_config_pricing.py:69:        # Buscar patrón TIER_CONFIG = { ... } en formato hardcodeado
+./tests/config/test_config_pricing.py:70:        assert 'TIER_CONFIG = {' not in content, \
+./tests/config/test_config_pricing.py:71:            "pricing_calculator.py contiene 'TIER_CONFIG = {' (hardcodeado)"
+./tests/config/test_config_pricing.py:74:        """pricing_calculator.py NO contiene GATE_MIN_RATIO = 0.03 hardcodeado"""
+./tests/config/test_config_pricing.py:78:        # Buscar línea como GATE_MIN_RATIO = 0.03 (asignación directa, no de config)
+./tests/config/test_config_pricing.py:82:            if 'GATE_MIN_RATIO' in line and '=' in line:
+./tests/financial_engine/test_pricing_calculator.py:295:        config = calc.TIER_CONFIG[HotelTier.BOUTIQUE]
+./tests/financial_engine/test_pricing_calculator.py:306:        config = calc.TIER_CONFIG[HotelTier.STANDARD]
+./tests/financial_engine/test_pricing_calculator.py:317:        config = calc.TIER_CONFIG[HotelTier.LARGE]
+./tests/financial_engine/test_pricing_calculator.py:328:        assert calc.GATE_MIN_RATIO == 0.03
+./tests/financial_engine/test_pricing_calculator.py:329:        assert calc.GATE_MAX_RATIO == 0.06
+./tests/financial_engine/test_pricing_calculator.py:330:        assert calc.GATE_IDEAL_RATIO == 0.045
+./tests/financial_engine/test_pricing_calculator.py:374:        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
+./tests/financial_engine/test_pricing_calculator.py:375:        assert calc.GATE_MIN_RATIO == 0.03
+./tests/financial_engine/test_pricing_calculator.py:376:        assert calc.GATE_MAX_RATIO == 0.06
+./tests/financial_engine/test_pricing_calculator.py:387:        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
+./tests/financial_engine/test_pricing_calculator.py:388:        assert calc.GATE_MIN_RATIO == 0.03
+./tests/financial_engine/test_pricing_calculator.py:398:        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["percentage"] == 0.035
+./tests/financial_engine/test_pricing_calculator.py:399:        assert calc.TIER_CONFIG[HotelTier.BOUTIQUE]["min_price"] == 800_000
+./tests/financial_engine/test_pricing_calculator.py:400:        assert calc.GATE_MIN_RATIO == 0.03
+./tests/financial_engine/test_pricing_calculator.py:401:        assert calc.GATE_MAX_RATIO == 0.06
+./tests/financial_engine/test_pricing_calculator.py:417:        # H-18b: floor was 800K in v4_proposal_generator.py, 1.2M in TIER_CONFIG
+./tests/financial_engine/test_pricing_calculator.py:431:        assert calc1.GATE_MIN_RATIO == calc2.GATE_MIN_RATIO
+./tests/financial_engine/test_pricing_calculator.py:432:        assert calc1.TIER_CONFIG[HotelTier.BOUTIQUE]["percentage"] == calc2.TIER_CONFIG[HotelTier.BOUTIQUE]["percentage"]
+./tests/quality_gates/test_publication_gates.py:1509:        # Test the _pain_to_brecha translation directly
+./tests/quality_gates/test_publication_gates.py:1520:            brecha = generator._pain_to_brecha(pain)
+./tests/quality_gates/test_publication_gates.py:1531:        assert generator._pain_to_brecha(unknown_pain) is None
+./tests/test_config_extraction_3b.py:288:        """SUPERPOSITION_FACTOR carga de YAML."""
+./tests/test_config_extraction_3b.py:296:        """YAML ausente → SUPERPOSITION_FACTOR fallback 0.7."""
+./tests/test_gap_analyzer_superposition_reader.py:3:El refactor ``1501dd8`` convirtió ``FinancialFactors.SUPERPOSITION_FACTOR``
+./tests/test_main_static_guards.py:75:# `AttributeError` latente (FinancialFactors.SUPERPOSITION_FACTOR, inexistente
+./tests/test_pricing_pipeline.py:16:    _DEFAULT_TIER_CONFIG,
+./tests/test_pricing_pipeline.py:27:    return dict(_DEFAULT_TIER_CONFIG["boutique"])
+./tests/test_spark_retirement.py:4:``FinancialFactors.SUPERPOSITION_FACTOR``, atributo inexistente desde el refactor
+./tests/test_spark_retirement.py:71:    Si alguien vuelve a escribir `FinancialFactors.SUPERPOSITION_FACTOR` en
+./tests/test_spark_retirement.py:79:        if isinstance(node, ast.Attribute) and node.attr == "SUPERPOSITION_FACTOR"
+./tests/test_spark_retirement.py:83:        "FinancialFactors.SUPERPOSITION_FACTOR ya no existe"

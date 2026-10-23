@@ -1,0 +1,25 @@
+commit 1501dd80699c3771292e1ec8306d00470352a73a
+Author: Hermes CLI <hermes@iah-cli.local>
+Date:   Thu Apr 30 22:16:10 2026 -0500
+
+    RELEASE 4.38.0: FEATURE-CONFIG-EXTRACTION — 31 hardcodes → 6 YAML + sync fix + 60 config tests. 7 root causes corrected. Backwards compatible.
+
+ modules/analytics/__init__.py                      |  28 +--
+ modules/analytics/data_aggregator.py               |  18 +-
+ modules/analytics/profound_client.py               |  18 +-
+ modules/analytics/semrush_client.py                |  24 +-
+ .../templates/propuesta_v6_template.md             |  35 ++-
+ .../v4_diagnostic_generator.py                     | 157 ++++++++++---
+ .../commercial_documents/v4_proposal_generator.py  | 222 ++++++++++++++----
+ modules/common/__init__.py                         |   1 +
+ modules/common/fallback_loader.py                  | 175 ++++++++++++++
+ modules/common/yaml_loader.py                      | 104 +++++++++
+ modules/delivery/generators/aeo_metrics_gen.py     |  17 ++
+ modules/financial_engine/loss_projector.py         |  16 +-
+ modules/financial_engine/pricing_calculator.py     | 260 ++++++++++++++++-----
+ modules/financial_engine/scenario_calculator.py    |  36 ++-
+ modules/utils/financial_factors.py                 |  74 ++++--
+ scripts/doctor.py                                  |  62 ++++-
+ scripts/sync_config.yaml                           |  12 +-
+ scripts/sync_versions.py                           |  24 +-
+ 18 files changed, 1065 insertions(+), 218 deletions(-)

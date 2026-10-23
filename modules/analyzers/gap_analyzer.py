@@ -398,7 +398,7 @@ class GapAnalyzer:
                 "perdida_intervalo_confianza": [perdida_min, perdida_max],
                 "factor_captura_aila": factor_aila,
                 "factor_perdida_aplicado": factor_perdida_base,
-                "factor_superposicion": FinancialFactors.SUPERPOSITION_FACTOR,
+                "factor_superposicion": FinancialFactors.get_superposition_factor(),
                 "nota_superposicion": "Factor 0.7 aplicado para evitar doble conteo de pérdidas superpuestas (estándar industria)",
                 "comision_ota_base": COMISION_OTA_BASE,
                 "penalizacion_invisibilidad_ia": PENALIZACION_INVISIBILIDAD_IA,
@@ -408,7 +408,12 @@ class GapAnalyzer:
         }
 
     def analyze_with_claude(self, hotel_data, gbp_data, schema_data, ia_test):
-        """Alias retained for backwards compatibility with main.py."""
+        """Alias histórico de ``analyze_with_llm``.
+
+        Sin consumidores registrados en el repo (la atribución previa a
+        ``main.py`` era falsa: main.py nunca lo invocó). Se conserva solo por
+        compatibilidad con consumidores externos no registrados.
+        """
         return self.analyze_with_llm(hotel_data, gbp_data, schema_data, ia_test)
 
     def get_quick_win_action(self, hotel_data: dict, gbp_data: dict, schema_data: dict, ia_test: dict) -> dict:
