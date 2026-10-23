@@ -1,0 +1,100 @@
+FASE-B — Crudo de la atribución de los 3 rojos R de la suite completa (Paso 1)
+Plan: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 · Fase: FASE-B
+Fecha de medición: 2026-10-23
+Instrumento: subagente de solo lectura S1 (delegación hermes, 15 api_calls), sin escrituras en el repo
+(pytest con -p no:cacheprovider y PYTHONDONTWRITEBYTECODE=1; git status --porcelain intacto tras la
+corrida; solo se corrieron los 3 tests indicados y una re-ejecución aislada del [2] para medir orden).
+Método: (1) re-corrió solo los 3 tests y capturó la traza de cada fallo; (2) grep de los tokens
+commercial_documents / v4_proposal_generator / v4_diagnostic_generator en los 3 tests y en los
+módulos que ejercitan (búsqueda directa por Python, inmune a gitignore); (3) sonda de entorno para
+credenciales (solo SET/ABSENT, sin valores); (4) veredicto por mecanismo con evidencia textual.
+
+[1] tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+TRAZA (medida, reproducida):
+tests\config\test_config_integration.py:84: AssertionError: secret_fragment_policy.yaml debe tener campo 'description'
+assert 'description' in {'directorios_exentos_barridos': [...], 'duenio': 'Operador', 'grandfathered': [...], ...}
+GREP (commercial_documents|v4_proposal_generator|v4_diagnostic_generator):
+- tests/config/test_config_integration.py: sin coincidencias
+- config/secret_fragment_policy.yaml (el YAML que falla): sin coincidencias
+- Resto de config/*.yaml (11 archivos): sin coincidencias, salvo config/regional_benchmarks.yaml,
+  solo COMENTARIOS de procedencia, no imports:
+    6:# Fuente: v4_diagnostic_generator.py, v4_proposal_generator.py
+    26:    # v4_diagnostic_generator.py L2240-2311   60:    # v4_proposal_generator.py L972-985
+    68:    # v4_diagnostic_generator.py L1992        73:    # v4_diagnostic_generator.py L1741
+    78:    # v4_diagnostic_generator.py L1713-1718   85:    # v4_diagnostic_generator.py L1749-1754
+  Ese archivo pasa el assert (el fallo ocurre en otro archivo del orden de os.listdir) y FASE-B no
+  modificó ningún YAML de config/.
+MÓDULOS EJERCITADOS: stdlib (os, sys, importlib, tempfile), PyYAML (yaml.safe_load); datos: los 12
+config/*.yaml. El método no importa ningún módulo del proyecto.
+VEREDICTO: PREEXISTENTE — deuda de metadatos (config/secret_fragment_policy.yaml sin 'description'),
+sin camino de dependencia hacia los archivos de FASE-B.
+
+[2] tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+TRAZA (medida):
+tests\quality_gates\jev_pilot\test_jev_pilot_deepseek_brazo.py:87: AssertionError: esperaba
+CredencialAusente y hubo RedProhibida: hubo un intento de envio
+assert 'RedProhibida' == 'CredencialAusente'  (- CredencialAusente / + RedProhibida)
+ORDEN (medido, 2 reproducciones): PASA solo (1 passed in 0.15s) y FALLA en combinación con los otros
+2 tests — sensible al orden de colección, no a FASE-B.
+MECANISMO (medido paso a paso):
+- tests/test_fase_h_onboarding_procedencia.py hace `from main import ...` a nivel de módulo → la
+  colección de pytest ejecuta main.py:11-17 (load_dotenv sobre .env del repo).
+- Sonda de proceso (solo SET/ABSENT): DEEPSEEK_API_KEY pasa ABSENT → SET tras `import main`
+  (ANTHROPIC_API_KEY sigue ABSENT).
+- decision_client.py:724 llama al brazo sin reenviar el entorno: payload = prov["modulo"].evaluar(...);
+  deepseek.py:197 (entorno = os.environ if entorno is None else entorno) encuentra la clave sembrada
+  por .env y llega al transporte real (post_default) → el guard de red del conftest lanza RedProhibida.
+  Sin el import de main (test solo, entorno limpio) → CredencialAusente, como el test espera.
+GREP: tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py: sin coincidencias ·
+scripts/decision_client.py: sin coincidencias · scripts/proveedores/deepseek.py: sin coincidencias ·
+tests/quality_gates/jev_pilot/conftest.py: sin coincidencias · tests/conftest.py: sin coincidencias
+(además sin environ/setenv/DEEPSEEK).
+MÓDULOS EJERCITADOS: tests/quality_gates/jev_pilot/conftest.py (fixtures sin_red, dc, proveedor,
+entorno_brazo, excpcion_de_red, raiz_repo), scripts/decision_client.py (cargado como
+decision_client_bajo_prueba_jev), scripts/proveedores/deepseek.py (vía dc.cargar_modulo_proveedor),
+stdlib (ast, json, pathlib). Indirecto por colección: main.py → .env.
+VEREDICTO: AMBIENTAL — depende de (1) la entrada no vacía DEEPSEEK_API_KEY en el .env del repo y
+(2) qué módulos de test comparten el proceso de pytest. Sin esas condiciones el test pasa. Cero
+camino hacia los archivos de FASE-B.
+
+[3] tests/test_fase_h_onboarding_procedencia.py::test_el_preflight_recalculado_no_inventa_el_consentimiento
+TRAZA (medida):
+tests\test_fase_h_onboarding_procedencia.py:479: AssertionError: el documento del operador esta en el
+arbol: negarlo tambien seria inventar — assert False is True
+CAUSA (sonda que ejecuta run_once.preflight() sobre el árbol real, solo lectura):
+  causa: edad del dato 93 dias contra un limite declarado de 90 (techo de H: 90)
+  detalle: fecha_captura='2026-07-22', edad_dias=93, autoriza_entrega=False
+  emitido_el: 2026-10-23; no_favorables: ['consentimiento_datado_sobre_la_url_viva',
+  'control_productivo_intacto', 'frescura_fail_closed']
+MECANISMO: run_once.py (l.430, 500-507, 565-572) computa edad_dias contra el reloj con
+EDAD_MAXIMA_DIAS = 90; el dato congelado (captura 2026-07-22) cumplió 93 días el 2026-10-23. El test
+era verde hasta 2026-10-20 y vence por calendario desde 2026-10-21 — bomba de tiempo en el propio
+test, ajena a FASE-B.
+GREP: tests/test_fase_h_onboarding_procedencia.py: sin coincidencias ·
+evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py: sin coincidencias ·
+evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/derivar_onboarding.py: sin coincidencias ·
+integracion_offline.json y onboarding_provenance.json (datos leídos): sin coincidencias ·
+main.py: 5 coincidencias — imports LAZY dentro de funciones que el test no llama
+(hook_pdf_generator l.1329 dentro de run_hook_pdf_mode; data_structures l.1417; bloque v4complete
+l.1993-2000: V4DiagnosticGenerator, V4ProposalGenerator, pain_solution_mapper).
+Medición decisiva: sys.modules tras `import main` = ningún módulo commercial*/v4_* cargado; sigue
+igual tras ejecutar run_once.preflight(). La ruta fallida nunca ejecuta los archivos de FASE-B.
+MÓDULOS EJERCITADOS: evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/run_once.py (preflight,
+rama_favorable, leer_consentimiento, evaluar_consentimiento, inventario_memoria, congelar_hashes),
+derivar_onboarding.py (importado, no llamado por este test), main.py (importado, funciones no
+llamadas), stdlib (hashlib, importlib.util, json, datetime, pathlib), PyYAML; datos:
+integracion_offline.json, onboarding_provenance.json, evidence/.../FASE-F/credential_status.json,
+evidence/.../FASE-H/consentimiento-corrida.md, .agent/memory y los ARCHIVOS_CONGELADOS por hash.
+VEREDICTO: PREEXISTENTE (rojo vencido por calendario) — sin dependencia de FASE-B ni de credenciales.
+
+SALVEDAD (menciones estáticas, ninguna en ruta fallida): existe la cadena estática
+main.py (imports lazy) → modules/commercial_documents/__init__.py:31-32 (from .v4_diagnostic_generator
+... / from .v4_proposal_generator ...) y evidence/REFACTOR-WHATSAPP-ENTREGA-2026-09-18/FASE-H/
+integracion_offline.py:76,334 (from modules.commercial_documents.coherence_validator ...). Pero los
+archivos de FASE-B son exactamente v4_diagnostic_generator.py, v4_proposal_generator.py y los 2
+templates: integracion_offline.py no se ejecuta en el test [3] (solo se lee su JSON de salida) y los
+imports de main.py son lazy en funciones que estos tests no llaman (confirmado con sys.modules).
+Ninguna traza de fallo pasa por código de FASE-B.
+
+VEREDICTO GLOBAL: [1] PREEXISTENTE · [2] AMBIENTAL · [3] PREEXISTENTE (calendario).
+Ninguno atribuible a FASE-B; sin camino de dependencia hacia los 4 archivos modificados por la fase.

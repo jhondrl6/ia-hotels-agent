@@ -92,7 +92,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-E --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "R2: lector único de benchmarks, cinco tablas derivadas/retiradas y verificador real cableado (D25-ter/N4/N5/N6, AC4)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

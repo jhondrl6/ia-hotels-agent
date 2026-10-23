@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-22
+> **Ultima actualizacion:** 2026-10-23
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 534
+> **Total fases completadas:** 535
 
 ---
 
@@ -12662,6 +12662,45 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 7 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-B - 2026-10-23 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** Ítem A: 2 claims neutralizados por tier en propuesta y diagnóstico; revisor real y diente (AC1); gate de Wiring re-publicado
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/commercial_documents/test_fase_b_claims_tier_render.py` | NUEVO | Test Fase B Claims Tier Render |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/inventario-candidatas.txt` | NUEVO | Inventario-Candidatas |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/inventario_runner.py` | NUEVO | Inventario Runner |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/mutation_pair_runner.py` | NUEVO | Mutation Pair Runner |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/par-rojo-verde-claims.txt` | NUEVO | Par-Rojo-Verde-Claims |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/quick-post-reparacion-wiring.txt` | NUEVO | Quick-Post-Reparacion-Wiring |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/atribucion-rojos-r.txt` | NUEVO | Atribucion-Rojos-R |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/fixture-ac11-reexecucion.txt` | NUEVO | Fixture-Ac11-Reexecucion |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/pytest-tests-nuevos.txt` | NUEVO | Pytest-Tests-Nuevos |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-B/suite-completa-post-cierre.txt` | NUEVO | Suite-Completa-Post-Cierre |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/commercial_documents/templates/diagnostico_v6_template.md` | Diagnostico V6 Template |
+| `modules/commercial_documents/templates/propuesta_v6_template.md` | Propuesta V6 Template |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/LECCIONES-INDEX.md` | LECCIONES-INDEX |
+| `.opencode/lecciones_index.json` | Lecciones Index Json |
+
+_Errata corregida a mano: el registro se estampó sin `--archivos-nuevos` y los 11 archivos nuevos figuraban bajo «Modificados»; faltaban además 3 artefactos de evidencia. Reclasificado contra `git cat-file -e HEAD:&lt;ruta&gt;`, que es quien decide si una ruta existe en el commit padre; la cabecera de este archivo no se tocó. La deuda de instrumento (que el escritor clasifique por HEAD y no por el flag donde cae la ruta) queda con dueño FASE-H2 en `10-analisis` §Seguimientos de este plan._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 8 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

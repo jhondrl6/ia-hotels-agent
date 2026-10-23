@@ -82,7 +82,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-E2E --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "Corrida v4complete Don Alfonso post-curación: ZIP real, 0 OVER_PRESENTATION y veredicto honesto (AC7)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

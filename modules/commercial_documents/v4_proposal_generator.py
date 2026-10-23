@@ -1871,6 +1871,10 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
         FASE-2-PATCH-A: Expande expresiones compuestas con OR antes del pattern
         simple. Maneja {{if a == "X" or a == "Y"}}...{{endif}}.
+
+        FASE-B (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER): el operador != expresa la
+        variante honesta del contrato plantilla↔tier (claims de totalidad solo con
+        tier A; con tier no-A —o sin tier declarado— se emite la variante honesta).
         """
         import re
 
@@ -1891,15 +1895,17 @@ Cuando configuremos Google Analytics, podremos medir con precision el impacto de
 
         template_content = re.sub(or_pattern, expand_or, template_content, flags=re.DOTALL)
 
-        # PASO 2: Procesar conditionals simples (código existente FASE-1-A)
-        pattern = r'\{\{if\s+(\w+)\s*==\s*"([^"]+)"\}\}(.*?)\{\{endif\}\}'
+        # PASO 2 (FASE-1-A + FASE-B): conditionales simples con == o !=
+        pattern = r'\{\{if\s+(\w+)\s*(==|!=)\s*"([^"]+)"\}\}(.*?)\{\{endif\}\}'
 
         def replace_match(match):
             var_name = match.group(1)
-            expected = match.group(2)
-            block = match.group(3)
+            operador = match.group(2)
+            expected = match.group(3)
+            block = match.group(4)
             actual = str(data.get(var_name, ''))
-            return block if actual == expected else ''
+            coincide = (actual == expected) if operador == '==' else (actual != expected)
+            return block if coincide else ''
 
         return re.sub(pattern, replace_match, template_content, flags=re.DOTALL)
     

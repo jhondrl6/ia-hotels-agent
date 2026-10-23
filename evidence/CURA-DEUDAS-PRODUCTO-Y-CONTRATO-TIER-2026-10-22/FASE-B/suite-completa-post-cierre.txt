@@ -1,0 +1,1770 @@
+........................................................................ [  1%]
+................................................................s....... [  2%]
+........................................................................ [  3%]
+........................................................................ [  5%]
+........................................................................ [  6%]
+........................................................................ [  7%]
+........................................................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 11%]
+........................................s............................... [ 13%]
+........................................................................ [ 14%]
+........................................................................ [ 15%]
+........................................................................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 19%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 23%]
+.............................s.................F........................ [ 24%]
+........................................................................ [ 26%]
+........................................................................ [ 27%]
+........................................................................ [ 28%]
+..............................................s......................... [ 30%]
+........................................................................ [ 31%]
+............................................................x........... [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+........................................................................ [ 47%]
+........................................................................ [ 48%]
+...............F........................................................ [ 49%]
+........................................................................ [ 50%]
+............................................EEEEEE..FFFFFFFFFFFE.F...... [ 52%]
+.......FFFFFF.FEEEE.EEEEEEEEFFFFEEEEEEEE................................ [ 53%]
+........................................................................ [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 57%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+.....................sssssss............................................ [ 66%]
+.................................................................ss..... [ 67%]
+........................................................................ [ 69%]
+.............................s.....s.............ss..................... [ 70%]
+........................................................................ [ 71%]
+...........................................................s............ [ 73%]
+........................................................................ [ 74%]
+......................................x................................. [ 75%]
+........................................................................ [ 77%]
+.................................................................F...... [ 78%]
+............................sssss..s................................sss. [ 79%]
+s........s.................................s............................ [ 81%]
+........................................................................ [ 82%]
+........................................ss.............................. [ 83%]
+........................................................................ [ 84%]
+........................................................................ [ 86%]
+..................sss................................................... [ 87%]
+........................................................................ [ 88%]
+........................s............................................... [ 90%]
+........................................................................ [ 91%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+........................................................................ [ 96%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+................................xx                                       [100%]
+=================================== ERRORS ====================================
+_____ ERROR at setup of test_acceptacion_no_ejercitado_con_motivo_literal _____
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+__________ ERROR at setup of test_no_se_simulo_ninguna_aceptabilidad __________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+__________ ERROR at setup of test_el_informe_declara_quien_contesto ___________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_denominador_con_poblacion_terminos_ceros_y_familias __
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_lo_que_no_se_juzga_queda_declarado[familias_no_juzgadas] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_lo_que_no_se_juzga_queda_declarado[familias_excluidas_por_el_generador] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+______ ERROR at setup of test_real_triage_guard_preserves_anchored_rows _______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_ninguna_fila_anclada_desaparece_y_el_guard_tuvo_trabajo _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_el_informe_del_seccion_dos_trae_los_tres_campos_del_ac10 _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+______ ERROR at setup of test_anchored_after_conserva_las_filas_litales _______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+____ ERROR at setup of test_todas_las_preguntas_son_choice_de_dos_opciones ____
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_______ ERROR at setup of test_probabilidad_si_no_es_el_campo_gobernado _______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_misma_probabilidad_distinta_confidencia_cambia_el_bucket _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+______ ERROR at setup of test_el_umbral_no_acepta_una_confidence_ausente ______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[campo] ____________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[value] ____________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+___________ ERROR at setup of test_forma_pregunta_publicada[basis] ____________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+________ ERROR at setup of test_forma_pregunta_publicada[action_below] ________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+__ ERROR at setup of test_el_script_no_tiene_camino_de_escribir_seccion_dos ___
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+____ ERROR at setup of test_las_tres_partes_del_ac12_estan_en_el_artefacto ____
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_________ ERROR at setup of test_la_accion_por_debajo_no_es_descartar _________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_todos_los_candidatos_tienen_bucket_y_ninguno_se_pierde _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[campo] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[value] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[basis] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ ERROR at setup of test_el_valor_publicado_es_el_del_codigo_no_el_del_test[action_below] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+______ ERROR at setup of test_el_coste_del_reporte_lleva_tope_publicado _______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    @pytest.fixture
+    def informe_real(trl, entorno_falso) -> dict:
+        """Una corrida completa del triaje sobre ESTE plan, con el proveedor falso determinista."""
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\conftest.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+================================== FAILURES ===================================
+________ TestConfigIntegration.test_all_config_files_have_description _________
+
+self = <test_config_integration.TestConfigIntegration object at 0x0000019D94DD4B00>
+
+    def test_all_config_files_have_description(self):
+        """Todos los YAML activos de config/ deben tener campo 'description'"""
+        config_dir = os.path.join(os.path.dirname(__file__), '../../config')
+    
+        # Archivos LEGACY sin version/description (deprecated)
+        skip_files = {'settings.yaml'}  # LEGACY — ver header del archivo
+    
+        for filename in os.listdir(config_dir):
+            if filename.endswith('.yaml') or filename.endswith('.yml'):
+                if filename in skip_files:
+                    continue
+                filepath = os.path.join(config_dir, filename)
+                with open(filepath, encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+>               assert 'description' in data, f"{filename} debe tener campo 'description'"
+E               AssertionError: secret_fragment_policy.yaml debe tener campo 'description'
+E               assert 'description' in {'directorios_exentos_barridos': ['archives', 'evidence', '.opencode'], 'duenio': 'Operador', 'grandfathered': [{'cond... empieza ni termina en esos fragmentos.', ...}], 'prefijos': ['sk-', 'AIza', 'ghp_', 'gho_', 'ghu_', 'ghs_', ...], ...}
+
+tests\config\test_config_integration.py:84: AssertionError
+_ test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic _
+
+dc = <module 'decision_client_bajo_prueba_jev' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\decision_client.py'>
+proveedor = <module 'iah_decision_provider__deepseek' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\proveedores\\deepseek.py'>
+entorno_brazo = {'IAH_DECISION_PROVIDER': 'deepseek-comparador', 'IAH_DECISION_PROVIDERS_DIR': 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\proveedores'}
+excpcion_de_red = <class 'quality_gates.jev_pilot.conftest.RedProhibida'>
+
+    def test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic(
+            dc, proveedor, entorno_brazo, excpcion_de_red):
+        """AC2/AC12: el brazo se detiene por su propia credencial y no se deriva a Anthropic.
+    
+        Que la excepcion sea `CredencialAusente` y no `RedProhibida` es la mitad del control: el guard
+        de red esta armado, asi que cualquier intento de envio habria saltado antes. La clave Anthropic
+        sintetica esta puesta a proposito: si alguien programara un fallback, aqui se veria.
+        """
+        entorno = {**entorno_brazo, "ANTHROPIC_API_KEY": CLAVE_SINTETICA}
+        with pytest.raises(Exception) as vio:
+            dc.evaluar("estado del plan", [dc.Pregunta("n1", "noul", "¿Sigues vigente?")],
+                       entorno=entorno)
+>       assert type(vio.value).__name__ == "CredencialAusente", (
+            f"esperaba CredencialAusente y hubo {type(vio.value).__name__}: hubo un intento de envio")
+E       AssertionError: esperaba CredencialAusente y hubo RedProhibida: hubo un intento de envio
+E       assert 'RedProhibida' == 'CredencialAusente'
+E         
+E         - CredencialAusente
+E         + RedProhibida
+
+tests\quality_gates\jev_pilot\test_jev_pilot_deepseek_brazo.py:87: AssertionError
+_ test_triage_sobre_plan_archivado_real[CURA-BLOQUE-HUESPED-QMIND-2026-10-10] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+___ test_triage_sobre_plan_archivado_real[CURA-COSTURA-TRIBUNAL-2026-10-11] ___
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/CURA-COSTURA-TRIBUNAL-2026-10-11')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[CURA-INSTRUMENTOS-QMIND-S15-2026-10-07] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+__ test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21] __
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[REFACTOR-WHATSAPP-ENTREGA-2026-09-18] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[TRIBUNAL-ENFORCEMENT-OBS-2026-09-11] __
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_triage_sobre_plan_archivado_real[VERIFICADOR-ESCRITURA-QMIND-2026-09-20] _
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+plan_dir = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans/Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20')
+
+    @skip_sin_corpus
+    @pytest.mark.parametrize("plan_dir", _corpus, ids=lambda p: p.name)
+    def test_triage_sobre_plan_archivado_real(trl, entorno_falso, plan_dir):
+        lecciones = plan_dir / "00-lecciones-capitalizadas.md"
+        antes = _sha(lecciones)
+>       indice, estado = trl.leer_suelo()
+                         ^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+______________ test_la_salida_por_main_sobre_archivado_es_triado ______________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_la_salida_por_main_sobre_0')
+
+    @skip_sin_corpus
+    def test_la_salida_por_main_sobre_archivado_es_triado(trl, entorno_falso, tmp_path):
+        plan = _corpus[0]
+        ruta = tmp_path / "informe.json"
+        rc = trl.main(["--plan", plan.name, "--report", "--out", str(ruta)])
+>       assert rc == 0
+E       assert 4 == 0
+
+tests\quality_gates\lesson_relevance\test_triage_corpus_real.py:81: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[VENCIDO] el suelo del triaje no es leible: el disco y el calculo propio difieren
+  ruta buscada: C:\Users\Jhond\Github\iah-cli\.opencode\lecciones_index.json
+  regenerar: python scripts/build_lesson_index.py
+  lo detecta el hook en: [6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)
+  que lo vencio: 0 IDs solo en disco, 0 solo en el calculo, 0 claves de cobertura distintas
+  informe escrito en: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1877\test_la_salida_por_main_sobre_0\informe.json
+_______ test_mutar_la_clausula_del_guard_hace_caer_la_afirmacion_de_ac6 _______
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_mutar_la_clausula_del_gua0')
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_mutar_la_clausula_del_guard_hace_caer_la_afirmacion_de_ac6(trl, tmp_path, entorno_falso):
+        """El diente: cortado el TEXTO de la reinsercion, `removed` deja de estar vacio por la causa nombrada.
+    
+        No se apaga `GUARD_ADITIVIDAD_ACTIVO` (eso ya lo hacen los dientes de AC14): se corta la otra mitad del
+        guard, la clausula que reintegra. La copia vive en `tmp_path` y el arbol de trabajo no se toca.
+        """
+        fuente = TRIAGE.read_text(encoding="utf-8")
+        assert fuente.count(ANCLA_GUARD) == 1, (
+            f"el ancla aparece {fuente.count(ANCLA_GUARD)} veces en el guion: el mutante no corta lo que se "
+            "cree que corta")
+        mutado = fuente.replace(ANCLA_GUARD, MUTANTE_GUARD, 1)
+        assert mutado != fuente and mutado.count(MUTANTE_GUARD) == 1
+        ast.parse(mutado)
+    
+        ruta_mutante = tmp_path / "triage_guard_mutado.py"
+        ruta_mutante.write_text(mutado, encoding="utf-8", newline="\n")
+        copia = _apuntar_a_la_raiz(_cargar_por_ruta("trl_guard_mutado", ruta_mutante))
+    
+>       real = _correr_triaje(trl, entorno_falso)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_guard_real_aditividad.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_guard_real_aditividad.py:88: in _correr_triaje
+    indice, estado = mod.leer_suelo(INDICE_JSON, plans_dir=PLANS, context_dir=CONTEXT)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {'context_dir': WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/context'), 'plans_dir': WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/plans')}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_____________________ test_la_tercera_via_esta_prohibida ______________________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+indice_real = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+
+    def test_la_tercera_via_esta_prohibida(trl, indice_real):
+        """Existir y leerse no es estar fresco: contra el indice vigente el check dice FRESCO, y eso es
+        lo unico que habilita el consumo."""
+        estado = trl.comprobar_frescura(indice_real)
+>       assert estado["index_status"] == "FRESCO"
+E       AssertionError: assert 'VENCIDO' == 'FRESCO'
+E         
+E         - FRESCO
+E         + VENCIDO
+
+tests\quality_gates\lesson_relevance\test_triage_indices_vencido.py:65: AssertionError
+_______________________ test_verde_con_el_guard_activo ________________________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_verde_con_el_guard_activo(trl, entorno_falso):
+>       v = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_______________________ test_rojo_con_el_guard_apagado ________________________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_rojo_con_el_guard_apagado(trl, entorno_falso):
+>       r = medir(trl, mut=True)
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:116: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+____________ test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10 _____________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10(trl, entorno_falso):
+        """La prueba de que el mutante apunta al guard de AC10: la misma asercion del test de AC10."""
+>       r = medir(trl, mut=True)
+            ^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+___________________ test_apagar_el_guard_no_altera_nada_mas ___________________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_apagar_el_guard_no_altera_nada_mas(trl, entorno_falso):
+        """Un mutante que apaga el guard no debe cambiar el denominador ni la poblacion miradas."""
+>       v, r = medir(trl, mut=False), medir(trl, mut=True)
+               ^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+____ test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno ____
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_las_dos_salidas_van_a_des0')
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno(tmp_path, entorno_falso):
+        obs = _observador()
+        protegido_antes = obs.huellas(EVIDENCIA_SOLO_LECTURA)
+        assert protegido_antes, f"no hay expediente que proteger en {EVIDENCIA_SOLO_LECTURA}"
+        destino = tmp_path / "mutation"
+        with obs.observador_de_escrituras() as registro:
+>           correr_a_destino(destino)
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:80: in correr_a_destino
+    verde = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_para_evidencia.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_______________ test_resumen_publica_el_alcance_del_observador ________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_resumen_publica_el_alcanc0')
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_resumen_publica_el_alcance_del_observador(tmp_path, entorno_falso):
+        obs = _observador()
+>       resumen = Path(correr_a_destino(tmp_path / "m")["destino"]) / "resumen.txt"
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:171: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:80: in correr_a_destino
+    verde = medir(trl, mut=False)
+            ^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:56: in medir
+    indice, estado, ancladas, pendientes = _insumos(trl)
+                                           ^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_mutation_aditividad.py:49: in _insumos
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_para_evidencia.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_________________ test_corrida_completa_no_toca_el_plan_real __________________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_corrida_completa_no_toca_0')
+
+    def test_corrida_completa_no_toca_el_plan_real(trl, entorno_falso, tmp_path):
+        """Corre el `main()` entero, con `--report` y destino explicito, contra el plan vigente."""
+        antes = _sha(LECCIONES)
+        ruta_informe = tmp_path / "informe.json"
+        obs = _observador()
+        with obs.observador_de_escrituras() as registro:
+            rc = trl.main(["--plan", NOMBRE, "--report", "--out", str(ruta_informe)])
+>       assert rc == 0, "la corrida debe terminar en TRIADO con el falso montado por entorno"
+E       AssertionError: la corrida debe terminar en TRIADO con el falso montado por entorno
+E       assert 4 == 0
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:57: AssertionError
+---------------------------- Captured stdout call -----------------------------
+[VENCIDO] el suelo del triaje no es leible: el disco y el calculo propio difieren
+  ruta buscada: C:\Users\Jhond\Github\iah-cli\.opencode\lecciones_index.json
+  regenerar: python scripts/build_lesson_index.py
+  lo detecta el hook en: [6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)
+  que lo vencio: 0 IDs solo en disco, 0 solo en el calculo, 0 claves de cobertura distintas
+  informe escrito en: C:\Users\Jhond\AppData\Local\Temp\pytest-of-Jhond\pytest-1877\test_corrida_completa_no_toca_0\informe.json
+____________ test_decision_incompleta_no_se_aplica_y_ruena_fuerte _____________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_decision_incompleta_no_se0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000019D9A71F3E0>
+
+    def test_decision_incompleta_no_se_aplica_y_ruena_fuerte(trl, entorno_falso, tmp_path, capsys):
+        """Sin `decidio` / `fecha` / `motivo` no hay aceptacion que valga: exit 6, no un verde comodo."""
+>       objetivo = informe_propuesta(trl, entorno_falso)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:125: in informe_propuesta
+    return correr_informe(trl, entorno_falso, None)["buckets"]["propuesto"][0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:117: in correr_informe
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_______ test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio ________
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio(trl, entorno_falso):
+>       base = correr_informe(trl, entorno_falso, None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:117: in correr_informe
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_ test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista __
+
+trl = <module 'trl_bajo_prueba_34804' from 'C:\\Users\\Jhond\\Github\\iah-cli\\scripts\\triage_lesson_relevance.py'>
+entorno_falso = {'ALLUSERSPROFILE': 'C:\\ProgramData', 'APPDATA': 'C:\\Users\\Jhond\\AppData\\Roaming', 'CHOCOLATEYINSTALL': 'C:\\ProgramData\\chocolatey', 'CHOCOLATEYLASTPATHUPDATE': '133899202865979652', ...}
+
+    def test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista(trl, entorno_falso):
+>       base = correr_informe(trl, entorno_falso, None)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\quality_gates\lesson_relevance\test_triage_propuesta_no_escribe_seccion_dos.py:117: in correr_informe
+    indice, estado = trl.leer_suelo()
+                     ^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ruta_json = WindowsPath('C:/Users/Jhond/Github/iah-cli/.opencode/lecciones_index.json')
+kw = {}
+estado = {'check_del_hook_que_lo_detecta': '[6/7] de scripts/git_hooks/pre-commit (build_lesson_index.py --check)', 'comando_re...c0612', 'sha256_disco': 'af4818e0291e9929', 'solo_en_disco': [], ...}, 'ejecutado_por': 'triage_lesson_relevance', ...}
+
+    def leer_suelo(ruta_json: Path = INDICE_JSON, **kw) -> tuple[dict, dict]:
+        """Devuelve (indice, estado). Un lector roto jamas devuelve «sin candidatos» (L-PF6)."""
+        estado = comprobar_frescura(ruta_json, **kw)
+        if estado["index_status"] != "FRESCO":
+>           raise SueloNoLeible(estado["index_status"], estado)
+E           trl_bajo_prueba_34804.SueloNoLeible: VENCIDO: el disco y el calculo propio difieren
+
+scripts\triage_lesson_relevance.py:208: SueloNoLeible
+_________ test_el_preflight_recalculado_no_inventa_el_consentimiento __________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1877/test_el_preflight_recalculado_0')
+
+    def test_el_preflight_recalculado_no_inventa_el_consentimiento(tmp_path):
+        """Se re-calcula el preflight en vivo: si el requisito se hardcodeara True, esto cae.
+    
+        Las dos ramas hacen falta: sin documento en el arbol el requisito es FALSO (H no puede
+        autosatisfacerlo), y con el documento del operador sobre el arbol real es VERDADERO porque lo lee.
+        """
+        fase_tmp = tmp_path / DIR_FASE.relative_to(RAIZ)
+        fase_tmp.mkdir(parents=True)
+        fase_f_tmp = tmp_path / "evidence" / PLAN / "FASE-F"
+        fase_f_tmp.mkdir(parents=True)
+        for nombre in ("integracion_offline.json", "onboarding_provenance.json"):
+            (fase_tmp / nombre).write_text(
+                (DIR_FASE / nombre).read_text(encoding="utf-8"), encoding="utf-8", newline="\n"
+            )
+        (fase_f_tmp / "credential_status.json").write_text(
+            (RAIZ / "evidence" / PLAN / "FASE-F" / "credential_status.json").read_text(encoding="utf-8"),
+            encoding="utf-8",
+            newline="\n",
+        )
+    
+        documento = run_once.preflight(raiz=tmp_path)
+        assert documento["intentos"] == 0
+        requisito = documento["requisitos"]["consentimiento_datado_sobre_la_url_viva"]
+        assert requisito["cumple"] is False, (
+            "el consentimiento es acto del operador; H no puede autosatisfacerlo"
+        )
+        assert "iah-consentimiento" in requisito["causa"]
+        assert documento["spawn_autorizado"] is False
+        assert "consentimiento_datado_sobre_la_url_viva" in documento["requisitos_no_favorables"]
+    
+        real = run_once.preflight()
+>       assert real["requisitos"]["consentimiento_datado_sobre_la_url_viva"]["cumple"] is True, (
+            "el documento del operador esta en el arbol: negarlo tambien seria inventar"
+        )
+E       AssertionError: el documento del operador esta en el arbol: negarlo tambien seria inventar
+E       assert False is True
+
+tests\test_fase_h_onboarding_procedencia.py:479: AssertionError
+============================== warnings summary ===============================
+tests\analytics\test_data_aggregator.py:17
+  C:\Users\Jhond\Github\iah-cli\tests\analytics\test_data_aggregator.py:17: DeprecationWarning: Este módulo está deprecado y no se usa en el pipeline v4complete. Sus funciones son cubiertas por GoogleAnalyticsClient y GoogleSearchConsoleClient. Se eliminará en v5.0.0.
+    from modules.analytics.data_aggregator import (
+
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+<unknown>:855
+tests/commercial_documents/test_fase_b_promesa_whatsapp.py::test_ac19a_narrativa_no_afirma_ausencia_confirmada
+tests/commercial_documents/test_pain_map_bijection.py::test_narratives_no_tiene_huerfanos
+tests/common/test_service_identity_registry.py::test_mensaje_no_narra_el_tamano_de_un_registro_estatico[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/common/test_service_identity_registry.py::test_pain_to_type_es_un_puente_valido
+tests/common/test_service_identity_registry.py::test_narratives_subset_de_capa1
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:855: SyntaxWarning: invalid escape sequence '\W'
+
+tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_asset_catalog.py::test_open_graph_in_catalog returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/asset_generation/test_content_gates.py::TestContentGates::test_performance_audit_generates_with_zeros
+  C:\Users\Jhond\Github\iah-cli\tests\asset_generation\test_content_gates.py:84: DeprecationWarning: support for supplying keyword arguments to pathlib.PurePath is deprecated and scheduled for removal in Python 3.14
+    content = Path(result["file_path"], errors='ignore').read_text(encoding='utf-8', errors='ignore')
+
+tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/asset_generation/test_open_graph_generator.py::test_open_graph_generator returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/auditors/test_pagespeed_auditor_v2.py: 10 warnings
+tests/auditors/test_v4_comprehensive_competitors.py: 2 warnings
+tests/data_validation/test_metadata_validator.py: 20 warnings
+tests/data_validation/test_schema_validator_v2.py: 14 warnings
+tests/test_hotel_visperas_regression.py: 11 warnings
+  <string>:9: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+
+tests/commercial_documents/test_fase_b_promesa_whatsapp.py::test_ac1_el_orquestador_propaga_la_senal_a_los_tres_productores
+tests/quality_gates/test_fase_d_veredicto_canonico.py::TestEntradaDirectaDelOrquestador::test_generate_assets_llama_al_guard_antes_de_generar
+tests/test_cop_cop_regression.py::TestNoCOPCOPRegression::test_no_cop_cop_in_modules
+  <unknown>:116: SyntaxWarning: invalid escape sequence '\)'
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestAislamientoFlagsFila13::test_pieza_3_con_la_guarda_el_lector_vuelve_a_los_defaults
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}"
+
+tests/financial_engine/test_adr_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestAislamientoFlagsFila13::test_pieza_3_con_la_guarda_el_lector_vuelve_a_los_defaults
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestCalculatePriceWithShadowFunction::test_function_default_flags
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_full_shadow_mode_flow
+tests/financial_engine/test_pricing_resolution_wrapper.py::TestIntegration::test_pricing_comparison_deltas
+  C:\Users\Jhond\Github\iah-cli\modules\financial_engine\shadow_logger.py:55: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow().isoformat(),
+
+tests/financial_engine/test_opportunity_scorer.py: 7 warnings
+tests/geo_enrichment/test_band_classification.py: 2 warnings
+tests/geo_enrichment/test_diagnose_hotelvisperas.py: 8 warnings
+tests/geo_enrichment/test_geo_dashboard.py: 13 warnings
+tests/geo_enrichment/test_hotel_schema_enricher.py: 14 warnings
+tests/geo_enrichment/test_llms_txt_generator.py: 9 warnings
+tests/regression/test_whatsapp_conflicts.py: 5 warnings
+tests/test_canonical_assessment.py: 51 warnings
+tests/test_hotel_visperas_regression.py: 13 warnings
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\asset_generation\v4_asset_orchestrator.py:116: SyntaxWarning: invalid escape sequence '\)'
+    H12 FIX: Avoid hardcoded Windows paths (C:\) in output.
+
+tests/quality_gates/decision_client/test_decision_client_aislamiento_imports.py::test_ningun_archivo_fuera_de_la_puerta_importa_el_sdk_o_el_adapter
+tests/test_encoding_artifacts.py::TestEncodingContractStatic::test_no_write_text_without_encoding
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_escribe_redactado
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_no_mutara_el_diccionario_del_caller
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_perfil_limpio_se_guarda_intacto
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_avisa_cuando_redacta
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_sin_el_guard_el_valor_llega_al_disco
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_guard_activo_bloquea_esa_misma_fuga
+  C:\Users\Jhond\Github\iah-cli\modules\scrapers\gbp_auditor.py:155: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+tests/test_audit_alignment.py::test_roas_calculation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_roas_calculation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_package_recommendation
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_package_recommendation returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_justification_block
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_justification_block returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_audit_alignment.py::test_thresholds_loading
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\_pytest\python.py:170: PytestReturnNotNoneWarning: Test functions should return None, but tests/test_audit_alignment.py::test_thresholds_loading returned <class 'bool'>.
+  Did you mean to use `assert` instead of `return`?
+  See https://docs.pytest.org/en/stable/how-to/assert.html#return-not-none for more information.
+    warnings.warn(
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:152: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    before = datetime.utcnow()
+
+tests/test_canonical_assessment.py::TestCanonicalAssessmentCreation::test_assessment_has_timestamp
+  C:\Users\Jhond\Github\iah-cli\tests\test_canonical_assessment.py:159: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    after = datetime.utcnow()
+
+tests/test_harness_core.py::TestAgentHarness::test_run_task_calls_handler
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_success_on_valid_result
+tests/test_harness_core.py::TestAgentHarness::test_run_task_returns_error_on_exception
+tests/test_harness_core.py::TestAgentHarness::test_run_task_logs_execution
+tests/test_harness_core.py::TestAgentHarness::test_run_task_injects_context_from_memory
+tests/test_harness_core.py::TestAgentHarness::test_validate_result_marks_empty_as_invalid
+  C:\Users\Jhond\Github\iah-cli\tests\..\agent_harness\core.py:201: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    now = datetime.utcnow()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[CURA-BLOQUE-HUESPED-QMIND-2026-10-10]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[CURA-COSTURA-TRIBUNAL-2026-10-11]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[CURA-INSTRUMENTOS-QMIND-S15-2026-10-07]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[EVALUACION-JEV-TYPESAFE-2026-09-21]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[REFACTOR-WHATSAPP-ENTREGA-2026-09-18]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[TRIBUNAL-ENFORCEMENT-OBS-2026-09-11]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_triage_sobre_plan_archivado_real[VERIFICADOR-ESCRITURA-QMIND-2026-09-20]
+FAILED tests/quality_gates/lesson_relevance/test_triage_corpus_real.py::test_la_salida_por_main_sobre_archivado_es_triado
+FAILED tests/quality_gates/lesson_relevance/test_triage_guard_real_aditividad.py::test_mutar_la_clausula_del_guard_hace_caer_la_afirmacion_de_ac6
+FAILED tests/quality_gates/lesson_relevance/test_triage_indices_vencido.py::test_la_tercera_via_esta_prohibida
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_verde_con_el_guard_activo
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_rojo_con_el_guard_apagado
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_el_rojo_es_el_que_quiebra_la_afirmacion_de_ac10
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_apagar_el_guard_no_altera_nada_mas
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_las_dos_salidas_van_a_destino_explicito_y_no_al_expediente_ajeno
+FAILED tests/quality_gates/lesson_relevance/test_triage_mutation_aditividad.py::test_resumen_publica_el_alcance_del_observador
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_corrida_completa_no_toca_el_plan_real
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_incompleta_no_se_aplica_y_ruena_fuerte
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_aceptacion_y_rechazo_quedan_registrados_con_quien_decidio
+FAILED tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_decision_sobre_algo_que_no_estaba_propuesto_se_publica_fuera_de_lista
+FAILED tests/test_fase_h_onboarding_procedencia.py::test_el_preflight_recalculado_no_inventa_el_consentimiento
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_acceptacion_no_ejercitado_con_motivo_literal
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_no_se_simulo_ninguna_aceptabilidad
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_el_informe_declara_quien_contesto
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_denominador_con_poblacion_terminos_ceros_y_familias
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_no_juzgadas]
+ERROR tests/quality_gates/lesson_relevance/test_triage_acceptance_no_es_simulado.py::test_lo_que_no_se_juzga_queda_declarado[familias_excluidas_por_el_generador]
+ERROR tests/quality_gates/lesson_relevance/test_triage_guard_real_aditividad.py::test_real_triage_guard_preserves_anchored_rows
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_ninguna_fila_anclada_desaparece_y_el_guard_tuvo_trabajo
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_el_informe_del_seccion_dos_trae_los_tres_campos_del_ac10
+ERROR tests/quality_gates/lesson_relevance/test_triage_no_elimina_fila_anclada.py::test_anchored_after_conserva_las_filas_litales
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_todas_las_preguntas_son_choice_de_dos_opciones
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_probabilidad_si_no_es_el_campo_gobernado
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_misma_probabilidad_distinta_confidencia_cambia_el_bucket
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_el_umbral_no_acepta_una_confidence_ausente
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[campo]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[value]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[basis]
+ERROR tests/quality_gates/lesson_relevance/test_triage_pregunta_es_choice_y_no_noul.py::test_forma_pregunta_publicada[action_below]
+ERROR tests/quality_gates/lesson_relevance/test_triage_propuesta_no_escribe_seccion_dos.py::test_el_script_no_tiene_camino_de_escribir_seccion_dos
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_las_tres_partes_del_ac12_estan_en_el_artefacto
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_la_accion_por_debajo_no_es_descartar
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_todos_los_candidatos_tienen_bucket_y_ninguno_se_pierde
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[campo]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[value]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[basis]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_valor_publicado_es_el_del_codigo_no_el_del_test[action_below]
+ERROR tests/quality_gates/lesson_relevance/test_triage_umbral_publicado.py::test_el_coste_del_reporte_lleva_tope_publicado
+26 failed, 5413 passed, 37 skipped, 4 xfailed, 235 warnings, 27 errors in 489.60s (0:08:09)

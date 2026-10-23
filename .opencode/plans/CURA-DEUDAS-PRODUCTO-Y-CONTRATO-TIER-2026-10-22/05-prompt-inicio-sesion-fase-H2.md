@@ -95,7 +95,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-H2 --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "D18 thresholds LEGACY retirados, D22 dead code retirado, D23 docstring honesto y D20 fuente declarada (AC8)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

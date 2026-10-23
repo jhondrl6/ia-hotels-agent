@@ -188,7 +188,7 @@ El análisis de IAO utiliza APIs de terceros (OpenRouter, Google AI, Perplexity)
 
 *Ver Anexo Técnico: Infraestructura IAO al final del documento.*
 
-## 🛡️ GARANTÍAS: Protección total para usted
+## 🛡️ GARANTÍAS:{{if financial_evidence_tier == "A"}} Protección total para usted{{endif}}{{if financial_evidence_tier != "A"}} Protección para usted{{endif}}
 
 ### 1. Value-Capture Cap: Solo cobramos si usted gana
 
@@ -209,7 +209,7 @@ Sin reclamos, sin papeleo, sin llamadas.
 ### 4. Sin compromiso
 Contrato mes a mes. Si en cualquier momento no quiere continuar, nos avisa con ${guarantee_delivery_days} días. Sin penalizaciones.
 
-### 5. Transparencia total
+### 5.{{if financial_evidence_tier == "A"}} Transparencia total{{endif}}{{if financial_evidence_tier != "A"}} Transparencia en cada cifra{{endif}}
 Reporte mensual con métricas reales. Usted ve exactamente qué está pasando.
 
 {{if testimonials_present == "true"}}

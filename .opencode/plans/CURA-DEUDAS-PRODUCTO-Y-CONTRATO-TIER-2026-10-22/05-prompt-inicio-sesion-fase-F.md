@@ -91,7 +91,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-F --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "R3: umbrales por semántica, D25-bis una fuente y D27 con nombres semánticos (AC6)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

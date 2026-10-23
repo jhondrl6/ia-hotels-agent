@@ -86,7 +86,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-H1 --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "D16 score /90 sin API muerta y D24 stub retirado sin tocar el scraper real (AC8)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

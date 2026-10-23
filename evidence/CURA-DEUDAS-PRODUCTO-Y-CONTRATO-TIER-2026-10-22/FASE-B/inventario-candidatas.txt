@@ -1,0 +1,143 @@
+INVENTARIO CANDIDATAS - FASE-B - funcion real del revisor
+Patrones importados desde modules/quality_gates/tribunal/honesty_reviewer.py
+(bandera re.IGNORECASE incluida en ambos grupos).
+
+==============================================================================
+TEXTO: PROPUESTA BASELINE (render real 2026-10-12)
+==============================================================================
+
+--- PASADA 1 (cruda: regex del codigo, sin filtro, sin dedupe): 10 literales ---
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | **Ficha del Hotel en Google e IA** | ✅ Alineado | 100% | #3: Sin Ficha del Hotel en Google e IA ($
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | **Meta Tags Sociales (Vista previa en redes sociales)** | ✅ Alineado | 100% | #9: Sin Vista previa
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | **Optimización para IA Generativa** | ✅ Alineado | 100% | — | Aparece cuando clientes preguntan a 
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | 'total' | > 📊 **Trazabilidad financiera**: La fuga total estimada es de $21.067.200 COP en 6 meses.
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | Mes 6 | 100% | $1.228.920 | $4.731.342 | Recomendaciones de IA — Estado estacionario, mantenimient
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | 'Total' | **Total recuperación proyectada (6 meses): $4.731.342 COP**
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | Setup fee (único) | **CAPEX** | $2.500.000 COP | **100% suyo** — Real Estate Digital |
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | 'Total' | | **Total CAPEX** | **$2.500.000 COP** | Única vez |
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+
+  descartados por filtro estructural: 8
+
+--- PASADA 2 (funcion real coincidencias_lenguaje_de_verificacion): 2 hallazgos emitidos ---
+  CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+  CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+
+>>> RESTA BASELINE: 10 literales -> 8 descartados por filtro estructural -> 2 emitidos
+==============================================================================
+TEXTO: DIAGNOSTICO BASELINE (render real 2026-10-12)
+==============================================================================
+
+--- PASADA 1 (cruda: regex del codigo, sin filtro, sin dedupe): 9 literales ---
+  [candidato] LENGUAJE_VERIFICACION | 'CIFRA EXACTA' | > para entregarle la CIFRA EXACTA al peso, con evidencia verificable.
+  [candidato] LENGUAJE_VERIFICACION | 'verificados' | > ✅ **Datos operativos verificados.** Para obtener la cifra exacta al peso, conecte Google Analytics
+  [candidato] LENGUAJE_VERIFICACION | 'cifra exacta' | > ✅ **Datos operativos verificados.** Para obtener la cifra exacta al peso, conecte Google Analytics
+  [candidato] LENGUAJE_VERIFICACION | 'verificados' | > ⚠️ Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las pro
+  [candidato] LENGUAJE_VERIFICACION | 'validados' | > ⚠️ Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las pro
+  [candidato] LENGUAJE_VERIFICACION | 'verificados' | > - Tier B+: Datos operativos verificados, proyecciones con supuestos conservadores
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | 'total' | | | Fuga total estimada (6 meses) | Recuperación proyectada (6 meses) |
+  [candidato] CUANTIFICADOR_ABSOLUTO | '100%' | > el impacto mensual crece progresivamente — 15% en el mes 1 → 100% del factor
+  [candidato] CUANTIFICADOR_ABSOLUTO | '100%' | **Nota sobre la proyección**: La recuperación de 6 meses sigue la curva de maduración estándar de 4 
+
+  descartados por filtro estructural: 1
+
+--- PASADA 2 (funcion real coincidencias_lenguaje_de_verificacion): 8 hallazgos emitidos ---
+  LENGUAJE_VERIFICACION | 'CIFRA EXACTA' | > para entregarle la CIFRA EXACTA al peso, con evidencia verificable.
+  LENGUAJE_VERIFICACION | 'verificados' | > ✅ **Datos operativos verificados.** Para obtener la cifra exacta al peso, conecte Google Analytics
+  LENGUAJE_VERIFICACION | 'cifra exacta' | > ✅ **Datos operativos verificados.** Para obtener la cifra exacta al peso, conecte Google Analytics
+  LENGUAJE_VERIFICACION | 'verificados' | > ⚠️ Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las pro
+  LENGUAJE_VERIFICACION | 'validados' | > ⚠️ Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las pro
+  LENGUAJE_VERIFICACION | 'verificados' | > - Tier B+: Datos operativos verificados, proyecciones con supuestos conservadores
+  CUANTIFICADOR_ABSOLUTO | '100%' | > el impacto mensual crece progresivamente — 15% en el mes 1 → 100% del factor
+  CUANTIFICADOR_ABSOLUTO | '100%' | **Nota sobre la proyección**: La recuperación de 6 meses sigue la curva de maduración estándar de 4 
+==============================================================================
+TEXTO: PLANTILLA propuesta_v6_template.md
+==============================================================================
+
+--- PASADA 1 (cruda: regex del codigo, sin filtro, sin dedupe): 6 literales ---
+  [candidato] LENGUAJE_VERIFICACION | 'verificados' | > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchm
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'total' | > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'Total' | **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | '100%' | | Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+  [candidato] CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+
+  descartados por filtro estructural: 1
+
+--- PASADA 2 (funcion real coincidencias_lenguaje_de_verificacion): 5 hallazgos emitidos ---
+  LENGUAJE_VERIFICACION | 'verificados' | > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchm
+  CUANTIFICADOR_ABSOLUTO | 'total' | > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+  CUANTIFICADOR_ABSOLUTO | 'Total' | **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+  CUANTIFICADOR_ABSOLUTO | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+  CUANTIFICADOR_ABSOLUTO | 'total' | ### 5. Transparencia total
+==============================================================================
+TEXTO: PLANTILLA diagnostico_v6_template.md
+==============================================================================
+
+--- PASADA 1 (cruda: regex del codigo, sin filtro, sin dedupe): 3 literales ---
+  [candidato] LENGUAJE_VERIFICACION | 'verificados' | > - Tier B+: Datos operativos verificados, proyecciones con supuestos conservadores
+  [DESCARTADO(filtro estructural)] CUANTIFICADOR_ABSOLUTO | 'total' | | | Fuga total estimada (6 meses) | Recuperación proyectada (6 meses) |
+  [candidato] CUANTIFICADOR_ABSOLUTO | '100%' | > el impacto mensual crece progresivamente — 15% en el mes 1 → 100% del factor
+
+  descartados por filtro estructural: 1
+
+--- PASADA 2 (funcion real coincidencias_lenguaje_de_verificacion): 2 hallazgos emitidos ---
+  LENGUAJE_VERIFICACION | 'verificados' | > - Tier B+: Datos operativos verificados, proyecciones con supuestos conservadores
+  CUANTIFICADOR_ABSOLUTO | '100%' | > el impacto mensual crece progresivamente — 15% en el mes 1 → 100% del factor
+==============================================================================
+CONTRASTE grep suelto vs funcion real (plantilla de propuesta)
+==============================================================================
+  grep -in 'total|100%' -> 6 lineas:
+    123: > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+    139: **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+    149: | Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
+    150: | Fee mensual (×6) | **OPEX** | ${opex_total_6m} | Servicio de implementación |
+    191: ## 🛡️ GARANTÍAS: Protección total para usted
+    212: ### 5. Transparencia total
+  funcion real -> 6 literales crudos / 5 emitidos
+  (el grep cuenta lineas; la funcion cuenta literales y aplica el filtro)
+==============================================================================
+FALSO 0 HISTORICO (alternante 100% con \b tras el signo)
+==============================================================================
+  propuesta baseline       patron VIEJO(\b): 0  patron ACTUAL: 5   <- falso 0
+  diagnostico baseline     patron VIEJO(\b): 0  patron ACTUAL: 2   <- falso 0
+  plantilla propuesta      patron VIEJO(\b): 0  patron ACTUAL: 1   <- falso 0
+  plantilla diagnostico    patron VIEJO(\b): 0  patron ACTUAL: 1   <- falso 0
+  Documentacion: docstring de VERIFICATION_GROUP_CUANTIFICADOR en
+  modules/quality_gates/tribunal/honesty_reviewer.py (frontera curada).
+  El '0' del patron viejo era falso: ningun 100% del corpus matcheaba.
+
+==============================================================================
+TABLA - plantilla de propuesta: 2 claims emitidos vs labels 'no tocar'
+==============================================================================
+  EMITIDOS por la funcion sobre la plantilla: 5
+    EMITIDO  | 'verificados' | > **📋 Nota sobre entregables:** Los activos listados en esta propuesta se generan a partir de benchm
+    EMITIDO  | 'total' | > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+    EMITIDO  | 'Total' | **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+    EMITIDO  | 'total' | ## 🛡️ GARANTÍAS: Protección total para usted
+    EMITIDO  | 'total' | ### 5. Transparencia total
+  LABELS FINANCIEROS (no tocar):
+    NO TOCAR | linea 123 | > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+    NO TOCAR | linea 139 | **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+    NO TOCAR | linea 149 | | Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
+    NO TOCAR | linea 150 | | Fee mensual (×6) | **OPEX** | ${opex_total_6m} | Servicio de implementación |
+
+
+########## TABLA DE CONTRASTE (generada por inventario_runner.py tras el fix de FASE-B; las dos pasadas de arriba son la medicion PRE sobre el baseline 2026-10-12) ##########
+TABLA - grep de 7 lineas (total|absoluto|definitivo|100%|garantiz):
+2 claims EMITIDOS por la funcion real vs 5 lineas NO TOCAR
+==============================================================================
+    NO TOCAR (label)  | linea 123 | > 📊 **Trazabilidad financiera**: La fuga total estimada es de ${fuga_total_6m} en 6 meses.
+    NO TOCAR (label)  | linea 139 | **Total recuperación proyectada (6 meses): ${total_recuperacion_6m} COP**
+    NO TOCAR (label)  | linea 149 | | Setup fee (único) | **CAPEX** | ${capex_total} | **100% suyo** — Real Estate Digital |
+    NO TOCAR (label)  | linea 150 | | Fee mensual (×6) | **OPEX** | ${opex_total_6m} | Servicio de implementación |
+    EMITIDO  (claim)  | linea 191 | ## 🛡️ GARANTÍAS:{{if financial_evidence_tier == "A"}} Protección total para usted{{endif}}{{if finan
+    NO TOCAR (label)  | linea 197 | ### 2. Resultados garantizados
+    EMITIDO  (claim)  | linea 212 | ### 5.{{if financial_evidence_tier == "A"}} Transparencia total{{endif}}{{if financial_evidence_tier
+  => 2 claims emitidos / 5 lineas no tocar (grep de 7 lineas)
+  Resta del baseline renderizado (funcion real, propuesta 2026-10-12):
+    crudos 10 literales -> filtro estructural (8 vs 10) -> 2 emitidos
+  Medicion congelada (CONTEXT-CONTRATO-PLANTILLA-TIER, 2026-10-14):
+    10 -> 6 -> 2 (los 2 restantes de esa medicion caian en el mismo
+    bucket de descartados; ver baseline-pre-post.md por la divergencia)

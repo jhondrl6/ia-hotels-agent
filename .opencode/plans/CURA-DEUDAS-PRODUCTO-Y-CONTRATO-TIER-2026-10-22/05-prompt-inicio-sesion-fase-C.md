@@ -92,7 +92,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-C --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "Ítem C: APROBADO-CONDICIONAL + conditional_reason (3 causas) y has_onboarding; P6.5 intacta (AC2)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

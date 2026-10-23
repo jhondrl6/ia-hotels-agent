@@ -1,0 +1,17 @@
+PAR ROJO/VERDE — mutation check AC1 (FASE-B)
+Simbolo del guard: _preprocess_conditionals (propuesta) / _build_financial_placeholders (diagnostico)
+======================================================================
+
+[VERDE] render B+ con condicion activa: summary.over_presentations = 0
+
+[ROJO]  render B+ con condicion DESACTIVADA: summary.over_presentations = 2
+   EMITIDO: total | ## 🛡️ GARANTÍAS: Protección total para usted
+   EMITIDO: total | ### 5. Transparencia total
+
+[VERDE] strings diagnostico B+ (variante honesta): 0 hallazgos de la funcion real
+[ROJO]  strings diagnostico B+ forzados a variante A: 2 hallazgos de la funcion real
+   EMITIDO: total | 🛡️ GARANTÍAS: Protección total para usted
+   EMITIDO: total | **Transparencia total**: reporte mensual con métricas reales.
+
+Resta publicada (antes -> despues): 2 emitidos -> 0 emitidos.
+Verificador mecanico de la resta: NO EXISTE — se declara (L-R.4 / R2.7).

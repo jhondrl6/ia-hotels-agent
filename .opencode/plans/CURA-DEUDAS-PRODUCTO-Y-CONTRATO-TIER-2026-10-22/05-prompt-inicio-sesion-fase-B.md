@@ -38,29 +38,29 @@ La propuesta ya tiene `{{if ...}}` y `_preprocess_conditionals` en `v4_proposal_
 ### Tarea 1: Inventario con la función real del revisor
 **Objetivo**: publicar las líneas candidatas con el barrido que invoca la función del revisor (bandera `re.IGNORECASE` incluida), no el grep suelto.
 **Criterios de aceptación**:
-- [ ] Crudo en `evidence/…/FASE-B/inventario-candidatas.txt` con las dos pasadas y el contraste (8 vs 10, falso 0 documentado)
-- [ ] La tabla separa **2 emitidos** de **6 descartados**; los 5 labels financieros quedan marcados como “no tocar”
+- [x] Crudo en `evidence/…/FASE-B/inventario-candidatas.txt` con las dos pasadas y el contraste (8 vs 10, falso 0 documentado)
+- [x] La tabla separa **2 emitidos** de **6 descartados**; los 5 labels financieros quedan marcados como “no tocar”
 
 ### Tarea 2: Variantes honestas en propuesta y diagnóstico
 **Objetivo**: con tier A se emite la variante respaldada por evidencia; con tier no-A se emite la variante honesta, sin “Protección total” ni “Transparencia total”. La propuesta usa `{{if}}`; el diagnóstico recibe el mismo contrato mediante preprocesador o strings precomputados.
 **Archivos afectados**: `modules/commercial_documents/v4_proposal_generator.py`, `modules/commercial_documents/v4_diagnostic_generator.py`, `modules/commercial_documents/templates/propuesta_v6_template.md`, `modules/commercial_documents/templates/diagnostico_v6_template.md`.
 **Criterios de aceptación**:
-- [ ] Los 2 claims tienen variante por tier en **ambos** documentos
-- [ ] Los labels “Fuga total”, “Total recuperación” y “100% suyo” siguen renderizados sin cambios
-- [ ] La decisión de copy queda escrita en `10-analisis` §Decisiones (DA-PLAN-2)
+- [x] Los 2 claims tienen variante por tier en **ambos** documentos
+- [x] Los labels “Fuga total”, “Total recuperación” y “100% suyo” siguen renderizados sin cambios
+- [x] La decisión de copy queda escrita en `10-analisis` §Decisiones (DA-PLAN-2)
 
 ### Tarea 3: Diente con el revisor real (AC1)
 **Objetivo**: test que renderice propuesta y diagnóstico con tier B+ y afirme `summary.over_presentations == 0`; con tier A, la variante de totalidad es la única posible y el escáner sigue apagado por diseño.
 **Criterios de aceptación**:
-- [ ] El test invoca `HonestyReviewer` sobre el texto renderizado; no busca strings sueltos
-- [ ] Par rojo/verde en evidencia: condición del render desactivada → el revisor emite los 2 claims
-- [ ] La resta `10 → 6 → 2` se documenta como “antes” y `0 emitidos` como “después”
+- [x] El test invoca `HonestyReviewer` sobre el texto renderizado; no busca strings sueltos
+- [x] Par rojo/verde en evidencia: condición del render desactivada → el revisor emite los 2 claims
+- [x] La resta `10 → 6 → 2` se documenta como “antes” y `0 emitidos` como “después”
 
 ### Tarea 4: Diagnóstico y tests existentes
 **Objetivo**: el diagnóstico no queda como excepción; se re-ejecuta el fixture de `test_evidence_tier_precedencia_unica_ac11.py` que usa “Transparencia total” como prosa de prueba, para confirmar que no se está confundiendo un fixture con la plantilla.
 **Criterios de aceptación**:
-- [ ] El diagnóstico tiene su propio test de render B+/A
-- [ ] El fixture existente se re-ejecuta y, si la frase cambió de contrato, se actualiza con justificación
+- [x] El diagnóstico tiene su propio test de render B+/A
+- [x] El fixture existente se re-ejecuta y, si la frase cambió de contrato, se actualiza con justificación
 
 ## Tests Obligatorios
 
@@ -91,11 +91,11 @@ Registro:
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] Inventario con la función real del revisor y la resta 10→6→2
-- [ ] Solo los 2 claims emitidos se neutralizan; los labels financieros siguen
-- [ ] Propuesta y diagnóstico con variante por tier
-- [ ] `summary.over_presentations == 0` con B+; mutante rojo; par en evidencia
-- [ ] `--quick` verde; cinco cortes sin commit; lecciones registradas
+- [x] Inventario con la función real del revisor y la resta 10→6→2
+- [x] Solo los 2 claims emitidos se neutralizan; los labels financieros siguen
+- [x] Propuesta y diagnóstico con variante por tier
+- [x] `summary.over_presentations == 0` con B+; mutante rojo; par en evidencia
+- [x] `--quick` verde; cinco cortes sin commit; lecciones registradas
 
 ## Restricciones
 

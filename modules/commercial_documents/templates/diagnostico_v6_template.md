@@ -189,6 +189,12 @@ ${brechas_resumen_section}
 
 ---
 
+## ${garantias_titulo}
+
+${garantias_cuerpo}
+
+---
+
 ## 📎 PRÓXIMO PASO
 
 **La solución detallada está en:** `02_PROPUESTA_COMERCIAL.md`

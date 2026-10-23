@@ -62,4 +62,14 @@
 | `D-PF5` | Extender el guardián de nombres a la clase importada | ✅ Extensión por AST + import (`hasattr` sobre la clase importada), no por más nombres prohibidos ni grep de menciones |
 | `L-R.4` | El par rojo/verde y la resta se declaran sin verificador mecánico | ✅ Declarado en `baseline-pre-post.md` (resta) y en el par del guardián (R2.8) |
 | `L-T4A.5` | El test del retiro afirma exit y mensaje, no solo «no lanzó» | ✅ El test afirma exit 0 **y** mensaje de retiro **y** ausencia de `AttributeError`; el test del lector recorre la rama fallback real de `_basic_analysis` |
+
+## 5.1 Qué pasó con las lecciones citadas — FASE-B (2026-10-23)
+
+| ID | Qué exigía en esta fase | Qué pasó realmente |
+|----|-------------------------|--------------------|
+| `L-P3A.2` | La sintaxis la dicta el parser del lector, no la intención del autor | ✅ El template pidió `==`/`!=` y `_preprocess_conditionals` solo comparaba igualdad: se extendió el parser (operador `==`/`!=`) antes de escribir el `{{if}}`; la regla la dictó el parser |
+| `L-T4A.5` | Mutation check sobre el símbolo real, no sobre un fixture | ✅ El par de AC1 corre la función real del revisor sobre el render real: VERDE 0 → ROJO 2 con el mutante (condición desactivada / strings forzados a variante A); el rojo del mutante queda codificado como test |
+| `L-VUP-5` | Una fase de extensión sin rojo es un falso verde potencial | ✅ La extensión de FASE-B sí produjo rojo: 2 hallazgos reales del revisor con el mutante; además el derivado de Wiring vencido hizo fallar `--quick` 12/13 hasta re-publicarlo. La extensión no es verde por no-ejecución |
+| `L-R.4` | Los huecos sin verificador se declaran | ✅ `baseline-pre-post.md` declara que el verificador mecánico de la resta no existe, que el par pass/fail de la suite completa **no existe** (solo el punto medido), y la atribución de los 3 rojos de la suite por mecanismo |
+
 - [ ] Actualizado al cierre de la última fase, y el write-back de QMind se ejecutó **antes** de archivar el plan (`git mv` a `Archives/`, orden R2.10).

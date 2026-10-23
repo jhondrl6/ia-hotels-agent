@@ -1255,7 +1255,7 @@
     {
       "id": "DA-PLAN-2",
       "familia": "DA",
-      "enunciado": "Ítem A por render condicionado, limitado a los 2 claims del revisor — El verde de Bot 4 pasa a ser estructural sobre los hallazgos reales; no se reescriben labels financieros legítimos",
+      "enunciado": "Ítem A por render condicionado, limitado a los 2 claims del revisor. Copy concreto emitido: con tier A «Protección total para usted» / «Transparencia total»; con tier no-A o sin tier «Protección para usted» / «Transparencia en cada cifra». La propuesta lo resuelve con {{if financial_evidence_tier == \"A\"}} / != \"A\" en el template; el diagnóstico con strings precomputados (garantias_titulo/garantias_cuerpo) interpolados por safe_substitute — El verde de Bot 4 pasa a ser estructural sobre los hallazgos reales; no se reescriben labels financieros legítimos",
       "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -3225,7 +3225,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -3779,7 +3779,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 107,
+      "total_citas": 108,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -4210,13 +4210,13 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 125,
+      "total_citas": 126,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": [
@@ -4973,7 +4973,7 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 80,
+      "total_citas": 82,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",

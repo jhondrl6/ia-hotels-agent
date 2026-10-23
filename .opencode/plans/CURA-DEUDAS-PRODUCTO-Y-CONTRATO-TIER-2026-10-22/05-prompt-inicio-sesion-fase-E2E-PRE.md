@@ -99,7 +99,7 @@ Registro:
 ./venv/Scripts/python.exe scripts/log_phase_completion.py \
     --fase FASE-E2E-PRE --fecha <fecha-de-cierre-de-esta-fase> \
     --desc "Ensayo determinista del baseline: onboarding, render B+, revisor y juez reales, paquete temporal (sin inferencia)" \
-    --archivos-mod "<rutas>" --tests "N" --check-manual-docs
+    --archivos-nuevos "<rutas nuevas>" --archivos-mod "<rutas modificadas>" --tests "N" --check-manual-docs
 ```
 
 ## Criterios de Completitud (CHECKLIST)

@@ -1422,6 +1422,26 @@ class V4DiagnosticGenerator:
         # FASE-TRAZABILIDAD-REFINEMENT: Tier C visibility in header
         financial_tier_suffix = " *(estimado — Tier C)*" if tier == "C" else ""
 
+        # FASE-B (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER): mismo contrato plantilla↔tier
+        # que la propuesta — los claims de totalidad («Protección total para usted»,
+        # «Transparencia total») se emiten solo con tier A; con tier no-A (o sin tier
+        # declarado) sale la variante honesta. Strings precomputados porque este
+        # generador sustituye con safe_substitute y no preprocesa {{if}}.
+        if tier == "A":
+            garantias_titulo = "🛡️ GARANTÍAS: Protección total para usted"
+            garantias_cuerpo = (
+                "**Transparencia total**: reporte mensual con métricas reales de su "
+                "hotel y condiciones claras. El detalle completo está en "
+                "`02_PROPUESTA_COMERCIAL.md`."
+            )
+        else:
+            garantias_titulo = "🛡️ GARANTÍAS: Protección para usted"
+            garantias_cuerpo = (
+                "**Transparencia en cada cifra**: reporte mensual con las métricas "
+                "de su hotel y condiciones claras. El detalle completo está en "
+                "`02_PROPUESTA_COMERCIAL.md`."
+            )
+
         # BUG-2-FIX: Centralized onboarding CTA for banner
         # Infer has_onboarding from validation_summary fields
         has_onboarding_banner = False
@@ -1469,6 +1489,8 @@ class V4DiagnosticGenerator:
             'scenario_table_rows': scenario_table,
             'evidence_tier': tier,
             'financial_disclaimer': disclaimer,
+            'garantias_titulo': garantias_titulo,
+            'garantias_cuerpo': garantias_cuerpo,
             'financial_source_ref': 'financial_scenarios.json#realistic',
             'financial_value_central': str(base_value),
             'financial_value_min': str(main.monthly_loss_min),
