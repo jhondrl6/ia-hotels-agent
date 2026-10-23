@@ -2,13 +2,13 @@
   "_generated_by": "scripts/build_lesson_index.py",
   "_notice": "Artefacto generado: no editar a mano. Ejecutar el script para actualizar.",
   "cobertura": {
-    "archivos_analysis_escaneados": 21,
+    "archivos_analysis_escaneados": 22,
     "archivos_contexto_escaneados": 45,
-    "archivos_md_escaneados": 486,
-    "ids_con_definicion": 390,
+    "archivos_md_escaneados": 505,
+    "ids_con_definicion": 398,
     "ids_citados_sin_definicion": 113,
     "fechas_por_fuente": {
-      "nombre": 379,
+      "nombre": 387,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -274,8 +274,9 @@
       "seccion": "Decisiones Arquitectónicas (pre-registradas en preparación; confirmar implementación en cada fase)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 3,
+      "total_citas": 6,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -412,8 +413,9 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 21,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -678,9 +680,10 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 23,
+      "total_citas": 29,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
       ],
@@ -976,9 +979,10 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 1,
+      "total_citas": 2,
       "planes_que_lo_citan": [
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -1231,6 +1235,118 @@
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
       "total_citas": 4,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-1",
+      "familia": "DA",
+      "enunciado": "Un solo plan para A y C, sin absorber D21 — A y C comparten la superficie comercial, pero D21 tiene dueño y no hay letra; absorberlo convertiría una deuda ajena en cambio no autorizado",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-2",
+      "familia": "DA",
+      "enunciado": "Ítem A por render condicionado, limitado a los 2 claims del revisor — El verde de Bot 4 pasa a ser estructural sobre los hallazgos reales; no se reescriben labels financieros legítimos",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-3",
+      "familia": "DA",
+      "enunciado": "Ítem C con APROBADO-CONDICIONAL + conditional_reason — Un veredicto puede ser condicional por tres causas; codificarlas en el nombre produce combinaciones y deja fuera la causa de tier A no certificable",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-4",
+      "familia": "DA",
+      "enunciado": "Retirar spark; D19 se cierra por retiro — spark está deprecado y su ruta no recibe hotel_data ni _pv_result; repararla exigiría inventar un contrato que el producto no usa",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-5",
+      "familia": "DA",
+      "enunciado": "D16 publica /90 y elimina la rama API muerta — _places_api_lookup no está implementada; la única varilla viva es la estimación; publicar /100 con máximo 90 es un sesgo sistemático",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-6",
+      "familia": "DA",
+      "enunciado": "D24 declara muerto el stub y no toca el scraper real — El producto usa autonomous_researcher.BookingScraper; el stub solo lo consumen tests y no debe presentarse como dato",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-7",
+      "familia": "DA",
+      "enunciado": "E2E-PRE determinista antes de la corrida pagada — La corrida es única y no se parchea en E2E; el ensayo valida onboarding, render, revisor y juez sin inferencia",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-8",
+      "familia": "DA",
+      "enunciado": "D25-ter obliga a retirar/derivar las cinco tablas — Reparar BenchmarkLoader sin eliminar las copias deja la causa raíz viva",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 1,
       "planes_que_lo_citan": [],
       "redefiniciones": []
     },
@@ -1875,8 +1991,9 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 5,
+      "total_citas": 11,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -1975,10 +2092,11 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 12,
+      "total_citas": 13,
       "planes_que_lo_citan": [
         "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
-        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"
+        "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -1992,9 +2110,10 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12",
         "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15"
       ],
@@ -2312,9 +2431,10 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 14,
+      "total_citas": 18,
       "planes_que_lo_citan": [
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -2615,11 +2735,12 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 70,
+      "total_citas": 71,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -2920,14 +3041,14 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 113,
+      "total_citas": 120,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "context/CONTEXT-SALENTOREAL-V4COMPLETE-EJECUCION-2026-08-27"
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
       ],
       "redefiniciones": [
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3104,8 +3225,9 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 4,
+      "total_citas": 12,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -3474,14 +3596,14 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 113,
+      "total_citas": 118,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -3529,9 +3651,10 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 20,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
@@ -3656,14 +3779,14 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 93,
+      "total_citas": 105,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "Archives/CURA-BLOQUE-HUESPED-QMIND-2026-10-10"
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": []
     },
@@ -3709,9 +3832,10 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 27,
+      "total_citas": 32,
       "planes_que_lo_citan": [
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/VALIDADOR-URL-PROPIA-2026-08-30"
       ],
@@ -3743,14 +3867,14 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 72,
+      "total_citas": 79,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
+        "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
     },
@@ -4086,14 +4210,14 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 112,
+      "total_citas": 123,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
-        "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],
       "redefiniciones": [
         "Archives/CURA-COSTURA-TRIBUNAL-2026-10-11"
@@ -4198,8 +4322,9 @@
       "seccion": "8. Lecciones Aprendidas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 10,
+      "total_citas": 16,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
       ],
       "redefiniciones": []
@@ -4234,11 +4359,12 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 78,
+      "total_citas": 79,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18"
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
@@ -4254,12 +4380,13 @@
       "seccion": "2. Lecciones Aprendidas nuevas",
       "fecha_plan": "2026-09-12",
       "fuente_fecha": "nombre",
-      "total_citas": 90,
+      "total_citas": 91,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11"
+        "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
@@ -4482,8 +4609,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
-      "planes_que_lo_citan": [],
+      "total_citas": 14,
+      "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
+      ],
       "redefiniciones": []
     },
     {
@@ -4552,9 +4681,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 44,
+      "total_citas": 45,
       "planes_que_lo_citan": [
-        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22"
+        "context/ORDEN-CAMBIO-CALIDAD-PROCESO-2026-09-22",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -4568,9 +4698,10 @@
       "seccion": "Lecciones nuevas de este plan (L-VCF-1+)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 50,
+      "total_citas": 51,
       "planes_que_lo_citan": [
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -4842,13 +4973,14 @@
       "seccion": "Lecciones nuevas de este plan (numeración L-VUP-n)",
       "fecha_plan": "2026-08-30",
       "fuente_fecha": "nombre",
-      "total_citas": 78,
+      "total_citas": 80,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07"
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
       ],
       "redefiniciones": []
     },
@@ -5427,8 +5559,9 @@
       "seccion": "Deudas definidas por este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 37,
+      "total_citas": 42,
       "planes_que_lo_citan": [
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15",
         "context/CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12"

@@ -8,7 +8,7 @@
 >
 > **No autodeclara lección durable.** Este documento no escribe ninguna de las tres grafías que `scripts/verify_qmind_context_freshness.py` lista en `MARCA_DURABLE` al inicio de línea, así que el verificador debe publicarlo como `[EXCLUIDO]` con su razón: la política del write-back es por aporte declarado, no por existencia.
 >
-> **Congelamientos vigentes (DEC-2/DEC-3 de `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15`)**: `CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y `CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` se citan de **solo lectura** desde aquí; editar los publicados deja su `sha_cuerpo` vencido. Este archivo no toca ninguno de los dos.
+> **Congelamientos vigentes (DEC-2/DEC-3 de `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15`)**: los dos CONTEXT congelados por DEC-3 son `CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y `CONTEXT-JEV-COSTURA-V4COMPLETE-2026-10-10.md` — publicados el 2026-10-15, y editarlos deja su `sha_cuerpo` vencido (corregido el 2026-10-22: la primera forma de esta línea nombraba como segundo congelado a `CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md`, que **no está publicado** — sin entrada en `registro.json`, sin `sha_cuerpo` que vencer; está versionado y con dueño registrado). `CONTEXT-CONTRATO-PLANTILLA-TIER-2026-10-12.md` y `CONTEXT-DEUDAS-WRITER-QMIND-2026-10-15.md` siguen citándose de **solo lectura** desde aquí. Este archivo no toca ninguno de ellos.
 >
 > **Los IDs `D16`–`D28` quedan definidos en §2 de este archivo** (primera celda de fila de tabla, la convención de definición). Hasta hoy no existían en ningún archivo del repo: grep exacto sobre el árbol daba 0 coincidencias, es decir, eran deudas sin hogar documental ni dueño registrado. Los enunciados de §2 son los **medidos en esta verificación** (los enunciados originales no están en el repo; ver §8).
 >
@@ -92,7 +92,7 @@ El hecho está confirmado: el bloque de valor esperado de `v4_proposal_generator
 
 ---
 
-## §6. Restricciones de secuencia con `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15` (plan pendiente, PREPARACIÓN, 0 fases ejecutadas)
+## §6. Restricciones de secuencia con `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15` (plan **cerrado** el 2026-10-22 — ver actualización al pie de la sección)
 
 Ese plan no toca ninguna superficie de estas deudas (su ámbito es `scripts/`, el notebook QMind y los documentos de release; grep de las superficies de §2 sobre sus 11 archivos: solo menciones de `S-CST-1` como fuera de alcance). Pero condiciona el aterrizaje de este contexto y de su plan:
 
@@ -101,6 +101,8 @@ Ese plan no toca ninguna superficie de estas deudas (su ámbito es `scripts/`, e
 3. **Tren de release**: 4.81.1 está reclamado por ese plan (DEC-1: publica sus tres curas juntas). El plan de estas deudas declara su release **≥ 4.81.2** con el orden escrito frente a 4.81.1, y cuida `docs/cobertura-historia.md` (AC7 de ese plan promete conteos de tests medidos por el comando canónico).
 4. **Atribución**: todo archivo nuevo de este ciclo (este contexto, crudos, actas) se commitea con pathspec explícito y atribución propia, para no entrar ni quedar huérfano en los commits de FASE-A (que ya declara como suyos los archivos del registro `D-QW-1`/`D-QW-2`).
 5. **Convenciones de la casa**: una fase por sesión; ningún prompt autoriza commit — cada commit requiere letra del Operador con pathspec; citas del plan por símbolos, sin `archivo:línea` (R2.2), para no entrar al `plan_citations_baseline.json`.
+
+**Actualización (2026-10-22): el plan se ejecutó íntegro y cerró.** Medido en el árbol: `CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15` está en `.opencode/plans/Archives/` con sus fases ejecutadas (anotaciones «Real 2026-10-22» en sus lecciones capitalizadas) y la release **4.81.1** publicada (`VERSION.yaml` `release_date: 2026-10-22`, entrada en `CHANGELOG.md`). Efecto sobre los cinco puntos de arriba: (1) los congelamientos DEC-2/DEC-3 **siguen vigentes** — son decisiones del Operador, no estado transitorio de un plan; (2) la ventana de aterrizaje del par del índice **se consumió**: las fases de ese plan regeneraron el par y cerraron, así que el plan sucesor regenera solo y la mezcla de atribución de deltas ya no es un riesgo vivo; (3) el tren de release queda libre — el «≥ 4.81.2» declarado arriba sigue siendo el piso; (4) la atribución por pathspec explícito y (5) las convenciones de la casa se mantienen sin cambio.
 
 ---
 
