@@ -21,3 +21,7 @@
 
 - Fase agotada → `⏳ INCOMPLETA` con checkpoint en esta tabla y en `dependencias-fases.md`; evidencia parcial en `evidence/CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15/FASE-*/`; la sesión nueva retoma desde el checkpoint sin re-ejecutar lo ya correcto.
 - El crudo del rojo-antes de FASE-B es insumo de AC5: si se pierde, se re-corre el writer antes de curar (el rojo tiene que estar capturado ANTES del cambio, R2.8).
+
+## Sello de la tanda de publicación (2026-10-22)
+
+La fila 4 de la tabla conserva su «**Plan CERRADO**, sin commit (letra del Operador)» porque esa celda registra el **corte declarado al cerrar**, no el estado vigente. La fuente única del sello está en `## Sello de la tanda de publicación` del `README.md` de este plan: el cierre quedó commiteado y empujado en `651efd2` (51 rutas, revisión de seguridad previa con 0 hallazgos, paridad `0 0`), el primer intento (`ab95b78`) se rehízo por decisión escrita del Operador al quedarse la mitad vieja de los renombres fuera del pathspec, y el rojo de frescura que el archivado introdujo se cerró el mismo día en `32cd77c` (2 rutas, `R100`, baseline con 4 entradas, nunca `--fix`). La tabla de fases no gana fila nueva: el plan está **cerrado y publicado** y no le sigue fase dentro de este plan.
