@@ -1,0 +1,17 @@
+# BASELINE POST — literal viejo en la población declarada (AC2, FASE-C)
+# Consulta re-ejecutable (superficie viva = código/tests .py):
+#   grep -rn --include='*.py' 'APROBADO-CONDICIONAL-PENDING-ONBOARDING' modules tests main.py
+# Ejecutada al cierre de FASE-C sobre el árbol con las tareas 1-4 aplicadas.
+
+(0 coincidencias — grep exit 1)
+
+# Fuera de población (derivados __pycache__/*.pyc compilados antes del renombre,
+# no fuente; se regeneran solos en la próxima corrida de pytest):
+#   tests/quality_gates/tribunal/__pycache__/test_acta_serialization.cpython-313-pytest-9.0.2.pyc
+#   tests/quality_gates/tribunal/__pycache__/test_acta_version_desde_yaml.cpython-313-pytest-9.0.2.pyc
+#   tests/quality_gates/tribunal/__pycache__/test_conditional_reason.cpython-313-pytest-9.0.0.pyc
+#   tests/quality_gates/tribunal/__pycache__/test_judge.cpython-313-pytest-9.0.2.pyc
+#   tests/__pycache__/test_ac_g4_g5_multi_hotel_matrix.cpython-313-pytest-9.0.2.pyc
+#   tests/__pycache__/test_fase_0_ac20_evidencia_veredicto.cpython-313-pytest-9.0.2.pyc
+
+TOTAL POST = 0

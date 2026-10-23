@@ -333,13 +333,13 @@ def test_multi_hotel_matrix_three_profiles():
         {
             "name": "Hotel de Paso (sintético)",
             "tier": "B",
-            "expected_verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+            "expected_verdict": "APROBADO-CONDICIONAL",
             "blocks": False,
         },
         {
             "name": "Hotel Sin Datos (sintético)",
             "tier": "C",
-            "expected_verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+            "expected_verdict": "APROBADO-CONDICIONAL",
             "blocks": True,
         },
     ]

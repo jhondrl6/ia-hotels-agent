@@ -38,7 +38,7 @@ La cura se ancla en el camino real del producto:
 | Preparación | — | ✅ 2026-10-22 |
 | FASE-A — retiro de `spark` + guardián | MEDIA-ALTA | ✅ 2026-10-22 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-B — ítem A (2 claims) | ALTA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
-| FASE-C — ítem C | MEDIA | ⏳ |
+| FASE-C — ítem C | MEDIA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-D — contrato GBP (ambos caminos) | ALTA | ⏳ |
 | FASE-E — lector único de benchmarks | ALTA | ⏳ |
 | FASE-F — umbrales por semántica | MEDIA | ⏳ |

@@ -12,6 +12,8 @@ La corrida E2E es única y no se parchea en esa fase. El baseline del 2026-10-12
 
 **Hallazgo que este paso debe cerrar**: el onboarding del baseline vive en `output/clientes/hotel_don_alfonso_onboarding.yaml`, que está gitignorado; la copia versionada está en la evidencia. `data/hotel_observations/observations.json` declara Don Alfonso con `hoteldonalfonso.com`, que no casa por host con `www.donalfonsohotel.com`. El preflight materializa el YAML versionado y **afirma** que `_load_latest_onboarding_data()` lo devuelve; el Operador confirma el dominio antes de la corrida.
 
+**Límite heredado de FASE-C (H9)**: el `review_input_manifest.json` del baseline (2026-10-12, schema 1.0) **no trae `has_onboarding`**. Si el ensayo invoca al Juez sobre ese `v4_audit` sin reparar el manifiesto, `ReviewInputs.for_run()` entrega `None`, el primer piso se aplica (tier B+) y el acta emite `APROBADO-CONDICIONAL` + `ONBOARDING_INCOMPLETE`, una causa **falsa** para un hotel con onboarding verificado. Medido en la auditoría de FASE-C: con los informes del baseline y el manifiesto sin la clave, ese es el resultado. El ensayo debe re-capturar/sobrescribir el manifiesto con `has_onboarding: true` **en su copia temporal** antes de invocar al Juez y afirmarlo en `preflight.json`; la evidencia archivada del baseline no se modifica.
+
 ### Estado de Fases Anteriores
 
 | Fase | Estado |
@@ -43,6 +45,7 @@ La corrida E2E es única y no se parchea en esa fase. El baseline del 2026-10-12
 - [ ] `preflight.json` con `onboarding_source`, `hotel_name`, `rooms`, `adr_cop`, `occupancy_rate`, `direct_channel_pct` y `domain_confirmed`
 - [ ] Si el YAML no está o no casa, el ensayo se detiene con `⏳ INCOMPLETA`; no se sigue a ciegas
 - [ ] No se edita `observations.json` sin autorización del Operador
+- [ ] El `review_input_manifest.json` de la **copia temporal** del ensayo publica `has_onboarding: true`: si se parte del baseline, se re-captura con `capture_review_inputs(..., has_onboarding=True)` o se sobrescribe en la copia antes de invocar al Juez (H9); el baseline archivado no se modifica
 
 ### Tarea 2: Render con los generadores corregidos
 **Objetivo**: reconstruir la propuesta y el diagnóstico con los insumos del baseline y los generadores corregidos, sin llamar al LLM. Si un generador exige un objeto que no se puede reconstruir sin inferencia, se documenta el hueco y se usa la ruta de render de plantilla con los datos del baseline; no se inventan cifras.
@@ -52,10 +55,10 @@ La corrida E2E es única y no se parchea en esa fase. El baseline del 2026-10-12
 - [ ] La fuente de cada cifra es un artefacto del baseline, no un valor inventado
 
 ### Tarea 3: Revisor real y juez real
-**Objetivo**: ejecutar `HonestyReviewer` sobre los documentos renderizados y `TribunalJudge` sobre el `v4_audit` del baseline con el código nuevo; usar `MockPromiseExtractor` o los reports existentes para no llamar al LLM.
+**Objetivo**: ejecutar `HonestyReviewer` sobre los documentos renderizados y `TribunalJudge` sobre una **copia temporal** del `v4_audit` del baseline con el código nuevo y el manifiesto de revisión reparado (`has_onboarding: true`); usar `MockPromiseExtractor` o los reports existentes para no llamar al LLM.
 **Criterios de aceptación**:
 - [ ] `revision_honestidad.json` del ensayo → `summary.over_presentations == 0` en propuesta y diagnóstico
-- [ ] Acta del ensayo → `verdict` no bloqueante y `conditional_reason` legible
+- [ ] Acta del ensayo → `verdict == APROBADO-CONDICIONAL` y `conditional_reason == ANALYTICS_CEILING` (Don Alfonso es B+ con onboarding verificado); si sale `ONBOARDING_INCOMPLETE`, el ensayo se detiene: el manifiesto no transportó el onboarding (H9)
 - [ ] `P6.5` permanece `NOT_EVALUABLE` con su dueño; no se toca
 - [ ] Mutante: desactivar la condición del render → `summary.over_presentations > 0` (rojo)
 
@@ -80,7 +83,7 @@ La corrida E2E es única y no se parchea en esa fase. El baseline del 2026-10-12
 | onboarding | `preflight.json` | Fuente y datos reales; dominio declarado |
 | render B+ | `render/02_PROPUESTA`, `render/01_DIAGNOSTICO` | Sin claims absolutos; labels financieros intactos |
 | revisor real | `review/revision_honestidad.json` | `summary.over_presentations == 0` |
-| juez real | `judge/acta_revision.json` | Veredicto no bloqueante + `conditional_reason` |
+| juez real | `judge/acta_revision.json` | `verdict == APROBADO-CONDICIONAL` + `conditional_reason == ANALYTICS_CEILING` (manifiesto con `has_onboarding: true`) |
 | paquete | `package/` | ZIP real, `suppressed:false`, sha/tamaño |
 
 **Comando de validación**: lectura de artefactos del ensayo + `./venv/Scripts/python.exe -m pytest <tests-de-render-y-paquete> -q` (si la fase añade tests). **No** ejecutar `main.py v4complete`.
@@ -107,7 +110,7 @@ Registro:
 
 - [ ] Onboarding materializado y dominio declarado; si no, detenido
 - [ ] Propuesta y diagnóstico B+ sin los 2 claims; labels financieros intactos
-- [ ] `summary.over_presentations == 0`; acta con `conditional_reason`
+- [ ] `summary.over_presentations == 0`; acta con `conditional_reason == ANALYTICS_CEILING` (manifiesto con `has_onboarding: true`)
 - [ ] ZIP temporal real; `deliveries/` intacto
 - [ ] `LISTO_PARA_E2E` o `INCOMPLETA` con dueño; evidencia completa
 - [ ] Cinco cortes sin commit; lecciones registradas
@@ -126,6 +129,6 @@ Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-E2E-PRE de
 Lee 05-prompt-inicio-sesion-fase-E2E-PRE.md, 01-plan-maestro.md §1, §2, §4, §5 y §6, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: ensayo determinista del baseline (onboarding, render B+, revisor/juez reales, paquete temporal) sin inferencia.
 TAREAS: 1 preflight de onboarding, 2 render, 3 revisor y juez reales, 4 paquete temporal, 5 veredicto LISTO/INCOMPLETA.
-CRITERIOS: summary.over_presentations == 0; acta con conditional_reason; ZIP temporal real; no tocar deliveries real.
+CRITERIOS: summary.over_presentations == 0; manifiesto con has_onboarding: true y acta con conditional_reason == ANALYTICS_CEILING; ZIP temporal real; no tocar deliveries real.
 VALIDACIONES: artefactos del ensayo; log_phase_completion.py al cierre.
 ```

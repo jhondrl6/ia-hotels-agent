@@ -42,31 +42,31 @@ Superficie medida del literal viejo: **8 ocurrencias en `.py`** (constante en `j
 **Objetivo**: definir `APROBADO-CONDICIONAL` como valor estable y `conditional_reason` con tres valores: `ANALYTICS_CEILING` (tier B+ con onboarding verificado y sin analytics), `ONBOARDING_INCOMPLETE` (tier B/C sin onboarding verificado) y `UNCERTIFIABLE_CLAUSES` (tier A con cláusulas no certificables o revisores no leídos).
 **Archivos afectados**: `modules/quality_gates/tribunal/judge.py`, `modules/quality_gates/tribunal/outcome.py`, `modules/quality_gates/tribunal/acta_writer.py`.
 **Criterios de aceptación**:
-- [ ] `_compute_verdict` devuelve el veredicto y la causa; no hay dos nombres largos que oculten la tercera causa
-- [ ] `BLOCKING_VERDICTS` no incluye `APROBADO-CONDICIONAL`; el paquete sigue publicando
-- [ ] `P6.5` y `T1_CERTIFIABLE_CLAUSES` no cambian
+- [x] `_compute_verdict` devuelve el veredicto y la causa; no hay dos nombres largos que oculten la tercera causa
+- [x] `BLOCKING_VERDICTS` no incluye `APROBADO-CONDICIONAL`; el paquete sigue publicando
+- [x] `P6.5` y `T1_CERTIFIABLE_CLAUSES` no cambian
 
 ### Tarea 2: Transportar `has_onboarding` al tribunal
 **Objetivo**: que la causa `ANALYTICS_CEILING` vs `ONBOARDING_INCOMPLETE` se decida con un dato real, no inferida solo de `evidence_tier`.
 **Archivos afectados**: `main.py`, `modules/quality_gates/tribunal/review_inputs.py`.
 **Criterios de aceptación**:
-- [ ] `has_onboarding` viaja en el manifiesto de revisión (o en el contrato equivalente) y el juez lo lee
-- [ ] Un hotel con onboarding verificado y sin analytics produce `ANALYTICS_CEILING`
-- [ ] Un hotel sin onboarding produce `ONBOARDING_INCOMPLETE`
+- [x] `has_onboarding` viaja en el manifiesto de revisión (o en el contrato equivalente) y el juez lo lee
+- [x] Un hotel con onboarding verificado y sin analytics produce `ANALYTICS_CEILING`
+- [x] Un hotel sin onboarding produce `ONBOARDING_INCOMPLETE`
 
 ### Tarea 3: Renombrar la superficie viva
 **Objetivo**: actualizar la constante, la etiqueta humana y los 6 tests; el literal viejo desaparece de la población de código/tests.
 **Criterios de aceptación**:
-- [ ] Grep del literal viejo: 0 en `modules/`, `tests/` y `main.py` (crudo en evidencia)
-- [ ] La etiqueta humana del acta no dice “Pendiente de onboarding” para el caso de techo de analytics
-- [ ] Los históricos (`VERSION.yaml`, `context/`, `Archives/`, `evidence/`, `qmind-writeback/`, `temp/`) se declaran fuera de la población, no se editan
+- [x] Grep del literal viejo: 0 en `modules/`, `tests/` y `main.py` (crudo en evidencia)
+- [x] La etiqueta humana del acta no dice “Pendiente de onboarding” para el caso de techo de analytics
+- [x] Los históricos (`VERSION.yaml`, `context/`, `Archives/`, `evidence/`, `qmind-writeback/`, `temp/`) se declaran fuera de la población, no se editan
 
 ### Tarea 4: Tests de las tres causas (AC2)
 **Objetivo**: acta serializada con el veredicto y la causa legibles; mutation check: restaurar el literal viejo o eliminar la causa → grep/test en rojo.
 **Criterios de aceptación**:
-- [ ] Test de serialización lee el JSON del writer real (R2.4)
-- [ ] Las tres causas se provocan con protocolos sintéticos y se leen en el acta
-- [ ] Par rojo/verde en `evidence/…/FASE-C/`
+- [x] Test de serialización lee el JSON del writer real (R2.4)
+- [x] Las tres causas se provocan con protocolos sintéticos y se leen en el acta
+- [x] Par rojo/verde en `evidence/…/FASE-C/`
 
 ## Tests Obligatorios
 
@@ -98,12 +98,12 @@ Registro:
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] `conditional_reason` con las tres causas y `has_onboarding` transportado
-- [ ] 0 literales viejos vivos en la población declarada; acta legible
-- [ ] `P6.5`/`T1_CERTIFIABLE_CLAUSES` intactas
-- [ ] Mutation check con par rojo/verde; `--quick` verde; cinco cortes sin commit
-- [ ] `dependencias-fases.md` actualizado; lecciones registradas; evidencia preservada
-- [ ] Derivados re-publicados y verificados con `--check` como último paso (Wiring si la fase añadió archivos versionados; índice de lecciones si se citaron IDs del vocabulario), con el exit leído sin tubería
+- [x] `conditional_reason` con las tres causas y `has_onboarding` transportado
+- [x] 0 literales viejos vivos en la población declarada; acta legible
+- [x] `P6.5`/`T1_CERTIFIABLE_CLAUSES` intactas
+- [x] Mutation check con par rojo/verde; `--quick` verde; cinco cortes sin commit
+- [x] `dependencias-fases.md` actualizado; lecciones registradas; evidencia preservada
+- [x] Derivados re-publicados y verificados con `--check` como último paso (Wiring si la fase añadió archivos versionados; índice de lecciones si se citaron IDs del vocabulario), con el exit leído sin tubería
 
 ## Restricciones
 

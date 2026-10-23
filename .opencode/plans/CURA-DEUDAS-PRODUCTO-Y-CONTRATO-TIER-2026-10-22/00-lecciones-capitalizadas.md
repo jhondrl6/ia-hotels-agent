@@ -72,4 +72,13 @@
 | `L-VUP-5` | Una fase de extensión sin rojo es un falso verde potencial | ✅ La extensión de FASE-B sí produjo rojo: 2 hallazgos reales del revisor con el mutante; además el derivado de Wiring vencido hizo fallar `--quick` 12/13 hasta re-publicarlo. La extensión no es verde por no-ejecución |
 | `L-R.4` | Los huecos sin verificador se declaran | ✅ `baseline-pre-post.md` declara que el verificador mecánico de la resta no existe, que el par pass/fail de la suite completa **no existe** (solo el punto medido), y la atribución de los 3 rojos de la suite por mecanismo |
 
+## 5.2 Qué pasó con las lecciones citadas — FASE-C (2026-10-23)
+
+| ID | Qué exigía en esta fase | Qué pasó realmente |
+|----|-------------------------|--------------------|
+| `L-P3A.2` | El nombre y la causa se validan contra el acta serializada, no contra el diccionario en memoria | ✅ Los tests de las 3 causas leen `acta_revision.json` escrito por el `ActaWriter` real (R2.4); un primer protocolo mal planteado (tier A + todo PASS + revisores leídos) salió `APROBADO-PARA-ENTREGA` y el assert del JSON lo delató, no el diccionario |
+| `L-T4A.5` | El test lee el JSON del writer real y provoca las tres causas | ✅ Par rojo/verde con dos mutantes sobre el símbolo real: M1 (literal viejo restaurado) → 8 rojos; M2 (causa eliminada) → 6 rojos; restauración verificada con el verde final idéntico al inicial |
+| `L-CST-7` | `P6.5` no se toca; la cura se limita al veredicto y su causa | ✅ `P6.5` (fila NOT_EVALUABLE reservada Bot 4) y `T1_CERTIFIABLE_CLAUSES` sin cambios — grep por símbolo en `evidence/…/FASE-C/p65-intacta.txt` |
+| `L-R.4` | El grep del literal viejo se declara con su población | ✅ `baseline-pre-post.md` declara la población (`modules/`, `tests/`, `main.py`), la allowlist de históricos/scratch y que el verificador mecánico de la resta no existe |
+
 - [ ] Actualizado al cierre de la última fase, y el write-back de QMind se ejecutó **antes** de archivar el plan (`git mv` a `Archives/`, orden R2.10).

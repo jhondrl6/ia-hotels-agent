@@ -75,7 +75,7 @@ def test_acta_json_serialization(acta_output):
 
     assert data["verdict"] in (
         "APROBADO-PARA-ENTREGA",
-        "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+        "APROBADO-CONDICIONAL",
         "DEVOLVER-CORRECCIONES",
         "BLOQUEADO",
     )

@@ -1,0 +1,11 @@
+54:T1_CERTIFIABLE_CLAUSES = ("P6.1", "P6.3", "P6.4", "P6.6")
+55-
+56-# Veredictos que impiden emitir el ZIP. Un solo punto de decisión para main.py.
+57-BLOCKING_VERDICTS = frozenset({VERDICT_BLOCKED, VERDICT_RETURN})
+58-
+--
+267:            "P6.5": {
+268-                "status": STATUS_NOT_EVALUABLE,
+269-                "source_artifact": None,
+270-                "finding": "Reservada para Bot 4 (honestidad NL) — D-T1.3 opción a",
+271-            },

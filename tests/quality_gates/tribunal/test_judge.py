@@ -108,7 +108,8 @@ def _informes_sin_hallazgos() -> list:
 
 
 def test_verdict_tier_b_is_conditional(tmp_audit_dir, tmp_deliveries_dir_b):
-    """Artefacto SalenteReal (Tier B) → APROBADO-CONDICIONAL-PENDING-ONBOARDING."""
+    """Artefacto SalenteReal (Tier B) → APROBADO-CONDICIONAL (causa
+    ONBOARDING_INCOMPLETE: primer piso sin onboarding verificado)."""
     judge = TribunalJudge(
         v4_audit_dir=tmp_audit_dir,
         deliveries_dir=tmp_deliveries_dir_b,

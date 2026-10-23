@@ -2841,6 +2841,10 @@ def run_v4_complete_mode(args: argparse.Namespace) -> None:
             v4_audit_dir=_v4_audit_dir_inputs,
             documents={"diagnostico": diagnostic_path, "propuesta": proposal_path},
             retained_by_gate=_retained_by_gate,
+            # AC2 (FASE-C): el onboarding verificado de la corrida viaja en el
+            # manifiesto para que el Juez distinga ANALYTICS_CEILING de
+            # ONBOARDING_INCOMPLETE con un dato real, no inferido del tier.
+            has_onboarding=has_onboarding,
         )
         print(f"   [OK] Insumos de revision congelados: {_run_id} (no exportable)")
     except Exception as e:

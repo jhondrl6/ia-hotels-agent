@@ -15,6 +15,10 @@ from typing import Any, Optional
 from .artifact_paths import FINANCIAL_SCENARIOS_PATTERN
 from .evidence_tier import resolve_evidence_tier
 from .outcome import (
+    CONDITIONAL_REASONS,
+    REASON_ANALYTICS_CEILING,
+    REASON_ONBOARDING_INCOMPLETE,
+    REASON_UNCERTIFIABLE_CLAUSES,
     ReviewerReport,
     TribunalOutcome,
     build_outcome,
@@ -24,7 +28,11 @@ from .outcome import (
 
 
 VERDICT_APPROVED = "APROBADO-PARA-ENTREGA"
-VERDICT_CONDITIONAL = "APROBADO-CONDICIONAL-PENDING-ONBOARDING"
+# AC2 (FASE-C): el veredicto condicional es APROBADO-CONDICIONAL a secas; la causa
+# viaja aparte en `conditional_reason` (ANALYTICS_CEILING / ONBOARDING_INCOMPLETE /
+# UNCERTIFIABLE_CLAUSES). El nombre largo anterior codificaba UNA sola causa y
+# mentía para las otras dos.
+VERDICT_CONDITIONAL = "APROBADO-CONDICIONAL"
 VERDICT_RETURN = "DEVOLVER-CORRECCIONES"
 VERDICT_BLOCKED = "BLOQUEADO"
 
@@ -80,6 +88,17 @@ class TribunalJudge:
         self._manifest_cache: Optional[dict] = None
         self._evidence_tier_source: str = "sin lectura de tier"
 
+    def _has_onboarding(self) -> Optional[bool]:
+        """Onboarding verificado que transporta el manifiesto de revisión (AC2).
+
+        Tri-estado real (DA-C3): True/False lo declaró la corrida en
+        ``review_input_manifest.json → has_onboarding``; None significa «no
+        transportado» (corrida vieja o captura fallida). Para nombrar la causa,
+        solo True cuenta como onboarding verificado: la causa dice lo que el
+        tribunal pudo verificar, no lo que se supone.
+        """
+        return getattr(self._inputs, "has_onboarding", None)
+
     def evaluate(self) -> dict:
         """Retorna el acta de revisión con veredicto determinista.
 
@@ -91,10 +110,17 @@ class TribunalJudge:
         clauses = self._evaluate_clauses()
         first_floor = self._apply_first_floor_rule(evidence_tier)
         reports = not_run_reports()
-        verdict = self._compute_verdict(clauses, evidence_tier, first_floor, reports)
+        verdict, conditional_reason = self._compute_verdict(
+            clauses,
+            evidence_tier,
+            first_floor,
+            reports,
+            has_onboarding=self._has_onboarding(),
+        )
 
         return {
             "verdict": verdict,
+            "conditional_reason": conditional_reason,
             "evidence_tier": evidence_tier,
             "clauses_evaluated": 6,
             "clauses": clauses,
@@ -121,8 +147,12 @@ class TribunalJudge:
         re-parsea para decidir (contrato §2.3).
         """
         acta["reviewer_reports"] = [r.to_dict() for r in reports]
-        acta["verdict"] = self._compute_verdict(
-            acta["clauses"], acta["evidence_tier"], acta["first_floor_rule"], reports
+        acta["verdict"], acta["conditional_reason"] = self._compute_verdict(
+            acta["clauses"],
+            acta["evidence_tier"],
+            acta["first_floor_rule"],
+            reports,
+            has_onboarding=self._has_onboarding(),
         )
         return acta
 
@@ -144,6 +174,7 @@ class TribunalJudge:
             reports=reports,
             clauses=acta.get("clauses", {}),
             gate_blocking_enabled=gate_blocking_enabled,
+            conditional_reason=acta.get("conditional_reason"),
         )
         acta.update(outcome.acta_fields())
         return outcome
@@ -485,8 +516,14 @@ class TribunalJudge:
         evidence_tier: str,
         first_floor: dict,
         reviewer_reports: list[ReviewerReport],
-    ) -> str:
+        has_onboarding: Optional[bool] = None,
+    ) -> tuple[str, Optional[str]]:
         """Matriz §2.1 del contrato P1 — el orden de evaluación ES el contrato.
+
+        Retorna ``(verdict, conditional_reason)``: el veredicto nombra el QUÉ y la
+        causa nombra el POR QUÉ cuando es condicional (AC2), con vocabulario
+        cerrado (``CONDITIONAL_REASONS``). En cualquier otro veredicto la causa es
+        ``None``.
 
         1. Gate blocking fallido (P6.1/P6.6 en FAIL) → BLOQUEADO
         2. CRITICAL verificado de un revisor (critical_count>=1) o su recomendación
@@ -498,9 +535,11 @@ class TribunalJudge:
         4. ARTIFACT_MISSING / READER_FAILED / NOT_RUN: no cambian el veredicto, pero
            hacen APROBADO-PARA-ENTREGA imposible (ausencia jamás es PASS)
         5. Solo WARNING/INFO: nunca degrada por debajo del primer piso
-        6. Primer piso aplicado → condicional
+        6. Primer piso aplicado → condicional, con causa según onboarding verificado:
+           ANALYTICS_CEILING (solo falta analytics) u ONBOARDING_INCOMPLETE
         7. Tier A con todas las cláusulas certificables en PASS → aprobado
-        8. Cualquier otro caso → condicional
+        8. Cualquier otro caso → condicional con causa UNCERTIFIABLE_CLAUSES
+           (cláusulas no certificables en PASS o revisores no leídos)
         """
         has_blocking_fail = any(
             c.get("status") == STATUS_FAIL
@@ -509,10 +548,10 @@ class TribunalJudge:
         )
 
         if has_blocking_fail:
-            return VERDICT_BLOCKED
+            return VERDICT_BLOCKED, None
 
         if any(r.verified_critical or r.verified_block for r in reviewer_reports):
-            return VERDICT_BLOCKED
+            return VERDICT_BLOCKED, None
 
         has_critical_finding = any(
             c.get("status") == STATUS_FAIL
@@ -521,14 +560,22 @@ class TribunalJudge:
         ) or any(r.verified_return_for_tests for r in reviewer_reports)
 
         if has_critical_finding:
-            return VERDICT_RETURN
+            return VERDICT_RETURN, None
 
         # Filas 4 y 5: un fallo de lectura no bloquea, pero impide certificar la
         # entrega; un WARNING/INFO de revisor no degrada nada por debajo del piso.
         reviewer_unread = any(r.status.blocks_approval for r in reviewer_reports)
 
         if first_floor["applied"]:
-            return VERDICT_CONDITIONAL
+            # Solo True cuenta como onboarding verificado (DA-C3): False y el None
+            # de un transporte ausente nombran ONBOARDING_INCOMPLETE, que dice «sin
+            # onboarding verificado», no «sin onboarding supuesto».
+            reason = (
+                REASON_ANALYTICS_CEILING
+                if has_onboarding is True
+                else REASON_ONBOARDING_INCOMPLETE
+            )
+            return VERDICT_CONDITIONAL, reason
 
         # Sin evidencia certificada no se entrega el veredicto máximo: NOT_EVALUABLE
         # degrada a condicional en lugar de contar como no-bloqueante.
@@ -537,6 +584,6 @@ class TribunalJudge:
         )
 
         if certifiable and not reviewer_unread and evidence_tier == "A":
-            return VERDICT_APPROVED
+            return VERDICT_APPROVED, None
 
-        return VERDICT_CONDITIONAL
+        return VERDICT_CONDITIONAL, REASON_UNCERTIFIABLE_CLAUSES

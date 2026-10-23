@@ -1,0 +1,307 @@
+FFFFF.FF.......F                                                         [100%]
+================================== FAILURES ===================================
+______________ test_analytics_ceiling_con_onboarding_verificado _______________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_analytics_ceiling_con_onb0')
+
+    def test_analytics_ceiling_con_onboarding_verificado(tmp_path):
+        """Tier B+ (primer piso) + onboarding verificado \u2192 ANALYTICS_CEILING.
+    
+        Lo único que falta es analytics; la etiqueta humana NO dice «Pendiente de
+        onboarding».
+        """
+        data, md_text = _protocolo(
+            tier="B+",
+            first_floor=True,
+            clauses=_clauses(),
+            reports=_reports_ok(),
+            has_onboarding=True,
+            tmp_path=tmp_path,
+        )
+    
+>       assert data["verdict"] == "APROBADO-CONDICIONAL"
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E         
+E         - APROBADO-CONDICIONAL
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_conditional_reason.py:121: AssertionError
+__________________ test_onboarding_incomplete_sin_onboarding __________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_onboarding_incomplete_sin0')
+
+    def test_onboarding_incomplete_sin_onboarding(tmp_path):
+        """Tier B (primer piso) sin onboarding \u2192 ONBOARDING_INCOMPLETE."""
+        data, _ = _protocolo(
+            tier="B",
+            first_floor=True,
+            clauses=_clauses(),
+            reports=_reports_ok(),
+            has_onboarding=False,
+            tmp_path=tmp_path,
+        )
+    
+>       assert data["verdict"] == "APROBADO-CONDICIONAL"
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E         
+E         - APROBADO-CONDICIONAL
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_conditional_reason.py:141: AssertionError
+__________________ test_onboarding_incomplete_sin_transporte __________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_onboarding_incomplete_sin1')
+
+    def test_onboarding_incomplete_sin_transporte(tmp_path):
+        """Sin `has_onboarding` en el manifiesto (None) cuenta como «sin verificado».
+    
+        DA-C3: la causa nombra lo que el tribunal pudo verificar; el transporte
+        ausente no se lee como onboarding presente.
+        """
+        data, _ = _protocolo(
+            tier="C",
+            first_floor=True,
+            clauses=_clauses(),
+            reports=_reports_ok(),
+            has_onboarding=None,
+            tmp_path=tmp_path,
+        )
+    
+>       assert data["verdict"] == "APROBADO-CONDICIONAL"
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E         
+E         - APROBADO-CONDICIONAL
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_conditional_reason.py:160: AssertionError
+_____________ test_uncertifiable_clauses_clausula_no_certificable _____________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_uncertifiable_clauses_cla0')
+
+    def test_uncertifiable_clauses_clausula_no_certificable(tmp_path):
+        """Tier A sin primer piso, cl\xe1usula certificable no PASS \u2192 UNCERTIFIABLE_CLAUSES."""
+        clauses = _clauses()
+        clauses["P6.3"] = {
+            "status": "NOT_EVALUABLE",
+            "source_artifact": "protocolo-sintetico",
+            "finding": "asset_generation_report no disponible",
+        }
+        data, _ = _protocolo(
+            tier="A",
+            first_floor=False,
+            clauses=clauses,
+            reports=_reports_ok(),
+            has_onboarding=True,
+            tmp_path=tmp_path,
+        )
+    
+>       assert data["verdict"] == "APROBADO-CONDICIONAL"
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E         
+E         - APROBADO-CONDICIONAL
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_conditional_reason.py:184: AssertionError
+_______________ test_uncertifiable_clauses_revisores_no_leidos ________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_uncertifiable_clauses_rev0')
+
+    def test_uncertifiable_clauses_revisores_no_leidos(tmp_path):
+        """Tier A sin primer piso, revisores en NOT_RUN \u2192 UNCERTIFIABLE_CLAUSES."""
+        data, _ = _protocolo(
+            tier="A",
+            first_floor=False,
+            clauses=_clauses(),
+            reports=not_run_reports(),
+            has_onboarding=True,
+            tmp_path=tmp_path,
+        )
+    
+>       assert data["verdict"] == "APROBADO-CONDICIONAL"
+E       AssertionError: assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E         
+E         - APROBADO-CONDICIONAL
+E         + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\quality_gates\tribunal\test_conditional_reason.py:199: AssertionError
+_________________ test_acta_serializada_sin_el_literal_viejo __________________
+
+tmp_path = WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_acta_serializada_sin_el_l0')
+
+    def test_acta_serializada_sin_el_literal_viejo(tmp_path):
+        """El acta de las tres causas no contiene el literal viejo (JSON ni MD)."""
+        clauses_no_certificable = _clauses()
+        clauses_no_certificable["P6.3"] = {
+            "status": "NOT_EVALUABLE",
+            "source_artifact": "protocolo-sintetico",
+            "finding": "asset_generation_report no disponible",
+        }
+        protocolos = [
+            ("B+", True, _clauses(), _reports_ok(), True),
+            ("B", True, _clauses(), _reports_ok(), False),
+            ("A", False, clauses_no_certificable, _reports_ok(), True),
+        ]
+        for tier, first_floor, clauses, reports, has_onboarding in protocolos:
+            data, md_text = _protocolo(
+                tier=tier,
+                first_floor=first_floor,
+                clauses=clauses,
+                reports=reports,
+                has_onboarding=has_onboarding,
+                tmp_path=tmp_path / tier.replace("+", "mas"),
+            )
+            serializado = json.dumps(data, ensure_ascii=False) + md_text
+>           assert VIEJO_LITERAL not in serializado
+E           assert 'APROBADO-CO...G-ONBOARDING' not in '{"verdict":...10-23 15:21*'
+E             
+E             'APROBADO-CONDICIONAL-PENDING-ONBOARDING' is contained here:
+E             ?              ^^^^^^^^^^^^^^^^^^^^^^^^
+E               {"verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING", "conditional_reason": "ANALYTICS_CEILING", "evidence_tier": "B+", "clauses_evaluated": 6, "clauses": {"P6.1": {"status": "PASS", "source_artifact": "protocolo-sintetico", "finding": "protocolo sintetico"}, "P6.2": {"status": "PASS", "source_artifact": "protocolo-sintetico", "finding": "protocolo sintetico"}, "P6.3": {"status": "PASS", "source_artifact": "protocolo-sintetico", "finding": "protocolo sintetico"}, "P6.4"...
+E             
+E             ...Full output truncated (77 lines hidden), use '-vv' to show
+
+tests\quality_gates\tribunal\test_conditional_reason.py:260: AssertionError
+________________________ test_acta_json_serialization _________________________
+
+acta_output = {'acta': {'clauses': {'P6.1': {'finding': 'critical_recall OK: Critical recall at 100.0% (threshold: 90%)', 'source_ar...ir': WindowsPath('C:/Users/Jhond/AppData/Local/Temp/pytest-of-Jhond/pytest-1892/test_acta_json_serialization0/output')}
+
+    def test_acta_json_serialization(acta_output):
+        """Lee el JSON del writer real (no objeto en memoria), verifica claves."""
+        json_path = acta_output["json_path"]
+        assert json_path.exists()
+    
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    
+        required_keys = [
+            "verdict",
+            "evidence_tier",
+            "clauses_evaluated",
+            "clauses",
+            "reviewer_reports",
+            "first_floor_rule",
+            "timestamp",
+            "hotel_id",
+        ]
+        for key in required_keys:
+            assert key in data, f"Missing key: {key}"
+    
+>       assert data["verdict"] in (
+            "APROBADO-PARA-ENTREGA",
+            "APROBADO-CONDICIONAL",
+            "DEVOLVER-CORRECCIONES",
+            "BLOQUEADO",
+        )
+E       AssertionError: assert 'APROBADO-CONDICIONAL-PENDING-ONBOARDING' in ('APROBADO-PARA-ENTREGA', 'APROBADO-CONDICIONAL', 'DEVOLVER-CORRECCIONES', 'BLOQUEADO')
+
+tests\quality_gates\tribunal\test_acta_serialization.py:76: AssertionError
+___________________ test_multi_hotel_matrix_three_profiles ____________________
+
+    def test_multi_hotel_matrix_three_profiles():
+        """AC-G4: Matriz con 3 perfiles offline (Don Alfonso anonimizado + 2 sintéticos).
+    
+        Perfil 1: Hotel destino boutique (Don Alfonso anonimizado) - tier A, sin hallazgos
+        Perfil 2: Hotel de paso (sintético) - tier B, con hallazgo advisory
+        Perfil 3: Hotel sin datos financieros (sintético) - tier C, bloqueado por primer piso
+        """
+        from modules.quality_gates.tribunal.judge import TribunalJudge
+        from modules.quality_gates.tribunal.outcome import ReviewerReport, ReviewerStatus
+    
+        profiles = [
+            {
+                "name": "Hotel Destino Boutique (anonimizado)",
+                "tier": "A",
+                "expected_verdict": "APROBADO-PARA-ENTREGA",
+                "blocks": False,
+            },
+            {
+                "name": "Hotel de Paso (sintético)",
+                "tier": "B",
+                "expected_verdict": "APROBADO-CONDICIONAL",
+                "blocks": False,
+            },
+            {
+                "name": "Hotel Sin Datos (sintético)",
+                "tier": "C",
+                "expected_verdict": "APROBADO-CONDICIONAL",
+                "blocks": True,
+            },
+        ]
+    
+        with tempfile.TemporaryDirectory() as tmpdir:
+            v4_audit_dir = Path(tmpdir) / "v4_audit"
+            deliveries_dir = Path(tmpdir) / "deliveries"
+            v4_audit_dir.mkdir(exist_ok=True)
+            deliveries_dir.mkdir(exist_ok=True)
+            judge = TribunalJudge(v4_audit_dir, deliveries_dir)
+    
+            for profile in profiles:
+                base_acta = {
+                    "verdict": "PRE-APPROVED",
+                    "evidence_tier": profile["tier"],
+                    "hotel_id": profile["name"],
+                    "clauses": {
+                        "P6.1": {"status": "PASS", "finding": "OK"},
+                        "P6.2": {"status": "PASS", "finding": "OK"},
+                        "P6.3": {"status": "PASS", "finding": "OK"},
+                        "P6.4": {"status": "PASS", "finding": "OK"},
+                        "P6.5": {"status": "PASS", "finding": "OK"},
+                        "P6.6": {"status": "PASS", "finding": "OK"},
+                    },
+                    "first_floor_rule": {
+                        "applied": profile["tier"] == "C",
+                        "source_artifact": "financial_scenarios.json" if profile["tier"] == "C" else None,
+                        "reason": "Tier C requiere onboarding" if profile["tier"] == "C" else None,
+                    },
+                }
+    
+                reports = [
+                    ReviewerReport(reviewer="diagnosis_reviewer", status=ReviewerStatus.OK_NO_FINDINGS, findings_count=0, critical_count=0, recommendation="APPROVE"),
+                    ReviewerReport(reviewer="alignment_reviewer", status=ReviewerStatus.OK_NO_FINDINGS, findings_count=0, critical_count=0, recommendation="APPROVE"),
+                    ReviewerReport(reviewer="asset_reviewer", status=ReviewerStatus.OK_NO_FINDINGS, findings_count=0, critical_count=0, recommendation="APPROVE"),
+                    ReviewerReport(reviewer="honesty_reviewer", status=ReviewerStatus.OK_NO_FINDINGS, findings_count=0, critical_count=0, recommendation="APPROVE"),
+                ]
+    
+                enriched = judge.enrich(base_acta, reports)
+                outcome = judge.finalize(enriched, reports, blocks=profile["blocks"])
+    
+>               assert outcome.verdict == profile["expected_verdict"], f"Perfil {profile['name']}: verdict mismatch"
+E               AssertionError: Perfil Hotel de Paso (sintético): verdict mismatch
+E               assert 'APROBADO-CON...NG-ONBOARDING' == 'APROBADO-CONDICIONAL'
+E                 
+E                 - APROBADO-CONDICIONAL
+E                 + APROBADO-CONDICIONAL-PENDING-ONBOARDING
+
+tests\test_ac_g4_g5_multi_hotel_matrix.py:384: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_analytics_ceiling_con_onboarding_verificado
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_onboarding_incomplete_sin_onboarding
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_onboarding_incomplete_sin_transporte
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_uncertifiable_clauses_clausula_no_certificable
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_uncertifiable_clauses_revisores_no_leidos
+FAILED tests/quality_gates/tribunal/test_conditional_reason.py::test_acta_serializada_sin_el_literal_viejo
+FAILED tests/quality_gates/tribunal/test_acta_serialization.py::test_acta_json_serialization
+FAILED tests/test_ac_g4_g5_multi_hotel_matrix.py::test_multi_hotel_matrix_three_profiles
+8 failed, 8 passed, 8 warnings in 3.38s

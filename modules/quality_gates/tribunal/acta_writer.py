@@ -15,6 +15,21 @@ VERSION_FILE = Path(__file__).resolve().parents[3] / "VERSION.yaml"
 
 VERSION_NO_DISPONIBLE = "version-no-disponible"
 
+# AC2 (FASE-C): etiqueta humana de la causa del condicional en el acta MD. El caso
+# de techo de analytics NO se etiqueta como «Pendiente de onboarding»: su causa es
+# la falta de analytics, no la del onboarding (que está verificado).
+CONDITIONAL_REASON_LABELS = {
+    "ANALYTICS_CEILING": (
+        "techo de analytics — onboarding verificado; faltan datos de analítica para tier A"
+    ),
+    "ONBOARDING_INCOMPLETE": (
+        "onboarding incompleto — sin datos operativos verificados"
+    ),
+    "UNCERTIFIABLE_CLAUSES": (
+        "cláusulas no certificables o revisores no leídos"
+    ),
+}
+
 
 def _read_project_version() -> str:
     """Version del pipeline leida de VERSION.yaml (fuente unica del repo, AC-F6).
@@ -70,7 +85,7 @@ class ActaWriter:
 
         verdict_emoji = {
             "APROBADO-PARA-ENTREGA": "✅",
-            "APROBADO-CONDICIONAL-PENDING-ONBOARDING": "⚠️",
+            "APROBADO-CONDICIONAL": "⚠️",
             "DEVOLVER-CORRECCIONES": "🔄",
             "BLOQUEADO": "🚫",
         }.get(verdict, "❓")
@@ -85,6 +100,15 @@ class ActaWriter:
             f"**Cláusulas evaluadas**: {acta.get('clauses_evaluated', 6)}",
             f"",
         ]
+
+        # AC2 (FASE-C): la causa del condicional se lee en el acta, no se infiere.
+        conditional_reason = acta.get("conditional_reason")
+        if conditional_reason:
+            label = CONDITIONAL_REASON_LABELS.get(conditional_reason, "causa no reconocida")
+            lines.extend([
+                f"**Causa del condicional**: `{conditional_reason}` — {label}",
+                f"",
+            ])
 
         if first_floor.get("applied"):
             lines.extend([

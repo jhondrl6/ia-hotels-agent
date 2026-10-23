@@ -74,7 +74,7 @@ FASE-A (N1/N7/R4: retiro de spark + guardián)
 | Preparación | ✅ | 2026-10-22 | Correcciones al contexto de deudas aplicadas; estrategia corregida y prompts regenerados |
 | FASE-A | ✅ | 2026-10-22 | `spark` retirado (centinela exit 0, `D19` cerrada por retiro); `gap_analyzer` reparado con `get_superposition_factor()`; guardián por existencia con par rojo/verde; barrido `R4c` sin huérfanos vivos |
 | FASE-B | ✅ | 2026-10-23 | Ítem A: 2 claims neutralizados por tier en propuesta y diagnóstico (AC1: revisor real + par rojo/verde con diente); gate de Wiring re-publicado (`--quick` 13/13); índice de lecciones re-publicado con autorización (`--check` de `EXIT=1` a `EXIT=0`, los 50 nodos de `lesson_relevance` vuelven verdes); errata de `REGISTRY` corregida a mano (11 nuevos / 7 modificados); H1–H5 y rojos R declarados y H6 curado en `10-analisis` §Seguimientos, con H7 (deuda de instrumento) dueño FASE-H2 |
-| FASE-C | ⏳ pendiente | — | `conditional_reason`; `P6.5` intacta |
+| FASE-C | ✅ | 2026-10-23 | Ítem C: `APROBADO-CONDICIONAL` + `conditional_reason` (`ANALYTICS_CEILING`/`ONBOARDING_INCOMPLETE`/`UNCERTIFIABLE_CLAUSES`); `has_onboarding` viaja en `review_input_manifest.json`; 8→0 del literal viejo en la población declarada; `P6.5`/`T1` intactas; par rojo/verde M1/M2 en evidencia |
 | FASE-D | ⏳ pendiente | — | Ambos caminos GBP |
 | FASE-E | ⏳ pendiente | — | Lector único y cinco tablas |
 | FASE-F | ⏳ pendiente | — | Umbrales por semántica |

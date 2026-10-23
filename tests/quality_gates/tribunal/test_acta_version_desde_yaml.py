@@ -29,7 +29,7 @@ FOOTER = re.compile(r"TribunalJudge v(?P<version>\S+)")
 
 def _acta_minima() -> dict:
     return {
-        "verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+        "verdict": "APROBADO-CONDICIONAL",
         "evidence_tier": "B+",
         "clauses_evaluated": 6,
         "clauses": {},

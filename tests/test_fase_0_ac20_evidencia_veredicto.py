@@ -334,7 +334,7 @@ class TestPackageEvidenceEnRamaPublish:
         audit_dir.mkdir()
         published = tmp_path / "hotel_20260920.zip"
         _make_zip(published, members=4)
-        acta = {"verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING"}
+        acta = {"verdict": "APROBADO-CONDICIONAL"}
 
         _record_published_package_evidence(acta, published, audit_dir)
 

@@ -16,6 +16,21 @@ RECOMMENDATION_BLOCK = "BLOQUEAR"
 RECOMMENDATION_RETURN_TESTS = "DEVOLVER-PRUEBAS"
 SEVERITY_CRITICAL = "CRITICAL"
 
+# AC2 (FASE-C, ítem C): causa estructurada del veredicto condicional. El veredicto
+# nombra el QUÉ (`APROBADO-CONDICIONAL`); `conditional_reason` nombra el POR QUÉ
+# sin codificarlo en un nombre largo. Vocabulario cerrado de tres valores:
+#   ANALYTICS_CEILING      — primer piso aplicado con onboarding verificado: lo único
+#                            que falta es analytics (tier A).
+#   ONBOARDING_INCOMPLETE  — primer piso aplicado sin onboarding verificado.
+#   UNCERTIFIABLE_CLAUSES  — sin primer piso (tier A): cláusulas no certificables
+#                            en PASS o revisores no leídos (fila 8 de la matriz §2.1).
+REASON_ANALYTICS_CEILING = "ANALYTICS_CEILING"
+REASON_ONBOARDING_INCOMPLETE = "ONBOARDING_INCOMPLETE"
+REASON_UNCERTIFIABLE_CLAUSES = "UNCERTIFIABLE_CLAUSES"
+CONDITIONAL_REASONS = frozenset(
+    {REASON_ANALYTICS_CEILING, REASON_ONBOARDING_INCOMPLETE, REASON_UNCERTIFIABLE_CLAUSES}
+)
+
 # FASE-0 (AC20-ii): proyección que el acta publica de cada hallazgo.
 # ``ACTA_FINDING_KEYS`` es la lista blanca de claves y ``ACTA_FINDING_TEXT_LIMIT``
 # acota la descripción: el acta debe nombrar la causa sin convertirse en una
@@ -265,12 +280,16 @@ class TribunalOutcome:
     blocks_publish: bool
     corrective_actions: list = field(default_factory=list)
     enforcement: EnforcementState = field(default_factory=EnforcementState)
+    # AC2 (FASE-C): causa del veredicto condicional (miembro de CONDITIONAL_REASONS
+    # o None). Viaja en el DTO para que el acta la derive de aquí (serie→documento).
+    conditional_reason: Optional[str] = None
 
     def acta_fields(self) -> dict:
         """Campos que el acta deriva del DTO (nunca al revés)."""
         return {
             "enforcement": self.enforcement.to_dict(),
             "corrective_actions": [a.to_dict() for a in self.corrective_actions],
+            "conditional_reason": self.conditional_reason,
         }
 
 
@@ -453,12 +472,14 @@ def build_outcome(
     reports: Iterable[ReviewerReport],
     clauses: Optional[Mapping[str, Mapping[str, Any]]] = None,
     gate_blocking_enabled: bool = True,
+    conditional_reason: Optional[str] = None,
 ) -> TribunalOutcome:
     """Consecuencia del bloqueo bajo el knob único del operador (Q7)."""
     enabled = bool(gate_blocking_enabled)
     outcome = TribunalOutcome(
         verdict=verdict,
         blocks_publish=bool(blocks) and enabled,
+        conditional_reason=conditional_reason,
         corrective_actions=derive_corrective_actions(
             reports, clauses, blocking=bool(blocks), verdict=verdict
         ),

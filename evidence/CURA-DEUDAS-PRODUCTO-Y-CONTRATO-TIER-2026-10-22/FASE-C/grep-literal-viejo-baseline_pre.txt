@@ -1,0 +1,20 @@
+# BASELINE PRE — literal viejo en la población declarada (AC2, FASE-C)
+# Consulta re-ejecutable (superficie viva = código/tests .py):
+#   grep -rn --include='*.py' 'APROBADO-CONDICIONAL-PENDING-ONBOARDING' modules tests main.py
+# Medido al inicio de la sesión FASE-C, ANTES de cualquier edición (search_files).
+# Población declarada: modules/, tests/, main.py. Fuera de población (históricos o
+# scratch, no se editan): VERSION.yaml, CHANGELOG.md, docs/ narrativos, context/,
+# Archives/, evidence/, qmind-writeback/, temp/.
+# Total medido por el plan (05-prompt-fase-C §Contexto): 8 ocurrencias en .py.
+# Coincide con la medición viva: 8.
+
+modules/quality_gates/tribunal/judge.py:27: VERDICT_CONDITIONAL = "APROBADO-CONDICIONAL-PENDING-ONBOARDING"
+modules/quality_gates/tribunal/acta_writer.py:73:             "APROBADO-CONDICIONAL-PENDING-ONBOARDING": "⚠️",
+tests/quality_gates/tribunal/test_judge.py:111:     """Artefacto SalenteReal (Tier B) → APROBADO-CONDICIONAL-PENDING-ONBOARDING."""
+tests/quality_gates/tribunal/test_acta_version_desde_yaml.py:32:         "verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+tests/quality_gates/tribunal/test_acta_serialization.py:78:         "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+tests/test_fase_0_ac20_evidencia_veredicto.py:337:         acta = {"verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING"}
+tests/test_ac_g4_g5_multi_hotel_matrix.py:336:             "expected_verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+tests/test_ac_g4_g5_multi_hotel_matrix.py:342:             "expected_verdict": "APROBADO-CONDICIONAL-PENDING-ONBOARDING",
+
+TOTAL PRE = 8 (constante judge.py + etiqueta acta_writer.py + 6 tests)

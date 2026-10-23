@@ -1,0 +1,3 @@
+[FAIL] Índice de lecciones vencido: LECCIONES-INDEX.md, lecciones_index.json
+Regenera: python scripts/build_lesson_index.py
+[fechas] nombre=388 commit=11 sin_fuente=0

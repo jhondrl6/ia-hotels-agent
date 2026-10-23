@@ -8,7 +8,9 @@
 
 ## Contexto
 
-Última fase. **NO modifica código fuente, NO ejecuta `v4complete`, NO toca ROADMAP.md.** Cada fase ya se registró en `docs/contributing/REGISTRY.md`; esta fase **verifica** el registro y solo escribe la entrada que falte (`log_phase_completion.py` es aditivo: re-registrar duplica). Release objetivo: **4.82.0** (comportamiento de producto cambiado: render, veredicto, score `/90`, retiro de `spark`, stub retirado).
+Última fase. **NO modifica código fuente, NO ejecuta `v4complete`.** Sí corrige la narrativa **vigente** vencida de `ROADMAP.md` y `GUIA_TECNICA.md` (H8); **no** reescribe `CHANGELOG.md`/`REGISTRY.md` como historia. Cada fase ya se registró en `docs/contributing/REGISTRY.md`; esta fase **verifica** el registro y solo escribe la entrada que falte (`log_phase_completion.py` es aditivo: re-registrar duplica). Release objetivo: **4.82.0** (comportamiento de producto cambiado: render, veredicto, score `/90`, retiro de `spark`, stub retirado).
+
+**H8 (heredado de FASE-C)**: `docs/GUIA_TECNICA.md` (5 ocurrencias) y `ROADMAP.md` (4) conservan `APROBADO-CONDICIONAL-PENDING-ONBOARDING`. La prosa de `GUIA_TECNICA` §primer piso describe el mecanismo **vigente** y quedó falsa; no es historia. Esta fase la corrige junto con el principio vigente de `ROADMAP.md` §veredictos y sus referencias. `CHANGELOG`/`REGISTRY` conservan el literal como registro histórico y no se tocan por H8.
 
 **Fases a verificar en el registro**: FASE-A, FASE-B, FASE-C, FASE-D, FASE-E, FASE-F, FASE-H1, FASE-H2, FASE-E2E-PRE, FASE-E2E, FASE-VERIFY. No existen FASE-G ni FASE-H única.
 
@@ -24,7 +26,7 @@
 2. **Verificación de registro (Paso 4.5.1)**: cada fase del plan tiene SU entrada en `docs/contributing/REGISTRY.md`; solo registrar en tardanza la que falte, con `--fecha` del cierre real de esa fase y `--nota` del motivo.
 3. **E2 Sync**: `./venv/Scripts/python.exe scripts/sync_versions.py` (VERSION.yaml → headers; `REGISTRY.md` no entra).
 4. **E3 CHANGELOG**: entrada `## [4.82.0] - Título — YYYY-MM-DD` con Objetivo / Cambios Implementados / Archivos Nuevos / Archivos Modificados / Tests (referencia a `evidence/`, no cifras re-transcritas). Datos desde `09-documentacion-post-proyecto.md` §A/B/D/E.
-5. **E4 GUIA_TECNICA**: «Notas de Cambios v4.82.0» por fase (módulos afectados, problema, solución, backwards compatibility).
+5. **E4 GUIA_TECNICA**: «Notas de Cambios v4.82.0» por fase (módulos afectados, problema, solución, backwards compatibility). Además, **H8**: refrescar la prosa vigente que aún publica `APROBADO-CONDICIONAL-PENDING-ONBOARDING` —`GUIA_TECNICA.md` §primer piso (descripción del mecanismo, no la historia) y `ROADMAP.md` §veredictos (principio vigente y sus referencias)— a `APROBADO-CONDICIONAL` + `conditional_reason`; la historia de `CHANGELOG`/`REGISTRY` se conserva.
 6. **E5 Skills/Workflows** + **E6** `doctor.py --status` + **E7** `doctor.py --regenerate-domain-primer` y `doctor.py --context`.
 7. **E8**: symlink `.agent/workflows` intacto; `run_all_validations.py --quick` verde; `git diff --stat` revisado.
 8. **E8b README audit**: conteos del README medidos por comando (`pytest --collect-only` / `find modules/`), cifras desde `09` §D, nunca re-copiadas entre secciones.
@@ -69,7 +71,7 @@ Ninguno nuevo. Verificación: `version_consistency_checker.py`, `run_all_validat
 
 - [ ] Registro de las 11 fases **verificado** (no re-registrado); solo escrita la que faltara
 - [ ] `sync_versions.py` + `version_consistency_checker.py` sin discrepancias; Version Sync Gate sin `(!)`
-- [ ] CHANGELOG `[4.82.0]` con secciones requeridas; GUIA_TECNICA con nota por fase; README audit con cifras desde la fuente
+- [ ] CHANGELOG `[4.82.0]` con secciones requeridas; GUIA_TECNICA con nota por fase; GUIA_TECNICA/ROADMAP vigentes sin el literal viejo (H8); README audit con cifras desde la fuente
 - [ ] `--quick` verde; `doctor.py --status` sin errores; DOMAIN_PRIMER verificado
 - [ ] Orden R2.10 ejecutado completo (write-back → índice → `mv`/`git mv` → índice → refs → citas → quick)
 - [ ] `P6.5`/`D21` y `T1_CERTIFIABLE_CLAUSES` intactos
@@ -77,7 +79,7 @@ Ninguno nuevo. Verificación: `version_consistency_checker.py`, `run_all_validat
 
 ## Restricciones
 
-- **NO** modifica código fuente ni ROADMAP.md; **NO** ejecuta `v4complete`.
+- **NO** modifica código fuente; **NO** ejecuta `v4complete`. **Sí** corrige la narrativa vigente de `ROADMAP.md`/`GUIA_TECNICA.md` (H8), sin tocar la historia de `CHANGELOG`/`REGISTRY`.
 - Release **4.82.0** fija (el Version Sync Gate compara `CHANGELOG.md [4.82.0]` contra `VERSION.yaml`, sin prefijo `v`).
 - Presupuesto: tope **60 tool-use**; instrumento legado/no comparable si no aplica; corte «listo para revisión».
 
@@ -87,7 +89,7 @@ Ninguno nuevo. Verificación: `version_consistency_checker.py`, `run_all_validat
 Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-RELEASE-4.82.0 del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-RELEASE.md, 01-plan-maestro.md §1 y §4, 00-lecciones-capitalizadas.md §4, dependencias-fases.md y workflow canónico.
 OBJETIVO: cerrar la release 4.82.0 con documentación oficial sincronizada y plan archivado por el orden R2.10.
-TAREAS: E1 diagnóstico, verificación de registro de 11 fases, E2 sync, E3 CHANGELOG, E4 GUIA_TECNICA, E5-E8 docs y validaciones, E8b README audit, cierre R2.10 con mv/git mv, registro propio.
+TAREAS: E1 diagnóstico, verificación de registro de 11 fases, E2 sync, E3 CHANGELOG, E4 GUIA_TECNICA + corrección H8 (ROADMAP/GUIA_TECNICA vigentes), E5-E8 docs y validaciones, E8b README audit, cierre R2.10 con mv/git mv, registro propio.
 CRITERIOS: Version Sync Gate sin alertas; --quick verde; orden R2.10 completo; P6.5/D21 intactos.
 VALIDACIONES: version_consistency_checker.py; run_all_validations.py --quick; build_lesson_index.py --check.
 ```

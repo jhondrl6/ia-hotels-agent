@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-23
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 535
+> **Total fases completadas:** 536
 
 ---
 
@@ -12701,6 +12701,57 @@ _Errata corregida a mano: el registro se estampó sin `--archivos-nuevos` y los 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 8 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-C - 2026-10-23 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** Ítem C: APROBADO-CONDICIONAL + conditional_reason (3 causas) y has_onboarding; P6.5 intacta (AC2)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/quality_gates/tribunal/test_conditional_reason.py` | NUEVO | Test Conditional Reason |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/01-verde-suite-contrato.txt` | NUEVO | 01-Verde-Suite-Contrato |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/02-rojo-mutante-m1-literal-viejo.txt` | NUEVO | 02-Rojo-Mutante-M1-Literal-Viejo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/03-rojo-mutante-m2-causa-eliminada.txt` | NUEVO | 03-Rojo-Mutante-M2-Causa-Eliminada |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/04-verde-tras-restaurar.txt` | NUEVO | 04-Verde-Tras-Restaurar |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/05-quick-run_all_validations.txt` | NUEVO | 05-Quick-Run All Validations |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/06-wiring-republicado.txt` | NUEVO | 06-Wiring-Republicado |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/07-lesson-index-check-pre.txt` | NUEVO | 07-Lesson-Index-Check-Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/08-wiring-check-pre.txt` | NUEVO | 08-Wiring-Check-Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/09-lesson-index-republicado.txt` | NUEVO | 09-Lesson-Index-Republicado |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/10-lesson-index-check-post.txt` | NUEVO | 10-Lesson-Index-Check-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/11-quick-final.txt` | NUEVO | 11-Quick-Final |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/12-collect-post.txt` | NUEVO | 12-Collect-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/13-collect-pre-sin-archivo-nuevo.txt` | NUEVO | 13-Collect-Pre-Sin-Archivo-Nuevo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/par-rojo-verde.md` | NUEVO | Par-Rojo-Verde |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/grep-literal-viejo-baseline_pre.txt` | NUEVO | Grep-Literal-Viejo-Baseline Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/grep-literal-viejo-baseline_post.txt` | NUEVO | Grep-Literal-Viejo-Baseline Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-C/p65-intacta.txt` | NUEVO | P65-Intacta |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/quality_gates/tribunal/judge.py` | Judge |
+| `modules/quality_gates/tribunal/outcome.py` | Outcome |
+| `modules/quality_gates/tribunal/acta_writer.py` | Acta Writer |
+| `modules/quality_gates/tribunal/review_inputs.py` | Review Inputs |
+| `main.py` | Main |
+| `tests/quality_gates/tribunal/test_judge.py` | Test Judge |
+| `tests/quality_gates/tribunal/test_acta_version_desde_yaml.py` | Test Acta Version Desde Yaml |
+| `tests/quality_gates/tribunal/test_acta_serialization.py` | Test Acta Serialization |
+| `tests/test_fase_0_ac20_evidencia_veredicto.py` | Test Fase 0 Ac20 Evidencia Veredicto |
+| `tests/test_ac_g4_g5_multi_hotel_matrix.py` | Test Ac G4 G5 Multi Hotel Matrix |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 7 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -156,6 +156,7 @@ def capture_review_inputs(
     v4_audit_dir: str | Path,
     documents: Mapping[str, Optional[str | Path]],
     retained_by_gate: bool = False,
+    has_onboarding: Optional[bool] = None,
 ) -> dict:
     """Conserve una copia interna no exportable ANTES de cualquier borrado.
 
@@ -235,6 +236,10 @@ def capture_review_inputs(
         "run_id": run_id,
         "generated_at": captured_at,
         "snapshot_root": snapshot_root.relative_to(run_root).as_posix(),
+        # AC2 (FASE-C): onboarding verificado de la corrida, para que el Juez
+        # distinga ANALYTICS_CEILING de ONBOARDING_INCOMPLETE con un dato real.
+        # Tri-estado: True/False declarado por main.py; None = no transportado.
+        "has_onboarding": has_onboarding,
         "documents": entries,
     }
     v4_audit_dir.mkdir(parents=True, exist_ok=True)
@@ -264,6 +269,10 @@ class ReviewInputs:
         self.v4_audit_dir = Path(v4_audit_dir)
         self.run_id = run_id or (manifest or {}).get("run_id", "")
         self.manifest = manifest
+        # AC2 (FASE-C): onboarding verificado del run (tri-estado). True/False lo
+        # declaró la corrida en el manifiesto; None = no transportado (corrida vieja
+        # o captura fallida). El Juez lo lee para nombrar la causa del condicional.
+        self.has_onboarding = (manifest or {}).get("has_onboarding")
         self.package_zip_path = Path(package_zip_path) if package_zip_path else None
         self.deliveries_dir = Path(deliveries_dir) if deliveries_dir else None
         self.run_root = self._resolve_run_root()

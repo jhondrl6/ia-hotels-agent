@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 22,
     "archivos_contexto_escaneados": 45,
     "archivos_md_escaneados": 505,
-    "ids_con_definicion": 398,
+    "ids_con_definicion": 399,
     "ids_citados_sin_definicion": 113,
     "fechas_por_fuente": {
-      "nombre": 387,
+      "nombre": 388,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -680,7 +680,7 @@
       "seccion": "6. Decisiones Arquitectónicas",
       "fecha_plan": "2026-09-03",
       "fuente_fecha": "nombre",
-      "total_citas": 29,
+      "total_citas": 31,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
@@ -1270,6 +1270,20 @@
       "id": "DA-PLAN-3",
       "familia": "DA",
       "enunciado": "Ítem C con APROBADO-CONDICIONAL + conditional_reason — Un veredicto puede ser condicional por tres causas; codificarlas en el nombre produce combinaciones y deja fuera la causa de tier A no certificable",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-3a",
+      "familia": "DA",
+      "enunciado": "Contrato aplicado en FASE-C: vocabulario cerrado de 3 causas en outcome.py (REASON_*, CONDITIONAL_REASONS); _compute_verdict retorna (verdict, conditional_reason); has_onboarding viaja en review_input_manifest.json → ReviewInputs.has_onboarding (tri-estado) y solo True cuenta como verificado; conditional_reason es null en veredictos no condicionales; BLOCKING_VERDICTS no cambia (el condicional sigue publicando); la etiqueta humana del techo de analytics no dice «Pendiente de onboarding» — La causa se decide con un dato real de la corrida, no inferido del tier; el acta serializada es la fuente que dicta la clave (L-P3A.2)",
       "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
@@ -2110,7 +2124,7 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-10-11",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 21,
       "planes_que_lo_citan": [
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
@@ -3225,7 +3239,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 15,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -3779,7 +3793,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 108,
+      "total_citas": 109,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -4210,7 +4224,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 126,
+      "total_citas": 127,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
