@@ -131,7 +131,10 @@ Comandos: `./venv/Scripts/python.exe -m pytest tests/ --collect-only -q` (con y 
   renderizadas sin cambios (`test_labels_financieros_intactos`).
 - `honesty_reviewer.py`, `judge.py`, `acta_writer.py`, `P6.5`, `T1_CERTIFIABLE_CLAUSES` y
   umbrales: intactos (fuera de alcance de FASE-B).
-- Ningún commit (ningún prompt autoriza commit).
+- Al cerrar el documental **no había commit**: ningún prompt lo autorizaba y los cinco cortes
+  terminaban en espera de autorización. Esa espera se levantó con letra del Operador el 2026-10-23, y
+  la tanda quedó estampada en §6 — leer esta celda junto con esa, porque su redacción original es
+  anterior al push que la venció.
 
 ## 5. Pase de cierre autorizado por el Operador (2026-10-23, después del informe de re-auditoría)
 
@@ -158,11 +161,30 @@ Dos cosas que este pase corrigió del propio cierre, no de la implementación:
    par intacto (§1b, «falsado propio»). El disparador es la cita de IDs del vocabulario o una
    definición nueva, no cualquier párrafo.
 
-Queda pendiente del Operador: el **commit con pathspec explícito**. Superficie medida en el árbol:
+El **commit con pathspec explícito** estaba pendiente a este punto y se estampó con letra del
+Operador el 2026-10-23; la tanda está en §6. Superficie medida en el árbol antes de commitear:
 **35 rutas (11 `A` + 24 `M`)**. El registro declara **18** de esas 35 (11 nuevos / 7 modificados)
 porque la convención del plan no lista los documentos de plan ni `docs/contributing/.last_doc_phase.json`
 —precedente: la entrada de FASE-A declaró 6 rutas y tampoco listó las suyas—, así que las 17
-diferencias son `.md` de plan y el archivo de estado del escritor, no un olvido del registro. Sin
-tocar la cabecera de `REGISTRY.md` ni `AGENTS.md`. Quedan también las letras **H7** (deuda de
-instrumento, dueño FASE-H2) y los tres rojos **R** (dueño Operador). FASE-C no se abre: la fase
-cierra en espera de autorización.
+diferencias son `.md` de plan y el archivo de estado del escritor, no un olvido del registro. No se
+tocó la cabecera de `REGISTRY.md` ni `AGENTS.md`. Quedan abiertas las letras **H7** (deuda de
+instrumento, dueño FASE-H2) y los tres rojos **R** (dueño Operador). FASE-C **no** se abrió: este
+cierre no abre la fase siguiente.
+
+## 6. Tanda de publicación (2026-10-23)
+
+Hechos medidos, enunciados en pasado para que no los vuelva a vencer el siguiente commit:
+
+| Corte | Resultado |
+|---|---|
+| Commit de FASE-B | `d1bb3c3` — 35 rutas, 3057 inserciones / 67 supresiones; staging explícito por grupos de ruta, nada con `-a` ni `add .` |
+| Hooks pre-commit | `[1/8]`…`[8/8]` todos PASSED, con `[6/8]` índice fresco (398 IDs) y `[8/8]` packs 5/5 reproducidos por el escritor |
+| Verificación sobre el árbol del commit | worktree limpio (0 rutas), las 11 rutas nuevas presentes en HEAD, `8 passed` desde lo commiteado |
+| L3 deep review | 0 hallazgos |
+| Push | `dc6a394..d1bb3c3` sobre `origin/master`; alcance medido antes de empujar: 1 commit; paridad 0/0 |
+| Gates sobre lo publicado | `run_all_validations.py --quick` 13/13 con `EXIT=0` (exit leído sin tubería), árbol limpio |
+
+Este apartado es el sello que vence las dos celdas anteriores —«Ningún commit» en §4 y «Queda
+pendiente del Operador: el commit» en §5—, verdaderas al escribirlas y dejadas atrás por el propio
+push. El sha de este sello no se estampa aquí: un commit no puede conocer su sha y la regla del plan es
+publicar solo lo que la corrida imprime; el padre publicado es `d1bb3c3`, medido antes de este commit.
