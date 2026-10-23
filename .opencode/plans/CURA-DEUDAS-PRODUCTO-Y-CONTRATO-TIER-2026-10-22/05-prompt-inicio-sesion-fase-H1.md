@@ -80,6 +80,7 @@
 4. `10-analisis-post-implementacion.md`: decisiones `D16`/`D24`, fila y lecciones.
 5. `00-lecciones-capitalizadas.md`: anotar las lecciones citadas.
 6. `evidence/…/FASE-H1/`: pares rojo/verde y `baseline-pre-post.md`.
+7. **Derivados al día, como último paso del cierre** (herencia medida de FASE-A y FASE-B): re-publicar el artefacto de Wiring con `validate_wiring.py --write-report` si la fase añadió archivos versionados —un `.py` nuevo en `tests/` **o** en `evidence/` mueve contadores—, y re-publicar el par del índice con `build_lesson_index.py` si la fase anotó lecciones **citando IDs del vocabulario** en `00-lecciones` o `10-analisis` (la prosa que no cita ninguno no lo vence). Verificar los dos con `--check` y leer el exit **sin tubería**: `run_all_validations.py --quick` no goberna la frescura del índice, pero el hook `[6/8]` del pre-commit la corta y bloquea el commit.
 
 Registro:
 ```bash
@@ -95,6 +96,7 @@ Registro:
 - [ ] Stub retirado con `found=False`/`STUB_RETIRADO`; scraper real intacto
 - [ ] Pares rojo/verde; `--quick` verde; cinco cortes sin commit
 - [ ] Lecciones registradas; evidencia preservada
+- [ ] Derivados re-publicados y verificados con `--check` como último paso (Wiring si la fase añadió archivos versionados; índice de lecciones si se citaron IDs del vocabulario), con el exit leído sin tubería
 
 ## Restricciones
 
