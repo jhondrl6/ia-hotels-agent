@@ -36,7 +36,7 @@ La cura se ancla en el camino real del producto:
 | Fase | Complejidad | Estado |
 |------|-------------|--------|
 | Preparación | — | ✅ 2026-10-22 |
-| FASE-A — retiro de `spark` + guardián | MEDIA-ALTA | ⏳ |
+| FASE-A — retiro de `spark` + guardián | MEDIA-ALTA | ✅ 2026-10-22 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-B — ítem A (2 claims) | ALTA | ⏳ |
 | FASE-C — ítem C | MEDIA | ⏳ |
 | FASE-D — contrato GBP (ambos caminos) | ALTA | ⏳ |

@@ -1,6 +1,6 @@
 # Análisis Post-Implementación — CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
 
-> **Estado**: Preparación corregida — ninguna fase ejecutada.
+> **Estado por fase**: no se declara en este encabezado; su dueño único es `06-checklist-implementacion.md` (cada ✅ exige el checklist del prompt y la entrada de esa fase en `docs/contributing/REGISTRY.md`). La frase «Preparación corregida — ninguna fase ejecutada» quedó retirada de este archivo al vencerse en el cierre de FASE-A (2026-10-22).
 > **Plan**: `CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22`
 > **Versión objetivo**: 4.82.0
 
@@ -9,6 +9,7 @@
 | Fase | Sesión | Estado | Iteraciones | Subagente | Notas |
 |------|--------|--------|-------------|-----------|-------|
 | Preparación | 2026-10-22 | ✅ | _(auto-reporte en unidad `tool_use`)_ | no | Correcciones al contexto de deudas aplicadas; estrategia corregida y 12 prompts regenerados |
+| FASE-A | 2026-10-22 | ✅ | _(auto-reporte unidad `tool_use`, **no comparable**: `measure_iterations.py` es legado y no se probó contra este runtime)_ | no | `spark` retirado (centinela exit 0; `D19` cerrada por retiro), `gap_analyzer` reparado (reparar, no retirar), guardián por existencia (`N7`) con par rojo/verde, barrido `R4c` sin huérfanos vivos |
 
 ## Matriz de Verificación de Hallazgos (llenar en FASE-VERIFY; los «Expected» ya están medidos)
 
@@ -49,10 +50,21 @@
 
 _(Al cierre de cada fase: qué pasó / por qué / qué lo previene + pertinencia INCLUIR/EXCLUIR. E2E-PRE y E2E nutren esta sección.)_
 
+| ID | Qué pasó / por qué | Qué lo previene | Pertinencia |
+|----|--------------------|-----------------|-------------|
+| L20 | FASE-A añadió archivos de tests y evidencia y `run_all_validations.py --quick` falló 12/13: el artefacto publicado `.opencode/wiring_report.json` quedó vencido por el propio cambio de la fase («no falta un caller, falta publicar»). Reparación: `validate_wiring.py --write-report` → 13/13 | En el cierre de fase: re-publicar el artefacto de Wiring tras añadir archivos versionados y antes de `--quick` | INCLUIR — cambia el cierre de las 11 fases restantes del plan, todas añaden archivos |
+
+Las lecciones citadas (`L-SR1`, `L-V2`, `L-CIM.12`, `D-PF5`, `L-R.4`, `L-T4A.5`)
+se anotan con su desenlace real en `00-lecciones-capitalizadas.md` §5.
+
 ## Seguimientos abiertos (llenar conforme avancen las fases)
 
 | Tema | Estado | Acción futura |
 |------|--------|---------------|
+| `D19`/`N1` (ruta `spark`) | **Cerrada por retiro** el 2026-10-22 (DA-PLAN-4) | Sin acción futura: no se promete cifra nueva; `spark` queda como centinela que informa su retiro y sale 0 |
+| Lectores del refactor `1501dd8` en `temp/` (backups `fase_d_backup`, `fase_f_recovery_backup`) | Detectados en el barrido `R4c`; fuera de las rutas del producto | Dueño Operador: decidir la depuración de `temp/`; no se expande alcance sin decisión |
+| Fósil textual: el docstring de clase de `FinancialFactors` nombra `SUPERPOSITION_FACTOR` como atributo | Detectado en el barrido `R4c` | Dueño FASE-H2 (honestidad de texto) |
+| `AGENTS.md` §Comandos CLI: `spark` aún figuraba como «Deprecado» | **Aplicada** la escritura el 2026-10-22 con autorización expresa del Operador (opción (a)): la fila de `spark` pasa a «🚫 Retirado» con el centinela y `D19` cerrada por retiro, y la fila de `modules/generators/` se re-escribió tras medir sus consumidores reales (solo tests y `scripts/validate_structure.py`; `outreach_gen` sin referencias). Medido: `git diff --numstat AGENTS.md` = 2/2, EOL intacto | Ninguna: el hecho documental está cerrado. Queda la brecha de instrumento, con dueño FASE-H2: `validate_agents_md.py` no mira la tabla §Comandos CLI (PASS y EXIT 0 con la fila vencida) y `run_all_validations.py` no lo invoca, así que este tipo de deriva no la corta nadie |
 | `D21`/`P6.5` | Fuera de alcance; dueño Operador | No absorber sin letra expresa; conservar `T1_CERTIFIABLE_CLAUSES` |
 | `D26` (fórmula pretendida del precio) | Diferida sin enunciado original | Operador aporta enunciado → fase propia |
 | Alias conformes para `D16`–`D28`/`N1`–`N7` | Decisión del Operador | Si se acuñan: celda de definición propia, nunca alias suelto |
@@ -65,7 +77,7 @@ _(Al cierre de cada fase: qué pasó / por qué / qué lo previene + pertinencia
 
 ## Métricas de Ejecución (al cierre: referencia a `09-documentacion-post-proyecto.md` §D y a los informes de `evidence/`, no copia del número)
 
-_(vacío hasta la primera fase)_
+Ver `09-documentacion-post-proyecto.md` §D (fuente única del número por fase) y `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-A/` (par pre/post con resta, par rojo/verde del guardián y crudos del barrido `R4c`).
 
 ## Decisiones Arquitectónicas
 

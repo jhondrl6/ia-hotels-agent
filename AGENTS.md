@@ -117,7 +117,7 @@ antes de cada commit para prevenir desincronizacion entre los 4 documentos clave
 |---------|--------|-------------|
 | `v4complete` | ✅ Recomendado | Flujo completo: diagnóstico, propuesta, assets, coherencia |
 | `v4audit` | ✅ Funcional | Auditoría con APIs externas (Rich Results, Places, PageSpeed) |
-| `spark` | ⚠️ Deprecado | Legacy, usar `v4complete` |
+| `spark` | 🚫 Retirado | Centinela: informa el retiro y sale 0; usar `v4complete` (`D19` cerrada por retiro) |
 | `execute` | ✅ Funcional | Implementa paquete, recupera análisis previo |
 | `stage` | ✅ Funcional | Ejecuta etapas individuales (geo, ia, seo, outputs) |
 | `deploy` | ✅ Funcional | Despliegue remoto via FTP/WP-API |
@@ -199,7 +199,7 @@ python main.py hook-pdf --output-dir output/v4_complete/
 | `modules/providers/` | LLM providers, benchmark resolver, disclaimers | scrapers, analyzers |
 | `modules/deployer/` | Despliegue FTP/WP-API | deploy |
 | `modules/onboarding/` | Formularios, validadores y carga de datos | onboard |
-| `modules/generators/` | Generadores auxiliares (report_builder, spark, outreach) | spark |
+| `modules/generators/` | Generadores auxiliares (report_builder, spark_generator, outreach_gen): sin consumidores de producción desde el retiro de `spark`; `outreach_gen` no tiene referencias | tests y `scripts/validate_structure.py` |
 | `modules/analyzers/` | Analizadores de gaps, competencia y ROI | v4audit, config_checker |
 | `modules/monitoring/` | Health dashboard y métricas | main.py |
 | `modules/postprocessors/` | Quality gate y scrubber de contenido | publication_gates |

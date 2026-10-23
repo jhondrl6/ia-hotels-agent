@@ -51,4 +51,15 @@
 - Qué **sí** deja evidencia: las consultas re-ejecutables de §1 (índice, QMind, memoria), las lecciones de §2 con dueño y ruta del corpus, y los descartes de §3 con motivo.
 - Qué **no** verifica el check mecánico: la **pertinencia**. `scripts/validate_lesson_capitalization.py` comprueba forma y trazabilidad —consultas corpus-wide con comando en backticks, ≥3 descartes, AC nombrado que existe en `01-plan-maestro.md`, ID con el dueño que publica el índice y ≥2 fuentes distintas— pero **no verifica** que la lección que debía capitalizarse fuera esta ni que el efecto alegado sea real.
 - Frontera de autoridad: las lecciones de `D28`/`D25-ter`/`D16`/`D24` son mediciones locales; las de A/C tienen respaldo publicado en el notebook. No se atribuye al Knowledge Center lo que no está en él.
+
+## 5. Qué pasó con las lecciones citadas — FASE-A (2026-10-22)
+
+| ID | Qué exigía en esta fase | Qué pasó realmente |
+|----|-------------------------|--------------------|
+| `L-SR1` | El retiro no cierra sin test de la ruta retirada y sin guardián | ✅ `tests/test_spark_retirement.py` ejercita la ruta real (`main.py spark --url …` → exit 0 + mensaje de retiro) y el guardián cubre las dos superficies del contrato; la reintroducción del lector roto es rojo por AST |
+| `L-V2` | Barrer los consumidores del contrato en TODO el repo (Tarea 4) | ✅ Barrido `R4c` publicado en `evidence/…/FASE-A/`: 2 huérfanos vivos del contrato (`main.py` retirado, `gap_analyzer` reparado), 0 restantes; hallazgos fuera de código vivo con dueño en `10-analisis` §Seguimientos |
+| `L-CIM.12` | El guardián se convierte en comprobación de existencia, con mutante en rojo | ✅ Mutante con atributo inventado sobre la fuente real del defecto → rojo (violación detectada); árbol actual → verde; par en `guardian-existencia-par-rojo-verde.txt` |
+| `D-PF5` | Extender el guardián de nombres a la clase importada | ✅ Extensión por AST + import (`hasattr` sobre la clase importada), no por más nombres prohibidos ni grep de menciones |
+| `L-R.4` | El par rojo/verde y la resta se declaran sin verificador mecánico | ✅ Declarado en `baseline-pre-post.md` (resta) y en el par del guardián (R2.8) |
+| `L-T4A.5` | El test del retiro afirma exit y mensaje, no solo «no lanzó» | ✅ El test afirma exit 0 **y** mensaje de retiro **y** ausencia de `AttributeError`; el test del lector recorre la rama fallback real de `_basic_analysis` |
 - [ ] Actualizado al cierre de la última fase, y el write-back de QMind se ejecutó **antes** de archivar el plan (`git mv` a `Archives/`, orden R2.10).

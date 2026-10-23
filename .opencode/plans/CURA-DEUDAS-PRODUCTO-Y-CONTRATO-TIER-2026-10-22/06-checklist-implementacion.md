@@ -5,7 +5,7 @@
 | # | Fase | Complejidad | Estado | Checklist del prompt | Registro REGISTRY |
 |---|------|-------------|--------|---------------------|-------------------|
 | 0 | Preparación + corrección de estrategia | — | ✅ 2026-10-22 | prompts + docs corregidos | (etapa de orquestación, sin registro) |
-| 1 | FASE-A — retiro de `spark` + guardián (`N1`/`N7`/`R4`) | MEDIA-ALTA | ⏳ | [ ] | [ ] |
+| 1 | FASE-A — retiro de `spark` + guardián (`N1`/`N7`/`R4`) | MEDIA-ALTA | ✅ 2026-10-22 | [x] checklist del prompt cerrado | [x] registrado con `log_phase_completion.py` |
 | 2 | FASE-B — ítem A (2 claims, propuesta y diagnóstico) | ALTA | ⏳ | [ ] | [ ] |
 | 3 | FASE-C — ítem C (`conditional_reason`; `P6.5` intacta) | MEDIA | ⏳ | [ ] | [ ] |
 | 4 | FASE-D — contrato GBP en ambos caminos | ALTA | ⏳ | [ ] | [ ] |

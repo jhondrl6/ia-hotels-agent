@@ -26,14 +26,20 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
-| Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | _(ver `evidence/…/FASE-X/baseline-pre-post.md` por fase)_ | — |
-| Mutation checks con par rojo/verde en evidencia (R2.8) | _(contar al cierre: AC1, AC2, AC3, AC5, AC8)_ | — |
+| Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | FASE-A: **+7** (5334 → 5341); resta publicada en `evidence/…/FASE-A/baseline-pre-post.md` | FASE-A |
+| Mutation checks con par rojo/verde en evidencia (R2.8) | 1 de 5 al cierre de FASE-A (AC5: guardián de existencia; `evidence/…/FASE-A/guardian-existencia-par-rojo-verde.txt`) | FASE-A |
 | Corridas `v4complete` de este plan | 0 / 1 prevista (después de E2E-PRE) | FASE-E2E |
 | Ensayos E2E-PRE sin inferencia | 0 / 1 previsto | FASE-E2E-PRE |
-| Presupuesto por fase (unidad `tool_use`, corte «listo para revisión») | _(auto-reporte por fase en `10-analisis` §Resumen; instrumento legado no comparable si el transcript no es compatible)_ | — |
+| Presupuesto por fase (unidad `tool_use`, corte «listo para revisión») | FASE-A: auto-reporte en `10-analisis` §Resumen, unidad `tool_use`, **no comparable** (instrumento legado `measure_iterations.py` no probado contra este runtime) | FASE-A |
 
 ## Sección E: Archivos Afiliados Actualizados
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
-| _(se completa al cierre de cada fase)_ | — | — |
+| `main.py` | Ruta `spark` retirada: `run_spark_mode` queda como centinela (informa retiro, exit 0); se retiran `_map_audit_to_spark_data`, `_spark_handler`, `_run_spark_legacy` y los helpers de región sin consumidores | FASE-A |
+| `modules/analyzers/gap_analyzer.py` | Lector latente corregido (`FinancialFactors.get_superposition_factor()`); docstring de `analyze_with_claude` deja de afirmar el consumidor falso `main.py` | FASE-A |
+| `tests/test_main_static_guards.py` | Guardián extendido a existencia de atributo sobre la clase importada (AST + import), con mutante rojo | FASE-A |
+| `tests/test_spark_retirement.py` | Nuevo: retiro con diente (exit 0 + mensaje + sin `AttributeError`; reintroducción del lector roto = rojo por AST) | FASE-A |
+| `tests/test_gap_analyzer_superposition_reader.py` | Nuevo: la rama fallback de `_basic_analysis` se recorre sin `AttributeError` | FASE-A |
+| `.opencode/wiring_report.json` | Re-publicado con `validate_wiring.py --write-report` (contadores frescos tras los archivos nuevos) | FASE-A |
+| `AGENTS.md` | **Aplicado** el 2026-10-22 con autorización del Operador: la fila de `spark` pasa de «⚠️ Deprecado» a «🚫 Retirado» (centinela, exit 0, `D19` cerrada por retiro) y la fila de `modules/generators/` se re-escribe con sus consumidores medidos. 2/2 líneas, EOL intacto; ver `10-analisis` §Seguimientos | FASE-A |

@@ -72,7 +72,7 @@ FASE-A (N1/N7/R4: retiro de spark + guardián)
 | Fase | Estado | Fecha cierre | Notas |
 |------|--------|--------------|-------|
 | Preparación | ✅ | 2026-10-22 | Correcciones al contexto de deudas aplicadas; estrategia corregida y prompts regenerados |
-| FASE-A | ⏳ pendiente | — | Retiro de `spark` + guardián por existencia |
+| FASE-A | ✅ | 2026-10-22 | `spark` retirado (centinela exit 0, `D19` cerrada por retiro); `gap_analyzer` reparado con `get_superposition_factor()`; guardián por existencia con par rojo/verde; barrido `R4c` sin huérfanos vivos |
 | FASE-B | ⏳ pendiente | — | 2 claims, propuesta y diagnóstico |
 | FASE-C | ⏳ pendiente | — | `conditional_reason`; `P6.5` intacta |
 | FASE-D | ⏳ pendiente | — | Ambos caminos GBP |

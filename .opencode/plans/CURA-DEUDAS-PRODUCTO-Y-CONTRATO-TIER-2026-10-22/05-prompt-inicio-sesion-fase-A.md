@@ -40,30 +40,30 @@
 **Objetivo**: el comando `spark` deja de ejecutar la estimación rota y sale con un mensaje de retiro; no queda ningún lector ejecutable de `SUPERPOSITION_FACTOR` en esa ruta.
 **Archivos afectados**: `main.py` (registro del subcomando, `_spark_handler`, `_run_spark_legacy`, `run_spark_mode`, `_map_audit_to_spark_data` y tests asociados).
 **Criterios de aceptación**:
-- [ ] `python main.py spark --url <fixture>` sale con código 0 y un mensaje que declara el retiro; no aparece `AttributeError`
-- [ ] `_map_audit_to_spark_data` desaparece o deja de calcular la pérdida; no hay lectura ejecutable de `FinancialFactors.SUPERPOSITION_FACTOR`
-- [ ] `D19` se declara cerrada por retiro en `10-analisis` §Seguimientos; no se promete una cifra nueva
+- [x] `python main.py spark --url <fixture>` sale con código 0 y un mensaje que declara el retiro; no aparece `AttributeError`
+- [x] `_map_audit_to_spark_data` desaparece o deja de calcular la pérdida; no hay lectura ejecutable de `FinancialFactors.SUPERPOSITION_FACTOR`
+- [x] `D19` se declara cerrada por retiro en `10-analisis` §Seguimientos; no se promete una cifra nueva
 
 ### Tarea 2: Corregir el lector latente de `gap_analyzer`
 **Objetivo**: `GapAnalyzer._basic_analysis` deja de referenciar el atributo inexistente; si la rama es código muerto, se retira o se marca con dueño, no se deja “por si acaso”.
 **Archivos afectados**: `modules/analyzers/gap_analyzer.py`.
 **Criterios de aceptación**:
-- [ ] Importar y recorrer la rama no produce `AttributeError`
-- [ ] La decisión (reparar o retirar) queda escrita en `10-analisis` §Decisiones; no se cambia el alcance de `D19`
+- [x] Importar y recorrer la rama no produce `AttributeError`
+- [x] La decisión (reparar o retirar) queda escrita en `10-analisis` §Decisiones; no se cambia el alcance de `D19`
 
 ### Tarea 3: Guardián por existencia (`N7`)
 **Objetivo**: el guardián detecta un atributo inexistente sobre la clase importada, no solo nombres prohibidos.
 **Archivos afectados**: `tests/test_main_static_guards.py` (o test de superficie pública nuevo).
 **Criterios de aceptación**:
-- [ ] Mutante con atributo inventado → rojo; árbol actual → verde; par en `evidence/…/FASE-A/`
-- [ ] El docstring de `analyze_with_claude` deja de afirmar un consumidor (`main.py`) que no existe
-- [ ] La comprobación es AST/import, no un grep de menciones
+- [x] Mutante con atributo inventado → rojo; árbol actual → verde; par en `evidence/…/FASE-A/`
+- [x] El docstring de `analyze_with_claude` deja de afirmar un consumidor (`main.py`) que no existe
+- [x] La comprobación es AST/import, no un grep de menciones
 
 ### Tarea 4: Barrido de lectores huérfanos (`R4c`)
 **Objetivo**: barrer los demás contratos que el mismo refactor tocó (atributo→método) en TODO el repo.
 **Criterios de aceptación**:
-- [ ] Crudo del barrido en evidencia (`git log -S`/AST), con la lista de superficies revisadas
-- [ ] Huérfanos adicionales → `10-analisis` §Seguimientos con dueño; **no** se expande alcance sin decisión
+- [x] Crudo del barrido en evidencia (`git log -S`/AST), con la lista de superficies revisadas
+- [x] Huérfanos adicionales → `10-analisis` §Seguimientos con dueño; **no** se expande alcance sin decisión
 
 ## Tests Obligatorios
 
@@ -94,12 +94,12 @@ Registro:
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] `spark` retirado con test de la ruta; sin `AttributeError`; `D19` cerrada por retiro
-- [ ] `gap_analyzer` sin lector roto; decisión escrita
-- [ ] Guardián con mutante rojo y árbol verde; par en evidencia
-- [ ] Barrido `R4c` publicado; huérfanos con dueño
-- [ ] `--quick` verde; cinco cortes sin commit; lecciones registradas
-- [ ] `dependencias-fases.md` actualizado; métricas consistentes con `09` §D
+- [x] `spark` retirado con test de la ruta; sin `AttributeError`; `D19` cerrada por retiro
+- [x] `gap_analyzer` sin lector roto; decisión escrita
+- [x] Guardián con mutante rojo y árbol verde; par en evidencia
+- [x] Barrido `R4c` publicado; huérfanos con dueño
+- [x] `--quick` verde; cinco cortes sin commit; lecciones registradas
+- [x] `dependencias-fases.md` actualizado; métricas consistentes con `09` §D
 
 ## Restricciones
 
