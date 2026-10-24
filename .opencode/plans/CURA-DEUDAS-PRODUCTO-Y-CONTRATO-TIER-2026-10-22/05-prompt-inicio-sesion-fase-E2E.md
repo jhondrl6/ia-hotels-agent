@@ -40,6 +40,8 @@ El onboarding del baseline está en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/F
 **Objetivo**: confirmar que E2E-PRE dejó `LISTO_PARA_E2E`, que el onboarding está materializado y que `_load_latest_onboarding_data()` devuelve Don Alfonso con el dominio confirmado. Registrar `pre-vuelo.md` y `preflight.json` antes de gastar la inferencia.
 **Criterios de aceptación**:
 - [ ] `preflight.json` con `onboarding_source`, `hotel_name`, `rooms`, `adr_cop`, `occupancy_rate`, `direct_channel_pct`, `domain_confirmed`
+- [ ] `domain_confirmed: true` con la letra del Operador del 2026-10-24 como asiento: la web canónica es `https://donalfonsohotel.com/` (ápice; `www` normaliza al mismo host). La URL del run es `https://www.donalfonsohotel.com/` o su ápice — **nunca** `https://hoteldonalfonso.com/`, que carga al hotel por el fallback de `observations.json`, no dispara ninguna alerta e imprime en el documento del cliente una web que no es la del hotel (`evidence/…/FASE-E2E-PRE/confirmacion-dominio.txt`)
+- [ ] `frescura_declarada_vencida: true` con la edad medida del dato y esta letra: `fecha_captura: 2026-07-22` excede el techo de 90 días que publicó el baseline. Es la **decisión (b) del Operador (2026-10-24)**: se corre con la captura vigente y se declara la edad en el pre-vuelo, sin re-capturar. No se fija `ONBOARDING_FRESHNESS_HOURS`: con el dato vencido eso pone el loader en fail-closed, el tribunal pasa de `ANALYTICS_CEILING` a `ONBOARDING_INCOMPLETE` y AC7 deja de ser alcanzable (`evidence/…/FASE-E2E-PRE/condicion-frescura-decision-b.txt`)
 - [ ] Si falta un requisito, se detiene con `⏳ INCOMPLETA`; no se corre a ciegas
 - [ ] No se edita `observations.json` ni el YAML sin autorización
 

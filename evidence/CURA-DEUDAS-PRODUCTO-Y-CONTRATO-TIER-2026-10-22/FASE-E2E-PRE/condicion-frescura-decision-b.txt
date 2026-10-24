@@ -1,0 +1,34 @@
+# Decisión (b) sobre la frescura del onboarding — letra del Operador, 2026-10-24
+
+**Dictado literal:** «Git Commit +L3 + Condición de frescura B.»
+
+**(b) = declarar el techo vencido y correr con la captura vigente.** No se re-capta el dato: FASE-E2E
+corre con `metadatos.fecha_captura = 2026-07-22` y su pre-vuelo **estampa** que la edad
+(**94 días** medidos al 2026-10-24) excede el techo de 90 que publicó el baseline (`vence_el: 2026-10-20`).
+
+## Qué hace ejecutable la decisión
+
+- `05-prompt-inicio-sesion-fase-E2E.md` Tarea 1 lleva ahora un criterio de aceptación que exige
+  declarar la frescura vencida en su propio `preflight.json`, con la edad medida y esta letra como asiento.
+- Queda fijada la URL del run: `https://www.donalfonsohotel.com/` (o su ápice), **nunca**
+  `https://hoteldonalfonso.com/`. Medido en `confirmacion-dominio.txt`: esa tercera grafía carga al hotel
+  por el fallback del warehouse y no dispara ninguna alerta, pero publica en el documento del cliente una
+  web que no es la del hotel.
+- Se descarta por mecanismo la vía (c): fijar `ONBOARDING_FRESHNESS_HOURS` con el dato vencido pone el
+  loader en fail-closed → sin onboarding → el tribunal pasa de `ANALYTICS_CEILING` a
+  `ONBOARDING_INCOMPLETE` y AC7 deja de ser alcanzable en esa corrida.
+
+## Lo que la decisión NO resuelve (declarado, con dueño)
+
+1. **Divulgación al cliente**: la edad del dato vive en `metadatos.fecha_captura` del YAML y en el
+   pre-vuelo de la fase; **no** se imprime en `01_DIAGNOSTICO` ni en `02_PROPUESTA`. Decidir si la
+   divulgación corresponde al documento comercial es del Operador y su sede natural es FASE-VERIFY o una
+   fase propia, no E2E (que prohíbe tocar el render).
+2. **El hueco del fallback** (punto 2 arriba): nada en el pipeline compara `hotel.url` con la URL del run.
+   Cerrarlo es cambio de producto sin fase dueña en este plan.
+
+## Estado de la ventana para FASE-E2E
+
+Con esta letra quedan **cerradas las dos condiciones** que el ensayo dejó abiertas. La corrida sigue
+autorizada solo por su propia letra: 1/1, sin reintento, evidencia a salvo antes de verificar, y sin
+subagentes salvo el comando en segundo plano.
