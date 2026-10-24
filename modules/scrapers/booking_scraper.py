@@ -1,13 +1,13 @@
 """
-Booking.com Scraper - NEVER_BLOCK Architecture
+Booking.com Scraper - STUB RETIRADO (`D24`)
 
-Extrae datos de Booking.com:
-- Reviews y ratings
-- Amenities
-- Photos
-- Price range
+Este modulo es el stub de T8B: nunca hizo scraping. El scraper real del producto vive en
+`modules/providers/autonomous_researcher.py` (httpx + BeautifulSoup con fallback verificado de
+GBP) y NO se toca desde aqui.
 
-T8B: Implement Source Scrapers
+`scrape()` declaraba `found=True` con `rating`, `review_count` y `price_range` en `None` y
+`photos` vacio: leia como "medimos y no hay nada" cuando era "no medimos nada" (`DA-C3`).
+Hoy devuelve el estado retirado - `found=False`, `data={}` y `data_status=STUB_RETIRADO`.
 """
 
 from typing import Dict, Any, Optional, List
@@ -16,13 +16,17 @@ import json
 
 logger = logging.getLogger(__name__)
 
+# Estado que publica el stub retirado: nunca `found=True` con datos en None (`D24`/`DA-C3`).
+ESTADO_STUB_RETIRADO = "STUB_RETIRADO"
+
 
 class BookingScraper:
     """
-    Scraper para Booking.com.
-    
-    En producción usaría Playwright/Selenium para scraping real.
-    Por ahora retorna estructura válida para demostrar el flujo.
+    Stub de Booking.com: RETIRADO.
+
+    Conserva la firma para que el export legacy de `modules.scrapers` no reviente, pero ya no
+    finge un dato: `scrape()` devuelve el estado retirado. El scraper real del producto es
+    `modules.providers.autonomous_researcher.BookingScraper`.
     """
     
     SOURCE_NAME = 'booking'
@@ -32,51 +36,31 @@ class BookingScraper:
     
     def scrape(self, hotel_name: str, url: Optional[str] = None) -> Dict[str, Any]:
         """
-        Extrae datos de Booking.com.
-        
+        Devuelve el estado retirado del stub.
+
         Args:
-            hotel_name: Nombre del hotel a buscar
-            url: URL específica (opcional)
-            
+            hotel_name: Nombre del hotel consultado (solo para la URL de busqueda)
+            url: URL especifica (opcional)
+
         Returns:
             Dict con:
                 - source: nombre de la fuente
-                - found: bool indicando si se encontraron datos
-                - data: dict con reviews, ratings, amenities, photos, price_range
+                - found: siempre False
+                - data: siempre vacio
+                - data_status: ESTADO_STUB_RETIRADO
                 - url: URL usada para la consulta
         """
         result = {
             'source': self.source_name,
             'found': False,
             'data': {},
+            'data_status': ESTADO_STUB_RETIRADO,
             'url': url or self._build_search_url(hotel_name)
         }
         
-        try:
-            # T8B: Integration point - en producción usaría Playwright/Selenium
-            # Estructura de datos que se extraería de Booking.com
-            data = {
-                'source': self.source_name,
-                'hotel_name': hotel_name,
-                'rating': None,  # ej: 8.5
-                'review_count': None,  # ej: 1247
-                'reviews': [],  # Lista de {author, rating, text, date}
-                'amenities': [],  # Lista de amenidades
-                'photos': [],  # Lista de URLs de fotos
-                'price_range': None,  # ej: "$120 - $250"
-                'location': None,
-                'description': None,
-                'room_types': []
-            }
-            
-            result['found'] = True
-            result['data'] = data
-            
-            logger.info(f"[BookingScraper] Scraped {hotel_name}: found={result['found']}")
-            
-        except Exception as e:
-            logger.warning(f"[BookingScraper] Failed to scrape {hotel_name}: {e}")
-            result['found'] = False
+        logger.info(
+            f"[BookingScraper] Stub retirado (D24): {hotel_name} -> {ESTADO_STUB_RETIRADO}"
+        )
         
         return result
     

@@ -43,12 +43,16 @@ VOCABULARIO = {
 # Semántica esperada en cada módulo vivo: qué nombres lee y cuántos sitios de comparación
 # aporta. La cuenta total (14) es la re-medición de FASE-F: el contexto de deudas publicó 11
 # sitios y no contaba el segundo método de score de GBPAuditor ni la banda parcial >= MIN.
+# RE-MEDICION FASE-H1 (D16): GBPAuditor pasa de 5 a 3 sitios y el total de 14 a 12 porque la
+# rubrica duplicada del perfil se unifico en `_calculate_gbp_score` — la copia inline de
+# `_scrape_maps_profile` desaparecio, no se perdio umbral: los dos nombres siguen leidos (el
+# assert `esperados <= leidos` lo corta).
 POBLACION = {
     "modules/utils/dynamic_impact.py": ({"MIN_FOTOS_BRECHA"}, 1),
     "modules/financial_engine/opportunity_scorer.py": ({"FOTOS_OPORTUNIDAD"}, 1),
     "modules/scrapers/gbp_auditor.py": (
         {"FOTOS_RUBRICA_EXCELENTE", "MIN_FOTOS_BRECHA"},
-        5,
+        3,
     ),
     "modules/generators/report_builder.py": ({"FOTOS_RUBRICA_EXCELENTE"}, 3),
     "modules/auditors/v4_comprehensive.py": (
@@ -183,9 +187,9 @@ def test_ningun_umbral_de_fotos_es_un_default_inline():
 
 
 def test_la_cuenta_total_de_sitios_es_la_re_medida_de_fase_f():
-    """14 sitios vivos en 7 módulos (el contexto de deudas publicó 11; la re-medición cuenta +3)."""
+    """12 sitios vivos en 7 módulos (14 en FASE-F; FASE-H1 retira la rúbrica duplicada)."""
     total = sum(len(_sitios_fotos(rel_ruta)) for rel_ruta in POBLACION)
-    assert total == 14, f"sitios de comparación medidos: {total} (la población declara 14)"
+    assert total == 12, f"sitios de comparación medidos: {total} (la población declara 12)"
 
 
 def test_el_target_ya_no_se_justifica_por_un_constante_local():

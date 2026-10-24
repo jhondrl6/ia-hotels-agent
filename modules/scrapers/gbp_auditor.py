@@ -31,6 +31,8 @@ from modules.utils.benchmarks import BenchmarkLoader
 from modules.utils.dynamic_impact import DynamicImpactCalculator, get_detected_issues
 # Umbrales de fotos GBP: nombre semantico, valor definido en config/regional_benchmarks.yaml
 from modules.common.umbrales_fotos import FOTOS_RUBRICA_EXCELENTE, MIN_FOTOS_BRECHA
+# Denominadores GBP: techo de la rubrica y techo de la estimacion de competidor
+from modules.common.rubrica_gbp import ESTIMACION_GBP_MAXIMO, SCORE_GBP_MAXIMO
 
 logger = logging.getLogger(__name__)
 
@@ -723,29 +725,7 @@ class GBPAuditor:
         except Exception:
             profile_data['meta'].setdefault('data_confidence', {}).setdefault('qa', False)
 
-        score = 0
-        if profile_data['existe']:
-            score += 20
-        if profile_data['reviews'] >= 10:
-            score += 15
-        elif profile_data['reviews'] > 0:
-            score += 10
-        if profile_data['rating'] >= 4.0:
-            score += 15
-        elif profile_data['rating'] > 0:
-            score += 10
-        if profile_data['fotos'] >= FOTOS_RUBRICA_EXCELENTE:
-            score += 15
-        elif profile_data['fotos'] >= MIN_FOTOS_BRECHA:
-            score += 10
-        if profile_data['horarios']:
-            score += 10
-        if profile_data['website']:
-            score += 10
-        if profile_data['telefono']:
-            score += 5
-
-        profile_data['score'] = score
+        profile_data['score'] = self._calculate_gbp_score(profile_data)
 
         # v2.4.2: Calcular y exportar activity score compuesto
         try:
@@ -1338,6 +1318,7 @@ class GBPAuditor:
             return {
                 'nombre': hotel_name,
                 'geo_score': cached.get('score', 0),
+                'geo_score_maximo': SCORE_GBP_MAXIMO,
                 'reviews': cached.get('reviews', 0),
                 'rating': cached.get('rating', 0.0),
                 'fotos': cached.get('fotos', 0),
@@ -1356,6 +1337,7 @@ class GBPAuditor:
                 return {
                     'nombre': hotel_name,
                     'geo_score': profile_data.get('score', 0),
+                    'geo_score_maximo': SCORE_GBP_MAXIMO,
                     'reviews': profile_data.get('reviews', 0),
                     'rating': profile_data.get('rating', 0.0),
                     'fotos': profile_data.get('fotos', 0),
@@ -1380,7 +1362,7 @@ class GBPAuditor:
 Pérdida mensual estimada:  ${profile_data['perdida_total_mes_COP']:,} COP
 Pérdida anual proyectada:  ${profile_data['perdida_anual_COP']:,} COP
 Prioridad de acción:       {profile_data['prioridad_accion']}
-Score actual GBP:          {profile_data['score']}/100
+Score actual GBP:          {profile_data['score']}/{SCORE_GBP_MAXIMO}
 
 🚨 FUGAS DETECTADAS ({len(profile_data['fugas_detectadas'])})
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1433,34 +1415,28 @@ Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}
 """
         return reporte
 
-    def get_competitor_score(self, competitor: dict, use_api: bool = False) -> dict:
+    def get_competitor_score(self, competitor: dict) -> dict:
+        """Score de un competidor por heuristica local, sobre `ESTIMACION_GBP_MAXIMO`.
+
+        La rama API (`_places_api_lookup`) se retiro con `D16`: nunca se implemento y su
+        `except Exception: pass` degradaba en silencio al `score_source="api"` inalcanzable.
+        La estimacion puede llegar a 100, asi que NO es comparable con la rubrica de
+        `SCORE_GBP_MAXIMO` puntos: la escala viaja en `score_maximo` y en `metodologia`.
         """
-        Obtiene score de competidor con fuente documentada.
-        
-        Returns:
-            dict con 'score', 'score_source', 'confidence', 'metodologia'
-        """
-        if use_api and competitor.get('place_id'):
-            try:
-                real_data = self._places_api_lookup(competitor['place_id'])
-                return {
-                    "score": self._calculate_gbp_score(real_data),
-                    "score_source": "api",
-                    "confidence": "alta",
-                    "metodologia": "Google Places API - datos reales"
-                }
-            except Exception:
-                pass
-        
         reviews = competitor.get('reviews', 0)
         rating = competitor.get('rating', 4.0)
-        estimated = min(100, int((reviews / 10) * rating * 2))
-        
+        estimated = min(ESTIMACION_GBP_MAXIMO, int((reviews / 10) * rating * 2))
+
         return {
             "score": estimated,
+            "score_maximo": ESTIMACION_GBP_MAXIMO,
             "score_source": "estimation",
             "confidence": "baja",
-            "metodologia": "reviews x rating x factor_distancia (heuristica local)"
+            "comparable_con_rubrica_gbp": False,
+            "metodologia": (
+                "estimacion local: min(100, reviews/10 x rating x 2) - metrica distinta de la "
+                f"rubrica GBP de {SCORE_GBP_MAXIMO} puntos; no se compara con ella"
+            )
         }
 
     def calculate_gbp_activity_score_detailed(self, gbp_data: dict, competitors: list = None) -> dict:
@@ -1523,12 +1499,12 @@ Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}
         
         return result
 
-    def _places_api_lookup(self, place_id: str) -> dict:
-        """Placeholder for Places API lookup - to be implemented with actual API integration."""
-        raise NotImplementedError("Places API integration pending")
-
     def _calculate_gbp_score(self, data: dict) -> int:
-        """Calculate GBP score from raw API data."""
+        """Productor unico de la rubrica GBP: su techo es SCORE_GBP_MAXIMO (90), no 100 (`D16`).
+
+        `check_google_profile` y `get_competitor_score` leen esta varilla; el reporte publica el
+        denominador de la constante, no un `/100` heredado.
+        """
         score = 0
         if data.get('existe'):
             score += 20

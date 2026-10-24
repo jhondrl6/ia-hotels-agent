@@ -7,6 +7,9 @@ from modules.scrapers.gbp_photo_auditor import integrate_photo_auditor
 # T8B: Source Scrapers for Autonomous Research
 # NOTE: TripAdvisorScraper, InstagramScraper -> archives/deprecated_modules_20260304
 # (OBSOLETE: datos capturados por Google Places API)
+# D24 (FASE-H1): LEGACY. El BookingScraper exportado aqui es el STUB RETIRADO: su scrape()
+# devuelve found=False + data={} + data_status=STUB_RETIRADO. El scraper real del producto es
+# modules.providers.autonomous_researcher.BookingScraper.
 from modules.scrapers.booking_scraper import BookingScraper, create_booking_scraper
 
 # FASE 11A: Google Travel Scraper

@@ -1,0 +1,200 @@
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-10-23 21:22:49
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged + salidas en output/ y logs/)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 parseado y 4 regiones con valores sincronizados con el maestro (exenta: default: master la marca LEGACY y sus valores divergen del secundario (300000/0.50 vs 280000/0.60))
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1425 tracked files + staged + 1426 salidas en output/ y logs/ + 5592 leidos por forma fragmento (4 grandfathered con lineas cuadadas) (excluidos declarados: 1 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 4176 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 180 llamadas descubiertas en 743 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+### CIERRE (despues de REGISTRY y su errata) ###
+2026-10-23 21:24
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-10-23 21:24:47
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged + salidas en output/ y logs/)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 parseado y 4 regiones con valores sincronizados con el maestro (exenta: default: master la marca LEGACY y sus valores divergen del secundario (300000/0.50 vs 280000/0.60))
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1425 tracked files + staged + 1426 salidas en output/ y logs/ + 5592 leidos por forma fragmento (4 grandfathered con lineas cuadadas) (excluidos declarados: 1 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 4176 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 180 llamadas descubiertas en 743 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+### RE-EJECUCION tras curar el pin de FASE-F y cerrar REGISTRY ###
+2026-10-23 21:37
+........................................................................ [ 52%]
+.......s.................F.......................................        [100%]
+================================== FAILURES ===================================
+________ TestConfigIntegration.test_all_config_files_have_description _________
+
+self = <test_config_integration.TestConfigIntegration object at 0x000001EAF6F18FC0>
+
+    def test_all_config_files_have_description(self):
+        """Todos los YAML activos de config/ deben tener campo 'description'"""
+        config_dir = os.path.join(os.path.dirname(__file__), '../../config')
+    
+        # Archivos LEGACY sin version/description (deprecated)
+        skip_files = {'settings.yaml'}  # LEGACY � ver header del archivo
+    
+        for filename in os.listdir(config_dir):
+            if filename.endswith('.yaml') or filename.endswith('.yml'):
+                if filename in skip_files:
+                    continue
+                filepath = os.path.join(config_dir, filename)
+                with open(filepath, encoding='utf-8') as f:
+                    data = yaml.safe_load(f)
+>               assert 'description' in data, f"{filename} debe tener campo 'description'"
+E               AssertionError: secret_fragment_policy.yaml debe tener campo 'description'
+E               assert 'description' in {'directorios_exentos_barridos': ['archives', 'evidence', '.opencode'], 'duenio': 'Operador', 'grandfathered': [{'cond... empieza ni termina en esos fragmentos.', ...}], 'prefijos': ['sk-', 'AIza', 'ghp_', 'gho_', 'ghu_', 'ghs_', ...], ...}
+
+tests\config\test_config_integration.py:84: AssertionError
+============================== warnings summary ===============================
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+  C:\Users\Jhond\Github\iah-cli\tests\config\../..\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+  C:\Users\Jhond\Github\iah-cli\tests\config\../..\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+  C:\Users\Jhond\Github\iah-cli\tests\config\../..\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+tests/config/test_coherencia_escenarios_d25bis.py::test_los_lectores_no_ponen_default_al_factor[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/config/test_coherencia_escenarios_d25bis.py::test_ambos_generadores_declaran_el_mismo_sitio_de_respaldo[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/config/test_umbrales_fotos_semantica.py::test_cada_sito_lee_su_umbral_nombrado[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/config/test_umbrales_fotos_semantica.py::test_cada_sito_lee_su_umbral_nombrado[modules/commercial_documents/v4_diagnostic_generator.py]
+tests/config/test_umbrales_fotos_semantica.py::test_ningun_umbral_de_fotos_es_un_default_inline
+tests/config/test_umbrales_fotos_semantica.py::test_la_cuenta_total_de_sitios_es_la_re_medida_de_fase_f
+  <unknown>:861: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+1 failed, 135 passed, 1 skipped, 14 warnings in 11.68s
+============================================================
+IA HOTELES AGENT - VALIDATION ENGINE
+Timestamp: 2026-10-23 21:38:11
+Mode: FULL
+============================================================
+
+[1/13] Checking for residual files...
+[2/13] Checking Plan Maestro sync...
+[3/13] Checking version synchronization...
+[4/13] Checking for hardcoded secrets (tracked + staged + salidas en output/ y logs/)...
+[5/13] Checking client material policy (tracked + staged)...
+[6/13] Checking document integration...
+[7/13] Checking prompts for --release flag in intermediate phases...
+[8/13] Checking .opencode references...
+[9/13] Checking plan citations (simbolos, no numeros de linea)...
+[10/13] Checking lesson capitalization (Paso 0 del executor)...
+[11/13] Checking signal wiring by AST (AC7/AC16)...
+[12/13] Checking governance numbers (documentos de gobierno vs fuente dinamica)...
+[13/13] Checking briefing packs against the committed tree...
+
+============================================================
+VALIDATION SUMMARY
+============================================================
+  MODO: rapido - el denominador de las etiquetas impresas es el del modo rapido (13); el modo completo llega a 18 y solo sus 5 exclusivas se etiquetan con ese numero
+  [+] Residual Files: No residual files found
+  [+] Plan Maestro Sync: Plan Maestro vv2.5.0 parseado y 4 regiones con valores sincronizados con el maestro (exenta: default: master la marca LEGACY y sus valores divergen del secundario (300000/0.50 vs 280000/0.60))
+  [+] Version Sync: All versions synchronized
+  [+] Secrets Check: SIN_HALLAZGOS: 1425 tracked files + staged + 1426 salidas en output/ y logs/ + 5592 leidos por forma fragmento (4 grandfathered con lineas cuadadas) (excluidos declarados: 1 binarios conocidos, 1 symlinks)
+  [+] Client Material: SIN_HALLAZGOS: 4176 rutas contra 4 marcadores (1 grandfathered con due�o)
+  [+] Document Integration: All cross-document checks passed
+  [+] Prompts No Release: No --release flag in intermediate prompts
+  [+] OpenCode References: All .opencode references exist
+  [+] Plan Citations: [OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+  [+] Lesson Capitalization: [OK] Capitalización del Paso 0: forma y trazabilidad verificadas | NO verifica pertinencia (qué lección debía capitalizarse, ni si el efecto alegado es real)
+  [+] Wiring: 180 llamadas descubiertas en 743 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+  [+] Governance Numbers: [SIN-HALLAZGOS] validate_governance_numbers.py - aserciones de conteo en documentos de gobierno vs etiqueta impresa por el codigo
+  [+] Briefing Packs in Commit Tree: [OK] packs en el árbol de HEAD (5/5 reproducidos por el escritor, 0 divergentes, 0 no evaluables)
+
+------------------------------------------------------------
+  TOTAL: 13/13 validations passed
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+### ULTIMA CORRIDIA (tras la ultima edicion de 09 y 10) ###
+2026-10-23 21:41
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+EXIT_INDEX=0 (403 IDs) | EXIT_WIRING=0 | EXIT_QUICK=0 | EXIT_DOCINTEG=0

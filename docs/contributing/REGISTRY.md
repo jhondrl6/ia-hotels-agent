@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-23
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 539
+> **Total fases completadas:** 540
 
 ---
 
@@ -12904,6 +12904,50 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 26 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-H1 - 2026-10-23
+**Descripcion:** D16 score /90 sin API muerta y D24 stub retirado sin tocar el scraper real (AC8)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/atribucion-head-rojos-especificos.txt` | NUEVO | Atribucion Head Rojos Especificos |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/crudo-derivados.txt` | NUEVO | Crudo-Derivados |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/crudo-quick.txt` | NUEVO | Crudo-Quick |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/par-rojo-verde-mutantes.md` | NUEVO | Par-Rojo-Verde-Mutantes |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/pytest-seleccion-fase-h1.txt` | NUEVO | Pytest-Seleccion-Fase-H1 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H1/pytest-suite-completa-post.txt` | NUEVO | Pytest-Suite-Completa-Post |
+| `modules/common/rubrica_gbp.py` | NUEVO | Rubrica Gbp |
+| `tests/scrapers/test_fase_h1_gbp_score_denominador.py` | NUEVO | Test Fase H1 Gbp Score Denominador |
+| `tests/scrapers/test_fase_h1_booking_stub_retirado.py` | NUEVO | Test Fase H1 Booking Stub Retirado |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
+| `modules/analyzers/competitor_analyzer.py` | Competitor Analyzer |
+| `modules/scrapers/__init__.py` |   Init   |
+| `modules/scrapers/booking_scraper.py` | Booking Scraper |
+| `modules/scrapers/gbp_auditor.py` | Gbp Auditor |
+| `tests/config/test_umbrales_fotos_semantica.py` | Test Umbrales Fotos Semantica |
+| `tests/providers/test_autonomous_research_fase8.py` | Test Autonomous Research Fase8 |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 23 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

@@ -270,7 +270,10 @@ class CompetitorAnalyzer:
                     competitor['rating'] = audit_result.get('rating', competitor['rating'])
                     competitor['fotos'] = audit_result.get('fotos', competitor['fotos'])
                     competitor['score_source'] = audit_result.get('source', 'gbp_audit')
-                    logger.info(f"   ✓ {competitor['nombre']}: GEO {audit_result['geo_score']}/100")
+                    logger.info(
+                        f"   ✓ {competitor['nombre']}: GEO {audit_result['geo_score']}"
+                        f"/{audit_result['geo_score_maximo']} (rubrica GBP)"
+                    )
                 else:
                     logger.warning(f"   ⚠ {competitor['nombre']}: Auditoría sin resultados, usando estimación")
                     

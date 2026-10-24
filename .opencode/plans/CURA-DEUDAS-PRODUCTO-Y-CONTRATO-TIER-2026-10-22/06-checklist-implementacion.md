@@ -11,7 +11,7 @@
 | 4 | FASE-D — contrato GBP en ambos caminos | ALTA | ✅ 2026-10-23 | [x] checklist del prompt cerrado | [x] registrado con `log_phase_completion.py` |
 | 5 | FASE-E — lector único y cinco tablas | ALTA | ✅ 2026-10-23 | [x] checklist del prompt cerrado (AC4; M1/M2/M3 en evidencia; `--quick` 13/13; presupuesto excedido y declarado) | [x] registrado con `log_phase_completion.py` |
 | 6 | FASE-F — umbrales por semántica | MEDIA | ✅ 2026-10-23 | [x] checklist del prompt cerrado (AC6: un sitio por umbral nombrado; mutante M1 de divergencia y M2 de literal re-introducido en rojo, `evidence/…/FASE-F/par-rojo-verde-mutantes.txt`; `--quick` 13/13; presupuesto excedido ≈66 `tool_use` y declarado, con la autorización del Operador para `H1`) | [x] registrado con `log_phase_completion.py` |
-| 7 | FASE-H1 — `D16` `/90` y `D24` stub retirado | MEDIA | ⏳ | [ ] | [ ] |
+| 7 | FASE-H1 — `D16` `/90` y `D24` stub retirado | MEDIA | ✅ 2026-10-23 | [x] checklist del prompt cerrado (AC8 mitad H1: `/90` con denominador único, rama API retirada, stub `STUB_RETIRADO` con export legacy, scraper real intacto; M1/M2/M3 en rojo con árbol intacto por sha; `--quick` y suite en crudo `evidence/…/FASE-H1/`; presupuesto excedido ≈64 `tool_use` y declarado) | [x] registrado con `log_phase_completion.py` |
 | 8 | FASE-H2 — `D18`/`D22`/`D23`/`D20` | BAJA | ⏳ | [ ] | [ ] |
 | 9 | FASE-E2E-PRE — ensayo determinista | MEDIA | ⏳ | [ ] | [ ] |
 | 10 | FASE-E2E — v4complete Don Alfonso | MEDIA | ⏳ | [ ] | [ ] |

@@ -1,0 +1,11 @@
+### suite completa (resumen)
+.............................................sss........................ [ 86%]
+........................................................................ [ 87%]
+......................### validate_wiring --write-report
+EXIT_WIRING_WRITE=0
+[OK] Wiring: 180 llamadas descubiertas en 743 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+### build_lesson_index
+EXIT_INDEX_WRITE=0
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=392 commit=11 sin_fuente=0

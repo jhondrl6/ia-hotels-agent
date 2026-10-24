@@ -126,7 +126,7 @@ class TestScraperBooking:
         assert scraper.source_name == 'booking'
     
     def test_scraper_booking_scrape(self):
-        """BookingScraper.scrape() devuelve estructura válida."""
+        """D24: el stub retirado publica found=False + data_status=STUB_RETIRADO."""
         from modules.scrapers.booking_scraper import BookingScraper
         
         scraper = BookingScraper()
@@ -136,23 +136,22 @@ class TestScraperBooking:
         assert 'found' in result
         assert 'data' in result
         assert 'url' in result
-        assert result['found'] == True  # Stub siempre returns True
+        assert result['found'] is False  # D24: el stub ya no finge un dato
+        assert result['data'] == {}
+        assert result['data_status'] == 'STUB_RETIRADO'
     
     def test_scraper_booking_data_structure(self):
-        """BookingScraper devuelve campos esperados."""
+        """D24/DA-C3: sin scraping no hay estructura de datos; vacio != 'medimos y no hay nada'."""
         from modules.scrapers.booking_scraper import BookingScraper
         
         scraper = BookingScraper()
         result = scraper.scrape("Hotel Test")
         
-        data = result['data']
-        
-        assert 'hotel_name' in data
-        assert 'rating' in data
-        assert 'reviews' in data
-        assert 'amenities' in data
-        assert 'photos' in data
-        assert 'price_range' in data
+        assert result['data'] == {}
+        assert result['data_status'] == 'STUB_RETIRADO'
+        # La varilla viva del producto es otra clase; el stub no la reemplaza.
+        from modules.providers.autonomous_researcher import BookingScraper as ScraperReal
+        assert ScraperReal is not BookingScraper
     
     def test_scraper_booking_url_construction(self):
         """BookingScraper construye URL correctamente."""

@@ -1,0 +1,16 @@
+.......................................................s.....s.......... [ 55%]
+...ss...................s................................                [100%]
+============================== warnings summary ===============================
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_escribe_redactado
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_save_cache_no_mutara_el_diccionario_del_caller
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_perfil_limpio_se_guarda_intacto
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_avisa_cuando_redacta
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestSaveCacheIntegration::test_reescritura_no_resucita_secrets
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_sin_el_guard_el_valor_llega_al_disco
+tests/scrapers/test_gbp_cache_secret_redaction.py::TestParNR7Mutacion::test_guard_activo_bloquea_esa_misma_fuga
+  C:\Users\Jhond\Github\iah-cli\tests\scrapers\../..\modules\scrapers\gbp_auditor.py:162: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    "timestamp": datetime.utcnow().isoformat(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+124 passed, 5 skipped, 8 warnings in 26.66s
