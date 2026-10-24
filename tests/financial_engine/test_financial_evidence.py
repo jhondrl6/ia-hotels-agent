@@ -355,7 +355,7 @@ def test_diagnostic_generator_uses_breakdown_tier():
 
 
 def test_diagnostic_generator_fallback_tier_no_breakdown():
-    """Sin breakdown, el diagnostic generator usa GA4 para determinar tier (fallback)."""
+    """Sin breakdown, el diagnostic generator degrada el tier a C igual que la propuesta (H1)."""
     from modules.commercial_documents.v4_diagnostic_generator import V4DiagnosticGenerator
     from modules.commercial_documents.data_structures import (
         FinancialScenarios,
@@ -396,12 +396,16 @@ def test_diagnostic_generator_fallback_tier_no_breakdown():
     assert placeholders["evidence_tier"] == "C", \
         f"Expected fallback tier 'C' without GA4, got '{placeholders['evidence_tier']}'"
 
-    # Sin breakdown, con GA4 -> tier A
+    # Sin breakdown, con GA4 -> tier C (FASE-F / H1). Antes este caso esperaba 'A': era la
+    # asimetría declarada en FASE-B, mismo run con dos contratos entre diagnóstico y propuesta.
+    # El ga4_enabled sigue decidiendo el disclaimer, no el tier.
     placeholders = gen._build_financial_placeholders(
         scenarios,
         analytics_data={"use_ga4": True},
         source_reliability="verified",
         financial_breakdown=None,
     )
-    assert placeholders["evidence_tier"] == "A", \
-        f"Expected fallback tier 'A' with GA4, got '{placeholders['evidence_tier']}'"
+    assert placeholders["evidence_tier"] == "C", \
+        f"Expected fallback tier 'C' with GA4 (sin breakdown), got '{placeholders['evidence_tier']}'"
+    assert "Google Analytics 4" in placeholders.get("financial_disclaimer", ""), \
+        "GA4 dejó de decidir el texto del disclaimer en el camino degradado"

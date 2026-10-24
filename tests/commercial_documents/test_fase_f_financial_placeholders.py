@@ -98,8 +98,13 @@ class TestFinancialPlaceholders:
 
         assert result['evidence_tier'] == 'C'
 
-    def test_evidence_tier_a_with_ga4(self):
-        """With GA4 enabled, tier is A."""
+    def test_evidence_tier_sigue_si_c_con_ga4_sin_breakdown(self):
+        """FASE-F (H1): GA4 solo ya no promueve el tier; sin breakdown ambos documentos van a C.
+
+        Este test certificaba la promoción a 'A', que es exactamente la asimetría declarada
+        en FASE-B: el diagnóstico emitía los claims de totalidad que la propuesta negaba en el
+        mismo run. El disclaimer sigue siendo el de GA4.
+        """
         gen = V4DiagnosticGenerator()
         scenarios = make_scenarios()
 
@@ -108,7 +113,8 @@ class TestFinancialPlaceholders:
             analytics_data={"use_ga4": True},
         )
 
-        assert result['evidence_tier'] == 'A'
+        assert result['evidence_tier'] == 'C'
+        assert 'Google Analytics 4' in result['financial_disclaimer']
 
     def test_scenario_table_has_3_rows(self):
         """Scenario table must have 3 rows (Conservador/Realista/Optimista)."""

@@ -12,6 +12,7 @@ from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 from modules.scrapers.scraper_fallback import ScraperFallback
 from modules.utils.benchmarks import BenchmarkLoader
+from modules.common.umbrales_fotos import FOTOS_RUBRICA_EXCELENTE
 from datetime import datetime
 
 
@@ -101,16 +102,16 @@ def _format_fotos_status(gbp_data: dict) -> Tuple[str, str, str]:
     if method == 'cache_fallback':
         return (
             f"{fotos}*",
-            "OK" if fotos >= 15 else "Mejorar",
+            "OK" if fotos >= FOTOS_RUBRICA_EXCELENTE else "Mejorar",
             f"⚠️ Dato de caché (confianza: {confidence}%) - Puede estar desactualizado. {nota_tipos}"
         )
     
     # Evaluación normal por confianza
     if confidence >= 80:
-        status = "[OK] OK" if fotos >= 15 else "[WARN] Mejorar"
+        status = "[OK] OK" if fotos >= FOTOS_RUBRICA_EXCELENTE else "[WARN] Mejorar"
         nota = f"✓ Detectado con {confidence}% confianza ({method}). {nota_tipos}"
     elif confidence >= 50:
-        status = "[OK] OK*" if fotos >= 15 else "[WARN] Mejorar*"
+        status = "[OK] OK*" if fotos >= FOTOS_RUBRICA_EXCELENTE else "[WARN] Mejorar*"
         nota = f"⚠️ Confianza media ({confidence}%) - considerar verificar. {nota_tipos}"
     else:
         status = "[⚠️] Verificar"

@@ -6,6 +6,7 @@ calculations based on hotel data or regional benchmarks.
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
+from modules.common.umbrales_fotos import MIN_FOTOS_BRECHA
 from modules.utils.benchmarks import BenchmarkLoader
 from modules.utils.confidence_tracker import ConfidenceTracker, DataSource
 
@@ -53,7 +54,10 @@ class DynamicImpactCalculator:
     3. Use Benchmarking.md for contextual data (RevPAR, ADR)
     """
 
-    PERDIDA_MENSUAL_BASE = 2_100_000  # COP - Base loss for PERFIL_NO_RECLAMADO scenario
+    # COP - Base consumida por _calculate_loss cuando el factor del issue es 1.0
+    # (PERFIL_NO_RECLAMADO). Distinta de las otras dos constantes homónimas del repo
+    # (gbp_auditor / gbp_leak_detector), que tienen otras semánticas y no se usan aqui.
+    PERDIDA_BASE_SIN_PERFIL = 2_100_000
 
     def __init__(self, benchmark_loader: Optional[BenchmarkLoader] = None):
         self.benchmark_loader = benchmark_loader or BenchmarkLoader()
@@ -229,7 +233,7 @@ class DynamicImpactCalculator:
         For other issues, use dynamic calculation based on hotel metrics.
         """
         if factor >= 1.0:
-            return self.PERDIDA_MENSUAL_BASE
+            return self.PERDIDA_BASE_SIN_PERFIL
         
         indirect_channel_share = 1 - canal_directo
         base_loss = factor * indirect_channel_share * reservas_mes * valor_reserva
@@ -308,7 +312,7 @@ def get_detected_issues(
     if not gbp_data.get('existe', False):
         issues.append('PERFIL_NO_RECLAMADO')
 
-    if gbp_data.get('fotos', 0) < 5:
+    if gbp_data.get('fotos', 0) < MIN_FOTOS_BRECHA:
         issues.append('FOTOS_INSUFICIENTES')
 
     rating = gbp_data.get('rating', 5)

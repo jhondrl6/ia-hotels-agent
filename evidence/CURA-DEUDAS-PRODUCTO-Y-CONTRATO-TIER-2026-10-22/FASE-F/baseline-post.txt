@@ -1,0 +1,52 @@
+# FASE-F baseline POST — medido en el árbol de trabajo el 2026-10-23
+
+## HEAD base
+5074b51
+
+## 1. Literales de comparación de fotos restantes en modules/
+modules/scrapers/gbp_leak_detector.py:145:        if profile_data['fotos'] < 15:
+modules/scrapers/gbp_leak_detector.py:403:            if profile_data['fotos'] >= 15:
+modules/scrapers/gbp_leak_detector.py:405:            elif profile_data['fotos'] >= 5:
+modules/scrapers/gbp_leak_detector.py:435:            if profile_data['fotos'] < 15:
+
+## 2. PERDIDA_MENSUAL_BASE en modules/, main.py, scripts/
+TOTAL_LITERALES_POST=4
+(0 líneas fuera de tests)
+
+## 3. recovery_factors con default inline en modules/
+(0 líneas)
+
+## 4. recuento canónico de funciones test (árbol vivo)
+5454
+
+## 5. nombres nuevos del vocabulario en el producto
+modules/auditors/v4_comprehensive.py
+modules/commercial_documents/data_structures.py
+modules/commercial_documents/v4_diagnostic_generator.py
+modules/common/umbrales_fotos.py
+modules/financial_engine/opportunity_scorer.py
+modules/generators/report_builder.py
+modules/scrapers/gbp_auditor.py
+modules/utils/dynamic_impact.py
+
+## 6. superficie tocada por la fase
+ M config/regional_benchmarks.yaml
+ M modules/auditors/v4_comprehensive.py
+ M modules/commercial_documents/data_structures.py
+ M modules/commercial_documents/v4_diagnostic_generator.py
+ M modules/commercial_documents/v4_proposal_generator.py
+ M modules/financial_engine/opportunity_scorer.py
+ M modules/generators/report_builder.py
+ M modules/scrapers/gbp_auditor.py
+ M modules/scrapers/gbp_leak_detector.py
+ M modules/utils/dynamic_impact.py
+ M tests/commercial_documents/test_fase_f_financial_placeholders.py
+ M tests/financial_engine/test_financial_evidence.py
+?? evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/
+?? modules/commercial_documents/evidence_tier.py
+?? modules/common/scenario_config.py
+?? modules/common/umbrales_fotos.py
+?? tests/commercial_documents/test_h1_tier_misma_fuente.py
+?? tests/config/test_coherencia_escenarios_d25bis.py
+?? tests/config/test_umbrales_fotos_semantica.py
+?? tests/test_d27_perdida_base_por_semantica.py

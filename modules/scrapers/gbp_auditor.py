@@ -29,6 +29,8 @@ from modules.utils.geo_validator import get_geo_validator, ValidationResult
 from modules.utils.horarios_detector import HorariosDetector
 from modules.utils.benchmarks import BenchmarkLoader
 from modules.utils.dynamic_impact import DynamicImpactCalculator, get_detected_issues
+# Umbrales de fotos GBP: nombre semantico, valor definido en config/regional_benchmarks.yaml
+from modules.common.umbrales_fotos import FOTOS_RUBRICA_EXCELENTE, MIN_FOTOS_BRECHA
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +69,10 @@ class GBPAuditor:
     Enfocado en calcular el impacto financiero de un perfil GBP suboptimizado.
     """
 
-    PERDIDA_MENSUAL_BASE = 2_800_000  # COP - Benchmark Plan Maestro v2.2 (Caribe RevPAR 270.6k)
+    # COP - Calibracion regional (Caribe) SIN consumidor en este modulo.
+    # No es la base que usa DynamicImpactCalculator (vale 2.1M). Las tres
+    # constantes homonimas del repo tienen semanticas distintas.
+    PERDIDA_BASE_CARIBE_CALIBRADA = 2_800_000  # Benchmark Plan Maestro v2.2 (Caribe RevPAR 270.6k)
 
     IMPACTOS_FINANCIEROS = {
         'PERFIL_NO_RECLAMADO': {
@@ -729,9 +734,9 @@ class GBPAuditor:
             score += 15
         elif profile_data['rating'] > 0:
             score += 10
-        if profile_data['fotos'] >= 15:
+        if profile_data['fotos'] >= FOTOS_RUBRICA_EXCELENTE:
             score += 15
-        elif profile_data['fotos'] >= 5:
+        elif profile_data['fotos'] >= MIN_FOTOS_BRECHA:
             score += 10
         if profile_data['horarios']:
             score += 10
@@ -768,8 +773,10 @@ class GBPAuditor:
 
         if profile_data['reviews'] < 10:
             profile_data['issues'].append(f"Pocas reseñas ({profile_data['reviews']}), meta: 10+")
-        if profile_data['fotos'] < 15:
-            profile_data['issues'].append(f"Pocas fotos ({profile_data['fotos']}), meta: 15+")
+        if profile_data['fotos'] < FOTOS_RUBRICA_EXCELENTE:
+            profile_data['issues'].append(
+                f"Pocas fotos ({profile_data['fotos']}), meta: {FOTOS_RUBRICA_EXCELENTE}+"
+            )
         if profile_data['rating'] < 4.0 and profile_data['rating'] > 0:
             profile_data['issues'].append(f"Rating bajo ({profile_data['rating']}), meta: 4.0+")
 
@@ -863,7 +870,7 @@ class GBPAuditor:
             return 100
 
         posts_90d_max = pesos.get('posts_90d_max', 5)
-        fotos_meta = pesos.get('fotos_meta', 15)  # v2.6.2: Meta total de fotos
+        fotos_meta = pesos.get('fotos_meta', FOTOS_RUBRICA_EXCELENTE)  # v2.6.2: Meta total de fotos
 
         posts_90d = profile_data.get('posts', 0)
         fotos_total = profile_data.get('fotos', 0)
@@ -1533,9 +1540,9 @@ Generado: {datetime.now().strftime('%Y-%m-%d %H:%M')}
             score += 15
         elif data.get('rating', 0) > 0:
             score += 10
-        if data.get('fotos', 0) >= 15:
+        if data.get('fotos', 0) >= FOTOS_RUBRICA_EXCELENTE:
             score += 15
-        elif data.get('fotos', 0) >= 5:
+        elif data.get('fotos', 0) >= MIN_FOTOS_BRECHA:
             score += 10
         if data.get('horarios'):
             score += 10

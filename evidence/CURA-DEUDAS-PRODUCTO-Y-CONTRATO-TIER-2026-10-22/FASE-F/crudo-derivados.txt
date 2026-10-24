@@ -1,0 +1,18 @@
+### validate_wiring.py --write-report
+[OK] Wiring: 180 llamadas descubiertas en 740 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+EXIT_WRITE=0
+
+### validate_wiring.py --check
+EXIT_CHECK=0
+
+### build_lesson_index.py
+[OK] 403 IDs definidos + 113 sin definición (22 análisis, 505 .md citados)
+  -> .opencode/LECCIONES-INDEX.md
+  -> .opencode/lecciones_index.json
+[fechas] nombre=392 commit=11 sin_fuente=0
+EXIT_INDEX=0
+
+### build_lesson_index.py --check
+[OK] Índice de lecciones fresco (403 IDs)
+[fechas] nombre=392 commit=11 sin_fuente=0
+EXIT_CHECK_INDEX=0

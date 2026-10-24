@@ -1,0 +1,23 @@
+### Atribución de los rojos de la corrida ampliada (Paso de verificación, FASE-F 2026-10-23)
+# Corrida combinada de las superficies tocadas:
+./venv/Scripts/python.exe -m pytest tests/commercial_documents tests/scrapers tests/utils tests/auditors tests/financial_engine tests/regression tests/test_gbp_contrato_relevo.py tests/test_gbp_contrato_frontera.py tests/config tests/test_d27_perdida_base_por_semantica.py -q
+#   → 3 failed, 1571 passed, 5 skipped, 3 xfailed (94.93s)
+#   (la fila de arriba es la corrida tal como se ejecutó; los dos tests re-escritos por H1 ya estaban corregidos cuando se midió el POST abajo)
+
+### POST: la misma selección, con los dos tests de contrato re-escritos
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/auditors/test_llm_mention_checker.py::TestOpenRouterModelFromRegistry::test_integration_real_openrouter_call
+FAILED tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+2 failed, 1572 passed, 5 skipped, 3 xfailed, 62 warnings in 86.67s (0:01:26)
+EXIT_POST=0   ← LINEA INVALIDA: el `$?` se leyó detrás de una tubería (`| tail -2`), así que es el exit
+                del filtro, no el del runner (lección L21 del plan, cometida y corregida aquí mismo). El
+                exit real no se midió sin tubería en esta sesión; lo que sostiene la atribución es la
+                línea de resumen `2 failed, 1572 passed`, que por el contrato de pytest implica EXIT 1.
+
+### Atribución por mecanismo
+1) tests/config/test_config_integration.py::test_all_config_files_have_description → PREEXISTENTE (config/secret_fragment_policy.yaml sin campo 'description'); ya declarado por FASE-B como rojo R1, dueño Operador. No lo produce esta fase: regional_benchmarks.yaml sí publica description.
+2) tests/auditors/test_llm_mention_checker.py::TestOpenRouterModelFromRegistry::test_integration_real_openrouter_call → re-medido abajo en aislado
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 skipped, 8 warnings in 1.25s
+   → AMBIENTAL por el mismo mecanismo que FASE-B declaró para la clave DEEPSEEK: en la colección combinada se importa main y siembra la credencial desde .env, y el test hace una llamada real. No es rojo de FASE-F.

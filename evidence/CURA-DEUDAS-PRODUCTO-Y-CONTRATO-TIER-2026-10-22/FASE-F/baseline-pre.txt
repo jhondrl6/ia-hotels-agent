@@ -1,0 +1,46 @@
+# FASE-F baseline PRE — medido en HEAD (5074b51, antes de FASE-F) con git grep, sin tocar el árbol
+
+## HEAD
+5074b51
+
+## 1. Sitios de comparación de fotos con literal (modules/)
+HEAD:modules/auditors/v4_comprehensive.py:1950:        if gbp.photos < 20:
+HEAD:modules/commercial_documents/data_structures.py:422:    if audit_result.gbp.photos < 20:
+HEAD:modules/commercial_documents/v4_diagnostic_generator.py:2100:        if audit_result.gbp and audit_result.gbp.photos < 20:
+HEAD:modules/financial_engine/opportunity_scorer.py:424:            if (photo_count is not None and photo_count < 10) or (
+HEAD:modules/generators/report_builder.py:104:            "OK" if fotos >= 15 else "Mejorar",
+HEAD:modules/generators/report_builder.py:110:        status = "[OK] OK" if fotos >= 15 else "[WARN] Mejorar"
+HEAD:modules/generators/report_builder.py:113:        status = "[OK] OK*" if fotos >= 15 else "[WARN] Mejorar*"
+HEAD:modules/scrapers/gbp_auditor.py:732:        if profile_data['fotos'] >= 15:
+HEAD:modules/scrapers/gbp_auditor.py:734:        elif profile_data['fotos'] >= 5:
+HEAD:modules/scrapers/gbp_auditor.py:771:        if profile_data['fotos'] < 15:
+HEAD:modules/scrapers/gbp_auditor.py:1536:        if data.get('fotos', 0) >= 15:
+HEAD:modules/scrapers/gbp_auditor.py:1538:        elif data.get('fotos', 0) >= 5:
+HEAD:modules/scrapers/gbp_leak_detector.py:140:        if profile_data['fotos'] < 15:
+HEAD:modules/scrapers/gbp_leak_detector.py:398:            if profile_data['fotos'] >= 15:
+HEAD:modules/scrapers/gbp_leak_detector.py:400:            elif profile_data['fotos'] >= 5:
+HEAD:modules/scrapers/gbp_leak_detector.py:430:            if profile_data['fotos'] < 15:
+HEAD:modules/utils/dynamic_impact.py:311:    if gbp_data.get('fotos', 0) < 5:
+TOTAL_SITIOS_PRE=17
+
+## 2. PERDIDA_MENSUAL_BASE (población modules/, tests/, main.py, scripts/)
+HEAD:modules/scrapers/gbp_auditor.py:70:    PERDIDA_MENSUAL_BASE = 2_800_000  # COP - Benchmark Plan Maestro v2.2 (Caribe RevPAR 270.6k)
+HEAD:modules/scrapers/gbp_leak_detector.py:35:    PERDIDA_MENSUAL_BASE = 2_100_000  # COP - Pérdida promedio hotel 15-20 hab
+HEAD:modules/utils/dynamic_impact.py:56:    PERDIDA_MENSUAL_BASE = 2_100_000  # COP - Base loss for PERFIL_NO_RECLAMADO scenario
+HEAD:modules/utils/dynamic_impact.py:232:            return self.PERDIDA_MENSUAL_BASE
+
+## 3. recovery_factors con default inline
+HEAD:modules/commercial_documents/v4_diagnostic_generator.py:1464:            recovery_diag = scenario_config_diag.get('recovery_factors', {}).get('realistic', 0.35)
+HEAD:modules/commercial_documents/v4_proposal_generator.py:186:                'recovery_factors': {'conservative': 0.15, 'realistic': 0.20, 'optimistic': 0.25},
+HEAD:modules/commercial_documents/v4_proposal_generator.py:620:                    recovery_factors = scenario_config['recovery_factors']
+HEAD:modules/commercial_documents/v4_proposal_generator.py:621:                    recovery_realistic = recovery_factors.get('realistic', 0.20)
+HEAD:modules/commercial_documents/v4_proposal_generator.py:762:        recovery_factors = scenario_config['recovery_factors']
+HEAD:modules/commercial_documents/v4_proposal_generator.py:771:            recuperacion_total=projected_monthly_gain * recovery_factors['realistic'] * 6,
+HEAD:modules/commercial_documents/v4_proposal_generator.py:784:        recovery_realistic = recovery_factors['realistic']
+HEAD:modules/commercial_documents/v4_proposal_generator.py:876:            'recovery_factor_pct': f"{recovery_factors['realistic']:.0%}",
+HEAD:modules/commercial_documents/v4_proposal_generator.py:894:            recuperacion_total=int(self._get_main_value(financial_scenarios.conservative) * pain_ratio) * recovery_factors['conservative'] * 6,
+HEAD:modules/commercial_documents/v4_proposal_generator.py:904:            recuperacion_total=int(self._get_main_value(financial_scenarios.optimistic) * pain_ratio) * recovery_factors['optimistic'] * 6,
+HEAD:modules/common/yaml_loader.py:11:    recovery = config['recovery_factors']['conservative']
+
+## 4. recuento canónico de funciones test en HEAD
+TOTAL_TEST_FUNCS_PRE=5428

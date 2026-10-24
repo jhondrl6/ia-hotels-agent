@@ -6,10 +6,42 @@
 # Fuente: v4_diagnostic_generator.py, v4_proposal_generator.py
 # Uso: Centralizar thresholds de scoring y narrativas de impacto por región
 
-version: "1.1.0"
-description: "Umbrales de scoring y narrativas de impacto por región (ADR referencial, master en regional_adr_2026.json)"
+version: "1.2.0"
+description: "Umbrales de scoring y narrativas de impacto por región (ADR referencial, master en regional_adr_2026.json) + vocabulario de umbrales de fotos GBP"
 
 default_region: "eje_cafetero"
+
+# ===========================================================================
+# UMBRALES DE FOTOS GBP — vocabulario por semántica (FASE-F, D25 / AC6)
+#
+# Sitio único de definición de los cinco valores. modules/common/umbrales_fotos.py
+# es el lector; los sitios de comparación del producto leen el NOMBRE, nunca el
+# número. No se colapsan en un valor único: son cinco semánticas distintas y la
+# escalera MIN ≤ OPORTUNIDAD ≤ RÚBRICA ≤ BRECHA ≤ TARGET es lo que las ordena.
+# La relación la verifica tests/config/test_umbrales_fotos_semantica.py.
+# ===========================================================================
+umbrales_fotos:
+  # Debajo de esto el perfil está efectivamente sin fotos: dispara la brecha
+  # FOTOS_INSUFICIENTES del cálculo de impacto (DynamicImpactCalculator) y el
+  # piso de la banda parcial de la rúbrica (GBPAuditor).
+  MIN_FOTOS_BRECHA: 5
+
+  # Por debajo de este conteo la GBP se considera una oportunidad de score
+  # incompleta para el priorizador (OpportunityScorer).
+  FOTOS_OPORTUNIDAD: 10
+
+  # Banda de la rúbrica: con este conteo o más, las fotos puntúan completo y el
+  # estado se lee "OK" (GBPAuditor, ReportBuilder).
+  FOTOS_RUBRICA_EXCELENTE: 15
+
+  # Umbral con el que diagnóstico y auditoría declaran la brecha "pocas fotos"
+  # del perfil GBP (V4ComprehensiveAuditor, data_structures, V4DiagnosticGenerator).
+  FOTOS_BRECHA_DIAGNOSTICO: 20
+
+  # Objetivo del plan de acción comercial: la fila "subir al menos N fotos" y el
+  # "target: N+" de las recomendaciones. Retira la justificación que lo apoyaba
+  # en gbp_leak_detector (copia retirada del servicio, sin consumidor).
+  FOTOS_TARGET_DIAGNOSTICO: 40
 
 regions:
   eje_cafetero:

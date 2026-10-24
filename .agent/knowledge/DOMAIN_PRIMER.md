@@ -11,7 +11,7 @@
 
 ## Modulos del Repositorio (auto-generado)
 
-> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 211 archivos Python en total.
+> 24 modulos detectados en `modules/` + 1 paquetes de nivel root. 214 archivos Python en total.
 
 ### CORE - Pipeline de diagnostico
 
@@ -35,7 +35,7 @@
 
 | Modulo | Archivos | Clases/Funciones Clave |
 |--------|----------|------------------------|
-| **commercial_documents/** | 9 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
+| **commercial_documents/** | 10 | CoherenceRule, PriceValidationRule, CoherenceConfig; CoherenceCheck, CoherenceReport, CoherenceValidator; ValidatedField, Conflict, ValidationSummary, Scenario; HookPDFGenerator; Pain, Solution, PainS |
 | **asset_generation/** | 22 | AssetStatus, AssetCatalogEntry; ContentStatus, ContentIssue, ContentValidationResult, AssetContentValidator; AssetDiagnosticLink, AssetMetadata, AssetDiagnosticLinker; AssetStatus, AssetMetadata, Asse |
 | **delivery/** | 23 | AltTextGuideGenerator; AnalyticsSetupGuideGenerator; BlogStrategyGuideGenerator; BookingBarGenerator; CertificateGenerator; ContentGenerator; DeliveryAssetState, DeliveryAssetEntry, DeliveryContext; D |
 | **generators/** | 3 | OutreachGenerator; ReportDataBundle, ReportIntegrationAudit, ReportIntegrationAdapter, ReportBuilder; GeoStageResult, IAStageResult, SparkGenerator |
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-22 | v4.81.1 Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G*
+*Auto-generado: 2026-10-24 | v4.81.1 Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

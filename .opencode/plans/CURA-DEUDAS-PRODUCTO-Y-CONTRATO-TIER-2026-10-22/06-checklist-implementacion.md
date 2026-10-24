@@ -10,7 +10,7 @@
 | 3 | FASE-C — ítem C (`conditional_reason`; `P6.5` intacta) | MEDIA | ✅ 2026-10-23 | [x] checklist del prompt cerrado | [x] registrado con `log_phase_completion.py` |
 | 4 | FASE-D — contrato GBP en ambos caminos | ALTA | ✅ 2026-10-23 | [x] checklist del prompt cerrado | [x] registrado con `log_phase_completion.py` |
 | 5 | FASE-E — lector único y cinco tablas | ALTA | ✅ 2026-10-23 | [x] checklist del prompt cerrado (AC4; M1/M2/M3 en evidencia; `--quick` 13/13; presupuesto excedido y declarado) | [x] registrado con `log_phase_completion.py` |
-| 6 | FASE-F — umbrales por semántica | MEDIA | ⏳ | [ ] | [ ] |
+| 6 | FASE-F — umbrales por semántica | MEDIA | ✅ 2026-10-23 | [x] checklist del prompt cerrado (AC6: un sitio por umbral nombrado; mutante M1 de divergencia y M2 de literal re-introducido en rojo, `evidence/…/FASE-F/par-rojo-verde-mutantes.txt`; `--quick` 13/13; presupuesto excedido ≈66 `tool_use` y declarado, con la autorización del Operador para `H1`) | [x] registrado con `log_phase_completion.py` |
 | 7 | FASE-H1 — `D16` `/90` y `D24` stub retirado | MEDIA | ⏳ | [ ] | [ ] |
 | 8 | FASE-H2 — `D18`/`D22`/`D23`/`D20` | BAJA | ⏳ | [ ] | [ ] |
 | 9 | FASE-E2E-PRE — ensayo determinista | MEDIA | ⏳ | [ ] | [ ] |

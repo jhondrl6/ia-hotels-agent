@@ -17,6 +17,8 @@ Uso:
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+from modules.common.umbrales_fotos import FOTOS_OPORTUNIDAD
+
 
 @dataclass
 class OpportunityScore:
@@ -421,7 +423,7 @@ class OpportunityScorer:
         if gbp:
             photo_count = getattr(gbp, "photo_count", None)
             is_claimed = getattr(gbp, "is_claimed", None)
-            if (photo_count is not None and photo_count < 10) or (
+            if (photo_count is not None and photo_count < FOTOS_OPORTUNIDAD) or (
                 is_claimed is not None and not is_claimed
             ):
                 bid = "gbp_incomplete"

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-23
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 538
+> **Total fases completadas:** 539
 
 ---
 
@@ -12849,6 +12849,61 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 48 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-F - 2026-10-23 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** R3: umbrales por semántica, D25-bis una fuente y D27 con nombres semánticos (AC6)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `modules/common/umbrales_fotos.py` | NUEVO | Umbrales Fotos |
+| `modules/common/scenario_config.py` | NUEVO | Scenario Config |
+| `modules/commercial_documents/evidence_tier.py` | NUEVO | Evidence Tier |
+| `tests/config/test_umbrales_fotos_semantica.py` | NUEVO | Test Umbrales Fotos Semantica |
+| `tests/config/test_coherencia_escenarios_d25bis.py` | NUEVO | Test Coherencia Escenarios D25Bis |
+| `tests/test_d27_perdida_base_por_semantica.py` | NUEVO | Test D27 Perdida Base Por Semantica |
+| `tests/commercial_documents/test_h1_tier_misma_fuente.py` | NUEVO | Test H1 Tier Misma Fuente |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/baseline-pre.txt` | NUEVO | Baseline-Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/baseline-post.txt` | NUEVO | Baseline-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/par-rojo-verde-mutantes.txt` | NUEVO | Par-Rojo-Verde-Mutantes |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/crudo-pytest-h1-y-fase-f.txt` | NUEVO | Crudo-Pytest-H1-Y-Fase-F |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/crudo-quick-pre-republicacion.txt` | NUEVO | Crudo-Quick-Pre-Republicacion |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/crudo-derivados.txt` | NUEVO | Crudo-Derivados |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/crudo-quick-cierre.txt` | NUEVO | Crudo-Quick-Cierre |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/regional_benchmarks.yaml` | Regional Benchmarks |
+| `modules/utils/dynamic_impact.py` | Dynamic Impact |
+| `modules/scrapers/gbp_auditor.py` | Gbp Auditor |
+| `modules/scrapers/gbp_leak_detector.py` | Gbp Leak Detector |
+| `modules/financial_engine/opportunity_scorer.py` | Opportunity Scorer |
+| `modules/generators/report_builder.py` | Report Builder |
+| `modules/auditors/v4_comprehensive.py` | V4 Comprehensive |
+| `modules/commercial_documents/data_structures.py` | Data Structures |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `modules/commercial_documents/v4_proposal_generator.py` | V4 Proposal Generator |
+| `tests/commercial_documents/test_fase_f_financial_placeholders.py` | Test Fase F Financial Placeholders |
+| `tests/financial_engine/test_financial_evidence.py` | Test Financial Evidence |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/wiring_report.json` | Wiring Report |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 26 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

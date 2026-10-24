@@ -1,0 +1,27 @@
+=== FASE-F mutantes (R2.8) — medidos sobre el símbolo real ===
+SHA PRE : 69f5f6803f65e2185afb878244608930970d737aff1a1af3727181061a1d9ce1 292fc208b200a7baca97a51422d97e4dff03f302c1e14df75d1c590897349d0e 
+
+### M1 divergencia D25-bis: scenario_config.RESPALDO_ESCENARIOS realistic 0.35 -> 0.20
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/config/test_coherencia_escenarios_d25bis.py::test_el_respaldo_no_diverge_del_maestro
+FAILED tests/config/test_coherencia_escenarios_d25bis.py::test_el_camino_de_respaldo_devuelve_el_factor_del_maestro
+FAILED tests/config/test_coherencia_escenarios_d25bis.py::test_el_respaldo_devuelve_copia_y_no_la_instancia_maestra
+3 failed, 7 passed, 10 warnings in 1.54s
+
+### M2 literal re-introducido (D25): report_builder fotos >= FOTOS_RUBRICA_EXCELENTE -> >= 15
+tests/config/test_umbrales_fotos_semantica.py::test_ningun_umbral_de_fotos_es_un_default_inline
+tests/config/test_umbrales_fotos_semantica.py::test_la_cuenta_total_de_sitios_es_la_re_medida_de_fase_f
+  <unknown>:861: SyntaxWarning: invalid escape sequence '\W'
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/config/test_umbrales_fotos_semantica.py::test_cada_sito_lee_su_umbral_nombrado[modules/generators/report_builder.py]
+1 failed, 19 passed, 4 warnings in 0.88s
+
+### VERDE RESTAURADO (ambos archivos intactos)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+49 passed, 16 warnings in 2.37s
+SHA POST: 69f5f6803f65e2185afb878244608930970d737aff1a1af3727181061a1d9ce1 292fc208b200a7baca97a51422d97e4dff03f302c1e14df75d1c590897349d0e 
+ARBOL INTACTO (sha identical)

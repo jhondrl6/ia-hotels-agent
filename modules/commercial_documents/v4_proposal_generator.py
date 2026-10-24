@@ -34,6 +34,8 @@ from modules.common.fallback_loader import get_fallback_value, get_estimated_tex
 # con el gate CG-TECH-JARGON y el generador de diagnóstico).
 from modules.commercial_documents.tech_jargon_glossary import apply_glossary
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
+from modules.common.scenario_config import respaldo_escenarios
+from modules.commercial_documents.evidence_tier import resolver_tier_evidencia
 # FASE-3: asset_semantics_validator integrada en services table
 from modules.quality.asset_semantics_validator import validar_semantica_comercial
 import logging
@@ -175,18 +177,16 @@ class V4ProposalGenerator:
 
     def _load_scenario_config(self) -> dict:
         """Load config/scenarios.yaml with caching. Falls back to hardcoded defaults.
-        
+
         FASE-CONFIG-3B: Replaces H-14, H-17, N-01 hardcodes.
+        FASE-F (D25-bis): el respaldo vive en modules/common/scenario_config.py, un solo
+        sitio, y el test de coherencia lo contra contra el maestro scenarios.yaml.
         """
         try:
             return load_yaml_config('scenarios')
         except YAMLLoadError as e:
             logger.warning(f"scenarios.yaml unavailable, using hardcoded defaults: {e}")
-            return {
-                'recovery_factors': {'conservative': 0.15, 'realistic': 0.20, 'optimistic': 0.25},
-                'scenario_weights': {'conservative': 0.70, 'realistic': 0.20, 'optimistic': 0.10},
-                'pain_ratio_default': 0.20,
-            }
+            return respaldo_escenarios()
 
     def _load_commercial_config(self) -> dict:
         """Load config/commercial.yaml with caching. Falls back to hardcoded defaults.
@@ -618,7 +618,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
                     # divergía de la curva del template (triple fuente del dinero).
                     scenario_config = self._load_scenario_config()
                     recovery_factors = scenario_config['recovery_factors']
-                    recovery_realistic = recovery_factors.get('realistic', 0.20)
+                    recovery_realistic = recovery_factors['realistic']
                     total_recovery = int(calcular_recuperacion_6m(raw_monthly_loss, recovery_realistic))
                     monthly_gain = total_recovery / 6  # promedio mensual equivalente (curva)
                     net_benefit_6m = total_recovery - price_monthly * 6
@@ -980,7 +980,7 @@ Entendemos que invertir en algo nuevo requiere confianza. Por eso ofrecemos:
 
         # FASE-PROP-F: Extract precision_tier from financial_breakdown for Tier C warning banner
         # Falls back to 'C' (most conservative) if not available
-        'financial_evidence_tier': getattr(financial_breakdown, 'evidence_tier', 'C') if financial_breakdown else 'C',
+        'financial_evidence_tier': resolver_tier_evidencia(financial_breakdown),
 
         # FASE-2 T2: Disclaimer condicional segun evidence tier real
         'financial_disclaimer': self._build_tier_disclaimer(financial_breakdown),

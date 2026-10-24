@@ -34,6 +34,7 @@ from modules.analyzers.competitor_analyzer import CompetitorAnalyzer
 from data_validation.metadata_validator import MetadataValidator
 from modules.utils.http_client import HttpClient
 from modules.common.performance_status import is_performance_api_unavailable
+from modules.common.umbrales_fotos import FOTOS_BRECHA_DIAGNOSTICO, FOTOS_TARGET_DIAGNOSTICO
 from modules.auditors.ai_crawler_auditor import AICrawlerAuditor
 from modules.auditors.citability_scorer import CitabilityScorer, CitabilityScore
 from modules.auditors.ia_readiness_calculator import IAReadinessCalculator, IAReadinessReport
@@ -1947,8 +1948,11 @@ class V4ComprehensiveAuditor:
         if not schema.faq_schema_detected:
             recs.append("Add FAQPage schema to capture rich snippets")
         
-        if gbp.photos < 20:
-            recs.append(f"Add more photos to GBP (current: {gbp.photos}, target: 40+)")
+        if gbp.photos < FOTOS_BRECHA_DIAGNOSTICO:
+            recs.append(
+                f"Add more photos to GBP (current: {gbp.photos}, "
+                f"target: {FOTOS_TARGET_DIAGNOSTICO}+)"
+            )
         
         if gbp.reviews < 50:
             recs.append(f"Encourage more reviews (current: {gbp.reviews}, target: 100+)")

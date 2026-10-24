@@ -34,6 +34,12 @@ from .tech_jargon_glossary import apply_glossary
 from data_models.analytics_status import AnalyticsStatus
 from modules.common.fallback_loader import get_fallback_value, get_estimated_text, FallbackLoadError
 from modules.common.yaml_loader import load_yaml_config, YAMLLoadError
+from modules.common.scenario_config import respaldo_escenarios
+from modules.commercial_documents.evidence_tier import resolver_tier_evidencia
+from modules.common.umbrales_fotos import (
+    FOTOS_BRECHA_DIAGNOSTICO,
+    FOTOS_TARGET_DIAGNOSTICO,
+)
 from modules.financial_engine.precision_validator import PrecisionValidator  # FIN-3
 
 
@@ -1378,21 +1384,23 @@ class V4DiagnosticGenerator:
         # scenario_calculator._determine_evidence_tier) como fuente unificada.
         # Si no hay breakdown, fallback al comportamiento anterior (GA4→A, else→C).
         ga4_enabled = analytics_data is not None and analytics_data.get("use_ga4", False)
+        tier = resolver_tier_evidencia(
+            financial_breakdown if hasattr(financial_breakdown, 'evidence_tier') else None
+        )
         if financial_breakdown and hasattr(financial_breakdown, 'evidence_tier'):
-            tier = financial_breakdown.evidence_tier
             disclaimer = getattr(financial_breakdown, 'disclaimer', '')
         else:
-            if ga4_enabled:
-                tier = "A"
-                disclaimer = (
-                    "Este diagnóstico usa datos reales de Google Analytics 4 y Search Console. "
-                    "Los escenarios representan el potencial de mejora basado en su tráfico actual."
-                )
-            else:
-                tier = "C"
-                disclaimer = (
-                    "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
-                    "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
+            # FASE-F (H1): sin breakdown el diagnóstico degrada a 'C', como la propuesta.
+            # Promover a 'A' solo porque GA4 estaba encendido fabricaba dos contratos en el
+            # mismo run: el diagnóstico emitía los claims de totalidad que la propuesta negaba.
+            # El ga4_enabled sigue decidiendo el texto del disclaimer, no el tier.
+            disclaimer = (
+                "Este diagnóstico usa datos reales de Google Analytics 4 y Search Console. "
+                "Los escenarios representan el potencial de mejora basado en su tráfico actual."
+                if ga4_enabled
+                else
+                "Este diagnóstico se basa en datos limitados de su web y benchmarks regionales. "
+                "Los valores son estimaciones. Para mayor precisión, configure GA4 y Search Console."
                 )
 
         # FASE-B: Distinguir claramente dos conceptos:
@@ -1461,9 +1469,12 @@ class V4DiagnosticGenerator:
         # causa de la triple fuente del dinero (diag 20%×35% vs propuesta 35%×3.85).
         try:
             scenario_config_diag = load_yaml_config('scenarios')
-            recovery_diag = scenario_config_diag.get('recovery_factors', {}).get('realistic', 0.35)
+            recovery_diag = scenario_config_diag['recovery_factors']['realistic']
         except Exception:
-            recovery_diag = 0.35
+            # FASE-F (D25-bis): el valor sale del respaldo único, no de un literal del
+            # propio generador. El maestro es config/scenarios.yaml y el test de coherencia
+            # contra el respaldo lo pone en rojo si divergen.
+            recovery_diag = respaldo_escenarios()['recovery_factors']['realistic']
 
         from modules.financial_engine.pillar_maturity_curve import calcular_recuperacion_6m
         raw_monthly_loss_diag = base_value  # fuga bruta mensual (monthly_loss_central)
@@ -2012,15 +2023,16 @@ class V4DiagnosticGenerator:
             return _render()
         
         # GBP issues
-        # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector —
-        # copia retirada del servicio desde FASE-D: oráculo del relevo, no fuente
-        # de estándar; el valor se re-mide por semántica en FASE-F, D25)
-        TARGET_GBP_PHOTOS = 40
+        # FASE-D (D9) / FASE-F (D25): el objetivo comercial se declara en el
+        # vocabulario umbrales_fotos.FOTOS_TARGET_DIAGNOSTICO de
+        # config/regional_benchmarks.yaml (lector: modules/common/umbrales_fotos.py).
+        # gbp_leak_detector quedó como copia retirada del servicio y oráculo del
+        # relevo de FASE-D, así que ya NO justifica el estándar.
         if audit_result.gbp.geo_score < 70:
             rows.append(f"| Perfil GBP Sub-optimizado | 🟡 Media | Optimizar {audit_result.gbp.reviews} reviews y {audit_result.gbp.photos} fotos |")
         
-        if audit_result.gbp.photos < TARGET_GBP_PHOTOS:
-            rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {TARGET_GBP_PHOTOS - audit_result.gbp.photos} fotos adicionales |")
+        if audit_result.gbp.photos < FOTOS_TARGET_DIAGNOSTICO:
+            rows.append(f"| Fotos GBP Insuficientes | 🟡 Media | Subir al menos {FOTOS_TARGET_DIAGNOSTICO - audit_result.gbp.photos} fotos adicionales |")
         
         # Performance without field data — FASE-C-B (D6): leer status real
         if audit_result.performance and not audit_result.performance.has_field_data:
@@ -2097,7 +2109,7 @@ class V4DiagnosticGenerator:
             win_number += 1
 
         # GBP optimization — additional photo push
-        if audit_result.gbp and audit_result.gbp.photos < 20:
+        if audit_result.gbp and audit_result.gbp.photos < FOTOS_BRECHA_DIAGNOSTICO:
             wins.append(
                 f"{win_number}. **DELEGAR A IA HOTELES AGENT: Hacer que Google muestre sus preguntas frecuentes y datos del hotel en los resultados de búsqueda.** "
                 f"→ Técnica clave que aumenta visibilidad en búsquedas de IA."

@@ -32,7 +32,12 @@ class GBPRevenueLeakDetector:
     """
     
     # CONSTANTES DE IMPACTO FINANCIERO (basadas en benchmark Plan Maestro)
-    PERDIDA_MENSUAL_BASE = 2_100_000  # COP - Pérdida promedio hotel 15-20 hab
+    # SIN consumidor en este modulo: los impactos de IMPACTOS_FINANCIEROS usan
+    # `cop_mes` literales. Se conserva por fidelidad a la copia retirada del
+    # servicio. No es la base de DynamicImpactCalculator ni la calibracion
+    # regional de GBPAuditor: las tres constantes homonimas del repo tienen
+    # semanticas distintas.
+    PERDIDA_BASE_CALIBRACION_15_20_HAB = 2_100_000  # COP - Pérdida promedio hotel 15-20 hab
     
     IMPACTOS_FINANCIEROS = {
         'PERFIL_NO_RECLAMADO': {

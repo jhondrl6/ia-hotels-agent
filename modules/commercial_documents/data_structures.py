@@ -12,6 +12,7 @@ from datetime import datetime
 
 # Use the unified ConfidenceLevel from confidence_taxonomy
 from modules.data_validation.confidence_taxonomy import ConfidenceLevel
+from modules.common.umbrales_fotos import FOTOS_BRECHA_DIAGNOSTICO
 
 if TYPE_CHECKING:
     pass
@@ -419,7 +420,7 @@ def calculate_quick_wins(audit_result: V4AuditResult, validation_summary: Option
         quick_wins += 1
     if audit_result.performance.mobile_score is not None and audit_result.performance.mobile_score < 70:
         quick_wins += 1
-    if audit_result.gbp.photos < 20:
+    if audit_result.gbp.photos < FOTOS_BRECHA_DIAGNOSTICO:
         quick_wins += 1
     
     return quick_wins

@@ -6,7 +6,9 @@
 
 | Módulo | Archivos | Descripción | Fase |
 |--------|----------|-------------|------|
-| _(ninguno previsto: todas las curas son sobre módulos existentes)_ | — | — | — |
+| Vocabulario de umbrales de fotos | `modules/common/umbrales_fotos.py` | Lector único del bloque `umbrales_fotos` de `config/regional_benchmarks.yaml`; valida la escalera al importar y falla fuerte si el bloque falta (no trae dict de respaldo: un segundo valor vivo es el defecto que cura) | FASE-F |
+| Respaldo único de `scenarios.yaml` | `modules/common/scenario_config.py` | `RESPALDO_ESCENARIOS` / `respaldo_escenarios()` — el único sitio Python de `recovery_factors`, `scenario_weights` y `pain_ratio_default`, contra el que coteja el test de coherencia (`D25-bis`) | FASE-F |
+| Productor único del tier de evidencia | `modules/commercial_documents/evidence_tier.py` | `resolver_tier_evidencia()`: el breakdown manda; sin breakdown ambos documentos degradan a `'C'` (`H1`) | FASE-F |
 
 ## Sección B: Funcionalidades Nuevas
 
@@ -26,6 +28,9 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
+| Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | FASE-F: **+26** funciones (5.428 → 5.454) en `tests/config/test_umbrales_fotos_semantica.py`, `tests/config/test_coherencia_escenarios_d25bis.py`, `tests/test_d27_perdida_base_por_semantica.py` y `tests/commercial_documents/test_h1_tier_misma_fuente.py`; dos tests existentes re-escritos por el contrato de `H1`; resta publicada en `evidence/…/FASE-F/baseline-pre-post.md` | FASE-F |
+| Mutation checks con par rojo/verde en evidencia (R2.8) | 5 de 5 del plan al cierre de FASE-E **+ 2 mutantes propios de AC6 en FASE-F** (M1 `RESPALDO_ESCENARIOS.realistic` 0.35 → 0.20 → **3 rojos**; M2 literal `fotos >= 15` re-introducido en `report_builder` → **1 rojo**; árbol intacto por sha256 y verde final idéntico — crudo `par-rojo-verde-mutantes.txt`). `01-plan-maestro` §1 no pedía mutation check para AC6: se añade porque el criterio es «un sitio por umbral nombrado» y sin rojo ese verde no tiene oportunidad de perder. Un tercer diente vive dentro de la suite: `test_mutante_de_divergencia_pone_en_rojo_el_cotejo` | FASE-F |
+| Presupuesto por fase (unidad `tool_use`, corte «listo para revisión») | FASE-F: auto-reporte ≈66 `tool_use` — **excede el tope 60**; el excedente es la ejecución de `H1`, autorizada por el Operador en esta sesión (unidad `tool_use`, **no comparable**: `measure_iterations.py` es legado). **Cinco cortes declarados y verificados sin commit** | FASE-F |
 | Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | FASE-E: **+48** funciones (5.380 → 5.428, 54 casos recolectados por dos baterías parametrizadas) en `tests/utils/test_benchmark_cura_lector_fase_e.py`, `tests/utils/test_benchmark_paridad_tablas_fase_e.py` y `tests/utils/test_plan_maestro_sync_cableado_fase_e.py`; resta publicada en `evidence/…/FASE-E/baseline-pre-post.md` | FASE-E |
 | Mutation checks con par rojo/verde en evidencia (R2.8) | 5 de 5 al cierre de FASE-E (AC4: M1 `get_regional_data` restaurado a la forma vieja → **13 rojos**; M2 el runner deja de consumir divergencias → **1 rojo**; M3 ADR de caribe 449.000 en copia → `ADR DIVERGENCE [caribe]`; restauración por sha256 y verde final idéntico — crudo `par-rojo-verde-mutantes.txt`) | FASE-E |
 | Presupuesto por fase (unidad `tool_use`, corte «listo para revisión») | FASE-E: auto-reporte ≈75 `tool_use` — **excede el tope 60** del plan; unidad `tool_use`, **no comparable** (el instrumento legado `measure_iterations.py` no está probado contra este runtime). **Cinco cortes declarados y verificados sin commit** | FASE-E |
@@ -48,6 +53,17 @@
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
+| `config/regional_benchmarks.yaml` | Nuevo bloque raíz `umbrales_fotos` con los cinco nombres (5/10/15/20/40) y su semántica; versión 1.1.0 → 1.2.0. Sitio único de definición | FASE-F |
+| `modules/common/umbrales_fotos.py`, `modules/common/scenario_config.py`, `modules/commercial_documents/evidence_tier.py` | Nuevos: lector del vocabulario con escalera verificada, respaldo único de `scenarios.yaml`, productor único del tier (`H1`) | FASE-F |
+| `modules/utils/dynamic_impact.py` | `MIN_FOTOS_BRECHA` en `get_detected_issues`; `PERDIDA_MENSUAL_BASE` → `PERDIDA_BASE_SIN_PERFIL` (definición y su uso en `_calculate_loss`) | FASE-F |
+| `modules/scrapers/gbp_auditor.py` | Cinco sitios de fotos con nombre; `meta: 15+` interpolado; `.get('fotos_meta', 15)` → `FOTOS_RUBRICA_EXCELENTE`; `PERDIDA_BASE_CARIBE_CALIBRADA` (huérfana documentada) | FASE-F |
+| `modules/financial_engine/opportunity_scorer.py`, `modules/generators/report_builder.py`, `modules/auditors/v4_comprehensive.py`, `modules/commercial_documents/data_structures.py` | Comparaciones de fotos contra el umbral nombrado; en `v4_comprehensive` el `target: 40+` del texto sale de `FOTOS_TARGET_DIAGNOSTICO` (render idéntico, verificado) | FASE-F |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | Retirada `TARGET_GBP_PHOTOS = 40` y su justificación en el módulo muerto; dos umbrales con nombre; `recovery_diag` sin default inline; tier resuelto por `resolver_tier_evidencia` (rama sin breakdown ya no promociona a `'A'`) | FASE-F |
+| `modules/commercial_documents/v4_proposal_generator.py` | Respaldo de escenarios sale al módulo único; `recovery_factors['realistic']` sin default; `financial_evidence_tier` delega en el productor único | FASE-F |
+| `modules/scrapers/gbp_leak_detector.py` | Solo el renombre `PERDIDA_BASE_CALIBRACION_15_20_HAB`; sus cuatro comparaciones de fotos quedan congeladas (oráculo del relevo de FASE-D) | FASE-F |
+| `tests/config/test_umbrales_fotos_semantica.py`, `tests/config/test_coherencia_escenarios_d25bis.py`, `tests/test_d27_perdida_base_por_semantica.py`, `tests/commercial_documents/test_h1_tier_misma_fuente.py` | Nuevos (+26 funciones): población por AST con conteos pinchados, cotejo respaldo↔maestro con mutante codificado, nombres de `D27` con consumidores medidos y paridad de tier entre generadores | FASE-F |
+| `tests/commercial_documents/test_fase_f_financial_placeholders.py`, `tests/financial_engine/test_financial_evidence.py` | Consumidores del contrato `H1`: el caso «GA4 sin breakdown → `'A`'` pasa a `'C'` con su disclaimer intacto | FASE-F |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-F/` | `baseline-pre.txt` (medido con `git grep` sobre `HEAD`), `baseline-post.txt`, `baseline-pre-post.md` (resta y re-medición 11 → 14), `par-rojo-verde-mutantes.txt`, `crudo-pytest-h1-y-fase-f.txt`, `crudo-quick-pre-republicacion.txt`, `crudo-derivados.txt`, `atribucion-rojos.txt` y `crudo-quick-cierre.txt` (13/13) | FASE-F |
 | `modules/utils/benchmarks.py` | Puente de esquema: `regiones()` normaliza `v25_config.regiones` y el nivel superior, deriva `revpar_cop = precio_promedio × ocupacion` y marca `revpar_derivado`; `get_all_regions()` nuevo; `load()` conserva la forma cruda del artefacto. Contrato de maestros declarado en tres poblaciones (`BLOQUES_LEIDOS_DEL_JSON`, `BLOQUES_MAESTRO_DECLARADO`, `BLOQUES_MAESTRO_CON_FORQUE_PUBLICADO`) con `auditoria_maestros()`/`assert_coherencia_maestros()` | FASE-E |
 | `modules/scrapers/scraper_fallback.py` | Retirado su dict de respaldo regional (330.000/0.52, 410.000/0.66, 280.000/0.60) y la apertura propia del JSON: `_load_benchmarks` delega en `BenchmarkLoader`; se va `benchmarks_path` (ruta relativa al cwd) | FASE-E |
 | `modules/analyzers/gap_analyzer.py` | `revpar_targets` retirada (171.600/270.600/168.000 literales del respaldo); `revpar_objetivo = config.revpar_cop` del lector único | FASE-E |

@@ -1,0 +1,10 @@
+### doctor.py --regenerate-domain-primer
+[OK] DOMAIN_PRIMER.md regenerado en .agent\knowledge\DOMAIN_PRIMER.md
+     214 archivos Python, 397 clases en 25 modulos (24 en modules/, 1 root)
+EXIT_PRIMER=0
+
+### run_all_validations.py --quick (cierre FASE-F)
+EXIT_QUICK=0
+  TOTAL: 13/13 validations passed
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
