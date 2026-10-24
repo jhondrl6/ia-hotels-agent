@@ -4,13 +4,20 @@
 **Objetivo**: certificar que los ACs del plan se cumplen **en los artefactos que el sistema produjo** (E2E-PRE + E2E + evidencia de fases), no solo en los tests.
 **Dependencias**: FASE-A…FASE-E2E ✅.
 **Complejidad técnica**: MEDIA · **Duración estimada**: 2-3 horas
-**Modo de ejecución**: **DIRECTO — NO DELEGABLE** (§4.6 del executor).
+**Modo de ejecución**: **DIRECTO — NO DELEGABLE en la certificación** (§4.6 del executor): el AC se lee en el artefacto y quien certifica no puede escribir la matriz desde el resumen de un tercero (R2.4 · `L-CIM.12` · `L-T4A.5`); un reporte ajeno se re-verifica, así que delegar el juicio cuesta dos lecturas. **Excepción condicional, solo si el tope de 60 `tool_use` aprieta**: un único `Agent` de **solo lectura** para **enumerar** los cuatro greps residuales de la tarea 4 —el encargo lleva comandos y poblaciones verbatim—, sin escribir evidencia ni emitir veredictos; el agente principal **re-ejecuta** el predicado decisivo de cada grep antes de publicarlo y declara en `pre-vuelo` si usó la excepción o no. Ausencia de la declaración = se ejecutó directo.
 
 ## Contexto
 
 Cada fase verificó sus criterios locales; esta fase certifica la integración coherente. El baseline de antes/después es la corrida del 2026-10-12 (`BLOQUEADO`, 2 `OVER_PRESENTATION`, 3.511.200 COP/mes, 11 brechas de `PainSolutionMapper`). El 39.600.000 COP/mes del reproductor sintético no es un criterio de esta fase.
 
 **Claves exactas**: `revision_honestidad.json` trae `summary.over_presentations` y `findings[]`; **no** trae `critical_count`. El acta trae `verdict` y `conditional_reason`. El ZIP se lee en `deliveries/` con `suppressed:false`, sha y tamaño.
+
+**Fuera del alcance de esta certificación** — hallazgos declarados al cerrar E2E el 2026-10-24, con dueño **Operador**, y que **no** se certifican, corrigen ni re-litigan aquí:
+
+1. **El ZIP de la corrida mezcla dos generaciones.** Medido: 82 miembros, 26 con timestamp `20261012`, 28 con `20261024` y 22 assets en dos versiones dentro de `ASSETS/`; el `DeliveryPackager` barre el directorio de salida del hotel, que conserva la corrida anterior. Queda como `L33`. **AC7 se lee sobre el ZIP real publicado —existencia, `suppressed:false`, sha y tamaño—, no sobre su composición: la mezcla no invalida AC7 y no es criterio de esta fase.**
+2. **`v4_complete_report.hotel_name` sale del slug de la URL** (`Donalfonsohotel`) en vez del `hotel.nombre` del YAML inyectado (`Hotel Don Alfonso`). Cosmético de marca; identidad y URL del run son correctas.
+
+Los dos viven en `evidence/…/FASE-E2E/tabla-antes-despues.md` y en `10-analisis` §Seguimientos abiertos. Se **citan**; si se observan al leer los artefactos, se reportan como ya declarados, no como hallazgo nuevo.
 
 ### Estado de Fases Anteriores
 
@@ -37,7 +44,7 @@ Cada fase verificó sus criterios locales; esta fase certifica la integración c
    - **AC4** → salida del check de sincronización cableado + test de getters y paridad de cinco tablas.
    - **AC5** → test de retiro de `spark` (exit 0, sin `AttributeError`) + par del guardián + `gap_analyzer` sin lector roto.
    - **AC6** → grep por símbolo de umbrales + tests de coherencia y `D27` post-D.
-   - **AC7** → acta + `v4_complete_report.json` + `pain_ledger.json` + **ZIP real** (`suppressed:false`, sha/tamaño) + 0 `OVER_PRESENTATION` + pérdida 3.511.200/re-medida + 11 brechas re-medidas.
+   - **AC7** → acta + `v4_complete_report.json` + `pain_ledger.json` + **ZIP real** (`suppressed:false`, sha/tamaño) + 0 `OVER_PRESENTATION` + pérdida 3.511.200/re-medida + 11 brechas re-medidas + **onboarding cargado desde una fuente que casa por URL**: `preflight.json` → `onboarding_source`, `rama_efectiva_del_loader` = `YAML_DE_DIR_CLIENTES`, `loader_devolvio` = `Hotel Don Alfonso`, `domain_confirmed: true`. El plan define AC7 con esta cláusula: si falta la clave del preflight, AC7 queda ⚠️ **aunque el ZIP sea real**.
    - **AC8** → score GBP `/90`; stub `found=False`/`STUB_RETIRADO`; `settings.yaml` sin claves muertas; `validar_arbitraje_etico` sin consumidor; docstring de `D23` = código; `Benchmarking.md` con fuente.
 3. **Comparar antes/después**: tabla narrativo-técnica en evidencia.
 4. **Greps residuales con población declarada**:

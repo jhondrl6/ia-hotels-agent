@@ -2061,7 +2061,7 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 15,
+      "total_citas": 16,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -4281,7 +4281,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 133,
+      "total_citas": 134,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",

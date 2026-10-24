@@ -54,7 +54,7 @@ Cada AC declara **el artefacto y la clave exacta donde se lee su valor** (R2.4).
 | FASE-H2 | `D18`, `D22`, `D23`, `D20`: limpieza y honestidad de texto; `D26` fuera | BAJA | Directo; `D20` documental delegable con `Agent` |
 | FASE-E2E-PRE | Ensayo determinista del baseline: onboarding, render B+, revisor real, juez real y ensamblaje de paquete; **sin inferencia pagada** | MEDIA | Directo, no delegable |
 | FASE-E2E | Corrida única de `v4complete` de Don Alfonso + evidencia + análisis | MEDIA | Directo con `Bash` en segundo plano; `Agent` solo para el comando |
-| FASE-VERIFY | Certificación AC1–AC8 contra artefactos reales (sin código, sin `v4complete`) | MEDIA | Directo, no delegable |
+| FASE-VERIFY | Certificación AC1–AC8 contra artefactos reales (sin código, sin `v4complete`) | MEDIA | Directo, **no delegable en la certificación**; delegable solo la **enumeración** mecánica de los greps residuales, con el principal re-ejecutando el predicado (ver el prompt de la fase) |
 | FASE-RELEASE-4.82.0 | Cierre documental, write-back QMind y archivado por R2.10 | BAJA | Directo o `Agent` (solo YAML/MD/scripts) |
 
 **Una fase = una sesión.** Cada fase registra su cierre con `log_phase_completion.py`; RELEASE solo verifica el registro.
