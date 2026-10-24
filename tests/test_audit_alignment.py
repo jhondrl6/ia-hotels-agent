@@ -10,8 +10,11 @@ Este script valida que:
 Referencias:
 - Plan Maestro v2.2 Tabla 5.1: Precios y ROI por paquete
 - BenchmarkingV2 Sección III: Umbrales regionales, RevPAR
-- settings.yaml → package_thresholds
 - plan_maestro_data.json → regiones, recuperacion_factores
+- D18 (FASE-H2): este test NUNCA leyo config/settings.yaml. Leia el `BenchmarkLoader`,
+  que tiene su maestro en modules/utils/benchmarks.py (DEFAULT_DATA) y en el JSON. La
+  prosa anterior prometia `settings.yaml → package_thresholds`; esa clave no tiene
+  lector y el bloque `thresholds` del archivo fue retirado por D18. Fuente real: BenchmarkLoader.
 """
 
 import json
@@ -27,17 +30,22 @@ from modules.utils.benchmarks import BenchmarkLoader
 
 
 def load_thresholds_from_config():
-    """Wrapper de compatibilidad para tests legacy."""
+    """Umbrales regionales leidos del maestro real: `BenchmarkLoader` (D18, FASE-H2).
+
+    La version anterior prometia `settings.yaml` y fabricaba dos claves que ningun
+    lector produce (`min_reviews: 10  # Default legacy` y `paquete_base: "pro_aeo"`,
+    siempre el mismo literal porque `regiones()` no publica ese campo). Publica solo
+    lo que el loader lee de verdad.
+    """
     loader = BenchmarkLoader()
-    # Mapear formato de thresholds a formato esperado por test
     thresholds = loader.get_thresholds()
-    regional = loader.load().get("regiones", {})
     result = {}
-    for region, data in regional.items():
+    for region, data in loader.regiones().items():
         result[region] = {
-            "min_reviews": 10,  # Default legacy
-            "min_gbp_score": thresholds.get("gbp_score_bajo", 60),
-            "paquete_base": data.get("paquete_base", "pro_aeo") if "paquete_base" in data else "pro_aeo",
+            "min_gbp_score": thresholds.get("gbp_score_bajo"),
+            "factor_gbp_punto": thresholds.get("factor_gbp_punto"),
+            "revpar_cop": data.get("revpar_cop"),
+            "ocupacion": data.get("ocupacion"),
         }
     return result
 
@@ -318,7 +326,12 @@ def test_justification_block():
 
 def test_thresholds_loading():
     """
-    Validar que los umbrales se cargan correctamente desde settings.yaml.
+    Validar que los umbrales regionales se leen del maestro (`BenchmarkLoader`).
+
+    D18 (FASE-H2): antes decia "desde settings.yaml" y buscaba la clave `regiones` en
+    el JSON crudo (el artefacto la publica bajo `v25_config`), asi que el diccionario
+    salia vacio, la funcion retornaba False y pytest la contaba como verde: un test que
+    no puede perder. Ahora afirma ademas de retornar, para `main()` siga imprimiendo.
     """
     print("\n" + "=" * 60)
     print("TEST 4: THRESHOLDS LOADING")
@@ -327,7 +340,7 @@ def test_thresholds_loading():
     thresholds = load_thresholds_from_config()
     
     required_regions = ["eje_cafetero", "antioquia", "caribe", "default"]
-    required_fields = ["min_reviews", "min_gbp_score", "paquete_base"]
+    required_fields = ["min_gbp_score", "factor_gbp_punto", "revpar_cop", "ocupacion"]
     
     all_passed = True
     
@@ -338,16 +351,16 @@ def test_thresholds_loading():
             continue
         
         region_data = thresholds[region]
-        missing_fields = [f for f in required_fields if f not in region_data]
+        missing_fields = [f for f in required_fields if region_data.get(f) is None]
         
         if missing_fields:
             print(f"[FAIL] {region}: campos faltantes {missing_fields}")
             all_passed = False
         else:
-            print(f"[OK] {region}: min_reviews={region_data['min_reviews']}, "
-                  f"min_gbp={region_data['min_gbp_score']}, "
-                  f"paquete_base={region_data['paquete_base']}")
+            print(f"[OK] {region}: min_gbp={region_data['min_gbp_score']}, "
+                  f"revpar={region_data['revpar_cop']}, ocup={region_data['ocupacion']}")
     
+    assert all_passed, "umbrales regionales no se leen del maestro (BenchmarkLoader)"
     return all_passed
 
 

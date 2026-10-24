@@ -1,0 +1,40 @@
+
+## M1 (D18): se re-introduce el bloque `thresholds` en config/settings.yaml
+tests\config\test_d18_settings_sin_thresholds.py:30: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/config/test_d18_settings_sin_thresholds.py::test_el_bloque_thresholds_ya_no_es_configuracion
+1 failed, 5 passed in 0.41s
+--- restaurado, sha POST-M1 debe igualar el PRE ---
+805cadfedc9dea5ee87c111dc92cec66918b6dd9a9e567785173da9c6a2e245e *config/settings.yaml
+
+## M2 (D22): se restaura el modulo y su bateria desde HEAD
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/test_d22_arbitraje_etico_retirado.py::test_la_funcion_no_se_define_en_modulos
+FAILED tests/quality_gates/test_d22_arbitraje_etico_retirado.py::test_el_modulo_no_importa
+FAILED tests/quality_gates/test_d22_arbitraje_etico_retirado.py::test_no_queda_su_bateria_de_tests
+FAILED tests/quality_gates/test_d22_arbitraje_etico_retirado.py::test_no_queda_como_gate_aparente_en_la_prosa_del_codigo
+4 failed, 13 passed, 2 warnings in 1.06s
+menciones restantes del par en git status: 2
+
+## M3a (D23): se restaura el docstring divergente (la prosa vieja, con disyuncion y frontera exclusiva)
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/test_d23_claim_vs_evidence_frontera.py::test_el_docstring_cita_la_condicion_del_codigo
+FAILED tests/quality_gates/test_d23_claim_vs_evidence_frontera.py::test_el_docstring_no_promete_disyuncion_ni_frontera_exclusiva
+2 failed, 4 passed, 8 warnings in 1.71s
+--- restaurado, sha POST-M3a debe igualar el PRE ---
+289ee64c350b72a37017dea51920d14c9db95ae41866bd097ea7dee335697f19 *modules/quality_gates/commercial_gate.py
+
+## M3b (D23): se invierte la frontera de la rama (>= por >), sin tocar la prosa
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/test_d23_claim_vs_evidence_frontera.py::test_la_condicion_real_es_conjuncion_inclusiva
+FAILED tests/quality_gates/test_d23_claim_vs_evidence_frontera.py::test_el_docstring_cita_la_condicion_del_codigo
+FAILED tests/quality_gates/test_d23_claim_vs_evidence_frontera.py::test_frontera_rating_igual_4_dispara
+3 failed, 61 passed, 8 warnings in 1.80s
+--- restaurado, sha POST-M3b debe igualar el PRE ---
+289ee64c350b72a37017dea51920d14c9db95ae41866bd097ea7dee335697f19 *modules/quality_gates/commercial_gate.py
+
+## Verde final tras restaurar (misma seleccion que antes de los mutantes)
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+32 passed, 14 warnings in 2.96s

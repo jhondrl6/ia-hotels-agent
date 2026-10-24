@@ -1,0 +1,15 @@
+# Atribucion del rojo test_jev_pilot_deepseek_brazo (declarado por FASE-H1 como acoplamiento de orden)
+## (a) el archivo solo
+...............                                                          [100%]
+15 passed in 0.33s
+## (b) tests/quality_gates con los dos archivos nuevos de H2 IGNORADOS
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+1 failed, 1253 passed, 9 skipped, 11 warnings in 106.19s (0:01:46)
+## (c) tests/quality_gates completo (con los nuevos)
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+1 failed, 1264 passed, 9 skipped, 13 warnings in 109.52s (0:01:49)
+## (d) en HEAD (arbol del commit, sin tocar el working tree): git archive a scratch
+...............                                                          [100%]
+15 passed in 0.53s

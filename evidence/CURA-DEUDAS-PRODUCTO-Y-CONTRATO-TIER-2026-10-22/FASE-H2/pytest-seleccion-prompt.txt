@@ -1,0 +1,9 @@
+# FASE-H2 — comando del prompt: pytest tests/test_audit_alignment.py tests/quality_gates <nuevos> -q
+# medido 2026-10-24T09:22:48-05:00
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek_falla_antes_de_enviar_aunque_haya_clave_anthropic
+1 failed, 1285 passed, 9 skipped, 17 warnings in 104.28s (0:01:44)
+
+# unidad de conteo: funciones test canonicas
+5483

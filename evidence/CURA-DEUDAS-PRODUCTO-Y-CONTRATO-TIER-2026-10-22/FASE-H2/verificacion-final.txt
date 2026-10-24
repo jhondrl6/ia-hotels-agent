@@ -1,0 +1,68 @@
+# Verificacion final de FASE-H2 — 2026-10-24T09:39:58-05:00
+## REGISTRY: ultima entrada estampada
+12699:_Errata corregida a mano: el registro se estampó sin `--archivos-nuevos` y los 11 archivos nuevos figuraban bajo «Modificados»; faltaban además 3 arte
+12956:## FASE-H2 - 2026-10-24 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+12965:| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+12966:| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/par-rojo-verde-mutantes.txt` | NUEVO | Par-Rojo-Verde-Mutantes |
+12967:| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/d18-d22-d23-d20_baseline_pre.txt` | NUEVO | D18-D22-D23-D20 Baseline Pre |
+
+## git status (superficie tocada por la fase)
+ M .opencode/LECCIONES-INDEX.md
+ M .opencode/lecciones_index.json
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md
+ M .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md
+ M .opencode/wiring_report.json
+ M config/settings.yaml
+ M data/benchmarks/Benchmarking.md
+ M docs/contributing/.last_doc_phase.json
+ M docs/contributing/REGISTRY.md
+ D modules/quality/financial_coherence_validator.py
+ M modules/quality_gates/commercial_gate.py
+ D tests/quality_gates/test_financial_coherence_validator.py
+ M tests/test_audit_alignment.py
+?? evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/
+?? tests/config/test_d18_settings_sin_thresholds.py
+?? tests/quality_gates/test_d22_arbitraje_etico_retirado.py
+?? tests/quality_gates/test_d23_claim_vs_evidence_frontera.py
+
+## Vallas: los archivos que la fase no pudo tocar, sin cambios
+  SIN CAMBIOS  modules/scrapers/booking_scraper.py
+  SIN CAMBIOS  modules/providers/autonomous_researcher.py
+  SIN CAMBIOS  modules/quality_gates/tribunal/judge.py
+  SIN CAMBIOS  modules/scrapers/gbp_auditor.py
+  SIN CAMBIOS  modules/common/rubrica_gbp.py
+  SIN CAMBIOS  modules/common/umbrales_fotos.py
+  SIN CAMBIOS  config/regional_benchmarks.yaml
+  SIN CAMBIOS  data/benchmarks/regional_adr_2026.json
+  SIN CAMBIOS  data/benchmarks/plan_maestro_data.json
+  SIN CAMBIOS  modules/quality_gates/ethics_gate.py
+
+## suite objetivo final (seleccion del prompt + baterias vecinas)
+FAILED tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+1 failed, 104 passed, 1 skipped, 18 warnings in 2.95s
+## exit leido sin tuberia del quick
+EXIT_QUICK_FINAL=0
+============================================================
+  STATUS: ALL VALIDATIONS PASSED
+  [GUARDA] las 13 etiquetas impresas casan con el TOTAL dinamico
+
+## Nota de la seleccion final
+El unico rojo de la seleccion (tests/config/test_config_integration.py::test_all_config_files_have_description) es PREEXISTENTE y con dueno Operador: config/secret_fragment_policy.yaml no publica campo 'description' (atribuido ya por FASE-H1, fila 94 de su baseline-pre-post.md). No lo toca esta fase: meter un 'description' en ese archivo es cambio de config de secretos, no de D18.
+Limpieza: los scratch de los mutantes vivieron en $TEMP/iah-fase-h2-scratch y se borraron; en evidence/ no queda ningun .py.
+Los cinco cortes terminan en espera de autorizacion: NINGUN git commit se ejecuto en esta sesion.
+
+## Frescura re-medida DESPUES de la tanda documental (ultimo paso real del cierre) — 2026-10-24T09:43:51-05:00
+build_lesson_index.py --check -> EXIT=0 (indice fresco, 403 IDs; fechas nombre=392 commit=11 sin_fuente=0)
+validate_wiring.py --check    -> EXIT=0 (digest 3ce1fb272728 conforme; 744 archivos; violaciones 0)
+run_all_validations.py --quick -> EXIT=0 (13/13, [GUARDA] las 13 etiquetas casan con el TOTAL dinamico)
+Los tres exit se leyeron sin tuberia (la salida se redirigio a archivos aparte y el $? se imprimio tal cual).
+
+## Re-verificacion definitiva tras las ultimas tres ediciones documentales (09 $D, 10 $Resumen, 06 checklist)
+build_lesson_index.py --check -> EXIT=0
+validate_wiring.py --check    -> EXIT=0
+run_all_validations.py --quick -> EXIT=0 (13/13)
+Este bloque si es el ultimo paso del cierre: posterior a el solo se escribio esta nota.

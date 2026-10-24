@@ -1,8 +1,8 @@
 # Registro de Fases - IA Hoteles Agent
 
-> **Ultima actualizacion:** 2026-10-23
+> **Ultima actualizacion:** 2026-10-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 540
+> **Total fases completadas:** 541
 
 ---
 
@@ -12948,6 +12948,57 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 23 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-H2 - 2026-10-24 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** D18 thresholds LEGACY retirados, D22 dead code retirado, D23 docstring honesto y D20 fuente declarada (AC8). Las dos rutas retiradas (modules/quality/financial_coherence_validator.py y tests/quality_gates/test_financial_coherence_validator.py) aparecen como modificadas porque el escritor no tiene flag de borrado. +17 funciones nuevas y -12 retiradas = +5 netos (5.478 -> 5.483). D20 no mueve valores: declara la fuente y fija la divergencia con el pin de FASE-E vivo. Mutantes M1/M2/M3a/M3b en rojo con sha256 intacto; suite POST 4 failed / 5619 passed con los cuatro rojos atribuidos (ninguno de la fase); --quick 13/13 con EXIT=0 sin tuberia; Wiring 744 archivos y indice de lecciones re-publicados y verificados con --check. Leccion nueva L31.
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/config/test_d18_settings_sin_thresholds.py` | NUEVO | Test D18 Settings Sin Thresholds |
+| `tests/quality_gates/test_d22_arbitraje_etico_retirado.py` | NUEVO | Test D22 Arbitraje Etico Retirado |
+| `tests/quality_gates/test_d23_claim_vs_evidence_frontera.py` | NUEVO | Test D23 Claim Vs Evidence Frontera |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/par-rojo-verde-mutantes.txt` | NUEVO | Par-Rojo-Verde-Mutantes |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/d18-d22-d23-d20_baseline_pre.txt` | NUEVO | D18-D22-D23-D20 Baseline Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/d18-d22-d23-d20_baseline_post.txt` | NUEVO | D18-D22-D23-D20 Baseline Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/pytest-seleccion-prompt.txt` | NUEVO | Pytest-Seleccion-Prompt |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/pytest-suite-completa-post.txt` | NUEVO | Pytest-Suite-Completa-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/atribucion-rojo-deepseek.txt` | NUEVO | Atribucion-Rojo-Deepseek |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/atribucion-rojos-suite-post.txt` | NUEVO | Atribucion-Rojos-Suite-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-quick-1.txt` | NUEVO | Crudo-Quick-1 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-quick-2.txt` | NUEVO | Crudo-Quick-2 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-wiring-write.txt` | NUEVO | Crudo-Wiring-Write |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-wiring-check.txt` | NUEVO | Crudo-Wiring-Check |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-indice-write.txt` | NUEVO | Crudo-Indice-Write |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/crudo-indice-check.txt` | NUEVO | Crudo-Indice-Check |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `config/settings.yaml` | Settings |
+| `modules/quality_gates/commercial_gate.py` | Commercial Gate |
+| `modules/quality/financial_coherence_validator.py` | Financial Coherence Validator |
+| `tests/quality_gates/test_financial_coherence_validator.py` | Test Financial Coherence Validator |
+| `tests/test_audit_alignment.py` | Test Audit Alignment |
+| `data/benchmarks/Benchmarking.md` | Benchmarking |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 17 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

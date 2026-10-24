@@ -21,6 +21,40 @@
 > 
 > ---
 
+## 0. FUENTE DE ESTE DOCUMENTO (declaración `D20`, FASE-H2)
+
+Este archivo **no es un maestro de datos y no lo lee el producto**. Su rol es el que anuncia la advertencia de arriba: contexto macroeconómico para el HOOK y para validar que un input sea razonable. El maestro de los valores regionales es el JSON, y la partición quedó decidida por escrito en FASE-E (`DA-PLAN-8a`/`8b`/`8c` de `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md`).
+
+Las **cinco** tablas regionales que FASE-E midió (`N5`) y su estado vigente:
+
+| Tabla | Dónde vive | Rol |
+| :--- | :--- | :--- |
+| ADR/ocupación por región y segmento | `data/benchmarks/regional_adr_2026.json` | **MASTER** (`master: true`); `BenchmarkLoader` lo sincroniza |
+| `v25_config.regiones` | `data/benchmarks/plan_maestro_data.json` | **PUBLICADA** (secundario conforme al master, región a región) |
+| `revpar_cop` | `modules/utils/benchmarks.py` → `regiones()` | **DERIVADA** en lectura: `precio_promedio × ocupacion` |
+| `revpar_targets` | `modules/analyzers/gap_analyzer.py` | **RETIRADA** (sus tres literales eran el respaldo de `ScraperFallback`, no el maestro) |
+| dict de respaldo de benchmarks | `modules/scrapers/scraper_fallback.py` | **RETIRADO** (el método delega en el lector único) |
+| las tablas ADR/RevPAR de este `.md` | este archivo, §I y §Tabla Comparativa | **CONTEXTO HISTÓRICO 2026**, sin lector de producción |
+
+### Divergencia que persiste por diseño (con su motivo)
+
+Las columnas ADR/RevPAR de la Tabla Comparativa (§I) **divergen** del maestro y así se quedan:
+
+| Región | ADR del doc | ADR del maestro | RevPAR del doc | RevPAR derivado |
+| :--- | :--- | :--- | :--- | :--- |
+| Eje Cafetero | 385k | 280k | 197.1k | 143.360 |
+| Caribe | 880k | 450k | 602.8k | 308.250 |
+| Antioquia | 560k | 500k | 359.5k | 321.000 |
+
+- **Motivo**: el doc es la prosa del ciclo "Benchmarking 2026" (segmento boutique premium, DANE/COTELCO) y el maestro es el dato operativo del producto. Re-valorar el maestro con la cifra del doc sería un cambio de modelo financiero sin dictado de fase — es exactamente lo que FASE-E se negó a hacer (`DA-PLAN-8b`: un fósil recalculado sigue siendo fósil; lo que cura es que el valor se derive del maestro en tiempo de lectura).
+- **La ocupación sí casa** con el maestro en las tres regiones con match; la divergencia es de ADR, no de fila completa.
+- **El pin existe**: `tests/utils/test_benchmark_paridad_tablas_fase_e.py` fija los tres ADR y los tres RevPAR de este doc. Mover un número sin re-declarar aquí la divergencia pone ese archivo en rojo: la promesa es verificable, no memorable.
+- **Ningún getter promete leer este archivo** (`test_benchmarking_no_esta_en_la_particion_de_maestros`): si algún día se convierte en fuente, esa promoción exige decisión de fase y un hueco en `BLOQUES_MAESTRO_DECLARADO`.
+
+### Umbrales de §IV (v2.5)
+
+La tabla de umbrales de decisión de §IV es **informativa**: el producto lee `BenchmarkLoader.get_thresholds()` (maestro declarado en `modules/utils/benchmarks.py`: `impacto_catastrofico` 8.000.000, `brecha_conversion_critica` 3.000.000, `revpar_premium` 250.000) y el horque publicado `v25_config.umbrales_decision` (6.000.000 / 2.500.000 / 180.000) **no lo lee nadie**. La reconciliación de ese horque está **diferida por el Operador hasta después de la corrida E2E** para no desplazar el baseline que AC7 compara; mientras tanto el assert de divergencia de FASE-E corta en los dos sentidos.
+
 
 ## I. RESUMEN EJECUTIVO
 

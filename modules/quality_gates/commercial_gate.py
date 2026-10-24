@@ -554,7 +554,14 @@ class CommercialGateValidator:
         place_found: bool,
         gbp_rating: float,
     ) -> CommercialGateResult:
-        """CG-CLAIM-VS-EVIDENCE: 'No aparece' cuando place_found=True o rating > 4.0.
+        """CG-CLAIM-VS-EVIDENCE: el claim factual de "no aparece" se descarta salvo place_found and gbp_rating >= 4.0.
+
+        D23 (FASE-H2): la condicion de disparo es la que se cita arriba, letra por letra
+        como la rama: conjuncion con frontera inclusiva. O sea que 4.0 exacto SI dispara,
+        y place_found=False nunca dispara por mucho que suba el rating. El texto anterior
+        describia otra logica (una disyuncion con frontera exclusiva); la divergencia queda
+        fijada por tests/quality_gates/test_d23_claim_vs_evidence_frontera.py, que lee esta
+        condicion por AST.
 
         FASE-C N11: split por oraciones + filtro de condicionales para evitar
         falsos positivos con texto condicional ("si su web no tiene los datos

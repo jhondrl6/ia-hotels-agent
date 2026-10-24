@@ -1,0 +1,21 @@
+## Atribucion de los 4 rojos de la suite POST (crudo pytest-suite-completa-post.txt: 4 failed / 5619 passed / 38 skipped, EXIT=1)
+1. tests/config/test_config_integration.py::test_all_config_files_have_description -> PREEXISTENTE con dueno Operador (config/secret_fragment_policy.yaml sin 'description'), ya atribuido por FASE-H1 en su baseline-pre-post.md fila 94 (4 coincidencias en atribucion-head-rojos-especificos.txt).
+2. tests/test_fase_h_onboarding_procedencia.py::test_el_preflight_recalculado_no_inventa_el_consentimiento -> PREEXISTENTE con dueno Operador, ya atribuido por FASE-H1 (fila 95, 4 coincidencias en su crudo).
+3. tests/quality_gates/jev_pilot/test_jev_pilot_deepseek_brazo.py::test_la_falta_de_deepseek... -> acoplamiento de orden declarado por FASE-H1 (fila 96: esperaba CredencialAusente, hubo RedProhibida). NO es de H2: mide (a) el archivo solo = 15 passed, (b) tests/quality_gates IGNORANDO los dos archivos nuevos de H2 = el mismo 1 rojo, (c) con los nuevos = el mismo 1 rojo, (d) en arbol git archive HEAD = 15 passed. Crudo: atribucion-rojo-deepseek.txt.
+4. tests/test_validate_wiring_check_derivado_versionado.py::test_el_derivado_versionado_del_repo_pasa_su_propio_check -> ROJO PROPIO de la fase: los 3 .py nuevos en tests/ movieron el contador del derivado versionado (.opencode/wiring_report.json). Curado con validate_wiring.py --write-report (740 -> 744 archivos).
+
+## Re-verificacion del rojo 4 tras re-publicar el derivado
+...........                                                              [100%]
+11 passed in 32.27s
+
+## Derivados al dia (ultimo paso del cierre, exit sin tuberia)
+validate_wiring.py --write-report  -> EXIT=0 (744 archivos, violaciones 0, omisiones 0)
+validate_wiring.py --check         -> EXIT=0 (digest 3ce1fb272728 conforme)
+build_lesson_index.py              -> EXIT=0 (403 IDs definidos + 113 sin definicion)
+build_lesson_index.py --check      -> EXIT=0 (indice fresco)
+run_all_validations.py --quick     -> primer EXIT=1 (12/13, el derivado vencido); tras re-publicar EXIT=0 (13/13) - crudos crudo-quick-1.txt y crudo-quick-2.txt
+
+## Rojo de scripts/validate_agents_md.py (EXIT=1) — NO lo corta ningun gate del plan y NO es de la fase
+[1/6 FAILED] test_count: agents_md_count=5.334 (la cabecera de §Cobertura por Modulo, publicada en la era v4.7x) vs pytest_count=5.664 (medido hoy) -> 5,8% contra tolerancia +/-5%.
+Estado PREVIO a FASE-H2 por aritmetica sobre lo medido (no es corrida en HEAD): el POST de la fase es 5.664; la fase sumo 17 funciones y retiro 12, asi que el PRE era 5.659. 5.659 vs 5.334 = 6,1% -> el FAIL ya estaba. La fase no lo creo ni lo cura.
+Dueño: la refresh de la tabla de cobertura de AGENTS.md (metodo canonico + docs/cobertura-historia.md), que es procedimiento de ronda de cobertura / RELEASE, no de D18-D22-D23-D20. run_all_validations.py --quick no incluye ese validador: el criterio del prompt (--quick verde) se mide en crudo-quick-final.txt y crudo-quick-2.txt con EXIT=0 y 13/13.

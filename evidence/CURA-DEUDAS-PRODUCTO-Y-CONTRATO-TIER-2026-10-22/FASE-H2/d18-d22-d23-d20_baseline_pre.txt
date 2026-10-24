@@ -1,0 +1,149 @@
+# FASE-H2 baseline PRE — medido 2026-10-24T09:13:32-05:00 sobre HEAD 3b0087c, arbol limpio (git status --porcelain vacio)
+
+## Unidad: funciones test canonicas (grep -rE '^\s*def test_' tests --include=*.py | wc -l)
+5478
+
+## D18: lectores de las cuatro claves thresholds de config/settings.yaml
+--- gbp_min_score ---
+--- schema_required ---
+--- min_reviews ---
+tests/test_audit_alignment.py:38:            "min_reviews": 10,  # Default legacy
+tests/test_audit_alignment.py:330:    required_fields = ["min_reviews", "min_gbp_score", "paquete_base"]
+tests/test_audit_alignment.py:347:            print(f"[OK] {region}: min_reviews={region_data['min_reviews']}, "
+--- min_photos ---
+--- unicos aperturas de settings.yaml en produccion ---
+modules/utils/http_client.py:302:    Factory function para obtener cliente HTTP con configuración de settings.yaml.
+modules/utils/http_client.py:313:            with open('config/settings.yaml', 'r', encoding='utf-8') as f:
+
+## D22: consumidores de validar_arbitraje_etico
+modules/quality/financial_coherence_validator.py:40:def validar_arbitraje_etico(proposal_data: Dict[str, Any]) -> ValidationReport:
+modules/quality/financial_coherence_validator.py:69:        >>> result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:14:    validar_arbitraje_etico,
+tests/quality_gates/test_financial_coherence_validator.py:28:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:41:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:54:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:68:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:79:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:90:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:99:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:108:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:118:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:129:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:141:        result = validar_arbitraje_etico(data)
+tests/quality_gates/test_financial_coherence_validator.py:152:        result = validar_arbitraje_etico(data)
+--- importadores del modulo ---
+tests/quality_gates/test_financial_coherence_validator.py:13:from modules.quality.financial_coherence_validator import (
+--- gate etico real ---
+modules/quality_gates/ethics_gate.py:64:class EthicsGate:
+modules/quality_gates/ethics_gate.py:239:    gate = EthicsGate()
+modules/quality_gates/publication_gates.py:51:from modules.quality_gates.ethics_gate import EthicsGate, EthicsStatus
+modules/quality_gates/publication_gates.py:290:        self.ethics_gate = EthicsGate()
+
+## D23: docstring vs rama de _check_claim_vs_evidence
+    def _check_claim_vs_evidence(
+        self,
+        diagnostic_text: str,
+        place_found: bool,
+        gbp_rating: float,
+    ) -> CommercialGateResult:
+        """CG-CLAIM-VS-EVIDENCE: 'No aparece' cuando place_found=True o rating > 4.0.
+
+        FASE-C N11: split por oraciones + filtro de condicionales para evitar
+        falsos positivos con texto condicional ("si su web no tiene los datos
+        correctos, no aparece en la respuesta").
+        """
+        no_aparece_re = CLAIM_VS_EVIDENCE_RE
+
+        # Split por oraciones (FASE-C: N11 fix)
+        sentences = re.split(r'[.!?\n]\s*', diagnostic_text)
+
+        factual_match: Optional[re.Match] = None
+        for sentence in sentences:
+            m = no_aparece_re.search(sentence)
+            if not m:
+                continue
+            # Verificar si la oración contiene marcador condicional ANTES del match
+            text_before_match = sentence[:m.start()]
+            if self._CONDITIONAL_MARKERS.search(text_before_match):
+                continue  # Oración condicional → descartar
+            # También revisar si la oración entera tiene estructura condicional
+            if self._CONDITIONAL_MARKERS.search(sentence):
+                continue  # Condicional en cualquier parte → descartar
+            # Oración factual con claim de invisibilidad
+            factual_match = m
+            break  # Basta una oración factual para evaluar
+
+        if not factual_match:
+            return CommercialGateResult(
+                gate_id="CG-CLAIM-VS-EVIDENCE",
+                name="Claims no soportados por datos",
+                passed=True,
+                severity="BLOCKING",
+                message="No se encontraron claims factuales de invisibilidad "
+                        "(condicionales descartados).",
+                suggestion="",
+            )
+
+        if place_found and gbp_rating >= 4.0:
+            # The business IS found and rated well — factual "no aparece" contradicts data
+            return CommercialGateResult(
+                gate_id="CG-CLAIM-VS-EVIDENCE",
+                name="Claims no soportados por datos",
+                passed=False,
+
+## D20: cinco tablas regionales (presencia/ausencia mediana FASE-E)
+modules/analyzers/gap_analyzer.py:245:        # `revpar_targets` que vivia aqui se retiro (DA-PLAN-8b): sus tres literales
+tests/utils/test_benchmark_paridad_tablas_fase_e.py:4:`v25_config.regiones`, `Benchmarking.md`, `revpar_targets` de `gap_analyzer` y el dict de
+tests/utils/test_benchmark_paridad_tablas_fase_e.py:114:# Tabla 4 retirada: gap_analyzer ya no conserva revpar_targets
+tests/utils/test_benchmark_paridad_tablas_fase_e.py:126:    assert "revpar_targets" not in asignadas
+modules/scrapers/scraper_fallback.py:19:        self.quality_thresholds = {
+modules/scrapers/scraper_fallback.py:265:        for field in self.quality_thresholds['required_fields']:
+modules/scrapers/scraper_fallback.py:276:        if html and len(html) < self.quality_thresholds['min_html_length']:
+--- pin de divergencia de FASE-E (DIVERGENCIA_BENCHMARKING) ---
+# Divergencia MEDIDA de Benchmarking.md contra el maestro (columnas ADR/RevPAR 2026).
+# FASE-H2 es la duena de ese documento (dependencias-fases.md): aqui vive el pin para
+# que la divergencia no se vuelva memoria, sino una afirmacion que alguien tiene que
+# re-declarar si mueve el numero.
+DIVERGENCIA_BENCHMARKING = {
+    "eje_cafetero": {"adr_md": 385_000, "revpar_md": 197_100},
+    "caribe": {"adr_md": 880_000, "revpar_md": 602_800},
+    "antioquia": {"adr_md": 560_000, "revpar_md": 359_500},
+}
+
+## Re-declaracion de hallazgos H1 que el prompt dejo en H2
+--- gbp_geo_score_threshold: lectores de produccion (esperado 0) ---
+102:    gbp_geo_score_threshold: 70
+170:    gbp_geo_score_threshold: 70
+218:    gbp_geo_score_threshold: 70
+267:    gbp_geo_score_threshold: 70
+--- H10: respaldos duplicados de scenarios.yaml (estado actual) ---
+modules/commercial_documents/data_structures.py:165:    ia_boost_percentage: float             # Ej: 0.05
+modules/financial_engine/loss_projector.py:69:        self._degradation_rate = LossProjector._load_degradation_rate()
+modules/financial_engine/loss_projector.py:72:    def _load_degradation_rate() -> float:
+modules/financial_engine/loss_projector.py:73:        """Load degradation_rate from config/scenarios.yaml. Falls back to 0.02."""
+modules/financial_engine/loss_projector.py:76:            return float(config.get('degradation_rate', 0.02))
+modules/financial_engine/loss_projector.py:78:            logger.warning(f"scenarios.yaml unavailable, using degradation_rate=0.02: {e}")
+modules/financial_engine/loss_projector.py:167:        degradation = 1 + (self._degradation_rate * (month - 1))
+modules/financial_engine/scenario_calculator.py:130:                'ota_shift': {'minimal': 0.05, 'moderate': 0.10, 'optimistic': 0.20},
+modules/financial_engine/scenario_calculator.py:131:                'ia_boost': 0.05,
+modules/financial_engine/scenario_calculator.py:225:        minimal_improvement = scenario_config['ota_shift']['minimal']
+modules/financial_engine/scenario_calculator.py:291:        moderate_shift = scenario_config['ota_shift']['moderate']
+modules/financial_engine/scenario_calculator.py:335:        optimistic_shift = scenario_config['ota_shift']['optimistic']
+modules/financial_engine/scenario_calculator.py:462:        ia_boost_percentage = self._get_ia_boost_percentage(hotel_data)
+modules/financial_engine/scenario_calculator.py:463:        ia_revenue = nights_per_month * hotel_data.adr_cop * ia_boost_percentage
+modules/financial_engine/scenario_calculator.py:479:            ia_boost_percentage=ia_boost_percentage,
+modules/financial_engine/scenario_calculator.py:480:            ia_source=sources.get('ia_boost', 'estimado: sin datos GA4'),
+modules/financial_engine/scenario_calculator.py:527:            return config['ota_shift']['moderate']
+modules/financial_engine/scenario_calculator.py:531:    def _get_ia_boost_percentage(self, hotel_data: HotelFinancialData) -> float:
+modules/financial_engine/scenario_calculator.py:536:            return config['ia_boost']
+modules/financial_engine/scenario_calculator.py:552:            'ia_boost': 'estimado: sin datos GA4'
+modules/utils/financial_factors.py:51:    SUPERPOSITION_FACTOR: Factor de corrección (0.7) para evitar doble conteo
+--- H8: disclaimer del breakdown en la propuesta ---
+145:    def _build_tier_disclaimer(self, financial_breakdown: Optional[Any] = None) -> str:
+146:        """FASE-2 T2: Devuelve disclaimer condicional segun el evidence tier real.
+789:        monthly_report_disclaimer = ""
+796:                        monthly_report_disclaimer = (
+986:        'financial_disclaimer': self._build_tier_disclaimer(financial_breakdown),
+1085:        'monthly_report_disclaimer': monthly_report_disclaimer,
+1121:                data['estimated_disclaimer'] = get_estimated_text()
+1124:                data['estimated_disclaimer'] = "Valor estimado"

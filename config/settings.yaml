@@ -75,12 +75,18 @@ scrapers:
     max_wait: 12
     nav_timeout: 8
 
-thresholds:
-  gbp_min_score: 60
-  schema_required: ["Hotel", "FAQPage"]
-  min_reviews: 10
-  min_photos: 15
-
+# D18 (FASE-H2): el bloque `thresholds` queda RETIRADO, no deprecado. Medido por simbolo
+# sobre modules/, main.py/, scripts/ y tests/: gbp_min_score, schema_required, min_reviews y
+# min_photos no tenian ningun lector. Su unica mencion era la prosa de
+# tests/test_audit_alignment.py, que en realidad lee el BenchmarkLoader (nunca este archivo).
+# Sucesores nombrados:
+#   - piso del score GBP -> `gbp_score_bajo`, leido por modules/utils/package_recommender.py
+#     a traves de BenchmarkLoader.get_thresholds() (maestro declarado en modules/utils/benchmarks.py)
+#   - umbrales de fotos -> config/regional_benchmarks.yaml, bloque `umbrales_fotos`, con lector
+#     unico modules/common/umbrales_fotos.py (FASE-F)
+#   - schema_required y min_reviews -> sin sucesor: ningun lector los tenia y ningun gate los pide
+# Un bloque sin lector que se conserva "por si acaso" es la deuda que esta cura cierra (AC8).
+#
 # Package Thresholds - Basados en BenchmarkingV2 Sección III
 # Umbrales de decisión por región para recomendación de paquetes
 package_thresholds:

@@ -1,0 +1,77 @@
+# FASE-H2 baseline POST — medido 2026-10-24T09:27:20-05:00 sobre HEAD 3b0087c + arbol de trabajo de la fase
+
+## D18: lectores de produccion de las cuatro claves (esperado: 0 lineas)
+--- gbp_min_score ---
+--- schema_required ---
+--- min_reviews ---
+--- min_photos ---
+--- bloque thresholds en settings.yaml (esperado: 0) ---
+(fin)
+
+## D22: consumidores (esperado: solo el guard que los corta)
+tests/quality_gates/test_d22_arbitraje_etico_retirado.py:1:"""FASE-H2 (`D22`, AC8): el dead code de `validar_arbitraje_etico` queda retirado.
+tests/quality_gates/test_d22_arbitraje_etico_retirado.py:20:SIMBOLO = "validar_arbitraje_etico"
+tests/quality_gates/test_d22_arbitraje_etico_retirado.py:21:MODULO_RETIRADO = "modules.quality.financial_coherence_validator"
+tests/quality_gates/test_d22_arbitraje_etico_retirado.py:53:    assert not (TESTS / "quality_gates" / "test_financial_coherence_validator.py").exists()
+
+## D23: docstring actual y rama
+    def _check_claim_vs_evidence(
+        self,
+        diagnostic_text: str,
+        place_found: bool,
+        gbp_rating: float,
+    ) -> CommercialGateResult:
+        """CG-CLAIM-VS-EVIDENCE: el claim factual de "no aparece" se descarta salvo place_found and gbp_rating >= 4.0.
+
+        D23 (FASE-H2): la condicion de disparo es la que se cita arriba, letra por letra
+        como la rama: conjuncion con frontera inclusiva. O sea que 4.0 exacto SI dispara,
+        y place_found=False nunca dispara por mucho que suba el rating. El texto anterior
+        describia otra logica (una disyuncion con frontera exclusiva); la divergencia queda
+        fijada por tests/quality_gates/test_d23_claim_vs_evidence_frontera.py, que lee esta
+        condicion por AST.
+
+        FASE-C N11: split por oraciones + filtro de condicionales para evitar
+        falsos positivos con texto condicional ("si su web no tiene los datos
+        correctos, no aparece en la respuesta").
+        """
+        no_aparece_re = CLAIM_VS_EVIDENCE_RE
+602:        if place_found and gbp_rating >= 4.0:
+
+## D20: pin de FASE-E sigue leyendo 3 filas del doc
+65:    assert len(filas) == 3, f"la tabla de Benchmarking.md no se leyo completa: {sorted(filas)}"
+--- Benchmarking.md: tablas declaradas ---
+30:| Tabla | Dónde vive | Rol |
+31:| :--- | :--- | :--- |
+32:| ADR/ocupación por región y segmento | `data/benchmarks/regional_adr_2026.json` | **MASTER** (`master: t
+33:| `v25_config.regiones` | `data/benchmarks/plan_maestro_data.json` | **PUBLICADA** (secundario conforme al 
+34:| `revpar_cop` | `modules/utils/benchmarks.py` → `regiones()` | **DERIVADA** en lectura: `precio_promedio
+35:| `revpar_targets` | `modules/analyzers/gap_analyzer.py` | **RETIRADA** (sus tres literales eran el respald
+36:| dict de respaldo de benchmarks | `modules/scrapers/scraper_fallback.py` | **RETIRADO** (el método delega
+37:| las tablas ADR/RevPAR de este `.md` | este archivo, §I y §Tabla Comparativa | **CONTEXTO HISTÓRICO 202
+43:| Región | ADR del doc | ADR del maestro | RevPAR del doc | RevPAR derivado |
+44:| :--- | :--- | :--- | :--- | :--- |
+45:| Eje Cafetero | 385k | 280k | 197.1k | 143.360 |
+46:| Caribe | 880k | 450k | 602.8k | 308.250 |
+47:| Antioquia | 560k | 500k | 359.5k | 321.000 |
+77:| Región       | ADR (v2.1) | ADR (2026) | Ocupación (2026) | RevPAR (v2.1) | RevPAR (2026) | Brecha vs P
+
+## EOL de los archivos tocados (CR/LF)
+config/settings.yaml                                           CR=0 LF=306
+tests/test_audit_alignment.py                                  CR=402 LF=402
+modules/quality_gates/commercial_gate.py                       CR=0 LF=850
+data/benchmarks/Benchmarking.md                                CR=0 LF=172
+tests/config/test_d18_settings_sin_thresholds.py               CR=0 LF=100
+tests/quality_gates/test_d22_arbitraje_etico_retirado.py       CR=0 LF=86
+tests/quality_gates/test_d23_claim_vs_evidence_frontera.py     CR=0 LF=92
+
+## git status
+ M config/settings.yaml
+ M data/benchmarks/Benchmarking.md
+ D modules/quality/financial_coherence_validator.py
+ M modules/quality_gates/commercial_gate.py
+ D tests/quality_gates/test_financial_coherence_validator.py
+ M tests/test_audit_alignment.py
+?? evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-H2/
+?? tests/config/test_d18_settings_sin_thresholds.py
+?? tests/quality_gates/test_d22_arbitraje_etico_retirado.py
+?? tests/quality_gates/test_d23_claim_vs_evidence_frontera.py
