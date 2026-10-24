@@ -8,6 +8,12 @@ contratos: el diagnóstico emitía los claims de totalidad que la propuesta nega
 Regla: el tier lo dicta el `FinancialBreakdown` (productor `scenario_calculator._determine_evidence_tier`).
 Sin breakdown —o sin el atributo— no hay evidencia que nombre, así que ambos documentos degradan
 a `'C'`. El `use_ga4` sigue decidiendo el texto del disclaimer, no el tier.
+
+Hermano con otra población: `modules/quality_gates/tribunal/evidence_tier.py` resuelve el mismo
+tier a partir de los dos artefactos serializados (`financial_scenarios_*.json` y `MANIFEST.json`)
+con el mismo fallback. No se importa de aquí (invertiría la dependencia commercial → quality_gates
+y su contrato es de I/O, no de DTO); lo que impide que las dos letras deriven en silencio es
+`test_el_fallback_del_tier_es_el_mismo_en_las_dos_poblaciones`.
 """
 
 from typing import Any, Optional

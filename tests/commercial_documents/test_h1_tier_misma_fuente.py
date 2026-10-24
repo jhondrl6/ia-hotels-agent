@@ -57,6 +57,19 @@ def test_ambos_generadores_delegan_en_el_productor_unico():
         assert llamados, f"{rel_ruta} importa el productor único pero nunca lo invoca"
 
 
+def test_el_fallback_del_tier_es_el_mismo_en_las_dos_poblaciones():
+    """Dos resolutores, una letra: el DTO comercial y los artefactos del tribunal no derivan.
+
+    Son poblaciones distintas (el DTO `FinancialBreakdown` aquí; `financial_scenarios_*.json`
+    + `MANIFEST.json` en el tribunal), así que no se importan entre sí. Pero el fallback es el
+    mismo hecho del producto: un tier que nadie declaró no certifica. Este diente impide que
+    una cura mueva una letra y deje la otra atrás.
+    """
+    from modules.quality_gates.tribunal.evidence_tier import TIER_FALLBACK
+
+    assert TIER_SIN_EVIDENCIA == TIER_FALLBACK == "C"
+
+
 def test_el_diagnostico_no_promueve_el_tier_por_ga4():
     """El `tier = "A"` de la rama sin breakdown desapareció: ese era el defecto."""
     arbol = ast.parse(
