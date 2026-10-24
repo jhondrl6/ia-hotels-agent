@@ -13022,6 +13022,10 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/chequeo-por-documento.txt` | NUEVO | Chequeo-Por-Documento |
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/mutante-condicion-render.txt` | NUEVO | Mutante-Condicion-Render |
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/revision_honestidad.json` | NUEVO | Revision Honestidad |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/confirmacion-dominio.txt` | NUEVO | Confirmacion Dominio |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/condicion-frescura-decision-b.txt` | NUEVO | Condicion Frescura Decision B |
+
+_Errata re-anchada a mano el 2026-10-24: estas dos rutas se escribieron después del estampado de la entrada (letras del Operador sobre dominio y frescura) y `log_phase_completion.py` no se re-ejecuta porque es aditivo y apilaría duplicados. Verificadas en el árbol publicado con `git cat-file -e HEAD:<ruta>`; la entrada queda con 14 archivos nuevos, que es lo que imprime `git ls-files evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE`. Precedente: la errata análoga de FASE-B._
 
 ### Archivos Modificados
 | Archivo | Cambio |

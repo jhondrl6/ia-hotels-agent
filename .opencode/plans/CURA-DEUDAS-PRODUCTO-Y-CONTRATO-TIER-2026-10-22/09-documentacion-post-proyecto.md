@@ -10,6 +10,8 @@
 | Respaldo único de `scenarios.yaml` | `modules/common/scenario_config.py` | `RESPALDO_ESCENARIOS` / `respaldo_escenarios()` — el único sitio Python de `recovery_factors`, `scenario_weights` y `pain_ratio_default`, contra el que coteja el test de coherencia (`D25-bis`) | FASE-F |
 | Productor único del tier de evidencia | `modules/commercial_documents/evidence_tier.py` | `resolver_tier_evidencia()`: el breakdown manda; sin breakdown ambos documentos degradan a `'C'` (`H1`) | FASE-F |
 
+| **Sin módulo nuevo** | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/` (solo artefactos) | La fase no crea ni importa módulos: ejecuta los tres consumidores reales (`HonestyReviewer`, `TribunalJudge`, `DeliveryPackager`) sobre copias temporales del `v4_audit` del baseline. Se estampa la fila porque §B ya declara «sin funcionalidad nueva» y, sin ella, quien recorra §A no distingue «no hubo módulo» de «no se registró» | FASE-E2E-PRE |
+
 ## Sección B: Funcionalidades Nuevas
 
 | Feature | Módulo | Descripción | Fase |

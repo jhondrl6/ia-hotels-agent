@@ -3666,13 +3666,13 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 120,
+      "total_citas": 121,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
-        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
