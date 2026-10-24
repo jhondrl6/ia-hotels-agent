@@ -9,11 +9,26 @@ import time
 import re
 from datetime import datetime, timedelta
 
+# =============================================================================
+# MÓDULO RETIRADO DEL SERVICIO (FASE-D, N3 / DA-PLAN-9) — sustituido, no borrado
+# -----------------------------------------------------------------------------
+# Este módulo no tiene importador de producción (el único que lo nombraba era un
+# comentario). Su `_detectar_fugas` es la copia muerta que CONSERVA el
+# vocabulario español correcto del productor (`_base_profile` de gbp_auditor):
+# su lógica se portó como implementación del contrato en
+# `modules.utils.dynamic_impact.get_detected_issues` (FASE-D) y esta copia queda
+# viva ÚNICAMENTE como oráculo del relevo: `tests/test_gbp_contrato_relevo.py`
+# la importa (con stubs de selenium) y demuestra que la lógica portada produce
+# el mismo resultado perfil a perfil. No añadir consumidores nuevos.
+# =============================================================================
 class GBPRevenueLeakDetector:
     """
     DETECTOR DE FUGAS DE RESERVAS GBP
     No es un scraper técnico. Es una herramienta de diagnóstico que calcula
     CUÁNTO dinero está perdiendo HOY un hotel por tener un GBP suboptimizado.
+
+    [RETIRADO] Ver el banner del módulo: solo se conserva como oráculo del
+    relevo de FASE-D.
     """
     
     # CONSTANTES DE IMPACTO FINANCIERO (basadas en benchmark Plan Maestro)

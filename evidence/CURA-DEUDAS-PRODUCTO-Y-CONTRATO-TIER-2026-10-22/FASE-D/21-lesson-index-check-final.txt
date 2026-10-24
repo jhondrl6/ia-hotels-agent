@@ -1,0 +1,3 @@
+[OK] Índice de lecciones fresco (400 IDs)
+[fechas] nombre=389 commit=11 sin_fuente=0
+IDX_EXIT=0

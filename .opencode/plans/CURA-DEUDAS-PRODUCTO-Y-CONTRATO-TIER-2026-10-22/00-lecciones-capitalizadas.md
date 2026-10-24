@@ -81,4 +81,15 @@
 | `L-CST-7` | `P6.5` no se toca; la cura se limita al veredicto y su causa | ✅ `P6.5` (fila NOT_EVALUABLE reservada Bot 4) y `T1_CERTIFIABLE_CLAUSES` sin cambios — grep por símbolo en `evidence/…/FASE-C/p65-intacta.txt` |
 | `L-R.4` | El grep del literal viejo se declara con su población | ✅ `baseline-pre-post.md` declara la población (`modules/`, `tests/`, `main.py`), la allowlist de históricos/scratch y que el verificador mecánico de la resta no existe |
 
+## 5.3 Qué pasó con las lecciones citadas — FASE-D (2026-10-23)
+
+| ID | Qué exigía en esta fase | Qué pasó realmente |
+|----|-------------------------|--------------------|
+| `D-T4B-A1` | El diente usa la forma real de `_base_profile` y la de `PainSolutionMapper`, no un fixture del detector | ✅ `tests/test_gbp_contrato_frontera.py` construye el perfil con `GBPAuditor._base_profile()` real y el audit con el `V4AuditResult` real de `v4_comprehensive` (la forma que `main.py` pasa a `detect_pains`) |
+| `L-SR3` | Un vocabulario, dos caminos | ✅ `get_detected_issues` y `_map_brecha_to_issue_type` comparten el vocabulario del productor; los tres pains de web quedan sin etiqueta GBP |
+| `DA-C3` | vacío ≠ ausente | ✅ Schema tri-estado (`None` no dispara; `{}`/`tiene_hotel_schema=False` = medido ausente → `SIN_FAQ`); `ultima_actividad_dias=None` no dispara `CERO_ACTIVIDAD_RECIENTE`; el llamador deja de pasar `{}` por defecto |
+| `L-T4A.5` | Mutation check sobre el símbolo real | ✅ M1 (contrato viejo restaurado) reproduce el reproductor de `D28` — 6 brechas y 39.600.000 COP/mes — y cae en rojo; M2 y M3 caen sobre `_map_brecha_to_issue_type` y `tipo_map` |
+| `L-V2` | Quien cambia un contrato barre sus consumidores | ✅ Barrido por grep en todo el repo de `get_detected_issues`, `gbp_leak_detector` y `_map_brecha_to_issue_type`: consumidores actualizados (llamador y `tipo_map` de `gbp_auditor`; comentario de `TARGET_GBP_PHOTOS` que citaba la copia muerta) |
+| `L-ENT.9` | Dos detectores reales, no uno | ✅ El relevo corre contra el detector muerto REAL (importado con stubs de `webdriver_manager`), no contra un fixture: matriz perfil a perfil en `relevo-cruce.txt` |
+
 - [ ] Actualizado al cierre de la última fase, y el write-back de QMind se ejecutó **antes** de archivar el plan (`git mv` a `Archives/`, orden R2.10).

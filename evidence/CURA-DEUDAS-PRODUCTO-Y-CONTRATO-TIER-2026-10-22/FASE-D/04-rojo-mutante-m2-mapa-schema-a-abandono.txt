@@ -1,0 +1,76 @@
+CMD: pytest tests/test_gbp_contrato_frontera.py::TestPainSolutionMapperCaminoV4Complete -q
+EXIT=1
+
+.FFF.                                                                    [100%]
+================================== FAILURES ===================================
+_ TestPainSolutionMapperCaminoV4Complete.test_map_no_convierte_sin_schema_en_perfil_abandonado _
+
+self = <test_gbp_contrato_frontera.TestPainSolutionMapperCaminoV4Complete object at 0x0000023E4CAD8910>
+
+    def test_map_no_convierte_sin_schema_en_perfil_abandonado(self):
+        gen = V4DiagnosticGenerator.__new__(V4DiagnosticGenerator)
+>       assert gen._map_brecha_to_issue_type('no_hotel_schema') != 'PERFIL_ABANDONADO'
+E       AssertionError: assert 'PERFIL_ABANDONADO' != 'PERFIL_ABANDONADO'
+E        +  where 'PERFIL_ABANDONADO' = _map_brecha_to_issue_type('no_hotel_schema')
+E        +    where _map_brecha_to_issue_type = <modules.commercial_documents.v4_diagnostic_generator.V4DiagnosticGenerator object at 0x0000023E4CA95400>._map_brecha_to_issue_type
+
+tests\test_gbp_contrato_frontera.py:225: AssertionError
+_ TestPainSolutionMapperCaminoV4Complete.test_map_no_convierte_no_og_tags_en_fotos _
+
+self = <test_gbp_contrato_frontera.TestPainSolutionMapperCaminoV4Complete object at 0x0000023E4CAA1480>
+
+    def test_map_no_convierte_no_og_tags_en_fotos(self):
+        gen = V4DiagnosticGenerator.__new__(V4DiagnosticGenerator)
+>       assert gen._map_brecha_to_issue_type('no_og_tags') != 'FOTOS_INSUFICIENTES'
+E       AssertionError: assert 'FOTOS_INSUFICIENTES' != 'FOTOS_INSUFICIENTES'
+E        +  where 'FOTOS_INSUFICIENTES' = _map_brecha_to_issue_type('no_og_tags')
+E        +    where _map_brecha_to_issue_type = <modules.commercial_documents.v4_diagnostic_generator.V4DiagnosticGenerator object at 0x0000023E4CAD8690>._map_brecha_to_issue_type
+
+tests\test_gbp_contrato_frontera.py:230: AssertionError
+_ TestPainSolutionMapperCaminoV4Complete.test_los_tres_pains_web_quedan_sin_issue_type_gbp _
+
+self = <test_gbp_contrato_frontera.TestPainSolutionMapperCaminoV4Complete object at 0x0000023E4CAA16E0>
+
+    def test_los_tres_pains_web_quedan_sin_issue_type_gbp(self):
+        """Justificación por escrito (DA-PLAN-9e): schema hotel, citability y OG
+        tags son markup/contenido del SITIO, no perfil GBP; conservan su peso
+        propio en `_identify_brechas` y no reclaman etiqueta GBP."""
+        gen = V4DiagnosticGenerator.__new__(V4DiagnosticGenerator)
+        for pain_id in ('no_hotel_schema', 'low_citability', 'no_og_tags'):
+>           assert gen._map_brecha_to_issue_type(pain_id) == ''
+E           AssertionError: assert 'PERFIL_ABANDONADO' == ''
+E             
+E             + PERFIL_ABANDONADO
+
+tests\test_gbp_contrato_frontera.py:238: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+modules\commercial_documents\v4_diagnostic_generator.py:855
+  C:\Users\Jhond\Github\iah-cli\modules\commercial_documents\v4_diagnostic_generator.py:855: SyntaxWarning: invalid escape sequence '\W'
+    El lookahead negativo de letra (?![^\W\d_]) — NO un \b — evita que
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_gbp_contrato_frontera.py::TestPainSolutionMapperCaminoV4Complete::test_map_no_convierte_sin_schema_en_perfil_abandonado
+FAILED tests/test_gbp_contrato_frontera.py::TestPainSolutionMapperCaminoV4Complete::test_map_no_convierte_no_og_tags_en_fotos
+FAILED tests/test_gbp_contrato_frontera.py::TestPainSolutionMapperCaminoV4Complete::test_los_tres_pains_web_quedan_sin_issue_type_gbp
+3 failed, 2 passed, 9 warnings in 2.40s

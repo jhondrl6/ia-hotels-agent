@@ -1,0 +1,377 @@
+CMD: pytest tests/test_gbp_contrato_frontera.py -q
+EXIT=1
+
+FFF.FFFFFFFF......                                                       [100%]
+================================== FAILURES ===================================
+________ TestDientePerfilCompleto.test_cero_brechas_con_schema_valido _________
+
+self = <test_gbp_contrato_frontera.TestDientePerfilCompleto object at 0x00000227D5443C50>
+
+    def test_cero_brechas_con_schema_valido(self):
+        issues = get_detected_issues(_perfil_completo(), SCHEMA_VALIDO)
+>       assert issues == [], f"perfil completo produjo {len(issues)} brechas: {issues}"
+E       AssertionError: perfil completo produjo 4 brechas: ['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP', 'SIN_HORARIOS']
+E       assert ['PERFIL_NO_R...SIN_HORARIOS'] == []
+E         
+E         Left contains 4 more items, first extra item: 'PERFIL_NO_RECLAMADO'
+E         Use -v to get more diff
+
+tests\test_gbp_contrato_frontera.py:86: AssertionError
+_______ TestDientePerfilCompleto.test_cero_brechas_con_schema_no_medido _______
+
+self = <test_gbp_contrato_frontera.TestDientePerfilCompleto object at 0x00000227D5B239D0>
+
+    def test_cero_brechas_con_schema_no_medido(self):
+>       issues = get_detected_issues(_perfil_completo(), None)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_gbp_contrato_frontera.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+gbp_data = {'descripcion': False, 'existe': True, 'fotos': 40, 'fugas_detectadas': [], ...}
+schema_data = None
+
+    def get_detected_issues(
+        gbp_data: Dict[str, Any],
+        schema_data: Optional[Dict[str, Any]] = None,
+    ) -> List[str]:
+        """Detect which issues are present based on GBP/Schema audit data.
+    
+        Contrato de claves (FASE-D): el vocabulario es el del productor real
+        ``_base_profile()`` de ``gbp_auditor`` (español): ``existe``, ``fotos``,
+        ``rating``, ``whatsapp_visible``, ``horarios``, ``website``, ``posts``,
+        ``tiene_qa``, ``ultima_actividad_dias``. Las cuatro claves inglesas del
+        contrato viejo (``claimed``, ``photos``, ``has_whatsapp``, ``has_hours``)
+        no existen en el productor y desaparecen: sobre un perfil completo el
+        contrato viejo devolvía 6 brechas incondicionales (D28).
+    
+        Schema tri-estado (DA-C3 \u2014 vac\xedo \u2260 ausente):
+          * ``schema_data is None``  \u2192 no medido \u2192 ninguna brecha de schema;
+          * dict medido (aunque sea ``{}`` o ``tiene_hotel_schema=False``) \u2192
+            ``has_faq`` ausente dispara ``SIN_FAQ``;
+          * schema v\xe1lido (``has_faq`` presente) \u2192 sin brecha.
+    
+        ``tiene_hotel_schema`` ausente NO es brecha GBP: es markup web y vive en el
+        canal de v4complete como ``no_hotel_schema`` (sin mapear a
+        ``PERFIL_ABANDONADO``, ver ``_map_brecha_to_issue_type``).
+    
+        ``PERFIL_ABANDONADO`` se decide por ACTIVIDAD del perfil (``posts == 0``),
+        nunca por ausencia de schema (N2); ``CERO_ACTIVIDAD_RECIENTE`` es etiqueta
+        propia sobre la última actividad MEDIDA (``ultima_actividad_dias``), con
+        ``None`` = no medido \u2192 sin brecha.
+        """
+        issues = []
+    
+        if not gbp_data.get('claimed', False):
+            issues.append('PERFIL_NO_RECLAMADO')
+    
+        photos = gbp_data.get('photos', 0)
+        if photos < 5:
+            issues.append('FOTOS_INSUFICIENTES')
+    
+        rating = gbp_data.get('rating', 5)
+        if rating < 3.5:
+            issues.append('RESENAS_CRITICAS')
+        elif rating < 4.0:
+            issues.append('RATING_BAJO')
+    
+        if not gbp_data.get('has_whatsapp', False):
+            issues.append('SIN_WHATSAPP')
+    
+        if not gbp_data.get('has_hours', False):
+            issues.append('SIN_HORARIOS')
+    
+        if not gbp_data.get('website', False):
+            issues.append('SIN_WEBSITE')
+    
+        if not gbp_data.get('posts', 0) > 0:
+            issues.append('CERO_ACTIVIDAD_RECIENTE')
+    
+>       if not schema_data.get('tiene_hotel_schema', False):
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'get'
+
+modules\utils\dynamic_impact.py:333: AttributeError
+______ TestDientePerfilCompleto.test_cero_cop_con_la_ruta_de_produccion _______
+
+self = <test_gbp_contrato_frontera.TestDientePerfilCompleto object at 0x00000227D5CBD350>
+
+    def test_cero_cop_con_la_ruta_de_produccion(self):
+        auditor = _auditor_real()
+        fugas, perdida_mes = auditor._detectar_fugas(_perfil_completo())
+        resumen = f"fugas={[f['tipo'] for f in fugas]}, perdida={perdida_mes} COP/mes"
+>       assert fugas == [] and perdida_mes == 0, f"perfil completo: {resumen}"
+E       AssertionError: perfil completo: fugas=['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP_VISIBLE', 'SIN_HORARIOS', 'PERFIL_ABANDONADO', 'SIN_FAQ_CONVERSACIONAL'], perdida=39600000 COP/mes
+E       assert ([{'detalle': ...RÍTICA', ...}] == []
+E         
+E         Left contains 6 more items, first extra item: {'detalle': 'Invisible total en búsquedas locales', 'impacto_estimado_COP_mes': 2100000, 'motivo': 'El 65% de turistas busca "hoteles cerca de mí"; sin perfil no existes.', 'severidad': 'CRÍTICA', ...}
+E         Use -v to get more diff)
+
+tests\test_gbp_contrato_frontera.py:96: AssertionError
+_______________ TestSchemaTriEstado.test_none_no_dispara_brecha _______________
+
+self = <test_gbp_contrato_frontera.TestSchemaTriEstado object at 0x00000227D5443B10>
+
+    def test_none_no_dispara_brecha(self):
+>       issues = get_detected_issues(_perfil_completo(), None)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_gbp_contrato_frontera.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+gbp_data = {'descripcion': False, 'existe': True, 'fotos': 40, 'fugas_detectadas': [], ...}
+schema_data = None
+
+    def get_detected_issues(
+        gbp_data: Dict[str, Any],
+        schema_data: Optional[Dict[str, Any]] = None,
+    ) -> List[str]:
+        """Detect which issues are present based on GBP/Schema audit data.
+    
+        Contrato de claves (FASE-D): el vocabulario es el del productor real
+        ``_base_profile()`` de ``gbp_auditor`` (español): ``existe``, ``fotos``,
+        ``rating``, ``whatsapp_visible``, ``horarios``, ``website``, ``posts``,
+        ``tiene_qa``, ``ultima_actividad_dias``. Las cuatro claves inglesas del
+        contrato viejo (``claimed``, ``photos``, ``has_whatsapp``, ``has_hours``)
+        no existen en el productor y desaparecen: sobre un perfil completo el
+        contrato viejo devolvía 6 brechas incondicionales (D28).
+    
+        Schema tri-estado (DA-C3 \u2014 vac\xedo \u2260 ausente):
+          * ``schema_data is None``  \u2192 no medido \u2192 ninguna brecha de schema;
+          * dict medido (aunque sea ``{}`` o ``tiene_hotel_schema=False``) \u2192
+            ``has_faq`` ausente dispara ``SIN_FAQ``;
+          * schema v\xe1lido (``has_faq`` presente) \u2192 sin brecha.
+    
+        ``tiene_hotel_schema`` ausente NO es brecha GBP: es markup web y vive en el
+        canal de v4complete como ``no_hotel_schema`` (sin mapear a
+        ``PERFIL_ABANDONADO``, ver ``_map_brecha_to_issue_type``).
+    
+        ``PERFIL_ABANDONADO`` se decide por ACTIVIDAD del perfil (``posts == 0``),
+        nunca por ausencia de schema (N2); ``CERO_ACTIVIDAD_RECIENTE`` es etiqueta
+        propia sobre la última actividad MEDIDA (``ultima_actividad_dias``), con
+        ``None`` = no medido \u2192 sin brecha.
+        """
+        issues = []
+    
+        if not gbp_data.get('claimed', False):
+            issues.append('PERFIL_NO_RECLAMADO')
+    
+        photos = gbp_data.get('photos', 0)
+        if photos < 5:
+            issues.append('FOTOS_INSUFICIENTES')
+    
+        rating = gbp_data.get('rating', 5)
+        if rating < 3.5:
+            issues.append('RESENAS_CRITICAS')
+        elif rating < 4.0:
+            issues.append('RATING_BAJO')
+    
+        if not gbp_data.get('has_whatsapp', False):
+            issues.append('SIN_WHATSAPP')
+    
+        if not gbp_data.get('has_hours', False):
+            issues.append('SIN_HORARIOS')
+    
+        if not gbp_data.get('website', False):
+            issues.append('SIN_WEBSITE')
+    
+        if not gbp_data.get('posts', 0) > 0:
+            issues.append('CERO_ACTIVIDAD_RECIENTE')
+    
+>       if not schema_data.get('tiene_hotel_schema', False):
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'get'
+
+modules\utils\dynamic_impact.py:333: AttributeError
+____________ TestSchemaTriEstado.test_dict_vacio_es_medido_ausente ____________
+
+self = <test_gbp_contrato_frontera.TestSchemaTriEstado object at 0x00000227D5B23B10>
+
+    def test_dict_vacio_es_medido_ausente(self):
+        issues = get_detected_issues(_perfil_completo(), {})
+>       assert issues == ['SIN_FAQ'], f"schema medido ausente dio {issues}"
+E       AssertionError: schema medido ausente dio ['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP', 'SIN_HORARIOS', 'PERFIL_ABANDONADO', 'SIN_FAQ']
+E       assert ['PERFIL_NO_R...O', 'SIN_FAQ'] == ['SIN_FAQ']
+E         
+E         At index 0 diff: 'PERFIL_NO_RECLAMADO' != 'SIN_FAQ'
+E         Left contains 5 more items, first extra item: 'FOTOS_INSUFICIENTES'
+E         Use -v to get more diff
+
+tests\test_gbp_contrato_frontera.py:115: AssertionError
+_ TestSchemaTriEstado.test_tiene_hotel_schema_false_es_el_mismo_estado_que_dict_vacio _
+
+self = <test_gbp_contrato_frontera.TestSchemaTriEstado object at 0x00000227D5CBD6E0>
+
+    def test_tiene_hotel_schema_false_es_el_mismo_estado_que_dict_vacio(self):
+        issues = get_detected_issues(_perfil_completo(), {'tiene_hotel_schema': False})
+>       assert issues == ['SIN_FAQ']
+E       AssertionError: assert ['PERFIL_NO_R...O', 'SIN_FAQ'] == ['SIN_FAQ']
+E         
+E         At index 0 diff: 'PERFIL_NO_RECLAMADO' != 'SIN_FAQ'
+E         Left contains 5 more items, first extra item: 'FOTOS_INSUFICIENTES'
+E         Use -v to get more diff
+
+tests\test_gbp_contrato_frontera.py:119: AssertionError
+__________ TestSchemaTriEstado.test_schema_valido_no_dispara_brecha ___________
+
+self = <test_gbp_contrato_frontera.TestSchemaTriEstado object at 0x00000227D5CBD810>
+
+    def test_schema_valido_no_dispara_brecha(self):
+        issues = get_detected_issues(_perfil_completo(), SCHEMA_VALIDO)
+>       assert issues == []
+E       AssertionError: assert ['PERFIL_NO_R...SIN_HORARIOS'] == []
+E         
+E         Left contains 4 more items, first extra item: 'PERFIL_NO_RECLAMADO'
+E         Use -v to get more diff
+
+tests\test_gbp_contrato_frontera.py:123: AssertionError
+_____ TestSchemaTriEstado.test_none_y_dict_vacio_dan_resultados_distintos _____
+
+self = <test_gbp_contrato_frontera.TestSchemaTriEstado object at 0x00000227D60F4A70>
+
+    def test_none_y_dict_vacio_dan_resultados_distintos(self):
+>       assert get_detected_issues(_perfil_completo(), None) != \
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            get_detected_issues(_perfil_completo(), {})
+
+tests\test_gbp_contrato_frontera.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+gbp_data = {'descripcion': False, 'existe': True, 'fotos': 40, 'fugas_detectadas': [], ...}
+schema_data = None
+
+    def get_detected_issues(
+        gbp_data: Dict[str, Any],
+        schema_data: Optional[Dict[str, Any]] = None,
+    ) -> List[str]:
+        """Detect which issues are present based on GBP/Schema audit data.
+    
+        Contrato de claves (FASE-D): el vocabulario es el del productor real
+        ``_base_profile()`` de ``gbp_auditor`` (español): ``existe``, ``fotos``,
+        ``rating``, ``whatsapp_visible``, ``horarios``, ``website``, ``posts``,
+        ``tiene_qa``, ``ultima_actividad_dias``. Las cuatro claves inglesas del
+        contrato viejo (``claimed``, ``photos``, ``has_whatsapp``, ``has_hours``)
+        no existen en el productor y desaparecen: sobre un perfil completo el
+        contrato viejo devolvía 6 brechas incondicionales (D28).
+    
+        Schema tri-estado (DA-C3 \u2014 vac\xedo \u2260 ausente):
+          * ``schema_data is None``  \u2192 no medido \u2192 ninguna brecha de schema;
+          * dict medido (aunque sea ``{}`` o ``tiene_hotel_schema=False``) \u2192
+            ``has_faq`` ausente dispara ``SIN_FAQ``;
+          * schema v\xe1lido (``has_faq`` presente) \u2192 sin brecha.
+    
+        ``tiene_hotel_schema`` ausente NO es brecha GBP: es markup web y vive en el
+        canal de v4complete como ``no_hotel_schema`` (sin mapear a
+        ``PERFIL_ABANDONADO``, ver ``_map_brecha_to_issue_type``).
+    
+        ``PERFIL_ABANDONADO`` se decide por ACTIVIDAD del perfil (``posts == 0``),
+        nunca por ausencia de schema (N2); ``CERO_ACTIVIDAD_RECIENTE`` es etiqueta
+        propia sobre la última actividad MEDIDA (``ultima_actividad_dias``), con
+        ``None`` = no medido \u2192 sin brecha.
+        """
+        issues = []
+    
+        if not gbp_data.get('claimed', False):
+            issues.append('PERFIL_NO_RECLAMADO')
+    
+        photos = gbp_data.get('photos', 0)
+        if photos < 5:
+            issues.append('FOTOS_INSUFICIENTES')
+    
+        rating = gbp_data.get('rating', 5)
+        if rating < 3.5:
+            issues.append('RESENAS_CRITICAS')
+        elif rating < 4.0:
+            issues.append('RATING_BAJO')
+    
+        if not gbp_data.get('has_whatsapp', False):
+            issues.append('SIN_WHATSAPP')
+    
+        if not gbp_data.get('has_hours', False):
+            issues.append('SIN_HORARIOS')
+    
+        if not gbp_data.get('website', False):
+            issues.append('SIN_WEBSITE')
+    
+        if not gbp_data.get('posts', 0) > 0:
+            issues.append('CERO_ACTIVIDAD_RECIENTE')
+    
+>       if not schema_data.get('tiene_hotel_schema', False):
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'get'
+
+modules\utils\dynamic_impact.py:333: AttributeError
+_ TestActividadVsSchema.test_perfil_abandono_por_posts_cero_con_schema_valido _
+
+self = <test_gbp_contrato_frontera.TestActividadVsSchema object at 0x00000227D5B23C50>
+
+    def test_perfil_abandono_por_posts_cero_con_schema_valido(self):
+        perfil = _perfil_completo()
+        perfil['posts'] = 0
+        issues = get_detected_issues(perfil, SCHEMA_VALIDO)
+>       assert 'PERFIL_ABANDONADO' in issues
+E       AssertionError: assert 'PERFIL_ABANDONADO' in ['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP', 'SIN_HORARIOS', 'CERO_ACTIVIDAD_RECIENTE']
+
+tests\test_gbp_contrato_frontera.py:137: AssertionError
+_____ TestActividadVsSchema.test_sin_schema_no_produce_perfil_abandonado ______
+
+self = <test_gbp_contrato_frontera.TestActividadVsSchema object at 0x00000227D5B23D90>
+
+    def test_sin_schema_no_produce_perfil_abandonado(self):
+        issues = get_detected_issues(_perfil_completo(), {})
+>       assert 'PERFIL_ABANDONADO' not in issues
+E       AssertionError: assert 'PERFIL_ABANDONADO' not in ['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP', 'SIN_HORARIOS', 'PERFIL_ABANDONADO', 'SIN_FAQ']
+
+tests\test_gbp_contrato_frontera.py:141: AssertionError
+____ TestActividadVsSchema.test_cero_actividad_reciente_es_etiqueta_propia ____
+
+self = <test_gbp_contrato_frontera.TestActividadVsSchema object at 0x00000227D5CBD940>
+
+    def test_cero_actividad_reciente_es_etiqueta_propia(self):
+        perfil = _perfil_completo()
+        perfil['ultima_actividad_dias'] = 90  # medida y antigua
+        issues = get_detected_issues(perfil, SCHEMA_VALIDO)
+>       assert issues == ['CERO_ACTIVIDAD_RECIENTE'], issues
+E       AssertionError: ['PERFIL_NO_RECLAMADO', 'FOTOS_INSUFICIENTES', 'SIN_WHATSAPP', 'SIN_HORARIOS']
+E       assert ['PERFIL_NO_R...SIN_HORARIOS'] == ['CERO_ACTIVIDAD_RECIENTE']
+E         
+E         At index 0 diff: 'PERFIL_NO_RECLAMADO' != 'CERO_ACTIVIDAD_RECIENTE'
+E         Left contains 3 more items, first extra item: 'FOTOS_INSUFICIENTES'
+E         Use -v to get more diff
+
+tests\test_gbp_contrato_frontera.py:147: AssertionError
+============================== warnings summary ===============================
+data_models\canonical_assessment.py:17
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class SiteMetadata(BaseModel):
+
+data_models\canonical_assessment.py:192
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:192: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class Claim(BaseModel):
+
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319
+  C:\Users\Jhond\Github\iah-cli\venv\Lib\site-packages\pydantic\_internal\_generate_schema.py:319: PydanticDeprecatedSince20: `json_encoders` is deprecated. See https://docs.pydantic.dev/2.12/concepts/serialization/#custom-serializers for alternatives. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    warnings.warn(
+
+data_models\canonical_assessment.py:257
+  C:\Users\Jhond\Github\iah-cli\data_models\canonical_assessment.py:257: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.12/migration/
+    class CanonicalAssessment(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_gbp_contrato_frontera.py::TestDientePerfilCompleto::test_cero_brechas_con_schema_valido
+FAILED tests/test_gbp_contrato_frontera.py::TestDientePerfilCompleto::test_cero_brechas_con_schema_no_medido
+FAILED tests/test_gbp_contrato_frontera.py::TestDientePerfilCompleto::test_cero_cop_con_la_ruta_de_produccion
+FAILED tests/test_gbp_contrato_frontera.py::TestSchemaTriEstado::test_none_no_dispara_brecha
+FAILED tests/test_gbp_contrato_frontera.py::TestSchemaTriEstado::test_dict_vacio_es_medido_ausente
+FAILED tests/test_gbp_contrato_frontera.py::TestSchemaTriEstado::test_tiene_hotel_schema_false_es_el_mismo_estado_que_dict_vacio
+FAILED tests/test_gbp_contrato_frontera.py::TestSchemaTriEstado::test_schema_valido_no_dispara_brecha
+FAILED tests/test_gbp_contrato_frontera.py::TestSchemaTriEstado::test_none_y_dict_vacio_dan_resultados_distintos
+FAILED tests/test_gbp_contrato_frontera.py::TestActividadVsSchema::test_perfil_abandono_por_posts_cero_con_schema_valido
+FAILED tests/test_gbp_contrato_frontera.py::TestActividadVsSchema::test_sin_schema_no_produce_perfil_abandonado
+FAILED tests/test_gbp_contrato_frontera.py::TestActividadVsSchema::test_cero_actividad_reciente_es_etiqueta_propia
+11 failed, 7 passed, 8 warnings in 2.85s

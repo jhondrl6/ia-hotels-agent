@@ -1,0 +1,2 @@
+[OK] Plan citations: 745 citas historicas, 0 nuevas y 0 crecimientos (81 archivos en el inventario)
+CIT_EXIT=0

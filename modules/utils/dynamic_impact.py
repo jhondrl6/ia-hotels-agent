@@ -268,39 +268,81 @@ class DynamicImpactCalculator:
         return descriptions.get(issue_type, 'Impacto en visibilidad')
 
 
-def get_detected_issues(gbp_data: Dict[str, Any], schema_data: Dict[str, Any]) -> List[str]:
-    """Detect which issues are present based on GBP/Schema audit data."""
-    issues = []
-    
-    if not gbp_data.get('claimed', False):
+# FASE-D (D28/N2, DA-PLAN-9): ventana de "actividad reciente" del perfil. La
+# copia muerta (`GBPRevenueLeakDetector`) declara la ventana de 60 días para la
+# actividad de posts; FASE-F re-centraliza los valores que sobrevivan.
+ACTIVIDAD_RECIENTE_DIAS = 60
+
+
+def get_detected_issues(
+    gbp_data: Dict[str, Any],
+    schema_data: Optional[Dict[str, Any]] = None,
+) -> List[str]:
+    """Detect which issues are present based on GBP/Schema audit data.
+
+    Contrato de claves (FASE-D): el vocabulario es el del productor real
+    ``_base_profile()`` de ``gbp_auditor`` (español): ``existe``, ``fotos``,
+    ``rating``, ``whatsapp_visible``, ``horarios``, ``website``, ``posts``,
+    ``tiene_qa``, ``ultima_actividad_dias``. Las cuatro claves inglesas del
+    contrato viejo (``claimed``, ``photos``, ``has_whatsapp``, ``has_hours``)
+    no existen en el productor y desaparecen: sobre un perfil completo el
+    contrato viejo devolvía 6 brechas incondicionales (D28).
+
+    Schema tri-estado (DA-C3 — vacío ≠ ausente):
+      * ``schema_data is None``  → no medido → ninguna brecha de schema;
+      * dict medido (aunque sea ``{}`` o ``tiene_hotel_schema=False``) →
+        ``has_faq`` ausente dispara ``SIN_FAQ``;
+      * schema válido (``has_faq`` presente) → sin brecha.
+
+    ``tiene_hotel_schema`` ausente NO es brecha GBP: es markup web y vive en el
+    canal de v4complete como ``no_hotel_schema`` (sin mapear a
+    ``PERFIL_ABANDONADO``, ver ``_map_brecha_to_issue_type``).
+
+    ``PERFIL_ABANDONADO`` se decide por ACTIVIDAD del perfil (``posts == 0``),
+    nunca por ausencia de schema (N2); ``CERO_ACTIVIDAD_RECIENTE`` es etiqueta
+    propia sobre la última actividad MEDIDA (``ultima_actividad_dias``), con
+    ``None`` = no medido → sin brecha.
+    """
+    issues: List[str] = []
+
+    if not gbp_data.get('existe', False):
         issues.append('PERFIL_NO_RECLAMADO')
-    
-    photos = gbp_data.get('photos', 0)
-    if photos < 5:
+
+    if gbp_data.get('fotos', 0) < 5:
         issues.append('FOTOS_INSUFICIENTES')
-    
+
     rating = gbp_data.get('rating', 5)
     if rating < 3.5:
         issues.append('RESENAS_CRITICAS')
     elif rating < 4.0:
         issues.append('RATING_BAJO')
-    
-    if not gbp_data.get('has_whatsapp', False):
+
+    if not gbp_data.get('whatsapp_visible', False):
         issues.append('SIN_WHATSAPP')
-    
-    if not gbp_data.get('has_hours', False):
+
+    if not gbp_data.get('horarios', False):
         issues.append('SIN_HORARIOS')
-    
-    if not gbp_data.get('website'):
+
+    if not gbp_data.get('website', False):
         issues.append('SIN_WEBSITE')
-    
-    if not gbp_data.get('posts', 0) > 0:
-        issues.append('CERO_ACTIVIDAD_RECIENTE')
-    
-    if not schema_data.get('tiene_hotel_schema', False):
+
+    # Actividad del perfil: ÚNICA fuente de PERFIL_ABANDONADO (N2).
+    if gbp_data.get('posts', 0) == 0:
         issues.append('PERFIL_ABANDONADO')
-    
-    if not schema_data.get('has_faq', False):
+
+    # Etiqueta propia (N2): disparo distinto al de posts. `None` = no medido
+    # → sin brecha (DA-C3).
+    dias = gbp_data.get('ultima_actividad_dias')
+    if dias is not None and dias > ACTIVIDAD_RECIENTE_DIAS:
+        issues.append('CERO_ACTIVIDAD_RECIENTE')
+
+    # FAQ/Q&A conversacional: cada fuente medida habla por sí sola (DA-C3).
+    # `tiene_qa` es el Q&A de GBP (siempre medido por el scraper); `has_faq` es
+    # el FAQ schema de la web (solo cuando se midió).
+    faq_ausente = not gbp_data.get('tiene_qa', False)
+    if schema_data is not None and not schema_data.get('has_faq', False):
+        faq_ausente = True
+    if faq_ausente:
         issues.append('SIN_FAQ')
-    
+
     return issues

@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-23
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 536
+> **Total fases completadas:** 537
 
 ---
 
@@ -12752,6 +12752,60 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 7 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-D - 2026-10-23 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** R1: contrato GBP unico en v4audit y v4complete, schema tri-estado y N2 (D28/N2/N3, AC3)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `tests/test_gbp_contrato_frontera.py` | NUEVO | Test Gbp Contrato Frontera |
+| `tests/test_gbp_contrato_relevo.py` | NUEVO | Test Gbp Contrato Relevo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/mutation_pair_runner.py` | NUEVO | Mutation Pair Runner |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/par-rojo-verde.md` | NUEVO | Par-Rojo-Verde |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/baseline-pre-post.md` | NUEVO | Baseline-Pre-Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/baseline_pre.txt` | NUEVO | Baseline Pre |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/baseline_post.txt` | NUEVO | Baseline Post |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/01-verde-dientes.txt` | NUEVO | 01-Verde-Dientes |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/02-rojo-mutante-m1-claves-inglesas.txt` | NUEVO | 02-Rojo-Mutante-M1-Claves-Inglesas |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/03-verde-tras-restaurar-m1.txt` | NUEVO | 03-Verde-Tras-Restaurar-M1 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/04-rojo-mutante-m2-mapa-schema-a-abandono.txt` | NUEVO | 04-Rojo-Mutante-M2-Mapa-Schema-A-Abandono |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/05-verde-tras-restaurar-m2.txt` | NUEVO | 05-Verde-Tras-Restaurar-M2 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/06-rojo-mutante-m3-tipo-map-colapsado.txt` | NUEVO | 06-Rojo-Mutante-M3-Tipo-Map-Colapsado |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/07-verde-tras-restaurar-m3.txt` | NUEVO | 07-Verde-Tras-Restaurar-M3 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/08-wiring-republicado.txt` | NUEVO | 08-Wiring-Republicado |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/09-lesson-index-republicado.txt` | NUEVO | 09-Lesson-Index-Republicado |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/10-wiring-check.txt` | NUEVO | 10-Wiring-Check |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/11-lesson-index-check.txt` | NUEVO | 11-Lesson-Index-Check |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/12-quick-final.txt` | NUEVO | 12-Quick-Final |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/relevo-cruce.txt` | NUEVO | Relevo-Cruce |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-D/regression-superficies.txt` | NUEVO | Regression-Superficies |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `modules/utils/dynamic_impact.py` | Dynamic Impact |
+| `modules/scrapers/gbp_auditor.py` | Gbp Auditor |
+| `modules/scrapers/gbp_leak_detector.py` | Gbp Leak Detector |
+| `modules/commercial_documents/v4_diagnostic_generator.py` | V4 Diagnostic Generator |
+| `.opencode/wiring_report.json` | Wiring Report |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md` | 06-Checklist-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/05-prompt-inicio-sesion-fase-D.md` | 05-Prompt-Inicio-Sesion-Fase-D |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 32 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

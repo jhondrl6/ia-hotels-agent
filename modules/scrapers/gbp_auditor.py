@@ -918,7 +918,10 @@ class GBPAuditor:
         """
         calculator = DynamicImpactCalculator(self.benchmark_loader)
         
-        detected_issues = get_detected_issues(profile_data, profile_data.get('schema_data', {}))
+        # FASE-D (D28, DA-C3): el default es None (schema NO medido), no `{}`
+        # (medido y ausente). Con `{}` fijo, el detector disparaba brechas de
+        # schema sin que nadie hubiera medido el schema.
+        detected_issues = get_detected_issues(profile_data, profile_data.get('schema_data'))
         
         impact_report = calculator.calculate_impacts(
             region=region,
@@ -942,7 +945,7 @@ class GBPAuditor:
                 'RATING_BAJO': 'RATING_DESCALIFICANTE',
                 'SIN_HORARIOS': 'SIN_HORARIOS',
                 'SIN_WEBSITE': 'SIN_WEBSITE_DIRECTO',
-                'CERO_ACTIVIDAD_RECIENTE': 'PERFIL_ABANDONADO',
+                'CERO_ACTIVIDAD_RECIENTE': 'CERO_ACTIVIDAD_RECIENTE',
             }
             
             fugas.append({
@@ -963,12 +966,12 @@ class GBPAuditor:
             'FOTOS_INSUFICIENTES': 'Google Maps prioriza perfiles visuales ricos. Pareces abandonado.',
             'RESENAS_CRITICAS': 'Google no recomienda hoteles con <10 reseñas en resultados conversacionales.',
             'SIN_WHATSAPP': '68% de reservas directas en Colombia inician en WhatsApp.',
-            'PERFIL_ABANDONADO': 'Google interpreta falta de actividad como cierre temporal.',
+            'PERFIL_ABANDONADO': 'Sin posts ni actualizaciones: Google trata el perfil como abandonado y lo degrada en el ranking local.',
             'SIN_FAQ': '40% de búsquedas turísticas son preguntas directas.',
             'RATING_BAJO': 'El 92% de usuarios solo considera hoteles 4.0+. Entregas clientes gratis a competidores.',
             'SIN_HORARIOS': 'Sin check-in visible pareces informal.',
             'SIN_WEBSITE': 'Cada reserva paga 18-25% de comisión.',
-            'CERO_ACTIVIDAD_RECIENTE': 'Google interpreta falta de actividad como cierre temporal.',
+            'CERO_ACTIVIDAD_RECIENTE': 'La última actividad registrada del perfil es antigua: Google lo lee como negocio inactivo.',
         }
         return motivos.get(issue_type, 'Impacto en visibilidad y conversión.')
 

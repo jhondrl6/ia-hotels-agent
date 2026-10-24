@@ -1,0 +1,35 @@
+CMD: pytest tests/test_gbp_contrato_relevo.py::TestN2EtiquetasPropias -q
+EXIT=1
+
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+________ TestN2EtiquetasPropias.test_dos_tipos_distintos_no_colapsados ________
+
+self = <test_gbp_contrato_relevo.TestN2EtiquetasPropias object at 0x0000019C62E95A90>
+
+    def test_dos_tipos_distintos_no_colapsados(self):
+        tipos = [f['tipo'] for f in self._fugas_actividad()]
+        assert 'PERFIL_ABANDONADO' in tipos
+>       assert 'CERO_ACTIVIDAD_RECIENTE' in tipos
+E       AssertionError: assert 'CERO_ACTIVIDAD_RECIENTE' in ['PERFIL_ABANDONADO', 'PERFIL_ABANDONADO']
+
+tests\test_gbp_contrato_relevo.py:199: AssertionError
+________ TestN2EtiquetasPropias.test_dedupe_aguas_abajo_no_undercounta ________
+
+self = <test_gbp_contrato_relevo.TestN2EtiquetasPropias object at 0x0000019C64899E50>
+
+    def test_dedupe_aguas_abajo_no_undercounta(self):
+        fugas = self._fugas_actividad()
+        dedup = {f['tipo']: f for f in fugas}  # dedupe por `tipo` aguas abajo
+>       assert len(dedup) == 2, (
+            f"dedupe por tipo undercounta: {sorted(dedup)} sobre {len(fugas)} fugas"
+        )
+E       AssertionError: dedupe por tipo undercounta: ['PERFIL_ABANDONADO'] sobre 2 fugas
+E       assert 1 == 2
+E        +  where 1 = len({'PERFIL_ABANDONADO': {'detalle': 'Google interpreta como negocio inactivo', 'impacto_estimado_COP_mes': 9000000, 'mot...última actividad registrada del perfil es antigua: Google lo lee como negocio inactivo.', 'severidad': 'CRÍTICA', ...}})
+
+tests\test_gbp_contrato_relevo.py:204: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_gbp_contrato_relevo.py::TestN2EtiquetasPropias::test_dos_tipos_distintos_no_colapsados
+FAILED tests/test_gbp_contrato_relevo.py::TestN2EtiquetasPropias::test_dedupe_aguas_abajo_no_undercounta
+2 failed, 1 passed in 0.92s

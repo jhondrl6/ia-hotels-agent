@@ -1,0 +1,5 @@
+CMD: pytest tests/test_gbp_contrato_relevo.py::TestN2EtiquetasPropias -q
+EXIT=0
+
+...                                                                      [100%]
+3 passed in 0.79s

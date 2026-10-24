@@ -1,8 +1,8 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 728,
-    "archivos_excluidos_por_rol": 8541,
-    "archivos_excluidos_por_rol_versionado": 170,
+    "archivos_en_alcance": 730,
+    "archivos_excluidos_por_rol": 8542,
+    "archivos_excluidos_por_rol_versionado": 171,
     "exclusiones_por_clase": {
       "ContentValidator": "valida contenido generado",
       "EnvValidator": "valida variables de entorno",
@@ -10,12 +10,12 @@
       "PlanValidator": "valida planes de contenido",
       "PrecisionValidator": "audita precision numerica, no promesa WhatsApp (AC7: excluir)"
     },
-    "gobernadas_resueltas": 75,
-    "llamadas_descubiertas": 174,
+    "gobernadas_resueltas": 76,
+    "llamadas_descubiertas": 175,
     "por_clasificacion": {
       "EXCLUIDA_POR_CLASE": 43,
       "EXCLUIDA_POR_CLASE_NO_GOBERNADA": 31,
-      "GOBERNADA_CONFORME": 21,
+      "GOBERNADA_CONFORME": 22,
       "RECEPTOR_NO_RESUELTO": 25,
       "TEST_EXENTO_DE_SENAL": 54
     },
@@ -44,7 +44,7 @@
       "motivo": "artefacto de empaquetado"
     },
     "evidence": {
-      "cantidad_versionada": 158,
+      "cantidad_versionada": 159,
       "motivo": "scripts de medicion historicos; el contrato del plan prohibe reescribirlos"
     },
     "temp": {
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-23T20:34:58+00:00",
-  "git_sha": "e2e68a6",
+  "generado": "2026-10-23T23:34:46+00:00",
+  "git_sha": "10c722f",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -272,7 +272,7 @@
         "validation_summary",
         "whatsapp_html_detected"
       ],
-      "linea": 3322,
+      "linea": 3324,
       "metodo": "detect_pains",
       "posicionales": 0,
       "prohibidos_presentes": [],
@@ -3234,6 +3234,30 @@
       "senales_ausentes": [
         "whatsapp_html_detected"
       ],
+      "senales_requeridas": [
+        "whatsapp_html_detected"
+      ]
+    },
+    {
+      "archivo": "tests/test_gbp_contrato_frontera.py",
+      "clase_resuelta": "PainSolutionMapper",
+      "clasificacion": "GOBERNADA_CONFORME",
+      "en_tests": true,
+      "gobernado": true,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "analytics_data",
+        "audit_result",
+        "validation_summary",
+        "whatsapp_html_detected"
+      ],
+      "linea": 214,
+      "metodo": "detect_pains",
+      "posicionales": 0,
+      "prohibidos_presentes": [],
+      "receptor": "mapper",
+      "resolucion": "asignacion_o_anotacion_local",
+      "senales_ausentes": [],
       "senales_requeridas": [
         "whatsapp_html_detected"
       ]

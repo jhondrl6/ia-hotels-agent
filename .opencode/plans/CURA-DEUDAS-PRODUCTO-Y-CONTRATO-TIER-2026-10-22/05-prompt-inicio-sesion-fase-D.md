@@ -98,12 +98,12 @@ Registro:
 
 ## Criterios de Completitud (CHECKLIST)
 
-- [ ] Gate de `gbp_leak_detector` escrito; relevo probado
-- [ ] Vocabulario único en ambos caminos; schema tri-estado
-- [ ] 0 brechas y 0 COP sobre perfil completo; mutante en rojo
-- [ ] `N2` sin etiquetas colapsadas; `--quick` verde
-- [ ] Cinco cortes sin commit; lecciones registradas; evidencia preservada
-- [ ] Derivados re-publicados y verificados con `--check` como último paso (Wiring si la fase añadió archivos versionados; índice de lecciones si se citaron IDs del vocabulario), con el exit leído sin tubería
+- [x] Gate de `gbp_leak_detector` escrito; relevo probado — decisión `DA-PLAN-9` escrita antes de editar código; matriz perfil a perfil contra la copia real en `evidence/…/FASE-D/relevo-cruce.txt`; copia marcada como retirada (oráculo vivo)
+- [x] Vocabulario único en ambos caminos; schema tri-estado — 4 claves inglesas retiradas; `None` ≠ `{}` con resultados legibles (tests `TestSchemaTriEstado`)
+- [x] 0 brechas y 0 COP sobre perfil completo; mutante en rojo — diente con la forma real de `_base_profile` (0 brechas, 0 COP); M1 reproduce 6 brechas / 39.600.000 COP/mes (`02-rojo-mutante-m1-claves-inglesas.txt`)
+- [x] `N2` sin etiquetas colapsadas; `--quick` verde — `tipo_map` inyectivo, dedupe sin undercount, textos distintos; `--quick` 13/13 (EXIT=0, crudo `12-quick-final.txt`)
+- [x] Cinco cortes sin commit; lecciones registradas; evidencia preservada — 5 cortes declarados (implementación → verificación → cierre documental → listo para revisión → espera de autorización), 0 commits; lecciones en `00-lecciones` §5.3 y `L24`; crudos 01–07 + `baseline-pre-post.md` + `par-rojo-verde.md`
+- [x] Derivados re-publicados y verificados con `--check` como último paso (Wiring si la fase añadió archivos versionados; índice de lecciones si se citaron IDs del vocabulario), con el exit leído sin tubería — crudos 08–11 y re-verificación final 14–15
 
 ## Restricciones
 

@@ -1,0 +1,21 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.3, pytest-9.0.0, pluggy-1.6.0 -- C:\Users\Jhond\Github\iah-cli\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Jhond\Github\iah-cli
+configfile: pytest.ini
+plugins: anyio-4.11.0
+collecting ... collected 11 items
+
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[fotos_pocas] PASSED [  9%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[perfil_completo] PASSED [ 18%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[rating_bajo] PASSED [ 27%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_horarios] PASSED [ 36%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_perfil] PASSED [ 45%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_posts] PASSED [ 54%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_qa] PASSED [ 63%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_website] PASSED [ 72%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_mismo_resultado_por_perfil[sin_whatsapp] PASSED [ 81%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_perfil_completo_cero_en_ambos_y_cero_perdida PASSED [ 90%]
+tests/test_gbp_contrato_relevo.py::TestRelevo::test_divergencias_declaradas_fijadas PASSED [100%]
+
+============================= 11 passed in 1.06s ==============================

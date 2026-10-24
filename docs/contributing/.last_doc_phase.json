@@ -1,6 +1,6 @@
 {
   "modules/asset_generation/conditional_generator.py": "FASE-RELEASE-4.63.0",
-  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-B",
+  "modules/commercial_documents/v4_diagnostic_generator.py": "FASE-D",
   "modules/commercial_documents/v4_proposal_generator.py": "FASE-B",
   "modules/commercial_documents/pain_solution_mapper.py": "FASE-B (ESTABILIZACION-PRE-TRIBUNAL)",
   "modules/asset_generation/asset_diagnostic_linker.py": "FASE-PROP-D",
@@ -306,9 +306,9 @@
   "14": "FASE-ENMIENDA",
   "16": "FASE-A2",
   ".opencode/plans/Archives/EVALUACION-JEV-TYPESAFE-2026-09-21/10-analisis-post-implementacion.md": "CURA-B2-1-SESION-2",
-  ".opencode/wiring_report.json": "FASE-C",
-  ".opencode/LECCIONES-INDEX.md": "FASE-C",
-  ".opencode/lecciones_index.json": "FASE-C",
+  ".opencode/wiring_report.json": "FASE-D",
+  ".opencode/LECCIONES-INDEX.md": "FASE-D",
+  ".opencode/lecciones_index.json": "FASE-D",
   ".opencode/qmind-writeback/registro.json": "FASE-RELEASE-4.81.1",
   "evidence/EVALUACION-JEV-TYPESAFE-2026-09-21/CURA-B2-1-2026-10-09/00-nota-de-cura.md": "CURA-B2-1-SESION-2",
   ".opencode/plans/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07/00-lecciones-capitalizadas.md": "FASE-A3",
@@ -374,5 +374,15 @@
   "modules/quality_gates/tribunal/review_inputs.py": "FASE-C",
   "tests/quality_gates/tribunal/test_acta_version_desde_yaml.py": "FASE-C",
   "tests/test_fase_0_ac20_evidencia_veredicto.py": "FASE-C",
-  "tests/test_ac_g4_g5_multi_hotel_matrix.py": "FASE-C"
+  "tests/test_ac_g4_g5_multi_hotel_matrix.py": "FASE-C",
+  "modules/utils/dynamic_impact.py": "FASE-D",
+  "modules/scrapers/gbp_auditor.py": "FASE-D",
+  "modules/scrapers/gbp_leak_detector.py": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/06-checklist-implementacion.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/05-prompt-inicio-sesion-fase-D.md": "FASE-D",
+  ".opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md": "FASE-D"
 }

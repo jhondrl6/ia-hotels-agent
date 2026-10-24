@@ -2012,7 +2012,9 @@ class V4DiagnosticGenerator:
             return _render()
         
         # GBP issues
-        # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector)
+        # FASE-D (D9): target estandarizado de 40 fotos GBP (gbp_leak_detector —
+        # copia retirada del servicio desde FASE-D: oráculo del relevo, no fuente
+        # de estándar; el valor se re-mide por semántica en FASE-F, D25)
         TARGET_GBP_PHOTOS = 40
         if audit_result.gbp.geo_score < 70:
             rows.append(f"| Perfil GBP Sub-optimizado | 🟡 Media | Optimizar {audit_result.gbp.reviews} reviews y {audit_result.gbp.photos} fotos |")
@@ -3597,18 +3599,28 @@ class V4DiagnosticGenerator:
         return brechas
 
     def _map_brecha_to_issue_type(self, brecha_tipo: str) -> str:
-        """Mapea tipo de brecha del diagnostico a issue_type del DynamicImpactCalculator."""
+        """Mapea tipo de brecha del diagnostico a issue_type del DynamicImpactCalculator.
+
+        FASE-D (D28/N2, DA-PLAN-9): el vocabulario GBP es único para los dos
+        caminos. Tres pains de la web dejan de reclamar etiquetas GBP:
+          * `no_hotel_schema` — markup schema.org/Hotel del SITIO; no es perfil
+            abandonado (PERFIL_ABANDONADO es actividad del perfil GBP). Se
+            queda sin issue_type: conserva su peso propio en `_identify_brechas`.
+          * `low_citability` — score de contenido citable del sitio; ídem.
+          * `no_og_tags` — markup social (Open Graph) del sitio; FOTOS_INSUFICIENTES
+            es recuento de fotos del GBP. Ídem.
+        """
         mapping = {
             'low_gbp_score': 'PERFIL_NO_RECLAMADO',
-            'no_hotel_schema': 'PERFIL_ABANDONADO',
+            'no_hotel_schema': '',
             'no_whatsapp_visible': 'SIN_WHATSAPP',
             'poor_performance': 'SIN_WEBSITE',
             'whatsapp_conflict': 'SIN_WHATSAPP',
             'metadata_defaults': 'CERO_ACTIVIDAD_RECIENTE',
             'missing_reviews': 'RESENAS_CRITICAS',
             'no_faq_schema': 'SIN_FAQ',
-            'no_og_tags': 'FOTOS_INSUFICIENTES',
-            'low_citability': 'PERFIL_ABANDONADO',
+            'no_og_tags': '',
+            'low_citability': '',
         }
         return mapping.get(brecha_tipo, '')
 
