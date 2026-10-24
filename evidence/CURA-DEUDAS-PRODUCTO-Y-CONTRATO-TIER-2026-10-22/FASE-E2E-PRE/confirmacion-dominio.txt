@@ -1,0 +1,42 @@
+# Confirmación de dominio — Hotel Don Alfonso (letra del Operador, 2026-10-24)
+
+**Dictado del Operador (literal):** «Esta es la web de: https://donalfonsohotel.com/»
+
+**Qué fija.** El sitio canónico de Hotel Don Alfonso es `donalfonsohotel.com` (ápice). Con eso queda
+refutada como URL del hotel la que publica `data/hotel_observations/observations.json`
+(`https://hoteldonalfonso.com/`), y el antecedente documentado en `onboarding_provenance.json` del
+baseline —la edición explícita de `hotel.url` en el YAML, atribuida al Operador el 2026-10-06— queda
+ratificado. La condición 1 del `pre-vuelo.md` de esta fase pasa a **cerrada**.
+
+## Consecuencias medidas (sondas de hoy, con el loader real)
+
+| Grafía pasada al loader | `_normalize_url` | Rama efectiva | `hotel.url` que viaja al documento |
+|-------------------------|------------------|---------------|-------------------------------------|
+| `https://donalfonsohotel.com/` | `donalfonsohotel.com` | YAML de `output/clientes` | `https://www.donalfonsohotel.com/` |
+| `https://www.donalfonsohotel.com/` | `donalfonsohotel.com` | YAML de `output/clientes` | `https://www.donalfonsohotel.com/` |
+| `https://hoteldonalfonso.com/` | `hoteldonalfonso.com` | **fallback a `observations.json`** | `https://hoteldonalfonso.com/` |
+
+- Ápice y `www` son **equivalentes para el cargador**: normalizan al mismo host y ambos toman la rama
+  del YAML. Las identidades que midieron el baseline tampoco se mueven: `_extract_hotel_name_from_url`
+  da `Donalfonsohotel` en las dos grafías. Por eso FASE-E2E puede conservar la URL del baseline
+  (`https://www.donalfonsohotel.com/`) y la comparación de AC7 sigue siendo a fuente igual.
+- La tercera fila es el riesgo real que cierra esta letra: con `hoteldonalfonso.com` el loader **sí**
+  devuelve a Don Alfonso —por el fallback del warehouse— así que la corrida no falla, pero **imprime en
+  el documento del cliente una URL que no es la web del hotel**. Un run con esa grafía no es detectable
+  por ausencia de onboarding: los `datos_operativos` salen idénticos en las dos ramas (habitaciones 11,
+  reservas_mes 140, valor_reserva_cop 330000, canal_directo_pct 30.0) y hasta la etiqueta
+  `metadatos.fuente` es `observations_tier_a` en las dos. Lo único que las distingue es `hotel.url` y la
+  ruta del archivo, y nada en el pipeline corta esa diferencia hoy.
+
+## Condición que sigue abierta para FASE-E2E
+
+**Frescura del dato operativo**: `metadatos.fecha_captura = 2026-07-22` → **94 días** medidos al
+2026-10-24, contra el techo de 90 que publicó el baseline (`vence_el: 2026-10-20`). El loader no lo corta
+porque `ONBOARDING_FRESHNESS_HOURS` está ausente del entorno. Dueño **Operador**: re-capturar el
+onboarding o declarar el techo vencido en el pre-vuelo de E2E.
+
+## Qué NO se re-escribe
+
+`preflight.json` de esta fase queda como se emitió (`domain_confirmed: false`, `domain_confirmed_por: null`):
+esa fue la verdad al momento del ensayo. Esta nota es el registro aditivo de la letra posterior, y el
+hecho del plan queda en `01-plan-maestro.md` §5.

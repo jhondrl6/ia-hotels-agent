@@ -84,6 +84,7 @@ Cada AC declara **el artefacto y la clave exacta donde se lee su valor** (R2.4).
 | Cinco bloques sin dato en el JSON: `DEFAULT_DATA` se declara maestro por escrito con assert de coherencia | FASE-E | Default del plan; se escribe antes de tocar el lector |
 | `gbp_leak_detector`: sustitución, no borrado; su lógica de vocabulario español sobrevive como implementación del contrato y la copia muerta se retira tras el relevo | FASE-D | Default del plan; se confirma al abrir la fase |
 | `P6.5` y `T1_CERTIFIABLE_CLAUSES` no se tocan | fuera de alcance | Aprobada |
+| Dominio de Hotel Don Alfonso: la web canónica es `https://donalfonsohotel.com/` (ápice; `www` redirige y normaliza al mismo host). Refuta `https://hoteldonalfonso.com/` —la URL que publica `observations.json`— como URL del hotel | FASE-E2E | **Aprobada por el Operador (2026-10-24)**: «Esta es la web de: https://donalfonsohotel.com/». Evidencia y sondas del loader en `evidence/…/FASE-E2E-PRE/confirmacion-dominio.txt`; FASE-E2E conserva la URL del baseline (`www`) porque las dos grafías cargan la misma rama y la misma identidad |
 
 ## §6. Pertinencia de la corrida `v4complete` (evaluada, no supuesta)
 
