@@ -47,7 +47,7 @@ La cura se ancla en el camino real del producto:
 
 | FASE-E2E-PRE — ensayo determinista | MEDIA | ✅ 2026-10-24 → `LISTO_PARA_E2E` (métricas: `09-documentacion-post-proyecto.md` §D; veredicto y condiciones: `evidence/…/FASE-E2E-PRE/pre-vuelo.md`) |
 | FASE-E2E — v4complete Don Alfonso | MEDIA | ✅ 2026-10-24 → ZIP real, 0 `OVER_PRESENTATION`, `APROBADO-CONDICIONAL` con `ANALYTICS_CEILING` (AC7; métricas: `09-documentacion-post-proyecto.md` §D; antes/después: `evidence/…/FASE-E2E/tabla-antes-despues.md`) |
-| FASE-VERIFY — certificación AC1–AC8 | MEDIA | ⏳ |
+| FASE-VERIFY — certificación AC1–AC8 | MEDIA | ✅ 2026-10-24 → **8 de 8 AC CUMPLIDOS** leídos en artefactos reales (AC1 en `summary.over_presentations = 0`, AC7 sobre el ZIP medido en disco, `P6.5` intacta y no certificada); límites y sedes en `evidence/…/FASE-VERIFY/matriz-verificacion-AC.md`; métricas: `09-documentacion-post-proyecto.md` §D |
 | FASE-RELEASE-4.82.0 | BAJA | ⏳ |
 
 **Cómo ejecutar una fase**: abrir sesión nueva, leer su `05-prompt-inicio-sesion-fase-*.md`, ejecutar solo esa fase, cerrar con su checklist + `log_phase_completion.py`. Ver `dependencias-fases.md` §Estado.

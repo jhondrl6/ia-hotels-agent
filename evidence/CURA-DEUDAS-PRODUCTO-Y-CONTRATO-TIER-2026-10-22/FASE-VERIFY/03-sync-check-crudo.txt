@@ -1,0 +1,2 @@
+BENCHMARK SYNC OK: 4 regions verified (master: ['antioquia', 'bogota', 'caribe', 'eje_cafetero'])
+EXIT_SYNC_REAL=0

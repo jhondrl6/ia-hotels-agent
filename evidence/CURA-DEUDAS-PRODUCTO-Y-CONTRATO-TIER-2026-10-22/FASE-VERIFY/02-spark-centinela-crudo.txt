@@ -1,0 +1,9 @@
+[HARNESS] 🔄 Usando URL persistente: https://example.com/hotel-fixture
+============================================================
+MODO SPARK - RUTA RETIRADA
+============================================================
+El comando 'spark' fue retirado (D19 cerrada por retiro, no por reparacion).
+La estimacion spark estaba rota y la ruta esta deprecada:
+el producto usa 'v4complete'.
+No se genera ninguna estimacion.
+Siguiente paso: python main.py v4complete --url <url>
