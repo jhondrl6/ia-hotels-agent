@@ -1,0 +1,75 @@
+{
+  "status": "WARNING",
+  "blocking": false,
+  "coverage_failure_rate": {
+    "passed": true,
+    "details": {
+      "total_assets": 12,
+      "generated": 12,
+      "failed": 0,
+      "failure_rate": 0.0,
+      "reason": ""
+    },
+    "gate": "G7"
+  },
+  "proposal_asset_gate": {
+    "passed": true,
+    "gate": "G9",
+    "aligned": 6,
+    "total": 6,
+    "alignment": {
+      "promised_services_total": 6,
+      "generated_aligned": 6,
+      "present_in_production": 0,
+      "unresolved": 0,
+      "coverage_ratio": 1.0,
+      "present_assets": [],
+      "no_breach": 0,
+      "passed": true,
+      "effective_total": 6,
+      "actionable_total": 6,
+      "message": "6/6 servicios comprometidos cubiertos (6 generados )"
+    }
+  },
+  "asset_specificity_gate": {
+    "passed": false,
+    "details": {
+      "reason": "1 assets below confidence threshold",
+      "avg_confidence": 0.86,
+      "low_confidence_count": 1,
+      "total_assets": 12
+    },
+    "gate": "G8"
+  },
+  "evidence_gate": {
+    "passed": true,
+    "details": {
+      "coherence_available": true,
+      "asset_data_available": true,
+      "coherence_score": 0.93
+    },
+    "gate": "EVIDENCE"
+  },
+  "advisory_warnings": [
+    {
+      "code": "IA_READINESS_CRITICAL",
+      "severity": "WARNING",
+      "blocking": false,
+      "message": "IA-Readiness Critical: objetivo de citación/recomendación por IA en riesgo sin acción correctiva"
+    }
+  ],
+  "human_review_items": [
+    "G8: Asset specificity failed — 1 assets below confidence threshold"
+  ],
+  "summary": {
+    "total_gates": 5,
+    "passed": 4,
+    "failed": 1,
+    "not_evaluated": [],
+    "coherence_score": 0.93,
+    "blocking_gates": [],
+    "warning_gates": [
+      "asset_specificity"
+    ]
+  }
+}

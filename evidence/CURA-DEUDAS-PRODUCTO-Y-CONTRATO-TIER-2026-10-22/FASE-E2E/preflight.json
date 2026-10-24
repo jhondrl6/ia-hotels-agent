@@ -1,0 +1,91 @@
+{
+  "schema": "iah-e2e-preflight/1.0",
+  "fase": "FASE-E2E",
+  "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+  "emitido_el": "2026-10-24T20:47:34Z",
+  "ensayo_previo": {
+    "fase": "FASE-E2E-PRE",
+    "veredicto": "LISTO_PARA_E2E",
+    "condiciones_abiertas_al_emitir": 2,
+    "condiciones_cerradas": 2
+  },
+  "onboarding_source": "output\\clientes\\hotel_don_alfonso_onboarding.yaml",
+  "onboarding_source_sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+  "copia_versionada_sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+  "copias_coinciden": true,
+  "hotel_name": "Hotel Don Alfonso",
+  "rooms": 11,
+  "adr_cop": 330000,
+  "occupancy_rate": 0.42424242424242425,
+  "direct_channel_pct": 30.0,
+  "productor_de_las_cifras": {
+    "rooms": "YAML datos_operativos.habitaciones",
+    "adr_cop": "YAML datos_operativos.valor_reserva_cop",
+    "direct_channel_pct": "YAML datos_operativos.canal_directo_pct",
+    "occupancy_rate": "derivada reservas_mes 140 / (11 habitaciones x 30 dias); coincide con financial_scenarios_20261012_165654.json -> input_data.occupancy_rate del baseline (0.42424242424242425)"
+  },
+  "rama_efectiva_del_loader": "YAML_DE_DIR_CLIENTES",
+  "loader_devolvio": "Hotel Don Alfonso",
+  "url_del_run": "https://www.donalfonsohotel.com/",
+  "url_normalizada": "donalfonsohotel.com",
+  "domain_confirmed": true,
+  "domain_confirmed_por": "Operador, 2026-10-24: «Esta es la web de: https://donalfonsohotel.com/» (asiento en 01-plan-maestro.md §5)",
+  "web_canonica_apice": "https://donalfonsohotel.com/",
+  "url_descartada_para_el_run": "https://hoteldonalfonso.com/",
+  "motivo_del_descarte": "esa grafia carga al hotel por el fallback de observations.json, no dispara alerta y publica en el documento del cliente una web que no es la del hotel (evidence/.../FASE-E2E-PRE/confirmacion-dominio.txt)",
+  "frescura_declarada_vencida": true,
+  "frescura": {
+    "fecha_captura": "2026-07-22",
+    "edad_dias_medida_al_2026-10-24": 94,
+    "techo_dias_publicado_por_el_baseline": 90,
+    "vence_el": "2026-10-20",
+    "decision": "(b) del Operador, 2026-10-24: correr con la captura vigente y declarar la edad, sin re-capturar",
+    "ONBOARDING_FRESHNESS_HOURS_en_el_entorno": false,
+    "via_c_descartada_por_mecanismo": "fijar la variable con el dato vencido pone el loader en fail-closed, el tribunal trueca ANALYTICS_CEILING por ONBOARDING_INCOMPLETE y AC7 deja de ser alcanzable"
+  },
+  "consentimiento": {
+    "ruta": "evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/consentimiento-corrida.md",
+    "fecha_acto": "2026-10-24",
+    "sha256": "ba392cc9da17121e1b4a0956212416c1e1bca883a8c59af61a9474ed72005bcd",
+    "bytes": 4136,
+    "procedencia_del_texto": "opcion (a) propuesta por el agente y adoptada por seleccion del Operador en el chat del 2026-10-24",
+    "no_se_reutiliza_el_acto_de": "evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/FASE-E2E/consentimiento-corrida.md"
+  },
+  "aislamiento_del_analisis_previo": {
+    "output_v4_complete_conserve_artefactos_del": "2026-10-12",
+    "memoria_tiene_analisis_de_la_url_canonica": true,
+    "efecto_medido_en_el_codigo": "run_v4_complete_mode solo IMPRIME el analisis descubierto (discovered_analysis); la auditoria se vuelve a ejecutar (V4ComprehensiveAuditor.audit bajo check_permission). La reutilizacion efectiva de hallazgo (find_latest_v4_analysis / force_new) vive en run_execution_mode, no en v4complete",
+    "fuerza_el_comando": "--force-new no interviene: su unico consumidor vivo es run_execution_mode (re-medido el 2026-10-24)",
+    "premisa_no_heredada": "la perdida y las brechas se leen de los artefactos que esta corrida escriba, con su propio timestamp",
+    "marco_de_lectura": "L-PF11"
+  },
+  "rutas_de_salida": {
+    "output_dir": "output/v4_complete",
+    "deliveries_dir": "output/v4_complete/deliveries",
+    "deliveries_dir_antes_de_la_corrida": "existe, 0 entradas (el ZIP del baseline fue suprimido)"
+  },
+  "baseline_congelado": {
+    "corrida": "2026-10-12",
+    "veredicto": "BLOQUEADO",
+    "evidence_tier": "B+",
+    "over_presentations": 2,
+    "perdida_realista_cop_mes": 3511200.0,
+    "escenarios_cop_mes": {"conservative": 6176940.0, "realistic": 3511200.0, "optimistic": 582120.0},
+    "pain_ledger_entries": 11
+  },
+  "presupuesto_de_corrida": {"intentos": "0/1 al emitir", "reintento": "prohibido", "re_run": "prohibido"},
+  "no_se_edito_observations_json": true,
+  "no_se_edito_el_yaml": true,
+  "credenciales_sondadas_en_esta_sesion": false,
+  "motivo_credenciales": "la politica de la herramienta bloquea leer .env sin autorizacion expresa; se declara por nombre de variable, nunca por valor",
+  "requisitos_observados": [
+    "E2E-PRE en LISTO_PARA_E2E",
+    "yaml_materializado",
+    "shas_coinciden",
+    "loader_devuelve_datos",
+    "domain_confirmed",
+    "frescura_declarada_vencida",
+    "consentimiento_de_esta_corrida"
+  ],
+  "veredicto_preflight": "AUTORIZA_LA_CORRIDA"
+}

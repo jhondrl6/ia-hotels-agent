@@ -1,0 +1,112 @@
+{
+  "reviewer": "asset_reviewer",
+  "clauses": [
+    "P6.3",
+    "P6.4"
+  ],
+  "coverage_by_service": [
+    {
+      "service": "SEO Local",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\optimization_guide\\ESTIMATED_guia_optimizacion_20261024_155113.md",
+      "asset_exists_on_disk": true,
+      "finding": null
+    },
+    {
+      "service": "Schema Hotel",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\hotel_schema\\hotel_schema_20261024_155113.json",
+      "asset_exists_on_disk": true,
+      "finding": null
+    },
+    {
+      "service": "Schema Organization",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\org_schema\\ESTIMATED_org_schema_20261024_155113.json",
+      "asset_exists_on_disk": true,
+      "finding": null
+    },
+    {
+      "service": "Página de FAQ",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\faq_page\\ESTIMATED_faqs_20261024_155113.json",
+      "asset_exists_on_disk": true,
+      "finding": null
+    },
+    {
+      "service": "Meta Tags Sociales (Open Graph)",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\open_graph\\open_graph_meta_20261024_155113.html",
+      "asset_exists_on_disk": true,
+      "finding": null
+    },
+    {
+      "service": "Optimización para IA Generativa",
+      "status": "CON-ASSET",
+      "asset_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\donalfonsohotel\\llms_txt\\llms_20261024_155113.txt",
+      "asset_exists_on_disk": true,
+      "finding": null
+    }
+  ],
+  "findings": [
+    {
+      "severity": "WARNING",
+      "finding_type": "P12_UNVERIFIABLE",
+      "description": "promised_assets_exist verificó via catálogo estático. P6.3 no verificable desde el artefacto; la verificación real requiere archivos en disco."
+    }
+  ],
+  "implementation_order_check": {
+    "status": "OK",
+    "source": "zip",
+    "contenido": "OK",
+    "tareas": 1,
+    "seccion_orden": "PRESENT"
+  },
+  "summary": {
+    "services_covered": 6,
+    "services_total": 6,
+    "coverage_ratio": 1.0
+  },
+  "verdict_recommendation": "APROBADO",
+  "timestamp": "2026-10-24T15:51:13.958052",
+  "artifacts_read": [
+    "asset_generation_report.json",
+    "delivery_quality_report.json",
+    "proposal_asset_matrix.json",
+    "MANIFEST.json",
+    "IMPLEMENTATION_ORDER.md (dir descomprimido o miembro del ZIP)",
+    "deliveries/*.zip (régimen ZIP-only)",
+    "coherence_validation*.json",
+    "ASSETS/* (archivos reales en disco)"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261024T155113",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+        "sha256": "73ff6ef089d7685bd5ad56798c7342f36eecfe586e2b450a067b8fb686f1f3ee",
+        "size_bytes": 18483,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      },
+      {
+        "kind": "manifest",
+        "read_status": "OK",
+        "source": "zip",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+        "sha256": "28f9344fabeffa86d79da873a4f2c11b66db4e5b558a3fe0b8453bd8f57cee48",
+        "size_bytes": 11557,
+        "disposition": null,
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "generado": "2026-10-12T21:57:17Z",
+  "origen": "cache",
+  "cache_key": "d66e95d7d92f46a842d572ac97db052da975ec0d6949b50c54a997d92ebd6546",
+  "digest_texto": "7328cb42e672516976e83904d9f563ef34598efcdf0d98878f760bcaa0b40728",
+  "digest_prompt_compuesto": "cbcb33b46e53e0f424fe8808fb38451855b4cda3218bb79fd5bef623cfcc80ab",
+  "version_prompt": "v2",
+  "proveedor_configurado": "deepseek",
+  "proveedor_servido": null,
+  "modelo_pedido": null,
+  "modelo_firmado": null,
+  "finish_reason": null,
+  "latencia_ms": null,
+  "usage": null,
+  "digest_respuesta_cruda": null,
+  "estado": "OK_CON_PROMESAS",
+  "motivo": null,
+  "num_promesas": 42
+}

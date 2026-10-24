@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 542
+> **Total fases completadas:** 543
 
 ---
 
@@ -13040,6 +13040,111 @@ _Errata re-anchada a mano el 2026-10-24: estas dos rutas se escribieron después
 | `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
 | `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
 | `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-E2E - 2026-10-24 (CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22)
+**Descripcion:** Corrida v4complete Don Alfonso post-curacion: ZIP real, 0 OVER_PRESENTATION y veredicto honesto (AC7)
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/consentimiento-corrida.md` | NUEVO | Consentimiento-Corrida |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md` | NUEVO | 01 Diagnostico Y Oportunidad 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/02_PROPUESTA_COMERCIAL_20261024_155113.md` | NUEVO | 02 Propuesta Comercial 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md` | NUEVO | 01 Diagnostico Y Oportunidad 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/_review_inputs/run_20261024T155113/propuesta/02_PROPUESTA_COMERCIAL_20261024_155113.md` | NUEVO | 02 Propuesta Comercial 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/deliveries/donalfonsohotel_20261024.zip` | NUEVO | Donalfonsohotel 20261024 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261024_155113.md` | NUEVO | Estimated Guia Configuracion Ga4 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/analytics_setup_guide/ESTIMATED_guia_configuracion_ga4_20261024_155113_metadata.json` | NUEVO | Estimated Guia Configuracion Ga4 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/faq_page/ESTIMATED_faqs_20261024_155113.json` | NUEVO | Estimated Faqs 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/faq_page/ESTIMATED_faqs_20261024_155113_metadata.json` | NUEVO | Estimated Faqs 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/faq_schema.json` | NUEVO | Faq Schema |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/geo_badge.md` | NUEVO | Geo Badge |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/geo_checklist_min.md` | NUEVO | Geo Checklist Min |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/geo_dashboard.md` | NUEVO | Geo Dashboard |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/geo_fix_kit.md` | NUEVO | Geo Fix Kit |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/hotel_schema_rich.json` | NUEVO | Hotel Schema Rich |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/llms.txt` | NUEVO | Llms |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/robots_fix.txt` | NUEVO | Robots Fix |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/seo_fix_kit.md` | NUEVO | Seo Fix Kit |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/geo_enriched/sync_report.md` | NUEVO | Sync Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/hotel_schema/hotel_schema_20261024_155113.json` | NUEVO | Hotel Schema 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/hotel_schema/hotel_schema_20261024_155113_metadata.json` | NUEVO | Hotel Schema 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261024_155113.md` | NUEVO | Estimated Optimizacion Trafico Indirecto 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/indirect_traffic_optimization/ESTIMATED_optimizacion_trafico_indirecto_20261024_155113_metadata.json` | NUEVO | Estimated Optimizacion Trafico Indirecto 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/llms_txt/llms_20261024_155113.txt` | NUEVO | Llms 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/llms_txt/llms_20261024_155113_metadata.json` | NUEVO | Llms 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/local_content_page/contenido_local__20261024_155113.md` | NUEVO | Contenido Local  20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/local_content_page/contenido_local__20261024_155113_metadata.json` | NUEVO | Contenido Local  20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/monthly_report/informe_mensual_20261024_155113.md` | NUEVO | Informe Mensual 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/monthly_report/informe_mensual_20261024_155113_metadata.json` | NUEVO | Informe Mensual 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/og_tags_guide/ESTIMATED_guia_og_tags_20261024_155113.md` | NUEVO | Estimated Guia Og Tags 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/og_tags_guide/ESTIMATED_guia_og_tags_20261024_155113_metadata.json` | NUEVO | Estimated Guia Og Tags 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/open_graph/open_graph_meta_20261024_155113.html` | NUEVO | Open Graph Meta 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/open_graph/open_graph_meta_20261024_155113_metadata.json` | NUEVO | Open Graph Meta 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/optimization_guide/ESTIMATED_guia_optimizacion_20261024_155113.md` | NUEVO | Estimated Guia Optimizacion 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/optimization_guide/ESTIMATED_guia_optimizacion_20261024_155113_metadata.json` | NUEVO | Estimated Guia Optimizacion 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/org_schema/ESTIMATED_org_schema_20261024_155113.json` | NUEVO | Estimated Org Schema 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/org_schema/ESTIMATED_org_schema_20261024_155113_metadata.json` | NUEVO | Estimated Org Schema 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/research_e7b5f4eae249_Donalfonsohotel.json` | NUEVO | Research E7B5F4Eae249 Donalfonsohotel |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/review_plan/ESTIMATED_plan_reviews_20261024_155113.md` | NUEVO | Estimated Plan Reviews 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/review_plan/ESTIMATED_plan_reviews_20261024_155113_metadata.json` | NUEVO | Estimated Plan Reviews 20261024 155113 Metadata |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/acta_revision.json` | NUEVO | Acta Revision |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/acta_revision.md` | NUEVO | Acta Revision |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/asset_generation_report.json` | NUEVO | Asset Generation Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/audit_report_20261024_155101.json` | NUEVO | Audit Report 20261024 155101 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_pre_gate_20261024_155109.json` | NUEVO | Coherence Pre Gate 20261024 155109 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_validation.json` | NUEVO | Coherence Validation |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/coherence_validation_post_gen.json` | NUEVO | Coherence Validation Post Gen |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/commercial_gates_report.json` | NUEVO | Commercial Gates Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/commercial_gates_report_diagnostic_20261024_155113.json` | NUEVO | Commercial Gates Report Diagnostic 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/delivery_quality_report.json` | NUEVO | Delivery Quality Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/financial_scenarios_20261024_155101.json` | NUEVO | Financial Scenarios 20261024 155101 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/gate_report_20261024_155113.json` | NUEVO | Gate Report 20261024 155113 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/geo_flow_result.json` | NUEVO | Geo Flow Result |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/human_checklist.md` | NUEVO | Human Checklist |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/ia_readiness_report.json` | NUEVO | Ia Readiness Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/pain_ledger.json` | NUEVO | Pain Ledger |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/pain_ledger_resolved.json` | NUEVO | Pain Ledger Resolved |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/proposal_asset_matrix.json` | NUEVO | Proposal Asset Matrix |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/review_input_manifest.json` | NUEVO | Review Input Manifest |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_alineacion.json` | NUEVO | Revision Alineacion |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_assets.json` | NUEVO | Revision Assets |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_diagnostico.json` | NUEVO | Revision Diagnostico |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/revision_honestidad.json` | NUEVO | Revision Honestidad |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/donalfonsohotel/v4_audit/site_presence_snapshot.json` | NUEVO | Site Presence Snapshot |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/health_dashboard/health_dashboard.html` | NUEVO | Health Dashboard |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/health_dashboard/health_dashboard_summary.json` | NUEVO | Health Dashboard Summary |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/corrida/v4_complete_report.json` | NUEVO | V4 Complete Report |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/inventario-paquete.json` | NUEVO | Inventario-Paquete |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/pre-run-inventario.txt` | NUEVO | Pre-Run-Inventario |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/pre-vuelo.md` | NUEVO | Pre-Vuelo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/preflight.json` | NUEVO | Preflight |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/recibos/50ba5b5fad381f25-llamada-01.json` | NUEVO | 50Ba5B5Fad381F25-Llamada-01 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/recibos/50ba5b5fad381f25-llamada-02.json` | NUEVO | 50Ba5B5Fad381F25-Llamada-02 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/recibos/d66e95d7d92f46a8-cache-02.json` | NUEVO | D66E95D7D92F46A8-Cache-02 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/recibos/d66e95d7d92f46a8-llamada-01.json` | NUEVO | D66E95D7D92F46A8-Llamada-01 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/stdout-corrida.txt` | NUEVO | Stdout-Corrida |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E/tabla-antes-despues.md` | NUEVO | Tabla-Antes-Despues |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/05-prompt-inicio-sesion-fase-E2E.md` | 05-Prompt-Inicio-Sesion-Fase-E2E |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
 
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._

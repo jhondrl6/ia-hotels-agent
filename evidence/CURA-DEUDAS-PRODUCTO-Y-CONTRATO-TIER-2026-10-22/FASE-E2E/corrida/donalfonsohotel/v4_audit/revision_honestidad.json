@@ -1,0 +1,161 @@
+{
+  "reviewer": "honesty_reviewer",
+  "clause": "P6.5",
+  "findings": [
+    {
+      "finding_type": "CG_WARNING_UNDISCLOSED",
+      "clause": "P6.5",
+      "severity": "WARNING",
+      "claim_text": null,
+      "evidence_tier_declared": "B+",
+      "cg_reference": "CG-WHATSAPP-LEAD",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md",
+      "description": "CG-* WARNING CG-WHATSAPP-LEAD no divulgado en propuesta: WhatsApp no aparece en la sección inicial del diagnóstico. El conflicto de WhatsApp es el gancho emo"
+    }
+  ],
+  "commercial_gates_read": {
+    "canonical_file": "commercial_gates_report.json",
+    "diagnostic_file": "commercial_gates_report_diagnostic_20261024_155113.json",
+    "total_cg_count": 12,
+    "distinct_cg_count": 10,
+    "duplicate_gate_ids": [
+      "CG-OTA-NARRATIVE",
+      "CG-TECH-JARGON"
+    ],
+    "warnings_found": [
+      "CG-WHATSAPP-LEAD"
+    ],
+    "all_gates": [
+      {
+        "gate_id": "CG-ROI-NEGATIVE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-OTA-NARRATIVE",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TECH-JARGON",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-SCENARIO-ORDER",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-SCENARIO-NEGATIVE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-IA-BLOCKED-CLAIM",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-CLAIM-VS-EVIDENCE",
+        "severity": "BLOCKING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-WHATSAPP-LEAD",
+        "severity": "WARNING",
+        "passed": false
+      },
+      {
+        "gate_id": "CG-OTA-NARRATIVE",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TIER-CONSISTENCY",
+        "severity": "WARNING",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-EVIDENCE-TIER-CONSISTENCY",
+        "severity": "INFO",
+        "passed": true
+      },
+      {
+        "gate_id": "CG-TECH-JARGON",
+        "severity": "WARNING",
+        "passed": true
+      }
+    ]
+  },
+  "summary": {
+    "over_presentations": 0,
+    "over_presentaciones_no_evaluables": 0,
+    "tier_mismatches": 0,
+    "undisclosed_warnings": 1,
+    "missing_scenarios": 0,
+    "total_findings": 1
+  },
+  "verdict_recommendation": "DEVOLVER-PRUEBAS",
+  "extraccion": {
+    "estado": "FALLIDO",
+    "motivo": "proveedor falló: ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x000001D71F62DD10>: Failed to resolve 'api.deepseek.com' ([Errno 11001] getaddrinfo failed)\"))",
+    "promesas_leidas": 0,
+    "via": "extract_checked"
+  },
+  "tier_resuelto": {
+    "evidence_tier": "B+",
+    "fuente": "escenarios",
+    "declarado": true,
+    "motivo_fuente": "financial_scenarios_20261024_155101.json → breakdown.evidence_tier"
+  },
+  "timestamp": "2026-10-24T15:51:14.085193",
+  "artifacts_read": [
+    "02_PROPUESTA_COMERCIAL*.md",
+    "financial_scenarios_*.json",
+    "commercial_gates_report.json",
+    "commercial_gates_report_diagnostic_*.json",
+    "MANIFEST.json (deliveries_dir)"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261024T155113",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+        "sha256": "73ff6ef089d7685bd5ad56798c7342f36eecfe586e2b450a067b8fb686f1f3ee",
+        "size_bytes": 18483,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      },
+      {
+        "kind": "manifest",
+        "read_status": "OK",
+        "source": "zip",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+        "sha256": "28f9344fabeffa86d79da873a4f2c11b66db4e5b558a3fe0b8453bd8f57cee48",
+        "size_bytes": 11557,
+        "disposition": null,
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      },
+      {
+        "kind": "propuesta",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/propuesta/02_PROPUESTA_COMERCIAL_20261024_155113.md",
+        "sha256": "e746d1fa28a5af42698c8e6b50e204de60765239e0305230511b8f06df0fbf05",
+        "size_bytes": 15182,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      }
+    ]
+  }
+}

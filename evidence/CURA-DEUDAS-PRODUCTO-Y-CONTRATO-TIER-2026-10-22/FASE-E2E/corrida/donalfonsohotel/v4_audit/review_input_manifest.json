@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run_20261024T155113",
+  "generated_at": "2026-10-24T15:51:13.685165",
+  "snapshot_root": "_review_inputs/run_20261024T155113",
+  "has_onboarding": true,
+  "documents": [
+    {
+      "kind": "diagnostico",
+      "run_id": "run_20261024T155113",
+      "original_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+      "internal_path": "_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+      "sha256": "73ff6ef089d7685bd5ad56798c7342f36eecfe586e2b450a067b8fb686f1f3ee",
+      "size_bytes": 18483,
+      "captured_at": "2026-10-24T15:51:13.685165",
+      "read_status": "OK",
+      "disposition": "internal_review_copy",
+      "cause": null
+    },
+    {
+      "kind": "propuesta",
+      "run_id": "run_20261024T155113",
+      "original_path": "C:\\Users\\Jhond\\Github\\iah-cli\\output\\v4_complete\\02_PROPUESTA_COMERCIAL_20261024_155113.md",
+      "internal_path": "_review_inputs/run_20261024T155113/propuesta/02_PROPUESTA_COMERCIAL_20261024_155113.md",
+      "sha256": "e746d1fa28a5af42698c8e6b50e204de60765239e0305230511b8f06df0fbf05",
+      "size_bytes": 15182,
+      "captured_at": "2026-10-24T15:51:13.685165",
+      "read_status": "OK",
+      "disposition": "internal_review_copy",
+      "cause": null
+    }
+  ]
+}

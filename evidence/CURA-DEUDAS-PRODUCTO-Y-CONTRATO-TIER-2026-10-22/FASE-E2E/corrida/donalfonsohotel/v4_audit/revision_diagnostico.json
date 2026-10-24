@@ -1,0 +1,39 @@
+{
+  "reviewer": "diagnosis_reviewer",
+  "clause": "P6.1",
+  "findings": [],
+  "summary": {
+    "total_findings": 0,
+    "critical": 0,
+    "warning": 0,
+    "info": 0
+  },
+  "verdict_recommendation": "APROBADO",
+  "timestamp": "2026-10-24T15:51:13.952475",
+  "artifacts_read": [
+    "01_DIAGNOSTICO_Y_OPORTUNIDAD_*.md",
+    "coherence_validation.json",
+    "pain_ledger.json",
+    "pain_ledger_resolved.json",
+    "gate_report_*.json"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261024T155113",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+        "sha256": "73ff6ef089d7685bd5ad56798c7342f36eecfe586e2b450a067b8fb686f1f3ee",
+        "size_bytes": 18483,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      }
+    ]
+  }
+}

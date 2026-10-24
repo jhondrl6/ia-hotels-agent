@@ -1,0 +1,19 @@
+{
+  "generado": "2026-10-24T20:51:14Z",
+  "origen": "llamada",
+  "cache_key": "50ba5b5fad381f25a80b3d99c4b5dd3ad2ba9c349b54e88cc5c00278f2f92aa3",
+  "digest_texto": "e746d1fa28a5af42698c8e6b50e204de60765239e0305230511b8f06df0fbf05",
+  "digest_prompt_compuesto": "a7ae0c20ac2f93fa9983ba1a832a9e5ecce69646d9c3af2aff24b5332141676d",
+  "version_prompt": "v2",
+  "proveedor_configurado": "deepseek",
+  "proveedor_servido": "deepseek",
+  "modelo_pedido": null,
+  "modelo_firmado": null,
+  "finish_reason": null,
+  "latencia_ms": 36.6,
+  "usage": null,
+  "digest_respuesta_cruda": null,
+  "estado": "FALLIDO",
+  "motivo": "proveedor falló: ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x000001D71F62DD10>: Failed to resolve 'api.deepseek.com' ([Errno 11001] getaddrinfo failed)\"))",
+  "num_promesas": 0
+}

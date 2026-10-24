@@ -1,0 +1,133 @@
+{
+  "reviewer": "alignment_reviewer",
+  "clause": "P6.2",
+  "service_matrix": [
+    {
+      "service": "SEO Local",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "metadata_defaults",
+      "finding": null
+    },
+    {
+      "service": "Schema Hotel",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "no_hotel_schema",
+      "finding": null
+    },
+    {
+      "service": "Schema Organization",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "no_org_schema",
+      "finding": null
+    },
+    {
+      "service": "Página de FAQ",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "no_faq_schema",
+      "finding": null
+    },
+    {
+      "service": "Meta Tags Sociales (Open Graph)",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "no_og_tags",
+      "finding": null
+    },
+    {
+      "service": "Optimización para IA Generativa",
+      "status": "ALINEADO",
+      "verbal_promise_found": false,
+      "promise_text": null,
+      "matrix_entry_found": true,
+      "pain_id": "missing_llmstxt",
+      "finding": null
+    }
+  ],
+  "findings": [
+    {
+      "finding_type": "S_C4_TECHNICAL_ASSETS_TABLE",
+      "clause": "P6.2",
+      "severity": "INFO",
+      "description": "Tabla de assets técnicos detectada como tercera superficie de promesa (S-C4)",
+      "source_artifact": "02_PROPUESTA_COMERCIAL.md"
+    }
+  ],
+  "summary": {
+    "aligned": 6,
+    "no_breach": 0,
+    "promise_without_matrix": 0,
+    "total": 6,
+    "no_breach_info": 0
+  },
+  "verdict_recommendation": "DEVOLVER-PRUEBAS",
+  "extraccion": {
+    "estado": "FALLIDO",
+    "motivo": "proveedor falló: ConnectionError: HTTPSConnectionPool(host='api.deepseek.com', port=443): Max retries exceeded with url: /v1/chat/completions (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x000001D71F62D310>: Failed to resolve 'api.deepseek.com' ([Errno 11001] getaddrinfo failed)\"))",
+    "promesas_leidas": 0,
+    "via": "extract_checked"
+  },
+  "info": {
+    "brechas_en_ledger": 11
+  },
+  "timestamp": "2026-10-24T15:51:14.019843",
+  "artifacts_read": [
+    "02_PROPUESTA_COMERCIAL*.md",
+    "proposal_asset_matrix.json",
+    "pain_ledger_resolved*.json"
+  ],
+  "review_inputs": {
+    "run_id": "run_20261024T155113",
+    "resolver": "review_inputs",
+    "manifest_present": true,
+    "package_zip_path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+    "documents": [
+      {
+        "kind": "diagnostico",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/diagnostico/01_DIAGNOSTICO_Y_OPORTUNIDAD_20261024_155113.md",
+        "sha256": "73ff6ef089d7685bd5ad56798c7342f36eecfe586e2b450a067b8fb686f1f3ee",
+        "size_bytes": 18483,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      },
+      {
+        "kind": "manifest",
+        "read_status": "OK",
+        "source": "zip",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/deliveries/donalfonsohotel_20261024.zip.tmp",
+        "sha256": "28f9344fabeffa86d79da873a4f2c11b66db4e5b558a3fe0b8453bd8f57cee48",
+        "size_bytes": 11557,
+        "disposition": null,
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      },
+      {
+        "kind": "propuesta",
+        "read_status": "OK",
+        "source": "snapshot",
+        "path": "C:/Users/Jhond/Github/iah-cli/output/v4_complete/_review_inputs/run_20261024T155113/propuesta/02_PROPUESTA_COMERCIAL_20261024_155113.md",
+        "sha256": "e746d1fa28a5af42698c8e6b50e204de60765239e0305230511b8f06df0fbf05",
+        "size_bytes": 15182,
+        "disposition": "internal_review_copy",
+        "cause": null,
+        "run_id": "run_20261024T155113"
+      }
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "zip": "output\\v4_complete\\deliveries\\donalfonsohotel_20261024.zip",
+  "bytes": 94432,
+  "sha256": "eeae4001625a72990d7c628b695ba5665560bad18a703cc6b73f94f1d554f9e0",
+  "member_count": 82,
+  "miembros_2026_10_12": 26,
+  "miembros_2026_10_24": 28,
+  "pares_duplicados_por_asset": 22,
+  "suppressed": false,
+  "verdict": "APROBADO-CONDICIONAL",
+  "conditional_reason": "ANALYTICS_CEILING",
+  "evidence_tier": "B+",
+  "over_presentations": 0,
+  "pain_ledger_entries": 11,
+  "scenarios_cop_mes": {
+    "conservative": 6176940.0,
+    "realistic": 3511200.0,
+    "optimistic": 582120.0
+  },
+  "expected_monthly_cop": 3511200.0,
+  "input_data": {
+    "rooms": 11,
+    "adr_cop": 330000,
+    "adr_source": "user_provided",
+    "occupancy_rate": 0.42424242424242425,
+    "direct_channel_percentage": 0.3
+  },
+  "can_show_exact_money": false,
+  "readiness": {
+    "status": "READY_FOR_PUBLICATION",
+    "ready": true,
+    "blocking_issues": [],
+    "warnings": [
+      {
+        "gate": "asset_confidence",
+        "message": "1 asset(s) below confidence threshold (0.7)"
+      },
+      {
+        "gate": "pricing_compliance",
+        "message": "Pricing compliance PASSED with WARNING: pain_ratio 0.1574 outside ideal range [0.03-0.06] — operational_floor $400,000 applied (tier 'boutique' gate_max 0.32: OK)"
+      }
+    ]
+  },
+  "hotel_url_gate_report": "https://www.donalfonsohotel.com/",
+  "gates_blocking_fallidos": [],
+  "gates_total": 13,
+  "coherence_score": 0.926969696969697,
+  "url_report": "https://www.donalfonsohotel.com/",
+  "hotel_name_report": "Donalfonsohotel",
+  "assets_generated": 12
+}
