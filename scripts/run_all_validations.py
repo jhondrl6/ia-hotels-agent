@@ -143,8 +143,30 @@ class ValidationRunner:
                 message="No residual files found"
             ))
     
+    def _sincronia_valores(self) -> tuple:
+        """Invoca en proceso al verificador que compara ADR/ocupacion contra el maestro.
+
+        En proceso y no por subprocess: el mutation check del cableado necesita
+        correrlo contra rutas corruptas sin tocar el arbol, y un subprocess no
+        hereda esa inyeccion.
+        """
+        import importlib.util
+        ruta = ROOT_DIR / "scripts" / "validate_benchmark_sync.py"
+        spec = importlib.util.spec_from_file_location("validate_benchmark_sync", ruta)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.resumen_sync()
+
     def _check_plan_maestro_sync(self) -> None:
-        """Check if Plan Maestro data is synchronized."""
+        """Check if Plan Maestro data is synchronized: parseo/version Y valores.
+
+        FASE-E (`N6`, `L-QW.1`): este slot era una comprobacion de parseo. El
+        verificador que compara los valores contra el maestro existia, estaba
+        versionado y pasaba en verde, pero nadie lo disparaba: un verificador que
+        existe y no se ejecuta no goberna nada. Se conserva lo que ya se sabia
+        comprobar (archivo presente, JSON leible, version leida) y se anade la
+        comparacion de valores, que es la que puede fallar.
+        """
         print("[2/13] Checking Plan Maestro sync...")
         
         json_path = ROOT_DIR / "data" / "benchmarks" / "plan_maestro_data.json"
@@ -172,19 +194,53 @@ class ValidationRunner:
         try:
             with open(json_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            
-            version = data.get("version", "unknown")
-            self.results.append(ValidationResult(
-                name="Plan Maestro Sync",
-                passed=True,
-                message=f"Plan Maestro v{version} loaded correctly"
-            ))
         except Exception as e:
             self.results.append(ValidationResult(
                 name="Plan Maestro Sync",
                 passed=False,
                 message=f"Error reading plan_maestro_data.json: {e}"
             ))
+            return
+
+        version = data.get("version", "unknown")
+
+        try:
+            divergencias, n_comparadas, exenta = self._sincronia_valores()
+        except Exception as e:
+            self.results.append(ValidationResult(
+                name="Plan Maestro Sync",
+                passed=False,
+                message=f"v{version} parseado, pero la comparacion de valores no se ejecuto: {e}"
+            ))
+            return
+
+        if divergencias:
+            self.results.append(ValidationResult(
+                name="Plan Maestro Sync",
+                passed=False,
+                message=f"v{version} parseado y {n_comparadas} regiones comparadas contra el "
+                        f"maestro: {len(divergencias)} divergencia(s) de valor",
+                details=divergencias[:6]
+            ))
+            return
+
+        if not n_comparadas:
+            # Verde vacio: sin regiones superpuestas el check no comparo ningun valor,
+            # que es exactamente el defecto que este slot tenia por disenio.
+            self.results.append(ValidationResult(
+                name="Plan Maestro Sync",
+                passed=False,
+                message=f"v{version} parseado pero 0 regiones comparadas contra el maestro: "
+                        f"el check no ejercito la comparacion de valores"
+            ))
+            return
+
+        self.results.append(ValidationResult(
+            name="Plan Maestro Sync",
+            passed=True,
+            message=f"Plan Maestro v{version} parseado y {n_comparadas} regiones con valores "
+                    f"sincronizados con el maestro (exenta: {exenta})"
+        ))
     
     def _check_version_sync(self) -> None:
         """Check if versions are synchronized across files."""

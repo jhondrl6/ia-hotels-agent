@@ -1,6 +1,6 @@
 {
   "cobertura": {
-    "archivos_en_alcance": 730,
+    "archivos_en_alcance": 733,
     "archivos_excluidos_por_rol": 8542,
     "archivos_excluidos_por_rol_versionado": 171,
     "exclusiones_por_clase": {
@@ -11,15 +11,15 @@
       "PrecisionValidator": "audita precision numerica, no promesa WhatsApp (AC7: excluir)"
     },
     "gobernadas_resueltas": 76,
-    "llamadas_descubiertas": 175,
+    "llamadas_descubiertas": 180,
     "por_clasificacion": {
       "EXCLUIDA_POR_CLASE": 43,
       "EXCLUIDA_POR_CLASE_NO_GOBERNADA": 31,
       "GOBERNADA_CONFORME": 22,
-      "RECEPTOR_NO_RESUELTO": 25,
+      "RECEPTOR_NO_RESUELTO": 30,
       "TEST_EXENTO_DE_SENAL": 54
     },
-    "receptores_no_resueltos": 25,
+    "receptores_no_resueltos": 30,
     "receptores_no_resueltos_en_produccion": 0
   },
   "comando": "python scripts/validate_wiring.py --write-report",
@@ -56,8 +56,8 @@
       "motivo": "entorno virtual de terceros"
     }
   },
-  "generado": "2026-10-23T23:34:46+00:00",
-  "git_sha": "10c722f",
+  "generado": "2026-10-24T00:57:15+00:00",
+  "git_sha": "86d3694",
   "limites": [
     "dispatch dinamico (`getattr(obj, nombre)(...)`): el AST no ve que metodo se invoca",
     "receptores cuyo tipo no se deduce estaticamente: se publican en `poblacion` con clasificacion RECEPTOR_NO_RESUELTO y se cuentan en `cobertura`",
@@ -3385,6 +3385,101 @@
       "posicionales": 1,
       "receptor": "vor",
       "resolucion": "clase_importada_o_alias"
+    },
+    {
+      "archivo": "tests/utils/test_plan_maestro_sync_cableado_fase_e.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "master_path",
+        "quiet",
+        "secondary_path"
+      ],
+      "linea": 109,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "sync_mod",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/utils/test_plan_maestro_sync_cableado_fase_e.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "master_path",
+        "quiet",
+        "secondary_path"
+      ],
+      "linea": 117,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "sync_mod",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/utils/test_plan_maestro_sync_cableado_fase_e.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "master_path",
+        "quiet",
+        "secondary_path"
+      ],
+      "linea": 125,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "sync_mod",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/utils/test_plan_maestro_sync_cableado_fase_e.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "master_path",
+        "quiet",
+        "secondary_path"
+      ],
+      "linea": 131,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "sync_mod",
+      "resolucion": "receptor_sin_binding"
+    },
+    {
+      "archivo": "tests/utils/test_plan_maestro_sync_cableado_fase_e.py",
+      "clase_resuelta": null,
+      "clasificacion": "RECEPTOR_NO_RESUELTO",
+      "en_tests": true,
+      "gobernado": false,
+      "hay_kwargs_opacos": false,
+      "kwargs_presentes": [
+        "master_path",
+        "quiet",
+        "secondary_path"
+      ],
+      "linea": 150,
+      "metodo": "validate",
+      "motivo": "metodo de nombre gobernado (validate) pero el AST no deduce el tipo del receptor (receptor_sin_binding); se publica, no se descarta (llamada bajo tests/)",
+      "posicionales": 0,
+      "receptor": "sync_mod",
+      "resolucion": "receptor_sin_binding"
     }
   ],
   "politica": {

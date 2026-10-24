@@ -238,18 +238,13 @@ class GapAnalyzer:
         if not ocupacion:
             ocupacion = region_data.get('ocupacion', 0.6)
 
-        # RevPAR targets actualizados según BenchmarkingV2
-        revpar_targets = {
-            'eje_cafetero': 171600,  # BM v2 Sec 3.1
-            'caribe': 270600,        # BM v2 Sec 3.2
-            'antioquia': 168000,     # BM v2 Sec 3.3
-            'default': int(region_data.get('precio_promedio', 280000) * region_data.get('ocupacion', 0.6))
-        }
-        revpar_objetivo = revpar_targets.get(region, revpar_targets['default'])
-        
         # Usar FinancialFactors para valores centralizados desde plan_maestro_data.json
         financial = FinancialFactors()
         config = financial.get_config(region)
+        # RevPAR objetivo = precio_promedio x ocupacion del lector unico. La tabla
+        # `revpar_targets` que vivia aqui se retiro (DA-PLAN-8b): sus tres literales
+        # eran la derivacion del dict de respaldo de ScraperFallback, no del maestro.
+        revpar_objetivo = config.revpar_cop
         
         factor_aila = config.factor_captura_aila
         COMISION_OTA_MIN = config.comision_ota_min

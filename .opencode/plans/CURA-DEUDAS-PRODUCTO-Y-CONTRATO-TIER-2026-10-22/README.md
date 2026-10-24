@@ -40,7 +40,7 @@ La cura se ancla en el camino real del producto:
 | FASE-B — ítem A (2 claims) | ALTA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-C — ítem C | MEDIA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-D — contrato GBP (ambos caminos) | ALTA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
-| FASE-E — lector único de benchmarks | ALTA | ⏳ |
+| FASE-E — lector único de benchmarks | ALTA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-F — umbrales por semántica | MEDIA | ⏳ |
 | FASE-H1 — `D16` y `D24` | MEDIA | ⏳ |
 | FASE-H2 — `D18`/`D22`/`D23`/`D20` | BAJA | ⏳ |

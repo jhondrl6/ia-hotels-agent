@@ -351,10 +351,12 @@ class ReportBuilder:
         self.templates_path = Path("templates")
         self.templates_path.mkdir(exist_ok=True)
         self._ensure_default_template()
-        self._fallback_helper = ScraperFallback()
-        self._region_profiles = self._fallback_helper.benchmarks.get('regiones', {})
-        self._default_region_profile = self._region_profiles.get('default', {})
         self._benchmark_loader = BenchmarkLoader()
+        # Un solo lector de benchmarks: los perfiles regionales salen del loader, no de
+        # ScraperFallback, que aqui solo presta _detect_region (lectura de texto).
+        self._region_profiles = self._benchmark_loader.regiones()
+        self._default_region_profile = self._region_profiles.get('default', {})
+        self._fallback_helper = ScraperFallback()
 
         env_enabled = os.getenv("REPORT_INTEGRATION_ENABLED", "false").lower()
         self._integration_enabled = env_enabled in ("1", "true", "yes", "on")

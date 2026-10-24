@@ -138,7 +138,7 @@
         "aeo_score_ref": 40,
         "seo_score_ref": 59,
         "iao_score_ref": 15,
-        "adr_sync_note": "ADR/occupancy sincronizados con regional_adr_2026.json (master) en FASE-P1-A"
+        "adr_sync_note": "ADR/occupancy de las regiones con match sincronizados con regional_adr_2026.json (master) en FASE-P1-A. 'default' NO casa con master.default.any (300000/0.50, marcado LEGACY por el maestro): queda exento del check por REGION_EXENTA_SYNC en scripts/validate_benchmark_sync.py (FASE-E, decision DA-PLAN-8c)."
       },
       "antioquia": {
         "precio_promedio": 500000,

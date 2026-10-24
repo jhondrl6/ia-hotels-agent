@@ -1,0 +1,12 @@
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/config/test_config_integration.py::TestConfigIntegration::test_all_config_files_have_description
+1 failed, 1383 passed, 5 skipped, 3 xfailed, 41 warnings in 33.67s
+PYTEST_EXIT=1
+ERROR tests/common/test_service_identity_registry.py
+ERROR tests/functional_test_seo_accelerator.py
+ERROR tests/test_gap_analyzer_superposition_reader.py
+ERROR tests/utils/test_benchmark_paridad_tablas_fase_e.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 4 errors during collection !!!!!!!!!!!!!!!!!!!
+8 warnings, 4 errors in 1.49s

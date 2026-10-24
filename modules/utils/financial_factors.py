@@ -220,5 +220,9 @@ class FinancialFactors:
         }
     
     def get_all_regions(self) -> list:
-        """Retorna lista de regiones disponibles."""
-        return list(self.loader._plan_data.get('regiones', {}).keys())
+        """Retorna lista de regiones disponibles, leidas del lector unico.
+
+        Referenciaba `loader._plan_data`, un atributo que `BenchmarkLoader` no tiene:
+        el metodo moria en `AttributeError` y no tenia consumidores (medido por grep).
+        """
+        return self.loader.get_all_regions()

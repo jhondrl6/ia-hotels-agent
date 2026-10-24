@@ -1,0 +1,23 @@
+== BASELINE (arbol actual) ==
+  exit 0 | 54 passed in 0.96s
+
+== M1: get_regional_data restaurado a la forma vieja (busca regiones en el nivel superior) ==
+  exit 1 | 13 failed, 41 passed in 1.37s
+  rojos: test_benchmarking_md_divergencia_fijada_con_su_dueno, test_caribe_no_es_default, test_default_esta_exento_y_su_divergencia_es_medida, test_gap_analyzer_objetivo_sale_del_lector_unico, test_los_consumidores_de_revpar_reciben_valor_por_region, test_maestro_secundario_y_derivado_casan_region_a_region, test_mutante_de_ocupacion_corrompida_cambia_el_derivado, test_mutante_de_valor_corrompido_vuelve_rojo_el_getter, test_region_se_lee_del_publicado, test_regiones_aceptan_la_forma_de_nivel_superior, test_revpar_cop_se_deriva_del_valor_publicado, test_revpar_derivado_casa_con_el_maestro, test_una_region_sin_valores_publicados_no_inventa_un_derivado
+  restaurado por sha: True
+
+== M2: el runner deja de consumir las divergencias (vuelve a ser check de parseo) ==
+  exit 1 | 1 failed, 53 passed in 1.01s
+  rojos: test_el_runner_pasa_a_rojo_con_divergencias_reales
+  restaurado por sha: True
+
+== VERDE FINAL (arbol intacto) ==
+  exit 0 | 54 passed in 0.80s
+
+== SHA PRE/POST ==
+   modules\utils\benchmarks.py True d8ee58b0fdc7
+   scripts\run_all_validations.py True b5f14e520f26
+
+== MUTANTE DE DATO (sin tocar el arbol): ADR de caribe 449000 en copia ==
+   divergencias: ['ADR DIVERGENCE [caribe]: master=450,000 vs plan_maestro=449,000']
+   arbol intacto (sin divergencias): True

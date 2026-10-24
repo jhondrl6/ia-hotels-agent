@@ -5,10 +5,10 @@
     "archivos_analysis_escaneados": 22,
     "archivos_contexto_escaneados": 45,
     "archivos_md_escaneados": 505,
-    "ids_con_definicion": 400,
+    "ids_con_definicion": 403,
     "ids_citados_sin_definicion": 113,
     "fechas_por_fuente": {
-      "nombre": 389,
+      "nombre": 392,
       "commit": 11,
       "SIN-FUENTE": 0
     },
@@ -1365,6 +1365,48 @@
       "redefiniciones": []
     },
     {
+      "id": "DA-PLAN-8a",
+      "familia": "DA",
+      "enunciado": "Destino de los bloques DEFAULT_DATA (escrito el 2026-10-23, antes de tocar el lector). Se aplica el default del plan: DEFAULT_DATA es maestro declarado por escrito de los bloques que el JSON publicado no contiene; el JSON (v25_config.regiones, sincronizado con regional_adr_2026.json (master: true)) es maestro de los valores regionales. La partición queda cerrada y gobernada por assert en tres poblaciones: todo bloque de DEFAULT_DATA está en BLOQUES_LEIDOS_DEL_JSON, en BLOQUES_MAESTRO_DECLARADO o en BLOQUES_MAESTRO_CON_FORQUE_PUBLICADO; ningún bloque nuevo entra sin declaración y el assert también corta la inversa (declarar un horque que ya no está, o publicar un bloque declarado sin mover la población). Medición que corrige el enunciado del plan: el prompt y 01-plan-maestro §5 nombran cinco bloques (actividad_gbp_pesos, kpis_objetivo_v23, terminologia_cliente, disclaimers_cliente, certificados) y esa lista se confirma tal cual: son los cinco que no tienen ningún nodo en el JSON a ninguna profundidad. La primera medición de la fase afirmó «ocho bloques sin contraparte publicada» y quedó refutada por su propio test: el barrido se había hecho sobre rutas de clave (v25_config.regiones), no sobre claves, y tres bloques sí tienen nodo publicado bajo v25_config — paquetes_servicios_v23, umbrales_decision y addons_v242 — con vocabulario incompatible y valores divergentes. Quedan declarados como horque publicado que el producto no lee: get_packages/get_thresholds/get_addons leen el nivel superior, el horque vive bajo v25_config, las claves de paquetes no comparten ni una (starter_geo vs Starter GEO; inversión_mensual_cop vs precio_cop), los addons son conjuntos disjuntos (2 del contrato vs 5 publicados) y en umbrales divergen impacto_catastrofico (8.000.000 vs 6.000.000), brecha_conversion_critica (3.000.000 vs 2.500.000) y revpar_premium (250.000 vs 180.000), coincide web_score_alto (75) y las dos claves que sí usa package_recommender (gbp_score_bajo, factor_gbp_punto) no existen en el horque. El nota_historica del propio JSON respalda la decisión: declara que el archivo no está en uso operativo para paquetes predefinidos ni umbrales de decisión estáticos desde la transición a v4. Dentro de regiones la partición es por clave: publicadas precio_promedio, ocupacion, habitaciones_promedio, geo_score_ref, aeo_score_ref, seo_score_ref, iao_score_ref, adr_sync_note; derivada revpar_cop = precio_promedio × ocupacion (semántica del maestro); maestro declarado región-invariante factor_captura_aila, factor_perdida_base, factor_captura_fuente, riesgo_ocupacion, benchmarks, comision_ota_base, penalizacion_invisibilidad_ia — los dos últimos con el valor ya publicado en v25_config.thresholds (0.20 / 0.05), así que no introducen una segunda varilla — Sin la decisión escrita, arreglar el lector cura una clave y deja ocho fósiles sin dueño (L-NC10); el assert convierte la declaración en contrato verificable, que es lo que falta cuando «el verde no dice qué dato se leyó» (L-CIM.12)",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 2,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-8b",
+      "familia": "DA",
+      "enunciado": "Los tres valores independientes de la matriz regional se retiran, no se re-valoran. ScraperFallback._load_benchmarks deja de traer su dict de respaldo (eje 330.000/0.52, caribe 410.000/0.66, antioquia 280.000/0.60) y delega en BenchmarkLoader; gap_analyzer.revpar_targets (eje 171.600, caribe 270.600, antioquia 168.000) se retira y el objetivo sale del revpar_cop derivado del lector único; report_builder deja de leer regiones por ScraperFallback.benchmarks y usa BenchmarkLoader, conservando ScraperFallback solo por _detect_region, que no lee el archivo. Medido: los tres literales de revpar_targets son exactamente precio_promedio × ocupacion del dict de respaldo de ScraperFallback, no del maestro; y el respaldo contradice al JSON que el propio método dice normalizar — Un fósil recalculado sigue siendo fósil: la única cura que no exige re-negociar cifras es que el valor se derive en tiempo de lectura del maestro (L-SR3, L-ENT.9). Retirar el segundo lector es lo que hace la afirmación verificable, no solo redactada",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
+      "id": "DA-PLAN-8c",
+      "familia": "DA",
+      "enunciado": "La exención de default en el verificador se nombra y se declara; no se elimina ni se re-valoran los datos. validate_benchmark_sync.py saltaba default con un continue anónimo mientras el JSON afirmaba en adr_sync_note que estaba sincronizado con el maestro. Medido: regional_adr_2026.json default.any = 300.000/0.50 (marcado LEGACY en el propio maestro) vs v25_config.regiones.default = 280.000/0.60 → divergencia real de 20.000 COP y 0.10 de ocupación que el check volvía infalsificable. La cura es el texto del dato (la nota deja de prometer lo que no casa) más el excluido con nombre y motivo en el verificador — Una promesa publicada que el verificador no puede refutar es el mismo defecto de N6 (L-QW.1): el verde certifica lo que el instrumento miró. Cambiar los valores de default movería toda estimación por defecto del producto sin dictado de fase",
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "origen": "plan",
+      "archivo": "10-analisis-post-implementacion.md",
+      "seccion": "Decisiones Arquitectónicas",
+      "fecha_plan": "2026-10-22",
+      "fuente_fecha": "nombre",
+      "total_citas": 0,
+      "planes_que_lo_citan": [],
+      "redefiniciones": []
+    },
+    {
       "id": "DA-PLAN-9",
       "familia": "DA",
       "enunciado": "Contrato GBP único (FASE-D): (a) vocabulario = el del productor (_base_profile: existe, fotos, rating, whatsapp_visible, horarios, website, posts, tiene_qa, ultima_actividad_dias); las cuatro claves inglesas (claimed, photos, has_whatsapp, has_hours) desaparecen de get_detected_issues; (b) PERFIL_ABANDONADO se decide por actividad (posts == 0, puerto de la copia muerta FUGA 6), nunca por ausencia de schema; (c) CERO_ACTIVIDAD_RECIENTE recibe etiqueta propia con disparo distinto: ultima_actividad_dias medido y mayor que la ventana ACTIVIDAD_RECIENTE_DIAS (=60, la ventana que declara la copia muerta); None = no medido → sin brecha; (d) schema tri-estado (DA-C3): schema_data=None no medido → ninguna brecha de schema; dict medido (aunque sea {} o tiene_hotel_schema=False) → has_faq ausente dispara SIN_FAQ; schema válido → nada; el llamador pasa profile_data.get('schema_data') (None, no {}); tiene_hotel_schema ausente no es brecha GBP — vive en el canal web como no_hotel_schema; (e) _map_brecha_to_issue_type: no_hotel_schema, low_citability y no_og_tags → '' (sin issue_type GBP); (f) tipo_map sin colapso (CERO_ACTIVIDAD_RECIENTE con etiqueta propia, N2) y motivos diferenciados; (g) gbp_leak_detector: sustitución, no borrado — la copia queda marcada como retirada del servicio y viva como oráculo del relevo (el test de relevo la importa con stubs de selenium y compara contra la implementación portada, perfil a perfil) — El contrato lo dicta la forma real del productor, no la intención del detector (L-P3A.2); la copia muerta era la que acierta (N3), y el relevo exige un oráculo vivo: borrar el módulo destruiría la única referencia del «mismo resultado» y el default de la fase es «sustitución, no borrado»",
@@ -2019,7 +2061,7 @@
       "seccion": "Lecciones nuevas de este plan (serie L-CIM, reservada; se llena al cerrar cada fase)",
       "fecha_plan": "2026-10-07",
       "fuente_fecha": "nombre",
-      "total_citas": 13,
+      "total_citas": 14,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -2459,10 +2501,10 @@
       "seccion": "Lecciones nuevas de este plan",
       "fecha_plan": "2026-09-18",
       "fuente_fecha": "nombre",
-      "total_citas": 19,
+      "total_citas": 21,
       "planes_que_lo_citan": [
-        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21",
         "Archives/VERIFICADOR-ESCRITURA-QMIND-2026-09-20"
       ],
@@ -3069,7 +3111,7 @@
       "seccion": "Lecciones nuevas de este plan (L-NC1+ — registrar al cierre de cada fase; mínimo 3 totales en R0-F)",
       "fecha_plan": "2026-08-22",
       "fuente_fecha": "nombre",
-      "total_citas": 120,
+      "total_citas": 122,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/ESTABILIZACION-PRE-TRIBUNAL-2026-09-03",
@@ -3253,7 +3295,7 @@
       "seccion": "Lecciones Aprendidas (mínimo 3 por fase con aprendizaje; al cerrar cada fase)",
       "fecha_plan": "2026-09-11",
       "fuente_fecha": "nombre",
-      "total_citas": 16,
+      "total_citas": 17,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -3679,7 +3721,7 @@
       "seccion": "E. Lecciones definidas por este plan (serie L-QW, reservada con Q4 del Paso 0)",
       "fecha_plan": "2026-09-20",
       "fuente_fecha": "nombre",
-      "total_citas": 20,
+      "total_citas": 22,
       "planes_que_lo_citan": [
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
@@ -3895,7 +3937,7 @@
       "seccion": "8.2 Lecciones nuevas (formato qué pasó / por qué / qué lo previene)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 80,
+      "total_citas": 82,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/SR-PIPELINE-FIXES-2026-08-27",
@@ -4238,7 +4280,7 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 128,
+      "total_citas": 129,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",

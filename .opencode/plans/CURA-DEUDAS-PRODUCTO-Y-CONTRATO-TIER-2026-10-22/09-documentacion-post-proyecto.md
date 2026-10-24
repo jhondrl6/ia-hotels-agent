@@ -26,6 +26,9 @@
 
 | Métrica | Valor | Fase |
 |---------|-------|------|
+| Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | FASE-E: **+48** funciones (5.380 → 5.428, 54 casos recolectados por dos baterías parametrizadas) en `tests/utils/test_benchmark_cura_lector_fase_e.py`, `tests/utils/test_benchmark_paridad_tablas_fase_e.py` y `tests/utils/test_plan_maestro_sync_cableado_fase_e.py`; resta publicada en `evidence/…/FASE-E/baseline-pre-post.md` | FASE-E |
+| Mutation checks con par rojo/verde en evidencia (R2.8) | 5 de 5 al cierre de FASE-E (AC4: M1 `get_regional_data` restaurado a la forma vieja → **13 rojos**; M2 el runner deja de consumir divergencias → **1 rojo**; M3 ADR de caribe 449.000 en copia → `ADR DIVERGENCE [caribe]`; restauración por sha256 y verde final idéntico — crudo `par-rojo-verde-mutantes.txt`) | FASE-E |
+| Presupuesto por fase (unidad `tool_use`, corte «listo para revisión») | FASE-E: auto-reporte ≈75 `tool_use` — **excede el tope 60** del plan; unidad `tool_use`, **no comparable** (el instrumento legado `measure_iterations.py` no está probado contra este runtime). **Cinco cortes declarados y verificados sin commit** | FASE-E |
 | Tests nuevos (delta, par pre/post por fase — R2.3/R2.7) | FASE-A: **+7** (5334 → 5341); resta publicada en `evidence/…/FASE-A/baseline-pre-post.md` | FASE-A |
 | Mutation checks con par rojo/verde en evidencia (R2.8) | 1 de 5 al cierre de FASE-A (AC5: guardián de existencia; `evidence/…/FASE-A/guardian-existencia-par-rojo-verde.txt`) | FASE-A |
 | Corridas `v4complete` de este plan | 0 / 1 prevista (después de E2E-PRE) | FASE-E2E |
@@ -45,6 +48,17 @@
 
 | Archivo | Cambio | Fase |
 |---------|--------|------|
+| `modules/utils/benchmarks.py` | Puente de esquema: `regiones()` normaliza `v25_config.regiones` y el nivel superior, deriva `revpar_cop = precio_promedio × ocupacion` y marca `revpar_derivado`; `get_all_regions()` nuevo; `load()` conserva la forma cruda del artefacto. Contrato de maestros declarado en tres poblaciones (`BLOQUES_LEIDOS_DEL_JSON`, `BLOQUES_MAESTRO_DECLARADO`, `BLOQUES_MAESTRO_CON_FORQUE_PUBLICADO`) con `auditoria_maestros()`/`assert_coherencia_maestros()` | FASE-E |
+| `modules/scrapers/scraper_fallback.py` | Retirado su dict de respaldo regional (330.000/0.52, 410.000/0.66, 280.000/0.60) y la apertura propia del JSON: `_load_benchmarks` delega en `BenchmarkLoader`; se va `benchmarks_path` (ruta relativa al cwd) | FASE-E |
+| `modules/analyzers/gap_analyzer.py` | `revpar_targets` retirada (171.600/270.600/168.000 literales del respaldo); `revpar_objetivo = config.revpar_cop` del lector único | FASE-E |
+| `modules/generators/report_builder.py` | `_region_profiles` sale de `BenchmarkLoader.regiones()`; `ScraperFallback` queda solo por `_detect_region` (ya no es el segundo lector) | FASE-E |
+| `modules/utils/financial_factors.py` | `get_all_regions()` deja de referenciar `loader._plan_data` (`AttributeError`, cero consumidores) y delega al lector único | FASE-E |
+| `scripts/validate_benchmark_sync.py` | Rutas parametrizables, `resumen_sync()` para el runner, exención de `default` nombrada (`REGION_EXENTA_SYNC` + `MOTIVO_EXENCION`) | FASE-E |
+| `scripts/run_all_validations.py` | `[2/13] Plan Maestro Sync` compara **valores** (invoca el verificador en proceso) sin perder parseo/versión; rojo nuevo si la comparación no se ejecuta o si `0 regiones comparadas` | FASE-E |
+| `data/benchmarks/plan_maestro_data.json` | `v25_config.regiones.default.adr_sync_note` deja de prometer una sincronía que el verificador no podía refutar: declara la exención y la divergencia medida | FASE-E |
+| `tests/utils/test_benchmark_cura_lector_fase_e.py`, `tests/utils/test_benchmark_paridad_tablas_fase_e.py`, `tests/utils/test_plan_maestro_sync_cableado_fase_e.py` | Nuevos: getters contra el artefacto y mutantes de dato, paridad de la matriz de cinco tablas con el horque de `Benchmarking.md` fijado, y cableado del check `[2/13]` con M2 y verde vacío cortado | FASE-E |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E/` | `baseline-pre-post.md` (resta y valores movidos), `par-rojo-verde-mutantes.txt` (M1/M2/M3 con sha), `crudo-pytest-afectados.txt`, `crudo-quick.txt` (12/13 con Wiring vencido), `crudo-quick-post.txt` (13/13) y `crudo-wiring-write.txt` | FASE-E |
+| `.opencode/wiring_report.json` | Re-publicado con `validate_wiring.py --write-report` (`cobertura.archivos_en_alcance` 730→733 por los tres tests nuevos); `--quick` de 12/13 a 13/13 | FASE-E |
 | `main.py` | Ruta `spark` retirada: `run_spark_mode` queda como centinela (informa retiro, exit 0); se retiran `_map_audit_to_spark_data`, `_spark_handler`, `_run_spark_legacy` y los helpers de región sin consumidores | FASE-A |
 | `modules/analyzers/gap_analyzer.py` | Lector latente corregido (`FinancialFactors.get_superposition_factor()`); docstring de `analyze_with_claude` deja de afirmar el consumidor falso `main.py` | FASE-A |
 | `tests/test_main_static_guards.py` | Guardián extendido a existencia de atributo sobre la clase importada (AST + import), con mutante rojo | FASE-A |

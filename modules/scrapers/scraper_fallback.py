@@ -7,10 +7,10 @@ from urllib.parse import urlparse
 import hashlib
 
 from modules.utils.data_validator import lookup_cached_location
+from modules.utils.benchmarks import BenchmarkLoader
 
 class ScraperFallback:
     def __init__(self):
-        self.benchmarks_path = Path("data/benchmarks/plan_maestro_data.json")
         self.cache_path = Path("data/cache/scraped_sites.json")
         self.benchmarks = self._load_benchmarks()
         self.cache = self._load_cache()
@@ -33,54 +33,15 @@ class ScraperFallback:
         self.heuristic_patterns = self._init_heuristic_patterns()
     
     def _load_benchmarks(self):
-        """Carga datos de benchmarks del Plan Maestro"""
-        try:
-            with open(self.benchmarks_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            # Normalize: support both top-level 'regiones' and 'v25_config.regiones'
-            if 'regiones' not in data and 'v25_config' in data:
-                v25 = data.get('v25_config', {})
-                if 'regiones' in v25:
-                    data['regiones'] = v25['regiones']
-            return data
-        except:
-            # Benchmarks por defecto si no existe el archivo
-            return {
-                "regiones": {
-                    "default": {
-                        "precio_promedio": 280000,
-                        "ocupacion": 0.60,
-                        "habitaciones_promedio": 15,
-                        "geo_score_ref": 85,
-                        "aeo_score_ref": 40,
-                        "seo_score_ref": 59
-                    },
-                    "antioquia": {
-                        "precio_promedio": 280000,
-                        "ocupacion": 0.60,
-                        "habitaciones_promedio": 18,
-                        "geo_score_ref": 84,
-                        "aeo_score_ref": 43,
-                        "seo_score_ref": 65
-                    },
-                    "eje_cafetero": {
-                        "precio_promedio": 330000,
-                        "ocupacion": 0.52,
-                        "habitaciones_promedio": 12,
-                        "geo_score_ref": 89,
-                        "aeo_score_ref": 44,
-                        "seo_score_ref": 59
-                    },
-                    "caribe": {
-                        "precio_promedio": 410000,
-                        "ocupacion": 0.66,
-                        "habitaciones_promedio": 25,
-                        "geo_score_ref": 82,
-                        "aeo_score_ref": 32,
-                        "seo_score_ref": 53
-                    }
-                }
-            }
+        """Delegacion al lector unico: este modulo ya no trae valores regionales propios.
+
+        El dict de respaldo que vivia aqui (eje 330.000/0.52, caribe 410.000/0.66,
+        antioquia 280.000/0.60) contradecia al JSON que el propio metodo decia
+        normalizar y era una de las cinco tablas de `D20`/`N5`. Retirado en FASE-E
+        (decision DA-PLAN-8b): si el artefacto no se puede leer, `BenchmarkLoader`
+        responde por su propio maestro declarado y esta clase no inventa un tercero.
+        """
+        return {"regiones": BenchmarkLoader().regiones()}
     
     def _load_cache(self) -> Dict:
         """Carga cache de sitios previamente scrapeados"""
