@@ -40,7 +40,7 @@ Los dos viven en `evidence/…/FASE-E2E/tabla-antes-despues.md` y en `10-analisi
 2. **Verificar cada AC contra artefacto real** (R2.4: AC sin clave legible = ⚠️, nunca ✅):
    - **AC1** → `revision_honestidad.json` → `summary.over_presentations == 0` en propuesta y diagnóstico + par rojo/verde de FASE-B.
    - **AC2** → `acta_revision.json` → `verdict`, `conditional_reason` (3 causas) + grep del literal viejo en la población declarada. **`P6.5` no se certifica aquí.**
-   - **AC3** → diente de FASE-D (0 brechas en `get_detected_issues` y `PainSolutionMapper`; 0 COP; mutante) + `pain_ledger.json` → `brechas_en_ledger`.
+   - **AC3** → diente de FASE-D (0 brechas en `get_detected_issues` y `PainSolutionMapper`; 0 COP; mutante) + `pain_ledger.json` → `entries` y `revision_alineacion.json` → `info.brechas_en_ledger` (errata `L34`, segunda pasada 2026-10-24: la clave no vive en el ledger ni bajo `summary`).
    - **AC4** → salida del check de sincronización cableado + test de getters y paridad de cinco tablas.
    - **AC5** → test de retiro de `spark` (exit 0, sin `AttributeError`) + par del guardián + `gap_analyzer` sin lector roto.
    - **AC6** → grep por símbolo de umbrales + tests de coherencia y `D27` post-D.
