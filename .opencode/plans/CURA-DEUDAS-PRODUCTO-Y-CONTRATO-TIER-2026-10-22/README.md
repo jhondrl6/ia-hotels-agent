@@ -45,7 +45,7 @@ La cura se ancla en el camino real del producto:
 | FASE-H1 — `D16` y `D24` | MEDIA | ✅ 2026-10-23 (métricas: `09-documentacion-post-proyecto.md` §D) |
 | FASE-H2 — `D18`/`D22`/`D23`/`D20` | BAJA | ✅ 2026-10-24 (métricas: `09-documentacion-post-proyecto.md` §D) |
 
-| FASE-E2E-PRE — ensayo determinista | MEDIA | ⏳ |
+| FASE-E2E-PRE — ensayo determinista | MEDIA | ✅ 2026-10-24 → `LISTO_PARA_E2E` (métricas: `09-documentacion-post-proyecto.md` §D; veredicto y condiciones: `evidence/…/FASE-E2E-PRE/pre-vuelo.md`) |
 | FASE-E2E — v4complete Don Alfonso | MEDIA | ⏳ |
 | FASE-VERIFY — certificación AC1–AC8 | MEDIA | ⏳ |
 | FASE-RELEASE-4.82.0 | BAJA | ⏳ |

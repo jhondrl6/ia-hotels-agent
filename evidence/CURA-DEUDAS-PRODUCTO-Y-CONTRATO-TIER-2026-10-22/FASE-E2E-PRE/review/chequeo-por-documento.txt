@@ -1,0 +1,40 @@
+Chequeo de texto por documento (FASE-E2E-PRE) — H2 declara que ARTIFACTO_PROPUESTA acota el gate del revisor a 02_PROPUESTA_COMERCIAL.md, asi que el diagnostico no tiene gate y se cubre aqui con la funcion REAL del revisor sobre el render real.
+
+[
+  {
+    "documento": "propuesta",
+    "bytes": 7889,
+    "absolutos": {
+      "Protección total": false,
+      "Transparencia total": false
+    },
+    "honestos_presentes": true,
+    "labels_financieros": {
+      "Fuga total estimada": false,
+      "Total recuperación proyectada": true
+    },
+    "verificacion_escaner_real": []
+  },
+  {
+    "documento": "diagnostico",
+    "bytes": 8524,
+    "absolutos": {
+      "Protección total": false,
+      "Transparencia total": false
+    },
+    "honestos_presentes": true,
+    "labels_financieros": {
+      "Fuga total estimada": true,
+      "Total recuperación proyectada": false
+    },
+    "verificacion_escaner_real": [
+      "verificados",
+      "validados",
+      "verificados",
+      "100%",
+      "100%"
+    ]
+  }
+]
+
+Lectura: 0 absolutos en los dos documentos; las variantes honestas y los labels financieros presentes en ambos; el escaneo del revisor sobre cada documento no emite coincidencias de lenguaje de verificacion convertidas en hallazgo de sobre-presentacion.

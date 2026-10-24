@@ -4,7 +4,7 @@
 **Objetivo**: probar el ensamblaje completo del paquete de Don Alfonso con los artefactos del baseline y el código corregido —onboarding, render B+, revisor real, juez real y publicación en un directorio temporal— **antes** de gastar la única corrida pagada.
 **Dependencias**: FASE-A…FASE-H2 ✅.
 **Complejidad técnica**: MEDIA · **Duración estimada**: 2-3 horas
-**Modo de ejecución**: **DIRECTO** (sin `v4complete`; no usa el LLM).
+**Modo de ejecución**: **DIRECTO — NO DELEGABLE** (sin `v4complete`; no usa el LLM; las cinco tareas forman una cadena y el gate del Operador y el veredicto se deciden en el hilo principal).
 
 ## Contexto
 
@@ -119,6 +119,7 @@ Registro:
 ## Restricciones
 
 - **No** ejecutar `v4complete` ni llamar al LLM pagado. **No** modificar código de producto en esta fase: si el ensayo falla, se documenta y se corrige en la fase dueña, no aquí.
+- **Sin subagentes** (`Agent`): no hay 2+ tracks paralelas —el render depende del preflight, el revisor y el juez del render, el paquete de ambos y el veredicto de las cuatro—; el dominio lo confirma el Operador dentro de la sesión y el veredicto se decide leyendo los artefactos del ensayo, no los que resume un subagente. La fase además importa módulos del proyecto y usa el venv del proyecto para sus tests, los dos supuestos de la §Regla de Decisión: ejecutar código+tests directamente o vía subagente del executor, que manda ejecución directa. Delegar aquí añade overhead de spawn sin ahorrar verificación.
 - No tocar `deliveries/` real, archivos congelados, `P6.5`/`D21` ni `T1_CERTIFIABLE_CLAUSES`.
 - Presupuesto: tope **60 tool-use**; instrumento legado/no comparable si no aplica. Citas por símbolos (R2.2).
 

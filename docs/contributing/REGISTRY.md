@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 541
+> **Total fases completadas:** 542
 
 ---
 
@@ -12999,6 +12999,47 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 ### Validaciones
 _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
 - [ ] Tests: 17 (declarado; no verificado por este script)
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-E2E-PRE - 2026-10-24
+**Descripcion:** Ensayo determinista del baseline: onboarding, render B+, revisor y juez reales, paquete temporal (sin inferencia). Veredicto LISTO_PARA_E2E con dos condiciones y dueño Operador
+
+### Archivos Nuevos
+| Archivo | Tipo | Descripcion |
+|---------|------|-------------|
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/derivados.txt` | NUEVO | Derivados |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/judge/acta_revision.json` | NUEVO | Acta Revision |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/package/hotel_donalfonsohotel.com_20261024.zip` | NUEVO | Hotel Donalfonsohotel.Com 20261024 |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/package/inventario-paquete.json` | NUEVO | Inventario-Paquete |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/pre-vuelo.md` | NUEVO | Pre-Vuelo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/preflight.json` | NUEVO | Preflight |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/render/01_DIAGNOSTICO_Y_OPORTUNIDAD_ensayo.md` | NUEVO | 01 Diagnostico Y Oportunidad Ensayo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/render/02_PROPUESTA_COMERCIAL_ensayo.md` | NUEVO | 02 Propuesta Comercial Ensayo |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/render/datos-render.json` | NUEVO | Datos-Render |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/chequeo-por-documento.txt` | NUEVO | Chequeo-Por-Documento |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/mutante-condicion-render.txt` | NUEVO | Mutante-Condicion-Render |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-E2E-PRE/review/revision_honestidad.json` | NUEVO | Revision Honestidad |
+
+### Archivos Modificados
+| Archivo | Cambio |
+|---------|--------|
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/00-lecciones-capitalizadas.md` | 00-Lecciones-Capitalizadas |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/01-plan-maestro.md` | 01-Plan-Maestro |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/05-prompt-inicio-sesion-fase-E2E-PRE.md` | 05-Prompt-Inicio-Sesion-Fase-E2E-Pre |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/05-prompt-inicio-sesion-fase-E2E.md` | 05-Prompt-Inicio-Sesion-Fase-E2E |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md` | 09-Documentacion-Post-Proyecto |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md` | 10-Analisis-Post-Implementacion |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/README.md` | Readme |
+| `.opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md` | Dependencias-Fases |
+| `.opencode/LECCIONES-INDEX.md` | Lecciones-Index |
+| `.opencode/lecciones_index.json` | Lecciones Index |
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: 0 (declarado; no verificado por este script)
 - [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
 
 ---

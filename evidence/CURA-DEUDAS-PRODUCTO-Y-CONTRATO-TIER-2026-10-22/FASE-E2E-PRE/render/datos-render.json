@@ -1,0 +1,51 @@
+{
+  "propuesta": {
+    "financial_evidence_tier": "B+",
+    "has_onboarding": "True",
+    "testimonials_present": "false",
+    "fuga_total_6m": "$21.067.200 COP",
+    "total_recuperacion_6m": "$4.731.342 COP",
+    "recuperacion_proyectada_6m": "$4.731.342 COP",
+    "capex_total": "$2.500.000 COP",
+    "opex_total_6m": "$2.400.000 COP"
+  },
+  "diagnostico_placeholders": {
+    "opportunity_cost_formatted": "$3.511.200 COP",
+    "ota_commission_formatted": "$3.511.200 COP",
+    "ota_commission_basis": "Estimación basada en escenario realista",
+    "ota_commission_source": "benchmark",
+    "ota_commission_real_formatted": "$6.468.000 COP",
+    "scenario_table_rows": "| Peor caso (conservador) | $6.176.940 COP/mes | 70% |\n| Más probable | $3.511.200 COP/mes | 20% |\n| Mejor caso (optimista) | $582.120 COP/mes | 10% |",
+    "evidence_tier": "B+",
+    "financial_disclaimer": "Datos operativos verificados de su hotel (habitaciones, ADR, ocupación, canal directo). Las proyecciones usan supuestos conservadores (shift 10%, IA boost 5%) no validados con tráfico real. Conecte Google Analytics 4 y Search Console para cifras exactas al peso.",
+    "garantias_titulo": "🛡️ GARANTÍAS: Protección para usted",
+    "garantias_cuerpo": "**Transparencia en cada cifra**: reporte mensual con las métricas de su hotel y condiciones claras. El detalle completo está en `02_PROPUESTA_COMERCIAL.md`.",
+    "financial_source_ref": "financial_scenarios.json#realistic",
+    "financial_value_central": "3511200",
+    "financial_value_min": "3511200",
+    "financial_value_max": "3511200",
+    "financial_value_range_label": "Rango de pérdida mensual del escenario más probable (prob. 20%)",
+    "financial_method": "pain_weights_normalized",
+    "financial_title_label": "Pérdida Mensual Estimada (verificable)",
+    "estimate_asterisk": "",
+    "estimate_footnote": "",
+    "financial_tier_suffix": "",
+    "financial_tier_banner": "",
+    "loss_6_months": "$21.067.200 COP",
+    "fuga_total_6m": "$21.067.200 COP",
+    "recuperacion_proyectada_6m": "$4.731.342 COP",
+    "recov_pct": "35",
+    "curva_maduracion_note": "**Nota sobre la proyección**: La recuperación de 6 meses sigue la curva de maduración estándar de 4 pilares (GEO→SEO→AEO→IAO): el impacto mensual crece progresivamente (15% → 100% del factor realista del 35%) y el semestre equivale a 3.85 meses de recuperación completa. Este cálculo es IDÉNTICO en el diagnóstico y en la propuesta comercial."
+  },
+  "procedencia": {
+    "escenarios": "financial_scenarios_20261012_165654.json → scenarios (min=max=central: el JSON del baseline publica un solo valor por escenario)",
+    "raw_monthly_loss": "3511200 = scenarios.realistic del baseline",
+    "recovery_factor_realistic": "0.35 = config/scenarios.yaml recovery_factors.realistic",
+    "total_recuperacion_6m": "calcular_recuperacion_6m(3511200, 0.35) = 4731342",
+    "opex_total_6m": "400000 (pricing.monthly_price_cop del baseline) x 6",
+    "capex_total": "2500000 = config/pricing.yaml packages.setup_fee_default",
+    "financial_evidence_tier": "resolver_tier_evidencia(breakdown del baseline) = B+",
+    "has_onboarding": "True: el preflight afirmo la rama YAML_DE_DIR_CLIENTES"
+  },
+  "hueco_declarado": "render por la ruta de plantilla autorizada (generate() completo tiene fuga de RAM y esta excluido de la suite); las secciones del diagnostico que dependen de objetos vivos no reconstruibles sin inferencia quedan con placeholders sin poblar; ninguna cifra inventada"
+}

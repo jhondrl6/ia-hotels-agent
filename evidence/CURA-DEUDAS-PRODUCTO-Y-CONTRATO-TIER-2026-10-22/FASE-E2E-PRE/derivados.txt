@@ -1,0 +1,14 @@
+Derivados al dia — FASE-E2E-PRE (2026-10-24), leidos con el exit sin tuberia
+
+       derivado: .opencode/wiring_report.json conforme con el calculo en memoria (digest 3ce1fb272728)
+[OK] Wiring: 180 llamadas descubiertas en 744 archivos | gobernadas 76 (conformes 22, omisiones 0) | amparadas por excepcion 0 | violaciones 0 | 684 excluidos por declaracion de Git | receptores no resueltos 30 | exclusiones_por_rol: .venv-wsl bruto=582 versionada=0, archives bruto=12 versionada=12, build bruto=14 versionada=0, evidence bruto=159 versionada=159, temp bruto=165 versionada=0, venv bruto=7610 versionada=0
+EXIT_wiring=0
+
+[OK] Índice de lecciones fresco (403 IDs)
+[fechas] nombre=392 commit=11 sin_fuente=0
+EXIT_indice=0
+
+Delta del indice por la seccion 5.8 (nuevas filas de citas): lecciones 403 -> 403, citados_sin_definicion 113 -> 113, cobertura 9 -> 9 (medido sobre .opencode/lecciones_index.json antes de re-publicar y despues). La seccion cita IDs ya definidos: no anade definiciones ni citas fantasma.
+
+checks verdes quick: 13
+EXIT_quick=0

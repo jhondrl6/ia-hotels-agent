@@ -413,7 +413,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 22,
+      "total_citas": 23,
       "planes_que_lo_citan": [
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
         "context/CONTEXT-DEUDAS-PRODUCTO-VERIFICADAS-2026-10-21"
@@ -3666,14 +3666,14 @@
       "seccion": "Lecciones nuevas de este plan (L-PF1+ — registrar al cierre de cada fase; mínimo 3 totales)",
       "fecha_plan": "2026-08-27",
       "fuente_fecha": "nombre",
-      "total_citas": 118,
+      "total_citas": 120,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
-        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12",
-        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22"
+        "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/PASO0-VERIFICADOR-CAPITALIZACION-2026-09-12"
       ],
       "redefiniciones": []
     },
@@ -3849,7 +3849,7 @@
       "seccion": "FASE-RELEASE-4.76.0 (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 111,
+      "total_citas": 113,
       "planes_que_lo_citan": [
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
@@ -4280,12 +4280,12 @@
       "seccion": "FASE-T4-A (2026-09-11)",
       "fecha_plan": "2026-09-09",
       "fuente_fecha": "nombre",
-      "total_citas": 132,
+      "total_citas": 133,
       "planes_que_lo_citan": [
         "Archives/TRIBUNAL-ENFORCEMENT-OBS-2026-09-11",
         "Archives/VERIFICADOR-CONTEXTO-DE-FASE-2026-09-20",
-        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+        "Archives/REFACTOR-WHATSAPP-ENTREGA-2026-09-18",
         "Archives/CURA-INSTRUMENTOS-QMIND-S15-2026-10-07",
         "Archives/EVALUACION-JEV-TYPESAFE-2026-09-21"
       ],

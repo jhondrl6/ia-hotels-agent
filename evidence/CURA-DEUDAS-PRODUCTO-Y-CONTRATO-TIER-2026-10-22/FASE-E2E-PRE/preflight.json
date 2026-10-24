@@ -1,0 +1,39 @@
+{
+  "schema": "iah-e2e-pre-preflight/1.0",
+  "fase": "FASE-E2E-PRE",
+  "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+  "emitido_el": "2026-10-24T14:53:34Z",
+  "onboarding_source": "output\\clientes\\hotel_don_alfonso_onboarding.yaml",
+  "onboarding_source_sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+  "copia_versionada_sha256": "2990d768f0ae75f3a5dfe6fac098f94c116ddc1b47a27b8727216c371b47c734",
+  "copias_coinciden": true,
+  "hotel_name": "Hotel Don Alfonso",
+  "url_declarada_por_el_yaml": "https://www.donalfonsohotel.com/",
+  "rama_efectiva_del_loader": "YAML_DE_DIR_CLIENTES",
+  "loader_sin_dir_clientes_devolvio": null,
+  "rooms": 11,
+  "adr_cop": 330000,
+  "occupancy_rate": 0.42424242424242425,
+  "direct_channel_pct": 30.0,
+  "fuente_de_adr_y_ocupacion": "financial_scenarios_20261012_165654.json → input_data (productor del baseline; coincide con el YAML: rooms 11, valor_reserva_cop 330000, canal 30.0)",
+  "discrepancia_de_dominio": {
+    "observations_website": "https://hoteldonalfonso.com/",
+    "url_del_run": "https://www.donalfonsohotel.com/",
+    "normalizada_observations": "hoteldonalfonso.com",
+    "normalizada_run": "donalfonsohotel.com",
+    "casan_por_host": false,
+    "efecto_medido": "el loader coincide por URL normalizada y encuentra el YAML en output/clientes antes de tocar observations.json, asi que la discrepancia no altera el onboarding del ensayo",
+    "antecedente": "onboarding_provenance.json del baseline declara la URL del YAML como edicion explicita del Operador (solicitada 2026-10-06)"
+  },
+  "domain_confirmed": false,
+  "domain_confirmed_por": null,
+  "domain_confirmation_owner": "Operador",
+  "domain_confirmation_required_before": "FASE-E2E",
+  "no_se_edito_observations_json": true,
+  "requisitos_observados": [
+    "yaml_materializado",
+    "shas_coinciden",
+    "loader_devuelve_datos",
+    "identidades_del_baseline"
+  ]
+}

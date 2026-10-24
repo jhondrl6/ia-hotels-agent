@@ -1,0 +1,5 @@
+R2.8 mutante: V4ProposalGenerator._preprocess_conditionals forzido a tier A dentro del render B+ (una linea en el arnes, sin tocar el arbol).
+over_presentations del revisor REAL: 2 (esperado > 0 = rojo del mutante)
+hallazgos OVER_PRESENTATION: 2
+veredicto del revisor: BLOQUEAR
+contraste verde: la misma copia con el render corregido da over_presentations = 0 y 0 hallazgos OVER_PRESENTATION

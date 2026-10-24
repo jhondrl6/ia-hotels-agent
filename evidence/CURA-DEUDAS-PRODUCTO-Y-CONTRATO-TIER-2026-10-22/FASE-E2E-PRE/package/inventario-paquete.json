@@ -1,0 +1,32 @@
+{
+  "schema": "iah-e2e-pre-package/1.0",
+  "fase": "FASE-E2E-PRE",
+  "paquete_publicado": "hotel_donalfonsohotel.com_20261024.zip",
+  "suppressed": false,
+  "member_count": 6,
+  "members": [
+    "DIAGNOSTICO.md",
+    "PROPUESTA_COMERCIAL.md",
+    "ASSETS/01_DIAGNOSTICO_Y_OPORTUNIDAD_ensayo.md",
+    "ASSETS/02_PROPUESTA_COMERCIAL_ensayo.md",
+    "README_DELIVERY.md",
+    "MANIFEST.json"
+  ],
+  "sha256": "78e9f55769b0cb0945e921f3806dc0afb92814e70c173a74ab4b2bd3792454ce",
+  "size_bytes": 16954,
+  "cuarentena_prueba_supresion": {
+    "ruta": "hotel_donalfonsohotel.com_20261024.zip.tmp",
+    "borrada_por_suppress": true
+  },
+  "acta_del_ensayo": {
+    "verdict": "APROBADO-CONDICIONAL",
+    "blocks_delivery_zip": false
+  },
+  "deliveries_real": {
+    "existe": false,
+    "antes": 0,
+    "despues": 0,
+    "intacto": true
+  },
+  "no_toco_output_de_corrida": true
+}

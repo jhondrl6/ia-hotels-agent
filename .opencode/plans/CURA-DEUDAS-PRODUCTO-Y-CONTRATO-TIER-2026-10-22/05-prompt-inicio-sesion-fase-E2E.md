@@ -4,7 +4,7 @@
 **Objetivo**: probar el pipeline comercial completo con datos reales tras las curas —un hotel tier B+ recibe paquete con veredicto honesto y **ZIP real**— y nutrir el `10-analisis` con los hallazgos de la corrida.
 **Dependencias**: FASE-E2E-PRE ✅ y todas las fases de implementación ✅.
 **Complejidad técnica**: MEDIA · **Duración estimada**: 2-3 horas (5-10 min solo la corrida)
-**Modo de ejecución**: **DIRECTO** o **subagente con `Agent`**; el comando largo se puede lanzar con `Bash` en segundo plano. No usar `delegate_task` ni `notify_on_complete`.
+**Modo de ejecución**: **DIRECTO**, con la corrida lanzada en `Bash` en segundo plano desde el hilo principal (preferido). `Agent` queda acotado a ejecutar el comando: nunca la verificación ni el cierre documental. No usar `delegate_task` ni `notify_on_complete`.
 
 ## Contexto
 
@@ -45,7 +45,7 @@ El onboarding del baseline está en `evidence/CURA-COSTURA-TRIBUNAL-2026-10-11/F
 
 ### Tarea 2: Corrida `v4complete`
 **Objetivo**: `./venv/Scripts/python.exe main.py v4complete --url https://www.donalfonsohotel.com/` con el onboarding materializado.
-**Protocolo**: directo o con `Agent`; si se lanza en segundo plano, usar `Bash` con `run_in_background` y preservar el stdout. **Evidencia proactiva obligatoria inmediatamente después de la corrida**: copiar `01_DIAGNOSTICO_*.md`, `02_PROPUESTA_*.md`, `v4_audit/*.json`, acta, `gate_report`, `revision_honestidad.json`, `pain_ledger.json`, `financial_scenarios_*.json`, ZIP y recibos a `evidence/…/FASE-E2E/`.
+**Protocolo**: `Bash` con `run_in_background` desde el hilo principal y stdout preservado. Si se delega en `Agent`, el encargo cubre **solo el comando** y lleva verbatim las prohibiciones de esta fase —un intento, sin reintento ni `--re-run`, sin modificar código, sin declarar la fase ni ejecutar `log_phase_completion.py`— porque un subagente que reintenta quema la única inferencia pagada. El término de la corrida se afirma por exit code y presencia de artefactos, no por la notificación de la herramienta. **Evidencia proactiva obligatoria inmediatamente después de la corrida**: copiar `01_DIAGNOSTICO_*.md`, `02_PROPUESTA_*.md`, `v4_audit/*.json`, acta, `gate_report`, `revision_honestidad.json`, `pain_ledger.json`, `financial_scenarios_*.json`, ZIP y recibos a `evidence/…/FASE-E2E/`.
 **Criterios de aceptación**:
 - [ ] Corrida terminada; evidencia a salvo **antes** de verificar
 - [ ] `v4_complete_report.json` y `acta_revision.json` presentes
