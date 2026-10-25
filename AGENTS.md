@@ -1,8 +1,8 @@
-<!-- agents_version: v4.81.1 | last_update: 2026-10-22 -->
+<!-- agents_version: v4.82.0 | last_update: 2026-10-24 -->
 
 # IA Hoteles Agent (iah-cli)
 
-> **v4.81.1 -- Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G COMPLETADO**
+> **v4.82.0 -- Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso COMPLETADO**
 
 ---
 

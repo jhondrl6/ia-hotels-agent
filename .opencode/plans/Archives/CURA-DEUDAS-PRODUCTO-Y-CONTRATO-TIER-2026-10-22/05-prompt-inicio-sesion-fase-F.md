@@ -112,7 +112,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-F del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-F del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-F.md, 01-plan-maestro.md §1, §2, §4 y §5, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: umbrales por semántica, D25-bis con una fuente y D27 con nombres semánticos tras D.
 TAREAS: 1 vocabulario de umbrales, 2 coherencia de defaults, 3 rename D27 post-D, 4 tests de coherencia + par pre/post.

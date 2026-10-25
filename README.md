@@ -2,7 +2,7 @@
 
 **Plataforma agéntica de diagnóstico de visibilidad digital hotelera: audita presencia en Google, IAs y búsquedas locales; cuantifica la fuga de reservas directas; y genera assets técnicos (schema, FAQ, llms.txt) para recuperar ingresos que hoy van a OTAs y competidores.**
 
-**v4.81.1** -- Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G | Actualizado 22 Octubre 2026
+**v4.82.0** -- Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso | Actualizado 24 Octubre 2026
 
 ---
 
@@ -149,7 +149,7 @@ Output: 01_DIAGNOSTICO_Y_OPORTUNIDAD.md (siempre)
 | `validate-guarantee` | Activo | Valida garantia Dia 55 contra datos reales | Reporte de estado de garantia |
 | `setup` | Activo | Configuracion interactiva de API keys | Credenciales configuradas |
 | `--doctor` | Activo | Diagnostico del ecosistema de agentes | Reporte de salud completo |
-| `spark` | Deprecado | Legacy v3.x | Usar `v4complete` |
+| `spark` | Retirado | Centinela: informa el retiro y sale 0 (v4.82.0) | Usar `v4complete` |
 | `audit` | Deprecado | Legacy v3.x | Usar `v4audit` |
 
 ### Opciones de v4complete
@@ -190,7 +190,7 @@ Verifica symlink de workflows, skills, memoria del agente, gitignore, DOMAIN_PRI
 
 ---
 
-## Estado del Proyecto (v4.81.1 -- Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
+## Estado del Proyecto (v4.82.0 -- Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso) vive en **[AGENTS.md](AGENTS.md)** — fuente unica del estado interno. Historial de cambios: [CHANGELOG.md](CHANGELOG.md). Registro de fases: [docs/contributing/REGISTRY.md](docs/contributing/REGISTRY.md).
 
 ---
 

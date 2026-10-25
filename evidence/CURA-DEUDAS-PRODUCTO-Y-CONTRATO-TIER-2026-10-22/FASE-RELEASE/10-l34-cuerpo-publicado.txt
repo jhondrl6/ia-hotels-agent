@@ -1,0 +1,16 @@
+# L34: sede de brechas_en_ledger en el cuerpo PUBLICADO
+
+Identidad remota (09-writeback-verificacion-strict.txt): [FRESCO] CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 :: promesa verificada por descarga+sha256
+  => los bytes que bajaron casan por sha256 con el cuerpo del repo, asi que grepear el cuerpo del repo es grepear lo publicado (verificacion por identidad, no por el eco del upload).
+
+Ocurrencias en el cuerpo (sha256 6faf093fda81eb9a... == fuente_id 01a17061-5b10-76e0-999a-4d246b039632):
+  revision_alineacion.json : 5
+  info.brechas_en_ledger   : 3
+  summary.brechas_en_ledger (errata vieja, debe ser 0): 0
+
+Lineas que casan:
+22:| FASE-VERIFY | 2026-10-24 | ✅ **8 de 8 AC CUMPLIDOS** | _(auto-reporte en unidad `tool_use`, **no comparable**: `measure_iterations.py` es legado y no se probó contra este runtime; el
+31:| AC3 | Contrato GBP en dos caminos | `get_detected_issues` 0 brechas con `_base_profile`; `PainSolutionMapper` sin schema→abandono; 0 COP falsos | **REAL:** los 0 COP y las 0 brechas s
+35:| AC7 | Corrida Don Alfonso | ZIP real (`suppressed:false`); 0 `OVER_PRESENTATION`; pérdida 3.511.200 o re-medida; 11 brechas re-medidas | **REAL, leído sobre el ZIP publicado y no sobr
+90:| L34 | FASE-VERIFY: el plan fijó la sede de una clave en el artefacto equivocado. AC3 y AC7 del `01-plan-maestro.md` §1 —y la Tarea 2 de este mismo prompt— mandan leer `brechas_en_
+139:| **`L34`** (errata de sede, FASE-VERIFY) — el §1 de este plan y el prompt de VERIFY ubicaban `brechas_en_ledger` en `pain_ledger.json`; la clave la publica `revision_alineacion.json`

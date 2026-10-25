@@ -114,7 +114,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-D del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-D del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-D.md, 01-plan-maestro.md §1, §2, §4 y §5, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: contrato GBP único en los dos caminos, schema tri-estado y N2; 0 brechas/0 COP sobre perfil completo.
 TAREAS: 1 gate de gbp_leak_detector, 2 vocabulario + schema tri-estado, 3 diente AC3 + mutation, 4 N2 y relevo.

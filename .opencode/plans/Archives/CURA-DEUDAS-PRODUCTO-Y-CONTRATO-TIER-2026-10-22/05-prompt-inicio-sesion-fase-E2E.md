@@ -108,7 +108,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-E2E del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-E2E del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-E2E.md, 01-plan-maestro.md §1, §4, §5 y §6, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: corrida v4complete de Don Alfonso, ZIP real, 0 OVER_PRESENTATION y veredicto honesto.
 TAREAS: 1 preflight de onboarding, 2 corrida y evidencia proactiva, 3 verificación contra baseline y 10-analisis.

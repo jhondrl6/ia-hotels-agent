@@ -1,0 +1,8 @@
+7
+21:| FASE-C | `tribunal/{judge,outcome,acta_writer,review_inputs}.py`, `main.py` | El veredicto condicional er
+33:**Backwards compatibility.** **Rompente en tres contratos observables**, declarados: (1) el literal del ver
+130:**Solución**: `TribunalJudge.evaluate()` produce un acta determinista con las **6 cláusulas P6** y `verd
+186:**Solución**: Vía A — los 4 revisores corren **después** del packaging, comparten un único `LLMPromi
+2606:**Cómo se midió**: el camino real del `1.0` se identificó **por símbolo y no por línea** (R2.2) y se
+2616:**Límites, dichos en el artefacto**: P6.2 y P6.5 siguen `NOT_EVALUABLE` por diseño y `T1_CERTIFIABLE_CL
+2874:**La entrega que produjo.** Veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING` con tier B+ (la regla de 

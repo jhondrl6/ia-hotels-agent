@@ -1,6 +1,6 @@
 {
   "comando_de_medicion": "grep -rEoh \"[A-Za-z0-9_/]+\\\\.py:[0-9]+\" .opencode/plans --include=*.md | wc -l",
-  "created_at": "2026-10-22T17:11:13",
+  "created_at": "2026-10-24T19:09:50",
   "files": {
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/01-plan-maestro.md": 11,
     "Archives/ASSET-ALIGNMENT-ZIONE-2026-07-23/02-prompt-fase-1.md": 3,
@@ -24,6 +24,9 @@
     "Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/04-prompt-fase-C-A.md": 1,
     "Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/05-prompt-fase-C-B.md": 2,
     "Archives/COHERENCIA-MODULO-ENTREGA-2026-08-03/06-prompt-fase-D.md": 13,
+    "Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/09-documentacion-post-proyecto.md": 1,
+    "Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/10-analisis-post-implementacion.md": 1,
+    "Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/dependencias-fases.md": 1,
     "Archives/DELIVERY-ZIP-SINGLE-WRITE-2026-08-01/02-prompt-fase-A.md": 1,
     "Archives/DT-3-TECH-DEBT-2026-07-25/08-analisis-post-implementacion.md": 37,
     "Archives/DT-4-ROOT-CAUSE-2026-07-25/01-plan-maestro.md": 1,

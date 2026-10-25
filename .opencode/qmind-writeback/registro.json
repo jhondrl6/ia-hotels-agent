@@ -146,6 +146,16 @@
       "sha_cuerpo": "d35b81786511daaa2b4a557294f3ae34337b73835fe819fc3d8a6f852fdaa100",
       "instanea": "CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15--10-analisis_CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-1--d35b81786511daaa.md",
       "publicado": "2026-10-22"
+    },
+    {
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "titulo": "10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0, 8 de 8 AC sobre artefactos reales)",
+      "estado": "vigente",
+      "fuente_id": "01a17061-5b10-76e0-999a-4d246b039632",
+      "sha256": "6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d",
+      "sha_cuerpo": "6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d",
+      "instanea": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--6faf093fda81eb9a.md",
+      "publicado": "2026-10-24"
     }
   ]
 }

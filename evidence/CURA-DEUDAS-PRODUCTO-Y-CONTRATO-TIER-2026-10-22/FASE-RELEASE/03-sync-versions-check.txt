@@ -1,0 +1,19 @@
+============================================================
+VERSION SYNC (CHECK)
+============================================================
+
+Source: C:\Users\Jhond\Github\iah-cli\VERSION.yaml
+  version: 4.82.0
+  codename: Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso
+  date: 2026-10-24
+
+OK: README.md (readme_version_header) - in sync
+OK: AGENTS.md (agents_version_comment) - in sync
+OK: AGENTS.md (agents_header_banner) - in sync
+OK: .cursorrules (cursorrules_header) - in sync
+OK: docs/CONTRIBUTING.md (contributing_version_header) - in sync
+OK: docs/GUIA_TECNICA.md (guia_tecnica_header) - in sync
+
+============================================================
+Result: All files in sync
+SYNC_EXIT=0

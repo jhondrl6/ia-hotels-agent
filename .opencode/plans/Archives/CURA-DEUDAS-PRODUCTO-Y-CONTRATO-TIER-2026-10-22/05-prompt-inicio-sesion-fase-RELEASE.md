@@ -42,9 +42,9 @@
 # 2. índice con el plan cerrado consultable
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 # 3. archivar: git mv si el plan está versionado; mv si aún es untracked (declararlo)
-git ls-files --error-unmatch .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 >/dev/null 2>&1 \
-  && git mv .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 .opencode/plans/Archives/ \
-  || mv .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 .opencode/plans/Archives/
+git ls-files --error-unmatch .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 >/dev/null 2>&1 \
+  && git mv .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 .opencode/plans/Archives/ \
+  || mv .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 .opencode/plans/Archives/
 # 3b. el índice congela la ruta nueva
 ./venv/Scripts/python.exe scripts/build_lesson_index.py
 ./venv/Scripts/python.exe scripts/validate_opencode_refs.py --fix
@@ -101,7 +101,7 @@ Ninguno nuevo. Verificación: `version_consistency_checker.py`, `run_all_validat
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-RELEASE-4.82.0 del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-RELEASE-4.82.0 del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-RELEASE.md, 01-plan-maestro.md §1 y §4, 00-lecciones-capitalizadas.md §4, dependencias-fases.md y workflow canónico.
 OBJETIVO: cerrar la release 4.82.0 con documentación oficial sincronizada y plan archivado por el orden R2.10.
 TAREAS: E1 diagnóstico, verificación de registro de 11 fases, E2 sync, E3 CHANGELOG, E4 GUIA_TECNICA + corrección H8 (ROADMAP/GUIA_TECNICA vigentes), E5-E8 docs y validaciones, E8b README audit, cierre R2.10 con mv/git mv, registro propio.

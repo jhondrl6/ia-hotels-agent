@@ -1,0 +1,6 @@
+5
+103:**Solución**: `TribunalJudge.evaluate()` produce un acta determinista con las **6 cláusulas P6** y `verd
+159:**Solución**: Vía A — los 4 revisores corren **después** del packaging, comparten un único `LLMPromi
+2579:**Cómo se midió**: el camino real del `1.0` se identificó **por símbolo y no por línea** (R2.2) y se
+2589:**Límites, dichos en el artefacto**: P6.2 y P6.5 siguen `NOT_EVALUABLE` por diseño y `T1_CERTIFIABLE_CL
+2847:**La entrega que produjo.** Veredicto `APROBADO-CONDICIONAL-PENDING-ONBOARDING` con tier B+ (la regla de 

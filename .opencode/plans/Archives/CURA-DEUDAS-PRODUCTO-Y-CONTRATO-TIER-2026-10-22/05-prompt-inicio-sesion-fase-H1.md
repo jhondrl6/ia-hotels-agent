@@ -106,7 +106,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-H1 del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-H1 del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-H1.md, 01-plan-maestro.md §1, §2, §4 y §5, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: D16 con score /90 y sin API muerta; D24 con stub retirado y scraper real intacto.
 TAREAS: 1 denominador/rama API, 2 stub retirado y tests, 3 pares rojo/verde y evidencia.

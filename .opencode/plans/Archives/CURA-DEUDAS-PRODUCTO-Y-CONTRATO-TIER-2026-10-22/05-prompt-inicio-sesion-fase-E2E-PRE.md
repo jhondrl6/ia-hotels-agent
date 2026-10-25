@@ -126,7 +126,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-E2E-PRE del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-E2E-PRE del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-E2E-PRE.md, 01-plan-maestro.md §1, §2, §4, §5 y §6, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: ensayo determinista del baseline (onboarding, render B+, revisor/juez reales, paquete temporal) sin inferencia.
 TAREAS: 1 preflight de onboarding, 2 render, 3 revisor y juez reales, 4 paquete temporal, 5 veredicto LISTO/INCOMPLETA.

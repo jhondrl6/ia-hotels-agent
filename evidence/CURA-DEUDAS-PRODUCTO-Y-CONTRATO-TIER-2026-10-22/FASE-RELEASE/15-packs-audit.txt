@@ -1,0 +1,5 @@
+# Packs de briefing de ESTE plan (paso 3c del orden)
+archivos briefing/ en HEAD bajo el plan: 0
+archivos briefing/ en el arbol archivado: 0
+=> el plan NO publica briefing/: no se generaron packs (build_phase_briefing --check saldria PACK-AUSENTE por construccion).
+=> el gate real es [13/13] del hook/quick, que verifica los packs EXISTENTES; su verde no dice nada de este plan.

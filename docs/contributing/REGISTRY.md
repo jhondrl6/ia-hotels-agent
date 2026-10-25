@@ -2,7 +2,7 @@
 
 > **Ultima actualizacion:** 2026-10-24
 > **Version actual:** v4.66.0
-> **Total fases completadas:** 544
+> **Total fases completadas:** 545
 
 ---
 
@@ -13171,6 +13171,24 @@ _Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni ver
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-VERIFY/05-indice-check.txt` | NUEVO | 05-Indice-Check |
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-VERIFY/06-wiring-check.txt` | NUEVO | 06-Wiring-Check |
 | `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-VERIFY/07-quick.txt` | NUEVO | 07-Quick |
+
+### Archivos Modificados
+_Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._
+
+### Validaciones
+_Declaraciones de quien registra. Este instrumento no ejecuto ningun test ni verifico ningun contrato: una linea sin `[x]` significa «declarado, no verificado aqui», no «falla»._
+- [ ] Tests: sin dato declarado
+- [ ] Suite NEVER_BLOCK y capability contract: NO verificados por este instrumento
+
+---
+
+
+## FASE-RELEASE-4.82.0 - 2026-10-24
+**Descripcion:** Release 4.82.0: curacion de deudas de producto (D16-D28) + contrato plantilla-tier y veredicto con causa + E2E-PRE/E2E Don Alfonso con ZIP real
+**Nota:** Cierre documental: bump con date=release_date, sync 6 reglas, CHANGELOG [4.82.0], nota por fase en GUIA_TECNICA, H8 (5 aserciones vigentes del literal viejo -> 0, par pre/post anclado a git show HEAD:), README auditado por comando con spark a Retirado, DOMAIN_PRIMER regenerado antes de --context, quick 13/13, registro de las 11 fases verificado y no re-registrado, write-back crudo con [FRESCO] por descarga+sha256 y L34 verificado, git mv a Archives/ por el orden R2.10. Ningun commit sin pathspec del Operador.
+
+### Archivos Nuevos
+_Sin dato declarado: quien registra no paso `--archivos-nuevos`. No significa «no hay»: este script no inspecciona el arbol._
 
 ### Archivos Modificados
 _Sin dato declarado: quien registra no paso `--archivos-mod` (pasarla hace que este script escriba `.last_doc_phase.json`, asi que se omite a proposito cuando el mandato no autoriza esa escritura auxiliar). No significa «no hay»._

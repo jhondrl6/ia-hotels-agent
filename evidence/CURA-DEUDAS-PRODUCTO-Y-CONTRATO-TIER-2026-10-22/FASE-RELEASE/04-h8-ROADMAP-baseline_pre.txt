@@ -1,0 +1,5 @@
+4
+184:4. **Ningún diagnóstico sin analítica verificada se presenta como entregable final sin condiciones.** C
+312:| FASE-0 offline (2026-09-20) | Contrafactual sobre el acta archivada: `BLOQUEADO` → `APROBADO-CONDICION
+491:**Veredictos del Juez y `PublicationState`** **[re-validado 2026-09-21]**: el módulo `publication_state.p
+595:5. **P5 — Sin estado de publicación para el veredicto condicional.** **[Re-validado 2026-09-21]**: el m

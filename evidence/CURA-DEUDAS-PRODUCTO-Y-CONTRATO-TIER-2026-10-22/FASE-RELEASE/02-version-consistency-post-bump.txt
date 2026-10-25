@@ -1,0 +1,24 @@
+============================================================
+VERSION CONSISTENCY CHECKER
+============================================================
+
+[1/3] CHANGELOG vs VERSION.yaml
+----------------------------------------
+  CHANGELOG.md:  4.82.0
+  VERSION.yaml:   4.82.0
+  Codename:       Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso
+  Status: ✅ SINCRONIZADO
+
+[2/3] REGISTRY - Ultima Fase
+----------------------------------------
+  Ultima fase: FASE-H2
+  Status: ✅ REGISTRY OK
+
+[3/3] CONTRIBUTING.md Consistency
+----------------------------------------
+  Status: ✅ SINCRONIZADO
+
+============================================================
+RESULTADO: ✅ TODO SINCRONIZADO
+============================================================
+VCC_EXIT=0

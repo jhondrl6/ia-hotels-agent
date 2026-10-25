@@ -97,7 +97,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-VERIFY del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-VERIFY del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-VERIFY.md, 01-plan-maestro.md §1, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: certificar AC1-AC8 contra artefactos reales de E2E-PRE y E2E.
 TAREAS: lectura de artefactos, verificación por AC, antes/después, greps con población, matriz del 10-analisis, lecciones, registro.

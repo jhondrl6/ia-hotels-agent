@@ -1,0 +1,30 @@
+[!] 15 referencia(s) rota(s):
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-A.md:113 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-B.md:109 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-C.md:116 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-D.md:117 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-E.md:116 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-E2E-PRE.md:129 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-E2E.md:111 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-F.md:115 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-H1.md:109 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-H2.md:119 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-RELEASE.md:45 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-RELEASE.md:46 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-RELEASE.md:47 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-RELEASE.md:104 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  .opencode\plans\Archives\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22\05-prompt-inicio-sesion-fase-VERIFY.md:100 -> .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-A.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-B.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-C.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-D.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-E.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-E2E-PRE.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-E2E.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-F.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-H1.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-H2.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-RELEASE.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+  [FIX] 05-prompt-inicio-sesion-fase-VERIFY.md: .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 -> .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22
+[FIX] 12 referencia(s) reparada(s)
+[PASS] OpenCode References: todas las referencias reparadas

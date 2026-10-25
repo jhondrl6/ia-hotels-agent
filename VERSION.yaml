@@ -1,15 +1,56 @@
 # VERSION.yaml - Fuente unica de verdad para el sistema de contexto
 project: "IA Hoteles Agent CLI"
-version: "4.81.1"
-codename: "Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G"
-release_date: "2026-10-22"
+version: "4.82.0"
+codename: "Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso"
+release_date: "2026-10-24"
 # `date` es el valor que sincroniza scripts/sync_config.yaml en los encabezados
 # versionados (AGENTS.md, .cursorrules, GUIA_TECNICA, REGISTRY). Si falta,
 # scripts/sync_versions.py lo inyecta con datetime.now() y el check de Version Sync
 # caduca a las 00:00 de cada dia: marca FAIL contra encabezados correctos de la release
 # anterior sin que haya cambiado ninguna version. Debe ir igual a release_date.
-date: "2026-10-22"
+date: "2026-10-24"
 plan_maestro_version: "v2.6.0"
+
+# v4.82.0 - CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER (2026-10-24)
+# Plan CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22, cerrado por su FASE-RELEASE: el camino real del
+# producto deja de publicar cifras y veredictos que no sostienen sus propias fuentes. Minor porque cambia
+# comportamiento de producto: el render comercial, el contrato del veredicto, el denominador del score GBP,
+# el lector de benchmarks y el retiro de dos rutas muertas.
+# FASE-A (AC5): retiro de la ruta `spark` (centinela informa y sale 0; D19 cerrada por retiro), el lector
+#         latente de `gap_analyzer` se corrige por AST y el guardian estatico pasa a comprobar EXISTENCIA
+#         del atributo sobre la clase importada, con su par rojo/verde.
+# FASE-B (AC1): los 2 claims de totalidad del revisor se renderizan condicionados por `evidence_tier` en
+#         propuesta Y diagnostico; el parser del template aprende `!=` porque lo dicto el lector, no el autor.
+# FASE-C (AC2): `APROBADO-CONDICIONAL` + `conditional_reason` (ANALYTICS_CEILING / ONBOARDING_INCOMPLETE /
+#         UNCERTIFIABLE_CLAUSES); `has_onboarding` viaja en el manifiesto; 8 -> 0 del literal viejo en la
+#         poblacion declarada; `P6.5` y `T1_CERTIFIABLE_CLAUSES` intactas.
+# FASE-D (AC3): un solo vocabulario GBP en los dos caminos (`get_detected_issues` y `PainSolutionMapper`);
+#         schema tri-estado (None no dispara), `PERFIL_ABANDONADO` por actividad y `CERO_ACTIVIDAD_RECIENTE`
+#         con etiqueta propia; `gbp_leak_detector` relevado a oraculo. M1 reproduce el defecto de `D28`:
+#         6 brechas y 39.600.000 COP/mes.
+# FASE-E (AC4): `BenchmarkLoader` es el unico lector regional; las cinco tablas quedan derivadas o retiradas
+#         y `[2/13]` compara VALORES sin perder parseo/version - `0 regiones comparadas` es rojo.
+# FASE-F (AC6): cinco umbrales de fotos con nombre propio y lector unico; `D25-bis` con un solo respaldo
+#         (0.20 -> 0.35 = maestro) y `D27` renombrado por semantica con los conteos de usos pinchados.
+# FASE-H1 (AC8): score GBP sobre `/90` con un denominador por escala en `modules/common/rubrica_gbp.py`,
+#         rama API muerta retirada; el stub de Booking publica `found=False` + `STUB_RETIRADO` sin tocar el
+#         scraper real del producto.
+# FASE-H2 (AC8): `settings.yaml` sin claves muertas (bloque `thresholds` retirado, 0 lectores medidos),
+#         dead code del arbitraje etico fuera con su bateria, el docstring de `CG-CLAIM-VS-EVIDENCE` cita la
+#         rama que desenrolla el AST y `Benchmarking.md` declara su fuente sin mover un numero.
+# FASE-E2E-PRE + FASE-E2E (AC7): ensayo determinista sin inferencia (`LISTO_PARA_E2E`) y UNA corrida real de
+#         Don Alfonso: `EXIT=0`, ZIP real `donalfonsohotel_20261024.zip` (82 miembros, 94.432 B,
+#         sha `eeae4001...`) con `suppressed: false`, veredicto `APROBADO-CONDICIONAL` + `ANALYTICS_CEILING`
+#         (baseline: `BLOQUEADO`), `summary.over_presentations` 0 (baseline: 2 CRITICAL), 3.511.200 COP/mes
+#         y 11 brechas re-medidos, coherencia 0,9269.
+# FASE-VERIFY: 8 de 8 AC certificados contra artefactos reales, cinco con su limite escrito; los dientes
+#         re-corridos dan 145 passed.
+# LIMITES que esta entrada publica: quedan con dueño Operador `package_thresholds` y `gbp_geo_score_threshold`
+#         (claves sin lector), el horque `v25_config.umbrales_decision`, la divulgacion de la edad del dato
+#         (94 dias contra el techo de 90 del baseline), la mezcla de dos corridas dentro del ZIP (26 de 82
+#         miembros) y `hotel_name` tomado del slug de la URL. `S-CST-1`, `D21`/`P6.5` y `D26` siguen fuera de
+#         este plan. Fuente unica de las metricas por fase: `09-documentacion-post-proyecto.md` §D del plan
+#         archivado (`Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/`).
 
 # v4.81.1 - CURA-ERA-G-Y-CIERRE-INSTRUMENTOS (2026-10-22)
 # Plan CURA-ERA-G-Y-CIERRE-INSTRUMENTOS-2026-10-15, cerrado por su FASE-RELEASE: una sola unidad de

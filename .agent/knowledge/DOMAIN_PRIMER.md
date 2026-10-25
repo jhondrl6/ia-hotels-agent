@@ -3,8 +3,8 @@
 > **Proposito**: Base de conocimiento comprimida del dominio "hoteleria digital".
 > Consultar para entender conceptos de negocio y su mapeo a codigo.
 >
-> **Version del sistema**: 4.81.1 | **Codename**: Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G
-> **Release date**: 2026-10-22 | **Plan Maestro**: v2.6.0
+> **Version del sistema**: 4.82.0 | **Codename**: Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso
+> **Release date**: 2026-10-24 | **Plan Maestro**: v2.6.0
 > **Agent Harness**: v3.2.0
 
 ---
@@ -81,6 +81,6 @@
 
 ---
 
-*Auto-generado: 2026-10-24 | v4.81.1 Instrumentos de QMind: la segunda via, el reemplazo por documento y la marca historica de la era-G*
+*Auto-generado: 2026-10-24 | v4.82.0 Cura de deudas de producto: contrato plantilla-tier, veredicto con causa y la corrida de Don Alfonso*
 *Regenerar con: `python scripts/doctor.py --regenerate-domain-primer`*
 *NO EDITAR MANUALMENTE - Este archivo se regenera automaticamente desde los modulos del proyecto*

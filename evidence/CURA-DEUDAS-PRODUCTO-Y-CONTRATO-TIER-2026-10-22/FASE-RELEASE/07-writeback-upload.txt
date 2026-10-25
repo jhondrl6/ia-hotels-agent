@@ -1,0 +1,4 @@
+[UP] 10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0, 8 de 8 AC sobre artefactos reales) <- 10-analisis-post-implementacion.md
+[OK] Registrada instantanea CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--6faf093fda81eb9a.md sha256=6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d fuente_id=01a17061-5b10-76e0-999a-4d246b039632
+
+[RESUMEN] upload=1 skip=0 fail=0

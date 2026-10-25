@@ -1,0 +1,8 @@
+cuerpo repo      : 6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d
+registro sha256  : 6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d
+registro sha_cuerpo: 6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d
+instantanea sha256: 6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d | ruta: .opencode\qmind-writeback\instantaneas\CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--6faf093fda81eb9a.md
+== sha_cuerpo == sha del cuerpo del repo : True
+== sha256  == sha de la instantanea      : True
+== publica CRUDA (sha256 == sha_cuerpo)  : True
+fuente_id: 01a17061-5b10-76e0-999a-4d246b039632 | titulo: 10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0, 8 de 8 AC sobre artefactos reales)

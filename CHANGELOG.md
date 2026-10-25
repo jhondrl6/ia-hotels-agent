@@ -1,5 +1,67 @@
 # Changelog
 
+## [4.82.0] - Cura de deudas de producto: contrato plantilla↔tier, veredicto con causa y la corrida de Don Alfonso — 2026-10-24
+
+### Objetivo
+
+Cerrar el plan `CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22`: que el camino real del producto deje de publicar cifras, veredictos y etiquetas que no sostienen sus propias fuentes. El bump es **minor** porque cambia comportamiento de producto — el render comercial, el contrato del veredicto, el denominador del score GBP, el lector único de benchmarks y el retiro de dos rutas muertas (`spark`, el stub de Booking) y de un módulo dead (`financial_coherence_validator`). Ocho fases de implementación (A, B, C, D, E, F, H1, H2), un ensayo determinista (E2E-PRE), **una** corrida real de `v4complete` sobre Hotel Don Alfonso (E2E) y la certificación de los ocho AC (VERIFY). Fuente única de las métricas por fase: `09-documentacion-post-proyecto.md` §D del plan archivado (`Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/`); esta entrada la referencia, no la re-transcribe.
+
+**Lo que se demostró sobre artefactos, no sobre la suite.** AC7 se lee en el paquete: ZIP real `output/v4_complete/deliveries/donalfonsohotel_20261024.zip` (82 miembros, 94.432 B, sha256 `eeae4001…`) con `package_evidence.suppressed: false`, veredicto `APROBADO-CONDICIONAL` con `conditional_reason: ANALYTICS_CEILING` donde el baseline del 2026-10-12 salió `BLOQUEADO`, `summary.over_presentations` **0** donde el baseline publicó 2 CRITICAL, y la pérdida realista **3.511.200 COP/mes** con las **11** brechas de `PainSolutionMapper` re-medidos contra los artefactos de esta corrida. El verde de la suite se usó como **re-ejecución** (145 passed), nunca como sustituto del artefacto.
+
+### Límites publicados
+
+- **Dueño Operador, declarados y no curados por este plan**: `package_thresholds` y `gbp_geo_score_threshold` (claves de config sin lector de producción), el horque `v25_config.umbrales_decision`, la divulgación al cliente de la **edad del dato** (94 días contra el techo de 90 que publicó el baseline — opción (b) aprobada), la **mezcla de dos corridas dentro del ZIP** (26 de 82 miembros son del 2026-10-12) y `hotel_name` tomado del slug de la URL (`Donalfonsohotel`) en lugar del YAML (`Hotel Don Alfonso`). Cada uno está en `10-analisis-post-implementacion.md` §Seguimientos con su evidencia.
+- **AC3 queda certificada por el camino `v4complete`**; la ruta `v4audit` de `get_detected_issues` no la ejercitó ninguna corrida de este plan, y así se escribió en la matriz.
+- **El techo `B+` es real**: con analytics no verificado, la regla de primer piso sigue capando el veredicto; AC1 se certifica sobre la propuesta y el diagnóstico renderizados, y el escáner de sobre-presentación sigue apagado por diseño con tier A. `P6.5`/`D21` y `D26` no se absorben (vallas del maestro §2).
+- **AC8 mitad H2 (`D20`) es documental y no tiene mutante**: queda gobernada por el pin de FASE-E, como exige `L-R.4`.
+- **R2.7 sin verificador mecánico de la resta**: el instrumento legado `measure_iterations.py` no corre sobre este runtime, así que el presupuesto por fase se reporta en unidad `tool_use` y marcado **no comparable**; en cuatro fases el tope de 60 quedó excedido o dentro del margen de una estimación propia, y se declaró en cada caso.
+
+### Cambios Implementados
+
+- `main.py` — la ruta `spark` se retira: `run_spark_mode` queda como centinela que informa el retiro y sale 0; se van `_map_audit_to_spark_data`, `_spark_handler`, `_run_spark_legacy` y los helpers de región sin consumidores. `capture_review_inputs` recibe y transporta `has_onboarding`.
+- `modules/commercial_documents/templates/{propuesta,diagnostico}_v6_template.md` + `v4_proposal_generator.py` + `v4_diagnostic_generator.py` — los 2 claims de totalidad se renderizan condicionados por `financial_evidence_tier`; `_preprocess_conditionals` acepta `==` y `!=`; el diagnóstico precomputa `garantias_titulo`/`garantias_cuerpo` y resuelve el tier por el productor único.
+- `modules/quality_gates/tribunal/{judge,outcome,acta_writer,review_inputs}.py` — `VERDICT_CONDITIONAL` pasa a `APROBADO-CONDICIONAL` y `_compute_verdict` retorna la causa (`ANALYTICS_CEILING` / `ONBOARDING_INCOMPLETE` / `UNCERTIFIABLE_CLAUSES`); el acta publica `Causa del condicional` sin negar a su revisor.
+- `modules/utils/dynamic_impact.py` + `modules/scrapers/gbp_auditor.py` + `modules/commercial_documents/v4_diagnostic_generator.py` — un solo vocabulario GBP en los dos caminos: las 4 claves inglesas desaparecen, schema tri-estado (`None` no dispara), `PERFIL_ABANDONADO` por actividad y `CERO_ACTIVIDAD_RECIENTE` con etiqueta propia; «sin schema» deja de convertirse en abandono de perfil. `gbp_leak_detector` relevado a oráculo vivo.
+- `modules/utils/benchmarks.py` (lector único, `regiones()` normaliza `v25_config.regiones` y deriva `revpar_cop`) + `scraper_fallback.py`, `gap_analyzer.py`, `report_builder.py`, `financial_factors.py` — un solo lector de benchmarks regionales; las cinco tablas regionales quedan derivadas o retiradas. `scripts/validate_benchmark_sync.py` + `run_all_validations.py [2/13]` comparan **valores** y `0 regiones comparadas` es rojo.
+- `config/regional_benchmarks.yaml` + `modules/common/{umbrales_fotos,scenario_config,evidence_tier}.py` y sus 14 sitios vivos (luego re-medidos a 12) — umbrales de fotos por semántica con lector único y escalera verificada al importar; el respaldo de `scenarios.yaml` y el productor del tier quedan en un solo sitio.
+- `modules/scrapers/gbp_auditor.py` + `modules/common/rubrica_gbp.py` + `modules/analyzers/competitor_analyzer.py` — score GBP sobre `/90` con un denominador por escala; la rúbrica duplicada delega y la rama API muerta (`_places_api_lookup`, `use_api`) se retira. `modules/scrapers/booking_scraper.py` — el stub publica `found=False` + `data={}` + `data_status=STUB_RETIRADO`; `autonomous_researcher.BookingScraper` (el scraper real) intacto.
+- `config/settings.yaml` (bloque `thresholds` retirado), `modules/quality/financial_coherence_validator.py` (**RETIRADO** con su batería), `modules/quality_gates/commercial_gate.py` (docstring cotejado por AST contra su rama), `tests/test_audit_alignment.py` (deja de certificar config muerta) y `data/benchmarks/Benchmarking.md` (§0 declara fuente y rol de las cinco tablas, 0 valores movidos).
+
+### Archivos Nuevos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `modules/common/umbrales_fotos.py` | Lector único del bloque `umbrales_fotos` del YAML maestro; valida la escalera al importar y falla fuerte si el bloque falta |
+| `modules/common/scenario_config.py` | `RESPALDO_ESCENARIOS` — el único sitio Python de `recovery_factors`, `scenario_weights` y `pain_ratio_default` (`D25-bis`) |
+| `modules/commercial_documents/evidence_tier.py` | `resolver_tier_evidencia()`: el breakdown manda; sin breakdown ambos documentos degradan a `'C'` (`H1`) |
+| `modules/common/rubrica_gbp.py` | `SCORE_GBP_MAXIMO` (90) y `ESTIMACION_GBP_MAXIMO` (100): un denominador por escala, en un solo sitio |
+| `tests/test_spark_retirement.py`, `tests/test_gap_analyzer_superposition_reader.py` | Dientes del retiro de `spark` y del lector corregido (FASE-A) |
+| `tests/commercial_documents/test_fase_b_claims_tier_render.py` | Render A/B+ de los 2 claims en propuesta y diagnóstico, con su mutante (FASE-B) |
+| `tests/quality_gates/tribunal/test_conditional_reason.py` | Las 3 causas leídas del `acta_revision.json` del writer real (FASE-C) |
+| `tests/test_gbp_contrato_frontera.py`, `tests/test_gbp_contrato_relevo.py` | 18 + 14 tests: la forma real de `_base_profile`, schema tri-estado y el relevo perfil a perfil contra la copia muerta (FASE-D) |
+| `tests/utils/test_benchmark_{cura_lector,paridad_tablas}_{fase_e}.py`, `tests/utils/test_plan_maestro_sync_cableado_fase_e.py` | Getters contra el artefacto, paridad de las cinco tablas y cableado del check `[2/13]` (FASE-E) |
+| `tests/config/test_umbrales_fotos_semantica.py`, `tests/config/test_coherencia_escenarios_d25bis.py`, `tests/test_d27_perdida_base_por_semantica.py`, `tests/commercial_documents/test_h1_tier_misma_fuente.py` | Población por AST con conteos pinchados, cotejo respaldo↔maestro y paridad de tier (FASE-F) |
+| `tests/scrapers/test_fase_h1_gbp_score_denominador.py`, `tests/scrapers/test_fase_h1_booking_stub_retirado.py` | Denominador de la rúbrica, productor único por AST, rama API retirada y estado retirado del stub (FASE-H1) |
+| `tests/config/test_d18_settings_sin_thresholds.py`, `tests/quality_gates/test_d22_arbitraje_etico_retirado.py`, `tests/quality_gates/test_d23_claim_vs_evidence_frontera.py` | Ausencia por símbolo, dead code barrido por AST con el gate real intacto, y la frontera 4.0 juzgada como el código (FASE-H2) |
+| `Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/` | El plan cerrado: maestro, prompts por fase, lecciones, `09` (fuente de las métricas), `10-analisis` y el registro de dependencias |
+| `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/` | Evidencia por fase: pares rojo/verde de mutantes, `baseline-pre-post.md`, crudos de suite y `--quick`, pre-vuelos, `preflight.json`, el paquete de E2E con sus recibos y la matriz de VERIFY |
+
+### Archivos Modificados
+
+| Archivo | Cambio |
+|---------|--------|
+| `VERSION.yaml` | 4.81.1 → **4.82.0** con su bloque de nota de release; `date` = `release_date` = 2026-10-24 |
+| `modules/analyzers/gap_analyzer.py` | Lector latente corregido (`get_superposition_factor()`); `revpar_targets` retirada; el docstring deja de afirmar un consumidor falso |
+| `modules/scrapers/gbp_auditor.py` | Reporte sobre el denominador del productor; `_detectar_fugas` deja de pasar `{}` por defecto; cinco sitios de fotos con nombre propio |
+| `modules/scrapers/{scraper_fallback,booking_scraper}.py`, `modules/analyzers/competitor_analyzer.py`, `modules/generators/report_builder.py`, `modules/utils/{financial_factors,dynamic_impact}.py`, `modules/financial_engine/opportunity_scorer.py`, `modules/auditors/v4_comprehensive.py`, `modules/commercial_documents/data_structures.py`, `modules/quality_gates/commercial_gate.py` | Un lector de benchmarks, vocabulario GBP único, umbrales nombrados por semántica, denominador que viaja desde el productor y docstring que cita su propia rama |
+| `config/{settings,regional_benchmarks,scenarios}.yaml`, `data/benchmarks/{plan_maestro_data.json,Benchmarking.md}` | Clave muerta retirada, `umbrales_fotos` publicado con su semántica, exención de sync declarada en el propio dato y fuente declarada del documento |
+| `scripts/{validate_benchmark_sync,run_all_validations}.py`, `.opencode/wiring_report.json`, `.opencode/LECCIONES-INDEX.md`, `.opencode/lecciones_index.json` | El verificador compara valores y el runner los consume; los derivados se re-publican en cada fase que los vence |
+| `AGENTS.md`, `README.md`, `.cursorrules`, `docs/CONTRIBUTING.md`, `docs/GUIA_TECNICA.md`, `docs/contributing/REGISTRY.md` | Cabeceras sincronizadas por `sync_versions.py`; `spark` pasa a «Retirado»; H8 refresca la narrativa vigente del veredicto condicional; las 11 fases quedan registradas |
+
+### Tests
+
+El delta por fase (con sus restas y poblaciones) vive en `09-documentacion-post-proyecto.md` §D; la cifra canónica no se transcribe aquí: la imprime `grep -rE "^\s*def test_" tests --include=*.py | wc -l` y su retrato por módulo vive en `AGENTS.md` §Cobertura por Módulo. **Nota de honestidad**: la nota de ronda de estas **149** funciones del plan (+149 medido entre la baseline de FASE-A, 5.334, y el árbol de este cierre, 5.483) **aún no está aparcada** en `docs/cobertura-historia.md`: abrir esa nota exige su propio instrumento y sus mutantes, y quedó declarada como seguimiento con dueño Operador en `10-analisis-post-implementacion.md` §Seguimientos del plan archivado. Los mutantes con su par rojo/verde están en `evidence/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22/FASE-*/` y la re-ejecución de los dientes certificada por FASE-VERIFY en `…/FASE-VERIFY/01-pytest-dientes-ac-verdes.txt`.
+
 ## [4.81.1] - Instrumentos de QMind: la segunda vía, el reemplazo por documento y la deuda era-G — 2026-10-22
 
 ### Objetivo

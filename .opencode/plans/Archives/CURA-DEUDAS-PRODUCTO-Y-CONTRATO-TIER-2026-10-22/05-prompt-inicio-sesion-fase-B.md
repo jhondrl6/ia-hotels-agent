@@ -106,7 +106,7 @@ Registro:
 ## Prompt de Ejecución
 
 ```bash
-Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-B del plan .opencode/plans/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
+Actúa como especialista en el repo iah-cli. Ejecuta únicamente FASE-B del plan .opencode/plans/Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22.
 Lee 05-prompt-inicio-sesion-fase-B.md, 01-plan-maestro.md §1, §2, §4 y §5, 00-lecciones-capitalizadas.md §2, dependencias-fases.md y workflow canónico.
 OBJETIVO: neutralizar los 2 claims de totalidad con variante por tier en propuesta y diagnóstico; verde estructural de Bot 4.
 TAREAS: 1 inventario con el revisor real, 2 variantes en propuesta y diagnóstico, 3 diente AC1 + mutation, 4 diagnóstico y fixture existente.
