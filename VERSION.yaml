@@ -16,7 +16,9 @@ plan_maestro_version: "v2.6.0"
 # producto deja de publicar cifras y veredictos que no sostienen sus propias fuentes. Minor porque cambia
 # comportamiento de producto: el render comercial, el contrato del veredicto, el denominador del score GBP,
 # el lector de benchmarks y el retiro de dos rutas muertas.
-# FASE-A (AC5): retiro de la ruta `spark` (centinela informa y sale 0; D19 cerrada por retiro), el lector
+# FASE-A (AC5): retiro de la ruta `spark` (centinela informa y sale 0; D19 cerrada por retiro y no por
+#         reparacion - su severidad historica es CRITICAL: el contexto de origen la reclasifico HIGH en la
+#         primera pasada y CRITICAL en la segunda - y no hay cifra nueva que publicar), el lector
 #         latente de `gap_analyzer` se corrige por AST y el guardian estatico pasa a comprobar EXISTENCIA
 #         del atributo sobre la clase importada, con su par rojo/verde.
 # FASE-B (AC1): los 2 claims de totalidad del revisor se renderizan condicionados por `evidence_tier` en

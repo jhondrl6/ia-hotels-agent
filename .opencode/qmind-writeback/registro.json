@@ -150,12 +150,23 @@
     {
       "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
       "titulo": "10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0, 8 de 8 AC sobre artefactos reales)",
-      "estado": "vigente",
+      "estado": "reemplazada",
       "fuente_id": "01a17061-5b10-76e0-999a-4d246b039632",
       "sha256": "6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d",
       "sha_cuerpo": "6faf093fda81eb9a146cf8c5db44a5fcb46a93305aa3677056ce6ec104c1fd4d",
       "instanea": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--6faf093fda81eb9a.md",
-      "publicado": "2026-10-24"
+      "publicado": "2026-10-24",
+      "reemplazada_por": "10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0 + severidad CRITICAL historica de D19 y encuadre deudas/contratos/hallazgos)"
+    },
+    {
+      "plan": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
+      "titulo": "10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0 + severidad CRITICAL historica de D19 y encuadre deudas/contratos/hallazgos)",
+      "estado": "vigente",
+      "fuente_id": "01a179e8-2e61-7ddf-8faa-ff63d6f3940a",
+      "sha256": "ca792302fa04d0273db536ea1fea967ef8c9f6fa714bef630ee772c421ddd970",
+      "sha_cuerpo": "ca792302fa04d0273db536ea1fea967ef8c9f6fa714bef630ee772c421ddd970",
+      "instanea": "CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--ca792302fa04d027.md",
+      "publicado": "2026-10-26"
     }
   ]
 }

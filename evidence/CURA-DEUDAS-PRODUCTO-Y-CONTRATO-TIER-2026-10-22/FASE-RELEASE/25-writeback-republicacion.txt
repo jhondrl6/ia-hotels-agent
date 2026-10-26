@@ -1,0 +1,4 @@
+[UP] 10-analisis: CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22 (cierre 4.82.0 + severidad CRITICAL historica de D19 y encuadre deudas/contratos/hallazgos) <- 10-analisis-post-implementacion.md
+[OK] Registrada instantanea CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22--10-analisis_CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2--ca792302fa04d027.md sha256=ca792302fa04d0273db536ea1fea967ef8c9f6fa714bef630ee772c421ddd970 fuente_id=01a179e8-2e61-7ddf-8faa-ff63d6f3940a
+
+[RESUMEN] upload=1 skip=0 fail=0

@@ -1297,7 +1297,7 @@
     {
       "id": "DA-PLAN-4",
       "familia": "DA",
-      "enunciado": "Retirar spark; D19 se cierra por retiro — spark está deprecado y su ruta no recibe hotel_data ni _pv_result; repararla exigiría inventar un contrato que el producto no usa",
+      "enunciado": "Retirar spark; D19 se cierra por retiro — spark está deprecado y su ruta no recibe hotel_data ni _pv_result; repararla exigiría inventar un contrato que el producto no usa. La deuda que se retira es CRITICAL (reclasificada HIGH → CRITICAL entre la 1.ª y la 2.ª pasada del contexto de origen), y su riesgo estaba detrás del crash de N1: sin ese crash no se materializa",
       "plan": "Archives/CURA-DEUDAS-PRODUCTO-Y-CONTRATO-TIER-2026-10-22",
       "origen": "plan",
       "archivo": "10-analisis-post-implementacion.md",
